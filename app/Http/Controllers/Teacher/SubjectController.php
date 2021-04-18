@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Teacher;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use \Session;
-class CourseController extends Controller
+class SubjectController extends Controller
 {
-  
+
     public function courses(){
         $year_id =  \App\Helpers\Helpers::instance()->getCurrentAccademicYear(Session::get('graduate'));
         $semester_id =  \App\Helpers\Helpers::instance()->getCurrentSemester(Session::get('graduate'));
@@ -14,7 +14,7 @@ class CourseController extends Controller
         $data['semester_id'] = $semester_id;
         $data['courses'] = \Auth::user()->teacher->courses($year_id,$semester_id);
         $data['title'] = "Courses for ".\App\Year::find($year_id)->name."  ".\App\Semesters::find($semester_id)->byLocale()->name;
-        return view('teacher.courses')->with($data);
+        return view('user.courses')->with($data);
     }
 
     public function student($course_id, $year_id, $semester_id){
@@ -28,7 +28,7 @@ class CourseController extends Controller
         }else{
             $data['title'] = "No Student offered ".\App\Course::find($course_id)->byLocale()->title." in ".\App\Year::find($year_id)->name." | ".\App\Semesters::find($semester_id)->name;
         }
-        return view('teacher.student')->with($data);
+        return view('user.student')->with($data);
     }
 
     public function coursesall(Request $request){
@@ -38,9 +38,9 @@ class CourseController extends Controller
         $data['semester_id'] = $semester_id;
         $data['courses'] = \Auth::user()->teacher->courses($year_id,$semester_id);
         $data['title'] = "Courses for ".\App\Year::find($year_id)->name."  ".\App\Semesters::find($semester_id)->byLocale()->name;
-     
+
    //  echo ( $data['courses']->count());
-      return view('teacher.courses')->with($data);
+      return view('user.courses')->with($data);
     }
 
     public function classList(Request $request){
@@ -48,7 +48,7 @@ class CourseController extends Controller
         $data['program_id'] =0;
         $data['level_id'] = 0;
         $data['title'] = "Select Department, Program and level to get Options List";
-        return view('teacher.class_list')->with($data);
+        return view('user.class_list')->with($data);
     }
 
 
@@ -59,7 +59,7 @@ class CourseController extends Controller
                             ->join('student_infos',['student_infos.id'=>'students.student_id'])
                             ->where(['student_infos.level_id'=>$request->level,'student_infos.program_id'=>$request->program])->orderBy('student_infos.firstname','ASC')->get();
         $data['title'] = "Student Under ".\App\Department::find($request->department)->name.",  ".\App\Options::find($request->program)->byLocale()->name." Level ".\App\Level::find($request->level)->name;
-        return view('teacher.class_list')->with($data);
+        return view('user.class_list')->with($data);
     }
 
 

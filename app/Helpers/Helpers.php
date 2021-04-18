@@ -1,25 +1,31 @@
 <?php
 namespace App\Helpers;
 
+
+use Illuminate\Contracts\Session\Session;
+
 class Helpers
 {
-
-    public function getCurrentAccademicYear()
+    public function getYear()
     {
-        $config = \App\Models\Config::all()->last();
-       return $config->year_id;
+        return session()->get('mode', $this->getCurrentAccademicYear());
     }
 
-    public function getCurrentSemester()
-    {
+    public function getCurrentAccademicYear(){
         $config = \App\Models\Config::all()->last();
-          return $config->semester_id;
+        return $config->year_id;
     }
 
-
+    public function getCurrentSemester(){
+        $config = \App\Models\Config::all()->last();
+        return $config->semester_id;
+    }
 
     public static function instance()
     {
         return new Helpers();
     }
+
+
 }
+

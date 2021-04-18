@@ -39,17 +39,30 @@
 </head>
 
 <body class="no-skin">
+<div class="pre-loader">
+    <div class="sk-fading-circle">
+        <div class="sk-circle1 sk-circle"></div>
+        <div class="sk-circle2 sk-circle"></div>
+        <div class="sk-circle3 sk-circle"></div>
+        <div class="sk-circle4 sk-circle"></div>
+        <div class="sk-circle5 sk-circle"></div>
+        <div class="sk-circle6 sk-circle"></div>
+        <div class="sk-circle7 sk-circle"></div>
+        <div class="sk-circle8 sk-circle"></div>
+        <div class="sk-circle9 sk-circle"></div>
+        <div class="sk-circle10 sk-circle"></div>
+        <div class="sk-circle11 sk-circle"></div>
+        <div class="sk-circle12 sk-circle"></div>
+    </div>
+</div>
 
 <div id="navbar" class="navbar navbar-default  ace-save-state">
-    <div class="navbar-container ace-save-state" id="navbar-container">
+    <div class="navbar-container w-100 ace-save-state" id="navbar-container">
         <button type="button" class="navbar-toggle menu-toggler pull-left display" id="menu-toggler"
                 data-target="#sidebar">
             <span class="sr-only">Toggle sidebar</span>
-
             <span class="icon-bar"></span>
-
             <span class="icon-bar"></span>
-
             <span class="icon-bar"></span>
         </button>
 
@@ -63,8 +76,21 @@
         </div>
 
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
-            <ul class="nav ace-nav" style="">
+            <ul class="nav ace-nav d-flex flex-nowrap" style="">
+                <li class="grenn dropdown-modal">
+                    <a data-toggle="dropdown" class="dropdown-toggle text-white font-weight-bold">
+                      Batch : {{ \App\Models\Batch::find(Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->name}}
+                        <i class="ace-icon fa fa-caret-down"></i>
+                    </a>
 
+                    <ul class="dropdown-menu">
+                       @foreach(\App\Models\Batch::all() as $batch)
+                            <li>
+                                <a href="{{ route('mode',$batch->id) }}">{{$batch->name}}</a>
+                            </li>
+                       @endforeach
+                    </ul>
+                </li>
                 <li class="light-blue dropdown-modal">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <img class="nav-user-photo" src="{{url('assets/images/avatars/user.jpg')}}"
@@ -82,7 +108,7 @@
                         <li>
                             @if(\Auth::guard('student')->user() == null)
                                 @if(\Auth::user()->isHod || \Auth::user()->isTeacher)
-                                    <a href="{{route('teacher.home')}}"><i
+                                    <a href="{{route('user.home')}}"><i
                                             class="ace-icon fa fa-user"></i>Profile</a>
                                 @elseif(\Auth::user()->isAdmin)
                                     <a href="{{route('admin.home')}}"><i
@@ -136,10 +162,9 @@
             </li>
 
             <li>
-                <a
-                    href="">
+                <a href="{{route('admin.student.create')}}">
                     <i class="menu-icon fa fa-graduation-cap"></i>
-                    <span class="menu-text">Admission</span>
+                    <span class="menu-text">Admit new student</span>
                 </a>
                 <b class="arrow"></b>
             </li>
@@ -169,17 +194,24 @@
                             <i class="menu-icon fa fa-caret-right"></i>
                             Set Semester
                         </a>
-
                         <b class="arrow"></b>
                     </li>
 
 
                     <li>
-                        <a href="">
+                        <a href="{{route('admin.sections')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
                             Manage Sections
                         </a>
 
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="">
+                            <i class="menu-icon fa fa-users"></i>
+                            Manage Batch
+                        </a>
                         <b class="arrow"></b>
                     </li>
 
@@ -188,7 +220,7 @@
 
             <li>
                 <a href="" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-pencil"></i>
+                    <i class="menu-icon fa fa-book"></i>
                     <span class="menu-text">
 							Subject Zone
 					</span>
@@ -197,17 +229,16 @@
 
                 <ul class="submenu">
                     <li>
-                        <a href="">
+                        <a href="{{route('admin.subjects.index')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            Add Subject
+                            All Subject
                         </a>
-
                         <b class="arrow"></b>
                     </li>
                     <li>
-                        <a href="">
+                        <a href="{{route('admin.subjects.create')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            Class Subject
+                            Add Subject
                         </a>
                         <b class="arrow"></b>
                     </li>
@@ -221,13 +252,12 @@
                     <span class="menu-text">
 						User Accounts
 						</span>
-
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
 
                 <ul class="submenu">
                     <li>
-                        <a href="">
+                        <a href="{{route('admin.users.index')}}?type=admin">
                             <i class="menu-icon fa fa-caret-right"></i>
                             Add Admins
                         </a>
@@ -235,14 +265,22 @@
                     </li>
 
                     <li>
-                        <a href="">
+                        <a href="{{route('admin.users.index')}}?type=teacher">
                             <i class="menu-icon fa fa-caret-right"></i>
                             Add Teachers
                         </a>
                         <b class="arrow"></b>
                     </li>
-
                 </ul>
+            </li>
+
+
+            <li>
+                <a href="{{route('admin.fee.classes')}}">
+                    <i class="menu-icon fa fa-graduation-cap"></i>
+                    <span class="menu-text">Fee Management </span>
+                </a>
+                <b class="arrow"></b>
             </li>
 
             <li>
@@ -283,21 +321,20 @@
             <div class="m-5">
                 @if(Session::has('success'))
                     <div class="alert alert-success fade in">
-                        <strong>Success!</strong> {{Session::get('s')}}
+                        <strong>Success!</strong> {{Session::get('success')}}
                     </div>
                 @endif
 
                 @if(Session::has('error'))
                     <div class="alert alert-danger fade in">
-                        <strong>Error!</strong> {{Session::get('e')}}
+                        <strong>Error!</strong> {{Session::get('error')}}
                     </div>
                 @endif
 
-                @if(Session::has('errors'))
-                    <div class="alert alert-danger fade in">
-                        <strong>Error!</strong>{{Session::get('errors')}}
-                    </div>
-                @endif
+
+                <div class="mb-4 mx-3">
+                    <h4 class="font-weight-bold">{{ $title ?? '' }}</h4>
+                </div>
                 @yield('section')
             </div>
         </div>
@@ -333,15 +370,20 @@
 </a>
 </div>
 <script src="{{url('assets/js/jquery-2.1.4.min.js')}}"></script>
-<script src="{{url('assets/js/jquery.dataTables.min.js')}}"></script>
-<script src="{{url('assets/js/jquery.dataTables.bootstrap.min.js')}}"></script>
-<script src="{{url('assets/js/dataTables.buttons.min.js')}}"></script>
-<script src="{{url('assets/js/buttons.html5.min.js')}}"></script>
-<script src="{{url('assets/js/buttons.print.min.js')}}"></script>
-<script src="{{url('assets/js/buttons.colVis.min.js')}}"></script>
 <script src="{{url('assets/js/bootstrap.min.js')}}"></script>
 <script src="{{ url('assets/vendor/toastr/toastr.min.js') }}"></script>
 <script src="{{url('assets/js/ace.min.js')}}"></script>
+<script>
+    (function($){
+        'use strict';
+        $(window).on('load', function () {
+            if ($(".pre-loader").length > 0)
+            {
+                $(".pre-loader").fadeOut("slow");
+            }
+        });
+    })(jQuery)
+</script>
 @yield('script')
 </body>
 </html>

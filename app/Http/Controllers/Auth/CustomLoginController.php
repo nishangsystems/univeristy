@@ -46,12 +46,11 @@ class CustomLoginController extends Controller
         //Attempt to log the user in
 
         if( Auth::guard('student')->attempt(['matric'=>$request->username,'password'=>$request->password], $request->remember)){
-
             return redirect()->intended(route('student.home'));
         }else{
             if( Auth::attempt(['username'=>$request->username,'password'=>$request->password])){
                 if(Auth::user()->type == 'teacher'){
-                    return redirect()->route('teacher.home')->with('success','Welcome to Teachers Dashboard '.Auth::user()->name);
+                    return redirect()->route('user.home')->with('success','Welcome to Teachers Dashboard '.Auth::user()->name);
                 }else{
                     return redirect()->route('admin.home')->with('success','Welcome to Admin Dashboard '.Auth::user()->name);
                 }

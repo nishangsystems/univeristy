@@ -17,11 +17,11 @@ class SubjectSeeder extends Seeder
             return;
         }
 
-        $levels = ['English','French','Mathematics','History','Geography','English Literature','Chemistry','Physics','Biology'];
-        foreach ($levels as $level) {
-            \App\Models\Subjects::create([
-                'name' => $level,
-            ]);
-        }
+//        $levels = ['English','French','Mathematics','History','Geography','English Literature','Chemistry','Physics','Biology'];
+//        foreach ($levels as $level) {
+//            \App\Models\Subjects::create([
+//                'name' => $level,
+//            ]);
+//        }
     }
 }

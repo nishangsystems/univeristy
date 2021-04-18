@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class HomeController extends Controller
 {
-  
+
     public function index(){
-        return view('student.index');
+        return view('student.dashboard');
     }
+
     public function profile(){
         return view('student.edit_profile');
     }

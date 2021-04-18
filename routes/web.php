@@ -44,29 +44,42 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('setayear','Admin\HomeController@createBatch')->name('createacademicyear');
     Route::post('setsem','Admin\HomeController@createsem')->name('createsem');
     Route::get('deletebatch/{id}','Admin\HomeController@deletebatch')->name('deletebatch');
-
+    Route::get('sections', 'Admin\ProgramController@sections')->name('sections');
     Route::get('sub_units/{parent_id}', 'Admin\ProgramController@index')->name('units.index');
     Route::get('new_units/{parent_id}', 'Admin\ProgramController@create')->name('units.create');
     Route::get('units/{parent_id}/edit', 'Admin\ProgramController@edit')->name('units.edit');
     Route::resource('units', 'Admin\ProgramController')->except(['index','create','edit']);
-
-    Route::get('all_subjects/{exam_id}/{flag}', 'Admin\SubjectsController@index')->name('subjects.index');
-    Route::get('new_subjects/{exam_id}/{flag}', 'Admin\SubjectsController@create')->name('subjects.create');
-    Route::resource('subjects', 'Admin\SubjectsController')->except(['index','create']);
-
+    Route::get('units/{parent_id}/subjects', 'Admin\ProgramController@subjects')->name('units.subjects');
+    Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
+    Route::get('fee/classes', 'Admin\FeesController@classes')->name('fee.classes');
+    Route::get('fee/{class_id}/report', 'Admin\FeesController@report')->name('fee.report');
+    Route::get('fee/{class_id}/student', 'Admin\FeesController@student')->name('fee.student');
+    Route::prefix('fee/{class_id}')->name('fee.')->group(function () {
+        Route::resource('list', 'Admin\ListController');
+    });
+    Route::prefix('fee/{student_id}')->name('fee.student.')->group(function () {
+        Route::resource('payments', 'Admin\PaymentController');
+    });
+    Route::get('units/{parent_id}/subjects/manage', 'Admin\ProgramController@manageSubjects')->name('units.subjects.manage');
+    Route::post('units/{parent_id}/subjects/manage', 'Admin\ProgramController@saveSubjects')->name('units.subjects.manage');
+    Route::resource('subjects', 'Admin\SubjectController');
+    Route::resource('users', 'Admin\UserController');
+    Route::resource('student', 'Admin\StudentController')->except(['index']);
 });
 
-Route::prefix('teacher')->name('teacher.')->middleware('isTeacher')->group(function () {
+Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
     Route::get('','Teacher\HomeController@index')->name('home');
 
 });
 
 Route::prefix('student')->name('student.')->group(function () {
-
+    Route::get('','Student\HomeController@index')->name('home');
 
 });
 
-Route::get('locale/{locale}', function ($locale){
-    Session::put('locale', $locale);
-  return redirect()->back();
-})->name('locale');
+Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');
+
+Route::get('mode/{locale}', function ($batch){
+    session()->put('mode', $batch);
+    return redirect()->back();
+})->name('mode');

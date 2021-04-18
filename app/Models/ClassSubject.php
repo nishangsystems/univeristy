@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class ClassSubject extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['class_id','coef', 'subject_id'];
+
+    public function subject(){
+        return $this->belongsTo(Subjects::class, 'subject_id');
+    }
+
+
+
 }
