@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSequencesTable extends Migration
-{
+class CreateSequencesTable extends Migration{
     /**
      * Run the migrations.
      *
@@ -16,7 +15,6 @@ class CreateSequencesTable extends Migration
         Schema::create('sequences', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('batch_id');
             $table->timestamps();
         });
     }

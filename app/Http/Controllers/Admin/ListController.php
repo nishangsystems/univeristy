@@ -93,9 +93,9 @@ class ListController extends Controller{
                 $input
             ]);
 
-//            if($unit->has('unit')){
-//                $unit->updateFee($input);
-//            }
+            if($unit->has('unit')){
+                $unit->updateFee($input);
+            }
 
             DB::commit();
             return redirect()->to(route('admin.fee.list.index', $unit_id))->with('success', "Fee List Successfully !");
@@ -115,13 +115,13 @@ class ListController extends Controller{
     {
        $item = PaymentItem::find($id);
        $items = PaymentItem::whereSlug($item->slug)->get();
-//        foreach ($items as $item){
-//            if($item->payments->count() > 0){
-//                return redirect()->to(route('admin.fee.list.index', $unit_id))->with('error', "Fee cant be deleted, some student have payed for already !");
-//            }else{
-//
-//            }
-//        }
+        foreach ($items as $item){
+            if($item->payments->count() > 0){
+                return redirect()->to(route('admin.fee.list.index', $unit_id))->with('error', "Fee cant be deleted, some student have payed for already !");
+            }else{
+
+            }
+        }
         $item->delete();
         return redirect()->to(route('admin.fee.list.index', $unit_id))->with('success', "Fee deleted successfully !");
     }

@@ -18,6 +18,7 @@ class CreatePaymentsTable extends Migration
             $table->integer('payment_id');
             $table->integer('student_id');
             $table->integer('batch_id');
+            $table->integer('unit_id');
             $table->integer('amount');
             $table->timestamps();
         });

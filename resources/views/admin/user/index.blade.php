@@ -29,12 +29,12 @@
                                 <td>{{$user->phone}}</td>
                                 <td>{{$user->address}}</td>
                                 <td>{{$user->gender}}</td>
-                                <td style="float: right;">
+                                <td  class="d-flex justify-content-end align-items-center" >
                                     <a class="btn btn-xs btn-primary" href="{{route('admin.users.show',[$user->id])}}"><i class="fa fa-eye"> Profile</i></a> |
                                     <a class="btn btn-xs btn-success" href="{{route('admin.users.edit',[$user->id])}}"><i class="fa fa-edit"> Edit</i></a> |
                                     <a onclick="event.preventDefault();
-                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">Delete</a>
-                                    <form id="delete" action="{{route('admin.users.destroy',$user->id)}}" method="POST" style="display: none;">
+                                            document.getElementById('delete{{$user->id}}').submit();" class=" btn btn-danger btn-xs m-2">Delete</a>
+                                    <form id="delete{{$user->id}}" action="{{route('admin.users.destroy',$user->id)}}" method="POST" style="display: none;">
                                         @method('DELETE')
                                         {{ csrf_field() }}
                                     </form>

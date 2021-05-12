@@ -18,6 +18,7 @@ class CreateTeachersSubjectsTable extends Migration
             $table->string('teacher_id');
             $table->string('subject_id');
             $table->string('batch_id');
+            $table->string('class_id');
             $table->timestamps();
         });
     }

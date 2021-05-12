@@ -22,6 +22,7 @@
     <script src="{{url('assets/js/ace-extra.min.js')}}"></script>
     <link rel="stylesheet" href="{{url('assets/css/custom.css')}}" class="ace-main-stylesheet"
           id="main-ace-style"/>
+    @yield('style')
     <STYLE>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -78,7 +79,7 @@
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav d-flex flex-nowrap" style="">
                 <li class="grenn dropdown-modal">
-                    <a data-toggle="dropdown" class="dropdown-toggle text-white font-weight-bold">
+                    <a data-toggle="dropdown" class="-toggledropdown text-white font-weight-bold">
                         Batch : {{ \App\Models\Batch::find(Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->name}}
                         <i class="ace-icon fa fa-caret-down"></i>
                     </a>
@@ -151,7 +152,7 @@
         </div><!-- /.sidebar-shortcuts -->
         <ul class="nav nav-list">
             <li>
-                <a href="">
+                <a href="{{route('user.home')}}">
                     <i class="menu-icon fa fa-dashboard"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>
@@ -159,7 +160,7 @@
             </li>
 
             <li>
-                <a href="">
+                <a href="{{route('user.class')}}">
                     <i class="menu-icon fa fa-home"></i>
                     <span class="menu-text">Class</span>
                 </a>
@@ -167,18 +168,9 @@
             </li>
 
             <li>
-                <a href="">
+                <a href="{{route('user.subject')}}">
                     <i class="menu-icon fa fa-book"></i>
                     <span class="menu-text">Subject</span>
-                </a>
-                <b class="arrow"></b>
-            </li>
-
-
-            <li>
-                <a href="">
-                    <i class="menu-icon fa fa-graduation-cap"></i>
-                    <span class="menu-text">Result</span>
                 </a>
                 <b class="arrow"></b>
             </li>

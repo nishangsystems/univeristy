@@ -17,7 +17,13 @@ class CreateResultsTable extends Migration
             $table->id();
             $table->string('batch_id');
             $table->string('student_id');
+            $table->string('class_id');
             $table->string('sequence');
+            $table->integer('subject_id');
+            $table->double('score');
+            $table->double('coef');
+            $table->string('remark');
+            $table->integer('class_subject_id');
             $table->timestamps();
         });
     }

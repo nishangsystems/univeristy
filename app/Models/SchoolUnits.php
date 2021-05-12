@@ -5,16 +5,23 @@ namespace App\Models;
 use App\Helpers\Helpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
 class SchoolUnits extends Model
 {
     use HasFactory;
+    use HasRecursiveRelationships;
 
     protected $fillable = [
         'name',
         'unit_id',
         'parent_id',
     ];
+
+    public function getParentKeyName()
+    {
+        return 'parent_id';
+    }
 
     public function unit(){
         return  $this->hasMany(SchoolUnits::class, 'parent_id');
@@ -25,9 +32,8 @@ class SchoolUnits extends Model
     }
 
     public function students($year){
-        return $this->belongsToMany(Students::class,'student_classes', 'class_id','student_id')->where('year_id', $year);
+        return $this->belongsToMany(Students::class,'student_classes', 'class_id', 'student_id')->where('year_id', $year);
     }
-
 
 
     public function subjects(){

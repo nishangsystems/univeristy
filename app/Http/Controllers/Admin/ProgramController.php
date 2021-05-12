@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Students;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -25,7 +26,8 @@ class ProgramController extends Controller
             return  redirect(route('admin.sections'));
         }
         $units =  $parent->unit;
-        $data['title'] = ($units->count() == 0)?"No Sub Units Available in ".$parent->name:"All ". $units->first()->type->name;
+        $name = $parent->name;
+        $data['title'] = ($units->count() == 0)?"No Sub Units Available in ".$name:"All ". $units->first()->type->name." > {$name}";
         $data['units']  = $units;
         $data['parent_id']  = $parent_id;
         return view('admin.units.index')->with($data);
@@ -149,7 +151,7 @@ class ProgramController extends Controller
     public function students($id){
         $parent = \App\Models\SchoolUnits::find($id);
         $data['parent'] = $parent;
-        $data['students'] = $parent->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
+
         $data['title'] = "Manage student under ".$parent->name;
         return view('admin.units.student')->with($data);
     }
@@ -181,4 +183,6 @@ class ProgramController extends Controller
         $data['title'] = "Manage subjects under ".$parent->name;
         return redirect()->back()->with('success', "Subjects Saved Successfully");
     }
+
+
 }

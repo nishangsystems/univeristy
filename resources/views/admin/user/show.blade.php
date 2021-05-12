@@ -90,4 +90,41 @@
             </div>
         </div>
     </div>
+    <div class="col-sm-12">
+        <p class="text-muted">
+            <a href="{{route('admin.users.subjects.add', $user->id)}}" class="btn btn-info btn-xs">Add Subject</a>
+        </p>
+
+        <div class="content-panel">
+            <div class="adv-table table-responsive">
+                <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($user->subjectR(\App\Helpers\Helpers::instance()->getCurrentAccademicYear()) as $k=>$subject)
+                        <tr>
+                            <td>{{$k+1}}</td>
+                            <td>{{$subject->subject->subject->name}}</td>
+                            <td>{{$subject->class->name}}</td>
+                            <td style="float: right;">
+                                <a onclick="event.preventDefault();
+                                            document.getElementById('delete{{$subject->id}}').submit();" class=" btn btn-danger btn-xs m-2">DROP</a>
+                                <form id="delete{{$subject->id}}" action="{{route('admin.users.subjects.drop',$subject->id)}}" method="POST" style="display: none;">
+                                    @method('DELETE')
+                                    {{ csrf_field() }}
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 @endsection

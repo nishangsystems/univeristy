@@ -45,4 +45,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function subject(){
+        return  $this->hasMany(TeachersSubject::class, 'teacher_id');
+    }
+
+    public function subjectR($year){
+        return  $this->hasMany(TeachersSubject::class, 'teacher_id')
+            ->where('batch_id', $year)->get();
+    }
+
+    public function classR($year){
+        return $this->belongsToMany(SchoolUnits::class,'teachers_subjects', 'teacher_id','class_id')->where('batch_id', $year)->distinct('school_units.id')->get();
+    }
 }

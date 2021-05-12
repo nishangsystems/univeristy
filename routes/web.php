@@ -40,9 +40,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('home','Admin\HomeController@index')->name('home');
     Route::get('','Admin\HomeController@index')->name('home');
     Route::get('setayear','Admin\HomeController@setayear')->name('setayear');
-    Route::get('setsem','Admin\HomeController@setsem')->name('setsem');
     Route::post('setayear','Admin\HomeController@createBatch')->name('createacademicyear');
-    Route::post('setsem','Admin\HomeController@createsem')->name('createsem');
     Route::get('deletebatch/{id}','Admin\HomeController@deletebatch')->name('deletebatch');
     Route::get('sections', 'Admin\ProgramController@sections')->name('sections');
     Route::get('sub_units/{parent_id}', 'Admin\ProgramController@index')->name('units.index');
@@ -51,7 +49,12 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::resource('units', 'Admin\ProgramController')->except(['index','create','edit']);
     Route::get('units/{parent_id}/subjects', 'Admin\ProgramController@subjects')->name('units.subjects');
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
+    Route::get('fee', 'Admin\FeesController@fee')->name('fee');
     Route::get('fee/classes', 'Admin\FeesController@classes')->name('fee.classes');
+    Route::get('fee/collect', 'Admin\FeesController@collect')->name('fee.collect');
+    Route::get('fee/daily_report', 'Admin\FeesController@daily_report')->name('fee.daily_report');
+    Route::get('fee/{id}', 'Admin\FeesController@fee')->name('fee.list');
+    Route::delete('fee/{id}', 'Admin\FeesController@delete')->name('fee.destroy');
     Route::get('fee/{class_id}/report', 'Admin\FeesController@report')->name('fee.report');
     Route::get('fee/{class_id}/student', 'Admin\FeesController@student')->name('fee.student');
     Route::prefix('fee/{class_id}')->name('fee.')->group(function () {
@@ -63,13 +66,23 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('units/{parent_id}/subjects/manage', 'Admin\ProgramController@manageSubjects')->name('units.subjects.manage');
     Route::post('units/{parent_id}/subjects/manage', 'Admin\ProgramController@saveSubjects')->name('units.subjects.manage');
     Route::resource('subjects', 'Admin\SubjectController');
+
+    Route::get('users/{user_id}/subjects', 'Admin\UserController@createSubject')->name('users.subjects.add');
+    Route::delete('users/{user_id}/subjects', 'Admin\UserController@dropSubject')->name('users.subjects.drop');
+    Route::post('users/{user_id}/subjects', 'Admin\UserController@saveSubject')->name('users.subjects.save');
+
     Route::resource('users', 'Admin\UserController');
     Route::resource('student', 'Admin\StudentController')->except(['index']);
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
     Route::get('','Teacher\HomeController@index')->name('home');
-
+    Route::get('class','Teacher\ClassController@index')->name('class');
+    Route::get('student/{class_id}/detail','Teacher\ClassController@student')->name('student.show');
+    Route::get('student/{class_id}','Teacher\ClassController@students')->name('class.student');
+    Route::get('subject','Teacher\SubjectController@index')->name('subject');
+    Route::get('subject/{subject}/result','Teacher\SubjectController@result')->name('result');
+    Route::post('subject/{subject}/result','Teacher\SubjectController@store')->name('store_result');
 });
 
 Route::prefix('student')->name('student.')->group(function () {
@@ -78,6 +91,9 @@ Route::prefix('student')->name('student.')->group(function () {
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');
+Route::get('section-subjects/{parent}', 'HomeController@subjects')->name('section-subjects');
+Route::get('student-search/{name}', 'HomeController@student')->name('student-search');
+Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search');
 
 Route::get('mode/{locale}', function ($batch){
     session()->put('mode', $batch);

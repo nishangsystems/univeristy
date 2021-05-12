@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\TeachersSubject;
 use App\Option;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -117,5 +118,44 @@ class UserController extends Controller
         }
         $user->delete();
         return redirect()->to(route('admin.users.index',['type'=>$user->type]))->with('success', "User deleted successfully!");
+    }
+
+
+    public function  createSubject($id){
+        $data['user'] = \App\Models\User::find($id);
+        $data['title'] = "Assign Subject to ". $data['user']->name;
+        return view('admin.user.assignSubject')->with($data);
+    }
+
+    public function  dropSubject($id){
+       $s = TeachersSubject::find($id);
+       if($s){
+           $s->delete();
+       }
+       return redirect()->to(route('admin.users.show',$id))->with('success', "Subject deleted successfully!");
+
+    }
+
+    public function  saveSubject(Request $request, $id){
+        $subject = TeachersSubject::where([
+            'teacher_id'=>$id,
+            'subject_id'=>$request->subject,
+            'class_id'=>$request->section,
+            'batch_id'=>\App\Helpers\Helpers::instance()->getCurrentAccademicYear()
+        ]);
+
+       if($subject->count() == 0){
+           TeachersSubject::create([
+               'teacher_id'=>$id,
+               'subject_id'=>$request->subject,
+               'class_id'=>$request->section,
+               'batch_id'=>\App\Helpers\Helpers::instance()->getCurrentAccademicYear()
+           ]);
+           Session::flash('success', "Subject assigned successfully!");
+       }else{
+           Session::flash('error', "Subject assigned already");
+       }
+
+        return redirect()->to(route('admin.users.show',$id));
     }
 }

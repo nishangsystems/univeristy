@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Models\Payments;
 use App\Models\SchoolUnits;
+use App\Models\TeachersSubject;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Session;
-use Redirect;
-use DB;
-use Auth;
 
 class FeesController extends Controller{
 
@@ -24,4 +24,30 @@ class FeesController extends Controller{
         $students = $class->students(Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(20);
         return view('admin.fee.students', compact('students','title'));
     }
+
+    public function collect(Request  $request){
+        $title = "Collect Fee";
+        return view('admin.fee.collect', compact('title'));
+    }
+
+     public function daily_report(Request  $request){
+        $title = "Fee Daily Report for ".($request->date?$request->date:Carbon::now()->format('d/m/Y'));
+        $fees = Payments::whereDate('created_at', $request->date?$request->date:Carbon::now())->get();
+        return view('admin.fee.daily_report', compact('fees','title'));
+    }
+
+    public function fee(Request  $request){
+        $type = request('type','completed');
+        $title = $type." fee ";
+        $students = [];
+        return view('admin.fee.fee', compact('students','title'));
+    }
+
+    public function delete(Request  $request, $id){
+        Payments::find($id)->delete();
+        Session::flash('success', "Fee collection deleted successfully!");
+        return redirect()->back();
+    }
+
+
 }

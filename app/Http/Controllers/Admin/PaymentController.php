@@ -49,6 +49,7 @@ class PaymentController extends Controller{
         Payments::create([
             "payment_id" => $request->item,
             "student_id" => $student->id,
+            "unit_id"=>$student->class(Helpers::instance()->getYear())->id,
             "batch_id" => Helpers::instance()->getYear(),
             "amount" => $request->amount
         ]);
@@ -66,7 +67,8 @@ class PaymentController extends Controller{
         $p =  Payments::find($id);
         $p->update([
             "payment_id" => $request->item,
-            "amount" => $request->amount
+            "amount" => $request->amount,
+            "unit_id"=>$student->class(Helpers::instance()->getYear())->id,
         ]);
 
         return redirect()->to(route('admin.fee.student.payments.index', $student_id))->with('success', "Fee collection record updated successfully !");

@@ -20,146 +20,77 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa3f63f2-05a0-494f-9f41-a131b487b5b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ListController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/PaymentController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/classes.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/list/create.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/list/edit.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/list/index.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/students.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/student/show.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/units/manage_subjects.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/units/sections.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/units/student.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/units/subjects.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/user/show.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/student/dashboard.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/teacher/dashboard.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Teacher/ClassController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/js/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/js/html2canvas.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/js/jquery.base64.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/js/jspdf/jspdf.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/js/jspdf/libs/base64.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/js/jspdf/libs/sprintf.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/js/tableExport.jquery.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/js/tableExport.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net-bs4/css/responsive.dataTables.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net-bs4/js/dataTables.responsive.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/buttons.html5.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/jquery.dataTables.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/jszip.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/pdfmake.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/vfs_fonts.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/collect.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/daily_report.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/fee.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/admin/user/assignSubject.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/teacher/class.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/teacher/result.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/teacher/student.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/teacher/student_detail.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/teacher/subjects.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ssp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ssp.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Helpers/Helpers.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/Helpers.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/FeesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/FeesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/HomeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ListController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ListController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/PaymentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/PaymentController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ProgramController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ProgramController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/StudentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/StudentController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/SubjectController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/SubjectController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Auth/CustomLoginController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Auth/CustomLoginController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Student/AssignmentController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Student/CourseController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Student/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Student/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Student/PaymentController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Teacher/CourseController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Teacher/SubjectController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Teacher/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Teacher/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Teacher/TeacherController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Teacher/ResultController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Teacher/TimeTableController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Teacher/ResultController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Teacher/SubjectController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Teacher/SubjectController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/WelcomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/WelcomeController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/ClassSubject.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/ClassSubject.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/PaymentItem.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/PaymentItem.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Payments.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Payments.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/SchoolUnits.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/SchoolUnits.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/StudentBatch.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/StudentClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/StudentClass.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Students.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Students.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Subjects.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Subjects.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/SubjectResult.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/TeachersSubject.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/TeachersSubject.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/auth.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/auth.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_06_221500_create_students_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_06_221500_create_students_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_06_221527_create_subjects_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_06_221527_create_subjects_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_06_221639_create_student_classes_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_06_221639_create_student_classes_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_06_221953_create_student_batches_table.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeders/SubjectSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeders/SubjectSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/af.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/af.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ar.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/az.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/az.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/bg.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/bg.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/bn.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/bn.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/bs.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/bs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ca.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ca.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/cs.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/cs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/cy.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/cy.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/da.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/da.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/de-ch.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/de-ch.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/de.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/de.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/el.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/el.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/en-au.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/en-au.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/en-ca.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/en-ca.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/en-gb.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/en-gb.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/en.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/en.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/eo.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/eo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/es-mx.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/es-mx.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/es.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/es.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/et.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/et.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/eu.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/eu.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/fa.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/fa.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/fi.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/fi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/fo.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/fo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/fr-ca.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/fr-ca.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/fr.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/fr.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/gl.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/gl.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/gu.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/gu.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/he.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/he.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/hi.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/hi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/hr.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/hr.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/hu.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/hu.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/id.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/id.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/is.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/is.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/it.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/it.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ja.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ja.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ka.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ka.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/km.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/km.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ko.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ko.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ku.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ku.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/lt.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/lt.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/lv.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/lv.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/mk.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/mk.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/mn.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/mn.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ms.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ms.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/nb.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/nb.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/nl.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/nl.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/no.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/no.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/oc.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/oc.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/pl.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/pl.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/pt-br.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/pt-br.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/pt.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/pt.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ro.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ro.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ru.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ru.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/si.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/si.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sk.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sk.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sl.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sl.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sq.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sq.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sr-latn.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sr-latn.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sr.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sr.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sv.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/sv.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/th.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/th.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/tr.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/tr.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/tt.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/tt.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ug.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/ug.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/uk.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/uk.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/vi.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/vi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/zh-cn.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/zh-cn.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/zh.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/ckeditor/lang/zh.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/moment.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/moment.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/fee/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/fee/payments/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/fee/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/fee/payments/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/fee/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/fee/payments/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_06_221923_create_teachers_subjects_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_06_221923_create_teachers_subjects_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_06_222157_create_results_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_06_222157_create_results_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_31_071858_create_sequences_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_31_071858_create_sequences_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2021_04_07_232151_create_payments_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_04_07_232151_create_payments_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2021_04_07_234842_create_subject_results_table.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/dashboard.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/dashboard.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/fee/students.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/fee/students.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/student/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/student/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/student/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/student/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/student/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/subject/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/subject/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/subject/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/subject/edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/setting/setsem.blade.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/admin/subject/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/subject/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/teacher/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/teacher/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/teacher/index.blade.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/unit/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/unit/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/unit/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/unit/show.blade.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/student/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/student/layout.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/sections.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/sections.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/student.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/student.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/subjects.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/subjects.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/user/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/user/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/show.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/teacher/dashboard.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/teacher/dashboard.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/teacher/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/teacher/layout.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/teacher/result/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/dataTables.buttons.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/teacher/result/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/item.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/teacher/result/show.blade.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -285,6 +216,8 @@
       <path value="$PROJECT_DIR$/vendor/symfony/string" />
       <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/vendor/staudenmeir/laravel-adjacency-list" />
+      <path value="$PROJECT_DIR$/vendor/staudenmeir/laravel-cte" />
     </include_path>
   </component>
   <component name="ProjectId" id="1pOysqdDguBApIs3483Ti1jr5mM" />
@@ -295,7 +228,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/admin/fee/payments" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/admin/fee" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -307,15 +240,16 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/views/admin/fee" />
       <recent name="$PROJECT_DIR$/resources/views/admin/units" />
       <recent name="$PROJECT_DIR$/resources/views/admin" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/resources/views/admin/fee/payments" />
-      <recent name="$PROJECT_DIR$/resources/views/admin/fee/list" />
-      <recent name="$PROJECT_DIR$/app/Http/Controllers/Admin" />
       <recent name="$PROJECT_DIR$/resources/views/admin/fee" />
-      <recent name="$PROJECT_DIR$/resources/views/student" />
+      <recent name="$PROJECT_DIR$/resources/views/admin/units" />
+      <recent name="$PROJECT_DIR$/public/libs/datatables.net/js" />
+      <recent name="$PROJECT_DIR$/public" />
+      <recent name="$PROJECT_DIR$/public/js" />
     </key>
   </component>
   <component name="RunManager">
@@ -368,12 +302,34 @@
       <workItem from="1618728573716" duration="15485000" />
       <workItem from="1618747443037" duration="233000" />
       <workItem from="1618747944632" duration="1413000" />
-      <workItem from="1618762763517" duration="1818000" />
+      <workItem from="1618762763517" duration="2639000" />
+      <workItem from="1619023000235" duration="1412000" />
+      <workItem from="1619080647065" duration="12000" />
+      <workItem from="1619489530827" duration="1020000" />
+      <workItem from="1619783841715" duration="16862000" />
+      <workItem from="1619803015319" duration="100000" />
+      <workItem from="1620487345830" duration="1521000" />
+      <workItem from="1620489677561" duration="7661000" />
+      <workItem from="1620596863052" duration="10000" />
+      <workItem from="1620734363828" duration="2864000" />
+      <workItem from="1620807676411" duration="4505000" />
+      <workItem from="1620813171550" duration="8774000" />
+      <workItem from="1620823533848" duration="7969000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -396,11 +352,11 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.900@0.0.1440.900" timestamp="1617840818605" />
-    <state x="526" y="206" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1618742930376">
-      <screen x="0" y="23" width="1440" height="825" />
+    <state x="526" y="200" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1620831094338">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="526" y="200" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1440.900@0.0.1440.900" timestamp="1618465247336" />
-    <state x="526" y="206" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.23.1440.825@0.23.1440.825" timestamp="1618742930376" />
+    <state x="526" y="200" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1440.900@0.0.1440.900" timestamp="1620831094338" />
+    <state x="526" y="206" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.23.1440.825@0.23.1440.825" timestamp="1620821561907" />
     <state x="526" y="207" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.23.1440.830@0.23.1440.830" timestamp="1615072437233" />
     <state x="393" y="191" key="NewPhpClassDialog" timestamp="1617180019189">
       <screen x="0" y="23" width="1440" height="826" />
@@ -421,10 +377,10 @@
     </state>
     <state x="408" y="151" width="604" height="598" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1617787342529" />
     <state x="408" y="162" width="604" height="548" key="find.popup/0.23.1440.826@0.23.1440.826" timestamp="1617179116166" />
-    <state x="177" y="163" width="670" height="738" key="search.everywhere.popup" timestamp="1617785768571">
+    <state x="177" y="163" width="670" height="738" key="search.everywhere.popup" timestamp="1619800060611">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="177" y="163" width="670" height="738" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1617785768571" />
+    <state x="177" y="163" width="670" height="738" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1619800060611" />
     <state x="177" y="172" width="670" height="676" key="search.everywhere.popup/0.23.1440.825@0.23.1440.825" timestamp="1617171553986" />
     <state x="450" y="369" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1618465520789">
       <screen x="0" y="0" width="1440" height="900" />
@@ -444,6 +400,26 @@
           <url>file://$PROJECT_DIR$/app/Http/Controllers/Admin/ListController.php</url>
           <line>4</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/resources/views/teacher/student.blade.php</url>
+          <line>2</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/resources/views/teacher/student.blade.php</url>
+          <line>12</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/resources/views/teacher/student.blade.php</url>
+          <line>6</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/resources/views/teacher/result.blade.php</url>
+          <line>62</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

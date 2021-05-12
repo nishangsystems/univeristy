@@ -1,8 +1,6 @@
 @extends('admin.layout')
-
 @section('section')
     <div class="col-sm-12">
-
         <div class="content-panel">
             <div class="adv-table table-responsive">
                 <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
@@ -26,7 +24,7 @@
                             <td>{{$student->total()}} FCFA </td>
                             <td>{{$student->paid()}} FCFA </td>
                             <td>{{$student->bal()}} FCFA </td>
-                            <td style="float: right;">
+                            <td class="d-flex justify-content-between align-items-center">
                                 <a class="btn btn-xs btn-primary" href="{{route('admin.fee.student.payments.index',[$student->id])}}"> Fee Collections</a>
                             </td>
                         </tr>
