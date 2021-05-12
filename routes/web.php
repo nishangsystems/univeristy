@@ -72,6 +72,11 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('users/{user_id}/subjects', 'Admin\UserController@saveSubject')->name('users.subjects.save');
 
     Route::resource('users', 'Admin\UserController');
+    Route::get('students/import', 'Admin\StudentController@import')->name('students.import');
+    Route::post('students/import', 'Admin\StudentController@importPost')->name('students.import');
+    Route::get('student/matricule', 'Admin\StudentController@matric')->name('students.matricule');
+    Route::post('student/matricule', 'Admin\StudentController@matricPost')->name('students.matricule');
+
     Route::resource('student', 'Admin\StudentController')->except(['index']);
 });
 

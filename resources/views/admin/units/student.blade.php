@@ -10,12 +10,12 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Matricule</th>
                         @if(request('action') != 'class_list')
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Address</th>
                             <th>Class</th>
-                            <th>Gender</th>
                             <th></th>
                         @endif
                     </tr>

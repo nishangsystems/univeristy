@@ -20,77 +20,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa3f63f2-05a0-494f-9f41-a131b487b5b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Teacher/ClassController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/html2canvas.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/jquery.base64.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/jspdf/jspdf.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/jspdf/libs/base64.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/jspdf/libs/sprintf.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/tableExport.jquery.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/tableExport.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net-bs4/css/responsive.dataTables.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net-bs4/js/dataTables.responsive.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/buttons.html5.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/jquery.dataTables.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/jszip.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/pdfmake.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/vfs_fonts.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/collect.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/daily_report.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/fee.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/user/assignSubject.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/teacher/class.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/teacher/result.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/teacher/student.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/teacher/student_detail.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/teacher/subjects.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/ssp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ssp.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/admin/student/import.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/admin/student/matricule.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Helpers/Helpers.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/Helpers.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/FeesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/FeesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ListController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ListController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/PaymentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/PaymentController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ProgramController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ProgramController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Teacher/ResultController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Teacher/SubjectController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Teacher/SubjectController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/WelcomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/WelcomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/ClassSubject.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/ClassSubject.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/PaymentItem.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/PaymentItem.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Payments.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Payments.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/SchoolUnits.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/SchoolUnits.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/StudentClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/StudentClass.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/SubjectResult.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/TeachersSubject.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/TeachersSubject.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_06_221923_create_teachers_subjects_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_06_221923_create_teachers_subjects_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_06_222157_create_results_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_06_222157_create_results_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_31_071858_create_sequences_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_31_071858_create_sequences_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2021_04_07_232151_create_payments_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_04_07_232151_create_payments_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2021_04_07_234842_create_subject_results_table.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/dashboard.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/dashboard.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/fee/students.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/fee/students.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/StudentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/StudentController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_06_224132_create_school_units_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_06_224132_create_school_units_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/setting/setsem.blade.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/subject/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/subject/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/edit.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/admin/units/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/item.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/item.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/admin/units/sections.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/sections.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/admin/units/student.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/student.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/subjects.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/subjects.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/user/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/user/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/show.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/teacher/dashboard.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/teacher/dashboard.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/teacher/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/teacher/layout.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/teacher/result/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/libs/datatables.net/js/dataTables.buttons.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/teacher/result/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/item.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/teacher/result/show.blade.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -228,7 +170,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/admin/fee" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/admin/student" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -245,11 +187,11 @@
       <recent name="$PROJECT_DIR$/resources/views/admin" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/views/admin/student" />
       <recent name="$PROJECT_DIR$/resources/views/admin/fee" />
       <recent name="$PROJECT_DIR$/resources/views/admin/units" />
       <recent name="$PROJECT_DIR$/public/libs/datatables.net/js" />
       <recent name="$PROJECT_DIR$/public" />
-      <recent name="$PROJECT_DIR$/public/js" />
     </key>
   </component>
   <component name="RunManager">
@@ -314,7 +256,7 @@
       <workItem from="1620734363828" duration="2864000" />
       <workItem from="1620807676411" duration="4505000" />
       <workItem from="1620813171550" duration="8774000" />
-      <workItem from="1620823533848" duration="7969000" />
+      <workItem from="1620823533848" duration="16149000" />
     </task>
     <servers />
   </component>

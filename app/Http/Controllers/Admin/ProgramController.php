@@ -57,6 +57,8 @@ class ProgramController extends Controller
             $unit->name = $request->input('name');
             $unit->unit_id = $request->input('type');
             $unit->parent_id = $request->input('parent_id');
+            $unit->prefix = $request->input('prefix');
+            $unit->suffix = $request->input('suffix');
             $unit->save();
             \DB::commit();
             return redirect()->to(route('admin.units.index',[$unit->parent_id]))->with('success', $unit->name." Added to units !");
@@ -103,6 +105,8 @@ class ProgramController extends Controller
             $unit =\App\Models\SchoolUnits::find($id);
             $unit->name = $request->input('name');
             $unit->unit_id = $request->input('type');
+            $unit->prefix = $request->input('prefix');
+            $unit->suffix = $request->input('suffix');
             $unit->save();
             \DB::commit();
 

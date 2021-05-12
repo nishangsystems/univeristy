@@ -18,6 +18,8 @@ class CreateSchoolUnitsTable extends Migration
             $table->string('name');
             $table->string('unit_id');
             $table->string('parent_id');
+            $table->string('prefix')->nullable();
+            $table->string('suffix')->nullable();
             $table->timestamps();
         });
     }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Batch;
+use App\Models\SchoolUnits;
 use App\Models\StudentClass;
 use App\Models\Students;
 use App\Option;
@@ -129,4 +131,114 @@ class StudentController extends Controller{
         $student->delete();
         return redirect()->back()->with('success', "Student deleted successfully !");
     }
+
+    public  function import(){
+        $data['title'] = "Import Student";
+        return view('admin.student.import')->with($data);
+    }
+
+    public  function matric(){
+        $data['title'] = "Generate Student Matricule Number";
+        return view('admin.student.matricule')->with($data);
+    }
+
+    public  function matricPost(Request  $request){
+        $this->validate($request, [
+            'batch' => 'required',
+            'section' => 'required',
+        ]);
+        $sec = $request->section;
+        $id = $sec[count($request->section)- 1];
+       $students = Students::join('student_classes',['students.admission_batch_id'=>'student_classes.id'])->where(['student_classes.year_id'=> $request->batch,'student_classes.class_id'=>$id])->orderBy('name')->get();
+       $section = SchoolUnits::find($id);
+       $batch = Batch::find($request->batch);
+       foreach($students as $k=>$student){
+           $student->matric = $section->prefix.substr(Batch::find($request->batch)->name,2,2).$section->suffix.($k+1);
+           $student->save();
+       }
+       return redirect()->to(route('admin.students.index', [$id]))->with('success', 'Matricule number generated successfully!');
+    }
+
+    public  function importPost(Request  $request){
+        // Validate request
+        $request->validate([
+            'batch' => 'required',
+            'file' => 'required|mimes:csv,txt,xlxs',
+            'section' => 'required',
+        ]);
+
+        $file = $request->file('file');
+        // File Details
+
+        $extension = $file->getClientOriginalExtension();
+        $filename = "Names.".$extension;
+        // Valid File Extensions;
+        $valid_extension = array("csv","xls");
+        if(in_array(strtolower($extension),$valid_extension)){
+            // File upload location
+            $location = public_path().'/files/';
+            // Upload file
+            $file->move($location, $filename);
+            $filepath = public_path('/files/'.$filename);
+
+            $file = fopen($filepath,"r");
+
+            $importData_arr = array();
+            $i = 0;
+
+            while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                $num = count($filedata );
+
+                for ($c=0; $c < $num; $c++) {
+                    $importData_arr[$i][] = $filedata [$c];
+                }
+                $i++;
+            }
+            fclose($file);
+
+
+
+            \DB::beginTransaction();
+            try{
+
+                foreach($importData_arr as $importData){
+                    if(Students::where('name',$importData[0])->count() === 0){
+                        $student = \App\Models\Students::create([
+                            'name'=>$importData[0],
+                            'gender'=>'male',
+                            'email'=>explode(' ',$importData[0])[0]
+                        ]);
+
+                        $class = StudentClass::create([
+                            'student_id' => $student->id,
+                            'class_id' => $request->section,
+                            'year_id' => $request->batch
+                        ]);
+                        $student->admission_batch_id = $class->id;
+                        $student->save();
+
+                       // echo ($importData[0]." Inserted Successfully<br>");
+                    }else{
+                      //  echo ($importData[0]."  <b style='color:#ff0000;'> Exist already on DB and wont be added. Please verify <br></b>");
+                    }
+                }
+
+                \DB::commit();
+            }catch(\Exception $e){
+                \DB::rollback();
+                echo ($e);
+            }
+            Session::flash('message','Import Successful.');
+            //echo("<h3 style='color:#0000ff;'>Import Successful.</h3>");
+
+        }else{
+            //echo("<h3 style='color:#ff0000;'>Invalid File Extension.</h3>");
+
+            Session::flash('message','Invalid File Extension.');
+        }
+
+        return redirect()->to(route('admin.students.index', [$request->section]))->with('success', 'Matricule number generated successfully!');
+    }
+
+
 }

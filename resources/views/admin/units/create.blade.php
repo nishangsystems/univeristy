@@ -21,7 +21,21 @@
                 <input type="hidden" name="parent_id" value="{{$parent_id}}">
                 <label for="cname" class="control-label col-lg-2">Name (required)</label>
                 <div class="col-lg-10">
-                    <input class=" form-control" name="name" type="text" required />
+                    <input class=" form-control" name="name" value="{{old('name')}}" type="text" required />
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label  class="control-label col-lg-2">Prefix</label>
+                <div class="col-lg-10">
+                    <input maxlength="3" class=" form-control" name="prefix" value="{{old('prefix')}}" type="text" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label  class="control-label col-lg-2">Suffix</label>
+                <div class="col-lg-10">
+                    <input maxlength="3" class=" form-control" name="suffix" value="{{old('suffix')}}" type="text"/>
                 </div>
             </div>
 

@@ -24,6 +24,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Type</th>
+                        <th>Matricule</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -33,6 +34,7 @@
                         <tr>
                             <td>{{ $unit->name }}</td>
                             <td>{{$unit->type->name}}</td>
+                            <td>{{$unit->prefix}}xx{{$unit->suffix}}xxx</td>
                             <td class="d-flex justify-content-end align-items-center">
                                 @if(request('action') == 'class_list')
                                     <a class="btn btn-xs btn-primary" href="{{route('admin.students.index', [$unit->id])}}?action={{request('action')}}">Students</a> |

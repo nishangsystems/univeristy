@@ -26,6 +26,20 @@
             </div>
 
             <div class="form-group">
+                <label  class="control-label col-lg-2">Prefix</label>
+                <div class="col-lg-10">
+                    <input maxlength="3" class=" form-control" name="prefix" value="{{old('prefix', $unit->prefix)}}" type="text" />
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label  class="control-label col-lg-2">Suffix</label>
+                <div class="col-lg-10">
+                    <input maxlength="3" class=" form-control" name="suffix" value="{{old('suffix', $unit->suffix)}}" type="text"/>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <div class="col-lg-offset-2 col-lg-10">
                     <button class="btn btn-xs btn-theme" type="submit">Save</button>
                     <a class="btn btn-xs btn-theme04" href="{{route('admin.units.index',[$parent_id])}}" type="button">Cancel</a>

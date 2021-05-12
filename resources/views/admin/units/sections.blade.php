@@ -23,7 +23,7 @@
                         <tr >
                             <td>{{ $unit->name }}</td>
                             <td>{{$unit->type->name}}</td>
-                            <td class="d-flex justify-content-end">
+                            <td class="d-flex justify-content-end align-items-center">
                                 @if(request('action') == "class_list")
                                     <a class="btn btn-xs btn-primary" href="{{route('admin.units.index', [$unit->id])}}?action={{request('action')}}">Sub Units</a>
                                  @else

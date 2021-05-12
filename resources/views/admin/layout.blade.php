@@ -214,6 +214,23 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+
+                    <li>
+                        <a href="{{route('admin.students.matricule')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Generate Matricule
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.students.import')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Import Student
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
                 </ul>
             </li>
 
