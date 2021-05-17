@@ -3,16 +3,7 @@ use App\Http\Controllers;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\WelcomeController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+
 
 Route::get('/clear', function () {
   $clearcache = Artisan::call('cache:clear');
@@ -76,8 +67,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('students/import', 'Admin\StudentController@importPost')->name('students.import');
     Route::get('student/matricule', 'Admin\StudentController@matric')->name('students.matricule');
     Route::post('student/matricule', 'Admin\StudentController@matricPost')->name('students.matricule');
-
     Route::resource('student', 'Admin\StudentController')->except(['index']);
+    Route::resource('result_release', 'Admin\ResultController');
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
@@ -92,7 +83,9 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
 
 Route::prefix('student')->name('student.')->group(function () {
     Route::get('','Student\HomeController@index')->name('home');
-
+    Route::get('subject','Student\HomeController@subject')->name('subject');
+    Route::get('result','Student\HomeController@result')->name('result');
+    Route::get('fee','Student\HomeController@fee')->name('fee');
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');

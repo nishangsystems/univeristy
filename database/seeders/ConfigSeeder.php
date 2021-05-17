@@ -21,9 +21,16 @@ class ConfigSeeder extends Seeder
             'name' => "2020/2021",
         ]);
 
-        \App\Models\Config::create([
-            'year_id' => 1,
-        ]);
+
+        if (\App\Models\Sequence::all()->count() > 0) {
+            return;
+        }
+
+        for($i = 1; $i<=6; $i++){
+            \App\Models\Sequence::create([
+                'name' => "2020/2021",
+            ]);
+        }
 
     }
 }

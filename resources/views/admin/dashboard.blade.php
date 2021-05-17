@@ -1,7 +1,7 @@
 @extends('admin.layout')
 @section('section')
     @php
-        $user = \Auth::user()
+        $user = \Auth()->user()
     @endphp
     <div>
         <div id="user-profile-1" class="user-profile row">
@@ -53,6 +53,7 @@
                                   id="username"> {{$user->gender}}</span>
                         </div>
                     </div>
+
 
                     <div class="profile-info-row">
                         <div class="profile-info-name"> Email</div>

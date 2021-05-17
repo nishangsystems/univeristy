@@ -262,6 +262,14 @@
 
                         <b class="arrow"></b>
                     </li>
+
+                    <li>
+                        <a href="{{route('admin.result_release.index')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           Add Result Release
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                 </ul>
             </li>
 

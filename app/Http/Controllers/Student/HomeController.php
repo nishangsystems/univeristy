@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\Sequence;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 class HomeController extends Controller
 {
@@ -12,9 +14,27 @@ class HomeController extends Controller
         return view('student.dashboard');
     }
 
+    public function fee(){
+        $data['title'] = "My fee Report";
+        return view('student.fee')->with($data);
+    }
+
+    public function result(){
+        $data['title'] = "My Result";
+        $data['seqs'] = Sequence::orderBy('name')->get();
+        $data['subjects'] = Auth('student')->user()->class(\App\Helpers\Helpers::instance()->getYear())->subjects;
+        return view('student.result')->with($data);
+    }
+
+    public function subject(){
+        $data['title'] = "My Subjects";
+        return view('student.subject')->with($data);
+    }
+
     public function profile(){
         return view('student.edit_profile');
     }
+
     public function update(Request $request){
         $validator = Validator::make($request->all(), [
             'email' => 'required|min:8',

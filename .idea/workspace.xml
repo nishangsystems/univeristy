@@ -20,19 +20,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa3f63f2-05a0-494f-9f41-a131b487b5b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/student/import.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/student/matricule.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/admin/setting/result/create.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/admin/setting/result/edit.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/admin/setting/result/index.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/student/fee.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/student/result.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/student/subject.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ProgramController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ProgramController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/StudentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/StudentController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_06_224132_create_school_units_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_06_224132_create_school_units_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Student/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Student/HomeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Student/PaymentController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Student/ResultController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Batch.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Batch.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Config.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Config.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Sequence.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Sequence.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_31_071120_create_configs_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_31_071120_create_configs_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/seeders/ConfigSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeders/ConfigSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/dashboard.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/dashboard.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/item.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/item.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/sections.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/sections.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/units/student.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/units/student.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/student/dashboard.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/student/dashboard.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/student/fee/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/student/fee/show.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/student/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/student/layout.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/student/result/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/student/result/show.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/teacher/result.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/teacher/result.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -170,7 +182,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/admin/student" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/student" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -187,11 +199,11 @@
       <recent name="$PROJECT_DIR$/resources/views/admin" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/views/student" />
+      <recent name="$PROJECT_DIR$/resources/views/admin/setting/result" />
+      <recent name="$PROJECT_DIR$/app/Http/Controllers/Admin" />
       <recent name="$PROJECT_DIR$/resources/views/admin/student" />
       <recent name="$PROJECT_DIR$/resources/views/admin/fee" />
-      <recent name="$PROJECT_DIR$/resources/views/admin/units" />
-      <recent name="$PROJECT_DIR$/public/libs/datatables.net/js" />
-      <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
   <component name="RunManager">
@@ -256,7 +268,9 @@
       <workItem from="1620734363828" duration="2864000" />
       <workItem from="1620807676411" duration="4505000" />
       <workItem from="1620813171550" duration="8774000" />
-      <workItem from="1620823533848" duration="16149000" />
+      <workItem from="1620823533848" duration="16529000" />
+      <workItem from="1621232796724" duration="5809000" />
+      <workItem from="1621248792652" duration="7193000" />
     </task>
     <servers />
   </component>
@@ -319,10 +333,10 @@
     </state>
     <state x="408" y="151" width="604" height="598" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1617787342529" />
     <state x="408" y="162" width="604" height="548" key="find.popup/0.23.1440.826@0.23.1440.826" timestamp="1617179116166" />
-    <state x="177" y="163" width="670" height="738" key="search.everywhere.popup" timestamp="1619800060611">
+    <state x="177" y="163" width="670" height="738" key="search.everywhere.popup" timestamp="1621249578074">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="177" y="163" width="670" height="738" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1619800060611" />
+    <state x="177" y="163" width="670" height="738" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1621249578074" />
     <state x="177" y="172" width="670" height="676" key="search.everywhere.popup/0.23.1440.825@0.23.1440.825" timestamp="1617171553986" />
     <state x="450" y="369" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1618465520789">
       <screen x="0" y="0" width="1440" height="900" />
@@ -360,7 +374,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/resources/views/teacher/result.blade.php</url>
-          <line>62</line>
+          <line>75</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>

@@ -22,9 +22,18 @@
 
     @csrf
     <div class="card">
-        <h3 class="card-header text-center font-weight-bold text-uppercase py-4">
-            Student Result ({{$subject->subject->name}})
-        </h3>
+       <div class="d-flex justify-content-between">
+           <div class="card-header d-flex justify-content-between align-items-center w-100">
+               <h3 class=" font-weight-bold text-uppercase py-4 flex-grow-1">
+                   Student Result ({{$subject->subject->name}})
+               </h3>
+
+               <div class="input-group radius-5 overflow-hidden" data-placement="left" data-align="top"
+                    data-autoclose="true">
+                   <input id="searchbox" placeholder="Type to search" type="text" class="form-control bg-white border-success">
+               </div>
+           </div>
+       </div>
         <div class="card-body">
             <div id="table table-responsive" class="table-editable">
                 <table class="table table-bordered table-responsive-md table-striped text-center">
@@ -44,13 +53,17 @@
                     </thead>
                     <tbody>
                     @foreach($subject->class->students($year)->get() as $student)
-                        <tr>
+                        <tr data-role="student">
                             <td>1</td>
-                            <td style="width: 200px; text-align: left">{{$student->name}}</td>
-                            <td style="width: 100px; text-align: left">{{$student->matric}}</td>
+                            <td class="name" style="width: 200px; text-align: left">{{$student->name}}</td>
+                            <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
                             @foreach($seqs as $seq)
                                 <td class="pt-3-half">
-                                   <input class="score" data-sequence="{{$seq->id}}" data-student="{{$student->id}}" value="{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->subject_id, $subject->class_id,$year, $student->id)}}">
+                                   @if(\App\Models\Config::where(['seq_id'=> $seq->id,'year_id'=>$year])->whereDate('start_date','<=', \Carbon\Carbon::now())->whereDate('end_date','>=', \Carbon\Carbon::now())->first())
+                                        <input class="score form-control bg-white border-0" data-sequence="{{$seq->id}}" data-student="{{$student->id}}" value="{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->subject_id, $subject->class_id,$year, $student->id)}}">
+                                    @else
+                                        <input class="score form-control bg-white border-0" readonly  value="{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->subject_id, $subject->class_id,$year, $student->id)}}">
+                                    @endif
                                 </td>
                             @endforeach
                         </tr>
@@ -87,5 +100,14 @@
                 }
             });
         })
+
+        $("#searchbox").on("keyup", function() {
+            console.log($(this).val());
+            var value = $(this).val().toLowerCase();
+            $('tr[data-role="student"]').filter(function() {
+                $(this).toggle($(this).find('.name').text().toLowerCase().indexOf(value) > -1)
+            });
+        });
     </script>
+
 @endsection

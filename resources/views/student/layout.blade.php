@@ -22,16 +22,45 @@
     <script src="{{url('assets/js/ace-extra.min.js')}}"></script>
     <link rel="stylesheet" href="{{url('assets/css/custom.css')}}" class="ace-main-stylesheet"
           id="main-ace-style"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('libs')}}/datatables.net-bs4/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('libs')}}/datatables.net-bs4/css/responsive.dataTables.min.css">
+
     <STYLE>
         body {
             font-family: Arial, Helvetica, sans-serif;
         }
-
+        .input-group {
+            position: relative;
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            width: 100%;
+        }
+        .dt-button{
+            background-image: none!important;
+            border: 1px solid #FFF;
+            border-radius: 0;
+            padding: 5px 20px;
+            border-radius: 5px;
+            box-shadow: none!important;
+            -webkit-transition: background-color .15s,border-color .15s,opacity .15s;
+            -o-transition: background-color .15s,border-color .15s,opacity .15s;
+            transition: background-color .15s,border-color .15s,opacity .15s;
+            vertical-align: middle;
+            margin: 0;
+            position: relative;
+        }
+        table{padding: 0px !important}
+        table th, table td{
+            padding: 10px;
+        }
+        .table td{
+            border-bottom: 1px  solid  #f1f1f1 !important;
+        }
         .nav li {
             display: block;
             width: 100% !important;
         }
-
         .dropdown-toggle:after {
             display: none;
         }
@@ -84,7 +113,7 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        @foreach(\App\Models\Batch::all() as $batch)
+                        @foreach(\App\Models\Batch::join('student_classes', ['student_classes.year_id'=>'batches.id'])->where('student_id', Auth('student')->user()->id)->orderBy('name')->get() as $batch)
                             <li>
                                 <a href="{{ route('mode',$batch->id) }}">{{$batch->name}}</a>
                             </li>
@@ -159,7 +188,7 @@
             </li>
 
             <li>
-                <a href="">
+                <a href="{{route('student.fee')}}">
                     <i class="menu-icon fa fa-money"></i>
                     <span class="menu-text">Fee Status</span>
                 </a>
@@ -167,7 +196,7 @@
             </li>
 
             <li>
-                <a href="">
+                <a href="{{route('student.subject')}}">
                     <i class="menu-icon fa fa-book"></i>
                     <span class="menu-text">Subject</span>
                 </a>
@@ -176,7 +205,7 @@
 
 
             <li>
-                <a href="">
+                <a href="{{route('student.result')}}">
                     <i class="menu-icon fa fa-graduation-cap"></i>
                     <span class="menu-text">Result</span>
                 </a>
@@ -273,6 +302,82 @@
 <script src="{{url('assets/js/bootstrap.min.js')}}"></script>
 <script src="{{ url('assets/vendor/toastr/toastr.min.js') }}"></script>
 <script src="{{url('assets/js/ace.min.js')}}"></script>
+
+<script src="{{ asset('libs')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('libs')}}/datatables.net-bs4/js/dataTables.responsive.min.js"></script>
+
+
+<script>
+    $(function () {
+        $('.table , .adv-table table').DataTable({
+            responsive: true,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel',
+                {
+                    text: 'Download PDF',
+                    extend: 'pdfHtml5',
+                    message: '',
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    },
+                    customize: function (doc) {
+                        doc.pageMargins = [10,10,10,10];
+                        doc.defaultStyle.fontSize = 7;
+                        doc.styles.tableHeader.fontSize = 7;
+                        doc.styles.title.fontSize = 9;
+                        doc.content[0].text = doc.content[0].text.trim();
+
+                        doc['footer']=(function(page, pages) {
+                            return {
+                                columns: [
+                                    '{{ $title ?? '' }}',
+                                    {
+                                        // This is the right column
+                                        alignment: 'right',
+                                        text: ['page ', { text: page.toString() },  ' of ', { text: pages.toString() }]
+                                    }
+                                ],
+                                margin: [10, 0]
+                            }
+                        });
+                        // Styling the table: create style object
+                        var objLayout = {};
+                        // Horizontal line thickness
+                        objLayout['hLineWidth'] = function(i) { return .5; };
+                        // Vertikal line thickness
+                        objLayout['vLineWidth'] = function(i) { return .5; };
+                        // Horizontal line color
+                        objLayout['hLineColor'] = function(i) { return '#aaa'; };
+                        // Vertical line color
+                        objLayout['vLineColor'] = function(i) { return '#aaa'; };
+                        // Left padding of the cell
+                        objLayout['paddingLeft'] = function(i) { return 4; };
+                        // Right padding of the cell
+                        objLayout['paddingRight'] = function(i) { return 4; };
+                        // Inject the object in the document
+                        doc.content[1].layout = objLayout;
+                    }
+                }
+
+            ],
+            info:     false,
+            searching: true,
+            ordering : false
+        });
+
+    });
+
+
+</script>
+
+<script src="{{ asset('libs')}}/datatables.net/js/dataTables.buttons.min.js"></script>
+<script src="{{ asset('libs')}}/datatables.net/js/jszip.min.js"></script>
+<script src="{{ asset('libs')}}/datatables.net/js/pdfmake.min.js"></script>
+<script src="{{ asset('libs')}}/datatables.net/js/vfs_fonts.js"></script>
+<script src="{{ asset('libs')}}/datatables.net/js/buttons.html5.min.js"></script>
+
 <script>
     (function($){
         'use strict';

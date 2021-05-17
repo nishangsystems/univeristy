@@ -16,6 +16,9 @@ class CreateConfigsTable extends Migration
         Schema::create('configs', function (Blueprint $table) {
             $table->id();
             $table->string('year_id');
+            $table->string('seq_id');
+            $table->string('start_date');
+            $table->string('end_date');
             $table->timestamps();
         });
     }
