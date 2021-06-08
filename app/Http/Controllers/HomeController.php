@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use App\Http\Resources\Fee;
 use App\Http\Resources\StudentFee;
+use App\Http\Resources\StudentRank;
 use App\Models\SchoolUnits;
+use App\Models\Sequence;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
@@ -55,6 +57,14 @@ class HomeController extends Controller
            $students = array_merge($students, $this->load($unit, $type));
         }
         return response()->json(['students'=>Fee::collection($students),'title'=>$title]);
+    }
+
+    public function rank(Request  $request){
+        $seq =  Sequence::find($request->sequence);
+        $unit = SchoolUnits::find($request->class);
+        $title = $seq->name." ranking ". ($unit != null ?"for ".$unit->name:'');
+        $students = $unit->students($request->year)->get();
+        return response()->json(['students'=> StudentRank::collection($students),'title'=>$title]);
     }
 
     public function load(SchoolUnits $unit , $type){

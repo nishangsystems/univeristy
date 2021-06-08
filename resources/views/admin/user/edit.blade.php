@@ -19,7 +19,7 @@
 
 
                 <div class="form-group @error('email') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2">Email (required)</label>
+                    <label for="cname" class="control-label col-lg-2">Username (required)</label>
                     <div class="col-lg-10">
                         <input class=" form-control" readonly value="{{old('email', $user->email)}}" type="text" required />
                         @error('email')

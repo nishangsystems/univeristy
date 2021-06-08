@@ -326,6 +326,14 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+
+                    <li>
+                        <a href="{{route('admin.users.classmaster')}}?type=teacher">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           Class Masters
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                 </ul>
             </li>
 
@@ -367,6 +375,15 @@
                         <a href="{{route('admin.fee')}}?type=uncompleted">
                             <i class="menu-icon fa fa-caret-right"></i>
                             Uncompleted Fees
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('admin.fee.drive')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Fee Drive
                         </a>
                         <b class="arrow"></b>
                     </li>

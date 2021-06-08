@@ -59,7 +59,7 @@
                             <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
                             @foreach($seqs as $seq)
                                 <td class="pt-3-half">
-                                   @if(\App\Models\Config::where(['seq_id'=> $seq->id,'year_id'=>$year])->whereDate('start_date','<=', \Carbon\Carbon::now())->whereDate('end_date','>=', \Carbon\Carbon::now())->first())
+                                   @if(\App\Models\Config::where(['seq_id'=> $seq->id,'year_id'=>$year])->whereDate('start_date','<=', \Carbon\Carbon::now())->whereDate('end_date','>=', \Carbon\Carbon::now())->first() || \Auth::user()->isMaster($year, $subject->class_id))
                                         <input class="score form-control bg-white border-0" data-sequence="{{$seq->id}}" data-student="{{$student->id}}" value="{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->subject_id, $subject->class_id,$year, $student->id)}}">
                                     @else
                                         <input class="score form-control bg-white border-0" readonly  value="{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->subject_id, $subject->class_id,$year, $student->id)}}">
@@ -79,26 +79,32 @@
         $('.score').on('change', function (){
             let subject_url = "{{route('user.store_result',$subject->subject_id)}}";
             // $(".pre-loader").css("display", "block");
-            $.ajax({
-                type: "POST",
-                url: subject_url,
-                data : {
-                    "student" : $(this).attr('data-student'),
-                    "sequence" :$(this).attr('data-sequence'),
-                    "subject" : '{{$subject->subject_id}}',
-                    "year" :'{{$year}}',
-                    "class_id" :'{{$subject->class_id}}',
-                    "class_subject_id" : '{{$subject->id}}',
-                    "coef" : {{$subject->subject->coef}},
-                    "score" : $(this).val(),
-                    '_token': '{{ csrf_token() }}'
-                },
-                success: function (data) {
-                    $(".pre-loader").css("display", "none");
-                }, error: function (e) {
-                    $(".pre-loader").css("display", "none");
-                }
-            });
+
+            if( $(this).val() > 20){
+
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: subject_url,
+                    data : {
+                        "student" : $(this).attr('data-student'),
+                        "sequence" :$(this).attr('data-sequence'),
+                        "subject" : '{{$subject->subject_id}}',
+                        "year" :'{{$year}}',
+                        "class_id" :'{{$subject->class_id}}',
+                        "class_subject_id" : '{{$subject->id}}',
+                        "coef" : {{$subject->subject->coef}},
+                        "score" : $(this).val(),
+                        '_token': '{{ csrf_token() }}'
+                    },
+                    success: function (data) {
+                        $(".pre-loader").css("display", "none");
+                    }, error: function (e) {
+                        $(".pre-loader").css("display", "none");
+                    }
+                });
+            }
+
         })
 
         $("#searchbox").on("keyup", function() {

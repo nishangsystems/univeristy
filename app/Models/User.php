@@ -46,16 +46,34 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function subject(){
-        return  $this->hasMany(TeachersSubject::class, 'teacher_id');
+    public function subject()
+    {
+        return $this->hasMany(TeachersSubject::class, 'teacher_id');
     }
 
-    public function subjectR($year){
-        return  $this->hasMany(TeachersSubject::class, 'teacher_id')
+    public function subjectR($year)
+    {
+        return $this->hasMany(TeachersSubject::class, 'teacher_id')
             ->where('batch_id', $year)->get();
     }
 
-    public function classR($year){
-        return $this->belongsToMany(SchoolUnits::class,'teachers_subjects', 'teacher_id','class_id')->where('batch_id', $year)->distinct('school_units.id')->get();
+    public function classR($year)
+    {
+        return $this->belongsToMany(SchoolUnits::class, 'teachers_subjects', 'teacher_id', 'class_id')->where('batch_id', $year)->distinct('school_units.id')->get();
     }
+
+    public function classes()
+    {
+        return $this->belongsToMany(SchoolUnits::class, 'class_masters', 'user_id', 'class_id');
+    }
+
+    public function isMaster($year, $class)
+    {
+        return ClassMaster::where([
+                'batch_id' => $year,
+                'class_id' => $class,
+                'user_id' => $this->id
+            ])->count() > 0;
+    }
+
 }

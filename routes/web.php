@@ -42,6 +42,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
     Route::get('fee/classes', 'Admin\FeesController@classes')->name('fee.classes');
+    Route::get('fee/drive', 'Admin\FeesController@drive')->name('fee.drive');
     Route::get('fee/collect', 'Admin\FeesController@collect')->name('fee.collect');
     Route::get('fee/daily_report', 'Admin\FeesController@daily_report')->name('fee.daily_report');
     Route::get('fee/{id}', 'Admin\FeesController@fee')->name('fee.list');
@@ -57,6 +58,12 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('units/{parent_id}/subjects/manage', 'Admin\ProgramController@manageSubjects')->name('units.subjects.manage');
     Route::post('units/{parent_id}/subjects/manage', 'Admin\ProgramController@saveSubjects')->name('units.subjects.manage');
     Route::resource('subjects', 'Admin\SubjectController');
+
+    Route::get('classmaster', 'Admin\UserController@classmaster')->name('users.classmaster');
+    Route::post('classmaster', 'Admin\UserController@saveClassmaster')->name('users.classmaster');
+    Route::delete('classmaster', 'Admin\UserController@deleteMaster')->name('users.classmaster');
+    Route::get('classmaster/create', 'Admin\UserController@classmasterCreate')->name('users.classmaster.create');
+
 
     Route::get('users/{user_id}/subjects', 'Admin\UserController@createSubject')->name('users.subjects.add');
     Route::delete('users/{user_id}/subjects', 'Admin\UserController@dropSubject')->name('users.subjects.drop');
@@ -74,6 +81,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
     Route::get('','Teacher\HomeController@index')->name('home');
     Route::get('class','Teacher\ClassController@index')->name('class');
+    Route::get('class/rank','Teacher\ClassController@classes')->name('rank.class');
+    Route::get('rank_student/{class}','Teacher\ClassController@rank')->name('class.rank_student');
     Route::get('student/{class_id}/detail','Teacher\ClassController@student')->name('student.show');
     Route::get('student/{class_id}','Teacher\ClassController@students')->name('class.student');
     Route::get('subject','Teacher\SubjectController@index')->name('subject');
@@ -92,6 +101,7 @@ Route::get('section-children/{parent}', 'HomeController@children')->name('sectio
 Route::get('section-subjects/{parent}', 'HomeController@subjects')->name('section-subjects');
 Route::get('student-search/{name}', 'HomeController@student')->name('student-search');
 Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search');
+Route::get('student_rank', 'HomeController@rank')->name('student_rank');
 
 Route::get('mode/{locale}', function ($batch){
     session()->put('mode', $batch);

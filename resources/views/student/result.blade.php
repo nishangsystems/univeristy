@@ -33,13 +33,13 @@
                 <tr>
                     <td class="text-center" ><span class="d-none">Z</span> Total</td>
                     @foreach($seqs as $seq)
-                        <td class="text-center">{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->id, $user->class(\App\Helpers\Helpers::instance()->getYear())->id,\App\Helpers\Helpers::instance()->getYear(), $user->id)}}</td>
+                        <td class="text-center">{{  $user->totalScore($seq->id, \App\Helpers\Helpers::instance()->getYear()) }}</td>
                     @endforeach
                 </tr>
                 <tr>
                     <td class="text-center" ><span class="d-none">Z</span> Average</td>
                     @foreach($seqs as $seq)
-                        <td class="text-center">{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->id, $user->class(\App\Helpers\Helpers::instance()->getYear())->id,\App\Helpers\Helpers::instance()->getYear(), $user->id)}}</td>
+                        <td class="text-center">{{ $user->averageScore($seq->id, \App\Helpers\Helpers::instance()->getYear())}}</td>
                     @endforeach
                 </tr>
                 </tbody>

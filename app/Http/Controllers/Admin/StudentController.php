@@ -153,7 +153,7 @@ class StudentController extends Controller{
        $section = SchoolUnits::find($id);
        $batch = Batch::find($request->batch);
        foreach($students as $k=>$student){
-           $student->matric = $section->prefix.substr(Batch::find($request->batch)->name,2,2).$section->suffix.($k+1);
+           $student->matric = $section->prefix.substr(Batch::find($request->batch)->name,2,2).$section->suffix. str_pad(($k+1),3,0,STR_PAD_LEFT);
            $student->save();
        }
        return redirect()->to(route('admin.students.index', [$id]))->with('success', 'Matricule number generated successfully!');
@@ -162,7 +162,7 @@ class StudentController extends Controller{
     public  function importPost(Request  $request){
         // Validate request
         $request->validate([
-            'batch' => 'required',
+            'batch' => 'required',  
             'file' => 'required|mimes:csv,txt,xlxs',
             'section' => 'required',
         ]);
@@ -204,9 +204,10 @@ class StudentController extends Controller{
                 foreach($importData_arr as $importData){
                     if(Students::where('name',$importData[0])->count() === 0){
                         $student = \App\Models\Students::create([
-                            'name'=>$importData[0],
+                            'name'=>str_replace('’',"'", $importData[0]),
                             'gender'=>'male',
-                            'email'=>explode(' ',$importData[0])[0]
+                            'password'=>Hash::make('12345678'),
+                            'email'=>explode(' ',str_replace('’',"'", $importData[0]))[0]
                         ]);
 
                         $class = StudentClass::create([

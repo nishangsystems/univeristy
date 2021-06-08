@@ -43,6 +43,12 @@ class FeesController extends Controller{
         return view('admin.fee.fee', compact('students','title'));
     }
 
+    public function drive(Request  $request){
+        $title = "Fee Drive";
+        $students = [];
+        return view('admin.fee.drive', compact('students','title'));
+    }
+
     public function delete(Request  $request, $id){
         Payments::find($id)->delete();
         Session::flash('success', "Fee collection deleted successfully!");

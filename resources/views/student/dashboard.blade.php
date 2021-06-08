@@ -81,13 +81,13 @@
                         </div>
                     </div>
                     <div class="profile-info-row">
-                        <div class="profile-info-name"> Contact</div>
+                        <div class="profile-info-name">Parent Contact</div>
 
                         <div class="profile-info-value">
                             <span class="editable" id="username"> {{$user->phone}}</span>
                         </div>
                     </div>
-                   
+
                     <div class="profile-info-row">
                         <div class="profile-info-name"></div>
                     </div>
