@@ -346,6 +346,7 @@
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
 
+
                 <ul class="submenu">
                     <li>
                         <a href="{{route('admin.fee.collect')}}">
@@ -354,6 +355,15 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+
+                    <li>
+                        <a href="{{route('admin.print_fee')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Print Reciept
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
 
                     <li>
                         <a href="{{route('admin.fee.daily_report')}}">

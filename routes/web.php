@@ -41,6 +41,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('units/{parent_id}/subjects', 'Admin\ProgramController@subjects')->name('units.subjects');
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
+    Route::get('print_fee', 'Admin\FeesController@printFee')->name('print_fee');
+    Route::get('print_fee/{student_id}', 'Admin\FeesController@printStudentFee')->name('print_fee.student');
     Route::get('fee/classes', 'Admin\FeesController@classes')->name('fee.classes');
     Route::get('fee/drive', 'Admin\FeesController@drive')->name('fee.drive');
     Route::get('fee/collect', 'Admin\FeesController@collect')->name('fee.collect');
@@ -85,6 +87,7 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::get('rank_student/{class}','Teacher\ClassController@rank')->name('class.rank_student');
     Route::get('student/{class_id}/detail','Teacher\ClassController@student')->name('student.show');
     Route::get('student/{class_id}','Teacher\ClassController@students')->name('class.student');
+    Route::get('{class_id}/student/{student_id_id}/report_card','Teacher\ClassController@reportCard')->name('student.report_card');
     Route::get('subject','Teacher\SubjectController@index')->name('subject');
     Route::get('subject/{subject}/result','Teacher\SubjectController@result')->name('result');
     Route::post('subject/{subject}/result','Teacher\SubjectController@store')->name('store_result');

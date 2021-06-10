@@ -18,6 +18,7 @@ class StudentFee extends JsonResource
         return [
             'name'=> $this->name,
             'link'=>route('admin.fee.student.payments.index',[$this->id]),
+            'rlink'=>route('admin.print_fee.student',[$this->id]),
             'bal'=>$this->bal(),
             'total'=>$this->total(),
             'class'=>$this->class(Helpers::instance()->getYear())->name,

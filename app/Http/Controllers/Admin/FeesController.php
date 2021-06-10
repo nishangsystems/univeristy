@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Payments;
 use App\Models\SchoolUnits;
+use App\Models\Students;
 use App\Models\TeachersSubject;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -28,6 +29,17 @@ class FeesController extends Controller{
     public function collect(Request  $request){
         $title = "Collect Fee";
         return view('admin.fee.collect', compact('title'));
+    }
+
+    public function printFee(Request  $request){
+        $title = "Print Fee";
+        return view('admin.fee.print', compact('title'));
+    }
+
+    public function printStudentFee(Request  $request, $student_id){
+        $student = Students::find($student_id);
+        $year = \App\Helpers\Helpers::instance()->getYear();
+        return view('admin.fee.print_reciept', compact('student', 'year'));
     }
 
      public function daily_report(Request  $request){

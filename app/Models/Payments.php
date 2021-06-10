@@ -22,4 +22,8 @@ class Payments extends Model
     public function student(){
         return $this->belongsTo(Students::class, 'student_id');
     }
+
+    public function user(){
+        return $this->belongsTo(Students::class, 'student_id');
+    }
 }

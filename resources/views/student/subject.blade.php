@@ -1,7 +1,7 @@
 @extends('student.layout')
 @section('section')
     @php
-        $student = \Auth::user()
+        $student = Auth('student')->user();
     @endphp
     <div class="col-sm-12">
         <div class="content-panel">
@@ -15,20 +15,19 @@
                     </tr>
                     </thead>
                     <tbody>
-@if($student->class(\App\Helpers\Helpers::instance()->getYear()))
-                        @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->subjects as $k=>$subject)
-                            <tr>
-                                <td>{{ $k+1 }}</td>
-                                <td>{{ $subject->subject->name }}</td>
-                                <td>{{ $subject->subject->coef }}</td>
-                            </tr>
-                        @endforeach
-
-@else
-    <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
-        <p>Your profile cant be matched to any class in <b>{{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name}}</b> </p>
-    </div>
-@endif
+                        @if($student->class(\App\Helpers\Helpers::instance()->getYear()))
+                            @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->subjects as $k=>$subject)
+                                <tr>
+                                    <td>{{ $k+1 }}</td>
+                                    <td>{{ $subject->name }}</td>
+                                    <td>{{ $subject->coef }}</td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
+                                <p>Your profile cant be matched to any class in <b>{{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name}}</b> </p>
+                            </div>
+                        @endif
                     </tbody>
                 </table>
             </div>
