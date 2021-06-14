@@ -70,10 +70,17 @@ class User extends Authenticatable
     public function isMaster($year, $class)
     {
         return ClassMaster::where([
-                'batch_id' => $year,
-                'class_id' => $class,
-                'user_id' => $this->id
-            ])->count() > 0;
+            'batch_id' => $year,
+            'class_id' => $class,
+            'user_id' => $this->id
+        ])->count() > 0;
     }
 
+    /**
+     * relationship between users(students) and scholarship
+     */
+    public function scholarships()
+    {
+        return $this->hasMany(Scholarship::class);
+    }
 }
