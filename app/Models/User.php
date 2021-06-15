@@ -75,12 +75,4 @@ class User extends Authenticatable
             'user_id' => $this->id
         ])->count() > 0;
     }
-
-    /**
-     * relationship between users(students) and scholarship
-     */
-    public function scholarships()
-    {
-        return $this->hasMany(Scholarship::class);
-    }
 }

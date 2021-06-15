@@ -28,7 +28,7 @@
                 <label class="control-label col-lg-2">Scholarship Type*</label>
                 <div class="col-lg-10">
                     <select class="form-control" name="type">
-                        <option value="" disabled>Select Type</option>
+                        <option value="">Select Type</option>
                         <option value="1">Tuition Fee Only</option>
                         <option value="2">Partial Tuition Fee</option>
                         <option value="3">Partial Boarding Fee</option>

@@ -10,7 +10,7 @@
                 <label class="control-label col-lg-2">Scholarship Type</label>
                 <div class="col-lg-10">
                     <select class="form-control" name="scholarship_id">
-                        <option value="" disabled>Select Scholarship Type</option>
+                        <option value="">Select Scholarship Type</option>
                         @foreach($scholarships as $key => $scholarship)
                         <option value="{{$scholarship->id}}">{{$scholarship->name }}, {{$scholarship->type}}</option>
                         @endforeach
@@ -24,7 +24,7 @@
                 <label class="control-label col-lg-2">Year</label>
                 <div class="col-lg-10">
                     <select class="form-control" name="year">
-                        <option value="" disabled>Select year</option>
+                        <option value="">Select year</option>
                         @foreach($years as $key => $year)
                         <option value="{{$year->id}}">{{$year->name}}</option>
                         @endforeach

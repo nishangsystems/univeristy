@@ -18,7 +18,7 @@ class Scholarship extends Model
     /**
      * relationship between users(student) and scholarship
      */
-    public function user()
+    public function student()
     {
         return $this->belongsTo(User::class);
     }

@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta charset="utf-8" />
-    <title>{{$title ?? ''}} | {{config('app.name')}}</title>
+    <title>@yield('title')| {{config('app.name')}}</title>
 
     <meta name="description" content="overview &amp; stats" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -444,7 +444,7 @@
                      <li>
                         <a href="{{route('admin.scholarship.awarded_students')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            Scholars
+                           Our Scholars
                         </a>
                         <b class="arrow"></b>
                     </li>

@@ -1,9 +1,14 @@
 @extends('admin.layout')
 
 @section('section')
+
 <div class="col-sm-12">
+    <div class="col-sm-12">
+        <div class="mb-3 d-flex justify-content-start">
+            <h4 class="font-weight-bold">Eligible Students</h4>
+        </div>
 
-
+    </div>
     <div class="content-panel">
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
