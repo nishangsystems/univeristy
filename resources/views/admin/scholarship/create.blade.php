@@ -1,4 +1,5 @@
 @extends('admin.layout')
+@section('title', 'Create Scholarship Award')
 @section('section')
 <div class="mx-3">
     <div class="form-panel">

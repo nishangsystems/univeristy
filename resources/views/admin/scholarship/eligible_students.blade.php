@@ -1,5 +1,5 @@
 @extends('admin.layout')
-
+@section('title', 'Eligible Students')
 @section('section')
 
 <div class="col-sm-12">

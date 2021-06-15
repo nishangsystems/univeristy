@@ -1,4 +1,5 @@
 @extends('admin.layout')
+@section('title', 'Available Scholarships')
 @section('section')
 <div class="col-sm-12">
     <div class="col-sm-12">
