@@ -53,10 +53,21 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::delete('fee/{id}', 'Admin\FeesController@delete')->name('fee.destroy');
     Route::get('fee/{class_id}/report', 'Admin\FeesController@report')->name('fee.report');
     Route::get('fee/{class_id}/student', 'Admin\FeesController@student')->name('fee.student');
+
+
+
     Route::get('scholarships', 'Scholarship\ScholarshipController@index')->name('scholarship.index');
     Route::get('scholarship/create', 'Scholarship\ScholarshipController@create')->name('scholarship.create');
     Route::post('scholarships', 'Scholarship\ScholarshipController@store')->name('scholarship.store');
-    Route::post('scholarships/award', 'Scholarship\UserScholarshipController@store')->name('admin.scholarship.award');
+    Route::get('scholarships/students_eligible', 'Scholarship\UserScholarshipController@students_eligible')->name('scholarship.eligible');
+    Route::post('scholarships/students/{id}/award', 'Scholarship\UserScholarshipController@store')->name('scholarship.award');
+    Route::get('scholarships/students/{id}/award', 'Scholarship\UserScholarshipController@create')->name('scholarship.award.create');
+    Route::get('scholarships/scholars', 'Scholarship\UserScholarshipController@index')->name('scholarship.awarded_students');
+
+
+
+
+
     Route::prefix('fee/{class_id}')->name('fee.')->group(function () {
         Route::resource('list', 'Admin\ListController');
     });

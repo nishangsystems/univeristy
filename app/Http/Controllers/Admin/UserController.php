@@ -152,7 +152,7 @@ class UserController extends Controller
             'user_id' => 'required',
             'section' => 'required',
         ]);
-        if(ClassMaster::where('user_id',$request->user_id)->where('class_id',  $request->section)->where('batch_id',  \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->count() > 0){
+        if (ClassMaster::where('user_id', $request->user_id)->where('class_id',  $request->section)->where('batch_id',  \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->count() > 0) {
             return redirect()->back()->with('error', "User already assigned to this class !");
         }
 
@@ -162,10 +162,11 @@ class UserController extends Controller
         $master->batch_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
         $master->save();
 
-         return redirect()->to(route('admin.users.classmaster'))->with('success', "User updated Successfully !");
+        return redirect()->to(route('admin.users.classmaster'))->with('success', "User updated Successfully !");
     }
 
-    public function  deleteMaster(Request  $request){
+    public function  deleteMaster(Request  $request)
+    {
         $master = ClassMaster::findOrFail($request->master);
         $master->delete();
         return redirect()->to(route('admin.users.classmaster'))->with('success', "User unassigned Successfully !");
@@ -179,7 +180,6 @@ class UserController extends Controller
             $s->delete();
         }
         return redirect()->to(route('admin.users.show', $id))->with('success', "Subject deleted successfully!");
-
     }
 
     public function saveSubject(Request $request, $id)

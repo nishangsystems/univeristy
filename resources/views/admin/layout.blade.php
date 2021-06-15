@@ -433,12 +433,18 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-
-
                     <li>
-                        <a href="#">
+                        <a href="{{route('admin.scholarship.eligible')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
                             Award Scholarship
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                     <li>
+                        <a href="{{route('admin.scholarship.awarded_students')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Scholars
                         </a>
                         <b class="arrow"></b>
                     </li>
