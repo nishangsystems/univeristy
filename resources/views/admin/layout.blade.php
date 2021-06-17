@@ -470,7 +470,7 @@
                     </li>
 
                     <li>
-                        <a href="{{route('admin.income.create')}}">
+                        <a href="{{route('admin.income.pay_income.create')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
                             Collect Income
                         </a>
