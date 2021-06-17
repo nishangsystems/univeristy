@@ -1,7 +1,7 @@
 <div class="form-group @error('name') has-error @enderror ">
     <label for="cname" class="control-label col-lg-2">Name *</label>
     <div class="col-lg-10">
-        <input class=" form-control" name="name" value="{{old('name') ?? $income->name}}" type="text" required />
+        <input class=" form-control" name="name" value="{{old('name')}}" type="text" required />
         @error('name')
         <span class="invalid-feedback">{{ $message }}</span>
         @enderror
@@ -10,7 +10,7 @@
 <div class="form-group @error('amount') has-error @enderror">
     <label for="cname" class="control-label col-lg-2">Amount *</label>
     <div class="col-lg-10">
-        <input class=" form-control" name="amount" value="{{old('amount') ?? $income->amount}}" type="number" required />
+        <input class=" form-control" name="amount" value="{{old('amount')}}" type="number" required />
         @error('amount')
         <span class="invalid-feedback">{{ $message }}</span>
         @enderror
@@ -19,7 +19,7 @@
 <div class="form-group @error('description') has-error @enderror">
     <label for="cname" class="control-label col-lg-2">Description *</label>
     <div class="col-lg-10">
-        <textarea class=" form-control" name="description" value="{{old('description')?? $income->description}}" type="textarea" rows="5"></textarea>
+        <textarea class=" form-control" name="description" value="{{old('description')}}" type="textarea" rows="5"></textarea>
         @error('description')
         <span class="invalid-feedback">{{ $message }}</span>
         @enderror
