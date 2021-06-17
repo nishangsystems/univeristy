@@ -450,6 +450,34 @@
                     </li>
                 </ul>
             </li>
+             <li>
+                <a href="#" class="dropdown-toggle">
+                <i class="menu-icon fa fa-money"></i>
+                    <span class="menu-text">
+						School Incomes
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.income.index')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Income List
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.income.create')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Collect Income
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
 
 
             <li>
