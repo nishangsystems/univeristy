@@ -28,7 +28,11 @@
                             <td>{{$student->address}}</td>
                             <td>{{$student->gender}}</td>
                             <td style="float: right;">
-                                <a class="btn btn-xs btn-success" href="{{route('user.student.report_card',[$class->id, $student->id])}}"><i class="fa fa-eye"> Print Report</i></a>
+
+                               @foreach(\App\Models\Term::all() as $term)
+
+                                    <a class="btn btn-xs btn-success" href="{{route('user.student.report_card',[$class->id,$term->id, $student->id])}}"><i class="fa fa-eye"> {{$term->name}} Term Report</i></a>
+                               @endforeach
                                 <a class="btn btn-xs btn-primary" href="{{route('user.student.show',[$student->id])}}"><i class="fa fa-eye"> Profile</i></a>
                             </td>
                         </tr>

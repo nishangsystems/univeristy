@@ -162,7 +162,7 @@ class StudentController extends Controller{
     public  function importPost(Request  $request){
         // Validate request
         $request->validate([
-            'batch' => 'required',  
+            'batch' => 'required',
             'file' => 'required|mimes:csv,txt,xlxs',
             'section' => 'required',
         ]);
@@ -238,7 +238,7 @@ class StudentController extends Controller{
             Session::flash('message','Invalid File Extension.');
         }
 
-        return redirect()->to(route('admin.students.index', [$request->section]))->with('success', 'Matricule number generated successfully!');
+        return redirect()->to(route('admin.students.index', [$request->section]))->with('success', 'Student Imported successfully!');
     }
 
 

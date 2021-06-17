@@ -67,6 +67,11 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('classmaster/create', 'Admin\UserController@classmasterCreate')->name('users.classmaster.create');
 
 
+    Route::get('result/import', 'Admin\ResultController@import')->name('result.import');
+    Route::post('result/import', 'Admin\ResultController@importPost')->name('result.import');
+    Route::get('result/export', 'Admin\ResultController@export')->name('result.export');
+    Route::post('result/export', 'Admin\ResultController@exportPost')->name('result.export');
+
     Route::get('users/{user_id}/subjects', 'Admin\UserController@createSubject')->name('users.subjects.add');
     Route::delete('users/{user_id}/subjects', 'Admin\UserController@dropSubject')->name('users.subjects.drop');
     Route::post('users/{user_id}/subjects', 'Admin\UserController@saveSubject')->name('users.subjects.save');
@@ -87,7 +92,7 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::get('rank_student/{class}','Teacher\ClassController@rank')->name('class.rank_student');
     Route::get('student/{class_id}/detail','Teacher\ClassController@student')->name('student.show');
     Route::get('student/{class_id}','Teacher\ClassController@students')->name('class.student');
-    Route::get('{class_id}/student/{student_id_id}/report_card','Teacher\ClassController@reportCard')->name('student.report_card');
+    Route::get('{class_id}/student/{term_id}/report_card/{student_id}','Teacher\ClassController@reportCard')->name('student.report_card');
     Route::get('subject','Teacher\SubjectController@index')->name('subject');
     Route::get('subject/{subject}/result','Teacher\SubjectController@result')->name('result');
     Route::post('subject/{subject}/result','Teacher\SubjectController@store')->name('store_result');
