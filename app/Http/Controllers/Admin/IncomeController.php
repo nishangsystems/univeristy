@@ -101,4 +101,15 @@ class IncomeController extends Controller
         $deleted = Income::findOrFail($id)->delete();
         return back()->with('success', 'Successfully deleted income');
     }
+
+    /**
+     * show form to pay(collect) income from students
+     * 
+     * @param Iluluminate\Http\Request
+     * @return string
+     */
+    public function payIncome(Request $request)
+    {
+        return view('admin.Income.pay_income');
+    }
 }

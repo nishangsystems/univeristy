@@ -71,6 +71,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('incomes/{id}/edit', 'Admin\IncomeController@edit')->name('income.edit');
     Route::put('incomes/{id}/', 'Admin\IncomeController@update')->name('income.update');
     Route::delete('incomes/{id}/delete', 'Admin\IncomeController@destroy')->name('income.destroy');
+    Route::get('incomes/pay_income', 'Admin\IncomeController@payIncome')->name('income.pay_income');
 
 
     Route::prefix('fee/{class_id}')->name('fee.')->group(function () {

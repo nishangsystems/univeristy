@@ -14,4 +14,20 @@ class Income extends Model
         'description',
         'amount'
     ];
+
+    /**
+     * relationship between student and income
+     */
+    public function students()
+    {
+        return $this->belongsToMany(Students::class);
+    }
+
+    /**
+     * relationship between an income and payments on the income
+     */
+    public function payIncomes()
+    {
+        return $this->hasMany(PayIncome::class, 'income_id');
+    }
 }

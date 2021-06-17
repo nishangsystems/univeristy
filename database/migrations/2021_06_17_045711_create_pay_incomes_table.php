@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ModifyIncomes extends Migration
+class CreatePayIncomesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class ModifyIncomes extends Migration
      */
     public function up()
     {
-        Schema::table('incomes', function (Blueprint $table) {
-            $table->string('name');
-            $table->decimal('amount', 8, 2);
-            $table->longText('description');
-            $table->integer('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::create('pay_incomes', function (Blueprint $table) {
+            $table->id();
+            $table->integer('income_id')->unsigned();
+            $table->integer('student_class_id')->unsigned();
+            $table->timestamps();
         });
     }
 
@@ -29,6 +28,6 @@ class ModifyIncomes extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('pay_incomes');
     }
 }
