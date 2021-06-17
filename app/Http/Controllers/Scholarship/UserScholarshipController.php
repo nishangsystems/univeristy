@@ -77,7 +77,7 @@ class UserScholarshipController extends Controller
         $user_scholarship->scholarship_id = $request->scholarship_id;
         $user_scholarship->batch_id = $request->year;
         $user_scholarship->save();
-        return redirect()->route('admin.scholarship.eligible')->with('success', 'Successfully awarded the Scholarship');
+        return redirect()->route('admin.scholarship.eligible')->with('success', 'Success! Awarded Scholarship successfully !');
     }
 
     /**

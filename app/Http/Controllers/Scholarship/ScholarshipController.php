@@ -50,7 +50,7 @@ class ScholarshipController extends Controller
         $scholarship->description = $request->description;
         $scholarship->status = 1;
         $scholarship->save();
-        return redirect()->route('scholarship.index')->with('success', 'Successfully created Scholarship');
+        return redirect()->route('scholarship.index')->with('success', 'Success! Scholarship saved successfully !');
     }
 
     /**
