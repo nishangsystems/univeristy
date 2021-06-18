@@ -4,9 +4,9 @@
 
 <div class="col-sm-12">
     <div class="col-sm-12">
-        <div class="mb-3 d-flex justify-content-start">
+        <!-- <div class="mb-3 d-flex justify-content-start">
             <h3 class="font-weight-bold">School incomes</h3>
-        </div>
+        </div> -->
         <!-- <div class="  mb-3 d-flex justify-content-start">
             <a href="{{route('admin.income.create')}}" class="btn btn-primary btn-sm">Add income</a>
         </div> -->

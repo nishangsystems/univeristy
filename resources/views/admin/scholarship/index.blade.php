@@ -31,7 +31,7 @@
                         <td>{{$scholarship->type}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
                             <a class="btn btn-sm btn-primary m-3" href="{{route('admin.scholarship.show',[$scholarship->id])}}"><i class="fa fa-info-circle"> View</i></a> |
-                            <a class="btn btn-sm btn-success m-3" href="{{route('admin.scholarship.edit',[$scholarship->id])}}"><i class="fa fa-edit"> Edit</i></a> |
+                            <a class="btn btn-sm btn-success m-3" href="{{route('admin.scholarship.edit',[$scholarship->id])}}"><i class="fa fa-edit"> Edit</i></a>
                         </td>
                     </tr>
                     @endforeach
