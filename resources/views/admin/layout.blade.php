@@ -444,11 +444,11 @@
                     </li>
                 </ul>
             </li>
-             <li>
+            <li>
                 <a href="#" class="dropdown-toggle">
                 <i class="menu-icon fa fa-money"></i>
                     <span class="menu-text">
-						School Incomes
+						Other Incomes
 						</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
@@ -467,6 +467,34 @@
                         <a href="{{route('admin.income.create')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
                             Add Income
+                        </a>
+                        <b class="arrow"></b>
+                    </li>  
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="dropdown-toggle">
+                <i class="menu-icon fa fa-money"></i>
+                    <span class="menu-text">
+						School Expenses
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.expense.index')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Expense List
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.expense.create')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Add Expense
                         </a>
                         <b class="arrow"></b>
                     </li>  

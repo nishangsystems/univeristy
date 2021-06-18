@@ -79,6 +79,14 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('incomes/{id}', 'Admin\IncomeController@show')->name('income.show');
 
 
+    Route::get('expenses', 'Admin\Expense\ExpenseController@index')->name('expense.index');
+    Route::get('expenses/create', 'Admin\Expense\ExpenseController@create')->name('expense.create');
+    Route::post('expenses', 'Admin\Expense\ExpenseController@store')->name('expense.store');
+    Route::get('expenses/{id}', 'Admin\Expense\ExpenseController@show')->name('expense.show');
+    Route::get('expenses/{id}/edit', 'Admin\Expense\ExpenseController@edit')->name('expense.edit');
+    Route::put('expenses/{id}/', 'Admin\Expense\ExpenseController@update')->name('expense.update');
+    Route::delete('expenses/{id}/delete', 'Admin\Expense\ExpenseController@destroy')->name('expense.destroy');
+
     Route::prefix('fee/{class_id}')->name('fee.')->group(function () {
         Route::resource('list', 'Admin\ListController');
     });
