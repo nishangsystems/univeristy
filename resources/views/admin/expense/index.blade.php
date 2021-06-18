@@ -4,12 +4,7 @@
 
 <div class="col-sm-12">
     <div class="col-sm-12">
-        <!-- <div class="mb-3 d-flex justify-content-start">
-            <h3 class="font-weight-bold">School expenses</h3>
-        </div> -->
-        <!-- <div class="  mb-3 d-flex justify-content-start">
-            <a href="{{route('admin.expense.create')}}" class="btn btn-primary btn-sm">Add expense</a>
-        </div> -->
+
     </div>
     <div class="content-panel">
         <div class="adv-table table-responsive">
