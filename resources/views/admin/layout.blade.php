@@ -1,20 +1,20 @@
 <html lang="en">
+
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
     <title>{{$title ?? ''}} | {{config('app.name')}}</title>
 
-    <meta name="description" content="overview &amp; stats"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="overview &amp; stats" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- bootstrap & fontawesome -->
-    <link rel="stylesheet" href="{{url('css/app.css')}}"/>
-    <link rel="stylesheet" href="{{url('assets/css/bootstrap.min.css')}}"/>
-    <link rel="stylesheet" href="{{url('assets/font-awesome/4.5.0/css/font-awesome.min.css')}}"/>
-    <link rel="stylesheet" href="{{url('assets/css/fonts.googleapis.com.css')}}"/>
-    <link rel="stylesheet" href="{{url('assets/css/ace.min.css')}}" class="ace-main-stylesheet"
-          id="main-ace-style"/>
-    <link rel="stylesheet" href="{{url('assets/css/ace-part2.min.css')}}" class="ace-main-stylesheet"/>
+    <link rel="stylesheet" href="{{url('css/app.css')}}" />
+    <link rel="stylesheet" href="{{url('assets/css/bootstrap.min.css')}}" />
+    <link rel="stylesheet" href="{{url('assets/font-awesome/4.5.0/css/font-awesome.min.css')}}" />
+    <link rel="stylesheet" href="{{url('assets/css/fonts.googleapis.com.css')}}" />
+    <link rel="stylesheet" href="{{url('assets/css/ace.min.css')}}" class="ace-main-stylesheet" id="main-ace-style" />
+    <link rel="stylesheet" href="{{url('assets/css/ace-part2.min.css')}}" class="ace-main-stylesheet" />
     <![endif]-->
     <link rel="stylesheet" href="{{url('assets/css/ace-skins.min.css')}}"/>
     <link rel="stylesheet" href="{{url('assets/css/ace-rtl.min.css')}}"/>
@@ -399,6 +399,77 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="dropdown-toggle">
+                <i class="menu-icon fa fa-money"></i>
+                    <span class="menu-text">
+						Scholarships
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.scholarship.index')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Scholarship offers
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.scholarship.create')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Add Scholarship
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.scholarship.eligible')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Award Scholarship
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                     <li>
+                        <a href="{{route('admin.scholarship.awarded_students')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           Our Scholars
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+             <li>
+                <a href="#" class="dropdown-toggle">
+                <i class="menu-icon fa fa-money"></i>
+                    <span class="menu-text">
+						School Incomes
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.income.index')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Income List
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.income.create')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Add Income
+                        </a>
+                        <b class="arrow"></b>
+                    </li>  
                 </ul>
             </li>
 

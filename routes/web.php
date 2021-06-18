@@ -1,19 +1,21 @@
 <?php
+
 use App\Http\Controllers;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\WelcomeController;
+use Illuminate\Support\Facades\Route;
 
 
 
 Route::get('/clear', function () {
-  $clearcache = Artisan::call('cache:clear');
-  echo "Cache cleared<br>";
+    $clearcache = Artisan::call('cache:clear');
+    echo "Cache cleared<br>";
 
-  $clearview = Artisan::call('view:clear');
-  echo "View cleared<br>";
+    $clearview = Artisan::call('view:clear');
+    echo "View cleared<br>";
 
-  $clearconfig = Artisan::call('config:cache');
-  echo "Config cleared<br>";
+    $clearconfig = Artisan::call('config:cache');
+    echo "Config cleared<br>";
 });
 
 Route::post('login', [CustomLoginController::class, 'login'])->name('login.submit');
@@ -24,20 +26,20 @@ Route::post('reset_password_with_token/password/reset', [CustomForgotPasswordCon
 Route::get('reset_password_with_token/{token}/{email}', [CustomForgotPasswordController::class, 'resetForm'])->name('reset');
 Route::post('reset_password_with_token', [CustomForgotPasswordController::class, 'resetPassword'])->name('reset_password_with_token');
 
-Route::get('','WelcomeController@home');
-Route::get('home','WelcomeController@home');
+Route::get('', 'WelcomeController@home');
+Route::get('home', 'WelcomeController@home');
 
 Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function () {
-    Route::get('home','Admin\HomeController@index')->name('home');
-    Route::get('','Admin\HomeController@index')->name('home');
-    Route::get('setayear','Admin\HomeController@setayear')->name('setayear');
-    Route::post('setayear','Admin\HomeController@createBatch')->name('createacademicyear');
-    Route::get('deletebatch/{id}','Admin\HomeController@deletebatch')->name('deletebatch');
+    Route::get('home', 'Admin\HomeController@index')->name('home');
+    Route::get('', 'Admin\HomeController@index')->name('home');
+    Route::get('setayear', 'Admin\HomeController@setayear')->name('setayear');
+    Route::post('setayear', 'Admin\HomeController@createBatch')->name('createacademicyear');
+    Route::get('deletebatch/{id}', 'Admin\HomeController@deletebatch')->name('deletebatch');
     Route::get('sections', 'Admin\ProgramController@sections')->name('sections');
     Route::get('sub_units/{parent_id}', 'Admin\ProgramController@index')->name('units.index');
     Route::get('new_units/{parent_id}', 'Admin\ProgramController@create')->name('units.create');
     Route::get('units/{parent_id}/edit', 'Admin\ProgramController@edit')->name('units.edit');
-    Route::resource('units', 'Admin\ProgramController')->except(['index','create','edit']);
+    Route::resource('units', 'Admin\ProgramController')->except(['index', 'create', 'edit']);
     Route::get('units/{parent_id}/subjects', 'Admin\ProgramController@subjects')->name('units.subjects');
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
@@ -51,6 +53,32 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::delete('fee/{id}', 'Admin\FeesController@delete')->name('fee.destroy');
     Route::get('fee/{class_id}/report', 'Admin\FeesController@report')->name('fee.report');
     Route::get('fee/{class_id}/student', 'Admin\FeesController@student')->name('fee.student');
+
+
+
+    Route::get('scholarships', 'Scholarship\ScholarshipController@index')->name('scholarship.index');
+    Route::get('scholarship/create', 'Scholarship\ScholarshipController@create')->name('scholarship.create');
+    Route::post('scholarships', 'Scholarship\ScholarshipController@store')->name('scholarship.store');
+    Route::get('scholarships/students_eligible', 'Scholarship\UserScholarshipController@students_eligible')->name('scholarship.eligible');
+    Route::post('scholarships/students/{id}/award', 'Scholarship\UserScholarshipController@store')->name('scholarship.award');
+    Route::get('scholarships/students/{id}/award', 'Scholarship\UserScholarshipController@create')->name('scholarship.award.create');
+    Route::get('scholarships/scholars', 'Scholarship\UserScholarshipController@index')->name('scholarship.awarded_students');
+    Route::post('scholarships/scholars', 'Scholarship\UserScholarshipController@getScholarsPerYear')->name('scholarship.scholars');
+    Route::get('scholarships/{id}', 'Scholarship\ScholarshipController@show')->name('scholarship.show');
+    Route::get('scholarships/{id}/edit', 'Scholarship\ScholarshipController@edit')->name('scholarship.edit');
+
+    Route::put('scholarships/{id}/', 'Scholarship\ScholarshipController@update')->name('scholarship.update');
+
+    Route::get('incomes', 'Admin\IncomeController@index')->name('income.index');
+    Route::get('incomes/create', 'Admin\IncomeController@create')->name('income.create');
+    Route::post('incomes', 'Admin\IncomeController@store')->name('income.store');
+    Route::get('incomes/{id}/edit', 'Admin\IncomeController@edit')->name('income.edit');
+    Route::put('incomes/{id}/', 'Admin\IncomeController@update')->name('income.update');
+    Route::delete('incomes/{id}/delete', 'Admin\IncomeController@destroy')->name('income.destroy');
+    Route::get('incomes/pay_income/create', 'Admin\PayIncomeController@create')->name('income.pay_income.create');
+    Route::get('incomes/{id}', 'Admin\IncomeController@show')->name('income.show');
+
+
     Route::prefix('fee/{class_id}')->name('fee.')->group(function () {
         Route::resource('list', 'Admin\ListController');
     });
@@ -86,23 +114,23 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
-    Route::get('','Teacher\HomeController@index')->name('home');
-    Route::get('class','Teacher\ClassController@index')->name('class');
-    Route::get('class/rank','Teacher\ClassController@classes')->name('rank.class');
-    Route::get('rank_student/{class}','Teacher\ClassController@rank')->name('class.rank_student');
-    Route::get('student/{class_id}/detail','Teacher\ClassController@student')->name('student.show');
-    Route::get('student/{class_id}','Teacher\ClassController@students')->name('class.student');
-    Route::get('{class_id}/student/{term_id}/report_card/{student_id}','Teacher\ClassController@reportCard')->name('student.report_card');
-    Route::get('subject','Teacher\SubjectController@index')->name('subject');
-    Route::get('subject/{subject}/result','Teacher\SubjectController@result')->name('result');
-    Route::post('subject/{subject}/result','Teacher\SubjectController@store')->name('store_result');
+    Route::get('',  'Teacher\HomeController@index')->name('home');
+    Route::get('class', 'Teacher\ClassController@index')->name('class');
+    Route::get('class/rank', 'Teacher\ClassController@classes')->name('rank.class');
+    Route::get('rank_student/{class}', 'Teacher\ClassController@rank')->name('class.rank_student');
+    Route::get('student/{class_id}/detail', 'Teacher\ClassController@student')->name('student.show');
+    Route::get('student/{class_id}', 'Teacher\ClassController@students')->name('class.student');
+    Route::get('{class_id}/student/{term_id}/report_card/{student_id}', 'Teacher\ClassController@reportCard')->name('student.report_card');
+    Route::get('subject', 'Teacher\SubjectController@index')->name('subject');
+    Route::get('subject/{subject}/result', 'Teacher\SubjectController@result')->name('result');
+    Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
 });
 
 Route::prefix('student')->name('student.')->group(function () {
-    Route::get('','Student\HomeController@index')->name('home');
-    Route::get('subject','Student\HomeController@subject')->name('subject');
-    Route::get('result','Student\HomeController@result')->name('result');
-    Route::get('fee','Student\HomeController@fee')->name('fee');
+    Route::get('', 'Student\HomeController@index')->name('home');
+    Route::get('subject', 'Student\HomeController@subject')->name('subject');
+    Route::get('result', 'Student\HomeController@result')->name('result');
+    Route::get('fee', 'Student\HomeController@fee')->name('fee');
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');
@@ -111,7 +139,7 @@ Route::get('student-search/{name}', 'HomeController@student')->name('student-sea
 Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search');
 Route::get('student_rank', 'HomeController@rank')->name('student_rank');
 
-Route::get('mode/{locale}', function ($batch){
+Route::get('mode/{locale}', function ($batch) {
     session()->put('mode', $batch);
     return redirect()->back();
 })->name('mode');

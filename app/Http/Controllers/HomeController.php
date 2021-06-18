@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Helpers\Helpers;
 use App\Http\Resources\Fee;
 use App\Http\Resources\StudentFee;
@@ -23,65 +24,70 @@ class HomeController extends Controller
         return redirect()->to(route('login'));
     }
 
-    public function children($parent)
+    public function children(Request $request,  $parent)
     {
+
         $parent = \App\Models\SchoolUnits::find($parent);
 
-        return response()->json(['array'=>$parent->unit,
-           // 'name'=>$parent->unit->first()?$parent->unit->first()->type->name:'',
-            'valid'=> ($parent->parent_id != 0 && $parent->unit->count() == 0)?'1':0,
-            'name'=> $parent->unit->first()?($parent->unit->first()->unit->count() == 0?'section':''):'section'
-            ]);
-    }
-
-    public function  subjects($parent){
-        $parent = \App\Models\SchoolUnits::find($parent);
         return response()->json([
-            'array'=>$parent->subject()->with('subject')->get(),
+            'array' => $parent->unit,
+            // 'name'=>$parent->unit->first()?$parent->unit->first()->type->name:'',
+            'valid' => ($parent->parent_id != 0 && $parent->unit->count() == 0) ? '1' : 0,
+            'name' => $parent->unit->first() ? ($parent->unit->first()->unit->count() == 0 ? 'section' : '') : 'section'
         ]);
     }
 
-    public function student($name){
-        $students = \App\Models\Students::join('student_classes', ['students.id'=>'student_classes.student_id'])->where('student_classes.year_id',\App\Helpers\Helpers::instance()->getYear())
+    public function  subjects($parent)
+    {
+        $parent = \App\Models\SchoolUnits::find($parent);
+        return response()->json([
+            'array' => $parent->subject()->with('subject')->get(),
+        ]);
+    }
+
+    public function student($name)
+    {
+        $students = \App\Models\Students::join('student_classes', ['students.id' => 'student_classes.student_id'])->where('student_classes.year_id', \App\Helpers\Helpers::instance()->getYear())
             ->where('students.name', 'LIKE', "%{$name}%")
             ->get();
         return \response()->json(StudentFee::collection($students));
     }
 
-    public function fee(Request  $request){
-        $type = request('type','completed');
+    public function fee(Request  $request)
+    {
+        $type = request('type', 'completed');
         $unit = SchoolUnits::find(\request('section'));
-        $title = $type." fee ". ($unit != null ?"for ".$unit->name:'');
+        $title = $type . " fee " . ($unit != null ? "for " . $unit->name : '');
         $students = [];
-        if($unit){
-           $students = array_merge($students, $this->load($unit, $type));
+        if ($unit) {
+            $students = array_merge($students, $this->load($unit, $type));
         }
-        return response()->json(['students'=>Fee::collection($students),'title'=>$title]);
+        return response()->json(['students' => Fee::collection($students), 'title' => $title]);
     }
 
-    public function rank(Request  $request){
+    public function rank(Request  $request)
+    {
         $seq =  Sequence::find($request->sequence);
         $unit = SchoolUnits::find($request->class);
-        $title = $seq->name." ranking ". ($unit != null ?"for ".$unit->name:'');
+        $title = $seq->name . " ranking " . ($unit != null ? "for " . $unit->name : '');
         $students = $unit->students($request->year)->get();
-        return response()->json(['students'=> StudentRank::collection($students),'title'=>$title]);
+        return response()->json(['students' => StudentRank::collection($students), 'title' => $title]);
     }
 
-    public function load(SchoolUnits $unit , $type){
+    public function load(SchoolUnits $unit, $type)
+    {
         $students = [];
-        foreach ($unit->students(Helpers::instance()->getYear())->get() as $student){
-            if($type == 'completed' && $student->bal() == 0){
+        foreach ($unit->students(Helpers::instance()->getYear())->get() as $student) {
+            if ($type == 'completed' && $student->bal() == 0) {
                 array_push($students, $student);
-            }elseif($type == 'uncompleted' && $student->bal() > 0){
+            } elseif ($type == 'uncompleted' && $student->bal() > 0) {
                 array_push($students, $student);
             }
         }
-        foreach ($unit->unit as $unit){
+        foreach ($unit->unit as $unit) {
             $students = array_merge($students, $this->load($unit, $type));
         }
 
         return $students;
     }
-
-
 }

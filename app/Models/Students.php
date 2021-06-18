@@ -55,33 +55,44 @@ class Students extends Authenticatable
         return $items->first()->total;
     }
 
-    public function bal(){
+    public function bal()
+    {
         return $this->total() - $this->paid();
     }
 
-    public function totalScore($sequence , $year){
+    public function totalScore($sequence, $year)
+    {
         $class = $this->class($year);
         $subjects = $class->subjects;
         $total = 0;
-        foreach ($subjects as $subject){
+        foreach ($subjects as $subject) {
             $total += Helpers::instance()->getScore($sequence, $subject->id, $class->id, $year, $this->id) * $subject->coef;
         }
 
         return $total;
     }
 
-    public function averageScore($sequence , $year){
+    public function averageScore($sequence, $year)
+    {
         $total = $this->totalScore($sequence, $year);
         $gtotal = 0;
         $class = $this->class($year);
         $subjects = $class->subjects;
-        foreach ($subjects as $subject){
+        foreach ($subjects as $subject) {
             $gtotal += 20 * $subject->coef;
         }
-        if($gtotal == 0 || $total == 0){
+        if ($gtotal == 0 || $total == 0) {
             return 0;
-        }else{
-            return number_format((float)($total/$gtotal)*20, 2);
+        } else {
+            return number_format((float)($total / $gtotal) * 20, 2);
         }
+    }
+
+    /**
+     * relationship between users(students) and scholarship
+     */
+    public function scholarships()
+    {
+        return $this->hasMany(Scholarship::class);
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSequencesTable extends Migration
+class Scholarships extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateSequencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sequences', function (Blueprint $table) {
+        Schema::create('scholarships', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('term_id');
+            $table->decimal('amount', 8, 2);
+            $table->string('type'); //they type of scholarship(tuition, full-time, PTA, Partial)
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateSequencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sequences');
+        Schema::dropIfExists('scholarships');
     }
 }

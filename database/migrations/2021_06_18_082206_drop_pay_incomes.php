@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSequencesTable extends Migration
+class DropPayIncomes extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,7 @@ class CreateSequencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sequences', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('term_id');
-            $table->timestamps();
-        });
+        Schema::drop('pay_incomes');
     }
 
     /**
@@ -28,6 +23,6 @@ class CreateSequencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sequences');
+        //
     }
 }

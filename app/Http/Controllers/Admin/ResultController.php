@@ -32,13 +32,15 @@ class ResultController extends Controller
         return view('admin.setting.result.create')->with($data);
     }
 
-    public function edit(Request $request, $id){
+    public function edit(Request $request, $id)
+    {
         $data['title'] = "Edit result releases";
         $data['release'] = \App\Models\Config::find($id);
         return view('admin.setting.result.edit')->with($data);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $request->validate([
             'year_id' => 'required',
             'seq_id' => 'required',
@@ -49,7 +51,8 @@ class ResultController extends Controller
         return redirect()->to(route('admin.result_release.index'))->with('success', "Release created successfully");
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $request->validate([
             'year_id' => 'required',
             'seq_id' => 'required',
@@ -105,7 +108,7 @@ class ResultController extends Controller
             while (($filedata = fgetcsv($file, 100, ",")) !== FALSE) {
                 $num = count($filedata);
                 for ($c = 0; $c < $num; $c++) {
-                    $importData_arr[$i][] = $filedata [$c];
+                    $importData_arr[$i][] = $filedata[$c];
                 }
                 $i++;
             }
@@ -113,17 +116,17 @@ class ResultController extends Controller
 
             \DB::beginTransaction();
             try {
-                foreach ($importData_arr as $k=>$importData) {
-                    if($k > 0){
+                foreach ($importData_arr as $k => $importData) {
+                    if ($k > 0) {
                         $result = Result::where([
                             'student_id' =>  $importData[1],
                             'class_id' => $importData[2],
-                            'sequence' =>$importData[3],
-                            'subject_id'=>$importData[4],
-                            'batch_id'=>$importData[0]
+                            'sequence' => $importData[3],
+                            'subject_id' => $importData[4],
+                            'batch_id' => $importData[0]
                         ])->first();
 
-                        if($result == null){
+                        if ($result == null) {
                             $result = new Result();
                         }
 
@@ -133,7 +136,7 @@ class ResultController extends Controller
                         $result->sequence =  $importData[3];
                         $result->subject_id =  $importData[4];
                         $result->score =  $importData[5];
-                        $result->coef =  $importData[6]??1;
+                        $result->coef =  $importData[6] ?? 1;
                         $result->remark = $importData[7];
                         $result->class_subject_id =  $importData[0];
                         $result->save();
@@ -143,7 +146,7 @@ class ResultController extends Controller
                 \DB::commit();
             } catch (\Exception $e) {
                 \DB::rollback();
-                echo($e->getMessage());
+                echo ($e->getMessage());
             }
             Session::flash('message', 'Import Successful.');
             //echo("<h3 style='color:#0000ff;'>Import Successful.</h3>");
@@ -151,7 +154,7 @@ class ResultController extends Controller
         } else {
             Session::flash('message', 'Invalid File Extension.');
         }
-       return redirect()->back()->with('success', 'Result Imported successfully!');
+        return redirect()->back()->with('success', 'Result Imported successfully!');
     }
 
     public function export()
@@ -171,7 +174,7 @@ class ResultController extends Controller
         $year = Batch::find($request->year);
         $sequence = Sequence::find($request->sequence);
 
-        $fileName = $sequence->name.' '.$year->name.' '.'results.csv';
+        $fileName = $sequence->name . ' ' . $year->name . ' ' . 'results.csv';
 
         $headers = array(
             "Content-type" => "text/csv",
@@ -181,14 +184,14 @@ class ResultController extends Controller
             "Expires" => "0"
         );
 
-        $columns = array('batch_id', 'student_id', 'class_id', 'sequence', 'subject_id','score','coef','remark','class_subject_id');
+        $columns = array('batch_id', 'student_id', 'class_id', 'sequence', 'subject_id', 'score', 'coef', 'remark', 'class_subject_id');
 
         $callback = function () use ($results, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
             foreach ($results as $result) {
-                fputcsv($file, array($result->batch_id, $result->student_id, $result->class_id, $result->sequence,$result->subject_id, $result->score, $result->coef, $result->remark, $result->class_subject_id));
+                fputcsv($file, array($result->batch_id, $result->student_id, $result->class_id, $result->sequence, $result->subject_id, $result->score, $result->coef, $result->remark, $result->class_subject_id));
             }
 
             fclose($file);

@@ -1,9 +1,14 @@
-@extends('teacher.layout')
+@extends('admin.layout')
+@section('title', 'Eligible Students')
 @section('section')
+
 <div class="col-sm-12">
-    <p class="text-muted">
-    <h4 class="mb-4">{{$class->name}} Student</h4>
-    </p>
+    <div class="col-sm-12">
+        <div class="mb-3 d-flex justify-content-start">
+            <!-- <h4 class="font-weight-bold">Eligible Students</h4> -->
+        </div>
+
+    </div>
     <div class="content-panel">
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
@@ -27,13 +32,9 @@
                         <td>{{$student->phone}}</td>
                         <td>{{$student->address}}</td>
                         <td>{{$student->gender}}</td>
-                        <td style="float: right;">
+                        <td class="d-flex justify-content-end align-items-center">
+                            <a class="btn btn-sm btn-primary" href="{{route('admin.scholarship.award.create', $student->id)}}"><i class="fa fa-money"> Award Scholarship</i></a> |
 
-                            @foreach(\App\Models\Term::all() as $term)
-
-                            <a class="btn btn-xs btn-success" href="{{route('user.student.report_card',[$class->id,$term->id, $student->id])}}"><i class="fa fa-eye"> {{$term->name}} Term Report</i></a>
-                            @endforeach
-                            <a class="btn btn-xs btn-primary" href="{{route('user.student.show',[$student->id])}}"><i class="fa fa-eye"> Profile</i></a>
                         </td>
                     </tr>
                     @endforeach
