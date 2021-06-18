@@ -32,12 +32,6 @@
                         <td class="d-flex justify-content-end  align-items-center">
                             <a class="btn btn-sm btn-primary m-3" href="{{route('admin.scholarship.show',[$scholarship->id])}}"><i class="fa fa-info-circle"> View</i></a> |
                             <a class="btn btn-sm btn-success m-3" href="{{route('admin.scholarship.edit',[$scholarship->id])}}"><i class="fa fa-edit"> Edit</i></a> |
-                            <a onclick="event.preventDefault();
-                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-3"><i class="fa fa-trash"> Delete</i></a>
-                            <form id="delete" action="{{route('admin.scholarship.destroy',$scholarship->id)}}" method="POST" style="display: none;">
-                                @method('DELETE')
-                                {{ csrf_field() }}
-                            </form>
                         </td>
                     </tr>
                     @endforeach
