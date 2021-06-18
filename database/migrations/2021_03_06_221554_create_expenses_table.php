@@ -15,6 +15,11 @@ class CreateExpensesTable extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
+            $table->string('name');                
+            $table->double('amount_spend', 8, 2);        
+            $table->longText('description');
+            $table->string('balance');
+            $table->date('date');	
             $table->timestamps();
         });
     }
