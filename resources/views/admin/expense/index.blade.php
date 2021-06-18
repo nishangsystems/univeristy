@@ -1,14 +1,14 @@
 @extends('admin.layout')
-@section('title', 'Eligible incomes')
+@section('title', 'Eligible expenses')
 @section('section')
 
 <div class="col-sm-12">
     <div class="col-sm-12">
         <!-- <div class="mb-3 d-flex justify-content-start">
-            <h3 class="font-weight-bold">School incomes</h3>
+            <h3 class="font-weight-bold">School expenses</h3>
         </div> -->
         <!-- <div class="  mb-3 d-flex justify-content-start">
-            <a href="{{route('admin.income.create')}}" class="btn btn-primary btn-sm">Add income</a>
+            <a href="{{route('admin.expense.create')}}" class="btn btn-primary btn-sm">Add expense</a>
         </div> -->
     </div>
     <div class="content-panel">
@@ -18,23 +18,27 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                        <th>Amount (CFA)</th>
-
+                        <th>Amount Spend(CFA)</th>
+                        <th>Balance(CFA)</th>
+                        <th>Date</th>
+                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($incomes as $k=>$income)
+                    @foreach($expenses as $k=>$expense)
                     <tr>
                         <td>{{$k+1}}</td>
-                        <td>{{$income->name}}</td>
-                        <td>{{$income->amount}}</td>
+                        <td>{{$expense->name}}</td>
+                        <td>{{$expense->amount_spend}}</td>
+                        <td>{{$expense->balance}}</td>
+                        <td>{{date('jS F Y', strtotime($expense->date))}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
-                            <a class="btn btn-sm btn-primary m-3" href="{{route('admin.income.show',[$income->id])}}"><i class="fa fa-info-circle"> View</i></a> |
-                            <a class="btn btn-sm btn-success m-3" href="{{route('admin.income.edit',[$income->id])}}"><i class="fa fa-edit"> Edit</i></a> |
+                            <a class="btn btn-sm btn-primary m-3" href="{{route('admin.expense.show',[$expense->id])}}"><i class="fa fa-info-circle"> View</i></a> |
+                            <a class="btn btn-sm btn-success m-3" href="{{route('admin.expense.edit',[$expense->id])}}"><i class="fa fa-edit"> Edit</i></a> |
                             <a onclick="event.preventDefault();
                                             document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-3"><i class="fa fa-trash"> Delete</i></a>
-                            <form id="delete" action="{{route('admin.income.destroy',$income->id)}}" method="POST" style="display: none;">
+                            <form id="delete" action="{{route('admin.expense.destroy',$expense->id)}}" method="POST" style="display: none;">
                                 @method('DELETE')
                                 {{ csrf_field() }}
                             </form>
@@ -44,7 +48,7 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-                {{$incomes->links()}}
+                {{$expenses->links()}}
             </div>
         </div>
     </div>

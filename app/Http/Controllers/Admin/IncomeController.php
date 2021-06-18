@@ -25,8 +25,9 @@ class IncomeController extends Controller
     public function index()
     {
         $user_id = Auth::id();
-        $incomes = Income::where('user_id', $user_id)->select($this->select)->paginate(5);
-        return view('admin.Income.index', compact('incomes'));
+        $data['incomes'] = Income::where('user_id', $user_id)->select($this->select)->paginate(5);
+        $data['title'] = 'School Income';
+        return view('admin.Income.index')->with($data);
     }
 
     /**
@@ -54,7 +55,7 @@ class IncomeController extends Controller
         $income->user_id = Auth::id();
         $income->income_date = $request->income_date;
         $income->save();
-        return redirect()->route('admin.income.index')->with('success', 'Success! Income saved successfully !');
+        return redirect()->route('admin.income.index')->with('success', 'Income saved successfully !');
     }
 
     /**
@@ -102,7 +103,7 @@ class IncomeController extends Controller
     public function destroy($id)
     {
         $deleted = Income::findOrFail($id)->delete();
-        return back()->with('success', 'Student deleted successfully !');
+        return back()->with('success', 'Income deleted successfully!');
     }
 
     /**
