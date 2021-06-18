@@ -21,8 +21,9 @@ class ScholarshipController extends Controller
      */
     public function index()
     {
-        $scholarships = Scholarship::all();
-        return view('admin.scholarship.index', compact('scholarships'));
+        $data['scholarships'] = Scholarship::paginate(5);
+        $data['title'] = 'Available Schollarship';
+        return view('admin.scholarship.index')->with($data);
     }
 
     /**
@@ -33,7 +34,8 @@ class ScholarshipController extends Controller
      */
     public function create()
     {
-        return view('admin.scholarship.create');
+        $data['title'] = 'Create Scholarship Award';
+        return view('admin.scholarship.create')->with($data);
     }
 
     /**
@@ -63,6 +65,60 @@ class ScholarshipController extends Controller
             'amount' => 'required|numeric',
             'type' => 'required|numeric',
             'description' => 'string',
+
         ]);
+    }
+
+    /**
+     * show information abouta scholarrship reesource
+     * 
+     * @param int $id
+     */
+    public function show($id)
+    {
+        $data['data'] = Scholarship::findOrFail($id);
+        $data['title'] = 'Scholarship Details';
+        return view('admin.scholarship.show')->with($data);
+    }
+
+    /**
+     * delete a scholarship
+     * 
+     * @param int $id
+     */
+    public function destroy($id)
+    {
+        $deleted = Scholarship::findOrFail($id)->delete();
+        return back()->with('success', 'Scholarship deleted Successfully');
+    }
+
+    /**
+     * show form to edit scholarship
+     * 
+     * @param int $id
+     */
+    public function edit($id)
+    {
+        $data['scholarship'] = Scholarship::findOrFail($id);
+        $data['title'] = 'Edit Scholarship';
+        return view('admin.scholarship.edit')->with($data);
+    }
+
+    /**
+     * updatea scholarship
+     * 
+     * @param Illuminate\Http\Request
+     * @param int $id
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'amount' => 'required|numeric',
+
+            'description' => 'string',
+        ]);
+        $updated = Scholarship::findOrFail($id)->update($request->all());
+        return redirect()->route('admin.scholarship.index')->with('success', 'Scholarship updated successfully !');
     }
 }

@@ -5,7 +5,7 @@
 <div class="col-sm-12">
     <div class="col-sm-12">
         <div class="mb-3 d-flex justify-content-start">
-            <h4 class="font-weight-bold">Eligible Students</h4>
+            <!-- <h4 class="font-weight-bold">Eligible Students</h4> -->
         </div>
 
     </div>

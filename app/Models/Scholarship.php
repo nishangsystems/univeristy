@@ -12,7 +12,8 @@ class Scholarship extends Model
         'name',
         'amount',
         'type',
-        'description'
+        'description',
+        'status'
     ];
 
     /**

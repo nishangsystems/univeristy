@@ -64,6 +64,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('scholarships/students/{id}/award', 'Scholarship\UserScholarshipController@create')->name('scholarship.award.create');
     Route::get('scholarships/scholars', 'Scholarship\UserScholarshipController@index')->name('scholarship.awarded_students');
     Route::post('scholarships/scholars', 'Scholarship\UserScholarshipController@getScholarsPerYear')->name('scholarship.scholars');
+    Route::get('scholarships/{id}', 'Scholarship\ScholarshipController@show')->name('scholarship.show');
+    Route::get('scholarships/{id}/edit', 'Scholarship\ScholarshipController@edit')->name('scholarship.edit');
+    Route::delete('scholarships/{id}/', 'Scholarship\ScholarshipController@destroy')->name('scholarship.destroy');
+    Route::put('scholarships/{id}/', 'Scholarship\ScholarshipController@update')->name('scholarship.update');
 
     Route::get('incomes', 'Admin\IncomeController@index')->name('income.index');
     Route::get('incomes/create', 'Admin\IncomeController@create')->name('income.create');
@@ -72,7 +76,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::put('incomes/{id}/', 'Admin\IncomeController@update')->name('income.update');
     Route::delete('incomes/{id}/delete', 'Admin\IncomeController@destroy')->name('income.destroy');
     Route::get('incomes/pay_income/create', 'Admin\PayIncomeController@create')->name('income.pay_income.create');
-    // Route::post('incomes/pay_income', 'Admin\PayIncomeController@store')->name('income.pay_income.store');
+    Route::get('incomes/{id}', 'Admin\IncomeController@show')->name('income.show');
 
 
     Route::prefix('fee/{class_id}')->name('fee.')->group(function () {

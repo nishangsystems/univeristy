@@ -1,10 +1,10 @@
 @extends('admin.layout')
-@section('title', 'Award Scholarship')
+
 @section('section')
 <div class="mx-3">
     <div class="form-panel">
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.scholarship.award', $student->id)}}">
-            <h5 class="mt-5 font-weight-bold mb-3">Scholarship Award to {{$student->name}}</h5>
+
             @csrf
 
             <div class="form-group @error('scholarship_id') has-error @enderror mt-5">

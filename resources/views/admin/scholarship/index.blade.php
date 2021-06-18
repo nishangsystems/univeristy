@@ -1,44 +1,52 @@
 @extends('admin.layout')
-@section('title', 'Available Scholarships')
+
 @section('section')
+
 <div class="col-sm-12">
     <div class="col-sm-12">
-        <div class="mb-3 d-flex justify-content-start">
+        <!-- <div class="mb-3 d-flex justify-content-start">
             <h3 class="font-weight-bold">Available Scholarships</h3>
-        </div>
-        <!-- <div class="text-muted mb-3 d-flex justify-content-end">
-            <a href="{{route('admin.scholarship.create')}}" class="btn btn-info btn-xs">Add Scholarship</a>
         </div> -->
+
     </div>
-    @if($scholarships != null)
     <div class="content-panel">
-        @foreach($scholarships as $scholarship)
-        <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
-            <div>
-                <div>
-                    <h4 class="font-weight-bold">Name: {{$scholarship->name}}</h4>
-                </div>
-                <h6 class="font-weight-bold">Amount: {{$scholarship->amount}} FCFA</h6>
-                <h6 class="font-weight-bold">Scholarship Type: {{$scholarship->type}}</h6>
-                @if($scholarship->status == 1)
-                <h6 class="font-weight-bold">Status: Active</h6>
-                @endif
-                @if($scholarship->status != 1)
-                <h6 class="font-weight-bold">Status: Inactive</h6>
-                @endif
-            </div>
-            <div class="d-inline-flex">
+        <div class="adv-table table-responsive">
+            <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Amount (CFA)</th>
+                        <th>Type</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($scholarships as $k=>$scholarship)
+                    <tr>
+                        <td>{{$k+1}}</td>
+                        <td>{{$scholarship->name}}</td>
+                        <td>{{$scholarship->amount}}</td>
+                        <td>{{$scholarship->type}}</td>
+                        <td class="d-flex justify-content-end  align-items-center">
+                            <a class="btn btn-sm btn-primary m-3" href="{{route('admin.scholarship.show',[$scholarship->id])}}"><i class="fa fa-info-circle"> View</i></a> |
+                            <a class="btn btn-sm btn-success m-3" href="{{route('admin.scholarship.edit',[$scholarship->id])}}"><i class="fa fa-edit"> Edit</i></a> |
+                            <a onclick="event.preventDefault();
+                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-3"><i class="fa fa-trash"> Delete</i></a>
+                            <form id="delete" action="{{route('admin.scholarship.destroy',$scholarship->id)}}" method="POST" style="display: none;">
+                                @method('DELETE')
+                                {{ csrf_field() }}
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end">
+                {{$scholarships->links()}}
             </div>
         </div>
-        @endforeach
     </div>
-    @endif
-    @if($scholarships == null)
-    <div class="content-panel">
-        <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
-            <p>No Scholarships where found, Click <b>Add Scholarship</b> to add new Scholarship</p>
-        </div>
-    </div>
-    @endif
 </div>
 @endsection

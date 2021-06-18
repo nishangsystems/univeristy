@@ -1,13 +1,8 @@
 @extends('admin.layout')
 
-@section('title', 'Our Scholars')
 @section('section')
 <div class="col-sm-12">
-    <div class="mb-5">
-        <p>
-        <h3 class="font-weight-bold">Our Scholars</h3>
-        </p>
-    </div>
+
     <div class="form-panel mb-5 ml-2">
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.scholarship.awarded_students')}}">
             <div class="form-group @error('year') has-error @enderror ">

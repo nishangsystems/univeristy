@@ -15,7 +15,8 @@ class IncomeController extends Controller
         'amount',
         'description',
         'user_id',
-        'id'
+        'id',
+        'income_date'
     ];
     /**
      * list all incomes of a school
@@ -51,6 +52,7 @@ class IncomeController extends Controller
         $income->amount = $request->amount;
         $income->description = $request->description;
         $income->user_id = Auth::id();
+        $income->income_date = $request->income_date;
         $income->save();
         return redirect()->route('admin.income.index')->with('success', 'Success! Income saved successfully !');
     }
@@ -64,7 +66,8 @@ class IncomeController extends Controller
         return $request->validate([
             'name' => 'required|max:255|string',
             'amount' => 'required|numeric',
-            'description' => 'required|string'
+            'description' => 'required|string',
+            'income_date' => 'required'
         ]);
     }
 
@@ -88,7 +91,7 @@ class IncomeController extends Controller
     {
         $this->validateData($request);
         $updated_income = Income::findOrFail($id)->update($request->all());
-        return  redirect()->route('admin.income.index')->with('success', 'Success! Income updated successfully !');
+        return  redirect()->route('admin.income.index')->with('success', 'Income updated successfully !');
     }
 
     /**
@@ -99,6 +102,17 @@ class IncomeController extends Controller
     public function destroy($id)
     {
         $deleted = Income::findOrFail($id)->delete();
-        return back()->with('success', 'Success! Student deleted successfully !');
+        return back()->with('success', 'Student deleted successfully !');
+    }
+
+    /**
+     * show details of an income
+     * 
+     * @param int $id
+     */
+    public function show($id)
+    {
+        $income = Income::findOrFail($id);
+        return view('admin.Income.show', compact('income'));
     }
 }

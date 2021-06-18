@@ -31,9 +31,10 @@ class UserScholarshipController extends Controller
      */
     public function index(Request $request)
     {
-        $students = $this->getScholars();
-        $years = Batch::all();
-        return view('admin.scholarship.scholars', compact(['students', 'years']));
+        $data['students'] = $this->getScholars();
+        $data['years'] = Batch::all();
+        $data['title'] = 'Our Scholars';
+        return view('admin.scholarship.scholars')->with($data);
     }
 
     /**
@@ -42,14 +43,15 @@ class UserScholarshipController extends Controller
      */
     public function getScholarsPerYear(Request $request)
     {
-        $years = Batch::all();
-        $students = DB::table('student_scholarships')
+        $data['years'] = Batch::all();
+        $data['students'] = DB::table('student_scholarships')
             ->join('students', 'students.id', '=', 'student_scholarships.student_id')
             ->join('scholarships', 'scholarships.id', '=', 'student_scholarships.scholarship_id')
             ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
             ->where('student_scholarships.batch_id', $request->year)
             ->select($this->select)->paginate(10);
-        return view('admin.scholarship.scholars', compact(['students', 'years']));
+        $data['title'] = 'Our Scholars';
+        return view('admin.scholarship.scholars')->with($data);
     }
 
     /**
@@ -77,7 +79,7 @@ class UserScholarshipController extends Controller
         $user_scholarship->scholarship_id = $request->scholarship_id;
         $user_scholarship->batch_id = $request->year;
         $user_scholarship->save();
-        return redirect()->route('admin.scholarship.eligible')->with('success', 'Success! Awarded Scholarship successfully !');
+        return redirect()->route('admin.scholarship.eligible')->with('success', 'Awarded Scholarship successfully !');
     }
 
     /**
@@ -85,8 +87,9 @@ class UserScholarshipController extends Controller
      */
     public function students_eligible()
     {
-        $students = Students::paginate(10);
-        return view('admin.scholarship.eligible_students', compact('students'));
+        $data['students'] = Students::paginate(10);
+        $data['title'] = 'Eligible Students';
+        return view('admin.scholarship.eligible_students')->with($data);
     }
 
     /**
@@ -95,10 +98,11 @@ class UserScholarshipController extends Controller
      */
     public function create($id)
     {
-        $student = Students::findOrFail($id);
-        $scholarships = Scholarship::all();
-        $years = Batch::all();
-        return view('admin.scholarship.award', compact(['student', 'scholarships', 'years']));
+        $data['student'] = Students::findOrFail($id);
+        $data['scholarships'] = Scholarship::all();
+        $data['years'] = Batch::all();
+        $data['title'] = 'Award Schoalrship to ' . $data['student']->name;
+        return view('admin.scholarship.award')->with($data);
     }
 
     /**

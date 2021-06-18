@@ -463,13 +463,13 @@
                         <b class="arrow"></b>
                     </li>
 
-                    <!-- <li>
-                        <a href="{{route('admin.income.pay_income.create')}}">
+                    <li>
+                        <a href="{{route('admin.income.create')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            Collect Income
+                            Add Income
                         </a>
                         <b class="arrow"></b>
-                    </li> -->
+                    </li>  
                 </ul>
             </li>
 

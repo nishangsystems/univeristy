@@ -16,6 +16,15 @@
         @enderror
     </div>
 </div>
+<div class="form-group @error('income_date') has-error @enderror">
+    <label for="cname" class="control-label col-lg-2">Income date *</label>
+    <div class="col-lg-10">
+        <input class=" form-control" name="income_date" value="{{old('income_date')}}" type="date" required />
+        @error('income_date')
+        <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
 <div class="form-group @error('description') has-error @enderror">
     <label for="cname" class="control-label col-lg-2">Description *</label>
     <div class="col-lg-10">

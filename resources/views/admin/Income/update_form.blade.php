@@ -19,7 +19,7 @@
 <div class="form-group @error('description') has-error @enderror">
     <label for="cname" class="control-label col-lg-2">Description *</label>
     <div class="col-lg-10">
-        <textarea class=" form-control" name="description" value="{{old('description')?? $income->description}}" type="textarea" rows="5"></textarea>
+        <textarea class=" form-control" name="description" type="textarea" rows="5">{{old('description') ?? $income->description }}</textarea>
         @error('description')
         <span class="invalid-feedback">{{ $message }}</span>
         @enderror
