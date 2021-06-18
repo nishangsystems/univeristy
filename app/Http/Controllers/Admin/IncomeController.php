@@ -35,7 +35,8 @@ class IncomeController extends Controller
      */
     public function create()
     {
-        return view('admin.Income.create');
+        $data['title'] = 'Create Other Income';
+        return view('admin.Income.create')->with($data);
     }
 
 
@@ -78,8 +79,9 @@ class IncomeController extends Controller
      */
     public function edit($id)
     {
-        $income = Income::findOrFail($id);
-        return view('admin.Income.edit', compact('income'));
+        $data['income'] = Income::findOrFail($id);
+        $data['title'] =  'Update Income';
+        return view('admin.Income.edit')->with($data);
     }
 
     /**
@@ -90,7 +92,11 @@ class IncomeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validateData($request);
+        $request->validate([
+            'name' => 'required|max:255|string',
+            'amount' => 'required|numeric',
+            'description' => 'required|string',
+        ]);
         $updated_income = Income::findOrFail($id)->update($request->all());
         return  redirect()->route('admin.income.index')->with('success', 'Income updated successfully !');
     }
