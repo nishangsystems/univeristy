@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ModifyIncomes extends Migration
+class ModifyExpenses extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class ModifyIncomes extends Migration
      */
     public function up()
     {
-        Schema::table('incomes', function (Blueprint $table) {
-            $table->string('name');
-            $table->decimal('amount', 8, 2);
-            $table->longText('description');
+        Schema::table('expenses', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
-            //  $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
