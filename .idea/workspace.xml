@@ -20,21 +20,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa3f63f2-05a0-494f-9f41-a131b487b5b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/public/assets/images/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/print.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/fee/print_reciept.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/teacher/class_master.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/teacher/report_card.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/admin/result/export.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/admin/result/import.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Helpers/Helpers.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/Helpers.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/FeesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/FeesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/StudentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/StudentController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Teacher/ClassController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Teacher/ClassController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/StudentFee.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/StudentFee.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Payments.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Payments.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2021_03_31_071858_create_sequences_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_03_31_071858_create_sequences_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/files/Names.csv" beforeDir="false" afterPath="$PROJECT_DIR$/public/files/Names.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/student/subject.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/student/subject.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/teacher/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/teacher/layout.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/teacher/report_card.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/teacher/report_card.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/teacher/student.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/teacher/student.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
@@ -173,7 +168,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/public/assets/images" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/result" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -184,17 +179,17 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/resources/views/admin/fee" />
-      <recent name="$PROJECT_DIR$/resources/views/admin/units" />
-      <recent name="$PROJECT_DIR$/resources/views/admin" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/views/result" />
+      <recent name="$PROJECT_DIR$/resources/views" />
       <recent name="$PROJECT_DIR$/public/assets/images" />
       <recent name="$PROJECT_DIR$/resources/views/admin/fee" />
       <recent name="$PROJECT_DIR$/resources/views/teacher" />
-      <recent name="$PROJECT_DIR$/resources/views/admin/user" />
-      <recent name="$PROJECT_DIR$/resources/views/student" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/views/admin" />
+      <recent name="$PROJECT_DIR$/resources/views/admin/fee" />
+      <recent name="$PROJECT_DIR$/resources/views/admin/units" />
     </key>
   </component>
   <component name="RunManager">
@@ -264,7 +259,10 @@
       <workItem from="1621248792652" duration="7508000" />
       <workItem from="1623106244746" duration="2210000" />
       <workItem from="1623108937295" duration="9077000" />
-      <workItem from="1623323094509" duration="3561000" />
+      <workItem from="1623323094509" duration="3791000" />
+      <workItem from="1623486538030" duration="20000" />
+      <workItem from="1623793508811" duration="6361000" />
+      <workItem from="1623946330932" duration="4191000" />
     </task>
     <servers />
   </component>
@@ -302,13 +300,12 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.900@0.0.1440.900" timestamp="1617840818605" />
-    <state x="526" y="207" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1623116109727">
-      <screen x="0" y="23" width="1440" height="826" />
+    <state x="526" y="200" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1623947947794">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="526" y="200" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1440.900@0.0.1440.900" timestamp="1620831094338" />
+    <state x="526" y="200" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1440.900@0.0.1440.900" timestamp="1623947947794" />
     <state x="526" y="206" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.23.1440.825@0.23.1440.825" timestamp="1620821561907" />
     <state x="526" y="207" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.23.1440.826@0.23.1440.826" timestamp="1623116109727" />
-    <state x="526" y="207" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.23.1440.830@0.23.1440.830" timestamp="1615072437233" />
     <state x="393" y="191" key="NewPhpClassDialog" timestamp="1617180019189">
       <screen x="0" y="23" width="1440" height="826" />
     </state>
@@ -318,7 +315,6 @@
       <screen x="0" y="23" width="1440" height="825" />
     </state>
     <state x="335" y="366" key="NewPhpFileDialog/0.23.1440.825@0.23.1440.825" timestamp="1618728860136" />
-    <state x="335" y="368" key="NewPhpFileDialog/0.23.1440.830@0.23.1440.830" timestamp="1615072893330" />
     <state x="375" y="113" width="691" height="625" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1623325423058">
       <screen x="0" y="23" width="1440" height="825" />
     </state>

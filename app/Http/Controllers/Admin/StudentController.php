@@ -246,6 +246,6 @@ class StudentController extends Controller
             Session::flash('message', 'Invalid File Extension.');
         }
 
-        return redirect()->to(route('admin.students.index', [$request->section]))->with('success', 'Matricule number generated successfully!');
+        return redirect()->to(route('admin.students.index', [$request->section]))->with('success', 'Student Imported successfully!');
     }
 }

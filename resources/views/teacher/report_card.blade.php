@@ -38,6 +38,12 @@
             font-size:12px;
             float:left;
         }
+        .red{
+            color:  red;
+        }
+        .blue{
+            color:  blue;
+        }
         .middle_box img{
             width:120px;
             height:120px;
@@ -115,7 +121,7 @@
         <strong>SABIBI COMPREHENSIVE COLLEGE</strong>
     </div>
     <div class="middle_box">
-        <img src="{{asset('assets/images/logo.png')}}">
+        <img src="{{asset('public/assets/images/logo.png')}}">
     </div>
     <div class="right_box">
         Republique du Cameroun<br>
@@ -126,7 +132,7 @@
     </div>
 </div>
 <div class="head2">
-    ACADEMIC REPORT SHEET /BULLETIN DE NOTES - FIRST TERM/ PREMIER TRIMESTRE 2019/2020 <BR>
+    ACADEMIC REPORT SHEET /BULLETIN DE NOTES - {{$term->name}} {{$year->name}} <BR>
     GRAMMAR
 </div>
 <div class="head3">
@@ -161,51 +167,49 @@
 </div>
 <table>
     <thead>
-    <tr>
-        <th>MATIERES/SUBECTS</TH>
-        <th>Test 3/20<br>Eval 3/20</th>
-        <th>Ave /20<br>Moy /20</th>
-        <th>Coef</th><th>Total</th>
-        <th>Position</th><th>Teacher</th>
-    </tr>
-
+        <tr>
+            <th>MATIERES/SUBECTS</TH>
+            @foreach($term->sequences as $seq)
+                <th>{{$seq->name}}/2</th>
+            @endforeach
+            <th>Ave /20<br>Moy /20</th>
+            <th>Coef</th>
+            <th>Total</th>
+            <th>Position</th><th>Teacher</th>
+        </tr>
     </thead>
     <tbody>
-    <?php
-    $con = mysqli_connect('localhost','root','','school');
-
-    // Check connection
-    if (mysqli_connect_errno())
-    {
-        echo "Failed to connect to MySQL: " . mysqli_connect_error();
-    }
-    $select=$con->query("SELECT * FROM subjects where form_id='31' ") or die(msyqli_error($con));
-    while($row=$select->fetch_assoc()){
-    ?>
-
-
-    <!---Display All Subects and Scores------>
-    <tr>
-        <td><?php echo $row['name']; ?></td>
-        <td>18</td>
-        <td>20</td>
-        <td>19</td>
-        <td><?php echo $row['coefficient']; ?></td>
-        <td><?php echo $row['coefficient']; ?></td>
-        <td></td>
-        <td>Leonard</td>
-    </tr>
-
-    <?php } ?>
-
-
-
-    <!---Average------>
+    @foreach($subjects as $subject)
+        <tr>
+            <td>{{$subject->name}}</td>
+            @php
+                $t = 0;
+            @endphp
+            @foreach($term->sequences as $seq)
+                @php
+                    $p =\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->id, $user->class($year->id)->id,$year->id, $user->id);
+                    $t += $p;
+                @endphp
+                <td class="{{$p < 10?'red':'blue'}}" >{{$p??'NA'}}/20</td>
+            @endforeach
+            <td>{{$t/2}}</td>
+            <td>{{$subject->coef}}</td>
+            <td class="{{$t/2 < 10?'red':'blue'}}">{{$t/2 * $subject->coef}}</td>
+        </tr>
+    @endforeach
     <tr>
         <td>Average </td>
-        <td></td>
-        <td></td>
-        <td></td>
+        @php
+            $t = 0;
+        @endphp
+        @foreach($term->sequences as $seq)
+            @php
+                $p = $user->averageScore($seq->id, $year->id);
+                $t += $p;
+            @endphp
+            <th class="{{$p < 10?'red':'blue'}}">{{  $p }}</th>
+        @endforeach
+        <td>{{$t/2}}</td>
         <td></td>
         <td></td>
         <td></td>
@@ -232,7 +236,7 @@
             DISCIPLINE
     </tr>
     <tr style="font-weight:bold" >
-        <td>Term Ave / Moy Trimestriel </td><td style="width:50px"></td><td>Highest Ave/ Moy Premier  </td>
+        <td>Term Ave / Moy Trimestriel  </td><td style="width:50px"><b class="{{$t/2 < 10?'red':'blue'}}">{{$t/2}}</b></td><td>Highest Ave/ Moy Premier  </td>
         <td style="width:50px"></td> <td>Absences: </td>
     </tr>
 
@@ -269,12 +273,16 @@
 
             </thead>
             <tbody>
-            <tr>
-                <td>Eval / Test : 3</td><td></td><td></td>
-            </tr>
-            <tr>
-                <td>Eval / Test : 4</td><td></td><td></td>
-            </tr>
+            @foreach($term->sequences as $seq)
+                <tr>
+                    @php
+                    $t =  $user->averageScore($seq->id, $year->id);
+                    @endphp
+                    <td>Eval / Test : {{$seq->id}}</td>
+                    <td class="{{$t < 10?'red':'blue'}}">{{$t}}</td>
+                    <td></td>
+                </tr>
+            @endforeach
 
             </tbody>
 

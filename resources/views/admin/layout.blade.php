@@ -339,9 +339,45 @@
 
             <li>
                 <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span class="menu-text">
+						User Accounts
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.users.index')}}?type=admin">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Add Admins
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.users.index')}}?type=teacher">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Add Teachers
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.users.classmaster')}}?type=teacher">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Class Masters
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" class="dropdown-toggle">
                     <i class="menu-icon fa fa-money"></i>
                     <span class="menu-text">
-						Fee Management
+						Result
 						</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
@@ -349,59 +385,17 @@
 
                 <ul class="submenu">
                     <li>
-                        <a href="{{route('admin.fee.collect')}}">
+                        <a href="{{route('admin.result.import')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            Collect Fee
+                            Import Result
                         </a>
                         <b class="arrow"></b>
                     </li>
 
                     <li>
-                        <a href="{{route('admin.print_fee')}}">
+                        <a href="{{route('admin.result.export')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            Print Reciept
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('admin.fee.daily_report')}}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Daily Reports
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.fee')}}?type=completed">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Completed Fees
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.fee')}}?type=uncompleted">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Uncompleted Fees
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('admin.fee.drive')}}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Fee Drive
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.fee.classes')}}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Set Class Fee
+                           Export Result
                         </a>
                         <b class="arrow"></b>
                     </li>

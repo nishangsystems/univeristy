@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSequencesTable extends Migration
+class CreateRanksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateSequencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sequences', function (Blueprint $table) {
+        Schema::create('ranks', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('term_id');
+            $table->string('student_id');
+            $table->string('sequence_id');
+            $table->string('year_id');
+            $table->string('position');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateSequencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sequences');
+        Schema::dropIfExists('ranks');
     }
 }
