@@ -18,6 +18,7 @@ class ModifyIncomes extends Migration
             $table->decimal('amount', 8, 2);
             $table->longText('description');
             $table->integer('user_id')->unsigned();
+            $table->date('income_date');
             //  $table->foreign('user_id')->references('id')->on('users');
         });
     }
