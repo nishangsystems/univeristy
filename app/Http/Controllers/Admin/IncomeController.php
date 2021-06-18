@@ -24,7 +24,7 @@ class IncomeController extends Controller
     public function index()
     {
         $user_id = Auth::id();
-        $incomes = Income::where('user_id', $user_id)->select($this->select)->get();
+        $incomes = Income::where('user_id', $user_id)->select($this->select)->paginate(5);
         return view('admin.Income.index', compact('incomes'));
     }
 
@@ -52,7 +52,7 @@ class IncomeController extends Controller
         $income->description = $request->description;
         $income->user_id = Auth::id();
         $income->save();
-        return redirect()->route('admin.income.index')->with('success', 'Successfully created income');
+        return redirect()->route('admin.income.index')->with('success', 'Success! Income saved successfully !');
     }
 
     /**
@@ -88,7 +88,7 @@ class IncomeController extends Controller
     {
         $this->validateData($request);
         $updated_income = Income::findOrFail($id)->update($request->all());
-        return  redirect()->route('admin.income.index')->with('success', 'Successfully updated income');
+        return  redirect()->route('admin.income.index')->with('success', 'Success! Income updated successfully !');
     }
 
     /**
@@ -99,17 +99,6 @@ class IncomeController extends Controller
     public function destroy($id)
     {
         $deleted = Income::findOrFail($id)->delete();
-        return back()->with('success', 'Successfully deleted income');
-    }
-
-    /**
-     * show form to pay(collect) income from students
-     * 
-     * @param Iluluminate\Http\Request
-     * @return string
-     */
-    public function payIncome(Request $request)
-    {
-        return view('admin.Income.pay_income');
+        return back()->with('success', 'Success! Student deleted successfully !');
     }
 }

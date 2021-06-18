@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePayIncomesTable extends Migration
+class DropPayIncomes extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,7 @@ class CreatePayIncomesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pay_incomes', function (Blueprint $table) {
-            $table->id();
-            $table->integer('income_id')->unsigned();
-            $table->integer('student_class_id')->unsigned();
-            $table->timestamps();
-        });
+        Schema::drop('pay_incomes');
     }
 
     /**
@@ -28,6 +23,6 @@ class CreatePayIncomesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pay_incomes');
+        //
     }
 }

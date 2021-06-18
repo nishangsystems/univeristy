@@ -469,13 +469,13 @@
                         <b class="arrow"></b>
                     </li>
 
-                    <li>
+                    <!-- <li>
                         <a href="{{route('admin.income.pay_income.create')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
                             Collect Income
                         </a>
                         <b class="arrow"></b>
-                    </li>
+                    </li> -->
                 </ul>
             </li>
 

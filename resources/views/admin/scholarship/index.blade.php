@@ -4,11 +4,11 @@
 <div class="col-sm-12">
     <div class="col-sm-12">
         <div class="mb-3 d-flex justify-content-start">
-            <h4 class="font-weight-bold">Available Scholarships</h4>
+            <h3 class="font-weight-bold">Available Scholarships</h3>
         </div>
-        <div class="text-muted mb-3 d-flex justify-content-end">
+        <!-- <div class="text-muted mb-3 d-flex justify-content-end">
             <a href="{{route('admin.scholarship.create')}}" class="btn btn-info btn-xs">Add Scholarship</a>
-        </div>
+        </div> -->
     </div>
     @if($scholarships != null)
     <div class="content-panel">
