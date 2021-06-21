@@ -145,6 +145,7 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('subject', 'Student\HomeController@subject')->name('subject');
     Route::get('result', 'Student\HomeController@result')->name('result');
     Route::get('fee', 'Student\HomeController@fee')->name('fee');
+    Route::get('subjects/{id}/notes', 'Student\HomeController@subjectNotes')->name('subject.notes');
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');

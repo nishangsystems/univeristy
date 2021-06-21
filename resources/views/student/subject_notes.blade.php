@@ -1,17 +1,15 @@
-@extends('teacher.layout')
+@extends('student.layout')
 
 @section('section')
 
 <div class="container mt-5">
     @if($notes != null)
-    <div class="row mb-5">
-        <!-- <div class="col-md-6">
-            <h4><b>Subject Notes for {{$notes[0]->name}}</b></h4>
-        </div> -->
+    <!-- <div class="row mb-5">
         <div class="col-md-6">
-            <a class="btn btn-md btn-primary" href="{{route('user.subject.show', $id)}}">Add Note</a>
+            <h4><b>Subject Notes for {{$notes[0]->name}}</b></h4>
         </div>
-    </div>
+
+    </div> -->
     @foreach($notes as $key => $note)
     <div class="row">
         <div class="col-8 well well-sm">
@@ -26,7 +24,7 @@
     @endforeach
     @endif
     @if($notes == null)
-    <div class="alert alert-danger" role="alert">Sorry! You have not uploaded any Note for this Subject <a href="{{route('user.subject.show', $id)}}">Click to add note</a></div>
+    <div class="alert alert-danger" role="alert">Thre are no Notes available for this Subject, Please contact the teacher. </div>
     @endif
 </div>
 
