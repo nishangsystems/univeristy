@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Models\Subjects;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -13,15 +13,19 @@ class SubjectSeeder extends Seeder
      */
     public function run()
     {
-        if (\App\Models\Subjects::all()->count() > 0) {
-            return;
-        }
+        Subjects::create([
+            'name' => 'Geograph',
+            'coef' => 3
+        ]);
 
-//        $levels = ['English','French','Mathematics','History','Geography','English Literature','Chemistry','Physics','Biology'];
-//        foreach ($levels as $level) {
-//            \App\Models\Subjects::create([
-//                'name' => $level,
-//            ]);
-//        }
+        Subjects::create([
+            'name' => 'English',
+            'coef' => 3
+        ]);
+
+        Subjects::create([
+            'name' => 'French',
+            'coef' => 3
+        ]);
     }
 }

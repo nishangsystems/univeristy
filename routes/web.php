@@ -77,7 +77,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::delete('incomes/{id}/delete', 'Admin\IncomeController@destroy')->name('income.destroy');
     Route::get('incomes/pay_income/create', 'Admin\PayIncomeController@create')->name('income.pay_income.create');
     Route::get('incomes/{id}', 'Admin\IncomeController@show')->name('income.show');
-
+    // Route::get('incomes/collect_income', 'Admin\PayIncomeController@create')->name('pay_income.create');
+    // Route::post('incomes/collect_income', 'Admin\PayIncomeController@create')->name('pay_income.post');
+    // Route::get('incomes/pay_income_list', 'Admin\PayIncomeController@index')->name('pay_income.index');
 
     Route::get('expenses', 'Admin\Expense\ExpenseController@index')->name('expense.index');
     Route::get('expenses/create', 'Admin\Expense\ExpenseController@create')->name('expense.create');
@@ -132,6 +134,10 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::get('subject', 'Teacher\SubjectController@index')->name('subject');
     Route::get('subject/{subject}/result', 'Teacher\SubjectController@result')->name('result');
     Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
+
+    Route::get('subjects/{id}', 'Teacher\SubjectNotesController@show')->name('subject.show');
+    Route::get('subjects/{id}/notes', 'Teacher\SubjectNotesController@index')->name('subject.index');
+    Route::post('subjects/{id}/notes/', 'Teacher\SubjectNotesController@store')->name('subject.store');
 });
 
 Route::prefix('student')->name('student.')->group(function () {
@@ -139,6 +145,7 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('subject', 'Student\HomeController@subject')->name('subject');
     Route::get('result', 'Student\HomeController@result')->name('result');
     Route::get('fee', 'Student\HomeController@fee')->name('fee');
+    Route::get('subjects/{id}/notes', 'Student\HomeController@subjectNotes')->name('subject.notes');
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');
