@@ -11,7 +11,7 @@ class PayIncome extends Model
 
     protected $fillable = [
         'income_id',
-        'student_class_id'
+        'student_id'
     ];
 
     /**
