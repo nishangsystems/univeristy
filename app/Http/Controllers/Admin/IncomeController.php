@@ -119,7 +119,8 @@ class IncomeController extends Controller
      */
     public function show($id)
     {
-        $income = Income::findOrFail($id);
-        return view('admin.Income.show', compact('income'));
+        $data['income'] = Income::findOrFail($id);
+        $data['title'] = 'Income details';
+        return view('admin.Income.show')->with($data);
     }
 }
