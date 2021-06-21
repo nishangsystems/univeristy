@@ -77,7 +77,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::delete('incomes/{id}/delete', 'Admin\IncomeController@destroy')->name('income.destroy');
     Route::get('incomes/pay_income/create', 'Admin\PayIncomeController@create')->name('income.pay_income.create');
     Route::get('incomes/{id}', 'Admin\IncomeController@show')->name('income.show');
-
+    // Route::get('incomes/collect_income', 'Admin\PayIncomeController@create')->name('pay_income.create');
+    // Route::post('incomes/collect_income', 'Admin\PayIncomeController@create')->name('pay_income.post');
+    // Route::get('incomes/pay_income_list', 'Admin\PayIncomeController@index')->name('pay_income.index');
 
     Route::get('expenses', 'Admin\Expense\ExpenseController@index')->name('expense.index');
     Route::get('expenses/create', 'Admin\Expense\ExpenseController@create')->name('expense.create');
