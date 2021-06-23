@@ -17,7 +17,7 @@ class PayIncomes extends Migration
             $table->id();
             $table->decimal('amount_payable', 8, 2);
             $table->integer('income_id')->unsigned();
-            $table->integer('student_class_id')->unsigned();
+            $table->integer('student_id')->unsigned();
             $table->timestamps();
         });
     }
