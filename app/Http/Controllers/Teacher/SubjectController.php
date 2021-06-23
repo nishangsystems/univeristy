@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Teacher;
+
 use App\Models\Result;
 use App\Models\SchoolUnits;
 use App\Models\TeachersSubject;
@@ -10,33 +11,38 @@ use Illuminate\Support\Facades\Auth;
 use \Session;
 
 
-class SubjectController extends Controller{
+class SubjectController extends Controller
+{
 
-    public function index(Request $request){
-        if($request->class){
-            $data['subjects'] = Auth::user()->subject()->where(['batch_id'=>\App\Helpers\Helpers::instance()
-                ->getCurrentAccademicYear(), 'class_id'=>$request->class])->with('subject')->get();
-        }else{
+    public function index(Request $request)
+    {
+        if ($request->class) {
+            $data['subjects'] = Auth::user()->subject()->where(['batch_id' => \App\Helpers\Helpers::instance()
+                ->getCurrentAccademicYear(), 'class_id' => $request->class])->with('subject')->get();
+        } else {
             $data['subjects'] = Auth::user()->subjectR(\App\Helpers\Helpers::instance()->getCurrentAccademicYear());
         }
+
         return view('teacher.subjects')->with($data);
     }
 
-    public function result($subject){
+    public function result($subject)
+    {
         $data['subject'] = TeachersSubject::find($subject)->subject;
         return view('teacher.result')->with($data);
     }
 
-    public function store(Request $request){
-       $result = Result::where([
-           'student_id' => $request->student,
-           'class_id' => $request->class_id,
-           'sequence' =>$request->sequence,
-           'subject_id'=>$request->subject,
-           'batch_id'=>$request->year
-       ])->first();
+    public function store(Request $request)
+    {
+        $result = Result::where([
+            'student_id' => $request->student,
+            'class_id' => $request->class_id,
+            'sequence' => $request->sequence,
+            'subject_id' => $request->subject,
+            'batch_id' => $request->year
+        ])->first();
 
-        if($result == null){
+        if ($result == null) {
             $result = new Result();
         }
 

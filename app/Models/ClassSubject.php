@@ -9,14 +9,23 @@ class ClassSubject extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['class_id','coef', 'subject_id'];
+    protected $fillable = ['class_id', 'coef', 'subject_id'];
 
-    public function subject(){
+    public function subject()
+    {
         return $this->belongsTo(Subjects::class, 'subject_id');
     }
 
-    public function class(){
+    public function class()
+    {
         return $this->belongsTo(SchoolUnits::class, 'class_id');
     }
 
+    /**
+     * relationship between subject and notes
+     */
+    public function subjectNotes()
+    {
+        return $this->hasMany(SubjectNotes::class);
+    }
 }

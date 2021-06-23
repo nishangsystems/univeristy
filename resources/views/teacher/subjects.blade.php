@@ -29,7 +29,7 @@
                             <a class="btn btn-xs btn-primary" href="{{route('user.result', [$subject->id])}}">Result</a>
                         </td>
                         <td style="float: right;">
-                            <a class="btn btn-xs btn-success" href="{{route('user.subject.show', [$subject->id])}}">View More</a>
+                            <a class="btn btn-xs btn-success" href="{{route('user.subject.show', [$subject->class_id, $subject->id])}}">View More</a>
                         </td>
                     </tr>
                     @endforeach

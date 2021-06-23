@@ -9,15 +9,16 @@ class SubjectNotes extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'subject_id',
+        'class_subject_id',
         'note_name',
-        'note_path'
+        'note_path',
+        'status'
     ];
 
     /**
-     * relationshipe between subject and notes
+     * relationshipe between class_subject and notes
      */
-    public function subject()
+    public function class_subject()
     {
         return $this->belongsTo(Subjects::class);
     }
