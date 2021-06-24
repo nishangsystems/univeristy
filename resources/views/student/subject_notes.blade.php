@@ -2,30 +2,41 @@
 
 @section('section')
 
-<div class="container mt-5">
-    @if($notes != null)
-    <!-- <div class="row mb-5">
-        <div class="col-md-6">
-            <h4><b>Subject Notes for {{$notes[0]->name}}</b></h4>
-        </div>
-
-    </div> -->
-    @foreach($notes as $key => $note)
-    <div class="row">
-        <div class="col-8 well well-sm">
-            <h4 class="pl-5"><a href="{{asset('storage/SubjectNotes/'. $note->note_path)}}"> {{$note->note_name}}
-                </a></h4>
-            <h4>
-            </h4>
-            <p class=" pl-5">Uploaded date: {{date('jS F Y', strtotime($note->created_at))}}</p>
-
+<div class="container">
+    <!-- notes -->
+    <div class="col-sm-12">
+        <div class="content-panel">
+            <div class="adv-table table-responsive">
+                <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Upload date</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($notes as $k=>$note)
+                        <tr>
+                            <td>{{ $k+1 }}</td>
+                            <td>{{ $note->note_name}} </td>
+                            <td>{{date('jS F Y', strtotime($note->created_at))}}</td>
+                            <td> <a href="{{asset('storage/SubjectNotes/'. $note->note_path)}}" class="btn btn-xs btn-success m-3"> <i class="fa fa-download"> Download</i>
+                                </a></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-end">
+                    {{$notes->links()}}
+                </div>
+            </div>
         </div>
     </div>
-    @endforeach
-    @endif
-    @if($notes == null)
-    <div class="alert alert-danger" role="alert">Thre are no Notes available for this Subject, Please contact the teacher. </div>
-    @endif
+
+
 </div>
 
 <style scoped>

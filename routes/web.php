@@ -135,9 +135,10 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::get('subject/{subject}/result', 'Teacher\SubjectController@result')->name('result');
     Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
 
-    Route::get('subjects/{id}', 'Teacher\SubjectNotesController@show')->name('subject.show');
-    Route::get('subjects/{id}/notes', 'Teacher\SubjectNotesController@index')->name('subject.index');
-    Route::post('subjects/{id}/notes/', 'Teacher\SubjectNotesController@store')->name('subject.store');
+    Route::get('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@show')->name('subject.show');
+    Route::put('subjects/notes/{id}', 'Teacher\SubjectNotesController@publish_notes')->name('subject.note.publish');
+    Route::post('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@store')->name('subject.note.store');
+    Route::delete('subjects/notes/{id}', 'Teacher\SubjectNotesController@destroy')->name('subject.note.destroy');
 });
 
 Route::prefix('student')->name('student.')->group(function () {
