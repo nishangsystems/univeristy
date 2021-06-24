@@ -7,7 +7,7 @@
     <div class="row mt-5">
 
         <div class="col-6">
-            <form class="form-horizontal" role="form" method="POST" enctype="multipart/form-data" action="{{route('user.subject.note.store', [$subject->class_id, $subject->subject_id])}}">
+            <form class="form-horizontal" role="form" method="POST" enctype="multipart/form-data" action="{{route('user.subject.note.store', [$subject_info->id, $subject_info->subject_id])}}">
                 <!-- @crsf -->
                 <div class="col-md-6">
                     <input type="file" name="file" placeholder="Choose file" id="file">
@@ -51,8 +51,14 @@
                                 </a>|
                                 <a onclick="event.preventDefault();
                                             document.getElementById('publish').submit();" class=" btn btn-primary btn-sm m-3"><i class="fa fa-eye"> Publish </i></a>
-                                <form id="publish" action="{{route('user.subject.note.publish', $note->note_id)}}" method="POST" style="display: none;" role="form">
+                                <form id="publish" action="{{route('user.subject.note.publish', $note->id)}}" method="POST" style="display: none;" role="form">
                                     @method('PUT')
+                                    @csrf
+                                </form>
+                                <a onclick="event.preventDefault();
+                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-3"><i class="fa fa-trash"> Delete </i></a>
+                                <form id="delete" action="{{route('user.subject.note.destroy', $note->id)}}" method="POST" style="display: none;" role="form">
+                                    @method('DELETE')
                                     @csrf
                                 </form>
 

@@ -22,6 +22,7 @@ $student = Auth('student')->user();
                         <td>{{ $k+1 }}</td>
                         <td>{{ $subject->name }}</td>
                         <td>{{ $subject->coef }}</td>
+
                         <td class="justify-end">
                             <a class="btn btn-xs btn-primary" href="{{route('student.subject.notes', [$subject->id])}}">View Notes</a>
                         </td>

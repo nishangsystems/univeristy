@@ -27,5 +27,17 @@ class SubjectSeeder extends Seeder
             'name' => 'French',
             'coef' => 3
         ]);
+        Subjects::create([
+            'name' => 'Maths',
+            'coef' => 5
+        ]);
+        Subjects::create([
+            'name' => 'Legislation',
+            'coef' => 3
+        ]);
+        Subjects::create([
+            'name' => 'Biology',
+            'coef' => 3
+        ]);
     }
 }

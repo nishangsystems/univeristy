@@ -136,8 +136,9 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
 
     Route::get('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@show')->name('subject.show');
-    Route::put('subjects/notes/{note_id}', 'Teacher\SubjectNotesController@publish_notes')->name('subject.note.publish');
+    Route::put('subjects/notes/{id}', 'Teacher\SubjectNotesController@publish_notes')->name('subject.note.publish');
     Route::post('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@store')->name('subject.note.store');
+    Route::delete('subjects/notes/{id}', 'Teacher\SubjectNotesController@destroy')->name('subject.note.destroy');
 });
 
 Route::prefix('student')->name('student.')->group(function () {

@@ -1,5 +1,6 @@
 <?php
 
+use Database\Seeders\ClassSubjectSeeder;
 use Database\Seeders\SchoolUnitSeeder;
 use Database\Seeders\StudentClassSeeder;
 use Database\Seeders\StudentSeeder;
@@ -19,9 +20,10 @@ class DatabaseSeeder extends Seeder
         $this->call(UnitSeeder::class);
         $this->call(SubjectSeeder::class);
         $this->call(ConfigSeeder::class);
-        // $this->call(SchoolUnitSeeder::class);
-        // $this->call(UserSeeder::class);
-        // $this->call(StudentSeeder::class);
-        // $this->call(StudentClassSeeder::class);
+        $this->call(SchoolUnitSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(StudentSeeder::class);
+        $this->call(StudentClassSeeder::class);
+        $this->call(ClassSubjectSeeder::class);
     }
 }

@@ -20,6 +20,7 @@ class SubjectNotesController extends Controller
         'coef',
         'code'
     ];
+
     /**
      * show subject details
      * @param integer $class_id,
@@ -28,23 +29,24 @@ class SubjectNotesController extends Controller
      */
     public function show($class_id, $id)
     {
-        $data['subject'] = $this->showSubject($class_id, $id);
-        $data['notes'] = $this->getSubjectNotes($data['subject']->id);
+
+        $data['subject_info'] = $this->showSubject($class_id, $id);
+        $data['notes'] = $this->getSubjectNotes($data['subject_info']->id);
+        //   dd($data['notes']);
         $data['title'] = 'Subject Notes';
         return view('teacher.subject_detail')->with($data);
     }
 
     /**
      * show subject notes
-     * @param integer subject $id
+     * @param integer  $id
      */
-    public function publish_notes($note_id)
+    public function publish_notes($id)
     {
-        dd($note_id);
-        // $data = [
-        //     'status' => 1
-        // ];
-        // $subject_note = SubjectNotes::find($note)->update($data);
+        $data = [
+            'status' => 1
+        ];
+        $subject_note = SubjectNotes::findOrFail($id)->update($data);
         return  back()->with('success', 'Publish note successfully');
     }
 
@@ -55,8 +57,9 @@ class SubjectNotesController extends Controller
      * @parame Illuminate\Http\Request
      * @return json
      */
-    public function store(Request $request, $class_id, $id)
+    public function store(Request $request, $id, $class_id)
     {
+
         //validate file
         $uploaded_file = $request->validate([
             'file' => 'required|mimes:pdf,docx,odt,txt,ppt|max:2048',
@@ -66,16 +69,13 @@ class SubjectNotesController extends Controller
         $path = time() . '.' . $extension;
         //store the file
         $request->file('file')->move('storage/SubjectNotes/', $path);
-        //get the class subject id
-        $class_subject_id = $this->showSubject($class_id, $id);
-
         //save the file in the database
         $notes = new SubjectNotes();
-        $notes->class_subject_id = $class_subject_id->id;
+        $notes->class_subject_id = $id;
         $notes->note_path = $path;
         $notes->note_name = $name;
         $notes->status = 0;
-        $notes->batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+        $notes->batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
         $notes->save();
         return  back()->with(['success' => 'File has been successfully uploaded']);
     }
@@ -100,28 +100,39 @@ class SubjectNotesController extends Controller
         return $subject;
     }
 
+
     /**
-     * query all notes for a subject for a year
-     * @param integer $id
+     * get all notes for a subject offered by a student
+     * 
+     * @param integer subject_id
      * @return array
      */
     public function getSubjectNotes($id)
     {
-        // dd($id);
-        $batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+        $batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
         $notes = DB::table('subject_notes')
             ->join('class_subjects', 'class_subjects.id', '=', 'subject_notes.class_subject_id')
             ->where('class_subjects.id', $id)
-            ->whereYear('subject_notes.batch_id', $batch_id)
+            ->where('subject_notes.batch_id', $batch_id)
             ->select(
-                'subject_notes.id as note_id',
-                'subject_notes.status',
-                'class_subjects.id as class_id',
+                'subject_notes.id as id',
                 'subject_notes.note_name',
                 'subject_notes.note_path',
                 'subject_notes.created_at'
             )
             ->paginate(5);
         return $notes;
+        // return view('student.subject_notes')->with($data);
+    }
+
+    /**
+     * delete subject note
+     * @param int $id
+     * 
+     */
+    public function destroy($id)
+    {
+        $deleted = SubjectNotes::findOrFail($id)->delete();
+        return back()->with('success', 'Deleted note successfully');
     }
 }
