@@ -16,15 +16,7 @@
         @enderror
     </div>
 </div>
-<div class="form-group @error('balance') has-error @enderror">
-    <label for="cname" class="control-label col-lg-2">Balance <span style="color:red">*</span> </label>
-    <div class="col-lg-10">
-        <input class=" form-control" name="balance" value="{{old('balance') ?? $expense->balance}}" type="number" required />
-        @error('balance')
-        <span class="invalid-feedback">{{ $message }}</span>
-        @enderror
-    </div>
-</div>
+
 <div class="form-group @error('description') has-error @enderror">
     <label for="cname" class="control-label col-lg-2">Description <span style="color:red">*</span></label>
     <div class="col-lg-10">

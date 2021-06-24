@@ -12,7 +12,7 @@ class Expenses extends Model
         'name',
         'amount_spend',
         'description',
-        'balance',
+         
         'date'
     ];
 }

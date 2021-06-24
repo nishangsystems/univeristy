@@ -7,9 +7,9 @@
         <!-- <div class="mb-3 d-flex justify-content-start">
             <h3 class="font-weight-bold">School incomes</h3>
         </div> -->
-        <!-- <div class="  mb-3 d-flex justify-content-start">
-            <a href="{{route('admin.income.create')}}" class="btn btn-primary btn-sm">Add income</a>
-        </div> -->
+        <div class="col-sm-12 mb-5">
+            <a href="{{route('admin.expense.create')}}" class="btn btn-info btn-xs">Add Income</a>
+        </div>
     </div>
     <div class="content-panel">
         <div class="adv-table table-responsive">

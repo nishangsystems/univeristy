@@ -3,8 +3,8 @@
 @section('section')
 
 <div class="col-sm-12">
-    <div class="col-sm-12">
-
+    <div class="col-sm-12 mb-5">
+        <a href="{{route('admin.expense.create')}}" class="btn btn-info btn-xs">Add Expense</a>
     </div>
     <div class="content-panel">
         <div class="adv-table table-responsive">
@@ -14,7 +14,6 @@
                         <th>#</th>
                         <th>Name</th>
                         <th>Amount Spend(CFA)</th>
-                        <th>Balance(CFA)</th>
                         <th>Date</th>
                         <th></th>
                         <th></th>
@@ -26,7 +25,6 @@
                         <td>{{$k+1}}</td>
                         <td>{{$expense->name}}</td>
                         <td>{{$expense->amount_spend}}</td>
-                        <td>{{$expense->balance}}</td>
                         <td>{{date('jS F Y', strtotime($expense->date))}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
                             <a class="btn btn-sm btn-primary m-3" href="{{route('admin.expense.show',[$expense->id])}}"><i class="fa fa-info-circle"> View</i></a> |
