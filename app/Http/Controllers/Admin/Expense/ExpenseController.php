@@ -16,7 +16,7 @@ class ExpenseController extends Controller
         'user_id',
         'id',
         'date',
-        'balance'
+
     ];
 
     /**
@@ -53,7 +53,7 @@ class ExpenseController extends Controller
             'amount_spend' => 'required|numeric',
             'description' => 'required|string',
             'date' => 'required|date',
-            'balance' => 'required|numeric'
+
         ]);
         return $validateData;
     }
@@ -73,7 +73,6 @@ class ExpenseController extends Controller
         $expense->description = $request->description;
         $expense->user_id = Auth::id();
         $expense->date = $request->date;
-        $expense->balance = $request->balance;
         $expense->save();
         return redirect()->route('admin.expense.index')->with('success', 'Expense saved successfully !');
     }
