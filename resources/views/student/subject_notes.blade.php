@@ -2,10 +2,9 @@
 
 @section('section')
 
-<div class="container mt-5">
+<div class="container">
     <!-- notes -->
-    <div class="col-sm-12 mt-5">
-
+    <div class="col-sm-12">
         <div class="content-panel">
             <div class="adv-table table-responsive">
                 <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
@@ -37,9 +36,7 @@
         </div>
     </div>
 
-    @if($notes == null)
-    <div class="alert alert-danger" role="alert">Thre are no Notes available for this Subject, Please contact the teacher. </div>
-    @endif
+
 </div>
 
 <style scoped>

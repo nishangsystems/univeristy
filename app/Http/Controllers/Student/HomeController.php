@@ -80,12 +80,13 @@ class HomeController extends Controller
      */
     public function subjectNotes($id)
     {
-        //dd($id);
+        // dd($id);
         $class_subject_id = DB::table('class_subjects')
             ->join('subjects', 'subjects.id', '=', 'class_subjects.subject_id')
             ->where('subjects.id', $id)
             ->pluck('class_subjects.id')->first();
         $data['notes'] = $this->getSubjectNotes($id);
+        $data['title'] = 'Subject Notes';
         return view('student.subject_notes')->with($data);
     }
 
@@ -95,12 +96,12 @@ class HomeController extends Controller
     public function getSubjectNotes($id)
     {
 
-        $batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+        $batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
         $notes = DB::table('subject_notes')
             ->join('class_subjects', 'class_subjects.id', '=', 'subject_notes.class_subject_id')
-            ->where('class_subjects.id', $id)
+            ->where('subject_notes.class_subject_id', $id)
             ->where('subject_notes.status', 1)
-            ->whereYear('subject_notes.batch_id', $batch_id)
+            ->where('subject_notes.batch_id', $batch_id)
             ->select(
                 'subject_notes.id',
                 'subject_notes.note_name',
