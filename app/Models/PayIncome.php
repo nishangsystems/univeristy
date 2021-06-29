@@ -11,7 +11,10 @@ class PayIncome extends Model
 
     protected $fillable = [
         'income_id',
+        'batch_id',
+        'class_id',
         'student_id'
+
     ];
 
     /**
@@ -28,5 +31,10 @@ class PayIncome extends Model
     public function studentClass()
     {
         return $this->belongsTo(StudentClass::class, 'student_class_id');
+    }
+
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class, 'batch_id');
     }
 }

@@ -337,7 +337,7 @@
                 </ul>
             </li>
 
-            <li>
+            <!-- <li>
                 <a href="#" class="dropdown-toggle">
                     <i class="menu-icon fa fa-cog"></i>
                     <span class="menu-text">
@@ -371,7 +371,7 @@
                         <b class="arrow"></b>
                     </li>
                 </ul>
-            </li>
+            </li> -->
 
             <li>
                 <a href="#" class="dropdown-toggle">
@@ -542,6 +542,20 @@
                         </a>
                         <b class="arrow"></b>
                     </li>  
+                     <li>
+                        <a href="{{route('admin.income.pay_income.create')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Collect Income
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                     <li>
+                        <a href="{{route('admin.pay_income.index')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Paid Incomes
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                 </ul>
             </li>
             <li>

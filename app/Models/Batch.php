@@ -9,4 +9,9 @@ class Batch extends Model
 {
     use HasFactory;
     protected $fillable = ['name'];
+
+    public function payIncomes()
+    {
+        return $this->hasMany(PayIncome::class, 'batch_id');
+    }
 }
