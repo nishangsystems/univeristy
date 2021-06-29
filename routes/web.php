@@ -76,10 +76,15 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::put('incomes/{id}/', 'Admin\IncomeController@update')->name('income.update');
     Route::delete('incomes/{id}/delete', 'Admin\IncomeController@destroy')->name('income.destroy');
     Route::get('incomes/pay_income/create', 'Admin\PayIncomeController@create')->name('income.pay_income.create');
+    Route::get('incomes/pay_income/collect/{class_id}/{student_id}', 'Admin\PayIncomeController@collect')->name('income.pay_income.collect');
     Route::get('incomes/{id}', 'Admin\IncomeController@show')->name('income.show');
-    // Route::get('incomes/collect_income', 'Admin\PayIncomeController@create')->name('pay_income.create');
-    // Route::post('incomes/collect_income', 'Admin\PayIncomeController@create')->name('pay_income.post');
-    // Route::get('incomes/pay_income_list', 'Admin\PayIncomeController@index')->name('pay_income.index');
+    Route::post('incomes/collect_income/{class_id}/{student_id}', 'Admin\PayIncomeController@store')->name('pay_income.store');
+    Route::get('incomes/paid_income/list', 'Admin\PayIncomeController@index')->name('pay_income.index');
+    Route::post('incomes/pay_income/list', 'Admin\PayIncomeController@getPayIncomePerClassYear')->name('pay_income.per_year');
+
+    Route::get('sections/{id}', 'Admin\PayIncomeController@getSections')->name('getSections');
+    Route::get('classes/{id}', 'Admin\PayIncomeController@getClasses')->name('getClasses');
+    Route::get('search/students/{name}', 'Admin\PayIncomeController@searchStudent')->name('searchStudent');
 
     Route::get('expenses', 'Admin\Expense\ExpenseController@index')->name('expense.index');
     Route::get('expenses/create', 'Admin\Expense\ExpenseController@create')->name('expense.create');
