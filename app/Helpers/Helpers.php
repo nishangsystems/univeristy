@@ -9,12 +9,12 @@ class Helpers
 {
     public function getYear()
     {
-        return session()->get('mode', $this->getCurrentAccademicYear());
+        return session()->get('moder', $this->getCurrentAccademicYear());
     }
 
     public function getCurrentAccademicYear(){
         $config = \App\Models\Config::all()->last();
-        return $config->year_id;
+        return $config->year_d;
     }
 
     public function getCurrentSemester(){
