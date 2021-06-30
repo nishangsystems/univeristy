@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helpers;
 
 
@@ -9,15 +10,17 @@ class Helpers
 {
     public function getYear()
     {
-        return session()->get('moder', $this->getCurrentAccademicYear());
+        return session()->get('mode', $this->getCurrentAccademicYear());
     }
 
-    public function getCurrentAccademicYear(){
+    public function getCurrentAccademicYear()
+    {
         $config = \App\Models\Config::all()->last();
-        return $config->year_d;
+        return $config->year_id;
     }
 
-    public function getCurrentSemester(){
+    public function getCurrentSemester()
+    {
         $config = \App\Models\Config::all()->last();
         return $config->semester_id;
     }
@@ -27,7 +30,8 @@ class Helpers
         return new Helpers();
     }
 
-    function numToWord($number) {
+    function numToWord($number)
+    {
 
         $hyphen      = '-';
         $conjunction = ' and ';
@@ -139,20 +143,18 @@ class Helpers
         return $string;
     }
 
-    public function getScore($seq_id, $subject_id, $class_id, $year, $student_id){
+    public function getScore($seq_id, $subject_id, $class_id, $year, $student_id)
+    {
         $result = Result::where([
             'student_id' => $student_id,
             'class_id' => $class_id,
-            'sequence' =>$seq_id,
-            'subject_id'=>$subject_id,
-            'batch_id'=>$year
+            'sequence' => $seq_id,
+            'subject_id' => $subject_id,
+            'batch_id' => $year
         ])->first();
 
-        if($result){
+        if ($result) {
             return $result->score;
         }
     }
-
-
 }
-
