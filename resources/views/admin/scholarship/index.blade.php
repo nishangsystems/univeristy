@@ -27,7 +27,7 @@
                     <tr>
                         <td>{{$k+1}}</td>
                         <td>{{$scholarship->name}}</td>
-                        <td>{{$scholarship->amount}}</td>
+                        <td>{{number_format($scholarship->amount)}}</td>
                         <td>{{$scholarship->type}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
                             <a class="btn btn-sm btn-primary m-3" href="{{route('admin.scholarship.show',[$scholarship->id])}}"><i class="fa fa-info-circle"> View</i></a> |

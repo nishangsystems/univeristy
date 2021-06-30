@@ -49,7 +49,7 @@
                         <td>{{$student->address}}</td>
                         <td>{{$student->gender}}</td>
                         <td>{{$student->type}}</td>
-                        <td>{{$student->amount}}</td>
+                        <td>{{number_format($student->amount)}}</td>
                     </tr>
                     @endforeach
                 </tbody>

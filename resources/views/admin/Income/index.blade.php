@@ -28,7 +28,7 @@
                     <tr>
                         <td>{{$k+1}}</td>
                         <td>{{$income->name}}</td>
-                        <td>{{$income->amount}}</td>
+                        <td>{{number_format($income->amount)}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
                             <a class="btn btn-sm btn-primary m-3" href="{{route('admin.income.show',[$income->id])}}"><i class="fa fa-info-circle"> View</i></a> |
                             <a class="btn btn-sm btn-success m-3" href="{{route('admin.income.edit',[$income->id])}}"><i class="fa fa-edit"> Edit</i></a> |
