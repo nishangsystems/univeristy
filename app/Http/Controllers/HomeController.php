@@ -26,14 +26,14 @@ class HomeController extends Controller
 
     public function children(Request $request,  $parent)
     {
-
-        $parent = \App\Models\SchoolUnits::find($parent);
-
+        $id = trim($parent);
+        $school_unit = \App\Models\SchoolUnits::find($id);
+        //  dd($school_unit);
         return response()->json([
-            'array' => $parent->unit,
+            'array' => $school_unit->unit,
             // 'name'=>$parent->unit->first()?$parent->unit->first()->type->name:'',
-            'valid' => ($parent->parent_id != 0 && $parent->unit->count() == 0) ? '1' : 0,
-            'name' => $parent->unit->first() ? ($parent->unit->first()->unit->count() == 0 ? 'section' : '') : 'section'
+            'valid' => ($school_unit->parent_id != 0 && $school_unit->unit->count() == 0) ? '1' : 0,
+            'name' => $school_unit->unit->first() ? ($school_unit->unit->first()->unit->count() == 0 ? 'section' : '') : 'section'
         ]);
     }
 

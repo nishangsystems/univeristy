@@ -254,6 +254,15 @@
                         <b class="arrow"></b>
                     </li>
 
+                     <li>
+                        <a href="{{route('admin.boarding_fee')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Set Boarding Fee
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+
                     <li>
                         <a href="{{route('admin.sections')}}">
                             <i class="menu-icon fa fa-caret-right"></i>

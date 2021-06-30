@@ -69,7 +69,7 @@
                 <label for="cname" class="control-label col-lg-2">School Section</label>
                 <div class="col-lg-10">
                     <select class="form-control" name="type">
-                        <option selected disabled>Select Section</option>
+                        <option selected disabled>Select</option>
                         <option {{old('type') == 'day'?'selected':''}} value="male">Day Section</option>
                         <option {{old('type') == 'boarding'?'selected':''}} value="female">Boarding Section</option>
                     </select>

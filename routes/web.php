@@ -126,6 +126,14 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('student/matricule', 'Admin\StudentController@matricPost')->name('students.matricule');
     Route::resource('student', 'Admin\StudentController')->except(['index']);
     Route::resource('result_release', 'Admin\ResultController');
+
+
+    Route::get('boarding_fee/create', 'Admin\BoardingFeeController@create')->name('boarding_fee');
+    Route::post('boarding_fee', 'Admin\BoardingFeeController@store')->name('boarding_fee.store');
+    Route::get('boarding_fee', 'Admin\BoardingFeeController@index')->name('boarding_fee.index');
+    Route::get('boarding_fee/{id}/edit', 'Admin\BoardingFeeController@edit')->name('boarding_fee.edit');
+    Route::put('boarding_fee/{id}', 'Admin\BoardingFeeController@update')->name('boarding_fee.update');
+    Route::delete('boarding_fee/{id}', 'Admin\BoardingFeeController@destroy')->name('boarding_fee.destroy');
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
