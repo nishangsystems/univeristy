@@ -70,7 +70,7 @@
                         <td>{{$k+1}}</td>
                         <td>{{$income->student_name}}</td>
                         <td>{{$income->income_name}}</td>
-                        <td>{{$income->amount}}</td>
+                        <td>{{number_format($income->amount)}}</td>
                     </tr>
                     @endforeach
                 </tbody>

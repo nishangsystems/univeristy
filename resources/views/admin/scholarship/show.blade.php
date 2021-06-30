@@ -20,7 +20,7 @@
                 </div>
                 <div>
                     <h5 class="font-weight-bold">Amount : <span>
-                            <label>{{$data->amount}} FCFA</label>
+                            <label>{{number_format($data->amount)}} FCFA</label>
                         </span></h5>
                 </div>
                 <div>

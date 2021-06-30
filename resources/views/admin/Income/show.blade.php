@@ -18,7 +18,7 @@
                 </div>
                 <div>
                     <h5 class="font-weight-bold">Amount : <span>
-                            <label>{{$income->amount}} FCFA</label>
+                            <label>{{number_format($income->amount)}} FCFA</label>
                         </span></h5>
                 </div>
                 <div>
