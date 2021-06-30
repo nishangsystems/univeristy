@@ -22,6 +22,7 @@ class Students extends Authenticatable
         'pob',
         'admission_batch_id',
         'password',
+        'type'
     ];
 
     public function class($year)
@@ -94,5 +95,10 @@ class Students extends Authenticatable
     public function scholarships()
     {
         return $this->hasMany(Scholarship::class);
+    }
+
+    public function collectBoardingFees()
+    {
+        return $this->hasMany(CollectBoardingFee::class, 'student_id');
     }
 }
