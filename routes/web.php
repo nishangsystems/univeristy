@@ -169,6 +169,8 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('result', 'Student\HomeController@result')->name('result');
     Route::get('fee', 'Student\HomeController@fee')->name('fee');
     Route::get('subjects/{id}/notes', 'Student\HomeController@subjectNotes')->name('subject.notes');
+    Route::get('boarding_fee', 'Student\HomeController@boarding')->name('boarding');
+    Route::post('boarding_fees', 'Student\HomeController@getBoardingFeesYear')->name('boarding_fee.per_year');
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');

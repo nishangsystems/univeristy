@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\SchoolUnits;
 use App\Models\Sequence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,19 @@ use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
+    private $years;
+    private $batch_id;
+    private $select = [
+        'students.id as student_id',
+        'collect_boarding_fees.id',
+        'students.name',
+        'students.matric',
+        'collect_boarding_fees.amount_payable',
+        'collect_boarding_fees.status',
+        'school_units.name as class_name'
+    ];
+
+
 
     public function index()
     {
@@ -69,6 +83,10 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth:student');
+        // $this->boarding_fee =  BoardingFee::first();
+        //  $this->year = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
+        $this->batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
+        $this->years = Batch::all();
     }
 
 
@@ -110,5 +128,48 @@ class HomeController extends Controller
             )
             ->paginate(5);
         return $notes;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function boarding()
+    {
+
+        $data['title'] = 'Paid Boarding Fees';
+        $data['years'] = $this->years;
+        $data['school_units'] = SchoolUnits::where('parent_id', '=', 0)->get();
+        $data['boarding_fees'] = $this->selectBoardingFee($this->batch_id);
+
+        return view('student.index')->with($data);
+    }
+
+    /**
+     * get boarding frees per year
+     * 
+     */
+    public function getBoardingFeesYear(Request $request)
+    {
+        $data['title'] = 'Paid Boarding Fees';
+        $data['years'] = $this->years;
+        $data['school_units'] = SchoolUnits::where('parent_id', '=', 0)->get();
+        $data['boarding_fees'] = $this->selectBoardingFee($request->batch_id);
+        return view('student.index')->with($data);
+    }
+
+    /**
+     * select details for student boarding fee
+     */
+    private function selectBoardingFee($batch_id)
+    {
+        return DB::table('collect_boarding_fees')
+            ->join('students', 'students.id', '=', 'collect_boarding_fees.student_id')
+            ->join('batches', 'batches.id', '=', 'collect_boarding_fees.batch_id')
+            ->join('school_units', 'school_units.id', '=', 'collect_boarding_fees.class_id')
+            ->where('batches.id', $batch_id)
+            ->where('collect_boarding_fees.student_id', Auth::id())
+            ->select($this->select)->paginate(7);
     }
 }
