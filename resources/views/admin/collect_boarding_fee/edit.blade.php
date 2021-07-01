@@ -23,20 +23,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="form-group @error('batch_id') has-error @enderror mt-4">
-                <label class="control-label col-lg-2">Year <span style="color:red">*</span></label>
-                <div class="col-lg-10">
-                    <select class="form-control" name="batch_id">
-                        <option value="">Select year</option>
-                        @foreach($years as $key => $year)
-                        <option value="{{$year->id}}">{{$year->name}}</option>
-                        @endforeach
-                    </select>
-                    @error('batch_id')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
+
 
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">

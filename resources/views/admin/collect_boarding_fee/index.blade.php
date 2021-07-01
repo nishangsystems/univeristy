@@ -57,7 +57,7 @@
                     </div>
 
                     <div class=" col-sm-2 mb-1">
-                        <button class="btn btn-md btn-primary" id="submit" type="submit">Get Boarding Fees</button>
+                        <button class="btn btn-xs btn-primary" id="submit" type="submit">Get Boarding Fees</button>
                     </div>
                 </div>
                 @csrf
@@ -94,7 +94,7 @@
                         @endif
                         @if($boarding_fee->status == 0)
                         <td class="d-flex justify-content-end  align-items-center">
-                            <a class="btn btn-md btn-warning" href="{{route('admin.collect_boarding_fee.edit',[$boarding_fee->id, $boarding_fee->student_id])}}">Complete Fee</a>
+                            <a class="btn btn-xs btn-warning" href="{{route('admin.collect_boarding_fee.edit',[$boarding_fee->id, $boarding_fee->student_id])}}">Complete Fee</a>
                         </td>
                         @endif
                         @if($boarding_fee->status ==1)

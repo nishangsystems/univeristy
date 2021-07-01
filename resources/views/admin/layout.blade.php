@@ -255,7 +255,7 @@
                     </li>
 
                      <li>
-                        <a href="{{route('admin.boarding_fee')}}">
+                        <a href="{{route('admin.boarding_fee.index')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
                             Set Boarding Fee
                         </a>

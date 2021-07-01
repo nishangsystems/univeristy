@@ -57,5 +57,20 @@ class StudentSeeder extends Seeder
             'admission_batch_id' => 3,
             'type' => 'boarding'
         ]);
+        Students::create([
+            'name' =>  'ATEMKENG  RANDY JOE',
+            'email' => 'ATEMKENG',
+            'password' => Hash::make('password'),
+            'gender'  => $faker->randomElement(['male', 'female']),
+            'matric' => 'F1G20SBB005',
+            'phone' => $faker->phoneNumber,
+            'dob' => $faker->date(),
+            'pob' => $faker->address,
+            'address' => $faker->address,
+            'admission_batch_id' => 4,
+            'type' => 'boarding',
+            'created_at' => '2020-12-01 00:00:00',
+            'updated_at' => '2020-12-01 00:00:00'
+        ]);
     }
 }

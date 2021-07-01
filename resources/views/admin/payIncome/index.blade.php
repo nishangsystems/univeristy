@@ -46,7 +46,7 @@
                         @enderror
                     </div>
                     <div class=" col-sm-1 mb-1">
-                        <button class="btn btn-md btn-primary" id="submit" type="submit">Get Income</button>
+                        <button class="btn btn-xs btn-primary" id="submit" type="submit">Get Income</button>
                     </div>
                 </div>
                 @csrf
