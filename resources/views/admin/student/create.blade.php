@@ -70,8 +70,8 @@
                 <div class="col-lg-10">
                     <select class="form-control" name="type">
                         <option selected disabled>Select</option>
-                        <option {{old('type') == 'day'?'selected':''}} value="male">Day Section</option>
-                        <option {{old('type') == 'boarding'?'selected':''}} value="female">Boarding Section</option>
+                        <option {{old('type') == 'day'?'selected':''}} value="day">Day Section</option>
+                        <option {{old('type') == 'boarding'?'selected':''}} value="boarding">Boarding Section</option>
                     </select>
                     @error('type')
                     <span class="invalid-feedback">{{ $message }}</span>

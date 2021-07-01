@@ -18,7 +18,7 @@
                     @enderror
                 </div>
                 <label class="control-label col-md-1"> </label>
-                <label class="control-label col-md-3 mb-2"> <button class="btn btn-md btn-primary" type="submit">Get Scholars</button></label>
+                <label class="control-label col-md-3 mb-2"> <button class="btn btn-xs btn-primary" type="submit">Get Scholars</button></label>
             </div>
             @csrf
         </form>

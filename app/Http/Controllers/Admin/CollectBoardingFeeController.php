@@ -85,6 +85,21 @@ class CollectBoardingFeeController extends Controller
 
         ]);
     }
+
+    /**
+     * check if boarding fee has bee set
+     * 
+     */
+    public function checkBoardingFee()
+    {
+        $boarding_fee = BoardingFee::first();
+        if (empty($boarding_fee)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -99,13 +114,20 @@ class CollectBoardingFeeController extends Controller
         //validate request
         $this->validateRequest($request);
 
+        //checkout if boarding fee has been set;
+        $boarding_fee_amount = $this->checkBoardingFee();
+        if (!$boarding_fee_amount) {
+            return redirect()->route('admin.boarding_fee')->with('error', 'Boarding Fee not set, please set Boarding Fee');
+        }
+
         //get student
-        $student = $this->getStudent($student_id, $this->batch_id);
+        $student = $this->getStudent($student_id, $this->year);
 
-        //  verify if student is old or new
-        $student_status = $this->getStudentStatus($student, $request, $student_id, $this->boarding_fee, $class_id);
+        //  verify if student is old or new and make payment for boarding
+        $paid_boarding = $this->paidStudentBoarding($student, $request, $this->boarding_fee, $class_id);
 
-        return redirect()->route('admin.collect_boarding_fee.index')->with('success', $this->msg[$student_status->status] . " Boarding Fee");
+        //dd($paid_boarding);
+        return redirect()->route('admin.collect_boarding_fee.index')->with('success', $this->msg[$paid_boarding->status] . " Boarding Fee");
     }
 
 
@@ -122,7 +144,6 @@ class CollectBoardingFeeController extends Controller
 
         $student = Students::where('id', $student_id)->first();
         $data['boarding_fee'] = CollectBoardingFee::findOrFail($id);
-        $data['years'] = $this->years;
         $data['title']  = 'Complete Boarding Fee: ' . $student->name;
         $data['balance'] = $this->getBalanceBoardingFee($student_id, $this->year, $data['boarding_fee']->amount_payable);
         return view('admin.collect_boarding_fee.edit')->with($data);
@@ -156,12 +177,11 @@ class CollectBoardingFeeController extends Controller
     {
         $validate_data = [
             'amount_payable' => 'required|numeric',
-            'batch_id' => 'required|numeric'
         ];
         $collected_boarding_fee = CollectBoardingFee::findOrFail($id);
-        $student = $this->getStudent($student_id, $this->batch_id);
+        $student = $this->getStudent($student_id, $this->year);
         $updated_amount = $request->amount_payable + $collected_boarding_fee->amount_payable;
-        $updated = $this->updateBoardingFee($student, $updated_amount, $this->boarding_fee, $request, $collected_boarding_fee);
+        $updated = $this->updateBoardingFee($student, $updated_amount, $this->boarding_fee, $collected_boarding_fee);
         return redirect()->route('admin.collect_boarding_fee.index')->with('success', $this->msg[$collected_boarding_fee->status] . " Boarding Fee");
     }
 
@@ -175,12 +195,18 @@ class CollectBoardingFeeController extends Controller
      */
     public function collect($class_id, $student_id)
     {
-        // dd($student_id);
-        $student = Students::where('id', $student_id)->first();
-        $data['title'] = 'Collect Boarding fee: ' . $student->name;
-        $data['years'] = $this->years;
-        $data['student_id'] = $student_id;
-        $data['class_id'] = $class_id;
+
+        $check_user = CollectBoardingFee::where('student_id', $student_id)->first();
+        if (empty($check_user)) {
+            $student = Students::where('id', $student_id)->first();
+            $data['title'] = 'Collect Boarding fee: ' . $student->name;
+            $data['years'] = $this->years;
+            $data['student_id'] = $student_id;
+            $data['class_id'] = $class_id;
+        } else {
+            return redirect()->route('admin.collect_boarding_fee.index');
+        }
+
         return view('admin.collect_boarding_fee.collect')->with($data);
     }
 
@@ -193,10 +219,9 @@ class CollectBoardingFeeController extends Controller
     private function getStudent($student_id, $current_year)
     {
         return DB::table('students')
-            ->leftJoin('student_classes', 'student_classes.student_id', '=', 'students.id')
             ->where('students.id', $student_id)
             ->where('students.type', 'boarding')
-            ->where('student_classes.year_id', '!=', $current_year)
+            ->whereYear('students.created_at', '!=', $current_year)
             ->select(
                 'students.id',
                 'students.name',
@@ -209,83 +234,72 @@ class CollectBoardingFeeController extends Controller
     /**
      * get student status
      */
-    private function getStudentStatus($student, $request, $student_id, $boarding_fee, $class_id)
+    private function paidStudentBoarding($student, $request, $boarding_fee, $class_id)
     {
+        $collectedBoarding = new CollectBoardingFee();
         if (empty($student)) {
-
             if ($request->amount_payable < $boarding_fee->amount_old_student) {
-                $created = CollectBoardingFee::create([
-                    'amount_payable' => $request->amount_payable,
-                    'student_id' => $student_id,
-                    'batch_id' => $request->batch_id,
-                    'status' => 0,
-                    'class_id' => $class_id
-                ]);
+                $collectedBoarding->amount_payable = $request->amount_payable;
+                $collectedBoarding->student_id = $student->id;
+                $collectedBoarding->batch_id = $request->batch_id;
+                $collectedBoarding->status = 0;
+                $collectedBoarding->class_id = $class_id;
+                $collectedBoarding->save();
             } else if ($request->amount_payable == $boarding_fee->amount_old_student) {
-                $created = CollectBoardingFee::create([
-                    'amount_payable' => $request->amount_payable,
-                    'student_id' => $student_id,
-                    'batch_id' => $request->batch_id,
-                    'status' => 1,
-                    'class_id' => $class_id
-                ]);
+                $collectedBoarding->amount_payable = $request->amount_payable;
+                $collectedBoarding->student_id = $student->id;
+                $collectedBoarding->batch_id = $request->batch_id;
+                $collectedBoarding->status = 1;
+                $collectedBoarding->class_id = $class_id;
+                $collectedBoarding->save();
             }
         } else {
             if ($request->amount_payable < $boarding_fee->amount_new_student) {
-                $created =  CollectBoardingFee::create([
-                    'amount_payable' => $request->amount_payable,
-                    'student_id' => $student_id,
-                    'batch_id' => $request->batch_id,
-                    'status' => 0,
-                    'class_id' => $class_id
-                ]);
+                $collectedBoarding->amount_payable = $request->amount_payable;
+                $collectedBoarding->student_id = $student->id;
+                $collectedBoarding->batch_id = $request->batch_id;
+                $collectedBoarding->status = 0;
+                $collectedBoarding->class_id = $class_id;
+                $collectedBoarding->save();
             } else if ($request->amount_payable == $boarding_fee->amount_new_student) {
-                $created =  CollectBoardingFee::create([
-                    'amount_payable' => $request->amount_payable,
-                    'student_id' => $student_id,
-                    'batch_id' => $request->batch_id,
-                    'status' => 1,
-                    'class_id' => $class_id
-                ]);
+                $collectedBoarding->amount_payable = $request->amount_payable;
+                $collectedBoarding->student_id = $student->id;
+                $collectedBoarding->batch_id = $request->batch_id;
+                $collectedBoarding->status = 1;
+                $collectedBoarding->class_id = $class_id;
+                $collectedBoarding->save();
             }
         }
-        return $created;
+        return $collectedBoarding;
     }
 
     /**
      * update boarding fee
      */
-    private function updateBoardingFee($student, $updated_amount, $boarding_fee, $request, $collected_boarding_fee)
+    private function updateBoardingFee($student, $updated_amount, $boarding_fee, $collected_boarding_fee)
     {
         if (empty($student)) {
             if ($updated_amount == $boarding_fee->amount_old_student) {
-                $collected_boarding_fee->update([
-                    'amount_payable' => $updated_amount,
-                    'batch_id' => $request->batch_id,
-                    'status' => 1
-                ]);
-            } else {
-                $collected_boarding_fee->update([
-                    'amount_payable' =>  $updated_amount,
-                    'batch_id' => $request->batch_id,
-                    'status' => 0
-                ]);
+                $collected_boarding_fee->amount_payable = $updated_amount;
+                $collected_boarding_fee->status = 1;
+                $collected_boarding_fee->save();
+            } else if ($updated_amount < $boarding_fee->amount_old_student) {
+                $collected_boarding_fee->amount_payable = $updated_amount;
+                $collected_boarding_fee->status = 0;
+                $collected_boarding_fee->save();
             }
         } else {
             if ($updated_amount == $boarding_fee->amount_new_student) {
-                $collected_boarding_fee->update([
-                    'amount_payable' =>  $updated_amount,
-                    'batch_id' => $request->batch_id,
-                    'status' => 1
-                ]);
-            } else {
-                $collected_boarding_fee->update([
-                    'amount_payable' => $updated_amount,
-                    'batch_id' => $request->batch_id,
-                    'status' => 0
-                ]);
+                $collected_boarding_fee->amount_payable = $updated_amount;
+                $collected_boarding_fee->status = 1;
+                $collected_boarding_fee->save();
+            } else if ($updated_amount < $boarding_fee->amount_new_student) {
+                $collected_boarding_fee->amount_payable = $updated_amount;
+                $collected_boarding_fee->status = 0;
+                $collected_boarding_fee->save();
             }
         }
+
         return $collected_boarding_fee;
     }
 

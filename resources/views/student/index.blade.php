@@ -20,7 +20,7 @@ $student = Auth('student')->user();
                     @enderror
                     <div class="col-md-1"></div>
                     <div class="col-md-3">
-                        <label class="control-label "> <button class="btn btn-md btn-primary" type="submit">Get Boarding Fees</button></label>
+                        <label class="control-label "> <button class="btn btn-xs btn-primary" type="submit">Get Boarding Fees</button></label>
                     </div>
                 </div>
 
@@ -50,7 +50,7 @@ $student = Auth('student')->user();
                         <td>{{$boarding_fee->class_name}}</td>
                         <td>{{number_format($boarding_fee->amount_payable)}}</td>
                         @if($boarding_fee->status == 0)
-                        <td>Incomplete</td>
+                        <td style="color: yellow;">Incomplete</td>
                         @endif
                         @if($boarding_fee->status == 1)
                         <td>Completed</td>

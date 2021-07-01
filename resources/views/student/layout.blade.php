@@ -194,6 +194,7 @@
                 </a>
                 <b class="arrow"></b>
             </li>
+           @if(Auth::user()->type == "boarding")
             <li>
                 <a href="{{route('student.boarding')}}">
                     <i class="menu-icon fa fa-money"></i>
@@ -201,6 +202,7 @@
                 </a>
                 <b class="arrow"></b>
             </li>
+           @endif
 
             <li>
                 <a href="{{route('student.subject')}}">
