@@ -32,10 +32,11 @@ class StudentController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'phone' => 'required',
+            'phone' => 'required|unique:users|regex:/^([0-9\s\-\+\(\)]*)$/',
             'address' => 'nullable',
             'gender' => 'required',
             'section' => 'required',
+            'type'  => 'required|string'
         ]);
         try {
             \DB::beginTransaction();

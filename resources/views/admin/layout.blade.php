@@ -254,6 +254,15 @@
                         <b class="arrow"></b>
                     </li>
 
+                     <li>
+                        <a href="{{route('admin.boarding_fee')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Set Boarding Fee
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+
                     <li>
                         <a href="{{route('admin.sections')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -392,6 +401,14 @@
                         <b class="arrow"></b>
                     </li>
 
+                      <li>
+                        <a href="{{route('admin.collect_boarding_fee.create')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Collect Boarding Fee
+                        </a>
+                        <b class="arrow"></b>
+                    </li> 
+
                     <li>
                         <a href="{{route('admin.print_fee')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -408,7 +425,13 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-
+                     <li>
+                        <a href="{{route('admin.collect_boarding_fee.index')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Boarding Fees
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                     <li>
                         <a href="{{route('admin.fee')}}?type=completed">
                             <i class="menu-icon fa fa-caret-right"></i>
