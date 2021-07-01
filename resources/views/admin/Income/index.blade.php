@@ -8,7 +8,7 @@
             <h3 class="font-weight-bold">School incomes</h3>
         </div> -->
         <div class="col-sm-12 mb-5">
-            <a href="{{route('admin.expense.create')}}" class="btn btn-info btn-xs">Add Income</a>
+            <a href="{{route('admin.income.create')}}" class="btn btn-info btn-xs">Add Income</a>
         </div>
     </div>
     <div class="content-panel">
