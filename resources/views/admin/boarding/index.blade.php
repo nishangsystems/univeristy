@@ -4,6 +4,37 @@
 
 <div class="col-sm-12">
 
+    <div class="form-panel mb-5 ml-2">
+        <form class="form-horizontal" role="form" method="POST" action="{{route('admin.boarding_fee.index')}}">
+            <div class="form-group ">
+                <label for="cname" class="control-label col-sm-2">Amount: New Students <span style="color:red">*</span></label>
+                <div class="col-md-3">
+                    <div class="form-group @error('amount_new_student') has-error @enderror">
+                        <input class=" form-control" name="amount_new_student" value="{{old('amount_new_student')}}" type="number" required />
+                        @error('amount_new_student')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <label for="cname" class="control-label col-sm-2 ">Amount: Old Students <span style="color:red">*</span></label>
+                <div class="col-md-3">
+                    <div class="form-group @error('amount_old_student') has-error @enderror">
+                        <input class=" form-control" name="amount_old_student" value="{{old('amount_old_student')}}" type="number" required />
+                        @error('amount_old_student')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="d-flex justify-content-end col-lg-12">
+                        <button id="save" class="btn btn-sm btn-primary mx-3" type="submit">Save</button>
+
+                    </div>
+                </div>
+            </div>
+            @csrf
+        </form>
+    </div>
     <div class="content-panel">
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
