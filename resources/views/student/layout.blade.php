@@ -194,6 +194,13 @@
                 </a>
                 <b class="arrow"></b>
             </li>
+            <li>
+                <a href="{{route('student.boarding')}}">
+                    <i class="menu-icon fa fa-money"></i>
+                    <span class="menu-text">Boarding Fee</span>
+                </a>
+                <b class="arrow"></b>
+            </li>
 
             <li>
                 <a href="{{route('student.subject')}}">
