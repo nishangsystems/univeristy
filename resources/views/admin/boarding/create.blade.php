@@ -25,8 +25,8 @@
             </div>
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
-                    <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">Save</button>
-                    <a class="btn btn-xs btn-danger" href="#" type="button">Cancel</a>
+                    <button id="save" class="btn btn-sm btn-primary mx-3" type="submit">Save</button>
+                    <a class="btn btn-sm btn-danger" href="#" type="button">Cancel</a>
                 </div>
             </div>
         </form>

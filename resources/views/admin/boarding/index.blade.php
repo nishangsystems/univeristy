@@ -10,8 +10,8 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Amount New Student (CFA)</th>
-                        <th>Amount Old Student (CFA)</th>
+                        <th>Amount New Students (CFA)</th>
+                        <th>Amount Old Students (CFA)</th>
                         <th></th>
 
                     </tr>

@@ -10,6 +10,7 @@ use App\Models\SchoolUnits;
 use App\Models\Sequence;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -89,5 +90,23 @@ class HomeController extends Controller
         }
 
         return $students;
+    }
+
+    /**
+     * get all school student boarders
+     * 
+     * @param string $name
+     */
+    public function getStudentBoarders($name)
+    {
+        $students = DB::table('student_classes')
+            ->join('students', 'students.id', '=', 'student_classes.student_id')
+            ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
+            ->where('students.name', 'like', '%' . $name . '%')
+            ->where('students.type', 'boarding')
+            ->orWhere('students.matric', 'like', $name . '%')
+            ->select('students.id',  'students.name', 'students.matric', 'school_units.name as class_name', 'school_units.id as class_id')->get()->toArray();
+
+        return response()->json(['data' => $students]);
     }
 }

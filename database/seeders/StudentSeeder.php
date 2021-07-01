@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Students;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Generator as Faker;
@@ -17,7 +18,7 @@ class StudentSeeder extends Seeder
     public function run(Faker $faker)
     {
 
-        DB::table('students')->insert([
+        Students::create([
             'name' =>  'ADANO NCHA ANGEL BRIGHT',
             'email' => 'ADANO',
             'password' => Hash::make('password'),
@@ -27,9 +28,10 @@ class StudentSeeder extends Seeder
             'dob' => $faker->date(),
             'pob' => $faker->address,
             'address' => $faker->address,
-            'admission_batch_id' => 1
+            'admission_batch_id' => 1,
+            'type' => 'boarding'
         ]);
-        DB::table('students')->insert([
+        Students::create([
             'name' =>  'AJOUH ARAA NAMONDO',
             'email' => 'AJOUH',
             'password' => Hash::make('password'),
@@ -39,9 +41,10 @@ class StudentSeeder extends Seeder
             'dob' => $faker->date(),
             'pob' => $faker->address,
             'address' => $faker->address,
-            'admission_batch_id' => 2
+            'admission_batch_id' => 2,
+            'type' => 'day'
         ]);
-        DB::table('students')->insert([
+        Students::create([
             'name' =>  'NCHA ANGEL BRIGHT',
             'email' => 'NCHA',
             'password' => Hash::make('password'),
@@ -51,7 +54,8 @@ class StudentSeeder extends Seeder
             'dob' => $faker->date(),
             'pob' => $faker->address,
             'address' => $faker->address,
-            'admission_batch_id' => 3
+            'admission_batch_id' => 3,
+            'type' => 'boarding'
         ]);
     }
 }
