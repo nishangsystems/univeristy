@@ -33,11 +33,13 @@
 <script>
     $('#search').on('keyup', function() {
         val = $(this).val();
-        search_url = '/admin/search/students/boarders/' + val;
+        url = "{{route('getStudentBoarder', "VALUE")}}";
+        search_url = url.replace('VALUE', val);
         $.ajax({
             type: 'GET',
             url: search_url,
             success: function(response) {
+                console.log(response.data)
                 let html = new String();
                 let size = response.data.length;
                 let data = response.data;
@@ -48,7 +50,7 @@
                         '    <td>' + data[i].matric + '</td>' +
                         '    <td>' + data[i].class_name + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
-                        '        <a class="btn btn-xs btn-primary" href="/admin/collect/boarding_fee/' + data[i].class_id + '/' + data[i].id + '"> Collect Boarding Fee</a>' +
+                        '        <a class="btn btn-xs btn-primary" href="'+data[i].link+'"> Collect Boarding Fee</a>' +
                         '    </td>' +
                         '</tr>';
                 }

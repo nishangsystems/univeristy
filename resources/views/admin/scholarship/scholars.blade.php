@@ -6,7 +6,8 @@
     <div class="form-panel mb-5 ml-2">
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.scholarship.awarded_students')}}">
             <div class="form-group @error('year') has-error @enderror ">
-                <div class="col-md-8">
+            <div class="col-sm-8"></div>
+                <div class="col-sm-2">
                     <select class="form-control" name="year">
                         <option value="">Select year</option>
                         @foreach($years as $key => $year)
@@ -17,8 +18,10 @@
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
-                <label class="control-label col-md-1"> </label>
-                <label class="control-label col-md-3 mb-2"> <button class="btn btn-xs btn-primary" type="submit">Get Scholars</button></label>
+               
+               <div class="col-sm-2 d-flex justify-content-center">
+                <label class="control-label mb-2 mr-2"> <button class="btn btn-xs btn-primary" type="submit">Get Scholars</button></label>
+                </div>
             </div>
             @csrf
         </form>

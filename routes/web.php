@@ -142,7 +142,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('collected/boarding_fees/{student_id}/{id}/edit', 'Admin\CollectBoardingFeeController@edit')->name('collect_boarding_fee.edit');
     Route::put('collected/boarding_fees/{student_id}/{id}', 'Admin\CollectBoardingFeeController@update')->name('collect_boarding_fee.update');
     Route::post('collected/boarding_fees', 'Admin\CollectBoardingFeeController@getBoardingFeePerYear')->name('boarding_fees_year');
-    Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
+   
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
@@ -178,6 +178,8 @@ Route::get('section-subjects/{parent}', 'HomeController@subjects')->name('sectio
 Route::get('student-search/{name}', 'HomeController@student')->name('student-search');
 Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search');
 Route::get('student_rank', 'HomeController@rank')->name('student_rank');
+
+Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
 
 Route::get('mode/{locale}', function ($batch) {
     session()->put('mode', $batch);

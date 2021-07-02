@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PayIncomeResource;
 use App\Models\Batch;
 use App\Models\Income;
 use App\Models\PayIncome;
@@ -99,9 +100,9 @@ class PayIncomeController extends Controller
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
             ->where('students.name', 'like', '%' . $name . '%')
             ->orWhere('students.matric', 'like', $name . '%')
-            ->select('students.id',  'students.name', 'students.matric', 'school_units.name as class_name', 'school_units.id as class_id')->get()->toArray();
+            ->select('students.id',  'students.name', 'students.matric','students.gender', 'school_units.name as class_name', 'school_units.id as class_id')->get();
 
-        return response()->json(['data' => $students]);
+        return response()->json(['data' => PayIncomeResource::collection($students)]);
     }
 
 

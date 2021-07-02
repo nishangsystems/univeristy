@@ -1,49 +1,68 @@
 @extends('admin.layout')
-@section('title', 'Eligible Students')
+
 @section('section')
-
 <div class="col-sm-12">
-    <div class="col-sm-12">
-        <div class="mb-3 d-flex justify-content-start">
-            <!-- <h4 class="font-weight-bold">Eligible Students</h4> -->
-        </div>
 
+    <div class="my-3">
+        <input class="form-control" id="search" placeholder="Search Student by Name or Matricule" required name="student_id" />
     </div>
+
+
     <div class="content-panel">
-        <div class="adv-table table-responsive">
-            <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
+        <div class="table-responsive">
+            <table class="table-bordered">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Address</th>
+                        <th>Matricule</th>
+                        <th>Class</th>
                         <th>Gender</th>
                         <th></th>
+                         
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach($students as $k=>$student)
-                    <tr>
-                        <td>{{$k+1}}</td>
-                        <td>{{$student->name}}</td>
-                        <td>{{$student->email}}</td>
-                        <td>{{$student->phone}}</td>
-                        <td>{{$student->address}}</td>
-                        <td>{{$student->gender}}</td>
-                        <td class="d-flex justify-content-end align-items-center">
-                            <a class="btn btn-sm btn-primary" href="{{route('admin.scholarship.award.create', $student->id)}}"><i class="fa fa-money"> Award Scholarship</i></a> |
+                <tbody id="content">
 
-                        </td>
-                    </tr>
-                    @endforeach
                 </tbody>
             </table>
-            <div class="d-flex justify-content-end">
-                {{$students->links()}}
-            </div>
+
         </div>
     </div>
 </div>
+@endsection
+@section('script')
+<script>
+    $('#search').on('keyup', function() {
+        val = $(this).val();
+        url = "{{route('admin.searchStudent', "VALUE")}}";
+        search_url = url.replace('VALUE', val);
+        $.ajax({
+            type: 'GET',
+            url: search_url,
+            success: function(response) {
+                let html = new String();
+                let size = response.data.length;
+                let data = response.data;
+                for (i = 0; i < size; i++) {
+                    html += '<tr>' +
+                        '    <td>' + (i + 1) + '</td>' +
+                        '    <td>' + data[i].name + '</td>' +
+                        '    <td>' + data[i].matric + '</td>' +
+                        '    <td>' + data[i].class_name + '</td>' +
+                        '    <td>' + data[i].gender + '</td>'+
+                        '    <td class="d-flex justify-content-between align-items-center">' +
+                        '        <a class="btn btn-xs btn-primary" href="'+data[i].link2+'">Award Scholarship</a>' +
+                        '    </td>' +
+                        '</tr>';
+                }
+                $('#content').html(html);
+
+            },
+            error: function(e) {
+                console.log(e)
+            }
+        })
+    })
+</script>
 @endsection

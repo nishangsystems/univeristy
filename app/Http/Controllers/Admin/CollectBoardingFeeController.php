@@ -124,7 +124,7 @@ class CollectBoardingFeeController extends Controller
         $student = $this->getStudent($student_id, $this->year);
 
         //  verify if student is old or new and make payment for boarding
-        $paid_boarding = $this->paidStudentBoarding($student, $request, $this->boarding_fee, $class_id);
+        $paid_boarding = $this->paidStudentBoarding($student, $request, $this->boarding_fee, $class_id, $student_id);
 
         //dd($paid_boarding);
         return redirect()->route('admin.collect_boarding_fee.index')->with('success', $this->msg[$paid_boarding->status] . " Boarding Fee");
@@ -195,8 +195,9 @@ class CollectBoardingFeeController extends Controller
      */
     public function collect($class_id, $student_id)
     {
-
+     //   dd($student_id);
         $check_user = CollectBoardingFee::where('student_id', $student_id)->first();
+      
         if (empty($check_user)) {
             $student = Students::where('id', $student_id)->first();
             $data['title'] = 'Collect Boarding fee: ' . $student->name;
@@ -204,7 +205,7 @@ class CollectBoardingFeeController extends Controller
             $data['student_id'] = $student_id;
             $data['class_id'] = $class_id;
         } else {
-            return redirect()->route('admin.collect_boarding_fee.index');
+            return redirect()->route('admin.collect_boarding_fee.edit', [$check_user->id, $student_id]);
         }
 
         return view('admin.collect_boarding_fee.collect')->with($data);
@@ -234,13 +235,13 @@ class CollectBoardingFeeController extends Controller
     /**
      * get student status
      */
-    private function paidStudentBoarding($student, $request, $boarding_fee, $class_id)
+    private function paidStudentBoarding($student, $request, $boarding_fee, $class_id, $student_id)
     {
         $collectedBoarding = new CollectBoardingFee();
         if (empty($student)) {
             if ($request->amount_payable < $boarding_fee->amount_old_student) {
                 $collectedBoarding->amount_payable = $request->amount_payable;
-                $collectedBoarding->student_id = $student->id;
+                $collectedBoarding->student_id = $student_id;
                 $collectedBoarding->batch_id = $request->batch_id;
                 $collectedBoarding->status = 0;
                 $collectedBoarding->class_id = $class_id;
@@ -256,7 +257,7 @@ class CollectBoardingFeeController extends Controller
         } else {
             if ($request->amount_payable < $boarding_fee->amount_new_student) {
                 $collectedBoarding->amount_payable = $request->amount_payable;
-                $collectedBoarding->student_id = $student->id;
+                $collectedBoarding->student_id = $student_id;
                 $collectedBoarding->batch_id = $request->batch_id;
                 $collectedBoarding->status = 0;
                 $collectedBoarding->class_id = $class_id;

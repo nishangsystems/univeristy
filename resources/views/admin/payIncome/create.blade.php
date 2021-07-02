@@ -33,7 +33,8 @@
 <script>
     $('#search').on('keyup', function() {
         val = $(this).val();
-        search_url = '/admin/search/students/' + val;
+        url = "{{route('admin.searchStudent', "VALUE")}}";
+        search_url = url.replace('VALUE', val);
         $.ajax({
             type: 'GET',
             url: search_url,
@@ -48,7 +49,7 @@
                         '    <td>' + data[i].matric + '</td>' +
                         '    <td>' + data[i].class_name + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
-                        '        <a class="btn btn-xs btn-primary" href="/admin/incomes/pay_income/collect/' + data[i].class_id + '/' + data[i].id + '"> Collect Income</a>' +
+                        '        <a class="btn btn-xs btn-primary" href="'+data[i].link+'"> Collect Income</a>' +
                         '    </td>' +
                         '</tr>';
                 }

@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use App\Http\Resources\Fee;
 use App\Http\Resources\StudentFee;
 use App\Http\Resources\StudentRank;
+use App\Http\Resources\CollectBoardingFeeResource;
 use App\Models\SchoolUnits;
 use App\Models\Sequence;
 use Illuminate\Support\Facades\Hash;
@@ -99,15 +100,17 @@ class HomeController extends Controller
      */
     public function getStudentBoarders($name)
     {
-        $type = 'boarding';
-        $students = DB::table('student_classes')
-            ->join('students', 'students.id', '=', 'student_classes.student_id')
-            ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
+       
+       $type = 'boarding';
+       
+       $students = DB::table('student_classes')
+            ->join('students', ['students.id' => 'student_classes.student_id'])
+            ->join('school_units', ['school_units.id' => 'student_classes.class_id'])
             ->where('students.type', '=', $type)
             ->where('students.name', 'LIKE', "%{$name}%")
             ->orWhere('students.matric', 'LIKE', "{$name}%")
-            ->select('students.id',  'students.name', 'students.matric', 'school_units.name as class_name', 'school_units.id as class_id')->get()->toArray();
-
-        return response()->json(['data' => $students]);
+            ->select('students.id',  'students.name', 'students.matric', 'school_units.name as class_name', 'school_units.id as class_id')->get();
+        
+        return response()->json(['data' => CollectBoardingFeeResource::collection($students)]);
     }
 }

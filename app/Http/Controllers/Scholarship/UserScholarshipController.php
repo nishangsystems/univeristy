@@ -79,7 +79,7 @@ class UserScholarshipController extends Controller
         $user_scholarship->scholarship_id = $request->scholarship_id;
         $user_scholarship->batch_id = $request->year;
         $user_scholarship->save();
-        return redirect()->route('admin.scholarship.eligible')->with('success', 'Awarded Scholarship successfully !');
+        return redirect()->route('admin.scholarship.awarded_students')->with('success', 'Awarded Scholarship successfully !');
     }
 
     /**
@@ -101,7 +101,7 @@ class UserScholarshipController extends Controller
         $data['student'] = Students::findOrFail($id);
         $data['scholarships'] = Scholarship::all();
         $data['years'] = Batch::all();
-        $data['title'] = 'Award Schoalrship to ' . $data['student']->name;
+        $data['title'] = 'Award Scholarship to ' . $data['student']->name;
         return view('admin.scholarship.award')->with($data);
     }
 
