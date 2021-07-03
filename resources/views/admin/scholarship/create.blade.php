@@ -1,14 +1,12 @@
 @extends('admin.layout')
-@section('title', 'Create Scholarship Award')
+
 @section('section')
 <div class="mx-3">
     <div class="form-panel">
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.scholarship.store')}}">
-            <!-- <h5 class="mt-5 font-weight-bold">Create Scholarship Award</h5> -->
             @csrf
-
             <div class="form-group @error('name') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Name*</label>
+                <label for="cname" class="control-label col-lg-2">Name <span style="color: red;">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="name" value="{{old('name')}}" type="text" required />
                     @error('name')
@@ -17,7 +15,7 @@
                 </div>
             </div>
             <div class="form-group @error('amount') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Amount*</label>
+                <label for="cname" class="control-label col-lg-2">Amount <span style="color: red;">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="amount" value="{{old('amount')}}" type="number" required />
                     @error('amount')
@@ -26,7 +24,7 @@
                 </div>
             </div>
             <div class="form-group @error('type') has-error @enderror">
-                <label class="control-label col-lg-2">Scholarship Type*</label>
+                <label class="control-label col-lg-2">Scholarship Type <span style="color: red;">*</span></label>
                 <div class="col-lg-10">
                     <select class="form-control" name="type">
                         <option value="">Select Type</option>
@@ -38,15 +36,6 @@
                         <option value="6">Full-time</option>
                     </select>
                     @error('type')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <div class="form-group @error('description') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Description</label>
-                <div class="col-lg-10">
-                    <textarea class=" form-control" name="description" value="{{old('description')}}" type="textarea" rows="4"></textarea>
-                    @error('description')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>

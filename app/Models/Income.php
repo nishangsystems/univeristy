@@ -11,9 +11,9 @@ class Income extends Model
 
     protected $fillable = [
         'name',
-        'description',
+
         'amount',
-        'income_date'
+
     ];
 
     /**
