@@ -1,10 +1,10 @@
 @extends('admin.layout')
-@section('title', 'Eligible expenses')
+
 @section('section')
 
 <div class="col-sm-12">
     <div class="col-sm-12 mb-5">
-        <a href="{{route('admin.expense.create')}}" class="btn btn-info btn-xs">Add Expense</a>
+        @include("admin.expense.create")
     </div>
     <div class="content-panel">
         <div class="adv-table table-responsive">
@@ -27,7 +27,7 @@
                         <td>{{number_format($expense->amount_spend)}}</td>
                         <td>{{date('jS F Y', strtotime($expense->date))}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
-                            <a class="btn btn-sm btn-primary m-3" href="{{route('admin.expense.show',[$expense->id])}}"><i class="fa fa-info-circle"> View</i></a> |
+
                             <a class="btn btn-sm btn-success m-3" href="{{route('admin.expense.edit',[$expense->id])}}"><i class="fa fa-edit"> Edit</i></a> |
                             <a onclick="event.preventDefault();
                                             document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-3"><i class="fa fa-trash"> Delete</i></a>

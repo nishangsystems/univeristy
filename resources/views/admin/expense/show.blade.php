@@ -25,13 +25,7 @@
                     <h5 class="font-weight-bold">Expense Date: <span><label>{{date('jS F Y', strtotime($expense->date))}}</label></span></h5>
                 </div>
 
-                <div>
-                    <h5 class="font-weight-bold">Description : </h5>
-                    <span>
-                        <p>{{$expense->description}}</p>
-                    </span>
 
-                </div>
                 <div class="d-inline-flex">
                 </div>
             </div>
