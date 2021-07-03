@@ -99,7 +99,7 @@ class UserScholarshipController extends Controller
     public function create($id)
     {
         $data['student'] = Students::findOrFail($id);
-        $data['scholarships'] = Scholarship::all();
+        $data['scholarships'] = DB::table('scholarships')->where('status', 1)->get()->toArray();
         $data['years'] = Batch::all();
         $data['title'] = 'Award Scholarship to ' . $data['student']->name;
         return view('admin.scholarship.award')->with($data);

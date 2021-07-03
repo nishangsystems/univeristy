@@ -510,7 +510,7 @@
                     <li>
                         <a href="{{route('admin.scholarship.index')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            Scholarship offers
+                            Scholarships
                         </a>
                         <b class="arrow"></b>
                     </li>

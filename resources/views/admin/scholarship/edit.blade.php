@@ -7,7 +7,7 @@
             @csrf
             @method('PUT')
             <div class="form-group @error('name') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Name*</label>
+                <label for="cname" class="control-label col-lg-2">Name <span style="color: red;">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="name" value="{{old('name') ?? $scholarship->name}}" type="text" required />
                     @error('name')
@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="form-group @error('amount') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Amount*</label>
+                <label for="cname" class="control-label col-lg-2">Amount <span style="color: red;">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="amount" value="{{old('amount') ?? $scholarship->amount}}" type="number" required />
                     @error('amount')
@@ -26,7 +26,7 @@
             </div>
 
             <div class="form-group @error('status') has-error @enderror">
-                <label class="control-label col-lg-2">Scholarship Status*</label>
+                <label class="control-label col-lg-2">Scholarship Status <span style="color: red;">*</span></label>
                 <div class="col-lg-10">
                     <select class="form-control" name="status">
                         <option value="1" {{$scholarship->status == 1? 'selected':''}}>Active</option>
@@ -37,15 +37,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="form-group @error('description') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Description</label>
-                <div class="col-lg-10">
-                    <textarea class=" form-control" name="description" value="{{old('description')}}" type="textarea" rows="4">{{old('description') ?? $scholarship->description }}</textarea>
-                    @error('description')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
+
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
                     <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">Save</button>
