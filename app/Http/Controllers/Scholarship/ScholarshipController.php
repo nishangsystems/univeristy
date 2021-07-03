@@ -115,6 +115,7 @@ class ScholarshipController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'amount' => 'required|numeric',
+            'status' => 'required|numeric'
         ]);
         $updated = Scholarship::findOrFail($id)->update($request->all());
         return redirect()->route('admin.scholarship.index')->with('success', 'Scholarship updated successfully !');

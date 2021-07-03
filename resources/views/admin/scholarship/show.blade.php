@@ -36,13 +36,7 @@
                     <h5 class="font-weight-bold">Status: <span><label> InActive</label></span></h5>
                     @endif
                 </div>
-                <div>
-                    <h5 class="font-weight-bold">Description : </h5>
-                    <span>
-                        <p>{{$data->description}}</p>
-                    </span>
 
-                </div>
             </div>
             <div class="d-inline-flex">
             </div>
