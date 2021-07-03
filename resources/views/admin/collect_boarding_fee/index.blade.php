@@ -117,7 +117,8 @@
     $('.section').on('change', function() {
 
         let value = $(this).val();
-        url = "{{route('admin.getSections', "VALUE")}}";
+        url = "{{route('admin.getSections', "
+        VALUE ")}}";
         search_url = url.replace('VALUE', value);
         $.ajax({
             type: 'GET',
@@ -148,7 +149,8 @@
     $('#circle').on('change', function() {
 
         let value = $(this).val();
-        url = "{{route('admin.getClasses', "VALUE")}}";
+        url = "{{route('admin.getClasses', "
+        VALUE ")}}";
         search_url = url.replace('VALUE', value);
         $.ajax({
             type: 'GET',

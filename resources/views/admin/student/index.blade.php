@@ -6,35 +6,54 @@
     <div class="col-lg-12">
         <div class="form-panel mb-5 mt-5 ml-2">
             <form class="form-horizontal" role="form" method="POST" action="{{route('admin.getStudent.perClassYear')}}">
-                <div class="row ml-5">
-                    <div class="col-sm-2 d-flex justify-content-lg-center">
+                <div class="form-group @error('class_id') has-error @enderror ml-2">
+                    <div class="col-sm-2 d-flex justify-content-lg-start">
                         <select class="form-control section" name="section_id">
                             <option value="">Select Section</option>
                             @foreach($school_units as $key => $unit)
                             <option value="{{$unit->id}}">{{$unit->name}}</option>
                             @endforeach
                         </select>
-                        @error('section_id')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <!-- <div>
+                            @error('section_id')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div> -->
                     </div>
 
-                    <div class="col-sm-2 d-flex justify-content-lg-center">
+                    <div class="col-sm-2 d-flex justify-content-lg-start">
                         <select class="form-control Circle" id="circle" name="circle">
                             <option value="">Select Circle</option>
                         </select>
-                        @error('circle')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <!-- <div>
+                            @error('circle')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div> -->
                     </div>
 
-                    <div class="col-sm-2 d-flex justify-content-lg-center">
+                    <div class="col-sm-2 d-flex justify-content-lg-start">
                         <select class="form-control class" name="class_id">
                             <option value="">Select Class</option>
                         </select>
-                        @error('class_id')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <!-- <div>
+                            @error('class_id')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div> -->
+                    </div>
+
+                    <div class="col-sm-2 d-flex justify-content-lg-start">
+                        <select class="form-control" name="type">
+                            <option value="">School Section</option>
+                            <option value="day">Day Section</option>
+                            <option value="boarding">Boarding Section</option>
+                        </select>
+                        <!-- <div>
+                            @error('type')
+                            <label class="invalid-feedback">{{ $message }}</label>
+                            @enderror
+                        </div> -->
                     </div>
 
                     <div class="col-sm-2">
@@ -44,9 +63,11 @@
                             <option value="{{$year->id}}">{{$year->name}}</option>
                             @endforeach
                         </select>
-                        @error('batch_id')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <!-- <div>
+                            @error('batch_id')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div> -->
                     </div>
                     <div class="col-md-1"></div>
                     <div class=" col-sm-1 mb-1 d-flex justify-content-end">
@@ -79,7 +100,7 @@
                         <td>{{$student->matric}}</td>
                         <td>{{$student->email}}</td>
                         <td>{{$student->phone}}</td>
-                        <td class="d-flex justify-content-end  align-items-center">
+                        <td class="d-flex justify-content-end  align-items-start">
                             <a class="btn btn-sm btn-primary m-1" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-info-circle"> View</i></a> |
                             <a class="btn btn-sm btn-success m-1" href="{{route('admin.student.edit',[$student->id])}}"><i class="fa fa-edit"> Edit</i></a>|
                             <a onclick="event.preventDefault();

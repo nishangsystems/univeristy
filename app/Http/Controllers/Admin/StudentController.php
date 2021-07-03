@@ -44,18 +44,31 @@ class StudentController extends Controller
     }
     public function getStudentsPerClass(Request $request)
     {
+        $type = $this->CheckoutSchoolType($request);
         $data['school_units'] = DB::table('school_units')->where('parent_id', 0)->get()->toArray();
         $data['years'] = $this->years;
         $class_name =  DB::table('school_units')->where('id', $request->class_id)->pluck('name')->first();
-        $data['title'] = 'Manage Students; ' . $class_name;
+        $data['title'] = 'Manage Students Under ' .  $type . ' in ' . $class_name;
         $data['students'] = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
             ->where('student_classes.year_id', $request->batch_id)
             ->where('school_units.id', $request->class_id)
+            ->where('students.type', $request->type)
             ->select($this->select)->paginate(15);
         return view('admin.student.index')->with($data);
     }
+    private function CheckoutSchoolType($request)
+    {
+        $type = null;
+        if ($request->type == 'day') {
+            $type = 'Day Section';
+        } else if ($request->type == 'boarding') {
+            $type = 'Boarding Section';
+        }
+        return $type;
+    }
+
 
     public function create(Request $request)
     {
