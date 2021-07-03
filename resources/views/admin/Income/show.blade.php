@@ -14,7 +14,6 @@
                             <label>{{number_format($income->amount)}} FCFA</label>
                         </span></h5>
                 </div>
-
                 <div>
                     @if($income->status == 1)
                     <h5 class="font-weight-bold">Status : <span><label>Active</label></span></h5>
@@ -25,7 +24,6 @@
                     <h5 class="font-weight-bold">Status : <span><label>Inactive</label></span></h5>
                     @endif
                 </div>
-
                 <div class="d-inline-flex">
                 </div>
             </div>

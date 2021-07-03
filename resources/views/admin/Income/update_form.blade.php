@@ -16,7 +16,6 @@
         @enderror
     </div>
 </div>
-
 <div class="form-group">
     <div class="d-flex justify-content-end col-lg-12">
         <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">Save</button>

@@ -64,7 +64,6 @@ class IncomeController extends Controller
         return $request->validate([
             'name' => 'required|max:255|string',
             'amount' => 'required|numeric',
-
         ]);
     }
 
@@ -90,7 +89,6 @@ class IncomeController extends Controller
         $request->validate([
             'name' => 'required|max:255|string',
             'amount' => 'required|numeric',
-
         ]);
         $updated_income = Income::findOrFail($id)->update($request->all());
         return  redirect()->route('admin.income.index')->with('success', 'Income updated successfully !');

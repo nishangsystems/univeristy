@@ -3,12 +3,14 @@
 @section('section')
 
 <div class="col-sm-12">
-    <div class="form-panel">
-        <form class="form-horizontal" role="form" method="POST" action="{{route('admin.income.store')}}">
+    <div class="col-sm-12">
+        <div class="form-panel">
+            <form class="form-horizontal" role="form" method="POST" action="{{route('admin.income.store')}}">
 
-            @csrf
-            @include('admin.Income.form')
-        </form>
+                @csrf
+                @include('admin.Income.form')
+            </form>
+        </div>
     </div>
     <div class="content-panel">
         <div class="adv-table table-responsive">
