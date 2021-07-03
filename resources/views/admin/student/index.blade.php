@@ -4,46 +4,58 @@
 
 <div class="col-sm-12">
     <div class="col-lg-12">
-        <div class="form-panel mb-5 ml-2">
-            <form class="form-horizontal" role="form" method="POST" action="{{route('admin.boarding_fees_year')}}">
-                <div class="form-group @error('class_id') has-error @enderror ">
-                    <div class="col-sm-2">
+        <div class="form-panel mb-5 mt-5 ml-2">
+            <form class="form-horizontal" role="form" method="POST" action="{{route('admin.getStudent.perClassYear')}}">
+                <div class="form-group @error('class_id') has-error @enderror ml-2">
+                    <div class="col-sm-2 d-flex justify-content-lg-start">
                         <select class="form-control section" name="section_id">
                             <option value="">Select Section</option>
                             @foreach($school_units as $key => $unit)
                             <option value="{{$unit->id}}">{{$unit->name}}</option>
                             @endforeach
                         </select>
-                        @error('section_id')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <!-- <div>
+                            @error('section_id')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div> -->
                     </div>
-                    <div class="col-sm-2">
+
+                    <div class="col-sm-2 d-flex justify-content-lg-start">
                         <select class="form-control Circle" id="circle" name="circle">
                             <option value="">Select Circle</option>
                         </select>
-                        @error('circle')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <!-- <div>
+                            @error('circle')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div> -->
                     </div>
-                    <div class="col-sm-2">
+
+                    <div class="col-sm-2 d-flex justify-content-lg-start">
                         <select class="form-control class" name="class_id">
                             <option value="">Select Class</option>
                         </select>
-                        @error('class_id')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <!-- <div>
+                            @error('class_id')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div> -->
                     </div>
-                    <div class="col-sm-2">
-                        <select class="form-control" name="status">
-                            <option value="">Select paid type</option>
-                            <option value="0">Incomplete</option>
-                            <option value="1">Completed</option>
+
+                    <div class="col-sm-2 d-flex justify-content-lg-start">
+                        <select class="form-control" name="type">
+                            <option value="">School Section</option>
+                            <option value="day">Day Section</option>
+                            <option value="boarding">Boarding Section</option>
                         </select>
-                        @error('status')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <!-- <div>
+                            @error('type')
+                            <label class="invalid-feedback">{{ $message }}</label>
+                            @enderror
+                        </div> -->
                     </div>
+
                     <div class="col-sm-2">
                         <select class="form-control" name="batch_id">
                             <option value="">Select Year</option>
@@ -51,13 +63,15 @@
                             <option value="{{$year->id}}">{{$year->name}}</option>
                             @endforeach
                         </select>
-                        @error('batch_id')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                        <!-- <div>
+                            @error('batch_id')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div> -->
                     </div>
-
-                    <div class=" col-sm-2 mb-1">
-                        <button class="btn btn-xs btn-primary" id="submit" type="submit">Get Boarding Fees</button>
+                    <div class="col-md-1"></div>
+                    <div class=" col-sm-1 mb-1 d-flex justify-content-end">
+                        <button class="btn btn-xs btn-primary" id="submit" type="submit">Get Students</button>
                     </div>
                 </div>
                 @csrf
@@ -72,40 +86,36 @@
                         <th>#</th>
                         <th>Name</th>
                         <th>Matricule</th>
-                        <th>Class</th>
-                        <th>Amount Payable(CFA)</th>
-                        <th>Status</th>
+                        <th>Email</th>
+                        <th>Phone</th>
                         <th></th>
+
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($boarding_fees as $k=>$boarding_fee)
+                    @foreach($students as $k=>$student)
                     <tr>
                         <td>{{$k+1}}</td>
-                        <td>{{$boarding_fee->name}}</td>
-                        <td>{{$boarding_fee->matric}}</td>
-                        <td>{{$boarding_fee->class_name}}</td>
-                        <td>{{number_format($boarding_fee->amount_payable)}}</td>
-                        @if($boarding_fee->status == 0)
-                        <td>Incomplete</td>
-                        @endif
-                        @if($boarding_fee->status == 1)
-                        <td>Completed</td>
-                        @endif
-                        @if($boarding_fee->status == 0)
-                        <td class="d-flex justify-content-end  align-items-center">
-                            <a class="btn btn-xs btn-warning" href="{{route('admin.collect_boarding_fee.edit',[$boarding_fee->id, $boarding_fee->student_id])}}">Complete Fee</a>
+                        <td>{{$student->name}}</td>
+                        <td>{{$student->matric}}</td>
+                        <td>{{$student->email}}</td>
+                        <td>{{$student->phone}}</td>
+                        <td class="d-flex justify-content-end  align-items-start">
+                            <a class="btn btn-sm btn-primary m-1" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-info-circle"> View</i></a> |
+                            <a class="btn btn-sm btn-success m-1" href="{{route('admin.student.edit',[$student->id])}}"><i class="fa fa-edit"> Edit</i></a>|
+                            <a onclick="event.preventDefault();
+                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-1"><i class="fa fa-trash"> Delete</i></a>
+                            <form id="delete" action="{{route('admin.student.destroy',[$student->id])}}" method="POST" style="display: none;">
+                                @method('DELETE')
+                                {{ csrf_field() }}
+                            </form>
                         </td>
-                        @endif
-                        @if($boarding_fee->status ==1)
-                        <td></td>
-                        @endif
                     </tr>
                     @endforeach
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-                {{$boarding_fees->links()}}
+
             </div>
         </div>
     </div>
@@ -115,14 +125,16 @@
 @section('script')
 <script>
     $('.section').on('change', function() {
-
         let value = $(this).val();
-        url = "{{route('admin.getSections', "
-        VALUE ")}}";
-        search_url = url.replace('VALUE', value);
+        url = '{{ route("admin.getSections", ":id") }}';
+        search_url = url.replace(':id', value);
+        console.log(search_url);
         $.ajax({
             type: 'GET',
             url: search_url,
+            data: {
+                'parent_id': value
+            },
             success: function(response) {
                 let size = response.data.length;
                 let data = response.data;

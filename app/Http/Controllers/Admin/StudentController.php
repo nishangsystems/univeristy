@@ -16,6 +16,60 @@ use Session;
 class StudentController extends Controller
 {
 
+    private $years;
+    private $year;
+    private $select = [
+        'students.id',
+        'students.name',
+        'students.matric',
+        'students.email',
+        'students.phone',
+
+    ];
+
+    public function __construct()
+    {
+        $this->year = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
+        $this->years = Batch::all();
+        // $this->batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
+    }
+    public function index()
+    {
+        $curent_year = substr($this->year, 5);
+        $data['title'] = 'Manage Students';
+        $data['school_units'] = DB::table('school_units')->where('parent_id', 0)->get()->toArray();
+        $data['years'] = $this->years;
+        $data['students'] = DB::table('students')->whereYear('students.created_at', $curent_year)->get()->toArray();
+        return view('admin.student.index')->with($data);
+    }
+    public function getStudentsPerClass(Request $request)
+    {
+        $type = $this->CheckoutSchoolType($request);
+        $data['school_units'] = DB::table('school_units')->where('parent_id', 0)->get()->toArray();
+        $data['years'] = $this->years;
+        $class_name =  DB::table('school_units')->where('id', $request->class_id)->pluck('name')->first();
+        $data['title'] = 'Manage Students Under ' .  $type . ' in ' . $class_name;
+        $data['students'] = DB::table('student_classes')
+            ->join('students', 'students.id', '=', 'student_classes.student_id')
+            ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
+            ->where('student_classes.year_id', $request->batch_id)
+            ->where('school_units.id', $request->class_id)
+            ->where('students.type', $request->type)
+            ->select($this->select)->paginate(15);
+        return view('admin.student.index')->with($data);
+    }
+    private function CheckoutSchoolType($request)
+    {
+        $type = null;
+        if ($request->type == 'day') {
+            $type = 'Day Section';
+        } else if ($request->type == 'boarding') {
+            $type = 'Boarding Section';
+        }
+        return $type;
+    }
+
+
     public function create(Request $request)
     {
         $data['title'] = "Admit New Student";
@@ -117,7 +171,7 @@ class StudentController extends Controller
             $class->class_id = $request->section;
             $class->save();
             DB::commit();
-            return redirect()->to(route('admin.students.index', $request->section))->with('success', "Student saved successfully !");
+            return redirect()->back()->with('success', "Student saved successfully !");
         } catch (\Exception $e) {
             DB::rollBack();
             echo $e;

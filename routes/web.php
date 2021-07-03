@@ -124,7 +124,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('students/import', 'Admin\StudentController@importPost')->name('students.import');
     Route::get('student/matricule', 'Admin\StudentController@matric')->name('students.matricule');
     Route::post('student/matricule', 'Admin\StudentController@matricPost')->name('students.matricule');
-    Route::resource('student', 'Admin\StudentController')->except(['index']);
+    Route::resource('student', 'Admin\StudentController');
+    Route::post('students', 'Admin\StudentController@getStudentsPerClass')->name('getStudent.perClassYear');
     Route::resource('result_release', 'Admin\ResultController');
 
 
@@ -142,7 +143,6 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('collected/boarding_fees/{student_id}/{id}/edit', 'Admin\CollectBoardingFeeController@edit')->name('collect_boarding_fee.edit');
     Route::put('collected/boarding_fees/{student_id}/{id}', 'Admin\CollectBoardingFeeController@update')->name('collect_boarding_fee.update');
     Route::post('collected/boarding_fees', 'Admin\CollectBoardingFeeController@getBoardingFeePerYear')->name('boarding_fees_year');
-   
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
