@@ -22,7 +22,9 @@ class Students extends Authenticatable
         'pob',
         'admission_batch_id',
         'password',
-        'type'
+        'type',
+        'parent_name',
+        'parent_phone_number'
     ];
 
     public function class($year)

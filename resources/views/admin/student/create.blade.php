@@ -8,7 +8,7 @@
             <h5 class="mt-5 font-weight-bold">Personal Information</h5>
             @csrf
             <div class="form-group @error('name') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Full Name (required)</label>
+                <label for="cname" class="control-label col-lg-2">Full Name <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="name" value="{{old('name')}}" type="text" required />
                     @error('name')
@@ -19,7 +19,7 @@
 
 
             <div class="form-group @error('email') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Email (required)</label>
+                <label for="cname" class="control-label col-lg-2">Email <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="email" value="{{old('email')}}" type="text" required />
                     @error('email')
@@ -29,7 +29,7 @@
             </div>
 
             <div class="form-group @error('phone') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Phone</label>
+                <label for="cname" class="control-label col-lg-2">Phone </label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="phone" value="{{old('phone')}}" type="text" required />
                     @error('phone')
@@ -39,7 +39,7 @@
             </div>
 
             <div class="form-group @error('address') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Address</label>
+                <label for="cname" class="control-label col-lg-2">Address <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="address" value="{{old('address')}}" type="text" required />
                     @error('address')
@@ -47,9 +47,47 @@
                     @enderror
                 </div>
             </div>
+            <div class="form-group @error('dob') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2">Date of Bith <span style="color:red">*</span></label>
+                <div class="col-lg-10">
+                    <input class=" form-control" name="dob" value="{{old('dob')}}" type="date" required />
+                    @error('dob')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="form-group @error('pob') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2">Place of Birth <span style="color:red">*</span></label>
+                <div class="col-lg-10">
+                    <input class=" form-control" name="pob" value="{{old('pob')}}" type="text" required />
+                    @error('pob')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="form-group @error('parent_name') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2">Parent's Name <span style="color:red">*</span></label>
+                <div class="col-lg-10">
+                    <input class=" form-control" name="parent_name" value="{{old('parent_name')}}" type="text" required />
+                    @error('parent_name')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="form-group @error('parent_phone_number') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2">Parent's or Guardian Phone Number <span style="color:red">*</span></label>
+                <div class="col-lg-10">
+                    <input class=" form-control" name="parent_phone_number" value="{{old('parent_phone_number')}}" type="text" required />
+                    @error('parent_phone_number')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
 
             <div class="form-group @error('gender') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Gender</label>
+                <label for="cname" class="control-label col-lg-2">Gender <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <select class="form-control" name="gender">
                         <option selected disabled>Select Gender</option>
@@ -66,7 +104,7 @@
 
 
             <div class="form-group @error('type') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">School Section</label>
+                <label for="cname" class="control-label col-lg-2">School Section <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <select class="form-control" name="type">
                         <option selected disabled>Select</option>
@@ -81,7 +119,7 @@
 
             <div id="section">
                 <div class="form-group">
-                    <label for="cname" class="control-label col-lg-2">Section</label>
+                    <label for="cname" class="control-label col-lg-2">Section <span style="color:red">*</span></label>
                     <div class="col-lg-10">
                         <div>
                             <select class="form-control section" id="section0">
