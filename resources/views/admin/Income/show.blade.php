@@ -2,14 +2,7 @@
 @section('title', 'Available incomes')
 @section('section')
 <div class="col-sm-12">
-    <div class="col-sm-12">
-        <div class="mb-3 d-flex justify-content-start">
-            <h4 class="font-weight-bold">Income Details</h4>
-        </div>
-        <!-- <div class="text-muted mb-3 d-flex justify-content-end">
-            <a href="{{route('admin.income.create')}}" class="btn btn-info btn-xs">Add income</a>
-        </div> -->
-    </div>
+
     <div class="content-panel">
         <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
             <div>

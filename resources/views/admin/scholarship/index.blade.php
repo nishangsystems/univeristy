@@ -3,10 +3,8 @@
 @section('section')
 
 <div class="col-sm-12">
-    <div class="col-sm-12">
-        <!-- <div class="mb-3 d-flex justify-content-start">
-            <h3 class="font-weight-bold">Available Scholarships</h3>
-        </div> -->
+    <div>
+        @include("admin.scholarship.create")
 
     </div>
     <div class="content-panel">

@@ -18,7 +18,7 @@
         @enderror
     </div>
     <div class="form-group col-sm-2">
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end  ">
             <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">Save</button>
 
         </div>

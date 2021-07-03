@@ -13,10 +13,8 @@ class IncomeController extends Controller
     private $select = [
         'name',
         'amount',
-
         'user_id',
         'id',
-
     ];
     /**
      * list all incomes of a school
