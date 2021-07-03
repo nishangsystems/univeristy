@@ -206,6 +206,13 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    <li>
+                        <a href="{{route('admin.student.index')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Enrolled Students
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
                     <li>
                         <a href="{{route('admin.sections')}}?action=class_list">

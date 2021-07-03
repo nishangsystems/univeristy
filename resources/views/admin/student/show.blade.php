@@ -62,10 +62,38 @@
                     </div>
                 </div>
                 <div class="profile-info-row">
+                    <div class="profile-info-name"> Date of Birth</div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" id="username"> {{$user->dob}}</span>
+                    </div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-name"> Place of Birth</div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" id="username"> {{$user->pob}}</span>
+                    </div>
+                </div>
+                <div class="profile-info-row">
                     <div class="profile-info-name"> Contact</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->phone}}</span>
+                    </div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-name"> Parent or Guardian Name</div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" id="username"> {{$user->parent_name}}</span>
+                    </div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-name">Parent or Guardian Phone Number</div>
+
+                    <div class="profile-info-value">
+                        <span class="editable" id="username"> {{$user->parent_phone_number}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
