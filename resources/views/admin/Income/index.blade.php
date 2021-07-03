@@ -4,11 +4,12 @@
 
 <div class="col-sm-12">
     <div class="col-sm-12">
-        <!-- <div class="mb-3 d-flex justify-content-start">
-            <h3 class="font-weight-bold">School incomes</h3>
-        </div> -->
-        <div class="col-sm-12 mb-5">
-            <a href="{{route('admin.income.create')}}" class="btn btn-info btn-xs">Add Income</a>
+        <div class="form-panel">
+            <form class="form-horizontal" role="form" method="POST" action="{{route('admin.income.store')}}">
+
+                @csrf
+                @include('admin.Income.form')
+            </form>
         </div>
     </div>
     <div class="content-panel">

@@ -13,10 +13,10 @@ class IncomeController extends Controller
     private $select = [
         'name',
         'amount',
-        'description',
+
         'user_id',
         'id',
-        'income_date'
+
     ];
     /**
      * list all incomes of a school
@@ -52,11 +52,9 @@ class IncomeController extends Controller
         $income = new Income();
         $income->name = $request->name;
         $income->amount = $request->amount;
-        $income->description = $request->description;
         $income->user_id = Auth::id();
-        $income->income_date = $request->income_date;
         $income->save();
-        return redirect()->route('admin.income.index')->with('success', 'Income saved successfully !');
+        return redirect()->back()->with('success', 'Income saved successfully !');
     }
 
     /**
@@ -68,8 +66,6 @@ class IncomeController extends Controller
         return $request->validate([
             'name' => 'required|max:255|string',
             'amount' => 'required|numeric',
-            'description' => 'required|string',
-            'income_date' => 'required'
         ]);
     }
 
@@ -95,7 +91,6 @@ class IncomeController extends Controller
         $request->validate([
             'name' => 'required|max:255|string',
             'amount' => 'required|numeric',
-            'description' => 'required|string',
         ]);
         $updated_income = Income::findOrFail($id)->update($request->all());
         return  redirect()->route('admin.income.index')->with('success', 'Income updated successfully !');
