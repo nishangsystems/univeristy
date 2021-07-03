@@ -515,13 +515,7 @@
                         <b class="arrow"></b>
                     </li>
 
-                    <li>
-                        <a href="{{route('admin.scholarship.create')}}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Add Scholarship
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    
                     <li>
                         <a href="{{route('admin.scholarship.eligible')}}">
                             <i class="menu-icon fa fa-caret-right"></i>

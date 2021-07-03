@@ -49,10 +49,10 @@ class ScholarshipController extends Controller
         $scholarship->name = $request->name;
         $scholarship->amount = $request->amount;
         $scholarship->type = $this->scholarship_to_code[$request->type];
-        $scholarship->description = $request->description;
+
         $scholarship->status = 1;
         $scholarship->save();
-        return redirect()->route('admin.scholarship.index')->with('success', 'Success! Scholarship saved successfully !');
+        return redirect()->back()->with('success', 'Success! Scholarship saved successfully !');
     }
 
     /**
@@ -64,7 +64,7 @@ class ScholarshipController extends Controller
             'name' => 'required|string|max:255',
             'amount' => 'required|numeric',
             'type' => 'required|numeric',
-            'description' => 'string',
+
 
         ]);
     }
@@ -115,8 +115,6 @@ class ScholarshipController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'amount' => 'required|numeric',
-
-            'description' => 'string',
         ]);
         $updated = Scholarship::findOrFail($id)->update($request->all());
         return redirect()->route('admin.scholarship.index')->with('success', 'Scholarship updated successfully !');
