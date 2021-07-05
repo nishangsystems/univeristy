@@ -276,7 +276,7 @@ class CollectBoardingFeeController extends Controller
             $data['student_id'] = $student_id;
             $data['class_id'] = $class_id;
         } elseif (!empty($check_completed)) {
-            return redirect()->route('admin.collect_boarding_fee.index')->with('success', "This Student has already completed Boarding Fee!");
+            return redirect()->route('admin.collect_boarding_fee.index')->with('error', "This Student has already completed Boarding Fee!");
         } else {
             return redirect()->route('admin.collect_boarding_fee.edit', [$check_user->id, $student_id]);
         }

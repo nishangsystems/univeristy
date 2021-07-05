@@ -81,7 +81,6 @@ class PayIncomeController extends Controller
      */
     public function create()
     {
-
         $data['title'] = 'Collect Income';
         return view('admin.payIncome.create')->with($data);
     }
@@ -100,7 +99,7 @@ class PayIncomeController extends Controller
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
             ->where('students.name', 'like', '%' . $name . '%')
             ->orWhere('students.matric', 'like', $name . '%')
-            ->select('students.id',  'students.name', 'students.matric','students.gender', 'school_units.name as class_name', 'school_units.id as class_id')->get();
+            ->select('students.id',  'students.name', 'students.matric', 'students.gender', 'school_units.name as class_name', 'school_units.id as class_id')->get();
 
         return response()->json(['data' => PayIncomeResource::collection($students)]);
     }
@@ -115,6 +114,7 @@ class PayIncomeController extends Controller
      */
     public function collect($class_id, $student_id)
     {
+
         $student = Students::where('id', $student_id)->first();
         $data['title'] = 'Collect Income for ' . $student->name;
         $data['class_id'] = $class_id;
@@ -122,6 +122,22 @@ class PayIncomeController extends Controller
         $data['years'] = Batch::all();
         $data['student_id'] = $student_id;
         return view('admin.payIncome.collect')->with($data);
+    }
+
+    /**
+     * checkout if student has pay income
+     */
+    private function checkStudentPaidIncome($student_id, $id, $class_id)
+    {
+        $student = DB::table('pay_incomes')
+            ->join('students', 'students.id', '=', 'pay_incomes.student_id')
+            ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
+            ->join('school_units', 'school_units.id', '=', 'pay_incomes.class_id')
+            ->where('pay_incomes.income_id', $id)
+            ->where('pay_incomes.student_id', $student_id)
+            ->where('pay_incomes.class_id', $class_id)
+            ->select('students.id')->first();
+        return $student;
     }
 
 
@@ -134,6 +150,12 @@ class PayIncomeController extends Controller
      */
     public function store(Request $request, $class_id, $student_id)
     {
+
+
+        $student = $this->checkStudentPaidIncome($student_id, $request->income_id, $class_id);
+        if (!empty($student)) {
+            return redirect()->route('admin.pay_income.index')->with('error', 'The Student has paid this Income Fee!');
+        }
 
         $validate_data = $request->validate([
             'income_id' => 'required|numeric',
