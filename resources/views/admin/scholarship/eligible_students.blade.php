@@ -19,7 +19,7 @@
                         <th>Class</th>
                         <th>Gender</th>
                         <th></th>
-                         
+
                     </tr>
                 </thead>
                 <tbody id="content">
@@ -35,7 +35,8 @@
 <script>
     $('#search').on('keyup', function() {
         val = $(this).val();
-        url = "{{route('admin.searchStudent', "VALUE")}}";
+        url = "{{route('admin.searchStudent', "
+        VALUE ")}}";
         search_url = url.replace('VALUE', val);
         $.ajax({
             type: 'GET',
@@ -50,9 +51,9 @@
                         '    <td>' + data[i].name + '</td>' +
                         '    <td>' + data[i].matric + '</td>' +
                         '    <td>' + data[i].class_name + '</td>' +
-                        '    <td>' + data[i].gender + '</td>'+
+                        '    <td>' + data[i].gender + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
-                        '        <a class="btn btn-xs btn-primary" href="'+data[i].link2+'">Award Scholarship</a>' +
+                        '        <a class="btn btn-xs btn-primary" href="' + data[i].link2 + '">Award Scholarship</a>' +
                         '    </td>' +
                         '</tr>';
                 }

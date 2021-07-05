@@ -54,7 +54,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('fee/{class_id}/report', 'Admin\FeesController@report')->name('fee.report');
     Route::get('fee/{class_id}/student', 'Admin\FeesController@student')->name('fee.student');
 
-
+    Route::get('sections/{id}', 'Admin\PayIncomeController@getSections')->name('getSections');
+    Route::get('classes/{id}', 'Admin\PayIncomeController@getClasses')->name('getClasses');
+    Route::get('search/students/{name}', 'Admin\PayIncomeController@searchStudent')->name('searchStudent');
 
     Route::get('scholarships', 'Scholarship\ScholarshipController@index')->name('scholarship.index');
     Route::get('scholarship/create', 'Scholarship\ScholarshipController@create')->name('scholarship.create');
@@ -82,9 +84,6 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('incomes/paid_income/list', 'Admin\PayIncomeController@index')->name('pay_income.index');
     Route::post('incomes/pay_income/list', 'Admin\PayIncomeController@getPayIncomePerClassYear')->name('pay_income.per_year');
 
-    Route::get('sections/{id}', 'Admin\PayIncomeController@getSections')->name('getSections');
-    Route::get('classes/{id}', 'Admin\PayIncomeController@getClasses')->name('getClasses');
-    Route::get('search/students/{name}', 'Admin\PayIncomeController@searchStudent')->name('searchStudent');
 
     Route::get('expenses', 'Admin\Expense\ExpenseController@index')->name('expense.index');
     Route::get('expenses/create', 'Admin\Expense\ExpenseController@create')->name('expense.create');
@@ -142,7 +141,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('collected/boarding_fees/', 'Admin\CollectBoardingFeeController@index')->name('collect_boarding_fee.index');
     Route::get('collected/boarding_fees/{student_id}/{id}/edit', 'Admin\CollectBoardingFeeController@edit')->name('collect_boarding_fee.edit');
     Route::put('collected/boarding_fees/{student_id}/{id}', 'Admin\CollectBoardingFeeController@update')->name('collect_boarding_fee.update');
+    Route::get('collected/boarding_fees/{student_id}/{id}', 'Admin\CollectBoardingFeeController@show')->name('collect_boarding_fee.show');
     Route::post('collected/boarding_fees', 'Admin\CollectBoardingFeeController@getBoardingFeePerYear')->name('boarding_fees_year');
+    Route::post('collect/boarding_fees/{student_id}/{id}', 'Admin\CollectBoardingFeeController@collectBoardingFeeDetails')->name('boarding_fees_details');
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
@@ -169,8 +170,8 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('result', 'Student\HomeController@result')->name('result');
     Route::get('fee', 'Student\HomeController@fee')->name('fee');
     Route::get('subjects/{id}/notes', 'Student\HomeController@subjectNotes')->name('subject.notes');
-    Route::get('boarding_fees', 'Student\HomeController@boarding')->name('boarding');
-    Route::post('boarding_fees', 'Student\HomeController@getBoardingFeesYear')->name('boarding_fee.per_year');
+    Route::get('boarding_fees/details', 'Student\HomeController@boarding')->name('boarding');
+    Route::post('boarding_fees/details/', 'Student\HomeController@getBoardingFeesYear')->name('boarding_fees_details');
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');
@@ -180,6 +181,9 @@ Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search
 Route::get('student_rank', 'HomeController@rank')->name('student_rank');
 
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
+
+
+
 
 Route::get('mode/{locale}', function ($batch) {
     session()->put('mode', $batch);

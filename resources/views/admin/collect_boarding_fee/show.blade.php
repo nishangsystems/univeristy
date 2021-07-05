@@ -4,10 +4,10 @@
 
 <div class="col-sm-12">
     <div class="col-lg-12">
-        <div class="form-panel mb-5 ml-2">
-            <form class="form-horizontal" role="form" method="POST" action="{{route('admin.pay_income.per_year')}}">
+        <div class="form-panel mb-3 ml-3 mt-5 mb-5">
+            <form class="form-horizontal" role="form" method="POST" action="{{route('admin.boarding_fees_details', [$paid_boarding_fee_details[0]->student_id, $paid_boarding_fee_details[0]->id])}}">
                 <div class="form-group @error('class_id') has-error @enderror ">
-                    <div class="col-sm-3">
+                    <div class="col-lg-2">
                         <select class="form-control section" name="section_id">
                             <option value="">Select Section</option>
                             @foreach($school_units as $key => $unit)
@@ -18,7 +18,8 @@
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-xs-1"></div>
+                    <div class="col-lg-2">
                         <select class="form-control Circle" id="circle" name="circle">
                             <option value="">Select Circle</option>
                         </select>
@@ -26,7 +27,8 @@
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-xs-1"></div>
+                    <div class="col-lg-2">
                         <select class="form-control class" name="class_id">
                             <option value="">Select Class</option>
                         </select>
@@ -34,7 +36,8 @@
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-xs-1"></div>
+                    <div class="col-lg-2">
                         <select class="form-control" name="batch_id">
                             <option value="">Select Year</option>
                             @foreach($years as $key => $year)
@@ -45,8 +48,9 @@
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class=" col-sm-1 mb-1">
-                        <button class="btn btn-xs btn-primary" id="submit" type="submit">Get Income</button>
+
+                    <div class=" col-lg-1 mb-1">
+                        <button class="btn btn-xs btn-primary" id="submit" type="submit">Get Details</button>
                     </div>
                 </div>
                 @csrf
@@ -60,23 +64,36 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                        <th>Income Type</th>
-                        <th>Amount (CFA)</th>
+                        <th>Matricule</th>
+                        <th>Amount Payable(CFA)</th>
+                        <th>Total Amount Paid(CFA)</th>
+                        <th>Balance(CFA)</th>
+                        <th>Date</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($pay_incomes as $k=>$income)
+                    @foreach($paid_boarding_fee_details as $k=>$boarding_fee)
                     <tr>
                         <td>{{$k+1}}</td>
-                        <td>{{$income->student_name}}</td>
-                        <td>{{$income->income_name}}</td>
-                        <td>{{number_format($income->amount)}}</td>
+                        <td>{{$boarding_fee->name}}</td>
+                        <td>{{$boarding_fee->matric}}</td>
+                        <td>{{number_format($boarding_fee->amount_payable)}}</td>
+                        <td>{{number_format($boarding_fee->total_amount)}}</td>
+                        <td>{{number_format($boarding_fee->balance)}}</td>
+                        <td>{{date('jS F Y', strtotime($boarding_fee->created_at))}}</td>
+                        @if($boarding_fee->status == 0)
+                        <td>Incomplete</td>
+                        @endif
+                        @if($boarding_fee->status == 1)
+                        <td>Completed</td>
+                        @endif
                     </tr>
                     @endforeach
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-                {{$pay_incomes->links()}}
+                {{$paid_boarding_fee_details->links()}}
             </div>
         </div>
     </div>
@@ -119,7 +136,7 @@
     $('#circle').on('change', function() {
 
         let value = $(this).val();
-        url = "{{route('admin.getClasses',':id')}}";
+        url = "{{route('admin.getClasses', ':id')}}";
         search_url = url.replace(':id', value);
         $.ajax({
             type: 'GET',

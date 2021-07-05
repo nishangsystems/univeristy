@@ -73,8 +73,6 @@
                         <th>Name</th>
                         <th>Matricule</th>
                         <th>Class</th>
-                        <th>Amount Payable(CFA)</th>
-                        <th>Status</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -85,21 +83,9 @@
                         <td>{{$boarding_fee->name}}</td>
                         <td>{{$boarding_fee->matric}}</td>
                         <td>{{$boarding_fee->class_name}}</td>
-                        <td>{{number_format($boarding_fee->amount_payable)}}</td>
-                        @if($boarding_fee->status == 0)
-                        <td>Incomplete</td>
-                        @endif
-                        @if($boarding_fee->status == 1)
-                        <td>Completed</td>
-                        @endif
-                        @if($boarding_fee->status == 0)
                         <td class="d-flex justify-content-end  align-items-center">
-                            <a class="btn btn-xs btn-warning" href="{{route('admin.collect_boarding_fee.edit',[$boarding_fee->id, $boarding_fee->student_id])}}">Complete Fee</a>
+                            <a class="btn btn-sm btn-info" href="{{route('admin.collect_boarding_fee.show',[$boarding_fee->student_id, $boarding_fee->id])}}"><i class="fa fa-eye">View</i> </a>
                         </td>
-                        @endif
-                        @if($boarding_fee->status ==1)
-                        <td></td>
-                        @endif
                     </tr>
                     @endforeach
                 </tbody>
@@ -117,9 +103,8 @@
     $('.section').on('change', function() {
 
         let value = $(this).val();
-        url = "{{route('admin.getSections', "
-        VALUE ")}}";
-        search_url = url.replace('VALUE', value);
+        url = "{{route('admin.getSections', ':id')}}";
+        search_url = url.replace(':id', value);
         $.ajax({
             type: 'GET',
             url: search_url,
@@ -149,9 +134,8 @@
     $('#circle').on('change', function() {
 
         let value = $(this).val();
-        url = "{{route('admin.getClasses', "
-        VALUE ")}}";
-        search_url = url.replace('VALUE', value);
+        url = "{{route('admin.getClasses', ':id')}}";
+        search_url = url.replace(':id', value);
         $.ajax({
             type: 'GET',
             url: search_url,

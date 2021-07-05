@@ -3,12 +3,12 @@
 @section('section')
 <div class="mx-3">
     <div class="form-panel">
-        <form class="form-horizontal" role="form" method="POST" action="{{route('admin.collect_boarding_fee.update',[$boarding_fee->id, $boarding_fee->student_id])}}">
+        <form class="form-horizontal" role="form" method="POST" action="{{route('admin.collect_boarding_fee.update',[$boarding_fee->id, $student_id])}}">
             @csrf
             @method('PUT')
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2">Amount Paid :</label>
-                <label for="cname" class="control-label col-lg-10">{{number_format($boarding_fee->amount_payable)}} CFA</label>
+                <label for="cname" class="control-label col-lg-10">{{number_format($boarding_fee->total_amount)}} CFA</label>
             </div>
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2">Balance Payment :</label>
