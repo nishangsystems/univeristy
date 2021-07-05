@@ -11,10 +11,9 @@ class CollectBoardingFee extends Model
 
     protected $fillable = [
         'student_id',
-        'amount_payable',
         'batch_id',
-        'status',
-        'class_id'
+        'class_id',
+
     ];
 
     public function student()
@@ -30,5 +29,10 @@ class CollectBoardingFee extends Model
     public function batch()
     {
         return $this->belongsTo(Batch::class, 'batch_id');
+    }
+
+    public function boardingAmounts()
+    {
+        return $this->hasMany(BoardingAmount::class, 'collect_boarding_fee_id');
     }
 }
