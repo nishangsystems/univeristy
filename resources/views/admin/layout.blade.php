@@ -315,6 +315,7 @@
                     </li>
                 </ul>
             </li>
+<<<<<<< HEAD
 
 
             <li>
@@ -353,42 +354,6 @@
                 </ul>
             </li>
 
-            <!-- <li>
-                <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-cog"></i>
-                    <span class="menu-text">
-						User Accounts
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.users.index')}}?type=admin">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Add Admins
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.users.index')}}?type=teacher">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Add Teachers
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.users.classmaster')}}?type=teacher">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Class Masters
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li> -->
-
             <li>
                 <a href="#" class="dropdown-toggle">
                     <i class="menu-icon fa fa-money"></i>
@@ -414,7 +379,7 @@
                             Collect Boarding Fee
                         </a>
                         <b class="arrow"></b>
-                    </li> 
+                    </li>
 
                     <li>
                         <a href="{{route('admin.print_fee')}}">
@@ -522,7 +487,7 @@
                         <b class="arrow"></b>
                     </li>
 
-                    
+
                     <li>
                         <a href="{{route('admin.scholarship.eligible')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -565,6 +530,7 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+<<<<<<< HEAD
                      <li>
                         <a href="{{route('admin.pay_income.index')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -572,6 +538,8 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+=======
+>>>>>>> e91d2c5... rank fixed
                 </ul>
             </li>
             <li>
@@ -592,8 +560,13 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-
-                    
+                    <li>
+                        <a href="{{route('admin.expense.create')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Add Expense
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                 </ul>
             </li>
 

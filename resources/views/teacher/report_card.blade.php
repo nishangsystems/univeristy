@@ -280,7 +280,7 @@
                     @endphp
                     <td>Eval / Test : {{$seq->id}}</td>
                     <td class="{{$t < 10?'red':'blue'}}">{{$t}}</td>
-                    <td></td>
+                    <td>{{$user->rank($seq->id, $year->id)}}</td>
                 </tr>
             @endforeach
 

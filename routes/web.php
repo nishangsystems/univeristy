@@ -179,6 +179,7 @@ Route::get('section-subjects/{parent}', 'HomeController@subjects')->name('sectio
 Route::get('student-search/{name}', 'HomeController@student')->name('student-search');
 Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search');
 Route::get('student_rank', 'HomeController@rank')->name('student_rank');
+Route::post('student_rank', 'HomeController@rankPost')->name('student_rank');
 
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
 

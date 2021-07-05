@@ -7,6 +7,7 @@ use App\Http\Resources\Fee;
 use App\Http\Resources\StudentFee;
 use App\Http\Resources\StudentRank;
 use App\Http\Resources\CollectBoardingFeeResource;
+use App\Models\Rank;
 use App\Models\SchoolUnits;
 use App\Models\Sequence;
 use Illuminate\Support\Facades\Hash;
@@ -95,22 +96,44 @@ class HomeController extends Controller
 
     /**
      * get all school student boarders
-     * 
+     *
      * @param string $name
      */
     public function getStudentBoarders($name)
     {
-       
-       $type = 'boarding';
-       
-       $students = DB::table('student_classes')
+
+        $type = 'boarding';
+
+        $students = DB::table('student_classes')
             ->join('students', ['students.id' => 'student_classes.student_id'])
             ->join('school_units', ['school_units.id' => 'student_classes.class_id'])
             ->where('students.type', '=', $type)
             ->where('students.name', 'LIKE', "%{$name}%")
             ->orWhere('students.matric', 'LIKE', "{$name}%")
-            ->select('students.id',  'students.name', 'students.matric', 'school_units.name as class_name', 'school_units.id as class_id')->get();
-        
+            ->select('students.id', 'students.name', 'students.matric', 'school_units.name as class_name', 'school_units.id as class_id')->get();
+
         return response()->json(['data' => CollectBoardingFeeResource::collection($students)]);
+    }
+
+    public function rankPost(Request  $request){
+        $sequence = $request->sequence;
+        $students = $request->students;
+        foreach ($students as $k=>$student){
+            $rank = Rank::where([
+                'student_id' => $student,
+                'sequence_id' => $sequence
+            ])->first();
+            if(!isset($rank)){
+                $rank = new Rank();
+            }
+
+            $rank->student_id = $student;
+            $rank->sequence_id = $sequence;
+            $rank->position = ($k + 1);
+            $rank->year_id = Helpers::instance()->getYear();
+            $rank->save();
+
+        }
+        return response()->json([ 'title' => "'success"]);
     }
 }

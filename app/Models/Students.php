@@ -103,4 +103,15 @@ class Students extends Authenticatable
     {
         return $this->hasMany(CollectBoardingFee::class, 'student_id');
     }
+
+    public function rank($sequence, $year){
+
+        $rank = $this->hasMany(Rank::class, 'student_id')->where([
+            'sequence_id'=>$sequence,
+            'year_id'=>$year
+        ])->first();
+
+        return $rank?$rank->position:"NOT SET";
+
+    }
 }

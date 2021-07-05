@@ -371,10 +371,11 @@
             ],
             info:     false,
             searching: true,
-            order: false,
+            order: [ [ 3, 'asc' ]]
         });
 
     });
+
 
 
 </script>

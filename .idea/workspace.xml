@@ -21,6 +21,14 @@
   <component name="ChangeListManager">
     <list default="true" id="aa3f63f2-05a0-494f-9f41-a131b487b5b0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/StudentRank.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/StudentRank.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Students.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Students.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/teacher/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/teacher/layout.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/teacher/rank.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/teacher/rank.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/teacher/report_card.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/teacher/report_card.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -254,6 +262,8 @@
       <workItem from="1623946330932" duration="4888000" />
       <workItem from="1624048980665" duration="832000" />
       <workItem from="1624630614704" duration="163000" />
+      <workItem from="1624964459525" duration="547000" />
+      <workItem from="1625490872003" duration="5401000" />
     </task>
     <servers />
   </component>
@@ -300,22 +310,26 @@
     <state x="393" y="191" key="NewPhpClassDialog" timestamp="1617180019189">
       <screen x="0" y="23" width="1440" height="826" />
     </state>
-    <state x="393" y="183" key="NewPhpClassDialog/0.0.1440.900@0.0.1440.900" timestamp="1616837078492" />
     <state x="393" y="191" key="NewPhpClassDialog/0.23.1440.826@0.23.1440.826" timestamp="1617180019189" />
     <state x="335" y="366" key="NewPhpFileDialog" timestamp="1618728860136">
       <screen x="0" y="23" width="1440" height="825" />
     </state>
     <state x="335" y="366" key="NewPhpFileDialog/0.23.1440.825@0.23.1440.825" timestamp="1618728860136" />
+    <state x="406" y="146" key="RollbackChangesDialog" timestamp="1625490968596">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state x="406" y="146" key="RollbackChangesDialog/0.23.1440.827@0.23.1440.827" timestamp="1625490968596" />
     <state x="375" y="113" width="691" height="625" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1623325423058">
       <screen x="0" y="23" width="1440" height="825" />
     </state>
     <state x="375" y="113" width="691" height="625" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.23.1440.825@0.23.1440.825" timestamp="1623325423058" />
-    <state x="75" y="99" width="1290" height="678" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1624049421704">
-      <screen x="0" y="23" width="1440" height="829" />
+    <state x="75" y="99" width="1290" height="678" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1625491233162">
+      <screen x="0" y="23" width="1440" height="827" />
     </state>
     <state x="75" y="83" width="1290" height="735" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1440.900@0.0.1440.900" timestamp="1623958098847" />
     <state x="100" y="100" width="1720" height="880" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1618766471729" />
     <state x="75" y="99" width="1290" height="673" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1440.825@0.23.1440.825" timestamp="1623326094440" />
+    <state x="75" y="99" width="1290" height="678" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1440.827@0.23.1440.827" timestamp="1625491233162" />
     <state x="75" y="99" width="1290" height="678" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1440.829@0.23.1440.829" timestamp="1624049421704" />
     <state x="408" y="151" width="604" height="598" key="find.popup" timestamp="1617787342529">
       <screen x="0" y="0" width="1440" height="900" />
@@ -365,6 +379,11 @@
           <url>file://$PROJECT_DIR$/resources/views/teacher/result.blade.php</url>
           <line>75</line>
           <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/resources/views/teacher/rank.blade.php</url>
+          <line>55</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
