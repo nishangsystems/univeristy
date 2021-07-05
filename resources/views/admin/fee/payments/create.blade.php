@@ -5,7 +5,6 @@
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.fee.student.payments.store',$student->id)}}">
             <h5 class="mt-5 font-weight-bold">Enter Fee Details</h5>
             @csrf
-
             <div class="form-group @error('item') has-error @enderror">
                 <label class="control-label col-lg-2">Item</label>
                 <div class="col-lg-10">

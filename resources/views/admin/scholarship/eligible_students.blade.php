@@ -35,9 +35,8 @@
 <script>
     $('#search').on('keyup', function() {
         val = $(this).val();
-        url = "{{route('admin.searchStudent', "
-        VALUE ")}}";
-        search_url = url.replace('VALUE', val);
+        url = "{{route('admin.searchStudent',':id')}}";
+        search_url = url.replace(':id', val);
         $.ajax({
             type: 'GET',
             url: search_url,

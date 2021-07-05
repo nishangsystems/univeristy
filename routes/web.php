@@ -99,6 +99,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::prefix('fee/{student_id}')->name('fee.student.')->group(function () {
         Route::resource('payments', 'Admin\PaymentController');
     });
+
     Route::get('units/{parent_id}/subjects/manage', 'Admin\ProgramController@manageSubjects')->name('units.subjects.manage');
     Route::post('units/{parent_id}/subjects/manage', 'Admin\ProgramController@saveSubjects')->name('units.subjects.manage');
     Route::resource('subjects', 'Admin\SubjectController');
