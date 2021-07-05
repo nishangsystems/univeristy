@@ -134,6 +134,20 @@ class CollectBoardingFeeController extends Controller
             return true;
         }
     }
+    /**
+     * check if some has completed boarding fee
+     */
+    private function checkCompletedBoardingFee($id)
+    {
+        $check = DB::table('collect_boarding_fees')
+            ->leftJoin('students', 'students.id', '=', 'collect_boarding_fees.student_id')
+            ->leftJoin('boarding_amounts', 'collect_boarding_fees.id', '=', 'boarding_amounts.collect_boarding_fee_id')
+            ->where('students.id', $id)
+            ->where('boarding_amounts.status', 1)
+            ->select('students.id')
+            ->first();
+        return $check;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -253,6 +267,7 @@ class CollectBoardingFeeController extends Controller
     {
         //   dd($student_id);
         $check_user = CollectBoardingFee::where('student_id', $student_id)->first();
+        $check_completed = $this->checkCompletedBoardingFee($student_id);
 
         if (empty($check_user)) {
             $student = Students::where('id', $student_id)->first();
@@ -260,6 +275,8 @@ class CollectBoardingFeeController extends Controller
             $data['years'] = $this->years;
             $data['student_id'] = $student_id;
             $data['class_id'] = $class_id;
+        } elseif (!empty($check_completed)) {
+            return redirect()->route('admin.collect_boarding_fee.index')->with('success', "This Student has already completed Boarding Fee!");
         } else {
             return redirect()->route('admin.collect_boarding_fee.edit', [$check_user->id, $student_id]);
         }
@@ -405,7 +422,7 @@ class CollectBoardingFeeController extends Controller
             ->orderBy('collect_boarding_fees.created_at', 'ASC')
             ->paginate(7);
         $class_name = $this->getSchoolUnit($request->class_id);
-
+        //    $data['student_id'] = $student_id;
         $data['title'] = 'Paid Boarding Fees: ' . $class_name;
         return view('admin.collect_boarding_fee.index')->with($data);
     }

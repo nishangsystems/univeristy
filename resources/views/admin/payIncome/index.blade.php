@@ -88,11 +88,11 @@
     $('.section').on('change', function() {
 
         let value = $(this).val();
-        url = "{{route('admin.getSections', "VALUE")}}";
-        search_url = url.replace('VALUE', value);
+        url = "{{route('admin.getSections', ':id')}}";
+        search_url = url.replace(':id', value);
         $.ajax({
             type: 'GET',
-            url:search_url,
+            url: search_url,
             success: function(response) {
                 let size = response.data.length;
                 let data = response.data;
@@ -119,8 +119,8 @@
     $('#circle').on('change', function() {
 
         let value = $(this).val();
-        url = "{{route('admin.getClasses', "VALUE")}}";
-        search_url = url.replace('VALUE', value);
+        url = "{{route('admin.getClasses',':id')}}";
+        search_url = url.replace(':id', value);
         $.ajax({
             type: 'GET',
             url: search_url,
