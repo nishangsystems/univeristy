@@ -100,7 +100,8 @@
                 url: url,
                 data:{
                     "section":div.siblings('select').val(),
-                    'type':'{{request('type', 'completed')}}',
+                    'bal':$('#amount').val(),
+                    'type':'{{request('type', 'uncompleted')}}',
                 },
                 success: function (data) {
                     let html = "";

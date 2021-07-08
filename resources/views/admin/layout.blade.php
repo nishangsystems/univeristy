@@ -315,8 +315,6 @@
                     </li>
                 </ul>
             </li>
-<<<<<<< HEAD
-
 
             <li>
                 <a href="#" class="dropdown-toggle">
@@ -530,7 +528,6 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-<<<<<<< HEAD
                      <li>
                         <a href="{{route('admin.pay_income.index')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -538,8 +535,6 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-=======
->>>>>>> e91d2c5... rank fixed
                 </ul>
             </li>
             <li>

@@ -71,15 +71,7 @@ class SchoolUnits extends Model
         }
     }
 
-    public function updateFee($input)
-    {
-        $input['unit'] = $this->id;
-        PaymentItem::where(['unit' => $this->id, 'slug' => $input['slug'], 'year_id' => $input['year_id']])->update($input);
-        foreach ($this->unit as $unit) {
-            $input['unit'] = $unit->id;
-            $unit->updateFee($input);
-        }
-    }
+
 
     public function collectBoardingFees()
     {

@@ -20,6 +20,20 @@
                 </thead>
                 <tbody>
 
+                    @if(\request('class'))
+                
+                        @foreach($subjects as $k=>$subject)
+                        <tr>
+                            <td>{{ $k+1 }}</td>
+                            <td>{{ $subject->subject->name }}</td>
+                            <td>{{ $subject->subject->coef }}</td>
+                            <td style="float: right;">
+                                <a class="btn btn-xs btn-primary" href="{{route('user.result', ['subject'=>$subject->id, 'class'=>request('class')])}}">Result</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    @else
+
                     @foreach($subjects as $k=>$subject)
                     <tr>
                         <td>{{ $k+1 }}</td>
@@ -33,6 +47,7 @@
                         </td>
                     </tr>
                     @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>

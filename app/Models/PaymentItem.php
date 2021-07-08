@@ -12,6 +12,6 @@ class PaymentItem extends Model
     protected $fillable = ["name", "amount", "slug", "unit", "year_id"];
 
     public function payments(){
-        return  $this->belongsTo(Payments::class,'payment_id');
+        return  $this->hasMany(Payments::class,'payment_id');
     }
 }

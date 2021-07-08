@@ -63,7 +63,7 @@ class HomeController extends Controller
         $title = $type . " fee " . ($unit != null ? "for " . $unit->name : '');
         $students = [];
         if ($unit) {
-            $students = array_merge($students, $this->load($unit, $type));
+            $students = array_merge($students, $this->load($unit, $type, $request->get('bal',0)));
         }
         return response()->json(['students' => Fee::collection($students), 'title' => $title]);
     }
@@ -77,18 +77,18 @@ class HomeController extends Controller
         return response()->json(['students' => StudentRank::collection($students), 'title' => $title]);
     }
 
-    public function load(SchoolUnits $unit, $type)
+    public function load(SchoolUnits $unit, $type, $bal)
     {
         $students = [];
         foreach ($unit->students(Helpers::instance()->getYear())->get() as $student) {
             if ($type == 'completed' && $student->bal() == 0) {
                 array_push($students, $student);
-            } elseif ($type == 'uncompleted' && $student->bal() > 0) {
+            } elseif ($type == 'uncompleted' && $student->bal() > $bal) {
                 array_push($students, $student);
             }
         }
         foreach ($unit->unit as $unit) {
-            $students = array_merge($students, $this->load($unit, $type));
+            $students = array_merge($students, $this->load($unit, $type, $bal));
         }
 
         return $students;

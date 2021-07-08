@@ -30,7 +30,7 @@
 
                <div class="input-group radius-5 overflow-hidden" data-placement="left" data-align="top"
                     data-autoclose="true">
-                   <input id="searchbox" placeholder="Type to search" type="text" class="form-control bg-white border-success">
+                   <input id="searchbox" placeholder="Type to search" type="number" class="form-control bg-white border-success">
                </div>
            </div>
        </div>
@@ -60,9 +60,9 @@
                             @foreach($seqs as $seq)
                                 <td class="pt-3-half">
                                    @if(\App\Models\Config::where(['seq_id'=> $seq->id,'year_id'=>$year])->whereDate('start_date','<=', \Carbon\Carbon::now())->whereDate('end_date','>=', \Carbon\Carbon::now())->first() || \Auth::user()->isMaster($year, $subject->class_id))
-                                        <input class="score form-control bg-white border-0" data-sequence="{{$seq->id}}" data-student="{{$student->id}}" value="{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->subject_id, $subject->class_id,$year, $student->id)}}">
+                                        <input class="score form-control bg-white border-0" data-sequence="{{$seq->id}}" type='number' data-student="{{$student->id}}" value="{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->subject_id, $subject->class_id,$year, $student->id)}}">
                                     @else
-                                        <input class="score form-control bg-white border-0" readonly  value="{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->subject_id, $subject->class_id,$year, $student->id)}}">
+                                        <input class="score form-control bg-white border-0" readonly type='number'  value="{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->subject_id, $subject->class_id,$year, $student->id)}}">
                                     @endif
                                 </td>
                             @endforeach
