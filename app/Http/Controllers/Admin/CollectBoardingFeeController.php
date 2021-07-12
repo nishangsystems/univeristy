@@ -18,23 +18,14 @@ class CollectBoardingFeeController extends Controller
         '0' => 'Paid part',
         '1' => 'Completed'
     ];
-    private $select = [
-        'students.id as student_id',
-        'collect_boarding_fees.id',
-        'students.name',
-        'students.matric',
-        'school_units.name as class_name'
-    ];
+
     private $select_boarding = [
         'students.id as student_id',
-        'students.name',
-        'students.matric',
         'collect_boarding_fees.id',
         'boarding_amounts.created_at',
         'boarding_amounts.amount_payable',
-        'boarding_amounts.total_amount',
         'boarding_amounts.status',
-        'boarding_amounts.balance'
+
     ];
     private  $boarding_fee;
     private $year;
@@ -68,9 +59,17 @@ class CollectBoardingFeeController extends Controller
             ->join('school_units', 'school_units.id', '=', 'collect_boarding_fees.class_id')
             ->join('boarding_amounts', 'collect_boarding_fees.id', '=', 'boarding_amounts.collect_boarding_fee_id')
             ->where('batches.id', $this->batch_id)
-            ->select($this->select)
-            ->distinct()
-            ->orderBy('collect_boarding_fees.created_at', 'ASC')
+            ->select(
+                \DB::raw("students.id as student_id, 
+                students.name, 
+                students.matric, 
+                school_units.name as class_name,
+                MAX(boarding_amounts.total_amount) as total_amount,
+                MIN(boarding_amounts.balance) as balance,
+                collect_boarding_fees.id
+                ")
+            )
+            ->groupBy('collect_boarding_fees.student_id')
             ->paginate(7);
 
         return view('admin.collect_boarding_fee.index')->with($data);
@@ -93,7 +92,9 @@ class CollectBoardingFeeController extends Controller
             ->orderBy('boarding_amounts.created_at', 'ASC')
             ->paginate(5);
         $data['years'] = $this->years;
+        $data['student_id'] = $student_id;
         $data['school_units'] = SchoolUnits::where('parent_id', 0)->get();
+        $data['id'] = $id;
         return view('admin.collect_boarding_fee.show')->with($data);
     }
 
@@ -265,7 +266,7 @@ class CollectBoardingFeeController extends Controller
      */
     public function collect($class_id, $student_id)
     {
-        //   dd($student_id);
+        $data['total_amount'] = $this->getTotalboardingAmount($student_id);
         $check_user = CollectBoardingFee::where('student_id', $student_id)->first();
         $check_completed = $this->checkCompletedBoardingFee($student_id);
 
@@ -283,6 +284,31 @@ class CollectBoardingFeeController extends Controller
 
         return view('admin.collect_boarding_fee.collect')->with($data);
     }
+
+    /**
+     * get the total amount to be paid ny a boarding student
+     */
+    private function getTotalboardingAmount($student_id)
+    {
+        $total = 0;
+        $student = $this->getStudent($student_id, $this->year);
+        $boarding_fee = BoardingFee::first();
+        if (!empty($student)) {
+            $total = $boarding_fee->amount_old_student;
+        } else {
+            $total = $boarding_fee->amount_new_student;
+        }
+        return $total;
+    }
+
+    public function totalBoardingAmount($id)
+    {
+        $total = $this->getTotalboardingAmount($id);
+        return response()->json(['data' => $total]);
+    }
+
+
+
 
     /**
      * get student
@@ -417,9 +443,17 @@ class CollectBoardingFeeController extends Controller
             ->where('batches.id', $request->batch_id)
             ->where('boarding_amounts.status', $request->status)
             ->where('collect_boarding_fees.class_id', $request->class_id)
-            ->select($this->select)
-            ->distinct()
-            ->orderBy('collect_boarding_fees.created_at', 'ASC')
+            ->select(
+                \DB::raw("students.id as student_id, 
+                students.name, 
+                students.matric, 
+                school_units.name as class_name,
+                MAX(boarding_amounts.total_amount) as total_amount,
+                MIN(boarding_amounts.balance) as balance,
+                collect_boarding_fees.id
+                ")
+            )
+            ->groupBy('collect_boarding_fees.student_id')
             ->paginate(7);
         $class_name = $this->getSchoolUnit($request->class_id);
         //    $data['student_id'] = $student_id;
@@ -469,6 +503,7 @@ class CollectBoardingFeeController extends Controller
             ->paginate(5);
         $data['years'] = $this->years;
         $data['student_id'] = $student_id;
+        $data['id'] = $id;
         $data['school_units'] = SchoolUnits::where('parent_id', 0)->get();
         return view('admin.collect_boarding_fee.show')->with($data);
     }
