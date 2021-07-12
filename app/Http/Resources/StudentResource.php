@@ -3,9 +3,10 @@
 namespace App\Http\Resources;
 
 use App\Helpers\Helpers;
+use App\Models\Students;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class StudentFee extends JsonResource
+class StudentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,15 +16,16 @@ class StudentFee extends JsonResource
      */
     public function toArray($request)
     {
+        $stud = Students::find($this->id);
         return [
             'name' => $this->name,
             'link' => route('admin.fee.student.payments.index', [$this->id]),
             'rlink' => route('admin.print_fee.student', [$this->id]),
-            'bal' => $this->bal(),
-            'total' => $this->total(),
-            'class' => $this->class(Helpers::instance()->getYear())->name,
-            'paid' => $this->paid(),
-            //    
+            'bal' => $stud->bal($this->id),
+            'total' => $stud->total($this->id),
+            'class' => $stud->class(Helpers::instance()->getYear())->name,
+            'paid' => $stud->paid(),
+            'scholarship' => Helpers::instance()->getStudentScholarshipAmount($this->id)
         ];
     }
 }

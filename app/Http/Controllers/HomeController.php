@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use App\Http\Resources\Fee;
 use App\Http\Resources\StudentFee;
+use App\Http\Resources\StudentResource;
 use App\Http\Resources\StudentRank;
 use App\Http\Resources\CollectBoardingFeeResource;
 use App\Models\Rank;
 use App\Models\SchoolUnits;
 use App\Models\Sequence;
+use App\Models\Students;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +19,12 @@ use Illuminate\Support\Facades\DB;
 class HomeController extends Controller
 {
 
+    private $select = [
+        'students.id as id',
+        'students.name',
+        'student_classes.year_id',
+    ];
+    private $select1 = [];
     /**
      * Show the application dashboard.
      *
@@ -50,10 +58,23 @@ class HomeController extends Controller
 
     public function student($name)
     {
-        $students = \App\Models\Students::join('student_classes', ['students.id' => 'student_classes.student_id'])->where('student_classes.year_id', \App\Helpers\Helpers::instance()->getYear())
+        $students = \App\Models\Students::join('student_classes', ['students.id' => 'student_classes.student_id'])
+            ->where('student_classes.year_id', \App\Helpers\Helpers::instance()->getYear())
             ->where('students.name', 'LIKE', "%{$name}%")
             ->get();
+
         return \response()->json(StudentFee::collection($students));
+    }
+    public function searchStudents($name)
+    {
+        $current_year = \App\Helpers\Helpers::instance()->getYear();
+        $students  = DB::table('students')
+            ->join('student_classes', ['students.id' => 'student_classes.student_id'])
+            ->where('student_classes.year_id', $current_year)
+            ->where('students.name', 'LIKE', "%{$name}%")
+            ->get()->toArray();
+
+        return \response()->json(StudentResource::collection($students));
     }
 
     public function fee(Request  $request)
@@ -63,7 +84,7 @@ class HomeController extends Controller
         $title = $type . " fee " . ($unit != null ? "for " . $unit->name : '');
         $students = [];
         if ($unit) {
-            $students = array_merge($students, $this->load($unit, $type, $request->get('bal',0)));
+            $students = array_merge($students, $this->load($unit, $type, $request->get('bal', 0)));
         }
         return response()->json(['students' => Fee::collection($students), 'title' => $title]);
     }
@@ -115,15 +136,16 @@ class HomeController extends Controller
         return response()->json(['data' => CollectBoardingFeeResource::collection($students)]);
     }
 
-    public function rankPost(Request  $request){
+    public function rankPost(Request  $request)
+    {
         $sequence = $request->sequence;
         $students = $request->students;
-        foreach ($students as $k=>$student){
+        foreach ($students as $k => $student) {
             $rank = Rank::where([
                 'student_id' => $student,
                 'sequence_id' => $sequence
             ])->first();
-            if(!isset($rank)){
+            if (!isset($rank)) {
                 $rank = new Rank();
             }
 
@@ -132,8 +154,7 @@ class HomeController extends Controller
             $rank->position = ($k + 1);
             $rank->year_id = Helpers::instance()->getYear();
             $rank->save();
-
         }
-        return response()->json([ 'title' => "'success"]);
+        return response()->json(['title' => "'success"]);
     }
 }

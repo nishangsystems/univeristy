@@ -33,7 +33,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('home', 'Admin\HomeController@index')->name('home');
     Route::get('', 'Admin\HomeController@index')->name('home');
     Route::get('setayear', 'Admin\HomeController@setayear')->name('setayear');
-    Route::post('setayear', 'Admin\HomeController@createBatch')->name('createacademicyear');
+    Route::post('setayear/{id}', 'Admin\HomeController@setAcademicYear')->name('createacademicyear');
     Route::get('deletebatch/{id}', 'Admin\HomeController@deletebatch')->name('deletebatch');
     Route::get('sections', 'Admin\ProgramController@sections')->name('sections');
     Route::get('sub_units/{parent_id}', 'Admin\ProgramController@index')->name('units.index');
@@ -179,6 +179,7 @@ Route::prefix('student')->name('student.')->group(function () {
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');
 Route::get('section-subjects/{parent}', 'HomeController@subjects')->name('section-subjects');
 Route::get('student-search/{name}', 'HomeController@student')->name('student-search');
+Route::get('search-all-students/{name}', 'HomeController@searchStudents')->name('search-all-students');
 Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search');
 Route::get('student_rank', 'HomeController@rank')->name('student_rank');
 Route::post('student_rank', 'HomeController@rankPost')->name('student_rank');
