@@ -73,6 +73,8 @@
                         <th>Name</th>
                         <th>Matricule</th>
                         <th>Class</th>
+                        <th>Total Amount Paid</th>
+                        <th>Balance</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -83,6 +85,8 @@
                         <td>{{$boarding_fee->name}}</td>
                         <td>{{$boarding_fee->matric}}</td>
                         <td>{{$boarding_fee->class_name}}</td>
+                        <td>{{number_format($boarding_fee->total_amount)}}</td>
+                        <td>{{number_format($boarding_fee->balance)}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
                             <a class="btn btn-sm btn-info" href="{{route('admin.collect_boarding_fee.show',[$boarding_fee->student_id, $boarding_fee->id])}}"><i class="fa fa-eye">View</i> </a>
                         </td>
