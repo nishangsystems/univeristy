@@ -21,6 +21,6 @@ class Scholarship extends Model
      */
     public function student()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class, 'student_scholarships', 'student_id', 'scholarship_id');
     }
 }

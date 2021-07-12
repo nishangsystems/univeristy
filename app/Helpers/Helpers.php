@@ -5,6 +5,7 @@ namespace App\Helpers;
 
 use App\Models\Result;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\DB;
 
 class Helpers
 {
@@ -156,5 +157,20 @@ class Helpers
         if ($result) {
             return $result->score;
         }
+    }
+
+    public function getStudentScholarshipAmount($student_id)
+    {
+        //  $amount = 0;
+        $amount = DB::table('student_scholarships')
+            ->join('scholarships', ['scholarships.id' => 'student_scholarships.scholarship_id'])
+            ->join('students', ['students.id' => 'student_scholarships.student_id'])
+            ->where('student_scholarships.batch_id', $this->getCurrentAccademicYear())
+            ->where('student_scholarships.student_id', $student_id)
+            ->pluck('scholarships.amount')->first();
+        if (empty($amount)) {
+            $amount =  0;
+        }
+        return $amount;
     }
 }

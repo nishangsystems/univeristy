@@ -16,7 +16,7 @@
                         <th>Name</th>
                         <th>Amount (CFA)</th>
                         <th>Type</th>
-                        <th></th>
+                        <th>Status</th>
                         <th></th>
                     </tr>
                 </thead>

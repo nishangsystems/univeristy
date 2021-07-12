@@ -47,9 +47,10 @@ class Students extends Authenticatable
         return $this->hasMany(Payments::class, 'student_id');
     }
 
-    public function total()
+    public function total($student_id)
     {
-        return $this->class(Helpers::instance()->getYear())->fee();
+        $scholarship = Helpers::instance()->getStudentScholarshipAmount($student_id);
+        return ($this->class(Helpers::instance()->getYear())->fee()) - ($scholarship);
     }
 
     public function paid()
@@ -58,9 +59,9 @@ class Students extends Authenticatable
         return $items->first()->total;
     }
 
-    public function bal()
+    public function bal($student_id)
     {
-        return $this->total() - $this->paid();
+        return $this->total($student_id) - $this->paid();
     }
 
     public function totalScore($sequence, $year)
@@ -96,7 +97,7 @@ class Students extends Authenticatable
      */
     public function scholarships()
     {
-        return $this->hasMany(Scholarship::class);
+        return $this->belongsToMany(Scholarship::class, 'student_scholarships', 'student_id', 'scholarship_id');
     }
 
     public function collectBoardingFees()
@@ -104,14 +105,16 @@ class Students extends Authenticatable
         return $this->hasMany(CollectBoardingFee::class, 'student_id');
     }
 
-    public function rank($sequence, $year){
+    public function rank($sequence, $year)
+    {
 
         $rank = $this->hasMany(Rank::class, 'student_id')->where([
-            'sequence_id'=>$sequence,
-            'year_id'=>$year
+            'sequence_id' => $sequence,
+            'year_id' => $year
         ])->first();
 
-        return $rank?$rank->position:"NOT SET";
-
+        return $rank ? $rank->position : "NOT SET";
     }
+
+    // public function getScholarshipAmount()
 }

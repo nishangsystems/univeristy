@@ -17,7 +17,7 @@ class PayIncomeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'matric' => $this->name,
+            'matric' => $this->matric,
             'class_name' => $this->class_name,
             'class_id' => $this->class_id,
             'gender' => $this->gender,
