@@ -38,7 +38,13 @@ class PaymentController extends Controller
     {
         $student = Students::find($student_id);
         $data['student'] = $student;
+        $data['scholarship'] = Helpers::instance()->getStudentScholarshipAmount($student_id);
+        $data['total_fee'] = $student->total($student_id);
+        $data['balance'] =  $student->bal($student_id);
         $data['title'] = "Collect Fee for " . $student->name;
+        if ($data['balance'] < 0) {
+            return back()->with('error', 'Student has already completed fee');
+        }
         return view('admin.fee.payments.create')->with($data);
     }
 

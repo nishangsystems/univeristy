@@ -555,13 +555,13 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="{{route('admin.expense.create')}}">
                             <i class="menu-icon fa fa-caret-right"></i>
                             Add Expense
                         </a>
                         <b class="arrow"></b>
-                    </li>
+                    </li> -->
                 </ul>
             </li>
 
