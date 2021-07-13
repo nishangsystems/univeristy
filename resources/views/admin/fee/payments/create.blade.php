@@ -5,8 +5,26 @@
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.fee.student.payments.store',$student->id)}}">
             <h5 class="mt-5 font-weight-bold">Enter Fee Details</h5>
             @csrf
+            <div class="form-group row">
+                <label for="cname" class="control-label col-sm-2">Total Fee: </label>
+                <div class="col-sm-10">
+                    <input for="cname" class="form-control" value="{{number_format($total_fee)}} CFA" disabled></input>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cname" class="control-label col-lg-2">Scholarship Award:</label>
+                <div class="col-lg-10">
+                    <input for="cname" class="form-control" value="{{number_format($scholarship)}} CFA" disabled></input>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cname" class="control-label col-lg-2">Balance Fee:</label>
+                <div class="col-lg-10">
+                    <input for="cname" class="form-control" name="balance" value="{{number_format($balance)}} CFA" disabled></input>
+                </div>
+            </div>
             <div class="form-group @error('item') has-error @enderror">
-                <label class="control-label col-lg-2">Item</label>
+                <label class="control-label col-lg-2">Item <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <select class="form-control" name="item">
                         <option value="" disabled>Select Item</option>
@@ -21,7 +39,7 @@
                 </div>
             </div>
             <div class="form-group @error('amount') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Amount (required)</label>
+                <label for="cname" class="control-label col-lg-2">Amount <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="amount" value="{{old('amount')}}" type="number" required />
                     @error('amount')
@@ -31,8 +49,8 @@
             </div>
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
-                    <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">Save</button>
-                    <a class="btn btn-xs btn-danger" href="{{route('admin.fee.student.payments.index', $student->id)}}" type="button">Cancel</a>
+                    <button onload="checkBalance()" id="save" class="btn btn-xs btn-primary mx-3" type="submit">Save</button>
+                    <a class="btn btn-xs btn-danger " href="{{route('admin.fee.student.payments.index', $student->id)}}" type="button">Cancel</a>
                 </div>
             </div>
         </form>
