@@ -60,12 +60,14 @@ class PaymentController extends Controller
     public function store(Request $request, $student_id)
     {
         $student = Students::find($student_id);
-
+        $total_fee = $student->total($student_id);
         $this->validate($request, [
             'item' =>  'required',
             'amount' => 'required',
         ]);
-
+        if ($request->amount > $total_fee) {
+            return back()->with('error', 'The amount deposited has exceeded the total fee amount');
+        }
         Payments::create([
             "payment_id" => $request->item,
             "student_id" => $student->id,
