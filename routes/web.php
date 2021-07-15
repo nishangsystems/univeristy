@@ -41,6 +41,13 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('units/{parent_id}/edit', 'Admin\ProgramController@edit')->name('units.edit');
     Route::resource('units', 'Admin\ProgramController')->except(['index', 'create', 'edit']);
     Route::get('units/{parent_id}/subjects', 'Admin\ProgramController@subjects')->name('units.subjects');
+
+
+    // Route::get('units/{parent_id}/subjects/{subject_id}/edit', 'Admin\ClassSubjectController@edit')->name('units.class_subject_edit');
+    // Route::put('units/{parent_id/subjects/', 'Admin\ClassSubjectController@update')->name('units.class_subjects.update');
+
+
+
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
     Route::get('print_fee', 'Admin\FeesController@printFee')->name('print_fee');
