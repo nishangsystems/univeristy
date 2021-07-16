@@ -14,7 +14,7 @@ class ModifyClassSubjects extends Migration
     public function up()
     {
         Schema::table('class_subjects', function (Blueprint $table) {
-            $table->integer('coef')->default(3);
+            $table->integer('coef')->nullable();
         });
     }
 

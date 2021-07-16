@@ -3,7 +3,7 @@
 @section('section')
 <div class="mx-3">
     <div class="form-panel">
-        <form class="form-horizontal" role="form" method="POST" action="{{route('admin.units.class_subjects.update',  [$parent->id])}}">
+        <form class="form-horizontal" role="form" method="POST" action="{{route('admin.units.class_subjects.update',  [$parent->id,  $subject->subject_id])}}">
             @csrf
             @method('PUT')
             <div class="form-group row">
@@ -20,8 +20,8 @@
             </div>
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
-                    <button id="save" class="btn btn-sm btn-primary mx-3" type="submit">Save</button>
-                    <a class="btn btn-sm btn-danger" type="button">Cancel</a>
+                    <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">Save</button>
+                    <a class="btn btn-xs btn-danger" href="{{route('admin.units.subjects', $parent->id)}}" type="button">Cancel</a>
                 </div>
             </div>
         </form>

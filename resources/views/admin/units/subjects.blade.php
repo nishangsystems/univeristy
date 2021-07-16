@@ -5,7 +5,7 @@
 
 <div class="col-sm-12">
     <p class="text-muted">
-        <a href="{{route('admin.units.subjects.manage', $parent->id)}}" class="btn btn-info btn-xs">Manage Subjects</a>
+        <a href="{{route('admin.units.subjects.manage_class_subjects', $parent->id)}}" class="btn btn-info btn-xs">Manage Subjects</a>
     </p>
 
     <div class="content-panel">
@@ -24,9 +24,13 @@
                     @foreach($subjects as $k=>$subject)
                     <tr>
                         <td>{{ $k+1 }}</td>
-                        <td>{{ $subject->subject->name }}</td>
-                        <td>{{ $subject->subject->coef }}</td>
-
+                        <td>{{ $subject->name }}</td>
+                        <td>{{ $subject->coef }}</td>
+                        <td class="d-flex justify-content-end">
+                            <a class="btn btn-sm btn-primary" href="{{route('admin.edit.class_subjects',[$subject->class_id,$subject->subject_id])}}">
+                                <i class="fa fa-edit"> Edit</i>
+                            </a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
