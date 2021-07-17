@@ -267,6 +267,9 @@ class CollectBoardingFeeController extends Controller
     public function collect($class_id, $student_id)
     {
         $data['total_amount'] = $this->getTotalboardingAmount($student_id);
+        if (!$data['total_amount']) {
+            return redirect()->route('admin.boarding_fee.index')->with('error', 'Boarding Fee not set, please set Boarding Fee');
+        }
         $check_user = CollectBoardingFee::where('student_id', $student_id)->first();
         $check_completed = $this->checkCompletedBoardingFee($student_id);
 
@@ -290,7 +293,14 @@ class CollectBoardingFeeController extends Controller
      */
     private function getTotalboardingAmount($student_id)
     {
+
+        //checkout if boarding fee has been set;
+        $boarding_fee_amount = $this->checkBoardingFee();
+        if (!$boarding_fee_amount) {
+            return false;
+        }
         $total = 0;
+
         $student = $this->getStudent($student_id, $this->year);
         $boarding_fee = BoardingFee::first();
         if (!empty($student)) {

@@ -8,7 +8,9 @@ use App\Models\SchoolUnits;
 use App\Models\Students;
 use App\Models\Subjects;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use SebastianBergmann\Environment\Console;
 
 class ProgramController extends Controller
 {
@@ -148,7 +150,11 @@ class ProgramController extends Controller
         $parent = \App\Models\SchoolUnits::find($id);
         $data['title'] = "Subjects under " . $parent->name;
         $data['parent'] = $parent;
-        $data['subjects'] = $parent->subject()->paginate(15);
+        $data['subjects'] = DB::table('class_subjects')
+            ->join('school_units', ['school_units.id' => 'class_subjects.class_id'])
+            ->join('subjects', ['subjects.id' => 'class_subjects.subject_id'])
+            ->where('class_subjects.class_id', $id)
+            ->select('subjects.id as subject_id', 'subjects.name', 'class_subjects.coef', 'class_subjects.class_id')->paginate(15);
         //  dd($data['subjects']);
         return view('admin.units.subjects')->with($data);
     }
@@ -172,6 +178,7 @@ class ProgramController extends Controller
 
     public function saveSubjects(Request  $request, $id)
     {
+        $class_subjects = [];
         $validator = Validator::make($request->all(), [
             'subjects' => 'required',
         ]);
@@ -183,16 +190,27 @@ class ProgramController extends Controller
         }
         $parent = \App\Models\SchoolUnits::find($id);
 
+        $new_subjects = $request->subjects;
         foreach ($parent->subject as $subject) {
-            $subject->delete();
+            array_push($class_subjects, $subject->subject_id);
         }
 
-        foreach ($request->subjects as $subject) {
-            \App\Models\ClassSubject::create([
-                'class_id' => $id,
-                'subject_id' => $subject
-            ]);
+
+        foreach ($new_subjects as $subject) {
+            if (!in_array($subject, $class_subjects)) {
+                \App\Models\ClassSubject::create([
+                    'class_id' => $id,
+                    'subject_id' => $subject,
+                ]);
+            }
         }
+
+        foreach ($class_subjects as $k => $subject) {
+            if (!in_array($subject, $new_subjects)) {
+                ClassSubject::where('class_id', $id)->where('subject_id', $subject)->first()->delete();
+            }
+        }
+
 
         $data['title'] = "Manage subjects under " . $parent->name;
         return redirect()->back()->with('success', "Subjects Saved Successfully");

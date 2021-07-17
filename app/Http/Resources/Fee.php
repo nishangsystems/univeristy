@@ -16,10 +16,10 @@ class Fee extends JsonResource
     public function toArray($request)
     {
         return [
-            'name'=> $this->name,
-            'link'=>route('admin.fee.student.payments.index',[$this->id]),
-            'total'=>$request->get('type', 'completed')== 'completed'?$this->paid():$this->bal(),
-            'class'=>$this->class(Helpers::instance()->getYear())->name,
+            'name' => $this->name,
+            'link' => route('admin.fee.student.payments.index', [$this->id]),
+            'total' => $request->get('type', 'completed') == 'completed' ? $this->paid() : $this->bal($this->id),
+            'class' => $this->class(Helpers::instance()->getYear())->name,
         ];
     }
 }

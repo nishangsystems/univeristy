@@ -49,7 +49,7 @@
             </div>
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
-                    <button onload="checkBalance()" id="save" class="btn btn-xs btn-primary mx-3" type="submit">Save</button>
+                    <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">Save</button>
                     <a class="btn btn-xs btn-danger " href="{{route('admin.fee.student.payments.index', $student->id)}}" type="button">Cancel</a>
                 </div>
             </div>

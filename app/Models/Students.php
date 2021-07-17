@@ -47,7 +47,7 @@ class Students extends Authenticatable
         return $this->hasMany(Payments::class, 'student_id');
     }
 
-    public function total($student_id)
+    public function total()
     {
         return ($this->class(Helpers::instance()->getYear())->fee());
     }
@@ -61,8 +61,10 @@ class Students extends Authenticatable
     public function bal($student_id)
     {
         $scholarship = Helpers::instance()->getStudentScholarshipAmount($student_id);
-        return $this->total($student_id) - $this->paid() - ($scholarship);
+        return $this->total() - $this->paid() - ($scholarship);
     }
+
+
 
     public function totalScore($sequence, $year)
     {

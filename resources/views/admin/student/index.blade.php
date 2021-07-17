@@ -115,7 +115,7 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-
+                {{$students->links()}}
             </div>
         </div>
     </div>

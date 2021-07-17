@@ -102,9 +102,9 @@ class HomeController extends Controller
     {
         $students = [];
         foreach ($unit->students(Helpers::instance()->getYear())->get() as $student) {
-            if ($type == 'completed' && $student->bal() == 0) {
+            if ($type == 'completed' && $student->bal($student->id) == 0) {
                 array_push($students, $student);
-            } elseif ($type == 'uncompleted' && $student->bal() > $bal) {
+            } elseif ($type == 'uncompleted' && $student->bal($student->id) > $bal) {
                 array_push($students, $student);
             }
         }
