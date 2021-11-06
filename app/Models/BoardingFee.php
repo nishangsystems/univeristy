@@ -19,4 +19,9 @@ class BoardingFee extends Model
     {
         return $this->hasMany(BoardingFeeInstallment::class);
     }
+
+    public function schoolUnit()
+    {
+        return $this->belongsTo(SchoolUnits::class, 'boarding_type');
+    }
 }

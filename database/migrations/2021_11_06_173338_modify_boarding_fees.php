@@ -14,7 +14,7 @@ class ModifyBoardingFees extends Migration
     public function up()
     {
         Schema::table('boarding_fees', function(Blueprint $table){
-            $table->string('boarding_type');
+            $table->integer('boarding_type')->unsigned();
         });
     }
 

@@ -9,7 +9,13 @@
                 <label for="cname" class="control-label col-sm-1">Dormitory Type<span style="color:red">*</span></label>
                 <div class="col-sm-2">
                     <div class="form-group @error('boarding_type') has-error @enderror">
-                        <input class=" form-control" name="boarding_type" value="{{old('boarding_type')}}" type="text" required />
+                        <select class="form-control" name="boarding_type" required>
+                            <option value="">Select Section</option>
+                            <option value="4">First Cycle</option>
+                            <option value="20">Second Cycle Science</option>
+                            <option value="21">Second Cycle Arts</option>
+                            <option value="2">Second Cycle Commcercial</option>
+                        </select>
                         @error('boarding_type')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
@@ -60,7 +66,7 @@
                     @foreach($boarding_fees as $k=>$boarding_fee)
                     <tr>
                         <td>{{$k+1}}</td>
-                        <td>{{$boarding_fee->boarding_type}}</td>
+                        <td>{{$boarding_fee->schoolUnit->name}}</td>
                         <td>{{number_format($boarding_fee->amount_new_student)}}</td>
                         <td>{{number_format($boarding_fee->amount_old_student)}}</td>
                         <td class="d-flex justify-content-end  align-items-center">

@@ -77,4 +77,9 @@ class SchoolUnits extends Model
     {
         return $this->hasMany(CollectBoardingFee::class, 'class_id');
     }
+
+    public function boardingTypes()
+    {
+        return $this->hasMany(BoardingFee::class);
+    }
 }

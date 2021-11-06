@@ -19,7 +19,7 @@ class BoardingFeeController extends Controller
     public function index()
     {
         $data['title'] = 'Boarding Fee';
-        $data['boarding_fees'] = BoardingFee::paginate(5);
+        $data['boarding_fees'] = BoardingFee::paginate(7);
         return view('admin.boarding.index')->with($data);
     }
 

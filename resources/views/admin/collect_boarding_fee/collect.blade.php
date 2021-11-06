@@ -11,10 +11,17 @@
                     <input for="cname" class="form-control" value="{{number_format($total_amount)}} CFA" disabled></input>
                 </div>
             </div>
+            <div class="form-group row">
+                <label for="cname" class="control-label col-sm-2">Select Installment: </label>
+                <div class="col-sm-10">
+                    <select class="form-control section" name="installment_id">
+                    </select>
+                </div>
+            </div>
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2">Balance:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" id="balance" value="0 CFA" disabled></input>
+                    <input for="cname" class="form-control" id="balance" value="0 CFA" disabled/>
                 </div>
             </div>
             @csrf
