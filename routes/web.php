@@ -137,10 +137,13 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::get('boarding_fee/create', 'Admin\BoardingFeeController@create')->name('boarding_fee');
     Route::post('boarding_fee', 'Admin\BoardingFeeController@store')->name('boarding_fee.store');
-    Route::post('boarding_fee', 'Admin\BoardingFeeController@addInstallments')->name('boarding_fee.installments.store');
+    Route::post('boarding_fee/{id}/installments', 'Admin\BoardingFeeController@addInstallments')->name('boarding_fee.installments.store');
+    Route::get('boarding_fee/{id}/installments/{installment_id}', 'Admin\BoardingFeeController@editBoardingPaymentInstallment')->name('boarding_fee.installments.edit');
+    Route::put('boarding_fee/{id}/installments/{installment_id}', 'Admin\BoardingFeeController@updateBoardingPaymentInstallment')->name('boarding_fee.installments.update');
+    Route::delete('boarding_fee/{id}/installments/{installment_id}', 'Admin\BoardingFeeController@deleteBoardingPaymentInstallment')->name('boarding_fee.installments.destroy');
     Route::get('boarding_fee', 'Admin\BoardingFeeController@index')->name('boarding_fee.index');
     Route::get('boarding_fee/{id}/edit', 'Admin\BoardingFeeController@edit')->name('boarding_fee.edit');
-    Route::get('boarding_fee/{id}/installments', 'Admin\BoardingFeeController@createInstallments')->name('boarding_fee.add.installments');
+    Route::get('boarding_fee/{id}/installments', 'Admin\BoardingFeeController@createInstallments')->name('boarding_fee.installments');
     Route::put('boarding_fee/{id}', 'Admin\BoardingFeeController@update')->name('boarding_fee.update');
     Route::delete('boarding_fee/{id}', 'Admin\BoardingFeeController@destroy')->name('boarding_fee.destroy');
     Route::get('total_boarding_fee/{id}',  'Admin\CollectBoardingFeeController@totalBoardingAmount')->name('getTotalBoardingAmount');

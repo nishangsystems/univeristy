@@ -8,16 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class BoardingFeeInstallment extends Model
 {
     use HasFactory;
-    protected $fillabe = [
+    protected $fillable = [
         'installment_name',
         'installment_amount',
-        'boarding_fee_id'
     ];
 
 
     public function boardingFee()
     {
-        return $this->belongsTo(BoardingFee::class);
+        return $this->belongsTo(BoardingFee::class, 'boarding_fee_id');
     }
 
 }

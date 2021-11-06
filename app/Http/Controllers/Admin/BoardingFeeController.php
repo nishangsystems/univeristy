@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BoardingFee;
+use App\Models\BoardingFeeInstallment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BoardingFeeController extends Controller
 {
 
     /**
      * show boarding fee
-     * 
+     *
      */
 
     public function index()
@@ -37,7 +39,8 @@ class BoardingFeeController extends Controller
     {
         $validate_data = $request->validate([
             'amount_old_student' => 'required|numeric',
-            'amount_new_student' => 'required|numeric'
+            'amount_new_student' => 'required|numeric',
+            'boarding_type' => 'required'
         ]);
         $created = BoardingFee::create($validate_data);
         return redirect()->route('admin.boarding_fee.index')->with('success', 'Set Boarding Fee succcessfully');
@@ -71,12 +74,59 @@ class BoardingFeeController extends Controller
 
     /**
      * delete boarding fee
-     * 
+     *
      * @param int $id
      */
     public function destroy($id)
     {
         $deleted = BoardingFee::findOrFail($id)->delete();
         return back()->with('success', 'Delete Boarding Fee Successfully');
+    }
+
+    public function createInstallments($id){
+
+        $data['title'] = 'Boarding Fee Payment Installments';
+        $data['id'] = $id;
+        $data['boarding_fee_installments']= DB::table('boarding_fee_installments')
+                                        ->join('boarding_fees', 'boarding_fees.id', '=', 'boarding_fee_installments.boarding_fee_id')
+                                        ->select('boarding_fee_installments.id', 'boarding_fee_installments.installment_name', 'boarding_fee_installments.installment_amount', 'boarding_fee_installments.boarding_fee_id')
+                                        ->where('boarding_fee_installments.boarding_fee_id', $id)->get();
+        return view('admin.boarding.installments')->with($data);
+    }
+
+    public function addInstallments(Request $request, $id)
+    {
+        $this->validateBoardingPaymentInstallment($request);
+        DB::insert('insert into boarding_fee_installments (installment_name, installment_amount, boarding_fee_id) values (?, ?,?)', [$request->installment_name, $request->installment_amount, $id]);
+        return redirect()->route('admin.boarding_fee.installments', $id)->with('success', 'Add Payment Installment succcessfully');
+    }
+
+    public function editBoardingPaymentInstallment($id, $installment_id)
+    {
+        $data['title'] = 'Edit Boarding Fee Payment Installment';
+        $data['id'] = $installment_id;
+        $data['installment'] = BoardingFeeInstallment::findOrFail($installment_id);
+       // dd($data['installment']);
+        return view('admin.boarding.editInstallment')->with($data);
+    }
+
+    public function updateBoardingPaymentInstallment(Request $request, $id, $installment_id)
+    {
+       $this->validateBoardingPaymentInstallment($request);
+        BoardingFeeInstallment::findOrFail($installment_id)->update($request->all());
+        return redirect()->route('admin.boarding_fee.installments', $id)->with('success', 'Updated Payment Installment succcessfully');
+    }
+
+    public function deleteBoardingPaymentInstallment($id,$installment_id)
+    {
+        BoardingFeeInstallment::findOrFail($installment_id)->delete();
+        return redirect()->route('admin.boarding_fee.installments', $id)->with('success', 'Deleted Payment Installment succcessfully');
+    }
+
+    private function validateBoardingPaymentInstallment(Request $request){
+        return $request->validate([
+            'installment_name' => 'required',
+            'installment_amount' => 'required',
+        ]);
     }
 }

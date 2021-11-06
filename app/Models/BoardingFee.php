@@ -17,6 +17,6 @@ class BoardingFee extends Model
 
     public function  boardingFeeInstallments()
     {
-        return $this->hasMany(BoardingFeeInstallment::class, 'boarding_fee_id');
+        return $this->hasMany(BoardingFeeInstallment::class);
     }
 }
