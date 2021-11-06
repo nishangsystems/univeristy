@@ -19,9 +19,19 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
-        $data['title'] = "Manage " . request('teacher', 'user') . 's';
-        return view('admin.user.index')->with($data);
+        if(\request('role')){
+            $data['title'] = "Role ( ".\App\Models\Role::whereSlug(\request('role'))->first()->name." ) Users";
+            $data['users'] =\App\Models\Role::whereSlug(\request('role'))->first()->users()->paginate(15);
+            return view('admin.user.index')->with($data);
+        }else if(\request('permission')){
+            $data['title'] = "Permission ( ".\App\Models\Permission::whereSlug(\request('permission'))->first()->name." ) Users";
+            $data['users'] =\App\Models\Permission::whereSlug(\request('permission'))->first()->users()->paginate(15);
+            return view('admin.user.index')->with($data);
+        }else{
+            $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
+            $data['title'] = "Manage " . request('teacher', 'user') . 's';
+            return view('admin.user.index')->with($data);
+        }
     }
 
     public function create(Request $request)

@@ -152,6 +152,12 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('collected/boarding_fees/{student_id}/{id}', 'Admin\CollectBoardingFeeController@show')->name('collect_boarding_fee.show');
     Route::post('collected/boarding_fees', 'Admin\CollectBoardingFeeController@getBoardingFeePerYear')->name('boarding_fees_year');
     Route::post('collect/boarding_fees/{student_id}/{id}', 'Admin\CollectBoardingFeeController@collectBoardingFeeDetails')->name('boarding_fees_details');
+
+    Route::resource('roles','Admin\RolesController');
+    Route::get('permissions', 'Admin\RolesController@permissions')->name('roles.permissions');
+    Route::get('assign_role', 'Admin\RolesController@rolesView')->name('roles.assign');
+    Route::post('assign_role', 'Admin\RolesController@rolesStore')->name('roles.assign.post');
+
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {

@@ -187,60 +187,62 @@
                 </a>
                 <b class="arrow"></b>
             </li>
+            @if (\Auth::user()->hasPermissionTo('manage_student'))
+                <li>
+                    <a href="#" class="dropdown-toggle">
+                        <i class="menu-icon fa fa-graduation-cap"></i>
+                        <span class="menu-text"> Student Management</span>
 
-            <li>
-                <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-graduation-cap"></i>
-                    <span class="menu-text"> Student Management</span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                    <b class="arrow"></b>
 
-                <b class="arrow"></b>
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('admin.student.create')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                Enroll Student
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.student.index')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                Enrolled Students
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.student.create')}}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Enroll Student
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.student.index')}}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Enrolled Students
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                        <li>
+                            <a href="{{route('admin.sections')}}?action=class_list">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                Class List
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                    <li>
-                        <a href="{{route('admin.sections')}}?action=class_list">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Class List
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                        <li>
+                            <a href="{{route('admin.students.matricule')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                Generate Matricule
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                    <li>
-                        <a href="{{route('admin.students.matricule')}}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Generate Matricule
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                        <li>
+                            <a href="{{route('admin.students.import')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                Import Student
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                    <li>
-                        <a href="{{route('admin.students.import')}}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Import Student
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    </ul>
+                </li>
+            @endif
 
-                </ul>
-            </li>
-
+            @if (\Auth::user()->hasPermissionTo('manage_setting'))
             <li>
                 <a href="#" class="dropdown-toggle">
                     <i class="menu-icon fa fa-pencil"></i>
@@ -288,7 +290,9 @@
                     </li>
                 </ul>
             </li>
+            @endif
 
+            @if (\Auth::user()->hasPermissionTo('manage_subject'))
             <li>
                 <a href="" class="dropdown-toggle">
                     <i class="menu-icon fa fa-book"></i>
@@ -313,11 +317,12 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-                   
-                 
+
+
                 </ul>
             </li>
-
+            @endif
+            @if (\Auth::user()->hasPermissionTo('manage_user'))
             <li>
                 <a href="#" class="dropdown-toggle">
                     <i class="menu-icon fa fa-cog"></i>
@@ -351,9 +356,19 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+
+                    <li>
+                        <a href="{{route('admin.roles.index')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           Roles
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                 </ul>
             </li>
+            @endif
 
+            @if (\Auth::user()->hasPermissionTo('manage_fee'))
             <li>
                 <a href="#" class="dropdown-toggle">
                     <i class="menu-icon fa fa-money"></i>
@@ -438,8 +453,9 @@
                     </li>
                 </ul>
             </li>
+            @endif
 
-
+            @if (\Auth::user()->hasPermissionTo('manage_result'))
             <li>
                 <a href="#" class="dropdown-toggle">
                     <i class="menu-icon fa fa-money"></i>
@@ -468,6 +484,9 @@
                     </li>
                 </ul>
             </li>
+            @endif
+
+            @if (\Auth::user()->hasPermissionTo('manage_scholarship'))
             <li>
                 <a href="#" class="dropdown-toggle">
                 <i class="menu-icon fa fa-money"></i>
@@ -505,6 +524,9 @@
                     </li>
                 </ul>
             </li>
+            @endif
+
+            @if (\Auth::user()->hasPermissionTo('manage_incomes'))
             <li>
                 <a href="#" class="dropdown-toggle">
                 <i class="menu-icon fa fa-money"></i>
@@ -539,6 +561,10 @@
                     </li>
                 </ul>
             </li>
+            @endif
+
+
+            @if (\Auth::user()->hasPermissionTo('manage_expenses'))
             <li>
                 <a href="#" class="dropdown-toggle">
                 <i class="menu-icon fa fa-money"></i>
@@ -566,6 +592,7 @@
                     </li> -->
                 </ul>
             </li>
+            @endif
 
 
             <li>
