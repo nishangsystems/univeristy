@@ -5,6 +5,15 @@
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.boarding_fee.store')}}">
 
             @csrf
+            <div class="form-group @error('boarding_type') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2">Dormitory Type <span style="color:red">*</span></label>
+                <div class="col-lg-10">
+                    <input class=" form-control" name="boarding_type" value="{{old('boarding_type')}}" type="text" required />
+                    @error('boarding_type')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
             <div class="form-group @error('amount_new_student') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2">Amount: New Students <span style="color:red">*</span></label>
                 <div class="col-lg-10">
