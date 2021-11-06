@@ -60,9 +60,9 @@ class CollectBoardingFeeController extends Controller
             ->join('boarding_amounts', 'collect_boarding_fees.id', '=', 'boarding_amounts.collect_boarding_fee_id')
             ->where('batches.id', $this->batch_id)
             ->select(
-                \DB::raw("students.id as student_id, 
-                students.name, 
-                students.matric, 
+                \DB::raw("students.id as student_id,
+                students.name,
+                students.matric,
                 school_units.name as class_name,
                 MAX(boarding_amounts.total_amount) as total_amount,
                 MIN(boarding_amounts.balance) as balance,
@@ -76,7 +76,7 @@ class CollectBoardingFeeController extends Controller
     }
 
     /**
-     * show all boarding fee payments made by a student 
+     * show all boarding fee payments made by a student
      */
     public function show($student_id, $id)
     {
@@ -106,6 +106,7 @@ class CollectBoardingFeeController extends Controller
     public function create()
     {
         $data['title'] = 'Collect Boarding Fee';
+        $id = $this->getStudentClass(3);
         return view('admin.collect_boarding_fee.create')->with($data);
     }
 
@@ -124,7 +125,7 @@ class CollectBoardingFeeController extends Controller
 
     /**
      * check if boarding fee has bee set
-     * 
+     *
      */
     private function checkBoardingFee()
     {
@@ -157,7 +158,7 @@ class CollectBoardingFeeController extends Controller
      * @return \Illuminate\Http\Response
      * @param int $student_id
      * @param int $class_id
-     * 
+     *
      */
     public function store(Request $request, $class_id, $student_id)
     {
@@ -204,7 +205,7 @@ class CollectBoardingFeeController extends Controller
 
     /**
      * get balnace fo boarding fee
-     * 
+     *
      */
     private function getBalanceBoardingFee($student_id, $year, $amount_pay)
     {
@@ -260,7 +261,7 @@ class CollectBoardingFeeController extends Controller
 
     /**
      * collect boarding fee
-     * 
+     *
      * @param int $student_id
      *  @param int $class_id
      */
@@ -300,9 +301,11 @@ class CollectBoardingFeeController extends Controller
             return false;
         }
         $total = 0;
-
         $student = $this->getStudent($student_id, $this->year);
-        $boarding_fee = BoardingFee::first();
+        // $studentClass_id = $this->getStudentClass($student->id);
+        // $studentClassParent = $this->getStudentClassParent($studentClass_id);
+       // $boarding_fee = BoardingFee::where('boarding_type', $studentClassParent)->get();
+        $boarding_fee = BoardingFee::findFirst();
         if (!empty($student)) {
             $total = $boarding_fee->amount_old_student;
         } else {
@@ -310,6 +313,11 @@ class CollectBoardingFeeController extends Controller
         }
         return $total;
     }
+    public function test(){
+        $student = $this->getStudent(7, $this->year);
+        dd($this->year);
+    }
+
 
     public function totalBoardingAmount($id)
     {
@@ -318,11 +326,20 @@ class CollectBoardingFeeController extends Controller
     }
 
 
+    private function getStudentClass($student_id)
+    {
+        return DB::select('select student_classes.class_id from student_classes, students, school_units where students.id = student_classes.student_id AND school_units.id= student_classes.class_id AND student_classes.student_id = ?', [$student_id]);
+    }
+
+    private function getStudentClassParent($class_id)
+    {
+        return DB::select('select school_units.parent_id from school_units where id = ?', [$class_id]);
+    }
 
 
     /**
      * get student
-     * 
+     *
      * @param int $current_year
      * @param int $student_id
      */
@@ -423,7 +440,7 @@ class CollectBoardingFeeController extends Controller
      * @param int $amount_payable
      * @param int $updated_amount
      * @param object CollectBoardingFee
-     * 
+     *
      */
     private function updatePaidBoardingAmount($amount_payable, $updated_amount, $collected_boarding_fee, $status, $balance)
     {
@@ -454,9 +471,9 @@ class CollectBoardingFeeController extends Controller
             ->where('boarding_amounts.status', $request->status)
             ->where('collect_boarding_fees.class_id', $request->class_id)
             ->select(
-                \DB::raw("students.id as student_id, 
-                students.name, 
-                students.matric, 
+                \DB::raw("students.id as student_id,
+                students.name,
+                students.matric,
                 school_units.name as class_name,
                 MAX(boarding_amounts.total_amount) as total_amount,
                 MIN(boarding_amounts.balance) as balance,
@@ -494,7 +511,7 @@ class CollectBoardingFeeController extends Controller
 
     /**
      * get paid boarding fees details for student per class and year
-     * 
+     *
      */
     public function collectBoardingFeeDetails(Request $request, $student_id, $id)
     {
