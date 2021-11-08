@@ -146,7 +146,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('boarding_fee/{id}/installments', 'Admin\BoardingFeeController@createInstallments')->name('boarding_fee.installments');
     Route::put('boarding_fee/{id}', 'Admin\BoardingFeeController@update')->name('boarding_fee.update');
     Route::delete('boarding_fee/{id}', 'Admin\BoardingFeeController@destroy')->name('boarding_fee.destroy');
-    Route::get('total_boarding_fee/{id}',  'Admin\CollectBoardingFeeController@totalBoardingAmount')->name('getTotalBoardingAmount');
+    Route::get('total_boarding_fee/{id}/',  'Admin\CollectBoardingFeeController@totalBoardingAmount')->name('getTotalBoardingAmount');
+
+    Route::get('sub-units/{parent_id}','Admin\ProgramController@getSubUnits')->name('getSubUnits');
+    Route::get('test', 'Admin\CollectBoardingFeeController@checkBoardingFee');
 
     Route::get('collect/boarding_fee/{class_id}/{student_id}', 'Admin\CollectBoardingFeeController@collect')->name('collect_boarding_fee.collect');
     Route::get('collect/boarding_fee', 'Admin\CollectBoardingFeeController@create')->name('collect_boarding_fee.create');
@@ -158,7 +161,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('collected/boarding_fees', 'Admin\CollectBoardingFeeController@getBoardingFeePerYear')->name('boarding_fees_year');
     Route::post('collect/boarding_fees/{student_id}/{id}', 'Admin\CollectBoardingFeeController@collectBoardingFeeDetails')->name('boarding_fees_details');
 
-    Route::get("test", 'Admin\CollectBoardingFeeController@test');
+
 
     Route::resource('roles','Admin\RolesController');
     Route::get('permissions', 'Admin\RolesController@permissions')->name('roles.permissions');

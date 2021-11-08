@@ -215,4 +215,10 @@ class ProgramController extends Controller
         $data['title'] = "Manage subjects under " . $parent->name;
         return redirect()->back()->with('success', "Subjects Saved Successfully");
     }
+
+    public function getSubUnits($parent_id)
+    {
+        $data = SchoolUnits::where('parent_id', $parent_id)->get();
+        return response()->json($data);
+    }
 }

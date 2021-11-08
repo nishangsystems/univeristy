@@ -147,33 +147,7 @@ class SchoolUnitSeeder extends Seeder
             'prefix' => 'AC',
             'suffix' => 'SBB'
         ]);
-        SchoolUnits::create([
-            'name' => 'SCIENCE',
-            'unit_id' => 1,
-            'parent_id' => 0,
-            'prefix' => 'SC',
-            'suffix' => 'SBB'
-        ]);
-        SchoolUnits::create([
-            'name' => 'ARTS',
-            'unit_id' => 1,
-            'parent_id' => 0,
-            'prefix' => 'AT',
-            'suffix' => 'SBB'
-        ]);
-        SchoolUnits::create([
-            'name' => 'SECOND CYCLE',
-            'unit_id' => 2,
-            'parent_id' => 20,
-            'prefix' => 'SC',
-            'suffix' => 'SBB'
-        ]);
-        SchoolUnits::create([
-            'name' => 'SECOND CYCLE',
-            'unit_id' => 2,
-            'parent_id' => 21,
-            'prefix' => 'SC',
-            'suffix' => 'SBB'
-        ]);
+        
+
     }
 }
