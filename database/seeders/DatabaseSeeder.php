@@ -6,6 +6,11 @@ use Database\Seeders\SchoolUnitSeeder;
 use Database\Seeders\StudentClassSeeder;
 use Database\Seeders\StudentSeeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\PermissionSeeder;
+use Database\Seeders\RolesSeeder;
+use Database\Seeders\RolesPermissionSeeder;
+use Database\Seeders\UserRoleSeeder;
+use Database\Seeders\UserPermissionSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -30,7 +35,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionSeeder::class);
         $this->call(RolesSeeder::class);
         $this->call(RolesPermissionSeeder::class);
-        $this->call(UserRole::class);
+        $this->call(UserRoleSeeder::class);
         $this->call(UserPermissionSeeder::class);
     }
 }

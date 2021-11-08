@@ -11,10 +11,21 @@
                     <input for="cname" class="form-control" value="{{number_format($total_amount)}} CFA" disabled></input>
                 </div>
             </div>
+            <div class="form-group row">
+                <label for="cname" class="control-label col-sm-2">Installment: <span style="color:red">*</span></label>
+                <div class="col-sm-10">
+                    <select class="form-control section" name="installment_id">
+                        <option value="">Select installment</option>
+                        @foreach ($installments as $installment)
+                        <option value="{{$installment->id}}">{{$installment->installment_name}},  {{number_format($installment->installment_amount)}} CFA</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2">Balance:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" id="balance" value="0 CFA" disabled></input>
+                    <input for="cname" class="form-control" id="balance" value="0 CFA" disabled/>
                 </div>
             </div>
             @csrf
@@ -22,7 +33,7 @@
             <div class="form-group @error('amount_payable') has-error @enderror">
                 <label for="cname" class="control-label col-sm-2">Deposit Payment(CFA): <span style="color:red">*</span></label>
                 <div class="col-lg-10">
-                    <input class=" form-control amount" name="amount_payable" value="{{old('amount_payable')}}" type="number" required />
+                    <input class=" form-control" name="amount_payable" value="{{old('amount_payable')}}" type="number" required />
                     @error('amount_payable')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -58,23 +69,20 @@
 @endsection
 @section('script')
 <script>
-    $('.amount').on('keyup', function() {
+    $('.section').on('change', function() {
         val = $(this).val();
-
         url = "{{route('admin.getTotalBoardingAmount', ':id')}}";
         search_url = url.replace(':id', val);
         $.ajax({
             type: 'GET',
             url: search_url,
             success: function(response) {
-
-                let balance = response.data - val;
-
+                let balance = response[0].amount_new_student - response[0].installment_amount;
                 value = document.getElementById('balance').value = balance.toLocaleString() + ' CFA';
                 //console.log(value);
             },
             error: function(e) {
-                console.log(e)
+
             }
         })
     })

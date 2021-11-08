@@ -147,5 +147,7 @@ class SchoolUnitSeeder extends Seeder
             'prefix' => 'AC',
             'suffix' => 'SBB'
         ]);
+        
+
     }
 }
