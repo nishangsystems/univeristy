@@ -3,7 +3,6 @@
 <div class="mx-3">
     <div class="form-panel">
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.boarding_fee.store')}}">
-
             @csrf
             <div class="form-group @error('boarding_type') has-error @enderror">
                 <label for="cname" class="control-label col-sm-2">School Section<span style="color:red">*</span></label>
