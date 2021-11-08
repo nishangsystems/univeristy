@@ -149,7 +149,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('total_boarding_fee/{id}/',  'Admin\CollectBoardingFeeController@totalBoardingAmount')->name('getTotalBoardingAmount');
 
     Route::get('sub-units/{parent_id}','Admin\ProgramController@getSubUnits')->name('getSubUnits');
-    Route::get('test', 'Admin\CollectBoardingFeeController@checkBoardingFee');
+
 
     Route::get('collect/boarding_fee/{class_id}/{student_id}', 'Admin\CollectBoardingFeeController@collect')->name('collect_boarding_fee.collect');
     Route::get('collect/boarding_fee', 'Admin\CollectBoardingFeeController@create')->name('collect_boarding_fee.create');
