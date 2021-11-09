@@ -233,7 +233,7 @@ class CollectBoardingFeeController extends Controller
         $updated_amount = $request->amount_payable + $collected_boarding_fee->total_amount;
 
         $updated_boarding_fee = $this->updateBoardingFee($student_id, $request->amount_payable, $updated_amount, $this->boarding_fee, $collected_boarding_fee);
-    
+
         if (!$updated_boarding_fee) {
             return redirect()->back()->with('error', 'The Amount Paid is more than the specified amount for Boarding Fee.');
         }
@@ -265,8 +265,9 @@ class CollectBoardingFeeController extends Controller
     {
         $data['total_amount'] = $this->getTotalboardingAmount($student_id);
         $data['installments'] = BoardingFeeInstallment::all();
+
         if (!$this->checkBoardingFee()) {
-            return redirect()->route('admin.boarding_fee.index')->with('error', 'Boarding Fee not set, please set Boarding Fee');
+            return redirect()->route('admin.boarding_fee.index')->with('error', 'Boarding Fee not set, please set Boarding Fee ');
         }
         $check_user = CollectBoardingFee::where('student_id', $student_id)->first();
         $check_completed = $this->checkCompletedBoardingFee($student_id);
@@ -278,7 +279,7 @@ class CollectBoardingFeeController extends Controller
             $data['student_id'] = $student_id;
             $data['class_id'] = $class_id;
         } elseif (!empty($check_completed)) {
-            return redirect()->route('admin.collect_boarding_fee.index')->with('error', "This Student has already completed Boarding Fee!");
+            return redirect()->route('admin.collect_boarding_fee.index')->with('success', "This Student has already completed Boarding Fee!");
         } else {
             return redirect()->route('admin.collect_boarding_fee.edit', [$check_user->id, $student_id]);
         }
@@ -296,7 +297,6 @@ class CollectBoardingFeeController extends Controller
         $studentClass_id = $this->getStudentClass($student->id);
         $studentClassParent = $this->getStudentClassParent($studentClass_id[0]->class_id);
         $boarding_fee = $this->getBoardingFeeAmount($studentClassParent[0]->parent_id);
-
         //need to catch exception
         if(!empty($boarding_fee))
         {

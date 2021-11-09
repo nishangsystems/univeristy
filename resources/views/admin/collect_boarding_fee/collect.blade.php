@@ -11,7 +11,7 @@
                     <input for="cname" class="form-control" value="{{number_format($total_amount)}} CFA" disabled></input>
                 </div>
             </div>
-            <div class="form-group row">
+            {{-- <div class="form-group row">
                 <label for="cname" class="control-label col-sm-2">Installment: <span style="color:red">*</span></label>
                 <div class="col-sm-10">
                     <select class="form-control section" name="installment_id">
@@ -21,7 +21,7 @@
                         @endforeach
                     </select>
                 </div>
-            </div>
+            </div> --}}
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2">Balance:</label>
                 <div class="col-lg-10">

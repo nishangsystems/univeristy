@@ -45,10 +45,10 @@ class BoardingFeeController extends Controller
             'boarding_type' => 'required'
         ]);
         $parent_id = SchoolUnits::where('id', $request->boarding_type)->first()->parent_id;
-        $data['name'] = SchoolUnits::where('id', $parent_id)->first()->name;
+
         $created = BoardingFee::create($validate_data);
-        $data['boarding_fees'] = BoardingFee::paginate(7);
-        return view('admin.boarding.index')->with($data);
+
+        return view('admin.boarding.index')->with('success', 'Successfully added Boarding fee');
     }
 
     /**

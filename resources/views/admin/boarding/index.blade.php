@@ -25,7 +25,7 @@
                     @foreach($boarding_fees as $k=>$boarding_fee)
                     <tr>
                         <td>{{$k+1}}</td>
-                        <td>{{$name??''}} {{$boarding_fee->schoolUnit->name}}</td>
+                        <td> {{$boarding_fee->schoolUnit->name}}</td>
                         <td>{{number_format($boarding_fee->amount_new_student)}}</td>
                         <td>{{number_format($boarding_fee->amount_old_student)}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
