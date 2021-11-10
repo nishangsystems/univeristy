@@ -9,13 +9,13 @@
             <div class="form-group row">
                 <label for="cname" class="control-label col-sm-2">Amount Paid :</label>
                 <div class="col-sm-10">
-                    <input for="cname" class="form-control" value="{{number_format($boarding_fee->total_amount)}} CFA" disabled></input>
+                    <input for="cname" class="form-control" value="{{number_format($boarding_fee->total_amount)}} CFA" disabled/>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="cname" class="control-label col-lg-2">Balance Payment :</label>
                 <div class="col-sm-10">
-                    <input for="cname" class="form-control " value="{{number_format($balance)}} CFA" disabled></input>
+                    <input for="cname" class="form-control"  value="{{number_format($balance)}} CFA" disabled/>
                 </div>
             </div>
             <div class="form-group @error('amount_payable') has-error @enderror">
@@ -39,3 +39,4 @@
     </div>
 </div>
 @endsection
+

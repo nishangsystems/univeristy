@@ -160,7 +160,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('collected/boarding_fees/{student_id}/{id}', 'Admin\CollectBoardingFeeController@show')->name('collect_boarding_fee.show');
     Route::post('collected/boarding_fees', 'Admin\CollectBoardingFeeController@getBoardingFeePerYear')->name('boarding_fees_year');
     Route::post('collect/boarding_fees/{student_id}/{id}', 'Admin\CollectBoardingFeeController@collectBoardingFeeDetails')->name('boarding_fees_details');
-
+    Route::get('students/{student_id}/boarding_fees/{id}/print', 'Admin\CollectBoardingFeeController@printBoardingFee')->name('boarding_fee.print');
 
 
     Route::resource('roles','Admin\RolesController');
