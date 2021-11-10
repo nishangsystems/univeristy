@@ -55,9 +55,6 @@
        refresh($(this))
     })
 
-
-
-
     function refresh(div){
         val = div.val();
         url = "{{route('admin.getSubUnits', ':id')}}";
@@ -92,14 +89,14 @@
         url = "{{route('admin.getSubUnits', ':id')}}";
         search_url = url.replace(':id', val);
         search_url = search_url.replaceAll(" ", "");
-        console.log(search_url)
+
         $.ajax({
             type: 'GET',
             url: search_url,
             success: function(response) {
                 let html = "";
                 let size = response.length;
-                console.log(response)
+
                 if(response.length > 0){
                    html+= '<div class="col-md-1"></div>'
                     html += '<div class="col-lg-12 mt-3 p-2"><select class="form-control" name="boarding_type">';

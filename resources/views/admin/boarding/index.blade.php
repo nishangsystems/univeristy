@@ -29,7 +29,7 @@
                         <td>{{number_format($boarding_fee->amount_new_student)}}</td>
                         <td>{{number_format($boarding_fee->amount_old_student)}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
-                            <a class="btn btn-sm btn-info m-3" href="{{route('admin.boarding_fee.installments',[$boarding_fee->id])}}"><i class="fa fa-eye"> Installments</i></a> |
+
                             <a class="btn btn-sm btn-success m-3" href="{{route('admin.boarding_fee.edit',[$boarding_fee->id])}}"><i class="fa fa-edit"> Edit</i></a> |
                             <a onclick="event.preventDefault();
                                             document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-3"><i class="fa fa-trash"> Delete</i></a>

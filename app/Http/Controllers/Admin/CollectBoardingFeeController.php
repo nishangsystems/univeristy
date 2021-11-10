@@ -13,6 +13,7 @@ use App\Models\Students;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class CollectBoardingFeeController extends Controller
 {
@@ -163,19 +164,12 @@ class CollectBoardingFeeController extends Controller
      */
     public function store(Request $request, $class_id, $student_id)
     {
-        //validate request
         $this->validateRequest($request);
-
-        //checkout if boarding fee has been set;
         $boarding_fee_amount = $this->checkBoardingFee();
         if (!$boarding_fee_amount) {
             return redirect()->route('admin.boarding_fee.index')->with('error', 'Boarding Fee not set, please set Boarding Fee');
         }
-
-        //get student
         $student = $this->getStudent($student_id, $this->year);
-
-        //  verify if student is old or new and make payment for boarding
         $paid_boarding = $this->paidStudentBoarding($student, $request, $this->boarding_fee, $class_id, $student_id);
 
         if (!$paid_boarding) {
@@ -195,7 +189,6 @@ class CollectBoardingFeeController extends Controller
      */
     public function edit($id, $student_id)
     {
-
         $student = Students::where('id', $student_id)->first();
         $data['boarding_fee'] = $this->getCollectedBoardingFee($id);
         $data['title']  = 'Complete Boarding Fee: ' . $student->name;
@@ -263,9 +256,8 @@ class CollectBoardingFeeController extends Controller
      */
     public function collect($class_id, $student_id)
     {
-        $data['total_amount'] = $this->getTotalboardingAmount($student_id);
-        $data['installments'] = BoardingFeeInstallment::all();
 
+        $data['total_amount'] = $this->getTotalboardingAmount($student_id);
         if (!$this->checkBoardingFee()) {
             return redirect()->route('admin.boarding_fee.index')->with('error', 'Boarding Fee not set, please set Boarding Fee ');
         }
@@ -297,7 +289,6 @@ class CollectBoardingFeeController extends Controller
         $studentClass_id = $this->getStudentClass($student->id);
         $studentClassParent = $this->getStudentClassParent($studentClass_id[0]->class_id);
         $boarding_fee = $this->getBoardingFeeAmount($studentClassParent[0]->parent_id);
-        //need to catch exception
         if(!empty($boarding_fee))
         {
             if (!empty($student)) {
@@ -305,16 +296,24 @@ class CollectBoardingFeeController extends Controller
             } else {
                 $total = $boarding_fee[0]->amount_new_student;
             }
+        }else {
+            return redirect()->route('admin.boarding_fee.index')->with("error", "Please Set Boarding fee");
         }
         return $total;
+
+
     }
 
 
 
     public function totalBoardingAmount($id)
     {
-        $total = DB::select('select boarding_fee_installments.installment_amount, boarding_fees.amount_new_student from boarding_fee_installments, boarding_fees where boarding_fee_installments.boarding_fee_id = boarding_fees.id AND boarding_fee_installments.id = ?', [$id]);
-        return response()->json($total);
+       $url = URL::previous();
+       $length = strlen($url);
+       $id = substr($url, $length-1, $length);
+       $student_id = (int) $id;
+       $balance = $this->getTotalboardingAmount($student_id);
+        return response()->json(['data' => $balance]);
     }
 
 
@@ -481,7 +480,6 @@ class CollectBoardingFeeController extends Controller
             ->groupBy('collect_boarding_fees.student_id')
             ->paginate(7);
         $class_name = $this->getSchoolUnit($request->class_id);
-        //    $data['student_id'] = $student_id;
         $data['title'] = 'Paid Boarding Fees: ' . $class_name;
         return view('admin.collect_boarding_fee.index')->with($data);
     }

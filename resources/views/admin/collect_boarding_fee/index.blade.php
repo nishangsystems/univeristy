@@ -131,7 +131,7 @@
                 $('.circle').html(html);
             },
             error: function(e) {
-                console.log(e)
+
             }
         })
     })
@@ -162,7 +162,7 @@
                 $('.class').html(html);
             },
             error: function(e) {
-                console.log(e)
+
             }
         })
     })

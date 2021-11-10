@@ -39,7 +39,7 @@
             type: 'GET',
             url: search_url,
             success: function(response) {
-                console.log(response.data)
+
                 let html = new String();
                 let size = response.data.length;
                 let data = response.data;
@@ -58,7 +58,7 @@
 
             },
             error: function(e) {
-                console.log(e)
+
             }
         })
     })
