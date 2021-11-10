@@ -24,11 +24,11 @@ class CollectBoardingFeeController extends Controller
 
     private $select_boarding = [
         'students.id as student_id',
-        'collect_boarding_fees.id',
+        'collect_boarding_fees.id as collect_boarding_fees_id',
         'boarding_amounts.created_at',
         'boarding_amounts.amount_payable',
         'boarding_amounts.status',
-
+        'boarding_amounts.id'
     ];
     private  $boarding_fee;
     private $year;
@@ -93,7 +93,7 @@ class CollectBoardingFeeController extends Controller
             ->where('collect_boarding_fees.id', $id)
             ->select($this->select_boarding)
             ->orderBy('boarding_amounts.created_at', 'ASC')
-            ->paginate(5);
+            ->paginate(10);
         $data['years'] = $this->years;
         $data['student_id'] = $student_id;
         $data['school_units'] = SchoolUnits::where('parent_id', 0)->get();
@@ -530,4 +530,17 @@ class CollectBoardingFeeController extends Controller
         $data['school_units'] = SchoolUnits::where('parent_id', 0)->get();
         return view('admin.collect_boarding_fee.show')->with($data);
     }
+
+
+    public function printBoardingFee($student_id, $id)
+    {
+        $student  = Students::findOrFail($student_id);
+        $boarding_fee  = BoardingAmount::findOrFail($id);
+        $year = $this->year;
+        return view("admin.collect_boarding_fee.print_receipt", compact(['student', 'boarding_fee', 'year']));
+    }
+
+
+
+
 }

@@ -82,7 +82,7 @@
                         <td>Completed</td>
                         @endif
                         <td class="d-flex justify-content-end  align-items-center">
-                            <a class="btn btn-sm btn-primary" href="#"><i class="fa fa-printer">Print</i> </a>
+                            <a class="btn btn-sm btn-primary" href="{{route('admin.boarding_fee.print', [$student_id, $boarding_fee->id])}}"><i class="fas fa-print"></i>Print </a>
                         </td>
                     </tr>
                     @endforeach
