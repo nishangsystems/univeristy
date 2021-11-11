@@ -1,9 +1,10 @@
 @extends('admin.layout')
 @section('section')
+ 
         <div>
             <img width="100%" src="{{asset('assets/images')}}/header.jpg" />
         </div>
-        <div style=" float:left; width:100%;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; ">
+        <div style=" float:left; width:100%;TEXT-ALIGN:CENTER;  height:34px;font-size:24px;margin-bottom:20px; ">
             CASH RECEIPT N<SUP>0</SUP> 00{{$boarding_fee->id}}
         </div>
         <div style=" float:left; width:width:900px; margin-top:0px;TEXT-ALIGN:CENTER; font-family:arial; height:300px;font-size:13px; ">
@@ -41,7 +42,7 @@
                         DATE
                     </div>
                     <div style=" float:left; border-bottom:1px solid #000;margin-top:3px;">
-                        {{$boarding_fee->created_at->format('d/m/Y')}}
+                        {{$boarding_fee->updated_at->format('d/m/Y')}}
                     </div>
                 </div>
                 <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
@@ -91,7 +92,7 @@
             
             <img width="100%" src="{{asset('assets/images')}}/header.jpg" style="margin-top:80px;" />
         </div>
-        <div style=" float:left; width:100%;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; ">
+        <div style=" float:left; width:100%;TEXT-ALIGN:CENTER;  height:34px;font-size:24px;margin-bottom:20px; ">
             CASH RECEIPT N<SUP>0</SUP> 00{{$boarding_fee->id}}
         </div>
         <div style=" float:left; width:width:900px; margin-top:0px;TEXT-ALIGN:CENTER; font-family:arial; height:300px;font-size:13px; ">
@@ -129,7 +130,7 @@
                         DATE
                     </div>
                     <div style=" float:left; border-bottom:1px solid #000;margin-top:3px;">
-                        {{$boarding_fee->created_at->format('d/m/Y')}}
+                        {{$boarding_fee->updated_at->format('d/m/Y')}}
                     </div>
                 </div>
                 <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
@@ -176,7 +177,7 @@
 @section('script')
 <script>
     window.print()
-    window.close();
+   
     
 </script>
 @endsection
