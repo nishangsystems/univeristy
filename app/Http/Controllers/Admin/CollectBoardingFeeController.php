@@ -345,7 +345,7 @@ class CollectBoardingFeeController extends Controller
         return DB::table('students')
             ->where('students.id', $student_id)
             ->where('students.type', 'boarding')
-            ->whereYear('students.created_at', '=', substr($current_year, 5))
+           // ->whereYear('students.created_at', '=', substr($current_year, 5))
             ->select(
                 'students.id',
                 'students.name',
