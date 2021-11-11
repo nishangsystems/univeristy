@@ -67,10 +67,10 @@ class HomeController extends Controller
     }
     public function searchStudents($name)
     {
-        $current_year = \App\Helpers\Helpers::instance()->getYear();
+       // $current_year = \App\Helpers\Helpers::instance()->getYear();
         $students  = DB::table('students')
             ->join('student_classes', ['students.id' => 'student_classes.student_id'])
-            ->where('student_classes.year_id', $current_year)
+          //  ->where('student_classes.year_id', $current_year)
             ->where('students.name', 'LIKE', "%{$name}%")
             ->get()->toArray();
 

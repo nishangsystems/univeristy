@@ -35,7 +35,6 @@
 @section('script')
 <script>
     $('#search').on('keyup', function() {
-
         val = $(this).val()
         url = "{{route('search-all-students', ':id')}}";
         url = url.replace(':id', val);

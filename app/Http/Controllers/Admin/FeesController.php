@@ -45,7 +45,8 @@ class FeesController extends Controller
     {
         $student = Students::find($student_id);
         $year = \App\Helpers\Helpers::instance()->getYear();
-        return view('admin.fee.print_reciept', compact('student', 'year'));
+        $numbers = [1, 2];
+        return view('admin.fee.print_reciept', compact('student', 'year', 'numbers'));
     }
 
     public function daily_report(Request  $request)

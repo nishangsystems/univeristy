@@ -15,8 +15,8 @@ class CreateBoardingFeesTable extends Migration
     {
         Schema::create('boarding_fees', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount_new_student', 8, 2);
-            $table->decimal('amount_old_student', 8, 2);
+            $table->integer('amount_new_student');
+            $table->integer('amount_old_student');
             $table->timestamps();
         });
     }

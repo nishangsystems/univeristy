@@ -16,7 +16,7 @@ class BoardingFeeInstallements extends Migration
         Schema::create('boarding_fee_installments', function(Blueprint $table){
             $table->id();
             $table->string('installment_name');
-            $table->decimal('installment_amount', 8, 2);
+            $table->integer('installment_amount');
             $table->integer('boarding_fee_id')->unsigned();
             $table->timestamps();
         });
