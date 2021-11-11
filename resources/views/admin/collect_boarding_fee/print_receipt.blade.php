@@ -176,5 +176,7 @@
 @section('script')
 <script>
     window.print()
+    window.close();
+    
 </script>
 @endsection
