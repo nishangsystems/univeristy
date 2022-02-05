@@ -11,6 +11,7 @@ class StudentScholarship extends Model
     protected $fillable = [
         'student_id',
         'scholarship_id',
-        'batch_id'
+        'batch_id',
+        'amount'
     ];
 }

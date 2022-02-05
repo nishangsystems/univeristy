@@ -22,8 +22,7 @@ class UserScholarshipController extends Controller
         'students.gender',
         'students.phone',
         'students.address',
-        'scholarships.type',
-        'scholarships.amount'
+        'student_scholarships.amount'
     ];
     /**
      * @param Illuminate\Http\Request
@@ -46,7 +45,6 @@ class UserScholarshipController extends Controller
         $data['years'] = Batch::all();
         $data['students'] = DB::table('student_scholarships')
             ->join('students', 'students.id', '=', 'student_scholarships.student_id')
-            ->join('scholarships', 'scholarships.id', '=', 'student_scholarships.scholarship_id')
             ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
             ->where('student_scholarships.batch_id', $request->year)
             ->select($this->select)->paginate(10);
@@ -62,7 +60,6 @@ class UserScholarshipController extends Controller
     {
         return DB::table('student_scholarships')
             ->join('students', 'students.id', '=', 'student_scholarships.student_id')
-            ->join('scholarships', 'scholarships.id', '=', 'student_scholarships.scholarship_id')
             ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
             ->select($this->select)->paginate(10);
     }
@@ -73,10 +70,11 @@ class UserScholarshipController extends Controller
      */
     public function store(Request $request, $id)
     {
+        
         $this->validateRequest($request);
         $user_scholarship = new StudentScholarship();
         $user_scholarship->student_id  = $id;
-        $user_scholarship->scholarship_id = $request->scholarship_id;
+        $user_scholarship->amount = $request->amount;
         $user_scholarship->batch_id = $request->year;
         $user_scholarship->save();
         return redirect()->route('admin.scholarship.awarded_students')->with('success', 'Awarded Scholarship successfully !');
@@ -113,7 +111,7 @@ class UserScholarshipController extends Controller
     {
         return $request->validate([
 
-            'scholarship_id' => 'required|numeric',
+            'amount' => 'required|numeric',
             'year' => 'required'
         ]);
     }
