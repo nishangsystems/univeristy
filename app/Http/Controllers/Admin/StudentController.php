@@ -161,6 +161,7 @@ class StudentController extends Controller
             'address' => 'nullable',
             'gender' => 'required',
             'section' => 'required',
+            'type' => 'required'
         ]);
         try {
             \DB::beginTransaction();
