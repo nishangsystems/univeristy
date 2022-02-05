@@ -97,7 +97,7 @@
 
                 <div class="form-group">
                     <div class="d-flex justify-content-end col-lg-12">
-                        <button id="save" class="btn btn-xs btn-primary mx-3" style="display: none" type="submit">Save</button>
+                        <button  class="btn btn-xs btn-primary mx-3" type="submit">Save</button>
                         <a class="btn btn-xs btn-danger" href="{{route('admin.users.index')}}" type="button">Cancel</a>
                     </div>
                 </div>
