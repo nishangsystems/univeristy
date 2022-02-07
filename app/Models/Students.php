@@ -94,13 +94,7 @@ class Students extends Authenticatable
         }
     }
 
-    /**
-     * relationship between users(students) and scholarship
-     */
-    public function scholarships()
-    {
-        return $this->belongsToMany(Scholarship::class, 'student_scholarships', 'student_id', 'scholarship_id');
-    }
+
 
     public function collectBoardingFees()
     {
@@ -118,5 +112,5 @@ class Students extends Authenticatable
         return $rank ? $rank->position : "NOT SET";
     }
 
-    // public function getScholarshipAmount()
+
 }
