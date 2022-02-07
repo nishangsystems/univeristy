@@ -62,8 +62,20 @@
                         @enderror
                     </div>
                 </div>
-
                 <h5 class="mt-5 mb-4 font-weight-bold">Admission Class Information</h5>
+                <div class="form-group @error('type') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2">School Section <span style="color:red">*</span></label>
+                    <div class="col-lg-10">
+                        <select class="form-control" name="type">
+                            <option selected disabled>Select</option>
+                            <option {{old('type', $student->type) == 'day'?'selected':''}} value="day">Day Section</option>
+                            <option {{old('type', $student -> type) == 'boarding'?'selected':''}} value="boarding">Boarding Section</option>
+                        </select>
+                        @error('type')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
                 <div id="section">
                     <div class="form-group">
                         <label for="cname" class="control-label col-lg-2">Section</label>
@@ -85,7 +97,7 @@
 
                 <div class="form-group">
                     <div class="d-flex justify-content-end col-lg-12">
-                        <button id="save" class="btn btn-xs btn-primary mx-3" style="display: none" type="submit">Save</button>
+                        <button  class="btn btn-xs btn-primary mx-3" type="submit">Save</button>
                         <a class="btn btn-xs btn-danger" href="{{route('admin.users.index')}}" type="button">Cancel</a>
                     </div>
                 </div>
