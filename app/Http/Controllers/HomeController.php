@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use App\Http\Resources\Fee;
 use App\Http\Resources\StudentFee;
-use App\Http\Resources\StudentResource;
+use App\Http\Resources\StudentResource2;
 use App\Http\Resources\StudentRank;
 use App\Http\Resources\CollectBoardingFeeResource;
 use App\Models\Rank;
@@ -73,7 +73,7 @@ class HomeController extends Controller
             ->where('students.name', 'LIKE', "%{$name}%")
             ->get()->toArray();
 
-        return \response()->json(StudentResource::collection($students));
+        return \response()->json(StudentResource2::collection($students));
     }
 
     public function fee(Request  $request)
