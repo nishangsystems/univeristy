@@ -4,16 +4,16 @@
     <div class="form-panel">
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.boarding_fee.store')}}">
             @csrf
-            <div class="form-group @error('boarding_type') has-error @enderror">
+            <div class="form-group @error('parent_id') has-error @enderror">
                 <label for="cname" class="control-label col-sm-2">School Section<span style="color:red">*</span></label>
-                <div class="form-group @error('boarding_type') has-error @enderror col-md-10 ml-1">
-                    <select class="form-control section" name="boarding_type">
+                <div class="form-group @error('parent_id') has-error @enderror col-md-10 ml-1">
+                    <select class="form-control section" name="parent_id">
                         <option value="">Select Section</option>
                         @foreach ($main_sections as $section)
                             <option value="{{$section->id}}">{{$section->name}}</option>
                         @endforeach
                     </select>
-                    @error('boarding_type')
+                    @error('parent_id')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>

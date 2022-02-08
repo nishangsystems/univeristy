@@ -12,7 +12,8 @@ class BoardingFee extends Model
     protected $fillable = [
         'amount_new_student',
         'amount_old_student',
-        'boarding_type'
+        'boarding_type',
+        'parent_id'
     ];
 
     public function  boardingFeeInstallments()
@@ -23,5 +24,10 @@ class BoardingFee extends Model
     public function schoolUnit()
     {
         return $this->belongsTo(SchoolUnits::class, 'boarding_type');
+    }
+
+    public function schoolUnitParent()
+    {
+        return $this->belongsTo(SchoolUnits::class, 'parent_id');
     }
 }

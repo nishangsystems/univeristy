@@ -163,11 +163,10 @@ class Helpers
     {
         //  $amount = 0;
         $amount = DB::table('student_scholarships')
-            ->join('scholarships', ['scholarships.id' => 'student_scholarships.scholarship_id'])
             ->join('students', ['students.id' => 'student_scholarships.student_id'])
             ->where('student_scholarships.batch_id', $this->getCurrentAccademicYear())
             ->where('student_scholarships.student_id', $student_id)
-            ->pluck('scholarships.amount')->first();
+            ->pluck('student_scholarships.amount')->first();
         if (empty($amount)) {
             $amount =  0;
         }
