@@ -157,8 +157,8 @@ class StudentController extends Controller
 
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
+            'email' => 'nullable',
+            'phone' => 'nullable',
             'address' => 'nullable',
             'gender' => 'required',
             'section' => 'required',

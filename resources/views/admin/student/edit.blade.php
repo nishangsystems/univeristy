@@ -20,9 +20,9 @@
 
 
                 <div class="form-group @error('email') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2">Email (required)</label>
+                    <label for="cname" class="control-label col-lg-2">Email  </label>
                     <div class="col-lg-10">
-                        <input class=" form-control" name="email" value="{{old('email', $student->email)}}" type="text" required/>
+                        <input class=" form-control" name="email" value="{{old('email', $student->email)}}" type="text"  />
                         @error('email')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
@@ -32,7 +32,7 @@
                 <div class="form-group @error('phone') has-error @enderror">
                     <label for="cname" class="control-label col-lg-2">Phone</label>
                     <div class="col-lg-10">
-                        <input class=" form-control" name="phone" value="{{old('phone', $student->phone)}}" type="text" required/>
+                        <input class=" form-control" name="phone" value="{{old('phone', $student->phone)}}" type="text"  />
                         @error('phone')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
@@ -42,7 +42,7 @@
                 <div class="form-group @error('address') has-error @enderror">
                     <label for="cname" class="control-label col-lg-2">Address</label>
                     <div class="col-lg-10">
-                        <input class=" form-control" name="address" value="{{old('address', $student->address)}}" type="text" required/>
+                        <input class=" form-control" name="address" value="{{old('address', $student->address)}}" type="text"  />
                         @error('address')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
