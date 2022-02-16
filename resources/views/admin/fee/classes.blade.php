@@ -23,7 +23,8 @@
                         <tr>
                             <td>{{ $k+1 }}</td>
                             <td>{{ $class->name }}</td>
-                            <td>{{ $class->parent?$class->parent->name:'' }}</td>
+                            {{-- <td>{{ $class->parent?$class->parent->name:'' }}</td> --}}
+                            <td>{{$class}}</td>
                             <td>{{ $fee > 0 ? $fee." FCFA":'NOT SET' }} </td>
                             <td>
                                @if($class->unit->count() > 0)
