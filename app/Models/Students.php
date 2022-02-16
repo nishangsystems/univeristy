@@ -49,6 +49,7 @@ class Students extends Authenticatable
 
     public function total()
     {
+
         return ($this->class(Helpers::instance()->getYear())->fee());
     }
 
