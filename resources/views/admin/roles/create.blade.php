@@ -21,7 +21,7 @@
                             <div class="col-md-3 my-2">
                                 <div class="form-check">
                                     <input type="checkbox" value="{{$p->id}}" name="permissions[]" class="form-check-input">
-                                    <label class="form-check-label">{{$p->name}}</label>
+                                    <label class="form-check-label ml-4">{{$p->name}}</label>
                                 </div>
                             </div>
                         @endforeach
