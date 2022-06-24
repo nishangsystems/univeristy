@@ -181,7 +181,6 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::get('subject', 'Teacher\SubjectController@index')->name('subject');
     Route::get('subject/{subject}/result', 'Teacher\SubjectController@result')->name('result');
     Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
-
     Route::get('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@show')->name('subject.show');
     Route::put('subjects/notes/{id}', 'Teacher\SubjectNotesController@publish_notes')->name('subject.note.publish');
     Route::post('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@store')->name('subject.note.store');
