@@ -42,7 +42,9 @@ class PaymentController extends Controller
         $data['total_fee'] = $student->total($student_id);
         $data['balance'] =  $student->bal($student_id);
         $data['title'] = "Collect Fee for " . $student->name;
-        if ($data['balance'] < 0) {
+
+        if ($data['balance'] == 0) {
+
             return back()->with('error', 'Student has already completed fee');
         }
         return view('admin.fee.payments.create')->with($data);
@@ -59,13 +61,17 @@ class PaymentController extends Controller
 
     public function store(Request $request, $student_id)
     {
+
         $student = Students::find($student_id);
         $total_fee = $student->total($student_id);
+        $balance =  $student->bal($student_id);
         $this->validate($request, [
             'item' =>  'required',
             'amount' => 'required',
         ]);
         if ($request->amount > $total_fee) {
+            return back()->with('error', 'The amount deposited has exceeded the total fee amount');
+        }if($request->amount >  $balance) {
             return back()->with('error', 'The amount deposited has exceeded the total fee amount');
         }
         Payments::create([
@@ -82,12 +88,20 @@ class PaymentController extends Controller
     public function update(Request $request, $student_id, $id)
     {
         $student = Students::find($student_id);
-
         $this->validate($request, [
             'item' =>  'required',
             'amount' => 'required',
         ]);
+        $total_fee = $student->total($student_id);
+        $paid =  $student->paid();
+        if ($request->amount > $total_fee) {
+            return back()->with('error', 'The amount deposited has exceeded the total fee amount');
+        }
         $p =  Payments::find($id);
+        $new_balance = $paid - $p->amount;
+        if(($new_balance + $request->amount) > $total_fee){
+            return back()->with('error', 'The amount deposited has exceeded the total fee amount');
+        }
         $p->update([
             "payment_id" => $request->item,
             "amount" => $request->amount,
@@ -104,38 +118,38 @@ class PaymentController extends Controller
         return redirect()->to(route('admin.fee.student.payments.index', $student_id))->with('success', "Fee collection record deleted successfully !");
     }
 
-    private function checkScholars($student_id)
-    {
-        $scholar = DB::table('student_scholarships')
-            ->join('students', 'students.id',  '=', 'student_scholarships.student_id')
-            ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
-            ->join('scholarships', 'scholarships.id', '=', 'student_scholarships.scholarship_id')
-            ->where('student_scholarships.student_id', $student_id)
-            ->where('student_scholarships.batch_id', $this->batch_id)
-            ->select('students.id', 'scholarships.amount')->first();
-        return $scholar;
-    }
+    // private function checkScholars($student_id)
+    // {
+    //     $scholar = DB::table('student_scholarships')
+    //         ->join('students', 'students.id',  '=', 'student_scholarships.student_id')
+    //         ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
+    //         ->join('scholarships', 'scholarships.id', '=', 'student_scholarships.scholarship_id')
+    //         ->where('student_scholarships.student_id', $student_id)
+    //         ->where('student_scholarships.batch_id', $this->batch_id)
+    //         ->select('students.id', 'scholarships.amount')->first();
+    //     return $scholar;
+    // }
 
-    private function getBalanceFee($class_id)
-    {
-        $tuition = DB::table('payment_items')
-            ->join('school_units', 'school_units.id',  '=', 'payment_items.unit')
-            ->join('batches', 'batches.id', '=', 'payment_items.year_id')
-            ->where('payment_items.unit', $class_id)
-            ->where('payment_items.year_id', $this->batch_id)
-            ->select('payment_items.amount')->get()->toArray();
-        return $tuition;
-    }
+    // private function getBalanceFee($class_id)
+    // {
+    //     $tuition = DB::table('payment_items')
+    //         ->join('school_units', 'school_units.id',  '=', 'payment_items.unit')
+    //         ->join('batches', 'batches.id', '=', 'payment_items.year_id')
+    //         ->where('payment_items.unit', $class_id)
+    //         ->where('payment_items.year_id', $this->batch_id)
+    //         ->select('payment_items.amount')->get()->toArray();
+    //     return $tuition;
+    // }
 
-    private function getStudentClass($student_id)
-    {
-        $class_id = DB::table('student_classes')
-            ->join('students', 'students.id',  '=', 'student_classes.student_id')
-            ->join('school_units', 'school_units.id',  '=', 'student_classes.class_id')
-            ->join('batches', 'batches.id', '=', 'student_classes.year_id')
-            ->where('students.id', $student_id)
-            ->where('batches.id', $this->batch_id)
-            ->select('school_units.id')->first();
-        return $class_id;
-    }
+    // private function getStudentClass($student_id)
+    // {
+    //     $class_id = DB::table('student_classes')
+    //         ->join('students', 'students.id',  '=', 'student_classes.student_id')
+    //         ->join('school_units', 'school_units.id',  '=', 'student_classes.class_id')
+    //         ->join('batches', 'batches.id', '=', 'student_classes.year_id')
+    //         ->where('students.id', $student_id)
+    //         ->where('batches.id', $this->batch_id)
+    //         ->select('school_units.id')->first();
+    //     return $class_id;
+    // }
 }

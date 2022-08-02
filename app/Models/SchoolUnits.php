@@ -82,4 +82,8 @@ class SchoolUnits extends Model
     {
         return $this->hasMany(BoardingFee::class);
     }
+
+    public function parent(){
+        return $this->hasMany(BoardingFee::class, 'parent_id');
+    }
 }

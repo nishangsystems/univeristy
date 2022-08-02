@@ -286,15 +286,22 @@ class CollectBoardingFeeController extends Controller
     {
         $total = 0;
         $student = $this->getStudent($student_id, $this->year);
-        $studentClass_id = $this->getStudentClass($student->id);
+        $studentClass_id = $this->getStudentClass($student_id);
         $studentClassParent = $this->getStudentClassParent($studentClass_id[0]->class_id);
-        $boarding_fee = $this->getBoardingFeeAmount($studentClassParent[0]->parent_id);
+        $studentClassParentParent = $this->getStudentClassParent($studentClassParent[0]->parent_id);
+        $boarding_fee = $this->getBoardingFeeAmount($studentClassParent[0]->parent_id, $studentClassParentParent[0]->parent_id);
+        $year =  date('Y', strtotime($student[0]->created_at));
         if(!empty($boarding_fee))
         {
+
             if (!empty($student)) {
-                $total = $boarding_fee[0]->amount_old_student;
-            } else {
-                $total = $boarding_fee[0]->amount_new_student;
+                if($year === explode('/',$this->year)[1]){
+                    $total = $boarding_fee[0]->amount_new_student;
+
+                }else {
+                    $total = $boarding_fee[0]->amount_old_student;
+
+                }
             }
         }else {
             return redirect()->route('admin.boarding_fee.index')->with("error", "Please Set Boarding fee");
@@ -320,7 +327,9 @@ class CollectBoardingFeeController extends Controller
     private function getStudentClass($student_id)
     {
 
-        return DB::select('select student_classes.class_id from student_classes, students, school_units where students.id = student_classes.student_id AND school_units.id= student_classes.class_id AND student_classes.student_id = ?', [$student_id]);
+        return DB::select('select student_classes.class_id from student_classes, students, school_units
+         where students.id = student_classes.student_id AND
+         school_units.id= student_classes.class_id AND student_classes.student_id = ?', [$student_id]);
     }
 
     private function getStudentClassParent($class_id)
@@ -328,9 +337,9 @@ class CollectBoardingFeeController extends Controller
         return DB::select('select school_units.parent_id from school_units where id = ?', [$class_id]);
     }
 
-    private function getBoardingFeeAmount($boarding_type)
+    private function getBoardingFeeAmount($boarding_type, $parent_id)
     {
-        return DB::select('select * from boarding_fees where boarding_type = ?', [$boarding_type]);
+        return DB::select('SELECT * FROM boarding_fees WHERE boarding_type = ? AND parent_id = ?', [$boarding_type, $parent_id]);
     }
 
 
@@ -342,16 +351,7 @@ class CollectBoardingFeeController extends Controller
      */
     private function getStudent($student_id, $current_year)
     {
-        return DB::table('students')
-            ->where('students.id', $student_id)
-            ->where('students.type', 'boarding')
-            ->select(
-                'students.id',
-                'students.name',
-                'students.matric',
-                'students.type',
-                'students.email'
-            )->first();
+        return DB::select('SELECT * FROM students WHERE id = ?', [$student_id]);
     }
 
     /**

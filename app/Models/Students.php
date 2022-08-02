@@ -16,6 +16,7 @@ class Students extends Authenticatable
         'email',
         'phone',
         'address',
+        'religion',
         'gender',
         'username',
         'dob',
@@ -49,6 +50,7 @@ class Students extends Authenticatable
 
     public function total()
     {
+
         return ($this->class(Helpers::instance()->getYear())->fee());
     }
 
@@ -94,13 +96,7 @@ class Students extends Authenticatable
         }
     }
 
-    /**
-     * relationship between users(students) and scholarship
-     */
-    public function scholarships()
-    {
-        return $this->belongsToMany(Scholarship::class, 'student_scholarships', 'student_id', 'scholarship_id');
-    }
+
 
     public function collectBoardingFees()
     {
@@ -118,5 +114,5 @@ class Students extends Authenticatable
         return $rank ? $rank->position : "NOT SET";
     }
 
-    // public function getScholarshipAmount()
+
 }

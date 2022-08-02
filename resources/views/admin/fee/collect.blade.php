@@ -14,12 +14,8 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Matricule</th>
                         <th>Name</th>
-                        <th>Class</th>
-                        <th>Total Fee</th>
-                        <th>Paid</th>
-                        <th>Balance</th>
-                        <th>Scholarship</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -47,12 +43,8 @@
                 for (i = 0; i < data.length; i++) {
                     html += '<tr>' +
                         '    <td>' + (i + 1) + '</td>' +
+                        '    <td>' + data[i].matric + '</td>' +
                         '    <td>' + data[i].name + '</td>' +
-                        '    <td>' + data[i].class + '</td>' +
-                        '    <td>' + data[i].total + '</td>' +
-                        '    <td>' + data[i].paid + '</td>' +
-                        '    <td>' + data[i].bal + '</td>' +
-                        '    <td>' + data[i].scholarship + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
                         '        <a class="btn btn-xs btn-primary" href="' + data[i].link + '"> Fee Collections</a>' +
                         '    </td>' +

@@ -3,6 +3,7 @@
 use App\Http\Controllers;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\WelcomeController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 
@@ -36,6 +37,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('setayear/{id}', 'Admin\HomeController@setAcademicYear')->name('createacademicyear');
     Route::get('deletebatch/{id}', 'Admin\HomeController@deletebatch')->name('deletebatch');
     Route::get('sections', 'Admin\ProgramController@sections')->name('sections');
+    Route ::get('sub_units_of/{id}', 'Admin\ProgramController@subunitsOf')->name('subunits');
+
     Route::get('sub_units/{parent_id}', 'Admin\ProgramController@index')->name('units.index');
     Route::get('new_units/{parent_id}', 'Admin\ProgramController@create')->name('units.create');
     Route::get('units/{parent_id}/edit', 'Admin\ProgramController@edit')->name('units.edit');
@@ -126,6 +129,17 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('users/{user_id}/subjects', 'Admin\UserController@saveSubject')->name('users.subjects.save');
 
     Route::resource('users', 'Admin\UserController');
+    Route::get('students/init_promotion', 'Admin\StudentController@initialisePromotion')->name('students.init_promotion');
+    Route::get('students/promotion', 'Admin\StudentController@promotion')->name('students.promotion');
+    Route::post('students/promote', 'Admin\StudentController@pend_promotion')->name('students.promote');
+    Route::get('students/promotion/approve', 'Admin\StudentController@trigger_approval')->name('students.trigger_approval');
+    Route::post('students/promotion/approve', 'Admin\StudentController@approvePromotion')->name('students.approve_promotion');
+    Route::get('students/init_demotion', 'Admin\StudentController@initialiseDemotion')->name('students.init_demotion');
+    Route::get('students/demotion', 'Admin\StudentController@demotion')->name('students.demotion');
+    Route::post('students/demote', 'Admin\StudentController@demote')->name('students.demote');
+    Route::get('demotion_target/{id}', 'Admin\StudentController@unitDemoteTarget')->name('demotion_target');
+    Route::get('promotion_target/{id}', 'Admin\StudentController@unitTarget')->name('promotion_target');
+    Route::get('promotion_batch/{id}', 'Admin\StudentController@promotionBatch')->name('promotion_batch');
     Route::get('students/import', 'Admin\StudentController@import')->name('students.import');
     Route::post('students/import', 'Admin\StudentController@importPost')->name('students.import');
     Route::get('student/matricule', 'Admin\StudentController@matric')->name('students.matricule');
@@ -173,6 +187,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
     Route::get('',  'Teacher\HomeController@index')->name('home');
     Route::get('class', 'Teacher\ClassController@index')->name('class');
+    Route::get('students/init_promotion', 'Admin\StudentController@initialisePromotion')->name('student_promotion');
     Route::get('class/rank', 'Teacher\ClassController@classes')->name('rank.class');
     Route::get('rank_student/{class}', 'Teacher\ClassController@rank')->name('class.rank_student');
     Route::get('student/{class_id}/detail', 'Teacher\ClassController@student')->name('student.show');

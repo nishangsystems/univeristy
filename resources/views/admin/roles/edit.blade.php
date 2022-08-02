@@ -22,14 +22,14 @@
                             <div class="col-md-3 my-2">
                                 <div class="form-check">
                                     <input type="checkbox" {{($role->permissions->contains($p))?'checked':''}} value="{{$p->id}}" name="permissions[]" class="form-check-input">
-                                    <label class="form-check-label">{{$p->name}}</label>
+                                    <label class="form-check-label mx-4">{{$p->name}}</label>
                                 </div>
                             </div>
                         @endforeach
                     </div>
                     <div class="col-12 form-group mg-t-8">
                         <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
-                        <a href="{{route('admin,roles.index')}}" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</a>
+                        <a href="{{route('admin.roles.index')}}" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</a>
                     </div>
                 </div>
             </form>

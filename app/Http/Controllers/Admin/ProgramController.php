@@ -23,7 +23,9 @@ class ProgramController extends Controller
         return view('admin.units.sections')->with($data);
     }
 
-
+    function subunitsOf($id){
+        DB::table('school_units')->where('parent_id', '=', $id)->get(['id', 'name', 'parent_id']);
+    }
 
     public function index($parent_id)
     {

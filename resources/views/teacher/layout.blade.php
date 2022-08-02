@@ -203,6 +203,13 @@
                 </a>
                 <b class="arrow"></b>
             </li>
+            <li>
+                <a href="{{route('user.student_promotion')}}?type=master">
+                    <i class="menu-icon fa fa-home"></i>
+                    <span class="menu-text">Promote Students</span>
+                </a>
+                <b class="arrow"></b>
+            </li>
 
             <li>
                 <a href="{{route('user.rank.class')}}">
