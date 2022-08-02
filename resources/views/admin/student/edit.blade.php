@@ -49,6 +49,16 @@
                     </div>
                 </div>
 
+                <div class="form-group @error('religion') has-error @enderror">
+                    <label for="cname" class="control-label col-lg-2">Religion</label>
+                    <div class="col-lg-10">
+                        <input class=" form-control" name="religion" value="{{old('religion', $student->religion)}}" type="text"  />
+                        @error('address')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="form-group @error('gender') has-error @enderror">
                     <label for="cname" class="control-label col-lg-2">Gender</label>
                     <div class="col-lg-10">
@@ -64,7 +74,7 @@
                 </div>
                 <h5 class="mt-5 mb-4 font-weight-bold">Admission Class Information</h5>
                 <div class="form-group @error('type') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">School Section <span style="color:red">*</span></label>
+                <label for="cname" class="control-label col-lg-2">School Section</label>
                     <div class="col-lg-10">
                         <select class="form-control" name="type">
                             <option selected disabled>Select</option>

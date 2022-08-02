@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -9,20 +10,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- bootstrap & fontawesome -->
-    <link rel="stylesheet" href="{{url('css/app.css')}}" />
-    <link rel="stylesheet" href="{{url('assets/css/bootstrap.min.css')}}" />
-    <link rel="stylesheet" href="{{url('assets/font-awesome/4.5.0/css/font-awesome.min.css')}}" />
-    <link rel="stylesheet" href="{{url('assets/css/fonts.googleapis.com.css')}}" />
-    <link rel="stylesheet" href="{{url('assets/css/ace.min.css')}}" class="ace-main-stylesheet" id="main-ace-style" />
-    <link rel="stylesheet" href="{{url('assets/css/ace-part2.min.css')}}" class="ace-main-stylesheet" />
+    <link rel="stylesheet" href="{{url('/')}}/public/assets/css/*.css" />
+
+    <link rel="stylesheet" href="{{asset('css/app.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}" />
+    <!-- <link rel="stylesheet" href="{{asset('assets/css/*.css')}}" /> -->
+    <link rel="stylesheet" href="{{asset('assets/font-awesome/4.5.0/css/font-awesome.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/css/fonts.googleapis.com.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/css/ace.min.css')}}" class="ace-main-stylesheet" id="main-ace-style" />
+    <link rel="stylesheet" href="{{asset('assets/css/ace-part2.min.css')}}" class="ace-main-stylesheet" />
     <![endif]-->
-    <link rel="stylesheet" href="{{url('assets/css/ace-skins.min.css')}}"/>
-    <link rel="stylesheet" href="{{url('assets/css/ace-rtl.min.css')}}"/>
-    <script src="{{url('assets/js/ace-extra.min.js')}}"></script>
-    <link rel="stylesheet" href="{{url('assets/css/custom.css')}}" class="ace-main-stylesheet"
+    <link rel="stylesheet" href="{{asset('assets/css/ace-skins.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('assets/css/ace-rtl.min.css')}}"/>
+    <script src="{{asset('assets/js/ace-extra.min.js')}}"></script>
+    <link rel="stylesheet" href="{{asset('assets/css/custom.css')}}" class="ace-main-stylesheet"
           id="main-ace-style"/>
     <link rel="stylesheet" type="text/css" href="{{ asset('libs')}}/datatables.net-bs4/css/dataTables.bootstrap4.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('libs')}}/datatables.net-bs4/css/responsive.dataTables.min.css">
+
+    <!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js"></script> -->
+
     <STYLE>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -120,7 +130,7 @@
                 </li>
                 <li class="light-blue dropdown-modal">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img class="nav-user-photo" src="{{url('assets/images/avatars/user.jpg')}}"
+                        <img class="nav-user-photo" src="{{asset('assets/images/avatars/user.jpg')}}"
                              alt="Jason's Photo"/>
                         <span>
 						<small>Welcome</small>
@@ -210,6 +220,27 @@
                             <a href="{{route('admin.student.index')}}">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 Enrolled Students
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.students.trigger_approval')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                Promotions
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.students.init_promotion')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                Promote Students
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.students.init_demotion')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                Demote Students
                             </a>
                             <b class="arrow"></b>
                         </li>
@@ -681,10 +712,10 @@
     <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 </a>
 </div>
-<script src="{{url('assets/js/jquery-2.1.4.min.js')}}"></script>
-<script src="{{url('assets/js/bootstrap.min.js')}}"></script>
-<script src="{{ url('assets/vendor/toastr/toastr.min.js') }}"></script>
-<script src="{{url('assets/js/ace.min.js')}}"></script>
+<script src="{{asset('assets/js/jquery-2.1.4.min.js')}}"></script>
+<script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
+<script src="{{ asset('assets/vendor/toastr/toastr.min.js') }}"></script>
+<script src="{{asset('assets/js/ace.min.js')}}"></script>
 <script src="{{ asset('libs')}}/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="{{ asset('libs')}}/datatables.net-bs4/js/dataTables.responsive.min.js"></script>
 
@@ -714,7 +745,7 @@
                         doc['footer']=(function(page, pages) {
                             return {
                                 columns: [
-                                    '{{ $title ?? '' }}',
+                                    "{{ $title ?? '' }}",
                                     {
                                         // This is the right column
                                         alignment: 'right',

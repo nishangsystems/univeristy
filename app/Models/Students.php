@@ -16,6 +16,7 @@ class Students extends Authenticatable
         'email',
         'phone',
         'address',
+        'religion',
         'gender',
         'username',
         'dob',
