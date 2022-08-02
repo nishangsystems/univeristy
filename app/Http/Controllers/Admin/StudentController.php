@@ -132,7 +132,7 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         // return $request->all();
-        $validator = Validator::make($request->all(gity), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'phone' => 'regex:/^([0-9\s\-\+\(\)]*)$/',
             'address' => 'nullable',
