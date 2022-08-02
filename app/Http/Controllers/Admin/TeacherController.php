@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Option;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Session;
 
 class TeacherController extends Controller
@@ -199,7 +200,7 @@ class TeacherController extends Controller
                                 ->get(['students.id as id', 'students.matric as matric', 'students.name as name', 'students.email as email']);
         // return $data['students'];
 
-        return view('admin.student.promotion', $data);
+        return view('teacher.student.promotion', $data);
     }
 
     public function pend_promotion(Request $request)
@@ -237,10 +238,4 @@ class TeacherController extends Controller
 
     }
 
-    public function trigger_approval(Request $request)
-    {
-        # code...
-        $data['classes'] = $this->getMainClasses();
-        return view('admin.student.approve-promotion', $data);
-    }
 }

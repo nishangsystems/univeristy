@@ -187,7 +187,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
     Route::get('',  'Teacher\HomeController@index')->name('home');
     Route::get('class', 'Teacher\ClassController@index')->name('class');
-    Route::get('students/init_promotion', 'Admin\StudentController@initialisePromotion')->name('student_promotion');
+    Route::get('students/init_promotion', 'Admin\StudentController@TeacherPromotion')->name('student_promotion');
     Route::get('class/rank', 'Teacher\ClassController@classes')->name('rank.class');
     Route::get('rank_student/{class}', 'Teacher\ClassController@rank')->name('class.rank_student');
     Route::get('student/{class_id}/detail', 'Teacher\ClassController@student')->name('student.show');
