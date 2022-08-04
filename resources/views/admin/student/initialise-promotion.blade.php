@@ -57,8 +57,7 @@ use Illuminate\Support\Facades\Http;
                     <div id="section2 w-100">
                         <div class="form-group py-1 w-100">
                             <label for="cname" class="text-secondary">To </label>
-                            <div class="w-100">
-                                <input type="hidden" name="class_to" id="section2">
+                            <div class="w-100" id="section2-input-box">
                                 <div class="form-control text-dark rounded" id="section2-name">next class</div>
                                 <div class="children"></div>
                             </div>
@@ -123,8 +122,8 @@ use Illuminate\Support\Facades\Http;
                 $(".pre-loader").css("display", "none");
                 let html = "";
                 if (data.array.length > 0) {
-                    html += '<div class="mt-3"><select onchange="refresh($(this))" class="form-control section2" name="class_to">';
-                    html += '<option selected > Select ' + data.name + '</option>';
+                    html += '<div class="mt-3"><select onchange="refresh2($(this))" class="form-control section2" name="class_to">';
+                    html += '<option selected disabled > Select ' + data.name + '</option>';
                     for (i = 0; i < data.array.length; i++) {
                         html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
                     }
@@ -150,10 +149,14 @@ use Illuminate\Support\Facades\Http;
                 type: 'GET',
                 success: function(data){
                     // set target data
-                    $('#section2').val(data.id);
+                    // _data = JSON.parse(data);
+                    console.log(data.id);
+                    $('#section2-input-box').prepend("<input type='hidden' name='class_to' id='section2' value="+data.id+">");
                     $('#section2-name').text(data.name);
                     refresh2($('#section2'));
                 }
+
+
 
             })
         }
