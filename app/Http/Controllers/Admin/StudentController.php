@@ -183,22 +183,24 @@ class StudentController extends Controller
                     ->whereNotNull('matric')
                     ->distinct()
                     ->orderByDesc('students.matric')
-                    ->pluck('matric')
-                    ->toArray();
-            if ($mats == null) {
-                # code...
-                $matric .= '001';
-            }
-            else{
+                    ->get('matric');
+
+                    if (count($mats) == null) {
+                        # code...
+                        $mats[0] = $matric.'000';
+                        
+                    }
+                    else {
+                        $mats = $mats->pluck('matric')->toArray();
+                }
 
                 // extract last 3 digits; serial number, increment and append to class matric template
-                $matric_end = (int)substr($mats[0], 6, 3) + 1;
+                $matric_end = (int)substr($mats[0], -3) + 1;
                 while (strlen($matric_end)<3) {
                     # code...
                 $matric_end = '0'.$matric_end;
                 }
                 $matric .= $matric_end;
-            }
 
 
             // set student matric
