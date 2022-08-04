@@ -16,8 +16,10 @@ class FeesController extends Controller
 
     public function classes(Request  $request)
     {
+
         $title = "Classes";
         $classes = \App\Models\SchoolUnits::where('parent_id', $request->get('parent_id', '0'))->get();
+
         return view('admin.fee.classes', compact('classes', 'title'));
     }
 

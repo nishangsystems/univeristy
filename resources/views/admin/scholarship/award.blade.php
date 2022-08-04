@@ -7,22 +7,18 @@
 
             @csrf
 
-            <div class="form-group @error('scholarship_id') has-error @enderror mt-5">
-                <label class="control-label col-lg-2">Scholarship Type</label>
+            <div class="form-group @error('amount') has-error @enderror mt-5">
+            <label for="cname"  class="control-label col-lg-2">Amount <span style="color: red;">*</span></label>
                 <div class="col-lg-10">
-                    <select class="form-control" name="scholarship_id">
-                        <option value="">Select Scholarship Type</option>
-                        @foreach($scholarships as $key => $scholarship)
-                        <option value="{{$scholarship->id}}">{{$scholarship->name }}, {{$scholarship->type}}</option>
-                        @endforeach
-                    </select>
-                    @error('scholarship_id')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
+                <input class=" form-control" name="amount" value="{{old('amount')}}" type="number" required />
+                @error('amount')
+                <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
                 </div>
             </div>
+             
             <div class="form-group @error('year') has-error @enderror mt-4">
-                <label class="control-label col-lg-2">Year</label>
+                <label class="control-label col-lg-2">Year  <span style="color: red;">*</span></label>
                 <div class="col-lg-10">
                     <select class="form-control" name="year">
                         <option value="">Select year</option>

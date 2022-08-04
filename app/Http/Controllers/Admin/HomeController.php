@@ -59,4 +59,5 @@ class HomeController  extends Controller
 
         return redirect()->back()->with('success', 'Set Current Academic Year successfully');
     }
+
 }

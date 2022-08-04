@@ -14,7 +14,8 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Dormitory Type</th>
+                        <th>Unit</th>
+                        <th>Section</th>
                         <th>Amount New Students (CFA)</th>
                         <th>Amount Old Students (CFA)</th>
                         <th></th>
@@ -25,6 +26,7 @@
                     @foreach($boarding_fees as $k=>$boarding_fee)
                     <tr>
                         <td>{{$k+1}}</td>
+                        <td> {{$boarding_fee->schoolUnitParent->name}}</td>
                         <td> {{$boarding_fee->schoolUnit->name}}</td>
                         <td>{{number_format($boarding_fee->amount_new_student)}}</td>
                         <td>{{number_format($boarding_fee->amount_old_student)}}</td>

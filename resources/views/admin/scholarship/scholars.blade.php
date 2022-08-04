@@ -37,7 +37,6 @@
                         <th>Phone</th>
                         <th>Address</th>
                         <th>Gender</th>
-                        <th>Scholarship Type</th>
                         <th>Scholarship Amount </th>
 
                     </tr>
@@ -51,7 +50,6 @@
                         <td>{{$student->phone}}</td>
                         <td>{{$student->address}}</td>
                         <td>{{$student->gender}}</td>
-                        <td>{{$student->type}}</td>
                         <td>{{number_format($student->amount)}}</td>
                     </tr>
                     @endforeach

@@ -8,18 +8,18 @@
 		<meta name="description" content="User login page" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
-		<link rel="stylesheet" href="{{url('')}}/assets/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="{{url('')}}/assets/font-awesome/4.5.0/css/font-awesome.min.css" />
-		<link rel="stylesheet" href="{{url('')}}/assets/css/fonts.googleapis.com.css" />
-		<link rel="stylesheet" href="{{url('')}}/assets/css/ace.min.css" />
-		<link rel="stylesheet" href="{{url('')}}/assets/css/custom.css" />
-		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}" />
+		<link rel="stylesheet" href="{{asset('assets/font-awesome/4.5.0/css/font-awesome.min.css')}}" />
+		<link rel="stylesheet" href="{{asset('assets/css/fonts.googleapis.com.css')}}" />
+		<link rel="stylesheet" href="{{asset('assets/css/ace.min.css')}}" />
+		<link rel="stylesheet" href="{{asset('assets/css/custom.css')}}" />
+		<!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js"></script> -->
 
 
 		<style>
@@ -208,9 +208,9 @@
 
 {{--		@include('inc.student.footer')--}}
 				</div>
-		<script src="{{url('')}}/assets/js/jquery-2.1.4.min.js"></script>
+		<script src="{{asset('assets/js/jquery-2.1.4.min.js')}}"></script>
 		<script type="text/javascript">
-			if('ontouchstart' in document.documentElement) document.write("<script src='{{url('')}}/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+			if('ontouchstart' in document.documentElement) document.write("<script src='{{asset('assets/js/jquery.mobile.custom.min.js')}}'>"+"<"+"/script>");
 		</script>
 
 		<!-- inline scripts related to this page -->

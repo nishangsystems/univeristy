@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use App\Http\Resources\Fee;
 use App\Http\Resources\StudentFee;
-use App\Http\Resources\StudentResource;
+use App\Http\Resources\StudentResource2;
 use App\Http\Resources\StudentRank;
 use App\Http\Resources\CollectBoardingFeeResource;
 use App\Models\Rank;
@@ -67,14 +67,13 @@ class HomeController extends Controller
     }
     public function searchStudents($name)
     {
-       // $current_year = \App\Helpers\Helpers::instance()->getYear();
+
         $students  = DB::table('students')
             ->join('student_classes', ['students.id' => 'student_classes.student_id'])
-          //  ->where('student_classes.year_id', $current_year)
             ->where('students.name', 'LIKE', "%{$name}%")
             ->get()->toArray();
 
-        return \response()->json(StudentResource::collection($students));
+        return \response()->json(StudentResource2::collection($students));
     }
 
     public function fee(Request  $request)
