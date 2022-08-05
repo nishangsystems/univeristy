@@ -15,6 +15,7 @@ use App\Models\Students;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\SchoolUnitResource;
 
 class HomeController extends Controller
 {
@@ -38,13 +39,10 @@ class HomeController extends Controller
     public function children(Request $request,  $parent)
     {
         $id = trim($parent);
-        $school_unit = \App\Models\SchoolUnits::find($id);
-        //  dd($school_unit);
+        $school_unit = SchoolUnits::where('parent_id',$id)->get();
         return response()->json([
-            'array' => $school_unit->unit,
-            // 'name'=>$parent->unit->first()?$parent->unit->first()->type->name:'',
-            'valid' => ($school_unit->parent_id != 0 && $school_unit->unit->count() == 0) ? '1' : 0,
-            'name' => $school_unit->unit->first() ? ($school_unit->unit->first()->unit->count() == 0 ? 'section' : '') : 'section'
+            'data' => SchoolUnitResource::collection($school_unit),
+            'total' => count($school_unit)
         ]);
     }
 

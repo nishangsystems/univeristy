@@ -23,7 +23,7 @@ class StudentFee extends JsonResource
             'total' => $this->total(),
             'class' => $this->class(Helpers::instance()->getYear())->name,
             'paid' => $this->paid(),
-            //    
+            //
         ];
     }
 }

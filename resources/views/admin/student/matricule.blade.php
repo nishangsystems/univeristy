@@ -2,7 +2,7 @@
 @section('section')
     <div class="mx-3">
         <div class="form-panel">
-            <form class="form-horizontal" enctype="multipart/form-data" role="form" method="POST">
+            <form class="form-horizontal" role="form" method="POST">
                 @csrf
                 <h5 class="mt-5 mb-4 font-weight-bold">Select class and batch to generate matricule number</h5>
                 <div class="form-group @error('section') has-error @enderror">
@@ -25,7 +25,7 @@
                         <label for="cname" class="control-label col-lg-2">Section</label>
                         <div class="col-lg-10">
                             <div>
-                                <select class="form-control section" id="section0">
+                                <select class="form-control section" id="section0" name="section">
                                     <option selected disabled>Select Section</option>
                                     @forelse(\App\Models\SchoolUnits::where('parent_id',0)->get() as $section)
                                         <option value="{{$section->id}}">{{$section->name}}</option>
@@ -63,22 +63,27 @@
           $.ajax({
               type: "GET",
               url: url,
-              success: function (data) {
+              success: function (response) {
                   $(".pre-loader").css("display", "none");
                   let html = "";
-                  if(data.valid == 1){
+                  if(response.data.length > 0){
                       $('#save').css("display", "block");
                   }else{
                       $('#save').css("display", "none");
                   }
-                  if (data.array.length > 0) {
-                      html += '<div class="mt-3"><select onchange="refresh($(this))" class="form-control section" name="'+data.name+'[]">';
-                      html += '<option selected > Select ' + data.name + '</option>';
-                      for (i = 0; i < data.array.length; i++) {
-                          html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
-                      }
-                      html += '</select>' +
-                          '<div class="children"></div></div>';
+
+                  if (response.data.length > 0) {
+                    html += '<div class="mt-3"><select class="form-control section" name="section">';
+                    for (i = 0; i < response.data.length; i++) {
+                        if(response.data[i].sub_units.length == 0){
+                            html += '<option value="' + response.data[i].id + '">' + response.data[i].name + '</option>';
+                        }
+                        for (j = 0; j < response.data[i].sub_units.length; j ++){
+                           html += '<option value="' + response.data[i].sub_units[j].id + '">' + response.data[i].name +"     :    " + response.data[i].sub_units[j].name + '</option>';
+                        }
+                    }
+                    html += '</select>' +
+                        '<div class="children"></div></div>';
                   }
                   div.parent().find('.children').html(html)
               }, error: function (e) {
@@ -87,4 +92,5 @@
           });
       }
     </script>
+
 @endsection
