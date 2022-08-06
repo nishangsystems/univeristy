@@ -134,8 +134,8 @@
                         <div>
                             <select name="section" class="form-control section" id="section0">
                                 <option selected disabled>Select Section</option>
-                                @if(isset($options))
-                                    @foreach($options as $key => $option)
+                                @if(isset($schoolUnits))
+                                    @foreach($schoolUnits as $key => $option)
                                         <option value="{{$key}}">{{$option}}</option>
                                     @endforeach
                                 @else

@@ -4,7 +4,6 @@ namespace App\Services;
 use App\Models\Batch;
 use App\Models\SchoolUnits;
 use App\Models\Students;
-use Illuminate\Support\Facades\DB;
 
 class StudentMatriculeGenerationService {
 

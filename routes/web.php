@@ -182,6 +182,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('assign_role', 'Admin\RolesController@rolesView')->name('roles.assign');
     Route::post('assign_role', 'Admin\RolesController@rolesStore')->name('roles.assign.post');
 
+    Route::get('school/debts', 'Admin\SchoolDebtsController@index')->name('debts.schoolDebts');
+    Route::post('school/debts', 'Admin\SchoolDebtsController@getStudentsWithDebts')->name('debts.getStudentWithDebts');
+    Route::get('school/debts/{id}', 'Admin\SchoolDebtsController@getStudentDebts')->name('debts.showDebts');
+    Route::post('school/debts/{id}', 'Admin\SchoolDebtsController@collectStudentDebts')->name('debts.collectDebts');
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
