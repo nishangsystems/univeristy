@@ -136,6 +136,7 @@
                 'parent_id': value
             },
             success: function(response) {
+                console.log(response);
                 let size = response.data.length;
                 let data = response.data;
                 let html = "";
@@ -151,7 +152,7 @@
                     html += '<option selected> No data is avalaible</option>'
                     html += '</select></div>';
                 }
-                $('.circle').html(html);
+                $('#circle').html(html);
             },
             error: function(e) {
                 console.log(e)

@@ -16,18 +16,6 @@
                     @enderror
                 </div>
             </div>
-
-
-            <div class="form-group @error('email') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Email</label>
-                <div class="col-lg-10">
-                    <input class=" form-control" name="email" value="{{old('email')}}" type="text" />
-                    @error('email')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-
             <div class="form-group @error('phone') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2">Phone </label>
                 <div class="col-lg-10">
