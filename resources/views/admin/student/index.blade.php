@@ -80,7 +80,7 @@
     </div>
     <div class="">
         <div class=" ">
-            <table cellpadding="0" cellspacing="0" border="0" class=" table table-stripped" id="hidden-table-info">
+            <table cellpadding="0" cellspacing="0" border="0" class="table table-stripped" id="hidden-table-info">
                 <thead>
                     <tr>
                         <th>#</th>

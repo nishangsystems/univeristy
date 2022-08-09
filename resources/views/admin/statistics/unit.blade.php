@@ -2,7 +2,7 @@
 
 @section('section')
     <div class="w-100 py-3">
-        <form action="{{route('admin.stats.students')}}" method="get">
+        <form action="{{route('admin.stats.unit-fees', request('class_id'))}}" method="get">
             @csrf
             <div class="form-group">
                 <label for="" class="text-secondary h4 fw-bold">select academic year</label>
@@ -32,33 +32,18 @@
                 <thead class="bg-secondary text-black">
                     @php($count = 1)
                     <th>##</th>
-                    <th>Class</th>
-                    <th>Males</th>
-                    <th>Females</th>
-                    <th>Day students</th>
-                    <th>Boarders</th>
+                    <th>Name</th>
+                    <th>Paid</th>
+                    <th>Owing</th>
                 </thead>
                 <tbody>
                     @forelse($data ?? [] as $value)
-                        @if($value['target'] == 1)
-                        <tr class="border-bottom border-dark" style="background-color: rgba(160, 160, 230, 0.4);">
-                            <td class="border-left border-right">{{$count++}}</td>
-                            <td class="border-left border-right">{{$value['class']}}</td>
-                            <td class="border-left border-right">{{$value['males']}}</td>
-                            <td class="border-left border-right">{{$value['females']}}</td>
-                            <td class="border-left border-right">{{$value['day']}}</td>
-                            <td class="border-left border-right">{{$value['boarding']}}</td>
-                        </tr>
-                        @else
                         <tr class="border-bottom border-dark">
                             <td class="border-left border-right">{{$count++}}</td>
-                            <td class="border-left border-right">{{$value['class']}}</td>
-                            <td class="border-left border-right">{{$value['males']}}</td>
-                            <td class="border-left border-right">{{$value['females']}}</td>
-                            <td class="border-left border-right">{{$value['day']}}</td>
-                            <td class="border-left border-right">{{$value['boarding']}}</td>
+                            <td class="border-left border-right">{{$value['name']}}</td>
+                            <td class="border-left border-right">{{$value['paid']}}</td>
+                            <td class="border-left border-right">{{$value['left']}}</td>
                         </tr>
-                        @endif
                     @empty
                         <tr class="border-bottom border-dark text-center">
                             no statistics found for selected academic year

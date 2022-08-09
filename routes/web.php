@@ -189,6 +189,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('results', 'Admin\StatisticsController@results')->name('results');
         Route::get('income', 'Admin\StatisticsController@income')->name('income');
         Route::get('expenditure', 'Admin\StatisticsController@expenditure')->name('expenditure');
+        Route::get('fees/{class_id}', 'Admin\StatisticsController@unitFees')->name('unit-fees');
     });
 });
 

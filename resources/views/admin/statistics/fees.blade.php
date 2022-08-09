@@ -35,23 +35,42 @@
                     <th>Class</th>
                     <th>Number</th>
                     <th>Complete</th>
-                    <th>incomplete</th>
-                    <th>% Complete</th>
-                    <th>% Incomplete</th>
+                    <th>Incomplete</th>
+                    <th>Expected</th>
+                    <th>Recieved</th>
+                    <th>% Completed</th>
+                    <th>% Uncompleted</th>
                     <th></th>
                 </thead>
                 <tbody>
                     @forelse($data as $value)
-                        <tr class="border-bottom border-dark">
-                            <td class="border-left border-right">{{$count++}}</td>
-                            <td class="border-left border-right">{{$value['class']}}</td>
-                            <td class="border-left border-right">{{$value['students']}}</td>
-                            <td class="border-left border-right">{{$value['complete']}}</td>
-                            <td class="border-left border-right">{{$value['incomplete']}}</td>
-                            <td class="border-left border-right">{{$value['%complete']}}</td>
-                            <td class="border-left border-right">{{$value['%incomplete']}}</td>
-                            <td class="border-left border-right"><a href="{{$value['class_id']}}">Details</a></td>
-                        </tr>
+                        @if($value['target'])
+                            <tr class="border-bottom border-dark" style="background-color: rgba(160, 160, 235, 0.3);">
+                                <td class="border-left border-right">{{$count++}}</td>
+                                <td class="border-left border-right">{{$value['class']}}</td>
+                                <td class="border-left border-right">{{$value['students']}}</td>
+                                <td class="border-left border-right">{{$value['complete']}}</td>
+                                <td class="border-left border-right">{{$value['incomplete']}}</td>
+                                <td class="border-left border-right">{{$value['expected']}}</td>
+                                <td class="border-left border-right">{{$value['recieved']}}</td>
+                                <td class="border-left border-right">{{$value['%complete']}}</td>
+                                <td class="border-left border-right">{{$value['%incomplete']}}</td>
+                                <td class="border-left border-right"><a href="{{route('admin.stats.unit-fees', $value['class_id'])}}">Details</a></td>
+                            </tr>
+                            @else
+                            <tr class="border-bottom border-dark">
+                                <td class="border-left border-right">{{$count++}}</td>
+                                <td class="border-left border-right">{{$value['class']}}</td>
+                                <td class="border-left border-right">{{$value['students']}}</td>
+                                <td class="border-left border-right">{{$value['complete']}}</td>
+                                <td class="border-left border-right">{{$value['incomplete']}}</td>
+                                <td class="border-left border-right">{{$value['expected']}}</td>
+                                <td class="border-left border-right">{{$value['recieved']}}</td>
+                                <td class="border-left border-right">{{$value['%complete']}}</td>
+                                <td class="border-left border-right">{{$value['%incomplete']}}</td>
+                                <td class="border-left border-right"><a href="{{route('admin.stats.unit-fees', $value['class_id'])}}">Details</a></td>
+                            </tr>
+                            @endif
                     @empty
                         <tr class="border-bottom border-dark text-center">
                             no statistics found for selected academic year
