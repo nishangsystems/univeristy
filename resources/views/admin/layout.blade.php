@@ -273,6 +273,7 @@
                 </li>
             @endif
 
+
             @if (\Auth::user()->hasPermissionTo('manage_setting'))
             <li>
                 <a href="#" class="dropdown-toggle">
@@ -323,6 +324,64 @@
             </li>
             @endif
 
+            @if (\Auth::user()->hasPermissionTo('manage_setting'))
+            <li>
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa fa-pencil"></i>
+                    <span class="menu-text"> Statistics Zone</span>
+
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.stats.students')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Student Statistics
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+
+                     <li>
+                        <a href="{{route('admin.stats.fees')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Fee Statistics
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.stats.results')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Results Statistics
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.stats.income')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           Income Statistics
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.stats.expenditure')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           Expenditure Statistics
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            @endif
+
             @if (\Auth::user()->hasPermissionTo('manage_subject'))
             <li>
                 <a href="" class="dropdown-toggle">
@@ -353,6 +412,7 @@
                 </ul>
             </li>
             @endif
+            
             @if (\Auth::user()->hasPermissionTo('manage_user'))
             <li>
                 <a href="#" class="dropdown-toggle">

@@ -52,6 +52,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('units/{parent_id}/subjects/manage', 'Admin\ProgramController@saveSubjects')->name('units.subjects.manage');
 
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
+    
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
     Route::get('print_fee', 'Admin\FeesController@printFee')->name('print_fee');
     Route::get('print_fee/{student_id}', 'Admin\FeesController@printStudentFee')->name('print_fee.student');
@@ -182,6 +183,13 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('assign_role', 'Admin\RolesController@rolesView')->name('roles.assign');
     Route::post('assign_role', 'Admin\RolesController@rolesStore')->name('roles.assign.post');
 
+    Route::prefix('statistics')->name('stats.')->group(function(){
+        Route::get('sudents', 'Admin\StatisticsController@students')->name('students');
+        Route::get('fees', 'Admin\StatisticsController@fees')->name('fees');
+        Route::get('results', 'Admin\StatisticsController@results')->name('results');
+        Route::get('income', 'Admin\StatisticsController@income')->name('income');
+        Route::get('expenditure', 'Admin\StatisticsController@expenditure')->name('expenditure');
+    });
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {

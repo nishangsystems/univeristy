@@ -411,7 +411,8 @@ class StudentController extends Controller
     function getSubunitsOf($id){
         DB::table('school_units')->where('parent_id', '=', $id)->get(['id', 'name', 'parent_id']);
     }
-    public function getMainClasses()
+    
+    public static function getMainClasses()
     {
         # code...
         // added by Germanus. Loads listing of all classes accross all sections in a given school
