@@ -2,7 +2,7 @@
 
 @section('section')
     <div class="w-100 py-3">
-        <form action="{{route('admin.stats.students')}}" method="get">
+        <form action="{{route('admin.stats.fees')}}" method="get">
             @csrf
             <div class="form-group">
                 <label for="" class="text-secondary h4 fw-bold">select academic year</label>
@@ -33,21 +33,26 @@
                     @php($count = 1)
                     <th>##</th>
                     <th>Class</th>
-                    <th>Males</th>
-                    <th>Females</th>
-                    <th>Day students</th>
-                    <th>Boarders</th>
+                    <th>Number</th>
+                    <th>Complete</th>
+                    <th>Incomplete</th>
+                    <th>Expected</th>
+                    <th>Recieved</th>
+                    <th>% Completed</th>
+                    <th>% Uncompleted</th>
+                    <th></th>
                 </thead>
                 <tbody>
-                    @forelse($data as $value)
-                        <tr class="border-bottom border-dark">
-                            <td class="border-left border-right">{{$count++}}</td>
-                            <td class="border-left border-right">{{$value['class']}}</td>
-                            <td class="border-left border-right">{{$value['males']}}</td>
-                            <td class="border-left border-right">{{$value['females']}}</td>
-                            <td class="border-left border-right">{{$value['day']}}</td>
-                            <td class="border-left border-right">{{$value['boarding']}}</td>
-                        </tr>
+                    @forelse($data ?? [] as $value)
+                        @if($value['target'])
+                            <tr class="border-bottom border-dark" style="background-color: rgba(160, 160, 235, 0.3);">
+                               
+                            </tr>
+                            @else
+                            <tr class="border-bottom border-dark">
+                                
+                            </tr>
+                            @endif
                     @empty
                         <tr class="border-bottom border-dark text-center">
                             no statistics found for selected academic year

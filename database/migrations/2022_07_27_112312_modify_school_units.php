@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class StudentPromotions extends Migration
+class ModifySchoolUnits extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +14,10 @@ class StudentPromotions extends Migration
     public function up()
     {
         //
-        Schema::dropIfExists('student_promotions');
-        Schema::create('student_promotions', function(Blueprint $table){
-            $table->engine = 'InnoDB';
-            $table->id();
-            $table->unsignedBigInteger('promotion_id');
-            $table->unsignedBigInteger('student_id');
-        });
+        // Schema::table('school_units', function(Blueprint $table){
+        //     $table->unsignedBigInteger('base_class')->nullable();
+        //     $table->unsignedBigInteger('target_class')->nullable();
+        // });
     }
 
     /**

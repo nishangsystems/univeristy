@@ -14,7 +14,7 @@ class Promotions extends Migration
     public function up()
     {
         //
-        
+        Schema::dropIfExists('promotions');
         Schema::create('promotions', function(Blueprint $table){
             $table->engine = 'InnoDB';
             $table->id();

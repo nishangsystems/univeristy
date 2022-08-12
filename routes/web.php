@@ -133,8 +133,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('students/init_promotion', 'Admin\StudentController@initialisePromotion')->name('students.init_promotion');
     Route::get('students/promotion', 'Admin\StudentController@promotion')->name('students.promotion');
     Route::post('students/promote', 'Admin\StudentController@pend_promotion')->name('students.promote');
-    Route::get('students/promotion/approve', 'Admin\StudentController@trigger_approval')->name('students.trigger_approval');
+    Route::get('students/promotion/approve/{promotion_id?}', 'Admin\StudentController@trigger_approval')->name('students.trigger_approval');
     Route::post('students/promotion/approve', 'Admin\StudentController@approvePromotion')->name('students.approve_promotion');
+    Route::get('students/promotion/cancelPromotion/{promotion_id}', 'Admin\StudentController@cencelPromotion')->name('students.cancel_promotion');
     Route::get('students/init_demotion', 'Admin\StudentController@initialiseDemotion')->name('students.init_demotion');
     Route::get('students/demotion', 'Admin\StudentController@demotion')->name('students.demotion');
     Route::post('students/demote', 'Admin\StudentController@demote')->name('students.demote');
@@ -196,7 +197,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
     Route::get('',  'Teacher\HomeController@index')->name('home');
     Route::get('class', 'Teacher\ClassController@index')->name('class');
-    Route::get('students/init_promotion', 'Admin\StudentController@TeacherPromotion')->name('student_promotion');
+    Route::get('students/init_promotion', 'Admin\StudentController@teacherInitPromotion')->name('students.init_promotion');
+    Route::get('students/promote', 'Admin\StudentController@teacherPromotion')->name('students.promotion');
+    Route::post('students/promote', 'Admin\StudentController@teacher_promote')->name('students.promote');
     Route::get('class/rank', 'Teacher\ClassController@classes')->name('rank.class');
     Route::get('rank_student/{class}', 'Teacher\ClassController@rank')->name('class.rank_student');
     Route::get('student/{class_id}/detail', 'Teacher\ClassController@student')->name('student.show');

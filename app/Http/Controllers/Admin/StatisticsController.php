@@ -3,9 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use DateTime;
+use Doctrine\DBAL\Types\TimeType;
+use FontLib\Table\Type\name;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
-use NumberFormatter;
+use Illuminate\Support\Facades\Validator;
+use Ramsey\Uuid\Type\Time;
 use Throwable;
 
 class StatisticsController extends Controller
@@ -253,18 +259,210 @@ class StatisticsController extends Controller
     public function results(Request $request)
     {
         # code...
+        $data['title'] = "Results Statistics";
         return view('admin.statistics.results');
     }
     //
     public function income(Request $request)
     {
-        # code...
-        return view('admin.statistics.income');
+        $validator = Validator::make($request->all(), [
+            'filter'=>'string',
+            '$value'=>'month',
+            'start_date'=>'date',
+            'end_date'=>'date'
+        ]);
+        $data['title'] = "Income Statistics";
+        try {
+            $expenditureItems = null;
+            if ($request->filter == null) {
+                # code...
+                return view('admin.statistics.income')->with($data);
+            }
+            if($validator->fails())
+                {return back()->with('error', json_encode($validator->getMessageBag()->getMessages()));}
+                $data['filter'] = $request->filter == 'year' 
+                        ? 'year ' . $request->value 
+                        : ($request->filter == 'month' 
+                            ? DateTime::createFromFormat('!m', (int)date('m', strtotime($request->value)))->format('F') . ' ' . date('Y', strtotime($request->value)) 
+                            : 'period ' . $request->start_date . ' to '. $request->end_date
+                            ) ;
+            switch ($request->filter) {
+                case 'month': #having $value
+                    # code...
+                    $expenditureItems = DB::table('pay_incomes')
+                        ->whereYear('pay_incomes.created_at', '=', date('Y', strtotime($request->value)))
+                        ->whereMonth('pay_incomes.created_at', '=', date('m', strtotime($request->value)))
+                        ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
+                        ->get();
+                        $names = array_unique($expenditureItems->pluck('name')->toArray());
+                    $data['data'] = array_map(function($val) use ($expenditureItems){
+                        return [
+                            'name'=>$val,
+                            'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
+                            'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount')->toArray())
+                        ];
+                    }, $names);
+                    $data['totals'] = [
+                        'name'=>"Total",
+                        'count'=>count($expenditureItems->toArray()),
+                        'cost'=>array_sum($expenditureItems->pluck('amount')->toArray())
+                    ];
+                    return view('admin.statistics.income')->with($data);
+                    break;
+                case 'year':
+                    # code...
+                    $expenditureItems = DB::table('pay_incomes')
+                        ->whereYear('pay_incomes.created_at', '=', date('Y',strtotime($request->value)))
+                        ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
+                        ->get();
+                    $names = array_unique($expenditureItems->pluck('name')->toArray());
+                    $data['data'] = array_map(function($val) use ($expenditureItems){
+                        return [
+                            'name'=>$val,
+                            'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
+                            'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount')->toArray())
+                        ];
+                    }, $names);
+                    $data['totals'] = [
+                        'name'=>"Total",
+                        'count'=>count($expenditureItems->toArray()),
+                        'cost'=>array_sum($expenditureItems->pluck('amount')->toArray())
+                    ];
+                    return view('admin.statistics.income')->with($data);
+                    break;
+                case 'range':
+                    # has $from&$to or $start_date & $end_date
+                    $expenditureItems = DB::table('pay_incomes')
+                    ->whereDate('pay_incomes.created_at', '>=', date('Y-m-d', strtotime($request->start_date)))
+                    ->whereDate('pay_incomes.created_at', '<=', date('Y-m-d', strtotime($request->end_date)))
+                    ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
+                    ->get();
+                    $names = array_unique($expenditureItems->pluck('name')->toArray());
+                    $data['data'] = array_map(function($val) use ($expenditureItems){
+                        return [
+                            'name'=>$val,
+                            'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
+                            'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount')->toArray())
+                        ];
+                    }, $names);
+                    $data['totals'] = [
+                        'name'=>"Total",
+                        'count'=>count($expenditureItems->toArray()),
+                        'cost'=>array_sum($expenditureItems->pluck('amount')->toArray())
+                    ];
+                    return view('admin.statistics.income')->with($data);
+                    break;
+                
+                default:
+                # code...
+                    
+                    // return view('admin.statistics.expenditure')->with($data);
+                    break;
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', $th->getMessage());
+        }
+        
     }
     //
     public function expenditure(Request $request)
     {
-        # code...
-        return view('admin.statistics.expenditure');
+        $validator = Validator::make($request->all(), [
+            'filter'=>'string',
+            '$value'=>'month',
+            'start_date'=>'date',
+            'end_date'=>'date'
+        ]);
+        $data['title'] = "Expenditure Statistics";
+        try {
+            if ($request->filter == null) {
+                # code...
+                return view('admin.statistics.expenditure')->with($data);
+            }
+            $expenditureItems = null;
+            if($validator->fails())
+            {return back()->with('error', json_encode($validator->getMessageBag()->getMessages()));}
+            $data['filter'] = $request->filter == 'year' 
+                        ? 'year ' . $request->value 
+                        : ($request->filter == 'month' 
+                            ? DateTime::createFromFormat('!m', (int)date('m', strtotime($request->value)))->format('F') . ' ' . date('Y', strtotime($request->value)) 
+                            : 'period ' . $request->start_date . ' to '. $request->end_date
+                            ) ;
+            switch ($request->filter) {
+                case 'month': #having $value
+                    # code...
+                    $expenditureItems = DB::table('expenses')
+                        ->whereYear('date', '=', date('Y', strtotime($request->value)))
+                        ->whereMonth('date', '=', date('m', strtotime($request->value)))
+                        ->get();
+                        $names = array_unique($expenditureItems->pluck('name')->toArray());
+                    $data['data'] = array_map(function($val) use ($expenditureItems){
+                        return [
+                            'name'=>$val,
+                            'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
+                            'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
+                        ];
+                    }, $names);
+                    $data['totals'] = [
+                        'name'=>"Total",
+                        'count'=>count($expenditureItems->toArray()),
+                        'cost'=>array_sum($expenditureItems->pluck('amount_spend')->toArray())
+                    ];
+                    return view('admin.statistics.expenditure')->with($data);
+                    break;
+                case 'year':
+                    # code...
+                    $expenditureItems = DB::table('expenses')
+                        ->whereYear('date', '=', date('Y',strtotime($request->value)))
+                        ->get();
+                    $names = array_unique($expenditureItems->pluck('name')->toArray());
+                    $data['data'] = array_map(function($val) use ($expenditureItems){
+                        return [
+                            'name'=>$val,
+                            'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
+                            'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
+                        ];
+                    }, $names);
+                    $data['totals'] = [
+                        'name'=>"Total",
+                        'count'=>count($expenditureItems->toArray()),
+                        'cost'=>array_sum($expenditureItems->pluck('amount_spend')->toArray())
+                    ];
+                    return view('admin.statistics.expenditure')->with($data);
+                    break;
+                case 'range':
+                    # has $from&$to or $start_date & $end_date
+                    $expenditureItems = DB::table('expenses')
+                    ->whereDate('date', '>=', date('Y-m-d', strtotime($request->start_date)))
+                    ->whereDate('date', '<=', date('Y-m-d', strtotime($request->end_date)))
+                    ->get();
+                    $names = array_unique($expenditureItems->pluck('name')->toArray());
+                    $data['data'] = array_map(function($val) use ($expenditureItems){
+                        return [
+                            'name'=>$val,
+                            'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
+                            'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
+                        ];
+                    }, $names);
+                    $data['totals'] = [
+                        'name'=>"Total",
+                        'count'=>count($expenditureItems->toArray()),
+                        'cost'=>array_sum($expenditureItems->pluck('amount_spend')->toArray())
+                    ];
+                    return view('admin.statistics.expenditure')->with($data);
+                    break;
+                
+                default:
+                # code...
+                    
+                    // return view('admin.statistics.expenditure')->with($data);
+                    break;
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', $th->getMessage());
+        }
+        
     }
 }

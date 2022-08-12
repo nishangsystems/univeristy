@@ -15,7 +15,7 @@
                             <option value="" selected>academic year not set </option>
                         @endforelse
                     </select>
-                    <input type="submit" name="" id="" value="get statistics">
+                    <input type="submit" name="" class="btn btn-primary" id="" value="get statistics">
                 </div>
             </div>
         </form>

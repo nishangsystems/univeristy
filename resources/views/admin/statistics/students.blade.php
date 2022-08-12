@@ -15,7 +15,7 @@
                             <option value="" selected>academic year not set </option>
                         @endforelse
                     </select>
-                    <input type="submit" name="" id="" value="get statistics">
+                    <input type="submit" name="" id="" class="btn btn-primary" value="get statistics">
                 </div>
             </div>
         </form>
@@ -43,7 +43,7 @@
                         @if($value['target'] == 1)
                         <tr class="border-bottom border-dark" style="background-color: rgba(160, 160, 230, 0.4);">
                             <td class="border-left border-right">{{$count++}}</td>
-                            <td class="border-left border-right">{{$value['class']}}</td>
+                            <td class="border-left border-right"><script>this.innerHTML = ("{{$value['class']}}".replace(':', '/'))</script></td>
                             <td class="border-left border-right">{{$value['males']}}</td>
                             <td class="border-left border-right">{{$value['females']}}</td>
                             <td class="border-left border-right">{{$value['day']}}</td>
@@ -52,7 +52,7 @@
                         @else
                         <tr class="border-bottom border-dark">
                             <td class="border-left border-right">{{$count++}}</td>
-                            <td class="border-left border-right">{{$value['class']}}</td>
+                            <td class="border-left border-right"><script>this.innerHTML = ("{{$value['class']}}".replace(':', '/'))</script></td>
                             <td class="border-left border-right">{{$value['males']}}</td>
                             <td class="border-left border-right">{{$value['females']}}</td>
                             <td class="border-left border-right">{{$value['day']}}</td>
@@ -71,5 +71,4 @@
 @endsection
 
 @section('script')
-
 @endsection

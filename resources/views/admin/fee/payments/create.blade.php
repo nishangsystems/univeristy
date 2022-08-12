@@ -28,9 +28,8 @@
                 <div class="col-lg-10">
                     <select class="form-control" name="item">
                         <option value="" disabled>Select Item</option>
-                        <option value="0">Other Items</option>
                         @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->items as $item)
-                        <option {{old('item') == $item->id?'selected':''}} value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
+                        <option selected value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
                         @endforeach
                     </select>
                     @error('item')
@@ -45,6 +44,12 @@
                     @error('amount')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cname" class="control-label col-lg-2">Date<span style="color:red">*</span></label>
+                <div class="col-lg-10">
+                    <input class=" form-control" name="date" value="{{old('amount')}}" type="date" required />
                 </div>
             </div>
             <div class="form-group">

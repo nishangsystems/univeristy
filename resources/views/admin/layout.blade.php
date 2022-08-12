@@ -192,7 +192,7 @@
             <li>
                 <a
                     href="{{route('admin.home')}}">
-                    <i class="menu-icon fa fa-dashboard"></i>
+                    <i class="menu-icon text-primary fa fa-dashboard"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>
                 <b class="arrow"></b>
@@ -200,7 +200,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_student'))
                 <li>
                     <a href="#" class="dropdown-toggle">
-                        <i class="menu-icon fa fa-graduation-cap"></i>
+                        <i class="menu-icon  text-primary fa fa-graduation-cap"></i>
                         <span class="menu-text"> Student Management</span>
 
                         <b class="arrow fa fa-angle-down"></b>
@@ -226,7 +226,7 @@
                         <li>
                             <a href="{{route('admin.students.trigger_approval')}}">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                Promotions
+                                Admin Promotions
                             </a>
                             <b class="arrow"></b>
                         </li>
@@ -277,7 +277,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_setting'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-pencil"></i>
+                    <i class="menu-icon  text-primary fa fa-cog"></i>
                     <span class="menu-text"> Setting Zone</span>
 
                     <b class="arrow fa fa-angle-down"></b>
@@ -327,7 +327,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_setting'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-pencil"></i>
+                    <i class="menu-icon  text-primary fa fa-signal"></i>
                     <span class="menu-text"> Statistics Zone</span>
 
                     <b class="arrow fa fa-angle-down"></b>
@@ -385,7 +385,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_subject'))
             <li>
                 <a href="" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-book"></i>
+                    <i class="menu-icon  text-primary fa fa-book"></i>
                     <span class="menu-text">
 							Subject Zone
 					</span>
@@ -416,7 +416,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_user'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-cog"></i>
+                    <i class="menu-icon  text-primary fa fa-users"></i>
                     <span class="menu-text">
 						User Accounts
 						</span>
@@ -462,7 +462,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_fee'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-money"></i>
+                    <i class="menu-icon  text-primary fa fa-eur"></i>
                     <span class="menu-text">
 						Fee Management
 						</span>
@@ -549,7 +549,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_result'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-money"></i>
+                    <i class="menu-icon  text-primary fa fa-rocket"></i>
                     <span class="menu-text">
 						Result
 						</span>
@@ -580,7 +580,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_scholarship'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                <i class="menu-icon fa fa-money"></i>
+                <i class="menu-icon text-primary fa fa-graduation-cap"></i>
                     <span class="menu-text">
 						Scholarships
 						</span>
@@ -620,7 +620,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_incomes'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                <i class="menu-icon fa fa-money"></i>
+                <i class="menu-icon text-primary fa fa-money"></i>
                     <span class="menu-text">
 						Other Incomes
 						</span>
@@ -658,7 +658,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_expenses'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                <i class="menu-icon fa fa-money"></i>
+                <i class="menu-icon text-primary fa fa-spinner"></i>
                     <span class="menu-text">
 						School Expenses
 						</span>
@@ -689,7 +689,7 @@
             <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                    href="{{route('logout')}}">
-                    <i class="menu-icon fa fa-lock"></i>
+                    <i class="menu-icon text-primary fa fa-lock"></i>
                     <span class="menu-text">	Logout</span>
                 </a>
                 <b class="arrow"></b>
