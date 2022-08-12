@@ -42,6 +42,7 @@ class PaymentController extends Controller
         $data['total_fee'] = $student->total($student_id);
         $data['balance'] =  $student->bal($student_id);
         $data['title'] = "Collect Fee for " . $student->name;
+        
 
         if ($data['balance'] == 0) {
 
@@ -68,6 +69,7 @@ class PaymentController extends Controller
         $this->validate($request, [
             'item' =>  'required',
             'amount' => 'required',
+            'date' => 'required|date'
         ]);
         if ($request->amount > $total_fee) {
             return back()->with('error', 'The amount deposited has exceeded the total fee amount');
@@ -79,7 +81,8 @@ class PaymentController extends Controller
             "student_id" => $student->id,
             "unit_id" => $student->class(Helpers::instance()->getYear())->id,
             "batch_id" => Helpers::instance()->getYear(),
-            "amount" => $request->amount
+            "amount" => $request->amount,
+            "date" => $request->date
         ]);
 
         return redirect()->to(route('admin.fee.student.payments.index', $student_id))->with('success', "Fee collection recorded successfully !");

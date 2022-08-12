@@ -14,6 +14,8 @@ class PendingPromotions extends Migration
     public function up()
     {
         //
+        Schema::dropIfExists('pending_promotions');
+
         Schema::create('pending_promotions', function(Blueprint $table){
             $table->engine="InnoDB";
             $table->id();
