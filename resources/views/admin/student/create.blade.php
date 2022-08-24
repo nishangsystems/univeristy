@@ -104,7 +104,7 @@
             <div class="form-group @error('type') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2">School Section <span style="color:red">*</span></label>
                 <div class="col-lg-10">
-                    <select class="form-control" name="type">
+                    <select class="form-control" name="type" required>
                         <option selected disabled>Select</option>
                         <option {{old('type') == 'day'?'selected':''}} value="day">Day Section</option>
                         <option {{old('type') == 'boarding'?'selected':''}} value="boarding">Boarding Section</option>
@@ -120,7 +120,7 @@
                     <label for="cname" class="control-label col-lg-2">Section <span style="color:red">*</span></label>
                     <div class="col-lg-10">
                         <div>
-                            <select name="section" class="form-control section" id="section0">
+                            <select name="section" class="form-control section" id="section0" required>
                                 <option selected disabled>Select Section</option>
                                 @if(isset($options))
                                     @foreach($options as $key => $option)
