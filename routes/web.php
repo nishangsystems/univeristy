@@ -163,7 +163,6 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::put('boarding_fee/{id}', 'Admin\BoardingFeeController@update')->name('boarding_fee.update');
     Route::delete('boarding_fee/{id}', 'Admin\BoardingFeeController@destroy')->name('boarding_fee.destroy');
     Route::get('total_boarding_fee/{id}/',  'Admin\CollectBoardingFeeController@totalBoardingAmount')->name('getTotalBoardingAmount');
-
     Route::get('sub-units/{parent_id}','Admin\ProgramController@getSubUnits')->name('getSubUnits');
 
 
@@ -183,7 +182,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('permissions', 'Admin\RolesController@permissions')->name('roles.permissions');
     Route::get('assign_role', 'Admin\RolesController@rolesView')->name('roles.assign');
     Route::post('assign_role', 'Admin\RolesController@rolesStore')->name('roles.assign.post');
-
+    Route::get('school/debts', 'Admin\SchoolDebtsController@index')->name('debts.schoolDebts');
+    Route::post('school/debts', 'Admin\SchoolDebtsController@getStudentsWithDebts')->name('debts.getStudentWithDebts');
+    Route::get('school/debts/{id}', 'Admin\SchoolDebtsController@getStudentDebts')->name('debts.showDebts');
+    Route::post('school/debts/{id}', 'Admin\SchoolDebtsController@collectStudentDebts')->name('debts.collectDebts');
     Route::prefix('statistics')->name('stats.')->group(function(){
         Route::get('sudents', 'Admin\StatisticsController@students')->name('students');
         Route::get('fees', 'Admin\StatisticsController@fees')->name('fees');
