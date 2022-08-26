@@ -21,7 +21,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @include('admin.units.item',['item'=>$parent, 'm'=>0])
+                        @include('admin.units.item',['item'=>$parent, 'm'=>0,])
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-end">
