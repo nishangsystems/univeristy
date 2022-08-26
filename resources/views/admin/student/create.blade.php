@@ -135,7 +135,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
                     <button id="save" class="btn btn-xs btn-primary mx-3" style="display: block" type="submit">Save</button>
@@ -146,45 +145,4 @@
         </form>
     </div>
 </div>
-@endsection
-
-@section('script')
-<!-- <script>
-    $('.section').on('change', function() {
-        refresh($(this));
-    })
-
-    function refresh(div) {
-        $(".pre-loader").css("display", "block");
-        url = "{{route('section-children', "+
-        VALUE +")}}";
-        url = url.replace('VALUE', div.val());
-        $.ajax({
-            type: "GET",
-            url: url,
-            success: function(data) {
-                $(".pre-loader").css("display", "none");
-                let html = "";
-                if (data.valid == 1) {
-                    $('#save').css("display", "block");
-                } else {
-                    $('#save').css("display", "none");
-                }
-                if (data.array.length > 0) {
-                    html += '<div class="mt-3"><select onchange="refresh($(this))" class="form-control section" name="' + data.name + '">';
-                    html += '<option selected > Select ' + data.name + '</option>';
-                    for (i = 0; i < data.array.length; i++) {
-                        html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
-                    }
-                    html += '</select>' +
-                        '<div class="children"></div></div>';
-                }
-                div.parent().find('.children').html(html)
-            },
-            error: function(e) {
-                $(".pre-loader").css("display", "none");
-            }
-        });
-    }
-</script> -->
 @endsection
