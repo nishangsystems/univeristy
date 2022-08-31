@@ -182,7 +182,7 @@
         <ul class="nav nav-list">
             <li>
                 <a href="{{route('user.home')}}">
-                    <i class="menu-icon fa fa-dashboard"></i>
+                    <i class="menu-icon text-primary fa fa-dashboard"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>
                 <b class="arrow"></b>
@@ -190,7 +190,7 @@
 
             <li>
                 <a href="{{route('user.class')}}">
-                    <i class="menu-icon fa fa-home"></i>
+                    <i class="menu-icon text-primary fa fa-group"></i>
                     <span class="menu-text">Class</span>
                 </a>
                 <b class="arrow"></b>
@@ -198,14 +198,14 @@
 
             <li>
                 <a href="{{route('user.class')}}?type=master">
-                    <i class="menu-icon fa fa-home"></i>
+                    <i class="menu-icon text-primary fa fa-graduation-cap"></i>
                     <span class="menu-text">ClassMaster Of</span>
                 </a>
                 <b class="arrow"></b>
             </li>
             <li>
-                <a href="{{route('user.student_promotion')}}?type=master">
-                    <i class="menu-icon fa fa-home"></i>
+                <a href="{{route('user.students.init_promotion')}}?type=master">
+                    <i class="menu-icon text-primary fa fa-bullhorn"></i>
                     <span class="menu-text">Promote Students</span>
                 </a>
                 <b class="arrow"></b>
@@ -213,7 +213,7 @@
 
             <li>
                 <a href="{{route('user.rank.class')}}">
-                    <i class="menu-icon fa fa-home"></i>
+                    <i class="menu-icon text-primary fa fa-star"></i>
                     <span class="menu-text">Class Rank Sheet</span>
                 </a>
                 <b class="arrow"></b>
@@ -221,7 +221,7 @@
 
             <li>
                 <a href="{{route('user.subject')}}">
-                    <i class="menu-icon fa fa-book"></i>
+                    <i class="menu-icon text-primary fa fa-book"></i>
                     <span class="menu-text">Subject</span>
                 </a>
                 <b class="arrow"></b>
@@ -230,7 +230,7 @@
             <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                    href="{{route('logout')}}">
-                    <i class="menu-icon fa fa-lock"></i>
+                    <i class="menu-icon text-primary fa fa-lock"></i>
                     <span class="menu-text">	Logout</span>
                 </a>
                 <b class="arrow"></b>

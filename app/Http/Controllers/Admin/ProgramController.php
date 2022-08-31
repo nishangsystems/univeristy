@@ -7,6 +7,8 @@ use App\Models\ClassSubject;
 use App\Models\SchoolUnits;
 use App\Models\Students;
 use App\Models\Subjects;
+use App\Session;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -23,8 +25,73 @@ class ProgramController extends Controller
         return view('admin.units.sections')->with($data);
     }
 
-    function subunitsOf($id){
-        DB::table('school_units')->where('parent_id', '=', $id)->get(['id', 'name', 'parent_id']);
+    public static function subunitsOf($id){
+        $s_units = [];
+        $direct_sub = DB::table('school_units')->where('parent_id', '=', $id)->get()->pluck('id')->toArray();
+        $s_units[] = $id;
+        if (count($direct_sub) > 0) {
+            # code...
+            foreach ($direct_sub as $sub) {
+                # code...
+                $s_units = array_merge_recursive($s_units, Self::subunitsOf($sub));
+            }
+        }
+        return $s_units;
+    }
+
+    public static function orderedUnitsTree()
+    {
+        # code...
+        $ids = DB::table('school_units')
+                ->pluck('id')
+                ->toArray();
+        $units = [];
+        $names = Self::allUnitNames();
+        foreach ($ids as $id) {
+            # code...
+            foreach (Self::subunitsOf($id) as $sub) {
+                # code...
+                if (!in_array($sub, $units)) {
+                    # code...
+                    $units[$sub] = $names[$sub];
+                }
+            } 
+        }
+        return $units;
+    }
+
+    public static function allUnitNames()
+    {
+        # code...
+        // added by Germanus. Loads listing of all classes accross all sections in a given school
+        
+        $base_units = DB::table('school_units')->get();
+    
+        // return $base_units;
+        $listing = [];
+        $separator = ' : ';
+        foreach ($base_units as $key => $value) {
+            # code...
+            // set current parent as key and name as value, appending from the parent_array
+            if (array_key_exists($value->parent_id, $listing)) {
+                $listing[$value->id] = $listing[$value->parent_id] . $separator . $value->name; 
+            }else {$listing[$value->id] = $value->name;}
+    
+            // atatch parent units if there be any
+            if ($base_units->where('id', '=', $value->parent_id)->count() > 0) {
+                // return $base_units->where('id', '=', $value->parent_id)->pluck('name')[0];
+                $listing[$value->id] = array_key_exists($value->parent_id, $listing) ? 
+                $listing[$value->parent_id] . $separator . $value->name :
+                $base_units->where('id', '=', $value->parent_id)->pluck('name')[0] . $separator . $value->name ;
+            }
+            // if children are obove, move over and prepend to children listing
+            foreach ($base_units->where('parent_id', '=', $value->id) as $keyi => $valuei) {
+                $value->id > $valuei->id ?
+                $listing[$valuei->id] = $listing[$value->id] . $separator . $listing[$value->id]:
+                null;
+            }
+        }
+        return $listing;
     }
 
     public function index($parent_id)
@@ -170,13 +237,33 @@ class ProgramController extends Controller
     }
 
     public function students($id)
-    {
+    { 
+        return $this->studentsListing($id);
+
         $parent = \App\Models\SchoolUnits::find($id);
         $data['parent'] = $parent;
 
         $data['title'] = "Manage student under " . $parent->name;
         return view('admin.units.student')->with($data);
     }
+     public function studentsListing($id)
+     {
+        # code...
+        // get array of ids of all sub units
+        $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+        $subUnits = $this->subunitsOf($id);
+
+        $students = DB::table('student_classes')
+                ->whereIn('class_id', $subUnits)
+                ->join('students', 'students.id', '=', 'student_classes.student_id')
+                ->get();
+        $parent = \App\Models\SchoolUnits::find($id);
+        $data['parent'] = $parent;
+        $data['students'] = $students;
+        $data['classes'] = \App\Http\Controllers\Admin\StudentController::getMainClasses();
+        $data['title'] = "Manage student under " . $parent->name;
+        return view('admin.units.student-listing')->with($data);
+     }
 
     public function saveSubjects(Request  $request, $id)
     {

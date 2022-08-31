@@ -3,11 +3,11 @@
 use Illuminate\Support\Facades\Http;
 
 ?>
-@extends('admin.layout')
+@extends('teacher.layout')
 @section('section')
 <div class="container-fluid h-screen d-flex flex-column justify-content-center">
     <div class="w-75 mx-auto d-block py-3 px-5 rounded-lg">
-        <form action="{{route('admin.students.promotion')}}" method="get" class="w-100 p-2 ">
+        <form action="{{route('user.students.promotion')}}" method="get" class="w-100 p-2 ">
             @csrf
             <h2 class="my-3 text-dark fw-bolder text-center w-100">Student Promotion</h2>
             <div class="w-100 py-2 d-md-flex">

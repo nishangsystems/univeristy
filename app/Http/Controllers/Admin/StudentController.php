@@ -8,7 +8,7 @@ use App\Models\SchoolUnits;
 use App\Models\StudentClass;
 use App\Models\Students;
 use App\Option;
-use App\Session;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Session as FacadesSession;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Stringable;
 use Prophecy\Util\StringUtil;
+
+use function PHPUnit\Framework\stringStartsWith;
 
 class StudentController extends Controller
 {
@@ -147,16 +149,62 @@ class StudentController extends Controller
         ]);
         try {
             DB::beginTransaction();
+            // read user input
             $input = $request->all();
             $input['password'] = Hash::make('password');
+            // create a student
             $student = \App\Models\Students::create($input);
-
+            // create student class
             $class = StudentClass::create([
                 'student_id' => $student->id,
                 'class_id' => $request->section,
                 'year_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
             ]);
 
+            // create student matricule with the given section ID
+            // first check if section has prefix and/ot suffix
+            $unit = \App\Models\SchoolUnits::find($request->section);
+            if ($unit->prefix == null ) {
+                # code...
+                return back()->with('error', "Sorry prefix not set. Go to Settings Zone > Manage sections to set prefix");
+            }
+            if ($unit->suffix == null) {
+                # code...
+                return back()->with('error', "Sorry, suffix not set. Go to Settings Zone > Manage sections to set suffix");
+            }
+            // get the first part of matric
+            $academic_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
+            $matric = $unit->prefix . substr($academic_year_name, 2, 2) . $unit->suffix;
+         
+            // get the highest available matric for this class
+            $mats = DB::table('student_classes')
+                    ->where('class_id', '=', $request->section)
+                    ->join('students', 'students.id', '=', 'student_classes.student_id')
+                    ->whereNotNull('matric')
+                    ->distinct()
+                    ->orderByDesc('students.matric')
+                    ->get('matric');
+
+                    if (count($mats) == null) {
+                        # code...
+                        $mats[0] = $matric.'000';
+                        
+                    }
+                    else {
+                        $mats = $mats->pluck('matric')->toArray();
+                }
+
+                // extract last 3 digits; serial number, increment and append to class matric template
+                $matric_end = (int)substr($mats[0], -3) + 1;
+                while (strlen($matric_end)<3) {
+                    # code...
+                $matric_end = '0'.$matric_end;
+                }
+                $matric .= $matric_end;
+
+
+            // set student matric
+            $student->matric = $matric;
             $student->admission_batch_id = $class->id;
             $student->save();
             DB::commit();
@@ -260,6 +308,7 @@ class StudentController extends Controller
 
     public  function matricPost(Request  $request)
     {
+        return $request->all();
         $this->validate($request, [
             'batch' => 'required',
             'section' => 'required',
@@ -347,13 +396,13 @@ class StudentController extends Controller
                 DB::rollback();
                 echo ($e);
             }
-            Session::flash('message', 'Import Successful.');
+            session('message', 'Import Successful.');
             //echo("<h3 style='color:#0000ff;'>Import Successful.</h3>");
 
         } else {
             //echo("<h3 style='color:#ff0000;'>Invalid File Extension.</h3>");
 
-            Session::flash('message', 'Invalid File Extension.');
+            session('message', 'Invalid File Extension.');
         }
 
         return redirect()->to(route('admin.students.index', [$request->section]))->with('success', 'Student Imported successfully!');
@@ -362,7 +411,8 @@ class StudentController extends Controller
     function getSubunitsOf($id){
         DB::table('school_units')->where('parent_id', '=', $id)->get(['id', 'name', 'parent_id']);
     }
-    public function getMainClasses()
+    
+    public static function getMainClasses()
     {
         # code...
         // added by Germanus. Loads listing of all classes accross all sections in a given school
@@ -422,7 +472,7 @@ class StudentController extends Controller
             'year_from'=>'required',
             'year_to'=>'required'
         ]);
-        // return $request;
+        
         if ($validator->fails()) {
             # code...
             return back()->with('error', json_encode($validator->getMessageBag()->getMessages()));
@@ -450,7 +500,7 @@ class StudentController extends Controller
         $data['request'] = $request;
         $data['classes'] = $classes;
         $data['students'] =  DB::table('student_classes')
-                                ->where('class_id', '=', $request->class_from)
+                                ->whereIn('class_id', \App\Http\Controllers\Admin\ProgramController::subunitsOf($request->class_from))
                                 ->where('year_id', '=', $request->year_from)
                                 ->leftJoin('students', 'student_classes.student_id', '=', 'students.id')
                                 ->get(['students.id as id', 'students.matric as matric', 'students.name as name', 'students.email as email']);
@@ -484,7 +534,12 @@ class StudentController extends Controller
                 'type'=>$request->type,
                 'students'=>json_encode($request->students)
             ];
-            DB::table('pending_promotions')->insert($ppromotion);
+            $promotion_id = DB::table('pending_promotions')->insertGetId($ppromotion);
+            $pending_promotion_students = [];
+            foreach($request->students as $student){
+                $pending_promotion_students[] = ['pending_promotions_id'=>$promotion_id, 'students_id'=>$student];
+            }
+            DB::table('pending_promotion_students')->insert($pending_promotion_students);
             return back()->with('success', 'Operation Complete');
             //code...
         } catch (\Throwable $th) {
@@ -494,16 +549,92 @@ class StudentController extends Controller
 
     }
 
+    public function teacherInitPromotion(Request $request)
+    {
+        # code...
+        $classes = DB::table('school_units')->distinct()->get(['id', 'base_class', 'target_class']);
+        $class_names = DB::table('school_units')->distinct()->get(['id', 'name', 'parent_id']);
+
+        $data['base_classes'] = $this->_getBaseClasses();
+        $data['class_pairs'] = $classes;
+        $data['class_names'] = $class_names;
+        $data['classes'] = $this->getMainClasses();
+        return view('teacher.initialise-promotion', $data);
+    }
+
+    public function teacherPromotion(Request $request)
+    {
+    # code...
+        $validator = Validator::make($request->all(), [
+            'class_from'=>'required',
+            'class_to'=>'required',
+            'year_from'=>'required',
+            'year_to'=>'required'
+        ]);
+        
+        if ($validator->fails()) {
+            # code...
+            return back()->with('error', json_encode($validator->getMessageBag()->getMessages()));
+        }
+        if ($request->class_from >= $request->class_to) {
+            # code...
+            return back()->with('error', 'next class must be higher than the current');
+        }
+        if ($request->year_from >= $request->year_to) {
+            # code...
+            return back()->with('error', 'next academic year must be higher than the current');
+        }
+        
+        $mainClasses = $this->getMainClasses();
+
+        $classes = [
+            'cf'=>[
+                'id' => $request->class_from, 'name' => $mainClasses[$request->class_from]
+            ],
+            'ct' => [
+                'id' => $request->class_to, 'name' => $mainClasses[$request->class_to]
+                ]];
+
+        $data['title'] = "Student Promotion";
+        $data['request'] = $request;
+        $data['classes'] = $classes;
+        $data['students'] =  DB::table('student_classes')
+                                ->whereIn('class_id', \App\Http\Controllers\Admin\ProgramController::subunitsOf($request->class_from))
+                                ->where('year_id', '=', $request->year_from)
+                                ->leftJoin('students', 'student_classes.student_id', '=', 'students.id')
+                                ->get(['students.id as id', 'students.matric as matric', 'students.name as name', 'students.email as email']);
+        // return $data['students'];
+
+        return view('teacher.promotion', $data);
+    }
+    
+    public function teacherPromote(Request $request)
+    {
+        # code...
+        $this->pend_promotion($request);
+    }
     public function trigger_approval(Request $request)
     {
         # code...
         $data['classes'] = $this->getMainClasses();
+        if ($request->promotion_id != null) {
+            # get and show all students
+            $pending_promotion = DB::table('pending_promotions')->find($request->promotion_id);
+            $students = DB::table('pending_promotion_students')
+                    ->where('pending_promotions_id', '=', $request->promotion_id)
+                    ->join('students', 'students.id', '=', 'pending_promotion_students.students_id')
+                    ->get(['students.id as id', 'students.matric as matric', 'students.name as name']);
+            $data['students'] = $students;
+        }
         return view('admin.student.approve-promotion', $data);
     }
     public function approvePromotion(Request $request)
     {
         # code...
-        $validity = Validator::make($request->all(), ['pending_promotion'=>'required']);
+        $validity = Validator::make($request->all(), [
+            'pending_promotion'=>'required',
+            'students'=>'required|array'
+        ]);
 
         if ($validity->fails()) {
             # code...
@@ -514,13 +645,16 @@ class StudentController extends Controller
         $ppromotion = \App\Models\PendingPromotion::find($request->pending_promotion);
         // create request object and call promote for proper promotion
         $promotion_request = new Request();
+        $promotion_request->pp = $request->pending_promotion;
         $promotion_request->year_from = $ppromotion->from_year;
         $promotion_request->year_to = $ppromotion->to_year;
         $promotion_request->class_from = $ppromotion->from_class;
         $promotion_request->class_to = $ppromotion->to_class;
         $promotion_request->type = $ppromotion->type;
-        $promotion_request->students = json_decode($ppromotion->type);
-        $this->promote($promotion_request);
+        $promotion_request->students = $request->students;
+
+        // remove students from pending_promotion_students to student_promotions, update student classes and academic year
+        return $this->promote($promotion_request);
     }
 
     public function promote(Request $request)
@@ -534,22 +668,28 @@ class StudentController extends Controller
                 'to_year'=>$request->year_to,
                 'from_class'=>$request->class_from,
                 'to_class'=>$request->class_to,
-                'type'=>$request->type
+                'type'=>$request->type,
+                'students'=>json_encode($request->students)
             ];
             $promotion_id = DB::table('promotions')->insertGetId($promotion);
             if ($promotion_id != null) {
                 # code...
                 // create student promotions
-                $students_promottion = array_map(function($id) use ($promotion_id){
-                    return ['student_id'=>$id, 'promotion_id'=>$promotion_id];
-                }, $request->students);
-
-                DB::table('student_promotions')->insert($students_promottion);
+                $students_promotion = [];
+                foreach ($request->students as $value) {
+                    # code...
+                    $students_promotion[] = ['student_id'=>$value, 'promotion_id'=>$promotion_id];
+                }
+                DB::table('student_promotions')->insert($students_promotion);
 
                 // update students' class and academic year
                 DB::table('student_classes')->whereIn('student_id', $request->students)->update(['class_id'=>$request->class_to, 'year_id'=>$request->year_to]);
-            
-                FacadesSession::flash('success', 'Students promoted successfully!');
+                
+                // delete pending_promotion_students
+                DB::table('pending_promotion_students')
+                    ->where('pending_promotions_id', '=', $request->pp)
+                    ->whereIn('students_id', $request->students)
+                    ->delete();
                 return back()->with('success', 'Students promoted successfully!');
             }
 
@@ -563,6 +703,14 @@ class StudentController extends Controller
 
     }
 
+    public function cencelPromotion(Request $request)
+    {
+        # code...
+        $pending_promotion = DB::table('pending_promotions')->delete($request->promotion_id);
+        db::table('pending_promotion_students')->where('pending_promotions_id', '=', $request->promotion_id)
+        ->delete();
+        return back()->with('promotion was successfully cancelled');
+    }
 
     public function unitTarget(Request $request){
         $target_id = DB::table('school_units')->find($request->id)->target_class;
@@ -617,5 +765,131 @@ class StudentController extends Controller
 
     public function unitDemoteTarget(Request $request){
         return DB::table('school_units')->where('target_class', '=', $request->id)->first();
+    }
+
+    // Student results/average calculation section
+
+    // get subjects of a given class with class id
+    public function getSubjectsByClass($class_id)
+    {
+        # code...
+        return DB::table('class_subjects')
+                ->where('class_id', '=', $class_id)
+                ->join('subjects', 'subjects.id','=', 'class_subjects.subject_id')
+                ->distinct()
+                ->get(['subjects.id as id', 'subjects.name as name', 'subjects.coef as coef', 'subjects.code as code']);
+    }
+
+    // get subjects of a given student with $student_id
+    // here, we get the subjects for which a given student with $student_id has atleast a mark
+    public function getSubjectsByStudent($student_id)
+    {
+        # code...
+        return DB::table('student_classes')
+                ->where('student_id', '=', $student_id)
+                ->join('results', 'student_id', '=', $student_id)
+                ->where('results.class_id', '=', 'student_classes.class_id')
+                ->whereNotNull('results.score')
+                ->join('subjects', 'subjects.id', '=', 'results.subject_id')
+                ->distinct()
+                ->get(['subjects.id as id', 'subjects.name as name', 'subjects.coef as coef', 'subjects.code as code']);
+    }
+
+    // get sum of coeficients for given class subjects with $class_id
+    public function getCoeficientsSumByClass($class_id)
+    {
+        # code...
+        $coefs = DB::table('class_subjects')
+                ->where('class_id', '=', $class_id)
+                ->join('subjects', 'subjects.id','=', 'class_subjects.subject_id')
+                ->distinct()
+                ->get(['subjects.id as id', 'subjects.name as name', 'subjects.coef as coef', 'subjects.code as code'])
+                ->pluck('coef')
+                ->toArray();
+        return array_sum($coefs);
+    }
+
+    // get sum of coeficients for given student with $student_id
+    public function getCoeficientsSumByStudent($student_id)
+    {
+        # code...
+        $coefs = DB::table('student_classes')
+                ->where('student_id', '=', $student_id)
+                ->join('results', 'student_id', '=', $student_id)
+                ->where('results.class_id', '=', 'student_classes.class_id')
+                ->whereNotNull('results.score')
+                ->join('subjects', 'subjects.id', '=', 'results.subject_id')
+                ->distinct()
+                ->get(['subjects.id as id', 'subjects.name as name', 'subjects.coef as coef', 'subjects.code as code'])
+                ->pluck('coef')
+                ->toArray();
+        return array_sum($coefs);
+    }
+
+    // get student's score for subject with $student_id, and $subject_id in class with $class_id, in academic year with $year_id by filter[1st term : 1, 2nd term : 2, 3rd term : 3, annual : null; filter is built upon result.sequence
+    public function getStudentSubjectScore($student_id, $subject_id, $class_id, $year_id = 0, $filter = 4)
+    {
+        # code...
+        if ($year_id == null) {
+            # code...
+            $year_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+        }
+        $builder = DB::table('results')
+                ->where('batch_id', '=', $year_id)
+                ->where('student_id', '=', $student_id)
+                ->where('class_id', '=', $class_id)
+                ->where('subject_id', '=', $subject_id);
+        switch ($filter) {
+            case '1':
+                # code...
+                return array_sum($builder->where('sequence', '=', 1)
+                ->where('sequence', '=', 2)
+                ->pluck('score')
+                ->toArray());
+                break;
+            case '2':
+                # code...
+                return array_sum($builder->where('sequence', '=', 3)
+                    ->where('sequence', '=', 4)
+                    ->pluck('score')
+                    ->toArray());
+                break;
+            case '3':
+                # code...
+                return array_sum($builder->where('sequence', '=', 5)
+                    ->where('sequence', '=', 6)
+                    ->pluck('score')
+                    ->toArray());
+                break;
+
+            default:
+                # code...
+                return array_sum($builder
+                    ->pluck('score')
+                    ->toArray());
+                break;
+        }
+    }
+
+    // calculate student's average with specified term; 1,2,3; default : 4 for annual average
+    public function getStudentAverage($student_id, $class_id = null, $year_id = null, $filter = null, $gradingSystem = 20)
+    {
+        $coeficientSum = 0;
+        $subject_average = 0;
+        $subjects = $this->getSubjectsByStudent($student_id);
+        if ($class_id != null) {$coeficientSum = $this->getCoeficientsSumByClass($class_id);
+        }else {$coeficientSum = $this->getCoeficientsSumByStudent($student_id);
+        }
+        foreach($subjects as $key => $subject){
+            $subject_average += ($subject->coef / $coeficientSum) * $this->getStudentSubjectScore($student_id, $subject->id, $class_id, $year_id, $filter);
+        }
+        return $subject_average * $gradingSystem / $coeficientSum;
+        
+    }
+
+    // get averages for all students in a class
+    public function getClassStudentsAverageList($class_id, $year_id = null)
+    {
+        # code...
     }
 }

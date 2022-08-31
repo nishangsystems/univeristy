@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('teacher.layout')
 @section('section')
 <div class="container-fluid h-screen d-flex flex-column justify-content-center">
     <div class="w-100 d-block py-3  rounded-lg bg-light">
@@ -28,7 +28,7 @@
                 </div>
             </div>
     </div>
-    <form action="{{route('admin.students.promote')}}" method="post" class="w-100">
+    <form action="{{route('user.students.promote')}}" method="post" class="w-100">
         @csrf
         <input type="hidden" name="class_from" value="{{request('class_from')}}">
         <input type="hidden" name="class_to" value="{{request('class_to')}}">
