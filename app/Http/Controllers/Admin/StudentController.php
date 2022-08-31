@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Session as FacadesSession;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Stringable;
 use Prophecy\Util\StringUtil;
-use App\Services\StudentMatriculeGenerationService;
 
 use function PHPUnit\Framework\stringStartsWith;
 
@@ -34,13 +33,11 @@ class StudentController extends Controller
 
     ];
 
-    private $student_matricule_generation_service;
-
-    public function __construct(StudentMatriculeGenerationService $student_matricule_generation_service)
+    public function __construct()
     {
         $this->year = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
         $this->years = Batch::all();
-        $this->student_matricule_generation_service = $student_matricule_generation_service;
+        // $this->batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
     }
     public function index()
     {
@@ -78,14 +75,14 @@ class StudentController extends Controller
         }
         return $type;
     }
-
+    
     public function getBaseClasses()
     {
         # code...
         // added by Germanus. Loads listing of all classes accross all sections in a given school
-
+        
         $base_units = DB::table('school_units')->where('parent_id', '>', 0)->get();
-
+    
         // return $base_units;
         $listing = [];
         $options = [];
@@ -94,13 +91,13 @@ class StudentController extends Controller
             # code...
             // set current parent as key and name as value, appending from the parent_array
             if (array_key_exists($value->parent_id, $listing)) {
-                $listing[$value->id] = $listing[$value->parent_id] . $separator . $value->name;
+                $listing[$value->id] = $listing[$value->parent_id] . $separator . $value->name; 
             }else {$listing[$value->id] = $value->name;}
-
+    
             // atatch parent units if there be any
             if ($base_units->where('id', '=', $value->parent_id)->count() > 0) {
                 // return $base_units->where('id', '=', $value->parent_id)->pluck('name')[0];
-                $listing[$value->id] = array_key_exists($value->parent_id, $listing) ?
+                $listing[$value->id] = array_key_exists($value->parent_id, $listing) ? 
                 $listing[$value->parent_id] . $separator . $value->name :
                 $base_units->where('id', '=', $value->parent_id)->pluck('name')[0] . $separator . $value->name ;
             }
@@ -303,11 +300,9 @@ class StudentController extends Controller
         return view('admin.student.import')->with($data);
     }
 
-
     public  function matric()
     {
         $data['title'] = "Generate Student Matricule Number";
-
         return view('admin.student.matricule')->with($data);
     }
 
@@ -318,12 +313,17 @@ class StudentController extends Controller
             'batch' => 'required',
             'section' => 'required',
         ]);
-
         $sec = $request->section;
-        $this->student_matricule_generation_service->generateMatricule($request->section, $request->batch);
-        return redirect()->to(route('admin.students.index', [$sec]))->with('success', 'Matricule number generated successfully!');
+        $id = $sec[count($request->section) - 1];
+        $students = Students::join('student_classes', ['students.admission_batch_id' => 'student_classes.id'])->where(['student_classes.year_id' => $request->batch, 'student_classes.class_id' => $id])->orderBy('name')->get();
+        $section = SchoolUnits::find($id);
+        $batch = Batch::find($request->batch);
+        foreach ($students as $k => $student) {
+            $student->matric = $section->prefix . substr(Batch::find($request->batch)->name, 2, 2) . $section->suffix . str_pad(($k + 1), 3, 0, STR_PAD_LEFT);
+            $student->save();
+        }
+        return redirect()->to(route('admin.students.index', [$id]))->with('success', 'Matricule number generated successfully!');
     }
-
 
     public  function importPost(Request  $request)
     {
@@ -407,7 +407,7 @@ class StudentController extends Controller
 
         return redirect()->to(route('admin.students.index', [$request->section]))->with('success', 'Student Imported successfully!');
     }
-
+    
     function getSubunitsOf($id){
         DB::table('school_units')->where('parent_id', '=', $id)->get(['id', 'name', 'parent_id']);
     }
@@ -416,9 +416,9 @@ class StudentController extends Controller
     {
         # code...
         // added by Germanus. Loads listing of all classes accross all sections in a given school
-
+        
         $base_units = DB::table('school_units')->where('parent_id', '>', 0)->get();
-
+    
         // return $base_units;
         $listing = [];
         $separator = ' : ';
@@ -426,13 +426,13 @@ class StudentController extends Controller
             # code...
             // set current parent as key and name as value, appending from the parent_array
             if (array_key_exists($value->parent_id, $listing)) {
-                $listing[$value->id] = $listing[$value->parent_id] . $separator . $value->name;
+                $listing[$value->id] = $listing[$value->parent_id] . $separator . $value->name; 
             }else {$listing[$value->id] = $value->name;}
-
+    
             // atatch parent units if there be any
             if ($base_units->where('id', '=', $value->parent_id)->count() > 0) {
                 // return $base_units->where('id', '=', $value->parent_id)->pluck('name')[0];
-                $listing[$value->id] = array_key_exists($value->parent_id, $listing) ?
+                $listing[$value->id] = array_key_exists($value->parent_id, $listing) ? 
                 $listing[$value->parent_id] . $separator . $value->name :
                 $base_units->where('id', '=', $value->parent_id)->pluck('name')[0] . $separator . $value->name ;
             }
@@ -485,7 +485,7 @@ class StudentController extends Controller
             # code...
             return back()->with('error', 'next academic year must be higher than the current');
         }
-
+        
         $mainClasses = $this->getMainClasses();
 
         $classes = [
@@ -684,7 +684,6 @@ class StudentController extends Controller
 
                 // update students' class and academic year
                 DB::table('student_classes')->whereIn('student_id', $request->students)->update(['class_id'=>$request->class_to, 'year_id'=>$request->year_to]);
-
                 
                 // delete pending_promotion_students
                 DB::table('pending_promotion_students')
@@ -694,13 +693,13 @@ class StudentController extends Controller
                 return back()->with('success', 'Students promoted successfully!');
             }
 
-
+           
         } catch (\Throwable $th) {
             //throw $th;
             FacadesSession::flash('error', 'Error occured. Promotion failed. Please try again later.');
             return back()->with('error', 'Error occured. Promotion failed. Please try again later.');
         }
-
+        
 
     }
 
@@ -742,7 +741,7 @@ class StudentController extends Controller
             # code...
             return back()->with('error', json_encode($validator->getMessageBag()->getMessages()));
         }
-
+        
         $mainClasses = $this->getMainClasses();
 
         $classes = ['cf'=>['id' => $request->class_from, 'name' => $mainClasses[$request->class_from]],'ct' => ['id' => $request->class_to, 'name' => $mainClasses[$request->class_to]]];
@@ -760,7 +759,7 @@ class StudentController extends Controller
         return view('admin.student.promotion', $data);
     }
 
-
+    
     public function demote(Request $request){}
 
 

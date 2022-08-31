@@ -122,8 +122,8 @@
                         <div>
                             <select name="section" class="form-control section" id="section0" required>
                                 <option selected disabled>Select Section</option>
-                                @if(isset($schoolUnits))
-                                    @foreach($schoolUnits as $key => $option)
+                                @if(isset($options))
+                                    @foreach($options as $key => $option)
                                         <option value="{{$key}}">{{$option}}</option>
                                     @endforeach
                                 @else
@@ -135,6 +135,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
                     <button id="save" class="btn btn-xs btn-primary mx-3" style="display: block" type="submit">Save</button>
@@ -187,4 +188,3 @@
     }
 </script> -->
 @endsection
-
