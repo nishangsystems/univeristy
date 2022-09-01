@@ -12,6 +12,7 @@ class CreateUsersRolesTable extends Migration
             $table->id();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('role_id');
+            $table->timestamps();
         });
     }
 

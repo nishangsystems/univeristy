@@ -60,7 +60,7 @@
                         @enderror
                     </div>
                 </div>
-
+                <input type="hidden" name="type" id="" value="{{request('type') ?? ''}}">
                 <div class="form-group">
                     <div class="col-lg-offset-2 col-lg-10">
                         <button class="btn btn-xs btn-primary" type="submit">Save</button>
