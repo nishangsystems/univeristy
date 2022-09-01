@@ -148,12 +148,16 @@ class StudentController extends Controller
             'parent_phone_number' => 'nulla|unique:students|regex:/^([0-9\s\-\+\(\)]*)$/'
         ]);
         try {
+            // return $request->all();
             DB::beginTransaction();
             // read user input
             $input = $request->all();
             $input['password'] = Hash::make('password');
             // create a student
-            $student = \App\Models\Students::create($input);
+            $input['matric'] = $this->getNextAvailableMatricule($request->section);
+            $student = new \App\Models\Students($input);
+            $student->save();
+            // dd($student);
             // create student class
             $class = StudentClass::create([
                 'student_id' => $student->id,
@@ -161,57 +165,35 @@ class StudentController extends Controller
                 'year_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
             ]);
 
-            // create student matricule with the given section ID
-            // first check if section has prefix and/ot suffix
-            $unit = \App\Models\SchoolUnits::find($request->section);
-            if ($unit->prefix == null ) {
-                # code...
-                return back()->with('error', "Sorry prefix not set. Go to Settings Zone > Manage sections to set prefix");
-            }
-            if ($unit->suffix == null) {
-                # code...
-                return back()->with('error', "Sorry, suffix not set. Go to Settings Zone > Manage sections to set suffix");
-            }
-            // get the first part of matric
-            $academic_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
-            $matric = $unit->prefix . substr($academic_year_name, 2, 2) . $unit->suffix;
-         
-            // get the highest available matric for this class
-            $mats = DB::table('student_classes')
-                    ->where('class_id', '=', $request->section)
-                    ->join('students', 'students.id', '=', 'student_classes.student_id')
-                    ->whereNotNull('matric')
-                    ->distinct()
-                    ->orderByDesc('students.matric')
-                    ->get('matric');
-
-                    if (count($mats) == null) {
-                        # code...
-                        $mats[0] = $matric.'000';
-                        
-                    }
-                    else {
-                        $mats = $mats->pluck('matric')->toArray();
-                }
-
-                // extract last 3 digits; serial number, increment and append to class matric template
-                $matric_end = (int)substr($mats[0], -3) + 1;
-                while (strlen($matric_end)<3) {
-                    # code...
-                $matric_end = '0'.$matric_end;
-                }
-                $matric .= $matric_end;
-
-
-            // set student matric
-            $student->matric = $matric;
-            $student->admission_batch_id = $class->id;
-            $student->save();
             DB::commit();
             return redirect()->to(route('admin.students.index', $request->section))->with('success', "Student saved successfully !");
         } catch (\Exception $e) {
             DB::rollBack();
             echo $e;
+        }
+    }
+
+    public function getNextAvailableMatricule($section)
+    {
+        $unit = \App\Models\SchoolUnits::find($section);
+        $academic_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
+        $matric_template = $unit->prefix . substr($academic_year_name, 2, 2) . $unit->suffix;
+
+        $last_matric = DB::table('student_classes')->where('class_id', '=', $section)
+                        ->join('students', 'students.id', '=', 'student_classes.student_id')
+                        ->whereRaw('students.matric like "'.$matric_template.'%"')
+                        ->orderBy('students.matric', 'desc')
+                        ->first();
+
+        if($last_matric){
+            $next = ((int)substr($last_matric->matric, -3, 3)) + 1;
+            while(strlen($next) < 3){
+                $next = '0'.$next;
+            }
+            return substr($last_matric->matric, 0, -3).$next;
+        }
+        else {
+            return $matric_template.'001';
         }
     }
 

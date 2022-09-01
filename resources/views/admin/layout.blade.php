@@ -674,17 +674,30 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-                    <!-- <li>
-                        <a href="{{route('admin.expense.create')}}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            Add Expense
-                        </a>
-                        <b class="arrow"></b>
-                    </li> -->
                 </ul>
             </li>
             @endif
 
+            @if (\Auth::user()->hasPermissionTo('manage_school_debts'))
+            <li>
+                <a href="#" class="dropdown-toggle">
+                <i class="menu-icon fa fa-money"></i>
+                    <span class="menu-text">
+						School Debts
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.debts.schoolDebts')}}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Manage School Debts
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            @endif
 
             <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"

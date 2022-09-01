@@ -19,6 +19,7 @@ class Students extends Authenticatable
         'religion',
         'gender',
         'username',
+        'matric',
         'dob',
         'pob',
         'admission_batch_id',

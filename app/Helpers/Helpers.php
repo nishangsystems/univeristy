@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 
 use App\Models\Result;
+use App\Models\SchoolUnits;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\DB;
 
@@ -171,5 +172,13 @@ class Helpers
             $amount =  0;
         }
         return $amount;
+    }
+
+
+    public function getSchoolSubunitByParentId($parent_id)
+    {
+        $subunits = SchoolUnits::where('parent_id', $parent_id)->get();
+
+        return $subunits;
     }
 }
