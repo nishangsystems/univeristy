@@ -148,7 +148,7 @@ class StudentController extends Controller
             'parent_phone_number' => 'nulla|unique:students|regex:/^([0-9\s\-\+\(\)]*)$/'
         ]);
         try {
-            return $request->all();
+            // return $request->all();
             DB::beginTransaction();
             // read user input
             $input = $request->all();
