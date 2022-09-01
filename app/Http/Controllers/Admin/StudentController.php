@@ -179,10 +179,9 @@ class StudentController extends Controller
         $academic_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
         $matric_template = $unit->prefix . substr($academic_year_name, 2, 2) . $unit->suffix;
 
-        $last_matric = DB::table('student_classes')->where('class_id', '=', $section)
-                        ->join('students', 'students.id', '=', 'student_classes.student_id')
+        $last_matric = DB::table('students')
                         ->whereRaw('students.matric like "'.$matric_template.'%"')
-                        ->orderBy('students.matric', 'desc')
+                        ->orderBy('matric', 'desc')
                         ->first();
 
         if($last_matric){
