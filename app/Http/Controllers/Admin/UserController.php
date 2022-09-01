@@ -7,6 +7,7 @@ use App\Models\ClassMaster;
 use App\Models\TeachersSubject;
 use App\Option;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Session;
 
@@ -19,27 +20,31 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if(\request('role')){
-            $data['type'] = \App\Models\Role::whereSlug(\request('role'))->first()->name;
-            $data['title'] = "Role ( ".\App\Models\Role::whereSlug(\request('role'))->first()->name." ) Users";
-            $data['users'] =\App\Models\Role::whereSlug(\request('role'))->first()->users()->paginate(15);
+        if(\request('role') || \request('type')){
+            $request->role = \request('role') ? \request('role') : \request('type');
+            $data['type'] = \App\Models\Role::whereSlug($request->role)->first()->name;
+            $data['title'] = "Role ".($data['type'] ?? " Users");
+            $data['users'] = DB::table('roles')->where('slug', '=', $request->role)
+                        ->join('users_roles', 'users_roles.role_id', '=', 'roles.id')
+                        ->join('users', 'users.id', '=', 'users_roles.user_id')
+                        ->get('users.*');
             return view('admin.user.index')->with($data);
         }else if(\request('permission')){
             $data['type'] = \App\Models\Permission::whereSlug(\request('permission'))->first()->name;
-            $data['title'] = "Permission ( ".\App\Models\Permission::whereSlug(\request('permission'))->first()->name." ) Users";
+            $data['title'] = "Permission ".($data['type'] ?? "Users");
             $data['users'] =\App\Models\Permission::whereSlug(\request('permission'))->first()->users()->paginate(15);
             return view('admin.user.index')->with($data);
         }else{
             $data['type'] = request('teacher', 'user');
             $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
-            $data['title'] = "Manage " . request('teacher', 'user') . 's';
+            $data['title'] = "Manage " . $data['type']. 's';
             return view('admin.user.index')->with($data);
         }
     }
 
     public function create(Request $request)
     {
-        $data['title'] = "Add User";
+        $data['title'] = "Add ".(request('type') ?? "User");
         return view('admin.user.create')->with($data);
     }
 
@@ -63,7 +68,12 @@ class UserController extends Controller
         $input = $request->all();
         $input['password'] = Hash::make('password');
         $input['username'] = $request->email;
-        $user = \App\Models\User::create($input);
+        $user = new \App\Models\User($input);
+        $user->save();
+        $user_role = new \App\Models\UserRole();
+        $user_role->role_id = DB::table('roles')->where('slug', '=', $request->type)->first()->id;
+        $user_role->user_id = $user->id;
+        $user_role->save();
 
         return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('success', "User Created Successfully !");
     }
