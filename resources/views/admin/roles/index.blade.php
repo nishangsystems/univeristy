@@ -5,6 +5,7 @@
 
 
 @section('section')
+
     <div>
         <div class="col-8-xxxl col-12">
             <div class="card height-auto">

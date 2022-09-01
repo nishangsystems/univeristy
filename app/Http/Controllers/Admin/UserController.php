@@ -20,14 +20,17 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if(\request('role')){
+            $data['type'] = \App\Models\Role::whereSlug(\request('role'))->first()->name;
             $data['title'] = "Role ( ".\App\Models\Role::whereSlug(\request('role'))->first()->name." ) Users";
             $data['users'] =\App\Models\Role::whereSlug(\request('role'))->first()->users()->paginate(15);
             return view('admin.user.index')->with($data);
         }else if(\request('permission')){
+            $data['type'] = \App\Models\Permission::whereSlug(\request('permission'))->first()->name;
             $data['title'] = "Permission ( ".\App\Models\Permission::whereSlug(\request('permission'))->first()->name." ) Users";
             $data['users'] =\App\Models\Permission::whereSlug(\request('permission'))->first()->users()->paginate(15);
             return view('admin.user.index')->with($data);
         }else{
+            $data['type'] = request('teacher', 'user');
             $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
             $data['title'] = "Manage " . request('teacher', 'user') . 's';
             return view('admin.user.index')->with($data);

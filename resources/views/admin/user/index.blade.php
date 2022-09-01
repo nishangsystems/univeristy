@@ -3,7 +3,7 @@
 @section('section')
     <div class="col-sm-12">
         <p class="text-muted">
-            <a href="{{route('admin.users.create')}}?type={{request('type')}}" class="btn btn-info btn-xs">Add {{request('type', 'teacher')}}</a>
+            <a href="{{route('admin.users.create')}}?type={{$type}}" class="btn btn-info btn-xs">Add {{$type}}</a>
         </p>
 
         <div class="content-panel">

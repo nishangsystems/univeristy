@@ -1,6 +1,8 @@
 @extends('admin.layout')
 
 @section('section')
+@php(dd(request()->all()))
+
     <div>
         <div id="user-profile-1" class="user-profile row">
             <div class=" col-md-6 center">
