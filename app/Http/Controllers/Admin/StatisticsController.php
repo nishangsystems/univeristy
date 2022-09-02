@@ -260,7 +260,7 @@ class StatisticsController extends Controller
     {
         # code...
         $data['title'] = "Results Statistics";
-        return view('admin.statistics.results');
+        return view('admin.statistics.results', $data);
     }
     //
     public function income(Request $request)
