@@ -75,7 +75,7 @@
                                                     DATE
                                                 </div>
                                                 <div style=" float:left; border-bottom:1px solid #000;">
-                                                    {{$fee->updated_at->format('d/m/Y')}}
+                                                    {{$fee->created_at->format('d/m/Y')}}
                                                 </div>
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
@@ -146,8 +146,8 @@
                                                 <div style=" float:left; width:100px;margin-top:5px;">
                                                     DATE
                                                 </div>
-                                                <div style=" float:left; border-bottom:1px solid #000;margin-top53px;">
-                                                    {{$fee->updated_at->format('d/m/Y')}}
+                                                <div style=" float:left; border-bottom:1px solid #000; margin-top:53px;">
+                                                    {{$fee->created_at->format('d/m/Y')}}
                                                 </div>
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
