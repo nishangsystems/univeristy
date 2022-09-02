@@ -267,7 +267,9 @@ class StudentController extends Controller
     public function destroy($id)
     {
         $student = Students::find($id);
-        if ($student->classes->count() > 1 || $student->result->count() > 0 || $student->payment->count() > 0) {
+        if ($student->classes->count() > 1 
+        || $student->result->count() > 0
+         || $student->payment) {
             return redirect()->back()->with('error', "Student cant be deleted !");
         }
         $student->classes->first()->delete();

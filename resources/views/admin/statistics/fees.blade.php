@@ -44,7 +44,7 @@
                 </thead>
                 <tbody>
                     @forelse($data as $value)
-                        @if($value['target'])
+                        @if($value['target'] == 1)
                             <tr class="border-bottom border-dark" style="background-color: rgba(160, 160, 235, 0.3);">
                                 <td class="border-left border-right">{{$count++}}</td>
                                 <td class="border-left border-right">{{$value['class']}}</td>
