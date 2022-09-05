@@ -107,7 +107,7 @@
             <a class="navbar-brand">
                 <small>
                     <i class="fa fa-leaf"></i>
-                    {{__('text.app_name')}}
+                    {{config('app-name') ?? __('text.app_name')}}
                 </small>
             </a>
         </div>
