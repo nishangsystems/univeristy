@@ -46,7 +46,7 @@ $user = \Auth()->user()
             <div class="profile-user-info profile-user-info-striped">
 
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Gender</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.word_gender')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->gender}}</span>
@@ -55,28 +55,28 @@ $user = \Auth()->user()
 
 
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Email</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.word_email')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->email}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Address</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.word_address')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->address}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Contact</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.word_contact')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->phone}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Type</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.word_type')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->type}}</span>

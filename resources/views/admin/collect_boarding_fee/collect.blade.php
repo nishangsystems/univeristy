@@ -6,14 +6,14 @@
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.collect_boarding_fee.store',  [$class_id,$student_id])}}">
 
             <div class="form-group row">
-                <label for="cname" class="control-label col-sm-2">Total Amount Payable: </label>
+                <label for="cname" class="control-label col-sm-2 text-capitalize">{{__('text.total_amount_payable')}}: </label>
                 <div class="col-sm-10">
                     <input for="cname" class="form-control totalAmount" value="{{number_format($total_amount)}} CFA" disabled></input>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="cname" class="control-label col-lg-2">Balance:</label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_balance')}}:</label>
                 <div class="col-lg-10">
                     <input for="cname" class="form-control" id="balance" value="0 CFA" disabled/>
                 </div>
@@ -21,7 +21,7 @@
             @csrf
 
             <div class="form-group @error('amount_payable') has-error @enderror">
-                <label for="cname" class="control-label col-sm-2">Deposit Payment(CFA): <span style="color:red">*</span></label>
+                <label for="cname" class="control-label col-sm-2 text-capitalize">{{__('text.deposit_payament')}}({{__('text.currency_cfa')}}): <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" id="deposited_amount" name="amount_payable" value="{{old('amount_payable')}}" type="number" required />
                     @error('amount_payable')
@@ -33,7 +33,7 @@
                 <label class="control-label col-lg-2">Year <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <select class="form-control" name="batch_id">
-                        <option value="">Select year</option>
+                        <option value="">{{__('text.select_year')}}</option>
                         @foreach($years as $key => $year)
                         <option value="{{$year->id}}">{{$year->name}}</option>
                         @endforeach

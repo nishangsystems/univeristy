@@ -91,13 +91,12 @@
                         <label for="cname" class="control-label col-lg-2">Section</label>
                         <div class="col-lg-10">
                             <div>
-                                <select class="form-control section" id="section0">
+                                <select class="form-control section" name="section" id="section0">
                                     <option selected disabled>Select Section</option>
-                                    @forelse(\App\Models\SchoolUnits::where('parent_id',0)->get() as $section)
-                                        <option value="{{$section->id}}">{{$section->name}}</option>
-                                    @empty
-                                        <option>No Sections Created</option>
-                                    @endforelse
+                                    @foreach($classes as $key=>$section)
+                                        <option value="{{$key}}" {{\App\Models\StudentClass::where('student_id', $student->id)->first()->class_id == $key ? "selected" : ""}}>{{$section}}</option>
+                                    @endforeach
+                                    
                                 </select>
                                 <div class="children"></div>
                             </div>
@@ -120,7 +119,7 @@
 @section('script')
     <script>
         $('.section').on('change', function () {
-            refresh($(this));
+            // refresh($(this));
         })
 
         function refresh(div) {

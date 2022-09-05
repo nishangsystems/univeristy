@@ -9,7 +9,7 @@
                 <div class="form-group @error('class_id') has-error @enderror ">
                     <div class="col-lg-2">
                         <select class="form-control section" name="section_id">
-                            <option value="">Select Section</option>
+                            <option value="" class="text-capitalize">{{__('text.select_section')}}</option>
                             @foreach($school_units as $key => $unit)
                             <option value="{{$unit->id}}">{{$unit->name}}</option>
                             @endforeach
@@ -21,7 +21,7 @@
                     <div class="col-xs-1"></div>
                     <div class="col-lg-2">
                         <select class="form-control Circle" id="circle" name="circle">
-                            <option value="">Select Circle</option>
+                            <option value="" class="text-capitalize">{{__('text.select_circle')}}</option>
                         </select>
                         @error('circle')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -30,7 +30,7 @@
                     <div class="col-xs-1"></div>
                     <div class="col-lg-2">
                         <select class="form-control class" name="class_id">
-                            <option value="">Select Class</option>
+                            <option value="" class="text-capitalize">{{__('text.select_class')}}</option>
                         </select>
                         @error('class_id')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -39,7 +39,7 @@
                     <div class="col-xs-1"></div>
                     <div class="col-lg-2">
                         <select class="form-control" name="batch_id">
-                            <option value="">Select Year</option>
+                            <option value="" class="text-capitalize">{{__('text.select_year')}}</option>
                             @foreach($years as $key => $year)
                             <option value="{{$year->id}}">{{$year->name}}</option>
                             @endforeach
@@ -50,7 +50,7 @@
                     </div>
 
                     <div class=" col-lg-1 mb-1">
-                        <button class="btn btn-xs btn-primary" id="submit" type="submit">Get Details</button>
+                        <button class="btn btn-xs btn-primary text-capitalize" id="submit" type="submit">{{__('text.get_details')}}</button>
                     </div>
                 </div>
                 @csrf
@@ -61,11 +61,11 @@
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Amount Paid(CFA)</th>
-                        <th>Date</th>
-                        <th>Status</th>
+                        <th>{{__('text.amount_paid')}}({{__('text.currency_cfa')}})</th>
+                        <th>{{__('text.word_date')}}</th>
+                        <th>{{__('text.word_status')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -76,13 +76,13 @@
                         <td>{{number_format($boarding_fee->amount_payable)}}</td>
                         <td>{{date('jS F Y', strtotime($boarding_fee->created_at))}}</td>
                         @if($boarding_fee->status == 0)
-                        <td>Incomplete</td>
+                        <td class="text-capitalize">{{__('text.word_incomplete')}}</td>
                         @endif
                         @if($boarding_fee->status == 1)
-                        <td>Completed</td>
+                        <td class="text-capitalize">{{__('text.word_completed')}}</td>
                         @endif
                         <td class="d-flex justify-content-end  align-items-center">
-                            <a class="btn btn-sm btn-primary" href="{{route('admin.boarding_fee.print', [$student_id, $boarding_fee->id])}}"><i class="fas fa-print"></i>Print </a>
+                            <a class="btn btn-sm btn-primary text-capitalize" href="{{route('admin.boarding_fee.print', [$student_id, $boarding_fee->id])}}"><i class="fas fa-print"></i>{{__('text.word_print')}} </a>
                         </td>
                     </tr>
                     @endforeach
@@ -112,14 +112,14 @@
                 let html = "";
                 if (size > 0) {
                     html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option selected> Select Circle</option>'
+                    html += '<option selected> {{__(`text.select_circle`)}}</option>'
                     for (i = 0; i < size; i++) {
                         html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
                     }
                     html += '</select></div>';
                 } else {
                     html += '<div><select class="form-control"  >';
-                    html += '<option selected> No data is avalaible</option>'
+                    html += '<option selected> {{__(`text.no_data_available`)}}</option>'
                     html += '</select></div>';
                 }
                 $('.circle').html(html);
@@ -143,14 +143,14 @@
                 let html = "";
                 if (size > 0) {
                     html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option selected> Select Class</option>'
+                    html += '<option selected>{{__(`text.select_class`)}}</option>'
                     for (i = 0; i < size; i++) {
                         html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
                     }
                     html += '</select></div>';
                 } else {
                     html += '<div><select class="form-control"  >';
-                    html += '<option selected> No data is avalaible</option>'
+                    html += '<option selected>{{__(`text.no_data_available`)}}</option>'
                     html += '</select></div>';
                 }
                 $('.class').html(html);

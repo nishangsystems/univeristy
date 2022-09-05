@@ -14,15 +14,15 @@
         <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
             <div>
                 <div>
-                    <h5 class="font-weight-bold">Name : <span><label>{{$expense->name}}</label></span></h5>
+                    <h5 class="font-weight-bold text-capitalize">{{__('text.word_name')}} : <span><label>{{$expense->name}}</label></span></h5>
                 </div>
                 <div>
-                    <h5 class="font-weight-bold">Amount Spend: <span>
-                            <label>{{number_format($expense->amount_spend)}} FCFA</label>
+                    <h5 class="font-weight-bold text-capitalize">{{__('text.amount_spent')}}: <span>
+                            <label>{{number_format($expense->amount_spend)}} {{__('text.currency_cfa')}}</label>
                         </span></h5>
                 </div>
                 <div>
-                    <h5 class="font-weight-bold">Expense Date: <span><label>{{date('jS F Y', strtotime($expense->date))}}</label></span></h5>
+                    <h5 class="font-weight-bold text-capitalize">{{__('text.expense_date')}}: <span><label>{{date('jS F Y', strtotime($expense->date))}}</label></span></h5>
                 </div>
 
 

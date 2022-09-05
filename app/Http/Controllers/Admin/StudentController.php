@@ -219,6 +219,7 @@ class StudentController extends Controller
     {
         $data['title'] = "Edit Student Profile";
         $data['student'] = \App\Models\Students::find($id);
+        $data['classes'] = $this->getBaseClasses();
         return view('admin.student.edit')->with($data);
     }
 
@@ -242,7 +243,8 @@ class StudentController extends Controller
             'type' => 'required',
             'religion' => 'nullable'
         ]);
-        try {
+        try {       
+
             DB::beginTransaction();
             $input = $request->all();
             $student = Students::find($id);

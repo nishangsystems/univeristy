@@ -40,7 +40,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">{{config('app.name')}} </a>
+      <a class="navbar-brand" href="#">{{__('text.app_name')}} </a>
     </div>
 
   </div>
@@ -59,7 +59,7 @@
 						<div class="login-container">
 							<div class="center" style=" padding:5px 10px; ">
 
-								<h4 class="yellow" id="id-company-text" style="color:#ff0">&copy; Powered by Nishang System</h4>
+								<h4 class="yellow" id="id-company-text" style="color:#ff0">&copy; {{__('text.tech_base')}}</h4>
 							</div>
 
 							<div class="space-6"></div>
@@ -71,7 +71,7 @@
 										<div class="widget-main">
 											<h4 class="header blue lighter bigger">
 												<i class="ace-icon fa fa-coffee green"></i>
-											 Enter Username & Password
+											 {{__('auth.auth_request')}}
 											</h4>
 											@if(Session::has('error'))
 												<div class="alert alert-danger"><em> {!! session('error') !!}</em>
@@ -95,7 +95,7 @@
 												<fieldset>
 													<label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="text" required class="form-control" value="{{old("username")}}" name="username" placeholder="Username" />
+															<input type="text" required class="form-control" value="{{old("username")}}" name="username" placeholder="{{__('text.word_username')}}" />
 															<i class="ace-icon fa fa-user"></i>
 														</span>
 														@error('username')
@@ -107,7 +107,7 @@
 													<div class="space"></div>
 													<label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input  type="password" id="password" name="password" data-toggle="password" required class="form-control" placeholder="Password" />
+															<input  type="password" id="password" name="password" data-toggle="password" required class="form-control" placeholder="{{__('text.word_password')}}" />
 														</span>
 														@error('password')
 															<span class="invalid-feedback red" role="alert">
@@ -121,7 +121,7 @@
 													<div class="clearfix">
 														<button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
 															<i class="ace-icon fa fa-key"></i>
-															<span class="bigger-110">Login</span>
+															<span class="bigger-110">{{__('text.word_login')}}</span>
 														</button>
 													</div>
 
@@ -134,14 +134,14 @@
 										<div>
 										<a  href="#" data-target="#forgot-box" class="forgot-password-link">
 													<i class="ace-icon fa fa-arrow-left"></i>
-													I forgot my password
+													{{__('text.forgot_password')}}
 												</a>
 											</div>
 
 											<div>
 												<a href="" >
 
-												I want to register
+												{{__('text.want_to_register')}}
 													<i class="ace-icon fa fa-arrow-right"></i>
 													</a>
 												</a>
