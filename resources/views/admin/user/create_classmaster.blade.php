@@ -31,10 +31,10 @@
                         <label for="cname" class="control-label col-lg-2">Section</label>
                         <div class="col-lg-10">
                             <div>
-                                <select class="form-control section" id="section0">
+                                <select class="form-control section" name="section" id="section0">
                                     <option selected disabled>Select Section</option>
-                                    @forelse(\App\Models\SchoolUnits::where('parent_id',0)->get() as $section)
-                                        <option value="{{$section->id}}">{{$section->name}}</option>
+                                    @forelse($classes as $id => $section)
+                                        <option value="{{$id}}">{{$section}}</option>
                                     @empty
                                         <option>No Sections Created</option>
                                     @endforelse
@@ -47,7 +47,7 @@
 
                 <div class="form-group">
                     <div class="d-flex justify-content-end col-lg-12">
-                        <button id="save" class="btn btn-xs btn-primary mx-3" style="display: none" type="submit">Save</button>
+                        <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">Save</button>
                     </div>
                 </div>
 
@@ -59,7 +59,7 @@
 @section('script')
     <script>
         $('.section').on('change', function () {
-            refresh($(this));
+            // refresh($(this));
         })
 
         function refresh(div) {

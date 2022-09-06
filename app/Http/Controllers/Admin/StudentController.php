@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Stringable;
+use phpDocumentor\Reflection\Types\Self_;
 use Prophecy\Util\StringUtil;
 
 use function PHPUnit\Framework\stringStartsWith;
@@ -51,11 +52,18 @@ class StudentController extends Controller
     }
     public function getStudentsPerClass(Request $request)
     {
+        // return $request->all();
         $type = $this->CheckoutSchoolType($request);
         $data['school_units'] = DB::table('school_units')->where('parent_id', 0)->get()->toArray();
         $data['years'] = $this->years;
         $class_name =  DB::table('school_units')->where('id', $request->class_id)->pluck('name')->first();
-        $data['title'] = 'Manage Students Under ' .  $type . ' in ' . $class_name;
+        
+        $data['title'] = 'Manage Students Under ';
+        $data['title'] .= $request->type != null ? $request->type.' ' : '';
+        $data['title'] .= $request->circle != null ? \App\Models\SchoolUnits::find($request->circle)->name .' ' : '';
+        $data['title'] .= $request->class_id != null ? Self::baseClasses()[$request->class_id].' ' : '';
+        $data['title'] .= $request->batch_id != null ? 'For '.\App\Models\Batch::find($request->batch_id)->name.' ': '';
+        $data['title'] .= $request->class != null ? ' in ' . $class_name : '';
         $data['students'] = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
@@ -77,6 +85,45 @@ class StudentController extends Controller
     }
     
     public function getBaseClasses()
+    {
+        # code...
+        // added by Germanus. Loads listing of all classes accross all sections in a given school
+        
+        $base_units = DB::table('school_units')->where('parent_id', '>', 0)->get();
+    
+        // return $base_units;
+        $listing = [];
+        $options = [];
+        $separator = ' : ';
+        foreach ($base_units as $key => $value) {
+            # code...
+            // set current parent as key and name as value, appending from the parent_array
+            if (array_key_exists($value->parent_id, $listing)) {
+                $listing[$value->id] = $listing[$value->parent_id] . $separator . $value->name; 
+            }else {$listing[$value->id] = $value->name;}
+    
+            // atatch parent units if there be any
+            if ($base_units->where('id', '=', $value->parent_id)->count() > 0) {
+                // return $base_units->where('id', '=', $value->parent_id)->pluck('name')[0];
+                $listing[$value->id] = array_key_exists($value->parent_id, $listing) ? 
+                $listing[$value->parent_id] . $separator . $value->name :
+                $base_units->where('id', '=', $value->parent_id)->pluck('name')[0] . $separator . $value->name ;
+            }
+            // if children are obove, move over and prepend to children listing
+            foreach ($base_units->where('parent_id', '=', $value->id) as $keyi => $valuei) {
+                $value->id > $valuei->id ?
+                $listing[$valuei->id] = $listing[$value->id] . $separator . $listing[$value->id]:
+                null;
+            }
+            // if unit has no child, add to options
+            if ($base_units->where('parent_id', '=', $value->id)->count() == 0) {
+                $options[$value->id] = $listing[$value->id];
+            }
+        }
+        return $options;
+    }
+
+    public static function baseClasses()
     {
         # code...
         // added by Germanus. Loads listing of all classes accross all sections in a given school
@@ -462,14 +509,14 @@ class StudentController extends Controller
             # code...
             return back()->with('error', json_encode($validator->getMessageBag()->getMessages()));
         }
-        if ($request->class_from >= $request->class_to) {
-            # code...
-            return back()->with('error', 'next class must be higher than the current');
-        }
-        if ($request->year_from >= $request->year_to) {
-            # code...
-            return back()->with('error', 'next academic year must be higher than the current');
-        }
+        // if ($request->class_from >= $request->class_to) {
+        //     # code...
+        //     return back()->with('error', 'next class must be higher than the current');
+        // }
+        // if ($request->year_from >= $request->year_to) {
+        //     # code...
+        //     return back()->with('error', 'next academic year must be higher than the current');
+        // }
         
         $mainClasses = $this->getMainClasses();
 
@@ -561,14 +608,14 @@ class StudentController extends Controller
             # code...
             return back()->with('error', json_encode($validator->getMessageBag()->getMessages()));
         }
-        if ($request->class_from >= $request->class_to) {
-            # code...
-            return back()->with('error', 'next class must be higher than the current');
-        }
-        if ($request->year_from >= $request->year_to) {
-            # code...
-            return back()->with('error', 'next academic year must be higher than the current');
-        }
+        // if ($request->class_from >= $request->class_to) {
+        //     # code...
+        //     return back()->with('error', 'next class must be higher than the current');
+        // }
+        // if ($request->year_from >= $request->year_to) {
+        //     # code...
+        //     return back()->with('error', 'next academic year must be higher than the current');
+        // }
         
         $mainClasses = $this->getMainClasses();
 

@@ -126,5 +126,6 @@ return [
     'enter_fee_details'=>'enter fee details',
     'word_required'=>'required',
     'add_fee_listing'=>'add fee listing',
-    'phrase_1'=>'No Fee Listing where found, Click <b> :in_bold </b> to add new listing'
+    'phrase_1'=>'No Fee Listing where found, Click <b> :in_bold </b> to add new listing',
+    'word_teacher'=>'teacher | teachers'
 ];

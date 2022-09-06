@@ -23,7 +23,7 @@ class SubjectController extends Controller
         } else {
             $data['subjects'] = Auth::user()->subjectR(\App\Helpers\Helpers::instance()->getCurrentAccademicYear());
         }
-
+        $data['classes'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
         return view('teacher.subjects')->with($data);
     }
 

@@ -1,17 +1,16 @@
 @extends('admin.layout')
 
 @section('section')
-@php(dd(request()->all()))
 
-    <div>
-        <div id="user-profile-1" class="user-profile row">
-            <div class=" col-md-6 center">
-                <div>
-							<span class="profile-picture">
-								<img width="200px" height="" id="avatar" class="editable img-responsive"
-                                     alt="Alex's Avatar" src="{{url('assets/images/avatars/profile-pic.jpg')}}"/>
-							</span>
-
+<div>
+    <div id="user-profile-1" class="user-profile row">
+        <div class=" col-md-6 center">
+            <div>
+                <span class="profile-picture">
+                    <img width="200px" height="" id="avatar" class="editable img-responsive"
+                    alt="Alex's Avatar" src="{{url('assets/images/avatars/profile-pic.jpg')}}"/>
+                </span>
+                
                     <div class="space-4"></div>
 
                     <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">

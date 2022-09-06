@@ -19,7 +19,7 @@
 
                     @foreach($classes as $class)
                         <tr>
-                            <td>{{ $class->class->name }}</td>
+                            <td>{{ $options[$class->class->id] }}</td>
                             <td>{{$class->class->type->name}}</td>
                             <td>
                                 <a class="btn btn-xs btn-primary" href="{{route('user.class.student', [$class->class->id])}}">Students</a>

@@ -15,6 +15,7 @@
                         <th>#</th>
                         <th>Name</th>
                         <th>Coefficient</th>
+                        <th>Class</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -27,6 +28,7 @@
                             <td>{{ $k+1 }}</td>
                             <td>{{ $subject->subject->name }}</td>
                             <td>{{ $subject->subject->coef }}</td>
+                            <td>{{$classes[request('class')]}}</td>
                             <td style="float: right;">
                                 <a class="btn btn-xs btn-primary" href="{{route('user.result', ['subject'=>$subject->id, 'class'=>request('class')])}}">Result</a>
                             </td>
@@ -39,6 +41,7 @@
                         <td>{{ $k+1 }}</td>
                         <td>{{ $subject->subject->subject->name }}</td>
                         <td>{{ $subject->subject->subject->coef }}</td>
+                        <td>{{$classes[$subject->class_id]}}</td>
                         <td style="float: right;">
                             <a class="btn btn-xs btn-primary" href="{{route('user.result', [$subject->id])}}">Result</a>
                         </td>
