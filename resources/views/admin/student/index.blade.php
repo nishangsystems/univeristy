@@ -142,14 +142,14 @@
                 let html = "";
                 if (size > 0) {
                     html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option > Select Circle</option>'
+                    html += '<option disabled> Select Circle</option>'
                     for (i = 0; i < size; i++) {
                         html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
                     }
                     html += '</select></div>';
                 } else {
                     html += '<div><select class="form-control"  >';
-                    html += '<option > No data is avalaible</option>'
+                    html += '<option disabled> No data is avalaible</option>'
                     html += '</select></div>';
                 }
                 $('#circle').html(html);
@@ -174,14 +174,14 @@
                 let html = "";
                 if (size > 0) {
                     html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option > Select Class</option>'
+                    html += '<option disabled> Select Class</option>'
                     for (i = 0; i < size; i++) {
                         html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
                     }
                     html += '</select></div>';
                 } else {
                     html += '<div><select class="form-control"  >';
-                    html += '<option selected> No data is avalaible</option>'
+                    html += '<option disabled> No data is avalaible</option>'
                     html += '</select></div>';
                 }
                 $('.class').html(html);

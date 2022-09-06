@@ -20,7 +20,7 @@ class CustomLoginController extends Controller
     }
 
     public function detail(Request $request){
-        $type =Cookie::get('iam');
+        $type = Cookie::get('iam');
         $user = Cookie::get('iamuser');
         $data['type'] = $type;
 
@@ -37,18 +37,21 @@ class CustomLoginController extends Controller
     }
 
     public function login(Request $request){
+        // return $request->all();
         //validate the form data
         $this->validate($request, [
             'username' => 'required',
             'password' => 'required|min:5'
         ]);
-
+        // return $request->all();
         //Attempt to log the user in
 
         if( Auth::guard('student')->attempt(['matric'=>$request->username,'password'=>$request->password], $request->remember)){
+            // return "Spot 1";
             return redirect()->intended(route('student.home'));
         }else{
             if( Auth::attempt(['username'=>$request->username,'password'=>$request->password])){
+                // return "Spot 2";
                 if(Auth::user()->type == 'teacher'){
                     return redirect()->route('user.home')->with('success','Welcome to Teachers Dashboard '.Auth::user()->name);
                 }else{
@@ -56,6 +59,7 @@ class CustomLoginController extends Controller
                 }
             }
         }
+        // return "Spot 3";
         $request->session()->flash('error', 'Invalid Username or Password');
         return redirect()->back()->withInput($request->only('username','remember'));
     }

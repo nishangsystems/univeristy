@@ -58,12 +58,12 @@ class StudentController extends Controller
         $data['years'] = $this->years;
         $class_name =  DB::table('school_units')->where('id', $request->class_id)->pluck('name')->first();
         
-        $data['title'] = 'Manage Students Under ';
-        $data['title'] .= $request->type != null ? $request->type.' ' : '';
-        $data['title'] .= $request->circle != null ? \App\Models\SchoolUnits::find($request->circle)->name .' ' : '';
-        $data['title'] .= $request->class_id != null ? Self::baseClasses()[$request->class_id].' ' : '';
-        $data['title'] .= $request->batch_id != null ? 'For '.\App\Models\Batch::find($request->batch_id)->name.' ': '';
-        $data['title'] .= $request->class != null ? ' in ' . $class_name : '';
+        $data['title'] = 'Manage Students Under '.$type.' in '.$class_name;
+        $success = $request->type != null ? $request->type.' ' : '';
+        $success .= $request->circle != null ? \App\Models\SchoolUnits::find($request->circle)->name .' ' : '';
+        $success .= $request->class_id != null ? Self::baseClasses()[$request->class_id].' ' : '';
+        $success .= $request->batch_id != null ? 'For '.\App\Models\Batch::find($request->batch_id)->name.' ': '';
+        $success .= $request->class != null ? ' in ' . $class_name : '';
         $data['students'] = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
@@ -71,7 +71,7 @@ class StudentController extends Controller
             ->where('school_units.id', $request->class_id)
             ->where('students.type', $request->type)
             ->select($this->select)->paginate(15);
-        return view('admin.student.index')->with($data);
+        return view('admin.student.index')->with($data)->with('success', $success);
     }
     private function CheckoutSchoolType($request)
     {
