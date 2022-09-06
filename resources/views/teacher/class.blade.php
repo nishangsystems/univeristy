@@ -19,7 +19,7 @@
 
                     @foreach($units as $unit)
                         <tr>
-                            <td>{{ $unit->name }}</td>
+                            <td>{{ $options[$unit->id] }}</td>
                             <td>{{$unit->type->name}}</td>
                             <td style="float: right;">
                                 <a class="btn btn-xs btn-primary" href="{{route('user.class.student', [$unit->id])}}">Students</a>

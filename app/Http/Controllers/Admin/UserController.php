@@ -152,6 +152,7 @@ class UserController extends Controller
     {
         $data['user'] = \App\Models\User::find($id);
         $data['title'] = "Assign Subject to " . $data['user']->name;
+        $data['classes'] = StudentController::baseClasses();
         return view('admin.user.assignSubject')->with($data);
     }
 
@@ -165,6 +166,7 @@ class UserController extends Controller
     public function classmasterCreate()
     {
         $data['title'] = "Assign Class Master";
+        $data['classes'] = StudentController::baseClasses();
         $data['units'] = \App\Models\SchoolUnits::where('parent_id', 0)->get();
         return view('admin.user.create_classmaster')->with($data);
     }

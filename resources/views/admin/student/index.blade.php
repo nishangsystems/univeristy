@@ -23,7 +23,7 @@
 
                     <div class="col-sm-2 d-flex justify-content-lg-start">
                         <select class="form-control Circle" id="circle" name="circle">
-                            <option value="">Select Circle</option>
+                            <option value="" disabled>Select Circle</option>
                         </select>
                         <!-- <div>
                             @error('circle')
@@ -142,14 +142,14 @@
                 let html = "";
                 if (size > 0) {
                     html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option selected> Select Circle</option>'
+                    html += '<option > Select Circle</option>'
                     for (i = 0; i < size; i++) {
                         html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
                     }
                     html += '</select></div>';
                 } else {
                     html += '<div><select class="form-control"  >';
-                    html += '<option selected> No data is avalaible</option>'
+                    html += '<option > No data is avalaible</option>'
                     html += '</select></div>';
                 }
                 $('#circle').html(html);
@@ -174,7 +174,7 @@
                 let html = "";
                 if (size > 0) {
                     html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option selected> Select Class</option>'
+                    html += '<option > Select Class</option>'
                     for (i = 0; i < size; i++) {
                         html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
                     }

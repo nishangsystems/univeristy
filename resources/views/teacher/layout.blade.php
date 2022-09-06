@@ -196,6 +196,7 @@
                 <b class="arrow"></b>
             </li>
 
+            @if(count(\App\Models\ClassMaster::where('user_id', auth()->user()->id)->get()) > 0)
             <li>
                 <a href="{{route('user.class')}}?type=master">
                     <i class="menu-icon text-primary fa fa-graduation-cap"></i>
@@ -218,7 +219,7 @@
                 </a>
                 <b class="arrow"></b>
             </li>
-
+            @endif
             <li>
                 <a href="{{route('user.subject')}}">
                     <i class="menu-icon text-primary fa fa-book"></i>

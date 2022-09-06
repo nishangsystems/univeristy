@@ -16,6 +16,7 @@ class ClassController extends Controller
 
     public function index()
     {
+        $data['options'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
         if (\request('type') == 'master') {
             $data['classes'] = ClassMaster::where('batch_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->where('user_id', Auth::user()->id)->get();
             return view('teacher.class_master')->with($data);

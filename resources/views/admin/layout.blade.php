@@ -428,7 +428,7 @@
                     <li>
                         <a href="{{route('admin.users.index')}}?type=teacher" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            {{trans_choice('text.add_teacher', 2)}}
+                            {{trans_choice('text.word_teacher', 2)}}
                         </a>
                         <b class="arrow"></b>
                     </li>

@@ -15,11 +15,10 @@ use Illuminate\Support\Facades\Http;
                     <h3 class="py-1 fw-bold text-dark">Academic Year</h3>
                     <div class="form-group w-100 py-1">
                         <label for="year_from" class="text-secondary">From:</label>
+                        @php($xyz = \App\Models\ClassMaster::where('user_id', auth()->user()->id)->get('batch_id'))
                         <select name="year_from" id="" class="form-control text-dark rounded" onchange="set_next_year()" required>
-                            <option value="" selected>select a year</option>
-                            @foreach(\App\Models\Batch::all() as $batch)
-                                <option value="{{$batch->id}}">{{$batch->name}}</option>
-                            @endforeach
+                            <option value="{{$xyz->first()->batch_id}}" selected>{{\App\Models\Batch::find($xyz->first()->batch_id)->name}}</option>
+                            <option value="" disabled>select a year</option>
                         </select>
                     </div>
                     <div class="form-group w-100 py-1">
@@ -40,13 +39,29 @@ use Illuminate\Support\Facades\Http;
                         <div class="form-group py-1 w-100">
                             <label for="cname" class="text-secondary">From </label>
                             <div class="w-100">
-                                <select name="class_from" class="form-control text-dark rounded section" id="section" onchange="set_target()">
-                                    <option selected disabled>Select Section</option>
-                                    @forelse($base_classes as $section)
-                                    <option value="{{$section->id}}">{{$section->name}}</option>
-                                    @empty
-                                    <option>No Sections Created</option>
-                                    @endforelse
+                                @php($xyz2 = \App\Models\ClassMaster::where('user_id', auth()->user()->id)->get())
+                                <select name="class_from" class="form-control text-dark rounded section" id="section">
+                                    @if(count($xyz2) == 1)
+                                    <option value="{{$xyz2->first()->class_id}}" selected>{{\App\Http\Controllers\Admin\StudentController::baseClasses()[$xyz2->first()->class_id]}}</option>
+                                    @else
+                                        <option selected>Not a class master</option>
+                                    @endif
+                                </select>
+                                <div class="children"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="section w-100">
+                        <div class="form-group py-1 w-100">
+                            <label for="cname" class="text-secondary">To </label>
+                            <div class="w-100">
+                                <select name="class_to" class="form-control text-dark rounded section" id="section">
+                                    
+                                        @forelse(\App\Http\Controllers\Admin\StudentController::baseClasses() as $key => $section)
+                                        <option value="{{$key}}">{{$section}}</option>
+                                        @empty
+                                        <option>No Sections Created</option>
+                                        @endforelse
                                 </select>
                                 <div class="children"></div>
                             </div>
@@ -54,7 +69,7 @@ use Illuminate\Support\Facades\Http;
                     </div>
 
 
-                    <div id="section2 w-100">
+                    <!-- <div id="section2 w-100">
                         <div class="form-group py-1 w-100">
                             <label for="cname" class="text-secondary">To </label>
                             <div class="w-100" id="section2-input-box">
@@ -62,7 +77,7 @@ use Illuminate\Support\Facades\Http;
                                 <div class="children"></div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     
 
 
@@ -78,12 +93,12 @@ use Illuminate\Support\Facades\Http;
 @endsection
 @section('script')
 <script>
-    $('.section').on('change', function() {
-        refresh($(this));
-    })
-    $('.section2').on('change', function() {
-        refresh2($(this));
-    })
+    // $('.section').on('change', function() {
+    //     refresh($(this));
+    // })
+    // $('.section2').on('change', function() {
+    //     refresh2($(this));
+    // })
 
     function refresh(div) {
         $(".pre-loader").css("display", "block");

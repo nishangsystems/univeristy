@@ -12,13 +12,11 @@
                         <label for="cname" class="control-label col-lg-2">Section</label>
                         <div class="col-lg-10">
                             <div>
-                                <select class="form-control section" id="section0">
+                                <select class="form-control section" name="section" id="section0">
                                     <option selected disabled>Select Section</option>
-                                    @forelse(\App\Models\SchoolUnits::where('parent_id',0)->get() as $section)
-                                        <option value="{{$section->id}}">{{$section->name}}</option>
-                                    @empty
-                                        <option>No Sections Created</option>
-                                    @endforelse
+                                    @foreach($classes as $key => $section)
+                                        <option value="{{$key}}">{{$section}}</option>
+                                    @endforeach
                                 </select>
                                 <div class="children"></div>
                             </div>
@@ -69,57 +67,61 @@
         })
 
         function refresh(div) {
-            $(".pre-loader").css("display", "block");
-            url = "{{route('section-children', "VALUE")}}";
-            url = url.replace('VALUE', div.val());
-            $.ajax({
-                type: "GET",
-                url: url,
-                success: function (data) {
 
-                    let html = "";
-
-                    if (data.array.length > 0) {
-                        html += '<div class="mt-3"><select onchange="refresh($(this))" class="form-control section" name="'+data.name+'">';
-                        html += '<option selected > Select ' + data.name + '</option>';
-                        for (i = 0; i < data.array.length; i++) {
-                            html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
-                        }
-                        html += '</select>' +
-                            '<div class="children"></div></div>';
-                    }else{
-                        let subject_url = "{{route('section-subjects', "VALUE")}}";
-                        subject_url = subject_url.replace('VALUE', div.val());
-                        $.ajax({
-                            type: "GET",
-                            url: subject_url,
-                            success: function (data) {
-                                $(".pre-loader").css("display", "none");
-                                let html = "";
-                                if (data.array.length > 0) {
-                                    html += '<option selected value="" > Select Subjects </option>';
-                                    for (i = 0; i < data.array.length; i++) {
-                                        html += '<option value="' + data.array[i].id + '">' + data.array[i].subject.name + '</option>';
-                                    }
-                                }else{
-                                    html += ' <option selected disabled>Select Subjects, if the list is empty, select a class, or add subject to the class you have selected</option>';
-                                }
-                                $('#subjects').html(html)
-                            }, error: function (e) {
-                                $(".pre-loader").css("display", "none");
+            
+            let subject_url = "{{route('section-subjects', "VALUE")}}";
+                subject_url = subject_url.replace('VALUE', div.val());
+                $.ajax({
+                    type: "GET",
+                    url: subject_url,
+                    success: function (data) {
+                        $(".pre-loader").css("display", "none");
+                        let html = "";
+                        if (data.array.length > 0) {
+                            html += '<option selected value="" > Select Subjects </option>';
+                            for (i = 0; i < data.array.length; i++) {
+                                html += '<option value="' + data.array[i].id + '">' + data.array[i].subject.name + '</option>';
                             }
-                        });
+                        }else{
+                            html += ' <option selected disabled>Select Subjects, if the list is empty, select a class, or add subject to the class you have selected</option>';
+                        }
+                        $('#subjects').html(html)
+                    }, error: function (e) {
+                        $(".pre-loader").css("display", "none");
                     }
-                    $(".pre-loader").css("display", "none");
-                    if(data.valid == 1){
-                    }else{
-                        $('#save').css("display", "none");
-                    }
-                    div.parent().find('.children').html(html)
-                }, error: function (e) {
-                    $(".pre-loader").css("display", "none");
-                }
-            });
+                });
+            
+
+
+            // $(".pre-loader").css("display", "block");
+            // url = "{{route('section-children', "VALUE")}}";
+            // url = url.replace('VALUE', div.val());
+            // $.ajax({
+            //     type: "GET",
+            //     url: url,
+            //     success: function (data) {
+
+            //         let html = "";
+
+            //         if (data.array.length > 0) {
+            //             html += '<div class="mt-3"><select onchange="refresh($(this))" class="form-control section" name="'+data.name+'">';
+            //             html += '<option selected > Select ' + data.name + '</option>';
+            //             for (i = 0; i < data.array.length; i++) {
+            //                 html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
+            //             }
+            //             html += '</select>' +
+            //                 '<div class="children"></div></div>';
+            //         }else{}
+            //         $(".pre-loader").css("display", "none");
+            //         if(data.valid == 1){
+            //         }else{
+            //             $('#save').css("display", "none");
+            //         }
+            //         div.parent().find('.children').html(html)
+            //     }, error: function (e) {
+            //         $(".pre-loader").css("display", "none");
+            //     }
+            // });
         }
     </script>
 @endsection

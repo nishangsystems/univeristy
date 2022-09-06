@@ -201,7 +201,7 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::get('class', 'Teacher\ClassController@index')->name('class');
     Route::get('students/init_promotion', 'Admin\StudentController@teacherInitPromotion')->name('students.init_promotion');
     Route::get('students/promote', 'Admin\StudentController@teacherPromotion')->name('students.promotion');
-    Route::post('students/promote', 'Admin\StudentController@teacher_promote')->name('students.promote');
+    Route::post('students/promote', 'Admin\StudentController@pend_promotion')->name('students.promote');
     Route::get('class/rank', 'Teacher\ClassController@classes')->name('rank.class');
     Route::get('rank_student/{class}', 'Teacher\ClassController@rank')->name('class.rank_student');
     Route::get('student/{class_id}/detail', 'Teacher\ClassController@student')->name('student.show');
