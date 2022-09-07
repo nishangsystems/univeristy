@@ -205,20 +205,21 @@
                 <b class="arrow"></b>
             </li>
             <li>
-                <a href="{{route('user.students.init_promotion')}}?type=master">
-                    <i class="menu-icon text-primary fa fa-bullhorn"></i>
-                    <span class="menu-text">Promote Students</span>
-                </a>
-                <b class="arrow"></b>
-            </li>
-
-            <li>
                 <a href="{{route('user.rank.class')}}">
                     <i class="menu-icon text-primary fa fa-star"></i>
                     <span class="menu-text">Class Rank Sheet</span>
                 </a>
                 <b class="arrow"></b>
             </li>
+            @endif
+            @if (\Auth::user()->hasPermissionTo('promote_students'))
+                <li>
+                    <a href="{{route('user.students.init_promotion')}}?type=master"  class="text-capitalize">
+                        <i class="menu-icon text-primary fa fa-bullhorn"></i>
+                        {{__('text.promote_students')}}
+                    </a>
+                    <b class="arrow"></b>
+                </li>
             @endif
             <li>
                 <a href="{{route('user.subject')}}">
