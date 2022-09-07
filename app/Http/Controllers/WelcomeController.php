@@ -18,7 +18,6 @@ class WelcomeController extends Controller
         }elseif(Auth::guard('student')->check()){
             return redirect()->route('student.home');
         }
-
         return redirect()->to(route('login'));
 
     }

@@ -21,13 +21,16 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if(\request('role') || \request('type')){
-            $request->role = \request('role') ? \request('role') : \request('type');
-            $data['type'] = \App\Models\Role::whereSlug($request->role)->first()->name;
+            $data['type'] = \request('role')?\request('role'):\request('type');
             $data['title'] = "Role ".($data['type'] ?? " Users");
-            $data['users'] = DB::table('roles')->where('slug', '=', $request->role)
-                        ->join('users_roles', 'users_roles.role_id', '=', 'roles.id')
-                        ->join('users', 'users.id', '=', 'users_roles.user_id')
-                        ->get('users.*');
+            if(\request('role')){
+                $data['users'] = DB::table('roles')->where('slug', '=', $request->role)
+                    ->join('users_roles', 'users_roles.role_id', '=', 'roles.id')
+                    ->join('users', 'users.id', '=', 'users_roles.user_id')
+                    ->get('users.*');
+            }else{
+                $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
+            }
             return view('admin.user.index')->with($data);
         }else if(\request('permission')){
             $data['type'] = \App\Models\Permission::whereSlug(\request('permission'))->first()->name;
@@ -68,6 +71,11 @@ class UserController extends Controller
         $input = $request->all();
         $input['password'] = Hash::make('password');
         $input['username'] = $request->email;
+        if($request->type === "TEACHER"){
+            $input['type'] = "teacher";
+        }else{
+            $input['type'] = "admin";
+        }
         $user = new \App\Models\User($input);
         $user->save();
         $user_role = new \App\Models\UserRole();
@@ -75,7 +83,7 @@ class UserController extends Controller
         $user_role->user_id = $user->id;
         $user_role->save();
 
-        return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('success', "User Created Successfully !");
+        return redirect()->to(route('admin.users.index', ['type' =>$request->type]))->with('success', "User Created Successfully !");
     }
 
     /**
