@@ -8,14 +8,14 @@
                 <div>
                     <div class="input-group input-group-merge border">
                         <select class="w-100 border-0 section" id="section0">
-                            <option selected disabled>Select Section</option>
+                            <option selected disabled class="text-capitalize">{{__('text.select_section')}}</option>
                             @forelse(\App\Models\SchoolUnits::where('parent_id',0)->get() as $section)
                                 <option value="{{$section->id}}">{{$section->name}}</option>
                             @empty
-                                <option>No Sections Created</option>
+                                <option class="text-capitalize">{{__('text.no_sections_created')}}</option>
                             @endforelse
                         </select>
-                        <button type="submit" onclick="getStudent($(this))" class="border-0" >GET</button>
+                        <button type="submit" onclick="getStudent($(this))" class="border-0 text-uppercase" >{{__('text.word_get')}}</button>
                     </div>
 
                     <div class="children"></div>
@@ -71,7 +71,7 @@
                         for (i = 0; i < data.array.length; i++) {
                             html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
                         }
-                        html += '</select>  <button type="submit" onclick="getStudent($(this))" class="border-0" >GET</button>' +
+                        html += '</select>  <button type="submit" onclick="getStudent($(this))" class="border-0 text-uppercase" >{{__("text.word_get")}}</button>' +
                             '                    </div>' +
                             '<div class="children"></div></div>';
                     }
@@ -105,7 +105,7 @@
                             '    <td>'+data.students[i].class+'</td>' +
                             '    <td>'+data.students[i].total+'</td>' +
                             @if(request('type','completed') != 'completed') '    <td class="d-flex justify-content-between align-items-center">' +
-                            '        <a class="btn btn-xs btn-primary" href="'+data.students[i].link+'"> Fee Collections</a>' +
+                            '        <a class="btn btn-xs btn-primary text-capitalize" href="'+data.students[i].link+'"> {{__("text.fee_collections")}}</a>' +
                             '    </td>' +@endif
                             '</tr>';
                     }

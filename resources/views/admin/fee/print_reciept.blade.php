@@ -4,16 +4,16 @@
     <div class="card-body">
         <div class="heading-layout1">
             <div class="item-title">
-                <h3>{{$student->name}} Fee Payment</h3>
+                <h3 class="text-capitalize">{{$student->name}} {{__('text.fee_payment')}}</h3>
             </div>
         </div>
         <div class="table-responsive">
             <table class="table data-table text-nowrap">
                 <thead>
-                    <tr>
-                        <th>Collector</th>
-                        <th>Date</th>
-                        <th>Amount</th>
+                    <tr class="text-capitalize">
+                        <th>{{__('text.word_collector')}}</th>
+                        <th>{{__('text.word_date')}}</th>
+                        <th>{{__('text.word_amount')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -28,7 +28,7 @@
                         <td>{{($payment->created_at->diffForHumans())}}</td>
                         <td>{{$payment->amount}}</td>
                         <td>
-                            <button onclick="printDiv('printHERE{{$payment->id}}')" class="btn btn-primary"><i class="fas fa-print"></i>Print</button>
+                            <button onclick="printDiv('printHERE{{$payment->id}}')" class="btn btn-primary"><i class="fas fa-print text-capitalize"></i>{{__('text.word_print')}}</button>
                             <div class="d-none">
                                 <div id="printHERE{{$payment->id}}" class="eachrec">
                                     
@@ -36,8 +36,8 @@
                                    <div style="height:120px; width:95% ; ">
                                         <img width="100%" src="{{asset('assets/images')}}/header.jpg" />
                                     </div>
-                                    <div style=" float:left; width:100%; margin-top:100px;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; margin-bottom:10px;">
-                                        CASH RECEIPT N<SUP>0</SUP> 00{{$fee->id}}
+                                    <div style=" float:left; width:100%; margin-top:100px;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; margin-bottom:10px; text-transform: uppercase;">
+                                        {{__('text.cash_reciept')}} N<SUP>0</SUP> 00{{$fee->id}}
                                     </div>
                                     <div style=" float:left; width:900px; margin-top:0px;TEXT-ALIGN:CENTER; font-family:arial; height:300px;font-size:13px; ">
                                         <div style=" float:left; width:200px; height:25px;font-size:17px;"> Name :</div>

@@ -12,10 +12,10 @@
         <div class="table-responsive">
             <table class="table-bordered">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Matricule</th>
-                        <th>Name</th>
+                        <th>{{__('text.word_matricule')}}</th>
+                        <th>{{__('text.word_name')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -46,7 +46,7 @@
                         '    <td>' + data[i].matric + '</td>' +
                         '    <td>' + data[i].name + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
-                        '        <a class="btn btn-xs btn-primary" href="' + data[i].link + '"> Fee Collections</a>' +
+                        '        <a class="btn btn-xs btn-primary" href="' + data[i].link + '"> {{__("text.fee_collections")}}</a>' +
                         '    </td>' +
                         '</tr>';
                 }

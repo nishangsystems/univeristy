@@ -7,7 +7,7 @@
 
             <div class="form-group">
                 <div class="col-lg-12 mb-4">
-                    <input class="form-control" type="number" id="amount" name="amount" placeholder="Enter Amount Minimum Amount"  type="text" required/>
+                    <input class="form-control" type="number" id="amount" name="amount" placeholder="{{__('text.phrase3')}}"  type="text" required/>
                 </div>
             </div>
 
@@ -15,14 +15,14 @@
                 <div class="col-lg-12 mb-4">
                     <div class="input-group input-group-merge border">
                         <select class="w-100 border-0 section" id="section0">
-                            <option selected disabled>Select Section</option>
+                            <option selected disabled class="text-capitalize">{{__('text.select_section')}}</option>
                             @forelse(\App\Models\SchoolUnits::where('parent_id',0)->get() as $section)
                                 <option value="{{$section->id}}">{{$section->name}}</option>
                             @empty
-                                <option>No Sections Created</option>
+                                <option class="text-capitalize">{{__('text.no_sections_created')}}</option>
                             @endforelse
                         </select>
-                        <button type="submit" onclick="getStudent($(this))" class="border-0" >GET</button>
+                        <button type="submit" onclick="getStudent($(this))" class="border-0 text-uppercase" >{{__('text.word_get')}}</button>
                     </div>
                     <div class="children"></div>
                 </div>
@@ -34,11 +34,11 @@
             <div class="adv-table table-responsive">
                 <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                     <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Class</th>
-                        <th>Amount</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_class')}}</th>
+                        <th>{{__('text.word_amount')}}</th>
                         @if(request('type','completed') != 'completed') <th></th> @endif
                     </tr>
                     </thead>
@@ -77,7 +77,7 @@
                         for (i = 0; i < data.array.length; i++) {
                             html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
                         }
-                        html += '</select>  <button type="submit" onclick="getStudent($(this))" class="border-0" >GET</button>' +
+                        html += '</select>  <button type="submit" onclick="getStudent($(this))" class="border-0 text-uppercase" >{{__("text.word_get")}}</button>' +
                             '                    </div>' +
                             '<div class="children"></div></div>';
                     }
@@ -115,7 +115,7 @@
                                '    <td>'+data.students[i].class+'</td>' +
                                '    <td>'+data.students[i].total+'</td>' +
                                @if(request('type','completed') != 'completed') '    <td class="d-flex justify-content-between align-items-center">' +
-                               '        <a class="btn btn-xs btn-primary" href="'+data.students[i].link+'"> Fee Collections</a>' +
+                               '        <a class="btn btn-xs btn-primary text-capitalize" href="'+data.students[i].link+'"> {{__("text.fee_collections")}}</a>' +
                                '    </td>' +@endif
                                    '</tr>';
                                    j++;
