@@ -55,6 +55,7 @@ class ClassController extends Controller
     public function master_sheet(Request $request)
     {
         # code...
+        return view('teacher.master_sheet');
     }
 
     public function student($student_id)
