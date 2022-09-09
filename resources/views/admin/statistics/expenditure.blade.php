@@ -7,18 +7,18 @@
             <div class="form-group">
                 <div class="d-flex justify-content-between">
                     <div class="container">
-                        <label for="" class="text-secondary h4 fw-bold">Filter by:</label>
-                        <select name="filter" id="stats_filter" class="form-control">
-                            <option value="" selected>statistics filter</option>
-                            <option value="month">month</option>
-                            <option value="year">year</option>
-                            <option value="range">range</option>
+                        <label for="" class="text-secondary h4 fw-bold text-capitalize">{{__('text.filter_by')}}:</label>
+                        <select name="filter" id="stats_filter" class="form-control text-capitalize">
+                            <option value="" selected>{{__('text.statistics_filter')}}</option>
+                            <option value="month">{{__('text.word_month')}}</option>
+                            <option value="year">{{__('text.word_year')}}</option>
+                            <option value="range">{{__('text.word_range')}}</option>
                         </select>
                         <div class="py-3 mt-3 border-top" id="filterLoader">
                         </div>
                     </div>
                     <div class="">
-                        <input type="submit" name="" id="" class="h-auto w-auto btn btn-light btn-md btn-primary" value="get statistics">
+                        <input type="submit" name="" id="" class="h-auto w-auto btn btn-light btn-md btn-primary" value="{{__('text.get_statistics')}}">
                     </div>
                 </div>
             </div>
@@ -29,12 +29,12 @@
                 <span>{{$filter ?? '----'}}</span>
             </div>
             <table class="table table-stripped">
-                <thead class="bg-secondary text-black">
+                <thead class="bg-secondary text-black text-capitalize">
                     @php($count = 1)
                     <th>##</th>
-                    <th>Name</th>
-                    <th>Count</th>
-                    <th>Amount</th>
+                    <th>{{__('text.word_name')}}</th>
+                    <th>{{__('text.word_count')}}</th>
+                    <th>{{__('text.word_amount')}}</th>
                 </thead>
                 <tbody>
                     @foreach($data ?? [] as $value)
@@ -72,7 +72,7 @@
                 case 'month':
                     html = `<div class="w-100">
                                 <div class="form-group">
-                                    <label for="" class="text-secondary h4 fw-bold">Pick a month:</label>
+                                    <label for="" class="text-secondary h4 fw-bold">{{__("text.pick_a_month")}}:</label>
                                     <input type="month" name="value" class="form-control" placeholder="pick a month" id="">
                                 </div>
                             </div>`;
@@ -81,7 +81,7 @@
                 case 'year':
                     html = `<div class="w-100">
                                 <div class="form-group">
-                                    <label for="" class="text-secondary h4 fw-bold">Pick a year:</label>
+                                    <label for="" class="text-secondary h4 fw-bold">{{__("text.pick_a_year")}}:</label>
                                     <input type="number" min="2010" name="value" class="form-control" placeholder="pick a year" id="">
                                 </div>
                             </div>`;
@@ -90,11 +90,11 @@
                 case 'range':
                     html = `<div class="w-100">
                                 <div class="form-group">
-                                    <label for="" class="text-secondary h4 fw-bold">From:</label>
+                                    <label for="" class="text-secondary h4 fw-bold text-capitalize">{{__("text.word_from")}}:</label>
                                     <input type="date" name="start_date" class="form-control" placeholder="start date" id="">
                                 </div>
                                 <div class="form-group">
-                                    <label for="" class="text-secondary h4 fw-bold">To:</label>
+                                    <label for="" class="text-secondary h4 fw-bold text-capitalize">{{__("text.word_to")}}:</label>
                                     <input type="date" name="end_date" class="form-control" placeholder="end date" id="">
                                 </div>
                             </div>`;

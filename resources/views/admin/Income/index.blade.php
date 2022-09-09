@@ -16,10 +16,10 @@
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Amount (CFA)</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_amount')}} ({{__('text.currency_cfa')}})</th>
 
                         <th></th>
                     </tr>
@@ -31,10 +31,10 @@
                         <td>{{$income->name}}</td>
                         <td>{{number_format($income->amount)}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
-                            <a class="btn btn-sm btn-primary m-3" href="{{route('admin.income.show',[$income->id])}}"><i class="fa fa-info-circle"> View</i></a> |
-                            <a class="btn btn-sm btn-success m-3" href="{{route('admin.income.edit',[$income->id])}}"><i class="fa fa-edit"> Edit</i></a> |
+                            <a class="btn btn-sm btn-primary m-3" href="{{route('admin.income.show',[$income->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
+                            <a class="btn btn-sm btn-success m-3" href="{{route('admin.income.edit',[$income->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a> |
                             <a onclick="event.preventDefault();
-                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-3"><i class="fa fa-trash"> Delete</i></a>
+                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-3"><i class="fa fa-trash"> {{__('text.word_delete')}}</i></a>
                             <form id="delete" action="{{route('admin.income.destroy',$income->id)}}" method="POST" style="display: none;">
                                 @method('DELETE')
                                 {{ csrf_field() }}

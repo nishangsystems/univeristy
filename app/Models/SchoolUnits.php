@@ -37,6 +37,10 @@ class SchoolUnits extends Model
     {
         return $this->belongsToMany(Students::class, 'student_classes', 'class_id', 'student_id')->where('year_id', $year);
     }
+    // public function students($year)
+    // {
+    //     return $this->hasManyThrough(Students::class, StudentClass::class, 'class_id', 'student_id')->where('year_id', $year);
+    // }
 
 
     public function subjects()

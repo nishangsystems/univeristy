@@ -9,6 +9,7 @@ use App\Models\Term;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use \Session;
 
 class ClassController extends Controller
@@ -43,8 +44,17 @@ class ClassController extends Controller
         $class = SchoolUnits::find($class_id);
         $data['class'] = $class;
 
-        $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
+        // $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
+        $data['students'] = DB::table('student_classes')->where('class_id', '=', $class_id)
+                ->where('year_id', '=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
+                ->join('students', 'students.id', '=', 'student_classes.student_id')
+                ->get('students.*');
         return view('teacher.student')->with($data);
+    }
+
+    public function master_sheet(Request $request)
+    {
+        # code...
     }
 
     public function student($student_id)

@@ -5,7 +5,7 @@
 
 <div class="col-sm-12">
     <p class="text-muted">
-        <a href="{{route('admin.units.subjects.manage_class_subjects', $parent->id)}}" class="btn btn-info btn-xs">Manage Subjects</a>
+        <a href="{{route('admin.units.subjects.manage_class_subjects', $parent->id)}}" class="btn btn-info btn-xs text-capitalize">Manage Subjects</a>
     </p>
 
     <div class="content-panel">

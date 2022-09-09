@@ -203,6 +203,7 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::get('students/promote', 'Admin\StudentController@teacherPromotion')->name('students.promotion');
     Route::post('students/promote', 'Admin\StudentController@pend_promotion')->name('students.promote');
     Route::get('class/rank', 'Teacher\ClassController@classes')->name('rank.class');
+    Route::get('class/master_sheet', 'Teacher\ClassController@master_sheet')->name('master_sheet');
     Route::get('rank_student/{class}', 'Teacher\ClassController@rank')->name('class.rank_student');
     Route::get('student/{class_id}/detail', 'Teacher\ClassController@student')->name('student.show');
     Route::get('student/{class_id}', 'Teacher\ClassController@students')->name('class.student');

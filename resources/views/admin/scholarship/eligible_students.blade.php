@@ -12,12 +12,12 @@
         <div class="table-responsive">
             <table class="table-bordered">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Matricule</th>
-                        <th>Class</th>
-                        <th>Gender</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_matricule')}}</th>
+                        <th>{{__('text.word_class')}}</th>
+                        <th>{{__('text.word_gender')}}</th>
                         <th></th>
 
                     </tr>
@@ -52,7 +52,7 @@
                         '    <td>' + data[i].class_name + '</td>' +
                         '    <td>' + data[i].gender + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
-                        '        <a class="btn btn-xs btn-primary" href="' + data[i].link2 + '">Award Scholarship</a>' +
+                        '        <a class="btn btn-xs btn-primary text-capitalize" href="' + data[i].link2 + '">{{__("text.award_scholarship")}}</a>' +
                         '    </td>' +
                         '</tr>';
                 }

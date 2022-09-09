@@ -9,7 +9,7 @@
                 <div class="form-group @error('class_id') has-error @enderror ">
                     <div class="col-sm-3">
                         <select class="form-control section" name="section_id">
-                            <option value="">Select Section</option>
+                            <option value="" class="text-capitalize">{{__('text.select_section')}}</option>
                             @foreach($school_units as $key => $unit)
                             <option value="{{$unit->id}}">{{$unit->name}}</option>
                             @endforeach
@@ -46,7 +46,7 @@
                         @enderror
                     </div>
                     <div class=" col-sm-1 mb-1">
-                        <button class="btn btn-xs btn-primary" id="submit" type="submit">Get Income</button>
+                        <button class="btn btn-xs btn-primary text-capitalize" id="submit" type="submit">{{__('text.get_income')}}</button>
                     </div>
                 </div>
                 @csrf
@@ -57,11 +57,11 @@
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Income Type</th>
-                        <th>Amount (CFA)</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.income_type')}}</th>
+                        <th>{{__('text.word_amount')}} ({{__('text.currency_cfa')}})</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,14 +99,14 @@
                 let html = "";
                 if (size > 0) {
                     html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option selected> Select Circle</option>'
+                    html += '<option selected class="text-capitalize"> {{__("text.select_circle")}}</option>'
                     for (i = 0; i < size; i++) {
                         html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
                     }
                     html += '</select></div>';
                 } else {
                     html += '<div><select class="form-control"  >';
-                    html += '<option selected> No data is avalaible</option>'
+                    html += '<option selected> {{__("text.no_data_available")}}</option>'
                     html += '</select></div>';
                 }
                 $('.circle').html(html);
@@ -130,14 +130,14 @@
                 let html = "";
                 if (size > 0) {
                     html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option selected> Select Class</option>'
+                    html += '<option selected class="text-capitalize"> {{__("text.select_class")}}</option>'
                     for (i = 0; i < size; i++) {
                         html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
                     }
                     html += '</select></div>';
                 } else {
                     html += '<div><select class="form-control"  >';
-                    html += '<option selected> No data is avalaible</option>'
+                    html += '<option selected> {{__("text.no_data_available")}}</option>'
                     html += '</select></div>';
                 }
                 $('.class').html(html);

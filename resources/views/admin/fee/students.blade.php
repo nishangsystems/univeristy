@@ -5,13 +5,13 @@
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Total</th>
-                        <th>Paid</th>
-                        <th>Balance</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_phone')}}</th>
+                        <th>{{__('text.word_total')}}</th>
+                        <th>{{__('text.word_paid')}}</th>
+                        <th>{{__('text.word_balance')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -23,9 +23,9 @@
                         <td>{{$student->phone}}</td>
                         <td>{{$student->total()}} FCFA </td>
                         <td>{{$student->paid()}} FCFA </td>
-                        <td>{{$student->bal($student->id)}} FCFA </td>
+                        <td>{{$student->bal($student->id)}} {{__('text.currency_cfa')}} </td>
                         <td class="d-flex justify-content-between align-items-center">
-                            <a class="btn btn-xs btn-primary" href="{{route('admin.fee.student.payments.index',[$student->id])}}"> Fee Collections</a>
+                            <a class="btn btn-xs btn-primary text-capitalize" href="{{route('admin.fee.student.payments.index',[$student->id])}}"> {{__('text.fee_collections')}}</a>
                         </td>
                     </tr>
                     @endforeach

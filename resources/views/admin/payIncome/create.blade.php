@@ -12,11 +12,11 @@
         <div class="table-responsive">
             <table class="table-bordered">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Matricule</th>
-                        <th>Class</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_matricule')}}</th>
+                        <th>{{__('text.word_class')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -49,7 +49,7 @@
                         '    <td>' + data[i].matric + '</td>' +
                         '    <td>' + data[i].class_name + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
-                        '        <a class="btn btn-xs btn-primary" href="' + data[i].link + '"> Collect Income</a>' +
+                        '        <a class="btn btn-xs btn-primary text-capitalize" href="' + data[i].link + '"> {{__("text.collect_income")}}</a>' +
                         '    </td>' +
                         '</tr>';
                 }

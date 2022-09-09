@@ -12,10 +12,10 @@
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table table-bordered" id="hidden-table-info">
                 <thead>
-                    <tr>
+                    <tr class=" text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Coefficient</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_coefficient')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -26,10 +26,10 @@
                         <td>{{ $k+1 }}</td>
                         <td>{{ $subject->name }}</td>
                         <td>{{ $subject->coef }}</td>
-                        <td class="d-flex justify-content-end align-items-center">
-                            <a class="btn btn-xs btn-success" href="{{route('admin.subjects.edit',[$subject->id])}}"><i class="fa fa-edit"> Edit</i></a> |
+                        <td class="d-flex justify-content-end align-items-center text-capitalize">
+                            <a class="btn btn-xs btn-success" href="{{route('admin.subjects.edit',[$subject->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a> |
                             <a onclick="event.preventDefault();
-                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">Delete</a>
+                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">{{__('text.word_delete')}}</a>
                             <form id="delete" action="{{route('admin.subjects.destroy',$subject->id)}}" method="POST" style="display: none;">
                                 @method('DELETE')
                                 {{ csrf_field() }}

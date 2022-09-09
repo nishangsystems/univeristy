@@ -5,14 +5,14 @@
         <form action="{{route('admin.stats.fees')}}" method="get">
             @csrf
             <div class="form-group">
-                <label for="" class="text-secondary h4 fw-bold">select academic year</label>
+                <label for="" class="text-secondary h4 fw-bold">{{__('text.select_academic_year')}}</label>
                 <div class="d-flex justify-content-between">
                     <select name="year" id="" class="form-control">
-                        <option value="" selected>academic year</option>
+                        <option value="" selected>{{__(*'text.academic_year')}}</option>
                         @forelse(\App\Models\Batch::all() as $batch)
                             <option value="{{$batch->id}}">{{$batch->name}}</option>
                         @empty
-                            <option value="" selected>academic year not set </option>
+                            <option value="" selected>{{__('text.academic_year_not_set')}} </option>
                         @endforelse
                     </select>
                     <input type="submit" name="" id="" value="get statistics">
@@ -21,7 +21,7 @@
         </form>
         <div class="mt-5 pt-2">
             <div class="py-2 uppercase fw-bolder text-dark h3">
-                <span>{{$title}} for </span>
+                <span>{{$title}} {{__('text.word_for')}} </span>
                 @if(request('year') != null)
                     <span>{{\App\Models\Batch::find(request('year'))->name}}</span>
                 @else
@@ -29,17 +29,17 @@
                 @endif
             </div>
             <table class="table table-stripped">
-                <thead class="bg-secondary text-black">
+                <thead class="bg-secondary text-black text-capitalize">
                     @php($count = 1)
                     <th>##</th>
-                    <th>Class</th>
-                    <th>Number</th>
-                    <th>Complete</th>
-                    <th>Incomplete</th>
-                    <th>Expected</th>
-                    <th>Recieved</th>
-                    <th>% Completed</th>
-                    <th>% Uncompleted</th>
+                    <th>{{__('text.word_class')}}</th>
+                    <th>{{__('text.word_number')}}</th>
+                    <th>{{__('text.word_comlete')}}</th>
+                    <th>{{__('text.word_incomplete')}}</th>
+                    <th>{{__('text.word_expected')}}</th>
+                    <th>{{__('text.word_recieved')}}</th>
+                    <th>{{__('text.percentage_complete')}}</th>
+                    <th>{{__('text.percentage_uncompleted')}}</th>
                     <th></th>
                 </thead>
                 <tbody>
@@ -55,7 +55,7 @@
                             @endif
                     @empty
                         <tr class="border-bottom border-dark text-center">
-                            no statistics found for selected academic year
+                            {{__('text.phrase_6')}}
                         </tr>
                     @endforelse
                 </tbody>

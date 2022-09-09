@@ -5,14 +5,14 @@
         <form action="{{route('admin.stats.unit-fees', request('class_id'))}}" method="get">
             @csrf
             <div class="form-group">
-                <label for="" class="text-secondary h4 fw-bold">select academic year</label>
+                <label for="" class="text-secondary h4 fw-bold">{{__('text.select_academic_year')}}</label>
                 <div class="d-flex justify-content-between">
                     <select name="year" id="" class="form-control">
-                        <option value="" selected>academic year</option>
+                        <option value="" selected>{{__('text.academic_year')}}</option>
                         @forelse(\App\Models\Batch::all() as $batch)
                             <option value="{{$batch->id}}">{{$batch->name}}</option>
                         @empty
-                            <option value="" selected>academic year not set </option>
+                            <option value="" selected>{{__('text.academic_year_not_set')}} </option>
                         @endforelse
                     </select>
                     <input type="submit" name="" id="" value="get statistics">
@@ -29,12 +29,12 @@
                 @endif
             </div>
             <table class="table table-stripped">
-                <thead class="bg-secondary text-black">
+                <thead class="bg-secondary text-black text-capitalize">
                     @php($count = 1)
                     <th>##</th>
-                    <th>Name</th>
-                    <th>Paid</th>
-                    <th>Owing</th>
+                    <th>{{__('text.word_name')}}</th>
+                    <th>{{__('text.word_paid')}}</th>
+                    <th>{{__('text.word_owing')}}</th>
                 </thead>
                 <tbody>
                     @forelse($data ?? [] as $value)

@@ -5,10 +5,10 @@
         <form action="{{route('admin.stats.fees')}}" method="get">
             @csrf
             <div class="form-group">
-                <label for="" class="text-secondary h4 fw-bold">select academic year</label>
+                <label for="" class="text-secondary h4 fw-bold">{{__('text.select_academic_year')}}</label>
                 <div class="d-flex justify-content-between">
                     <select name="year" id="" class="form-control">
-                        <option value="" selected>academic year</option>
+                        <option value="" selected>{{__('text.academic_year')}}</option>
                         @forelse(\App\Models\Batch::all() as $batch)
                             <option value="{{$batch->id}}">{{$batch->name}}</option>
                         @empty
@@ -29,17 +29,17 @@
                 @endif
             </div>
             <table class="table table-stripped">
-                <thead class="bg-secondary text-black">
+                <thead class="bg-secondary text-black text-capitalize">
                     @php($count = 1)
                     <th>##</th>
-                    <th>Class</th>
-                    <th>Number</th>
-                    <th>Complete</th>
-                    <th>Incomplete</th>
-                    <th>Expected</th>
-                    <th>Recieved</th>
-                    <th>% Completed</th>
-                    <th>% Uncompleted</th>
+                    <th>{{__('text.word_class')}}</th>
+                    <th>{{__('text.word_number')}}</th>
+                    <th>{{__('text.word_comlete')}}</th>
+                    <th>{{__('text.word_incomplete')}}</th>
+                    <th>{{__('text.word_expected')}}</th>
+                    <th>{{__('text.word_recieved')}}</th>
+                    <th>{{__('text.percentage_complete')}}</th>
+                    <th>{{__('text.percentage_uncompleted')}}</th>
                     <th></th>
                 </thead>
                 <tbody>
@@ -55,7 +55,7 @@
                                 <td class="border-left border-right">{{$value['recieved']}}</td>
                                 <td class="border-left border-right">{{$value['%complete']}}</td>
                                 <td class="border-left border-right">{{$value['%incomplete']}}</td>
-                                <td class="border-left border-right"><a href="{{route('admin.stats.unit-fees', $value['class_id'])}}">Details</a></td>
+                                <td class="border-left border-right text-capitalize"><a href="{{route('admin.stats.unit-fees', $value['class_id'])}}">{{__('text.word_details')}}</a></td>
                             </tr>
                             @else
                             <tr class="border-bottom border-dark">
@@ -68,12 +68,12 @@
                                 <td class="border-left border-right">{{$value['recieved']}}</td>
                                 <td class="border-left border-right">{{$value['%complete']}}</td>
                                 <td class="border-left border-right">{{$value['%incomplete']}}</td>
-                                <td class="border-left border-right"><a href="{{route('admin.stats.unit-fees', $value['class_id'])}}">Details</a></td>
+                                <td class="border-left border-right text-capitalize"><a href="{{route('admin.stats.unit-fees', $value['class_id'])}}">{{__('text.word_details')}}</a></td>
                             </tr>
                             @endif
                     @empty
                         <tr class="border-bottom border-dark text-center">
-                            no statistics found for selected academic year
+                            {{__('text.phrase_6')}}
                         </tr>
                     @endforelse
                 </tbody>

@@ -211,6 +211,13 @@
                 </a>
                 <b class="arrow"></b>
             </li>
+            <li>
+                <a href="{{route('user.master_sheet')}}">
+                    <i class="menu-icon text-primary fa fa-star"></i>
+                    <span class="menu-text">Master Sheet</span>
+                </a>
+                <b class="arrow"></b>
+            </li>
             @endif
             @if (\Auth::user()->hasPermissionTo('promote_students'))
                 <li>

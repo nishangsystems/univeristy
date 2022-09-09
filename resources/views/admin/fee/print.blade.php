@@ -12,13 +12,13 @@
             <div class="table-responsive">
                 <table class="table-bordered">
                     <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Class</th>
-                        <th>Total Fee</th>
-                        <th>Paid</th>
-                        <th>Balance</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_class')}}</th>
+                        <th>{{__('text.total_fee')}}</th>
+                        <th>{{__('text.word_paid')}}</th>
+                        <th>{{__('text.word_balance')}}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -52,7 +52,7 @@
                             '    <td>'+data[i].paid+'</td>' +
                             '    <td>'+data[i].bal+'</td>' +
                             '    <td class="d-flex justify-content-between align-items-center">' +
-                            '        <a target="_blank" class="btn btn-xs btn-primary" href="'+data[i].rlink+'"> Print Reciept</a>' +
+                            '        <a target="_blank" class="btn btn-xs btn-primary" href="'+data[i].rlink+'"> {{__("text.print_reciept")}}</a>' +
                             '    </td>' +
                             '</tr>';
                     }

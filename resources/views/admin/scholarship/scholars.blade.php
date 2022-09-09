@@ -8,8 +8,8 @@
             <div class="form-group @error('year') has-error @enderror ">
             <div class="col-sm-8"></div>
                 <div class="col-sm-2">
-                    <select class="form-control" name="year">
-                        <option value="">Select year</option>
+                    <select class="form-control text-capitalize" name="year">
+                        <option value="">{{__('text.select_year')}}</option>
                         @foreach($years as $key => $year)
                         <option value="{{$year->id}}">{{$year->name}}</option>
                         @endforeach
@@ -20,7 +20,7 @@
                 </div>
                
                <div class="col-sm-2 d-flex justify-content-center">
-                <label class="control-label mb-2 mr-2"> <button class="btn btn-xs btn-primary" type="submit">Get Scholars</button></label>
+                <label class="control-label mb-2 mr-2"> <button class="btn btn-xs btn-primary" type="submit">{{__('text.get_scholars')}}</button></label>
                 </div>
             </div>
             @csrf
@@ -30,14 +30,14 @@
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Address</th>
-                        <th>Gender</th>
-                        <th>Scholarship Amount </th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_email')}}</th>
+                        <th>{{__('text.word_phone')}}</th>
+                        <th>{{__('text.word_address')}}</th>
+                        <th>{{__('text.word_gender')}}</th>
+                        <th>{{__('text.scholarship_amount')}} </th>
 
                     </tr>
                 </thead>

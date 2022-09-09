@@ -11,12 +11,12 @@
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Amount (CFA)</th>
-                        <th>Type</th>
-                        <th>Status</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_amount')}} ({{__('text.currency_cfa')}})</th>
+                        <th>{{__('text.word_type')}}</th>
+                        <th>{{__('text.word_status')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -28,13 +28,13 @@
                         <td>{{number_format($scholarship->amount)}}</td>
                         <td>{{$scholarship->type}}</td>
                         @if($scholarship->status ==1)
-                        <td>Active</td>
+                        <td class="text-capitalize">{{__('text.word_active')}}</td>
                         @else
-                        <td>Inactive</td>
+                        <td class="text-capitalize">{{__('text.word_inactive')}}</td>
                         @endif
                         <td class="d-flex justify-content-end  align-items-center">
-                            <a class="btn btn-sm btn-primary m-3" href="{{route('admin.scholarship.show',[$scholarship->id])}}"><i class="fa fa-info-circle"> View</i></a> |
-                            <a class="btn btn-sm btn-success m-3" href="{{route('admin.scholarship.edit',[$scholarship->id])}}"><i class="fa fa-edit"> Edit</i></a>
+                            <a class="btn btn-sm btn-primary m-3" href="{{route('admin.scholarship.show',[$scholarship->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
+                            <a class="btn btn-sm btn-success m-3" href="{{route('admin.scholarship.edit',[$scholarship->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>
                         </td>
                     </tr>
                     @endforeach

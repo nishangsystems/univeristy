@@ -4,33 +4,33 @@
         <div class="form-panel">
             <form class="form-horizontal" role="form" method="POST">
                 @csrf
-                <h5 class="mt-5 mb-4 font-weight-bold">Select class and batch to generate matricule number</h5>
-                <div class="form-group @error('section') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2">Batch</label>
+                <h5 class="mt-5 mb-4 font-weight-bold">{{__('text.phrase_9')}}</h5>
+                <div class="form-group @error('section') has-error @enderror text-capitalize">
+                    <label for="cname" class="control-label col-lg-2">{{__('text.word_batch')}}</label>
                     <div class="col-lg-10">
                         <div>
                             <select class="form-control" required name="batch">
-                                <option  disabled>Select Batch</option>
+                                <option  disabled>{{__('text.select_year')}}</option>
                                 @forelse(\App\Models\Batch::orderBy('name')->get() as $section)
                                     <option {{old('batch') == $section->id?'selected':''}} value="{{$section->id}}">{{$section->name}}</option>
                                 @empty
-                                    <option>No batch Created</option>
+                                    <option>{{__('text.no_batch_created')}}</option>
                                 @endforelse
                             </select>
                         </div>
                     </div>
                 </div>
                 <div id="section">
-                    <div class="form-group">
-                        <label for="cname" class="control-label col-lg-2">Section</label>
+                    <div class="form-group text-capitalize">
+                        <label for="cname" class="control-label col-lg-2">{{__('text.word_section')}}</label>
                         <div class="col-lg-10">
                             <div>
                                 <select class="form-control section" id="section0" name="section">
-                                    <option selected disabled>Select Section</option>
+                                    <option selected disabled>{{__('text.select_section')}}</option>
                                     @forelse(\App\Models\SchoolUnits::where('parent_id',0)->get() as $section)
                                         <option value="{{$section->id}}">{{$section->name}}</option>
                                     @empty
-                                        <option>No Sections Created</option>
+                                        <option>{{__('text.no_sections_created')}}</option>
                                     @endforelse
                                 </select>
                                 <div class="children"></div>
@@ -41,7 +41,7 @@
 
                 <div class="form-group">
                     <div class="d-flex justify-content-end col-lg-12">
-                        <button id="save" class="btn btn-xs btn-primary mx-3" style="display: none" type="submit">Generate</button>
+                        <button id="save" class="btn btn-xs btn-primary mx-3" style="display: none" type="submit">{{__('text.word_generate')}}</button>
                     </div>
                 </div>
 

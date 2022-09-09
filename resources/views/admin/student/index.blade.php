@@ -8,8 +8,8 @@
             <form class="form-horizontal" role="form" method="POST" action="{{route('admin.getStudent.perClassYear')}}">
                 <div class="form-group @error('class_id') has-error @enderror ml-2">
                     <div class="col-sm-2 d-flex justify-content-lg-start">
-                        <select class="form-control section" name="section_id">
-                            <option value="">Select Section</option>
+                        <select class="form-control section text-capitalize" name="section_id">
+                            <option value="">{{__('text.select_section')}}</option>
                             @foreach($school_units as $key => $unit)
                             <option value="{{$unit->id}}">{{$unit->name}}</option>
                             @endforeach
@@ -21,9 +21,9 @@
                         </div> -->
                     </div>
 
-                    <div class="col-sm-2 d-flex justify-content-lg-start">
+                    <div class="col-sm-2 d-flex justify-content-lg-start text-capitalize">
                         <select class="form-control Circle" id="circle" name="circle">
-                            <option value="" disabled>Select Circle</option>
+                            <option value="" disabled>{{__('text.select_circle')}}</option>
                         </select>
                         <!-- <div>
                             @error('circle')
@@ -32,9 +32,9 @@
                         </div> -->
                     </div>
 
-                    <div class="col-sm-2 d-flex justify-content-lg-start">
+                    <div class="col-sm-2 d-flex justify-content-lg-start text-capitalize">
                         <select class="form-control class" name="class_id">
-                            <option value="">Select Class</option>
+                            <option value="">{{__('text.select_class')}}</option>
                         </select>
                         <!-- <div>
                             @error('class_id')
@@ -43,11 +43,11 @@
                         </div> -->
                     </div>
 
-                    <div class="col-sm-2 d-flex justify-content-lg-start">
+                    <div class="col-sm-2 d-flex justify-content-lg-start text-capitalize">
                         <select class="form-control" name="type">
-                            <option value="">School Section</option>
-                            <option value="day">Day Section</option>
-                            <option value="boarding">Boarding Section</option>
+                            <option value="">{{__('text.select_circle')}}</option>
+                            <option value="day">{{__('text.day_section')}}</option>
+                            <option value="boarding">{{__('text.boarding_section')}}</option>
                         </select>
                         <!-- <div>
                             @error('type')
@@ -56,9 +56,9 @@
                         </div> -->
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-sm-2 text-capitalize">
                         <select class="form-control" name="batch_id">
-                            <option value="">Select Year</option>
+                            <option value="">{{__('text.select_year')}}</option>
                             @foreach($years as $key => $year)
                             <option value="{{$year->id}}">{{$year->name}}</option>
                             @endforeach
@@ -70,8 +70,8 @@
                         </div> -->
                     </div>
                     <div class="col-md-1"></div>
-                    <div class=" col-sm-1 mb-1 d-flex justify-content-end">
-                        <button class="btn btn-xs btn-primary" id="submit" type="submit">Get Students</button>
+                    <div class=" col-sm-1 mb-1 d-flex justify-content-end text-capitalize">
+                        <button class="btn btn-xs btn-primary" id="submit" type="submit">{{__('text.get_students')}}</button>
                     </div>
                 </div>
                 @csrf
@@ -82,12 +82,12 @@
         <div class=" ">
             <table cellpadding="0" cellspacing="0" border="0" class="table table-stripped" id="hidden-table-info">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Matricule</th>
-                        <th>Email</th>
-                        <th>Phone</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_matricule')}}</th>
+                        <th>{{__('text.word_email')}}</th>
+                        <th>{{__('text.word_phone')}}</th>
                         <th></th>
 
                     </tr>
@@ -100,11 +100,11 @@
                         <td>{{$student->matric}}</td>
                         <td>{{$student->email}}</td>
                         <td>{{$student->phone}}</td>
-                        <td class="d-flex justify-content-end  align-items-start">
-                            <a class="btn btn-sm btn-primary m-1" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-info-circle"> View</i></a> |
-                            <a class="btn btn-sm btn-success m-1" href="{{route('admin.student.edit',[$student->id])}}"><i class="fa fa-edit"> Edit</i></a>|
+                        <td class="d-flex justify-content-end  align-items-start text-capitalize">
+                            <a class="btn btn-sm btn-primary m-1" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
+                            <a class="btn btn-sm btn-success m-1" href="{{route('admin.student.edit',[$student->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>|
                             <a onclick="event.preventDefault();
-                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-1"><i class="fa fa-trash"> Delete</i></a>
+                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-1"><i class="fa fa-trash"> {{__('text.word_delete')}}</i></a>
                             <form id="delete" action="{{route('admin.student.destroy',[$student->id])}}" method="POST" style="display: none;">
                                 @method('DELETE')
                                 {{ csrf_field() }}
@@ -141,15 +141,15 @@
                 let data = response.data;
                 let html = "";
                 if (size > 0) {
-                    html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option disabled> Select Circle</option>'
+                    html += '<div><select class="form-control text-capitalize"  name="' + data[0].id + '" >';
+                    html += '<option disabled> {{__("text.select_circle")}}</option>'
                     for (i = 0; i < size; i++) {
                         html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
                     }
                     html += '</select></div>';
                 } else {
                     html += '<div><select class="form-control"  >';
-                    html += '<option disabled> No data is avalaible</option>'
+                    html += '<option disabled> {{__("text.no_data_available")}}</option>'
                     html += '</select></div>';
                 }
                 $('#circle').html(html);
@@ -173,15 +173,15 @@
                 let data = response.data;
                 let html = "";
                 if (size > 0) {
-                    html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option disabled> Select Class</option>'
+                    html += '<div><select class="form-control text-capitalize"  name="' + data[0].id + '" >';
+                    html += '<option disabled> {{__("text.select_class")}}</option>'
                     for (i = 0; i < size; i++) {
                         html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
                     }
                     html += '</select></div>';
                 } else {
-                    html += '<div><select class="form-control"  >';
-                    html += '<option disabled> No data is avalaible</option>'
+                    html += '<div><select class="form-control text-capitalize"  >';
+                    html += '<option disabled> {{__("text.no_data_available")}}</option>'
                     html += '</select></div>';
                 }
                 $('.class').html(html);

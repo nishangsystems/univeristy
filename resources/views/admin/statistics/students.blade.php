@@ -5,14 +5,14 @@
         <form action="{{route('admin.stats.students')}}" method="get">
             @csrf
             <div class="form-group">
-                <label for="" class="text-secondary h4 fw-bold">select academic year</label>
+                <label for="" class="text-secondary h4 fw-bold">{{__('text.select_academic_year)}}</label>
                 <div class="d-flex justify-content-between">
                     <select name="year" id="" class="form-control">
-                        <option value="" selected>academic year</option>
+                        <option value="" selected>{{__('text.academic_year')}}</option>
                         @forelse(\App\Models\Batch::all() as $batch)
                             <option value="{{$batch->id}}">{{$batch->name}}</option>
                         @empty
-                            <option value="" selected>academic year not set </option>
+                            <option value="" selected>{{__('text.academic_year_not_set')}} </option>
                         @endforelse
                     </select>
                     <input type="submit" name="" id="" class="btn btn-primary" value="get statistics">
@@ -29,14 +29,14 @@
                 @endif
             </div>
             <table class="table table-stripped">
-                <thead class="bg-secondary text-black">
+                <thead class="bg-secondary text-black text-capitalize">
                     @php($count = 1)
                     <th>##</th>
-                    <th>Class</th>
-                    <th>Males</th>
-                    <th>Females</th>
-                    <th>Day students</th>
-                    <th>Boarders</th>
+                    <th>{{__(text.word_class)}}</th>
+                    <th>{{__('text.word_males')}}</th>
+                    <th>{{__('text.word_females')}}</th>
+                    <th>{{__('text.day_students')}}</th>
+                    <th>{{__('text.word_boarders')}}</th>
                 </thead>
                 <tbody>
                     @forelse($data ?? [] as $value)
@@ -61,7 +61,7 @@
                         @endif
                     @empty
                         <tr class="border-bottom border-dark text-center">
-                            no statistics found for selected academic year
+                            {{__('text.phrase_6')}}
                         </tr>
                     @endforelse
                 </tbody>
