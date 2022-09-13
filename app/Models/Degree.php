@@ -25,4 +25,8 @@ class Degree extends Model
         return $this->belongsTo(School::class);
     }
 
+    public function information()
+    {
+        return $this->hasMany(SchoolDocument::class);
+    }
 }

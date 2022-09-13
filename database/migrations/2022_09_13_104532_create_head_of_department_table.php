@@ -15,19 +15,15 @@ class CreateHodTable extends Migration
     {
         Schema::create('head_of_department', function (Blueprint $table) {
             $table->id();
-            $table->string('email');
-            $table->string('username')->unique();
-            $table->enum('gender', ['female','male']);
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('phone')->nullable();
-            $table->string('address')->nullable();
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('school_id');
+            $table->unsignedBigInteger('campus_id');
             $table->unsignedBigInteger('department_id');
             $table->rememberToken();
             $table->timestamps();
 
-            
+            $table->foreign('campus_id')->references('id')->on('campuses');    
+            $table->foreign('user_id')->references('id')->on('users');    
             $table->foreign('school_id')->references('id')->on('schools');
             $table->foreign('department_id')->references('id')->on('departments');
         });

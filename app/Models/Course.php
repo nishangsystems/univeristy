@@ -29,13 +29,23 @@ class Course extends Model
         return $this->belongsTo(Program::class);
     }
 
-    public function lecturers()
+    public function teacher()
     {
         return $this->hasManyThrough(User::class, TeacherCourse::class);
     }
 
-    public function results()
+    public function results($year)
     {
-        
+        return $this->hasMany(Result::class)->where('batch_id', $year);
+    }
+
+    public function student_results($year, $student_id)
+    {
+        return $this->hasMany(Result::class)->where('batch_id', $year)->where('student_id', $student_id);
+    }
+
+    public function students()
+    {
+        # code...
     }
 }
