@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Student extends Model
 {
     use HasFactory;
 
@@ -14,10 +14,16 @@ class User extends Model
         'email',
         'phone',
         'address',
+        'religion',
         'gender',
         'username',
-        'type',
+        'dob',
+        'pob',
+        'batch_id',
         'password',
-        'school_id'
+        'type',
+        'parent_name',
+        'parent_phone_number',
+        'program_id'
     ];
 }

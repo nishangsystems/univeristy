@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Batch extends Model
+class ProgramExamGrading extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name'
+        'program_id',
+        'exam_grading_id'
     ];
 }
