@@ -13,4 +13,13 @@ class DepartmentTeacher extends Model
         'user_id',
         'department_id'
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(Departments::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

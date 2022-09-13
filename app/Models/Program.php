@@ -14,6 +14,15 @@ class Program extends Model
         'name',
         'duration',
         'degree_id',
-        'school_semester_id'
     ];
+
+    public function paymentTypes()
+    {
+        return $this->hasMany(PaymentType::class);
+    }
+
+    public function courses()
+    {
+        return $this->hasManyThrough(Course::class, ProgramCourse::class);
+    }
 }

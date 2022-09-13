@@ -14,4 +14,9 @@ class PaymentCollection extends Model
         'payment_id',
         'status',
     ];
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
+    }
 }

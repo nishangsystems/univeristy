@@ -14,4 +14,9 @@ class School extends Model
         'name',
         'description',
     ];
+
+    public function campuses()
+    {
+        return $this->hasMany(Campus::class);
+    }
 }

@@ -11,6 +11,12 @@ class Expenses extends Model
     protected $fillable = [
         'name',
         'amount_spend',
-        'date'
+        'date',
+        'user_id'//who recorded the expenses
     ];
+
+    public function recordedBy()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

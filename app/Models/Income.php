@@ -11,7 +11,6 @@ class Income extends Model
 
     protected $fillable = [
         'name',
-
         'amount',
 
     ];

@@ -5,19 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PaymentType extends Model
+class GradingScale extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'amount',
-        'program_id',
-        'batch_id'
+        'min', 'max', 'grade', 'weight', 'grading_id', 'remark', 'status'
     ];
 
-    public function payments()
+    public function grading()
     {
-        return $this->hasMany(Payment::class);
+        return $this->belongsTo(Grading::class);
     }
 }
