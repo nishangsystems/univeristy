@@ -14,7 +14,6 @@ class Program extends Model
         'name',
         'duration',
         'degree_id',
-        'school_semester_id'
     ];
 
     public function paymentTypes()
