@@ -15,4 +15,9 @@ class PaymentType extends Model
         'program_id',
         'batch_id'
     ];
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }

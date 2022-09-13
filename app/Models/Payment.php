@@ -12,6 +12,21 @@ class Payment extends Model
     protected $fillable = [
         'student_id',
         'batch_id',
-        'program_type_id'
+        'payment_type_id'
     ];
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class, 'program_type_id');
+    }
+
+    public function details()
+    {
+        return $this->hasOne(PaymentCollection::class);
+    }
 }
