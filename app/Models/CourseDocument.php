@@ -16,4 +16,9 @@ class CourseDocument extends Model
         'type'
 
     ];
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 }

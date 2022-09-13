@@ -18,4 +18,24 @@ class Course extends Model
         'program_id',
         'school_level_id'
     ];
+
+    public function notes()
+    {
+        return $this->hasMany(CourseDocument::class);
+    }
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
+
+    public function lecturers()
+    {
+        return $this->hasManyThrough(User::class, TeacherCourse::class);
+    }
+
+    public function results()
+    {
+        
+    }
 }

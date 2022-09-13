@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCAGradingsTable extends Migration
+class CreateGradingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateCAGradingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('c_a_gradings', function (Blueprint $table) {
+        Schema::create('grading', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('total_mark');
+            $table->integer('num');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateCAGradingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('c_a_gradings');
+        Schema::dropIfExists('grading');
     }
 }

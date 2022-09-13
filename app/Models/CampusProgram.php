@@ -13,4 +13,14 @@ class CampusProgram extends Model
         'campus_id',
         'program_id'
     ];
+
+    public function campus()
+    {
+        return $this->belongsToMany(Campus::class);
+    }
+
+    public function programs()
+    {
+        return $this->belongsToMany(Program::class);
+    }
 }

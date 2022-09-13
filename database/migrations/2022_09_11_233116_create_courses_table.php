@@ -17,11 +17,11 @@ class CreateCoursesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('code');
-            $table->integer('credit_value');
-            $table->enum('type', ['GENERAL', 'COMPLUSORY', 'REQURIED']);
-            $table->string('status');
-            $table->unsignedBigInteger('program_id');
-            $table->unsignedBigInteger('school_level_id');
+            $table->integer('credit_value')->nullable();
+            $table->enum('type', ['GENERAL', 'COMPLUSORY', 'REQURIED'])->nullable();
+            $table->string('status')->nullable();
+            $table->unsignedBigInteger('program_id')->nullable();
+            $table->unsignedBigInteger('school_level_id')->nullable();
             $table->timestamps();
 
             $table->foreign('program_id')->references('id')->on('programs');

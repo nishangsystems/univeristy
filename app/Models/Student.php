@@ -26,4 +26,21 @@ class Student extends Model
         'parent_phone_number',
         'program_id'
     ];
+
+    public function class($year)
+    {
+        return $this->hasOne(StudentClass::class)->where('batch_id', $year);
+    }
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
+
+    public function results()
+    {
+        return $this->hasMany(Result::class);
+    }
+
+
 }

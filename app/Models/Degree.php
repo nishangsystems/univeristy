@@ -14,4 +14,15 @@ class Degree extends Model
         'duration',
         'school_id'
     ];
+
+    public function semesters()
+    {
+        return $this->hasMany(SchoolSemester::class);
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+
 }

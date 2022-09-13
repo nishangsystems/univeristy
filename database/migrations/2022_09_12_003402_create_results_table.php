@@ -13,14 +13,19 @@ class CreateExamResultDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('exam_result_details', function (Blueprint $table) {
+        Schema::create('results', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id');
             $table->decimal('mark');
-            $table->unsignedBigInteger('exam_result_id');
+            $table->unsignedBigInteger('batch_id');
+            $table->unsignedBigInteger('program_id');
+            $table->unsignedBigInteger('program_course_id');
+            $table->unsignedBigInteger('sequence_id');
+            $table->unsignedBigInteger('student_id');
             $table->timestamps();
 
-            $table->foreign('exam_result_id')->references('id')->on('exam_results');
+            $table->foreign('batch_id')->references('id')->on('batch');
+            $table->foreign('program_id')->references('id')->on('programs');
+            $table->foreign('program_course_id')->references('id')->on('program_courses');
             $table->foreign('student_id')->references('id')->on('students');
         });
     }

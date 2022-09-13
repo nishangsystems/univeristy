@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class SubjectController extends Controller
+class CourseController extends Controller
 {
 
     public function store(Request $request)
@@ -13,6 +13,7 @@ class SubjectController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'coef' => 'required',
+            
         ]);
         $subject = new \App\Models\Subjects();
         $subject->name = $request->input('name');
