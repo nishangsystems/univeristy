@@ -15,7 +15,7 @@ class CourseController extends Controller
             'coef' => 'required',
             
         ]);
-        $subject = new \App\Models\Subjects();
+        $subject = new \App\Models\Course();
         $subject->name = $request->input('name');
         $subject->coef = $request->input('coef');
         $subject->save();
@@ -24,7 +24,7 @@ class CourseController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $data['subject'] = \App\Models\Subjects::find($id);
+        $data['subject'] = \App\Models\Course::find($id);
         $data['title'] = "Edit " . $data['subject']->name;
         return view('admin.subject.edit')->with($data);
     }
@@ -56,7 +56,7 @@ class CourseController extends Controller
             'coef' => 'required',
         ]);
 
-        $subject = \App\Models\Subjects::find($id);
+        $subject = \App\Models\Course::find($id);
         $subject->name = $request->input('name');
         $subject->coef = $request->input('coef');
         $subject->save();
@@ -72,7 +72,7 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-        $subject = \App\Models\Subjects::find($id);
+        $subject = \App\Models\Course::find($id);
         if ($subject->units->count() > 0) {
             return redirect()->to(route('admin.subjects.index'))->with('error', "Subject cant be deleted");
         }
@@ -84,7 +84,7 @@ class CourseController extends Controller
     {
 
         $data['title'] = "List of all Subjects";
-        $data['subjects'] = \App\Models\Subjects::orderBy('name')->paginate(15);
+        $data['subjects'] = \App\Models\Course::orderBy('name')->paginate(15);
         return view('admin.subject.index')->with($data);
     }
 }
