@@ -9,7 +9,7 @@ class ProgramCourse extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['program_id', 'course_id', 'school_level_id', 'degree_semester_id'];
+    protected $fillable = ['program_id', 'course_id', 'school_level_id', 'degree_semester_id', 'credit_value'];
 
     public function course()
     {
@@ -29,5 +29,10 @@ class ProgramCourse extends Model
     public function level()
     {
         return $this->belongsTo(SchoolLevel::class);
+    }
+
+    public function results()
+    {
+        return $this->hasMany(Result::class);
     }
 }

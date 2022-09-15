@@ -9,7 +9,7 @@ class Config extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['year_id','seq_id', 'start_date', 'end_date'];
+    protected $fillable = ['batch_id', 'school_id', 'campus_id', 'degree_id', 'degree_semester_id','sequence_id', 'start_date', 'end_date'];
     protected $dates =  ['start_date', 'end_date'];
 
     public function batch(){
@@ -17,6 +17,6 @@ class Config extends Model
     }
 
     public function sequence(){
-        return $this->belongsTo(Sequence::class, 'seq_id');
+        return $this->belongsTo(Sequence::class, 'sequence_id');
     }
 }

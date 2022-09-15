@@ -13,10 +13,16 @@ class School extends Model
     protected $fillable = [
         'name',
         'description',
+        'logo_path'
     ];
 
     public function campuses()
     {
         return $this->hasMany(Campus::class);
+    }
+
+    public function degrees()
+    {
+        return $this->hasMany(Degree::class);
     }
 }

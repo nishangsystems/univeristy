@@ -2,7 +2,10 @@
 
 use App\Http\Controllers;
 use App\Http\Controllers\Auth\CustomLoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\WelcomeController;
+use App\Models\School;
+use Doctrine\DBAL\Schema\Index;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +25,8 @@ Route::get('/clear', function () {
 Route::post('login', [CustomLoginController::class, 'login'])->name('login.submit');
 Route::get('login', [CustomLoginController::class, 'showLoginForm'])->name('login');
 Route::post('logout', [CustomLoginController::class, 'logout'])->name('logout');
+// Route::get('register', [RegisterController::class, 'register'])->name('register');
+// Route::post('register', [RegisterController::class, 'create']);
 
 Route::post('reset_password_with_token/password/reset', [CustomForgotPasswordController::class, 'validatePasswordRequest'])->name('reset_password_without_token');
 Route::get('reset_password_with_token/{token}/{email}', [CustomForgotPasswordController::class, 'resetForm'])->name('reset');
@@ -31,6 +36,18 @@ Route::get('', 'WelcomeController@home');
 Route::get('home', 'WelcomeController@home');
 
 Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function () {
+    Route::get('schools/{school_id}', 'Admin\SchoolController@show')->name('school.home');
+    Route::get('schools/create', 'Admin\SchoolController@create')->name('school.create');
+    Route::post('schools/create', 'Admin\SchoolController@store');
+    Route::get('schools/edit/{school_id}', 'Admin\SchoolController@edit')->name('school.edit');
+    Route::post('schools/edit/{school_id}', 'Admin\ScoolController@update');
+    Route::get('schools/{school_id}/programs', 'Admin\SchoolController@programs')->name('school.programs');
+    Route::get('schools/{school_id}/campuses', 'Admin\SchoolController@campuses')->name('school.campuses');
+
+    Route::get('campuses', 'Admin\CampusController@index')->name('campus.index');
+    Route::get('campuses/{campus_id}', 'Admin\CampusController@campus_home');
+
+
     Route::get('home', 'Admin\HomeController@index')->name('home');
     Route::get('', 'Admin\HomeController@index')->name('home');
     Route::get('setayear', 'Admin\HomeController@setayear')->name('setayear');

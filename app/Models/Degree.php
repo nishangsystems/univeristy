@@ -11,7 +11,6 @@ class Degree extends Model
 
     protected $fillable = [
         'name',
-        'duration',
         'school_id'
     ];
 
@@ -28,5 +27,10 @@ class Degree extends Model
     public function information()
     {
         return $this->hasMany(SchoolDocument::class);
+    }
+
+    public function programs()
+    {
+        return $this->hasMany(Program::class);
     }
 }

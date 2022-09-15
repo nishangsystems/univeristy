@@ -13,7 +13,7 @@ class CreateGradingTable extends Migration
      */
     public function up()
     {
-        Schema::create('grading', function (Blueprint $table) {
+        Schema::create('gradings', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->integer('num');

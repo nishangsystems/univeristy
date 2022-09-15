@@ -25,4 +25,9 @@ class Program extends Model
     {
         return $this->hasManyThrough(Course::class, ProgramCourse::class);
     }
+
+    public function degree()
+    {
+        return $this->belongsTo(Degree::class);
+    }
 }
