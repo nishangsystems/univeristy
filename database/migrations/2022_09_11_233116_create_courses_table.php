@@ -18,8 +18,8 @@ class CreateCoursesTable extends Migration
             $table->string('name');
             $table->string('code');
             $table->integer('credit_value')->nullable();
-            $table->enum('type', ['GENERAL', 'COMPLUSORY', 'REQURIED'])->nullable();
-            $table->string('status')->nullable();
+            $table->enum('status', ['GENERAL', 'COMPLUSORY', 'REQURIED'])->nullable();
+            $table->string('type')->nullable();
             $table->unsignedBigInteger('program_id')->nullable();
             $table->unsignedBigInteger('school_level_id')->nullable();
             $table->timestamps();

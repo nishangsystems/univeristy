@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassSubject;
+use App\Models\ProgramCourse;
 use App\Models\SchoolUnits;
 use App\Models\Students;
 use App\Models\Subjects;
 use App\Session;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use SebastianBergmann\Environment\Console;
@@ -129,7 +131,7 @@ class ProgramController extends Controller
             'name' => 'required',
             'type' => 'required',
         ]);
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $unit = new \App\Models\SchoolUnits();
             $unit->name = $request->input('name');
@@ -138,10 +140,10 @@ class ProgramController extends Controller
             $unit->prefix = $request->input('prefix');
             $unit->suffix = $request->input('suffix');
             $unit->save();
-            \DB::commit();
+            DB::commit();
             return redirect()->to(route('admin.units.index', [$unit->parent_id]))->with('success', $unit->name . " Added to units !");
         } catch (\Exception $e) {
-            \DB::rollback();
+            DB::rollback();
             echo ($e);
         }
     }
@@ -149,7 +151,7 @@ class ProgramController extends Controller
     public function edit(Request $request, $id)
     {
         $lang = !$request->lang ? 'en' : $request->lang;
-        \App::setLocale($lang);
+        App::setLocale($lang);
         $data['id'] = $id;
         $unit = \App\Models\SchoolUnits::find($id);
         $data['unit'] = $unit;
@@ -180,7 +182,7 @@ class ProgramController extends Controller
             'type' => 'required',
         ]);
 
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $unit = \App\Models\SchoolUnits::find($id);
             $unit->name = $request->input('name');
@@ -188,11 +190,11 @@ class ProgramController extends Controller
             $unit->prefix = $request->input('prefix');
             $unit->suffix = $request->input('suffix');
             $unit->save();
-            \DB::commit();
+            DB::commit();
 
             return redirect()->to(route('admin.units.index', [$unit->parent_id]))->with('success', $unit->name . " Updated !");
         } catch (\Exception $e) {
-            \DB::rollback();
+            DB::rollback();
             echo ($e);
         }
     }
@@ -287,16 +289,16 @@ class ProgramController extends Controller
 
         foreach ($new_subjects as $subject) {
             if (!in_array($subject, $class_subjects)) {
-                \App\Models\ClassSubject::create([
-                    'class_id' => $id,
-                    'subject_id' => $subject,
+                \App\Models\ProgramCourse::create([
+                    'program_id' => $id,
+                    'course_id' => $subject,
                 ]);
             }
         }
 
         foreach ($class_subjects as $k => $subject) {
             if (!in_array($subject, $new_subjects)) {
-                ClassSubject::where('class_id', $id)->where('subject_id', $subject)->first()->delete();
+                ProgramCourse::where('class_id', $id)->where('subject_id', $subject)->first()->delete();
             }
         }
 

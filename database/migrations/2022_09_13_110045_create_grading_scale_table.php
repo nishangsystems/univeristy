@@ -24,7 +24,7 @@ class CreateGradingScaleTable extends Migration
             $table->integer('status');
             $table->timestamps();
 
-            $table->foreign('grading_id')->references('id')->on('grading');
+            $table->foreign('grading_id')->references('id')->on('gradings');
         });
     }
 

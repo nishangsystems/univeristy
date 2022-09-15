@@ -13,8 +13,8 @@ class Course extends Model
         'name',
         'code',
         'credit_value',
-        'type',
-        'status' ,//[could be available or unavailable ],
+        'status',
+        'type' ,//[could be available or unavailable ],
         'program_id',
         'school_level_id'
     ];
@@ -24,9 +24,9 @@ class Course extends Model
         return $this->hasMany(CourseDocument::class);
     }
 
-    public function program()
+    public function programs()
     {
-        return $this->belongsTo(Program::class);
+        return $this->hasManyThrough(Program::class, ProgramCourse::class);
     }
 
     public function teacher()
