@@ -254,4 +254,9 @@ return [
     'add_unit'=>'add unit',
     'sub_unit'=>'sub unit',
     'word_subject'=>'subject | subjects',
+    'word_campus'=>'campus',
+    'select_campus' => 'select campus',
+    'manage_campuses'=>'manage campuses',
+    'manage_school'=>'manage school',
+    
 ];

@@ -22,6 +22,7 @@ class Students extends Authenticatable
         'matric',
         'dob',
         'pob',
+        'campus_id',
         'admission_batch_id',
         'password',
         'type',

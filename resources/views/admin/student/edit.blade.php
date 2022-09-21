@@ -9,7 +9,7 @@
                 <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.personal_information')}}</h5>
                 @csrf
                 <div class="form-group @error('name') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.full_name')}} ({{__text.word_required}})</label>
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.full_name')}} ({{__('text.word_required')}})</label>
                     <div class="col-lg-10">
                         <input class=" form-control" name="name" value="{{old('name', $student->name)}}" type="text" required/>
                         @error('name')
@@ -50,7 +50,7 @@
                 </div>
 
                 <div class="form-group @error('religion') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2">{{text.word_denomination}}</label>
+                    <label for="cname" class="control-label col-lg-2">{{'text.word_denomination'}}</label>
                     <div class="col-lg-10">
                         <input class=" form-control" name="religion" value="{{old('religion', $student->religion)}}" type="text"  />
                         @error('address')

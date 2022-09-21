@@ -194,6 +194,22 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('expenditure', 'Admin\StatisticsController@expenditure')->name('expenditure');
         Route::get('fees/{class_id}', 'Admin\StatisticsController@unitFees')->name('unit-fees');
     });
+    Route::prefix('campuses')->name('campuses.')->group(function(){
+        Route::get('/', 'Admin\CampusesController@index')->name('index');
+        Route::get('/create', 'Admin\CampusesController@create')->name('create');
+        Route::get('/edit/{id}', 'Admin\CampusesController@edit')->name('edit');
+        Route::post('/store', 'Admin\CampusesController@store')->name('store');
+        Route::post('/update/{id}', 'Admin\CampusesController@update')->name('update');
+        Route::get('/update/{id}', 'Admin\CampusesController@delete')->name('delete');
+    });
+    Route::prefix('schools')->name('schools.')->group(function(){
+        Route::get('/', 'Admin\SchoolsController@index')->name('index');
+        Route::get('/create', 'Admin\SchoolsController@create')->name('create');
+        Route::get('/edit/{id}', 'Admin\SchoolsController@edit')->name('edit');
+        Route::post('/store', 'Admin\SchoolsController@store')->name('store');
+        Route::post('/update/{id}', 'Admin\SchoolsController@update')->name('update');
+        Route::get('/update/{id}', 'Admin\SchoolsController@delete')->name('delete');
+    });
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {

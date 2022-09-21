@@ -183,16 +183,10 @@ class StudentController extends Controller
         // return $request->all();
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'phone' => 'regex:/^([0-9\s\-\+\(\)]*)$/',
-            'address' => 'nullable',
-            'religion' => 'nullable',
-            'gender' => 'nullable',
-            'section' => 'required',
-            'type'  => 'required|string',
-            'dob' => 'nullable|date',
-            'pob' => 'nullable|string',
-            'parent_name' => 'nullable|string',
-            'parent_phone_number' => 'nulla|unique:students|regex:/^([0-9\s\-\+\(\)]*)$/'
+            'matric' => 'required',
+            'year' => 'required',
+            'campus' => 'required',
+            'program_and_level' => 'required',
         ]);
         try {
             // return $request->all();
@@ -404,9 +398,10 @@ class StudentController extends Controller
                     if (Students::where('name', $importData[0])->count() === 0) {
                         $student = \App\Models\Students::create([
                             'name' => str_replace('’', "'", $importData[0]),
-                            'gender' => 'male',
+                            'matric' => $importData[1],
                             'password' => Hash::make('12345678'),
-                            'email' => explode(' ', str_replace('’', "'", $importData[0]))[0]
+                            'email' => explode(' ', str_replace('’', "'", $importData[0]))[0],
+                            'campus_id'=> $request->campus ?? null
                         ]);
 
                         $class = StudentClass::create([
@@ -790,10 +785,6 @@ class StudentController extends Controller
 
         return view('admin.student.promotion', $data);
     }
-
-    
-    public function demote(Request $request){}
-
 
     public function unitDemoteTarget(Request $request){
         return DB::table('school_units')->where('target_class', '=', $request->id)->first();
