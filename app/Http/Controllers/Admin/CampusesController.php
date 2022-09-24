@@ -103,6 +103,7 @@ class CampusesController extends Controller
             }
             $campus->fill($request->all());
             $campus->save();
+            return back()->with('success', 'Campus updated');
         } catch (\Throwable $th) {
             //throw $th;
             return back()->with('error', $th->getMessage());

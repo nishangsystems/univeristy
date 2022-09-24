@@ -52,5 +52,25 @@ class SchoolsController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        $data['title'] = "Edit School";
+        $data['school'] = \App\Models\School::find($id);
+        return view('admin.schools.edit', $data);
+    }
+
+    public function update($id, Request $request)
+    {
+        # code...
+    }
+
+    public function preview($id)
+    {
+        # code...
+        $data['title'] = "School Preview";
+        $data['school'] = \App\Models\School::find($id);
+        return view('admin.schools.preview', $data);
+    }
+
 
 }

@@ -129,7 +129,7 @@ class ProgramController extends Controller
             'name' => 'required',
             'type' => 'required',
         ]);
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $unit = new \App\Models\SchoolUnits();
             $unit->name = $request->input('name');
@@ -138,10 +138,10 @@ class ProgramController extends Controller
             $unit->prefix = $request->input('prefix');
             $unit->suffix = $request->input('suffix');
             $unit->save();
-            \DB::commit();
+            DB::commit();
             return redirect()->to(route('admin.units.index', [$unit->parent_id]))->with('success', $unit->name . " Added to units !");
         } catch (\Exception $e) {
-            \DB::rollback();
+            DB::rollback();
             echo ($e);
         }
     }
@@ -180,7 +180,7 @@ class ProgramController extends Controller
             'type' => 'required',
         ]);
 
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $unit = \App\Models\SchoolUnits::find($id);
             $unit->name = $request->input('name');
@@ -188,11 +188,11 @@ class ProgramController extends Controller
             $unit->prefix = $request->input('prefix');
             $unit->suffix = $request->input('suffix');
             $unit->save();
-            \DB::commit();
+            DB::commit();
 
             return redirect()->to(route('admin.units.index', [$unit->parent_id]))->with('success', $unit->name . " Updated !");
         } catch (\Exception $e) {
-            \DB::rollback();
+            DB::rollback();
             echo ($e);
         }
     }
@@ -217,13 +217,13 @@ class ProgramController extends Controller
     public function subjects($id)
     {
         $parent = \App\Models\SchoolUnits::find($id);
-        $data['title'] = "Subjects under " . $parent->name;
+        $data['title'] = "Subjects under " . \App\Http\Controllers\Admin\StudentController::baseClasses()[$parent->id];
         $data['parent'] = $parent;
         $data['subjects'] = DB::table('class_subjects')
             ->join('school_units', ['school_units.id' => 'class_subjects.class_id'])
             ->join('subjects', ['subjects.id' => 'class_subjects.subject_id'])
             ->where('class_subjects.class_id', $id)
-            ->select('subjects.id as subject_id', 'subjects.name', 'class_subjects.coef', 'class_subjects.class_id')->paginate(15);
+            ->select('subjects.id as subject_id', 'subjects.name', 'subjects.code', 'subjects.status', 'subjects.semester_id', 'subjects.level_id', 'class_subjects.coef', 'class_subjects.class_id')->paginate(15);
         //  dd($data['subjects']);
         return view('admin.units.subjects')->with($data);
     }
@@ -246,24 +246,24 @@ class ProgramController extends Controller
         $data['title'] = "Manage student under " . $parent->name;
         return view('admin.units.student')->with($data);
     }
-     public function studentsListing($id)
-     {
-        # code...
-        // get array of ids of all sub units
-        $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-        $subUnits = $this->subunitsOf($id);
+    public function studentsListing($id)
+    {
+    # code...
+    // get array of ids of all sub units
+    $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+    $subUnits = $this->subunitsOf($id);
 
-        $students = DB::table('student_classes')
-                ->whereIn('class_id', $subUnits)
-                ->join('students', 'students.id', '=', 'student_classes.student_id')
-                ->get();
-        $parent = \App\Models\SchoolUnits::find($id);
-        $data['parent'] = $parent;
-        $data['students'] = $students;
-        $data['classes'] = \App\Http\Controllers\Admin\StudentController::getMainClasses();
-        $data['title'] = "Manage student under " . $parent->name;
-        return view('admin.units.student-listing')->with($data);
-     }
+    $students = DB::table('student_classes')
+            ->whereIn('class_id', $subUnits)
+            ->join('students', 'students.id', '=', 'student_classes.student_id')
+            ->get();
+    $parent = \App\Models\SchoolUnits::find($id);
+    $data['parent'] = $parent;
+    $data['students'] = $students;
+    $data['classes'] = \App\Http\Controllers\Admin\StudentController::getMainClasses();
+    $data['title'] = "Manage student under " . $parent->name;
+    return view('admin.units.student-listing')->with($data);
+    }
 
     public function saveSubjects(Request  $request, $id)
     {
@@ -290,6 +290,8 @@ class ProgramController extends Controller
                 \App\Models\ClassSubject::create([
                     'class_id' => $id,
                     'subject_id' => $subject,
+                    'status'=> \App\Models\Subjects::find($subject)->status,
+                    'coef'=> \App\Models\Subjects::find($subject)->coef
                 ]);
             }
         }
@@ -309,5 +311,93 @@ class ProgramController extends Controller
     {
         $data = SchoolUnits::where('parent_id', $parent_id)->get();
         return response()->json($data);
+    }
+
+    public function semesters($background_id)
+    {
+        # code...
+        $data['title'] = "Manage Semesters Under ".\App\Models\SchoolUnits::find($background_id)->name;
+        $data['semesters'] = \App\Models\SchoolUnits::find($background_id)->semesters()->get();
+        return view('admin.semesters.index')->with($data);
+    }
+
+    public function create_semester($background_id)
+    {
+        # code...
+        $data['title'] = "Create Semesters Under ".\App\Models\SchoolUnits::find($background_id)->name;
+        $data['semesters'] = \App\Models\SchoolUnits::find($background_id)->semesters()->get();
+        return view('admin.semesters.create')->with($data);
+    }
+
+    public function edit_semester($background_id, $id)
+    {
+        # code...
+        $data['title'] = "Edit Semester";
+        $data['semesters'] = \App\Models\SchoolUnits::find($background_id)->semesters()->get();
+        $data['semester'] = \App\Models\Semester::find($id);
+        return view('admin.semesters.edit');
+    }
+
+    public function store_semester($program_id, Request $request)
+    {
+        # code...
+        $validator = Validator::make($request->all(), [
+            'program_id'=>'required',
+            'name'=>'required',
+        ]);
+
+        if ($validator->fails()) {
+            # code...
+            return back()->with('error', $validator->errors()->first());
+        }
+        try {
+            //code...
+            if (\App\Models\SchoolUnits::find($program_id)->semesters()->where('name', $request->name)->first()) {
+                # code...
+                return back()->with('error', "Semester already exists");
+            }
+            $semester = new \App\Models\Semester($request->all());
+            $semester->save();
+            return back()->with('success', 'Semester created');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function update_semester($program_id, $id)
+    {
+        # code...
+    }
+
+    public function delete_semester($id)
+    {
+        # code...
+    }
+
+    public function set_program_semester_type($program_id)
+    {
+        # code...
+        $data['title'] = "Set Semester Type for ".\App\Models\SchoolUnits::find($program_id)->name;
+        $data['semester_types'] = \App\Models\SemesterType::all();
+        return view('admin.semesters.set_type', $data);
+    }
+
+    public function post_program_semester_type($program_id, Request $request)
+    {
+        # code...
+        $validator = Validator::make(
+            $request->all(),
+            ['program_id'=>'required', 'semester_type'=>'required']
+        );
+
+        if ($validator->fails()) {
+            # code...
+            return back()->with('error', $validator->errors()->first());
+        }
+        $program = \App\Models\SchoolUnits::find($program_id);
+        $program->semester_type = $request->semester_type;
+        $program->save();
+        return back()->with('success', 'Done!');
     }
 }

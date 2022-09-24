@@ -14,8 +14,12 @@
                 <thead>
                     <tr class=" text-capitalize">
                         <th>#</th>
+                        <th>{{__('text.course_code')}}</th>
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.word_coefficient')}}</th>
+                        <th>{{__('text.word_semester')}}</th>
+                        <th>{{__('text.word_level')}}</th>
+                        <th>{{__('text.word_status')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -24,8 +28,11 @@
                     @foreach($subjects as $k=>$subject)
                     <tr>
                         <td>{{ $k+1 }}</td>
+                        <td>{{ $subject->code }}</td>
                         <td>{{ $subject->name }}</td>
                         <td>{{ $subject->coef }}</td>
+                        <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
+                        <td>{{ \App\Models\SchoolUnits::find($subject->level_id)->name }}</td>
                         <td class="d-flex justify-content-end align-items-center text-capitalize">
                             <a class="btn btn-xs btn-success" href="{{route('admin.subjects.edit',[$subject->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a> |
                             <a onclick="event.preventDefault();

@@ -16,6 +16,7 @@ class SchoolUnits extends Model
         'name',
         'unit_id',
         'parent_id',
+
     ];
 
     public function getParentKeyName()
@@ -89,5 +90,10 @@ class SchoolUnits extends Model
 
     public function parent(){
         return $this->hasMany(BoardingFee::class, 'parent_id');
+    }
+
+    public function semesters()
+    {
+        return $this->hasMany(Semester::class, 'background_id');
     }
 }

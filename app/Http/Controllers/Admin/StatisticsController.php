@@ -39,9 +39,7 @@ class StatisticsController extends Controller
                             'class'=>$sub_units[$key], 
                             'males'=>$this->getMales($key, request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear()), 
                             'females'=>$this->getFemales($key, request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear()),
-                            'day'=>$this->getDayStudents($key, request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear()),
-                            'boarding'=>$this->getBoardingStudents($key, request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
-                        ];
+                            ];
             }, array_keys($sub_units));
         // return $data['data'];
         return view('admin.statistics.students')->with($data);
@@ -70,29 +68,6 @@ class StatisticsController extends Controller
             ->pluck('students.id')
             ->toArray());
 
-    }
-
-    public function getDayStudents($unit_id, $year_id)
-    {
-        # code...
-        return count(DB::table('student_classes')
-            ->whereIn('class_id', \App\Http\Controllers\Admin\ProgramController::subunitsOf($unit_id))
-            ->where('year_id', '=', $year_id)
-            ->join('students', 'students.id', '=', 'student_classes.student_id')
-            ->where('students.type','=', 'day')
-            ->pluck('students.id')
-            ->toArray());
-    }
-    
-    public function getBoardingStudents($unit_id, $year_id)
-    {
-        return count(DB::table('student_classes')
-            ->whereIn('class_id', \App\Http\Controllers\Admin\ProgramController::subunitsOf($unit_id))
-            ->where('year_id', '=', $year_id)
-            ->join('students', 'students.id', '=', 'student_classes.student_id')
-            ->where('students.type','=', 'boarding')
-            ->pluck('students.id')
-            ->toArray());
     }
 
     // for each class, get the total number of students, fee per person, number of completed, number of owing, %age paid, %age owing, details

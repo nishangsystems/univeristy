@@ -89,7 +89,7 @@ class StudentController extends Controller
         # code...
         // added by Germanus. Loads listing of all classes accross all sections in a given school
         
-        $base_units = DB::table('school_units')->where('parent_id', '>', 0)->get();
+        $base_units = DB::table('school_units')->get();
     
         // return $base_units;
         $listing = [];
@@ -98,7 +98,7 @@ class StudentController extends Controller
         foreach ($base_units as $key => $value) {
             # code...
             // set current parent as key and name as value, appending from the parent_array
-            if (array_key_exists($value->parent_id, $listing)) {
+            if (array_key_exists($value->parent_id, $listing) ) {
                 $listing[$value->id] = $listing[$value->parent_id] . $separator . $value->name; 
             }else {$listing[$value->id] = $value->name;}
     
@@ -117,18 +117,31 @@ class StudentController extends Controller
             }
             // if unit has no child, add to options
             if ($base_units->where('parent_id', '=', $value->id)->count() == 0) {
-                $options[$value->id] = $listing[$value->id];
+                $options[$value->id] = '';
+
+                // remove second highest child before adding
+                // $options[$value->id] = mb_split(':', $listing[$value->id]); old format with complete hierarchy
+                $split = mb_split(':', $listing[$value->id]);
+                foreach ($split as $i => $word) {
+                    # code...
+                    if($i != 1)
+                    $options[$value->id] .= ' : '.$word;
+                }
+                $options[$value->id] = substr($options[$value->id], 2);
+
             }
+
         }
+
         return $options;
     }
 
     public static function baseClasses()
     {
-        # code...
+             # code...
         // added by Germanus. Loads listing of all classes accross all sections in a given school
         
-        $base_units = DB::table('school_units')->where('parent_id', '>', 0)->get();
+        $base_units = DB::table('school_units')->get();
     
         // return $base_units;
         $listing = [];
@@ -137,7 +150,7 @@ class StudentController extends Controller
         foreach ($base_units as $key => $value) {
             # code...
             // set current parent as key and name as value, appending from the parent_array
-            if (array_key_exists($value->parent_id, $listing)) {
+            if (array_key_exists($value->parent_id, $listing) ) {
                 $listing[$value->id] = $listing[$value->parent_id] . $separator . $value->name; 
             }else {$listing[$value->id] = $value->name;}
     
@@ -156,9 +169,22 @@ class StudentController extends Controller
             }
             // if unit has no child, add to options
             if ($base_units->where('parent_id', '=', $value->id)->count() == 0) {
-                $options[$value->id] = $listing[$value->id];
+                $options[$value->id] = '';
+
+                // remove second highest child before adding
+                // $options[$value->id] = mb_split(':', $listing[$value->id]); old format with complete hierarchy
+                $split = mb_split(':', $listing[$value->id]);
+                foreach ($split as $i => $word) {
+                    # code...
+                    if($i != 1)
+                    $options[$value->id] .= ' : '.$word;
+                }
+                $options[$value->id] = substr($options[$value->id], 2);
+
             }
+
         }
+
         return $options;
     }
 
@@ -185,8 +211,9 @@ class StudentController extends Controller
             'name' => 'required',
             'matric' => 'required',
             'year' => 'required',
-            'campus' => 'required',
-            'program_and_level' => 'required',
+            'campus_id' => 'required',
+            'section' => 'required',
+            'program_id'=>'required',
         ]);
         try {
             // return $request->all();
@@ -195,7 +222,7 @@ class StudentController extends Controller
             $input = $request->all();
             $input['password'] = Hash::make('password');
             // create a student
-            $input['matric'] = $this->getNextAvailableMatricule($request->section);
+            // $input['matric'] = $this->getNextAvailableMatricule($request->section);
             $student = new \App\Models\Students($input);
             $student->save();
             // dd($student);
@@ -356,9 +383,13 @@ class StudentController extends Controller
         // Validate request
         $request->validate([
             'batch' => 'required',
-            'file' => 'required|mimes:csv,txt,xlxs',
+            'file' => 'required|mimes:csv,txt,xlsx',
             'section' => 'required',
+            'program_id'=> 'required'
         ]);
+
+        // used to track duplicate records that won't be inserted/saved.
+        $duplicates = '';
 
         $file = $request->file('file');
         // File Details
@@ -366,7 +397,7 @@ class StudentController extends Controller
         $extension = $file->getClientOriginalExtension();
         $filename = "Names." . $extension;
         // Valid File Extensions;
-        $valid_extension = array("csv", "xls");
+        $valid_extension = array("csv", "xlsx");
         if (in_array(strtolower($extension), $valid_extension)) {
             // File upload location
             $location = public_path() . '/files/';
@@ -381,7 +412,6 @@ class StudentController extends Controller
 
             while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
                 $num = count($filedata);
-
                 for ($c = 0; $c < $num; $c++) {
                     $importData_arr[$i][] = $filedata[$c];
                 }
@@ -390,20 +420,20 @@ class StudentController extends Controller
             fclose($file);
 
 
-
             DB::beginTransaction();
             try {
-
                 foreach ($importData_arr as $importData) {
-                    if (Students::where('name', $importData[0])->count() === 0) {
+                    if (Students::where('name', $importData[0])->orWhere('matric', $importData[1])->count() === 0) {
                         $student = \App\Models\Students::create([
                             'name' => str_replace('’', "'", $importData[0]),
                             'matric' => $importData[1],
+                            'email' => explode(' ', str_replace('’', "'", $importData[2]))[0],
+                            'gender' => $importData[3],
                             'password' => Hash::make('12345678'),
-                            'email' => explode(' ', str_replace('’', "'", $importData[0]))[0],
-                            'campus_id'=> $request->campus ?? null
+                            'campus_id'=> $request->campus_id ?? null,
+                            'program_id' => $request->program_id ?? null
                         ]);
-
+                        dd($student);
                         $class = StudentClass::create([
                             'student_id' => $student->id,
                             'class_id' => $request->section,
@@ -414,6 +444,7 @@ class StudentController extends Controller
 
                         // echo ($importData[0]." Inserted Successfully<br>");
                     } else {
+                        $duplicates .= $importData[1].' : '.$importData[0].', ';
                         //  echo ($importData[0]."  <b style='color:#ff0000;'> Exist already on DB and wont be added. Please verify <br></b>");
                     }
                 }
@@ -421,18 +452,17 @@ class StudentController extends Controller
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollback();
-                echo ($e);
+                return back()->with('error', $e->getMessage());
             }
             session('message', 'Import Successful.');
             //echo("<h3 style='color:#0000ff;'>Import Successful.</h3>");
-
         } else {
             //echo("<h3 style='color:#ff0000;'>Invalid File Extension.</h3>");
 
             session('message', 'Invalid File Extension.');
         }
 
-        return redirect()->to(route('admin.students.index', [$request->section]))->with('success', 'Student Imported successfully!');
+        return redirect()->to(route('admin.students.index', [$request->section]))->with('success', $duplicates == '' ? 'Student Imported successfully!' : 'Student Imported successfully! The following students where not imported because they are already in the database;\n'.$duplicates);
     }
     
     function getSubunitsOf($id){
@@ -444,10 +474,11 @@ class StudentController extends Controller
         # code...
         // added by Germanus. Loads listing of all classes accross all sections in a given school
         
-        $base_units = DB::table('school_units')->where('parent_id', '>', 0)->get();
+        $base_units = DB::table('school_units')->where('parent_id', '>', 1)->get();
     
         // return $base_units;
         $listing = [];
+        $options = [];
         $separator = ' : ';
         foreach ($base_units as $key => $value) {
             # code...
@@ -469,8 +500,21 @@ class StudentController extends Controller
                 $listing[$valuei->id] = $listing[$value->id] . $separator . $listing[$value->id]:
                 null;
             }
+
+            $options[$value->id] = '';
+
+                // remove second highest child before adding
+                // $options[$value->id] = mb_split(':', $listing[$value->id]); old format with complete hierarchy
+                $split = mb_split(':', $listing[$value->id]);
+                foreach ($split as $i => $word) {
+                    # code...
+                    if($i < 3)
+                    $options[$value->id] .= ' : '.$word;
+                }
+                $options[$value->id] = substr($options[$value->id], 2);
+
         }
-        return $listing;
+        return $options;
     }
     // get promotion base classes
     function _getBaseClasses(){

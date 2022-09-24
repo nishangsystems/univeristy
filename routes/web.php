@@ -3,6 +3,7 @@
 use App\Http\Controllers;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\WelcomeController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -113,7 +114,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
 
     Route::resource('subjects', 'Admin\SubjectController');
-
+    Route::post('subjects/create/next', 'Admin\SubjectController@next')->name('courses.create_next');
+    Route::get('subjects/create/{background}/{semester}', 'Admin\SubjectController@_create')->name('courses._create');
     Route::get('classmaster', 'Admin\UserController@classmaster')->name('users.classmaster');
     Route::post('classmaster', 'Admin\UserController@saveClassmaster')->name('users.classmaster');
     Route::delete('classmaster', 'Admin\UserController@deleteMaster')->name('users.classmaster');
@@ -206,9 +208,21 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('/', 'Admin\SchoolsController@index')->name('index');
         Route::get('/create', 'Admin\SchoolsController@create')->name('create');
         Route::get('/edit/{id}', 'Admin\SchoolsController@edit')->name('edit');
+        Route::get('/preview/{id}', 'Admin\SchoolsController@preview')->name('preview');
         Route::post('/store', 'Admin\SchoolsController@store')->name('store');
         Route::post('/update/{id}', 'Admin\SchoolsController@update')->name('update');
         Route::get('/update/{id}', 'Admin\SchoolsController@delete')->name('delete');
+    });
+
+    Route::prefix('semesters')->name('semesters.')->group(function(){
+        Route::get('{program_id}', 'Admin\ProgramController@semesters')->name('index');
+        Route::get('create/{program_id}', 'Admin\ProgramController@create_semester')->name('create');
+        Route::get('edit/{program_id}/{id}', 'Admin\ProgramController@edit_semester')->name('edit');
+        Route::get('delete/{id}', 'Admin\ProgramController@delete_semester')->name('delete');
+        Route::post('store/{program_id}', 'Admin\ProgramController@store_semester')->name('store');
+        Route::post('update/{program_id}/{id}', 'Admin\ProgramController@update')->name('update');
+        Route::get('set_type/{program_id}', 'Admin\ProgramController@set_program_semester_type')->name('set_type');
+        Route::post('set_type/{program_id}', 'Admin\ProgramController@post_program_semester_type');
     });
 });
 
@@ -253,6 +267,9 @@ Route::post('student_rank', 'HomeController@rankPost')->name('student_rank');
 
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
 
+Route::get('semesters/{background}', function(Request $request){
+    return \App\Models\Semester::where('background_id', $request->background)->get();
+})->name('semesters');
 
 
 

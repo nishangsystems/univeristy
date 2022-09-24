@@ -5,20 +5,45 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use function Ramsey\Uuid\v1;
+
 class SubjectController extends Controller
 {
+
+    public function next(Request $request)
+    {
+        # code...
+        return redirect(route('admin.courses._create', [$request->background, $request->semester]));
+    }
+
+    public function _create(Request $request)
+    {
+        $data['title'] = 'Create '.\App\Models\Semester::find($request->semester)->name.' Course';
+        return view('admin.subject._create', $data);
+    }
 
     public function store(Request $request)
     {
         $this->validate($request, [
             'name' => 'required',
             'coef' => 'required',
+            'code'=>'required',
+            'level'=>'required',
+            'semester'=>'required',
+            'status'=>'required',
         ]);
+        if(\App\Models\Subjects::where('code', $request->input('code'))->count()>0){
+            return back()->with('error', "Course code ".$request->input('code').' already exist');
+        }
         $subject = new \App\Models\Subjects();
         $subject->name = $request->input('name');
         $subject->coef = $request->input('coef');
+        $subject->code = $request->input('code');
+        $subject->status = $request->input('status');
+        $subject->level_id = $request->input('level');
+        $subject->semester_id = $request->input('semester');
         $subject->save();
-        return redirect()->to(route("admin.subjects.index",))->with('success', "Subject Created!");
+        return back()->with('success', "Subject Created!");
     }
 
     public function edit(Request $request, $id)
@@ -53,13 +78,23 @@ class SubjectController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'coef' => 'required',
+            'code'=>'required',
+            'level'=>'required',
+            'semester'=>'required',
+            'status'=>'required',
         ]);
-
+        if(\App\Models\Subjects::where('code', $request->input('code'))->count()>0 && \App\Models\Subjects::find($id)->code != $request->input('code')){
+            return back()->with('error', "Course code ".$request->input('code').' already exist');
+        }
         $subject = \App\Models\Subjects::find($id);
         $subject->name = $request->input('name');
         $subject->coef = $request->input('coef');
+        $subject->code = $request->input('code');
+        $subject->status = $request->input('status');
+        $subject->level_id = $request->input('level');
+        $subject->semester_id = $request->input('semester');
         $subject->save();
-        return redirect()->to(route('admin.subjects.index'))->with('success', "Subject Updated Successfully!");
+        return back()->with('success', "Subject Updated Successfully!");
     }
 
     /**

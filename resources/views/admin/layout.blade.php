@@ -398,7 +398,7 @@
                 <a href="" class="dropdown-toggle text-capitalize">
                     <i class="menu-icon  text-primary fa fa-book"></i>
                     <span class="menu-text">
-							{{__('text.subject_zone')}}
+							{{__('text.course_zone')}}
 					</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
@@ -407,14 +407,14 @@
                     <li>
                         <a href="{{route('admin.subjects.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.all_subjects')}}
+                            {{__('text.all_courses')}}
                         </a>
                         <b class="arrow"></b>
                     </li>
                     <li>
                         <a href="{{route('admin.subjects.create')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.add_subject')}}
+                            {{__('text.add_course')}}
                         </a>
                         <b class="arrow"></b>
                     </li>

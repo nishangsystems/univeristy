@@ -71,10 +71,10 @@
                     </thead>
                     <tbody>
 
+                    @php($k = 0)
                     @foreach($campuses as $cps)
-                        @php($k = 0)
                         <tr>
-                            <td>{{ $k+1 }}</td>
+                            <td>{{ ++$k }}</td>
                             <td>{{ $cps->name }}</td>
                             <td>{{ $cps->address }}</td>
                             <td>{{ $cps->telephone }}</td>

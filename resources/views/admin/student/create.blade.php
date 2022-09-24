@@ -66,6 +66,7 @@
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_gender')}} </label>
                 <div class="col-lg-10">
                     <select class=" form-control" name="gender" >
+                        <option value="">{{__('text.word_gender')}}</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
@@ -75,10 +76,10 @@
                 </div>
             </div>
             
-           
+            
             <h5 class="mt-5 mb-4 font-weight-bold text-capitalize">{{__('text.admission_class_information')}}</h5>
             
-            <div class="form-group @error('dob') has-error @enderror">
+            <div class="form-group @error('year') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.academic_year')}}</label>
                 <div class="col-lg-10">
                     <select class=" form-control" name="year" >
@@ -89,19 +90,36 @@
                             <option value="" selected>No data found</option>
                         @endforelse
                     </select>
-                    @error('dob')
+                    @error('year')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="form-group @error('program_id') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_program')}}</label>
+                <div class="col-lg-10">
+                    <select class=" form-control" name="program_id" >
+                        <option value="">{{__('text.select_program')}}</option>
+                        @forelse(\App\Http\Controllers\Admin\StudentController::getMainClasses() as $k=>$v)
+                            <option value="{{$k}}">{{$v}}</option>
+                        @empty
+                            <option value="" selected>No data found</option>
+                        @endforelse
+                    </select>
+                    @error('program_id')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
             
-            <div class="form-group @error('campus') has-error @enderror">
+            <div class="form-group @error('campus_id') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_campus')}} </label>
                 <div class="col-lg-10">
-                    <select name="campus" class="form-control" id="">
-                        <option value="">select academic year</option>
-                        @forelse(\App\Models\Campus::all() as $year)
-                            <option value="{{$year->id}}">{{$year->name}}</option>
+                    <select name="campus_id" class="form-control" id="">
+                        <option value="">select campus</option>
+                        @forelse(\App\Models\Campus::all() as $campus)
+                            <option value="{{$campus->id}}">{{$campus->name}}</option>
                         @empty
                             <option value="" selected>No data found</option>
                         @endforelse
@@ -114,11 +132,11 @@
 
             <div id="section">
                 <div class="form-group text-capitalize">
-                    <label for="cname" class="control-label col-lg-2">Program / level <span style="color:red">*</span></label>
+                    <label for="cname" class="control-label col-lg-2"> Class <span style="color:red">*</span></label>
                     <div class="col-lg-10">
                         <div>
                             <select name="section" class="form-control section" id="section0" required>
-                                <option selected disabled>{{__('text.select_section')}}</option>
+                                <option selected disabled>{{__('text.select_class')}}</option>
                                 @if(isset($options))
                                     @foreach($options as $key => $option)
                                         <option value="{{$key}}">{{$option}}</option>
@@ -132,7 +150,8 @@
                     </div>
                 </div>
             </div>
-
+            
+           
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
                     <button id="save" class="btn btn-xs btn-primary mx-3" style="display: block" type="submit">{{__('text.word_save')}}</button>

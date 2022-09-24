@@ -35,7 +35,7 @@
                 <div class="form-group text-capitalize">
                     <label for="cname" class="control-label col-lg-2">{{__('text.word_campus')}}</label>
                     <div class="col-lg-10">
-                        <select class="form-control" name="campus">
+                        <select class="form-control" name="campus_id">
                             <option selected disabled>{{__('text.select_campus')}}</option>
                             @forelse(\App\Models\Campus::all() as $section)
                                 <option value="{{$section->id}}">{{$section->name}}</option>
@@ -51,10 +51,10 @@
                         <label for="cname" class="control-label col-lg-2">Program</label>
                         <div class="col-lg-10">
                             <div>
-                                <select class="form-control section" id="section0">
+                                <select class="form-control section" name="program_id" id="section0">
                                     <option selected disabled>{{__('text.select_section')}}</option>
-                                    @forelse(\App\Models\SchoolUnits::where('parent_id',0)->get() as $section)
-                                        <option value="{{$section->id}}">{{$section->name}}</option>
+                                    @forelse(\App\Http\Controllers\Admin\StudentController::getMainClasses() as $i => $class)
+                                        <option value="{{$i}}">{{$class}}</option>
                                     @empty
                                         <option>{{__('text.no_sections_created')}}</option>
                                     @endforelse
@@ -63,13 +63,13 @@
                         </div>
                     </div>
                     <div class="form-group text-capitalize">
-                        <label for="cname" class="control-label col-lg-2">Level</label>
+                        <label for="cname" class="control-label col-lg-2">Class</label>
                         <div class="col-lg-10">
                             <div>
-                                <select class="form-control section" id="section0">
+                                <select class="form-control section" name="section" id="section0">
                                     <option selected disabled>{{__('text.select_section')}}</option>
-                                    @forelse(\App\Models\SchoolUnits::where('parent_id',0)->get() as $section)
-                                        <option value="{{$section->id}}">{{$section->name}}</option>
+                                    @forelse(\App\Http\Controllers\Admin\StudentController::baseClasses() as $id => $section)
+                                        <option value="{{$id}}">{{$section}}</option>
                                     @empty
                                         <option>{{__('text.no_sections_created')}}</option>
                                     @endforelse
@@ -112,40 +112,5 @@
 @endsection
 
 @section('script')
-    <script>
-        $('.section').on('change', function () {
-            refresh($(this));
-        })
-
-      function refresh(div) {
-          $(".pre-loader").css("display", "block");
-          url = "{{route('section-children', "VALUE")}}";
-          url = url.replace('VALUE', div.val());
-          $.ajax({
-              type: "GET",
-              url: url,
-              success: function (data) {
-                  $(".pre-loader").css("display", "none");
-                  let html = "";
-                  if(data.valid == 1){
-                      $('#save').css("display", "block");
-                  }else{
-                      $('#save').css("display", "none");
-                  }
-                  if (data.array.length > 0) {
-                      html += '<div class="mt-3"><select onchange="refresh($(this))" class="form-control section" name="'+data.name+'">';
-                      html += '<option selected > {{__("text.word_select")}} ' + data.name + '</option>';
-                      for (i = 0; i < data.array.length; i++) {
-                          html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
-                      }
-                      html += '</select>' +
-                          '<div class="children"></div></div>';
-                  }
-                  div.parent().find('.children').html(html)
-              }, error: function (e) {
-                  $(".pre-loader").css("display", "none");
-              }
-          });
-      }
-    </script>
+    
 @endsection

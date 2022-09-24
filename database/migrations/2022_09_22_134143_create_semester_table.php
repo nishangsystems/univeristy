@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubjectsTable extends Migration
+class CreateSemesterTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateSubjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('subjects', function (Blueprint $table) {
+        Schema::create('semesters', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('coef')->default(2);
-            $table->string('code')->nullable();
-            $table->unsignedBigInteger('semester_id')->nullable();
-            $table->enum('status', ['general', 'required', 'compulsery']);
+            $table->unsignedBigInteger('background_id');
+            $table->integer('sem')->nullable();
             $table->timestamps();
+
+            $table->foreign('background_id')->references('id')->on('school_units');
         });
     }
 
@@ -31,6 +31,6 @@ class CreateSubjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subjects');
+        Schema::dropIfExists('semester');
     }
 }

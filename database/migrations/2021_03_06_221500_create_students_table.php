@@ -26,6 +26,7 @@ class CreateStudentsTable extends Migration
             $table->enum('gender', ['female','male']);
             $table->string('pob')->nullable();
             $table->string('address')->nullable();
+            $table->unsignedBigInteger('program_id')->nullable();
             $table->timestamps();
 
             $table->foreign('campus_id')->references('id')->on('campuses');

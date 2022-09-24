@@ -16,7 +16,6 @@ class Students extends Authenticatable
         'email',
         'phone',
         'address',
-        'religion',
         'gender',
         'username',
         'matric',
@@ -25,8 +24,8 @@ class Students extends Authenticatable
         'campus_id',
         'admission_batch_id',
         'password',
-        'type',
         'parent_name',
+        'program_id',
         'parent_phone_number'
     ];
 

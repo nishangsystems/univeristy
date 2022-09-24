@@ -30,9 +30,10 @@
                             <td>{{ $cps->telephone }}</td>
                             <td>
                                @if($cps->students()->count() > 0)
-                                    <a href="{{route('admin.campuses.edit', $cps->id)}}" class="btn btn-sm btn-warning text-capitalize">{{__('text.word_edit')}}</a>
-                               @else
-                                    <a href="{{route('admin.campuses.delete', $cps->id)}}" class="btn btn-sm btn-secondary text-capitalize">{{__('text.word_delete')}}</a>
+                                    <a href="{{route('admin.campuses.edit', $cps->id)}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_edit')}}</a>
+                                    @else
+                                    <a href="{{route('admin.campuses.edit', $cps->id)}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_edit')}}</a>
+                                    <a href="{{route('admin.campuses.delete', $cps->id)}}" class="btn btn-sm btn-danger text-capitalize">{{__('text.word_delete')}}</a>
                                 @endif
                             </td>
                         </tr>

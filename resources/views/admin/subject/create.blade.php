@@ -4,19 +4,24 @@
     <!-- FORM VALIDATION -->
     <div class="mx-3">
         <div class="form-panel">
-            <form class="cmxform form-horizontal style-form" method="post" action="{{route('admin.subjects.store')}}">
+            <form class="cmxform form-horizontal style-form" method="post" action="{{route('admin.courses.create_next')}}">
                 {{csrf_field()}}
                 <div class="form-group @error('name') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_name')}} ({{__('text.word_required')}})</label>
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_backgroun')}} ({{__('text.word_required')}})</label>
                     <div class="col-lg-10">
-                        <input class=" form-control" name="name" value="{{old('name')}}" type="text" required />
+                        <select class=" form-control" name="background" required onchange="loadSemesters(event.target)">
+                            <option value="">{{__('text.select_background')}}</option>
+                            @foreach(\App\Models\SemesterType::all() as $bgs)
+                                <option value="{{$bgs->id}}">{{$bgs->background_name}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 
-                <div class="form-group @error('coef') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_coefficient')}} ({{__('text.word_required')}})</label>
-                    <div class="col-lg-10">
-                        <input class=" form-control" name="coef" value="{{old('coef')}}" type="number" required />
+                <div class="form-group @error('coef') has-error @enderror" id="semesters-box">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_semester')}} ({{__('text.word_required')}})</label>
+                    <div class="col-lg-10" id="semesters">
+                        <input class=" form-control" name="coef" value="{{old('coef')}}" type="number" required  disabled/>
                     </div>
                 </div>
 
@@ -29,4 +34,26 @@
             </form>
         </div>
     </div>
+@endsection
+@section('script')
+<script>
+    function loadSemesters(element){
+        let bg = element.value;
+        let url = "{{route('semesters', '__BG')}}";
+        url = url.replace('__BG', bg);
+        $.ajax({
+            method:'get',
+            url: url,
+            success: function(data){
+                console.log(data);
+                let semester_ = `<select name="semester" class="form-control" required>`;
+                data.forEach(element => {
+                    semester_ = semester_+`<option value="`+element.id+`">`+element.name+`</option>`;
+                });
+                semester_ = semester_+`</select>`;
+                $('#semesters').html(semester_);
+            }
+        })
+    }
+</script>
 @endsection

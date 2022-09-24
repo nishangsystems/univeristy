@@ -5,7 +5,7 @@
         <form action="{{route('admin.stats.students')}}" method="get">
             @csrf
             <div class="form-group">
-                <label for="" class="text-secondary h4 fw-bold">{{__('text.select_academic_year)}}</label>
+                <label for="" class="text-secondary h4 fw-bold">{{__('text.select_academic_year')}}</label>
                 <div class="d-flex justify-content-between">
                     <select name="year" id="" class="form-control">
                         <option value="" selected>{{__('text.academic_year')}}</option>
@@ -32,11 +32,9 @@
                 <thead class="bg-secondary text-black text-capitalize">
                     @php($count = 1)
                     <th>##</th>
-                    <th>{{__(text.word_class)}}</th>
+                    <th>{{__('text.word_class')}}</th>
                     <th>{{__('text.word_males')}}</th>
                     <th>{{__('text.word_females')}}</th>
-                    <th>{{__('text.day_students')}}</th>
-                    <th>{{__('text.word_boarders')}}</th>
                 </thead>
                 <tbody>
                     @forelse($data ?? [] as $value)
@@ -46,8 +44,6 @@
                             <td class="border-left border-right">{{str_replace(':', '/', $value['class'])}}</td>
                             <td class="border-left border-right">{{$value['males']}}</td>
                             <td class="border-left border-right">{{$value['females']}}</td>
-                            <td class="border-left border-right">{{$value['day']}}</td>
-                            <td class="border-left border-right">{{$value['boarding']}}</td>
                         </tr>
                         @else
                         <tr class="border-bottom border-dark">
@@ -55,8 +51,6 @@
                             <td class="border-left border-right">{{str_replace(':', '/', $value['class'])}}</td>
                             <td class="border-left border-right">{{$value['males']}}</td>
                             <td class="border-left border-right">{{$value['females']}}</td>
-                            <td class="border-left border-right">{{$value['day']}}</td>
-                            <td class="border-left border-right">{{$value['boarding']}}</td>
                         </tr>
                         @endif
                     @empty
