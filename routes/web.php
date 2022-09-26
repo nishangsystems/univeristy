@@ -53,6 +53,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('units/{parent_id}/subjects/manage', 'Admin\ProgramController@saveSubjects')->name('units.subjects.manage');
 
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
+
+    Route::get('programs/assign_level', 'Admin\ProgramController@assign_program_level')->name('programs.set_levels');
+    Route::post('programs/assign_level', 'Admin\ProgramController@store_program_level');
+    Route::get('programs/{id}/levels', 'Admin\ProgramController@program_levels')->name('programs.levels');
     
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
     Route::get('print_fee', 'Admin\FeesController@printFee')->name('print_fee');

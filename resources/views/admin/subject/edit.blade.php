@@ -32,8 +32,8 @@
                     <div class="col-md-9 col-lg-9">
                         <select name="level" id="" required class="form-control">
                             <option value="">{{__('text.select_level')}}</option>
-                            @foreach(\App\Models\SchoolUnits::where('unit_id', 1)->get() as $level)
-                            <option value="{{$level->id}}" {{$level->id == $subject->level_id ? 'selected' : ''}}>{{$level->name}}</option>
+                            @foreach(\App\Models\Level::all() as $level)
+                            <option value="{{$level->id}}" {{$level->id == $subject->level_id ? 'selected' : ''}}>{{$level->level}}</option>
                             @endforeach
                         </select>
                     </div>
