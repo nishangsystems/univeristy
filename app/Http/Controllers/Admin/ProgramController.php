@@ -400,4 +400,31 @@ class ProgramController extends Controller
         $program->save();
         return back()->with('success', 'Done!');
     }
+
+    public function assign_program_level()
+    {
+        $data['title'] = "Manage Program Levels";
+        return view('admin.units.set-levels', $data);
+    }
+
+    public function store_program_level(Request $request)
+    {
+        $this->validate($request, [
+            'program_id'=>'required',
+            'levels'=>'required'
+        ]);
+        // return $request->all();
+
+        foreach ($request->levels as $key => $lev) {
+            if (\App\Models\ProgramLevel::where('program_id', $request->program_id)->where('level_id', $lev)->count() == 0) {
+                \App\Models\ProgramLevel::create(['program_id'=>$request->program_id, 'level_id'=>$lev]);
+            }
+        }
+        return back()->with('success', 'Program levels assigned.');
+    }
+
+    public function program_levels($id)
+    {
+        return \App\Models\ProgramLevel::where('program_id', $id)->pluck('id')->toArray();
+    }
 }

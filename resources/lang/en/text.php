@@ -276,4 +276,6 @@ return [
     'general/elective'=>'general/elective',
     'word_course'=>'course',
     'word_semester'=>'semester',
+    'program_levels'=>'program levels',
+    
 ];

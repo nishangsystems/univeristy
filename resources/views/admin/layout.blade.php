@@ -308,6 +308,15 @@
 
                         <b class="arrow"></b>
                     </li>
+                    
+                    <li>
+                        <a href="{{route('admin.programs.set_levels')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.program_levels')}}
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
 
                     <li>
                         <a href="{{route('admin.result_release.index')}}" class="text-capitalize">
