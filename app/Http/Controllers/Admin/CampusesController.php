@@ -119,4 +119,42 @@ class CampusesController extends Controller
         }
         \App\Models\Campus::find($id)->delete();
     }
+
+    public function programs($id)//$id for the campus_id
+    {
+        # code...
+        $data['title'] = "Manage Programs Under ".\App\Models\Campus::find($id)->name;
+        $data['programs'] = \App\Models\CampusProgram::where('campus_id', $id)->pluck('program_level_id')->toArray();
+        return view('admin.campuses.programs', $data);
+    }
+
+    public function set_program_fee($id, $program_id)
+    {
+        # code...
+    }
+
+    public function add_program($id, $program_id)
+    {
+    # code...
+        if (\App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->count()>0) {
+            # code...
+            return back()->with('error', 'Already exist in this campus');
+        }
+        $cp = new \App\Models\CampusProgram(['campus_id'=>$id, 'program_level_id'=>$program_id]);
+        $cp->save();
+        return back()->with('success', 'done');
+    }
+
+    public function drop_program($id, $program_id)
+    {
+        # code...
+        if (\App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->count()==0) {
+            # code...
+            return back()->with('error', 'Does not exist in this campus');
+        }
+
+        \App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->first()->delete();
+        return back()->with('success', 'done');
+
+    }
 }

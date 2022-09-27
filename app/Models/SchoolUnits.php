@@ -96,4 +96,9 @@ class SchoolUnits extends Model
     {
         return $this->hasMany(Semester::class, 'background_id');
     }
+
+    public function programLevels()
+    {
+        return $this->hasManyThrough(Level::class, ProgramLevel::class);
+    }
 }
