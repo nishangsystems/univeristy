@@ -310,9 +310,9 @@
                     </li>
                     
                     <li>
-                        <a href="{{route('admin.programs.set_levels')}}" class="text-capitalize">
+                        <a href="{{route('admin.programs.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.program_levels')}}
+                            {{__('text.manage_programs')}}
                         </a>
 
                         <b class="arrow"></b>

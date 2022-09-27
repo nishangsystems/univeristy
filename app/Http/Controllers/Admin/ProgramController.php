@@ -425,6 +425,46 @@ class ProgramController extends Controller
 
     public function program_levels($id)
     {
-        return \App\Models\ProgramLevel::where('program_id', $id)->pluck('id')->toArray();
+        $data['title'] = "Program Levels for ".\App\Models\SchoolUnits::find($id)->name;
+        $data['program_levels'] =  \App\Models\ProgramLevel::where('program_id', $id)->pluck('level_id')->toArray();
+        // $data['program_levels'] =  DB::table('school_units')->where('school_units.id', '=', $id)
+        //             ->join('program_levels', 'program_id', '=', 'school_units.id')
+        //             ->join('levels', 'levels.id', '=', 'program_levels.level_id')
+        //             ->get(['program_levels.*', 'school_units.name as program', 'levels.level as level']);
+        // dd($data);
+        return view('admin.units.program-levels', $data);
+    }
+
+    public function program_index()
+    {
+        # code...
+        $data['title'] = "Manage Programs";
+        $data['programs'] = \App\Models\SchoolUnits::where('unit_id', 4)->get();
+        // dd($data);
+        return view('admin.units.programs', $data);
+    }
+
+    public function add_program_level($id, $level_id)
+    {
+        # code...
+        if (\App\Models\ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->count()>0) {
+            # code...
+            return back()->with('error', 'Level already exist in this program');
+        }
+        $pl = new \App\Models\ProgramLevel(['program_id'=>$id, 'level_id'=>$level_id]);
+        $pl->save();
+        return back()->with('success','done');
+    }
+
+    public function drop_program_level($id, $level_id)
+    {
+        # code...
+        if (\App\Models\ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->count()==0) {
+            # code...
+            return back()->with('error', "Level doesn't exist in this program");
+        }
+        \App\Models\ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->first()->delete();
+        return back()->with('success', 'done');
+        
     }
 }

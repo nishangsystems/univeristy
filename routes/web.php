@@ -57,6 +57,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('programs/assign_level', 'Admin\ProgramController@assign_program_level')->name('programs.set_levels');
     Route::post('programs/assign_level', 'Admin\ProgramController@store_program_level');
     Route::get('programs/{id}/levels', 'Admin\ProgramController@program_levels')->name('programs.levels');
+    Route::get('programs/{id}/levels/{level_id}/add', 'Admin\ProgramController@add_program_level')->name('programs.levels.add');
+    Route::get('programs/{id}/levels/{levle_id}/drop', 'Admin\ProgramController@drop_program_level')->name('programs.levels.drop');
+    Route::get('programs/index', 'Admin\ProgramController@program_index')->name('programs.index');
     
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
     Route::get('print_fee', 'Admin\FeesController@printFee')->name('print_fee');
@@ -207,6 +210,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('/store', 'Admin\CampusesController@store')->name('store');
         Route::post('/update/{id}', 'Admin\CampusesController@update')->name('update');
         Route::get('/update/{id}', 'Admin\CampusesController@delete')->name('delete');
+        Route::get('/{id}/programs', 'Admin\CampusesController@programs')->name('programs');
+        Route::get('/{id}/programs/{program_id}/set_fee', 'Admin\CampusesController@set_program_fee')->name('set_fee');
+        Route::get('/{id}/programs/{program_id}/add', 'Admin\CampusesController@add_program')->name('add_program');
+        Route::get('/{id}/programs/{program_id}/drop', 'Admin\CampusesController@drop_program')->name('drop_program');
     });
     Route::prefix('schools')->name('schools.')->group(function(){
         Route::get('/', 'Admin\SchoolsController@index')->name('index');

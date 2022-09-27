@@ -35,4 +35,9 @@ class Campus extends Model
     {
         return $this->belongsTo(School::class);
     }
+
+    public function campus_programs()
+    {
+        return $this->hasMany(CampusProgram::class);
+    }
 }
