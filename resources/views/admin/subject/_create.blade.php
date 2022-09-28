@@ -62,7 +62,7 @@
             </thead>
             <tbody>
                 @php($k = 1)
-                @foreach(\App\Models\Subjects::where('semester_id', request('semester'))->orderBy('id', 'DESC')->get() as $subj)
+                @foreach(\App\Models\Subjects::where('semester_id', request('semester'))->orderBy('updated_at', 'DESC')->get() as $subj)
                 <tr>
                     <td>{{$k++}}</td>
                     <td>{{$subj->name}}</td>
