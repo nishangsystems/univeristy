@@ -32,7 +32,7 @@
                         <td>{{ $subject->name }}</td>
                         <td>{{ $subject->coef }}</td>
                         <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
-                        <td>{{ \App\Models\SchoolUnits::find($subject->level_id)->name }}</td>
+                        <td>{{ \App\Models\Level::find($subject->level_id)->level }}</td>
                         <td class="d-flex justify-content-end">
                             <a class="btn btn-sm btn-primary" href="{{route('admin.edit.class_subjects',[$subject->class_id,$subject->subject_id])}}">
                                 <i class="fa fa-edit"> Edit</i>
