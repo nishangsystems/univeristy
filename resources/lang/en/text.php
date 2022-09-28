@@ -281,6 +281,8 @@ return [
     'word_drop'=>'drop',
     'word_subjects'=>'subjects',
     'word_programs'=>'programs',
-    'word_fees'=>'fees'
-
+    'word_fees'=>'fees',
+    'manage_programs'=>'manage programs',
+    'word_update'=>'update',
+    'word_fee'=>'fee'
 ];

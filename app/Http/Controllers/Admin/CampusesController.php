@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Campus;
+use App\Models\ProgramLevel;
+use App\Models\SchoolUnits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -131,6 +134,8 @@ class CampusesController extends Controller
     public function set_program_fee($id, $program_id)
     {
         # code...
+        $data['title'] = "Manage Fee Under ".Campus::find($id)->name.' For '.SchoolUnits::find(ProgramLevel::find($program_id)->program_id)->name;
+        return view('admin.fee.create', $data);
     }
 
     public function add_program($id, $program_id)
@@ -156,5 +161,18 @@ class CampusesController extends Controller
         \App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->first()->delete();
         return back()->with('success', 'done');
 
+    }
+
+    public function save_program_fee($id, $program_id, Request $request)
+    {
+        # code...
+        $this->validate($request, [
+            'fees'=>'required|int'
+        ]);
+
+        $inst = \App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->first();
+        $inst->fees = $request->fees;
+        $inst->save();
+        return back()->with('success', 'Done');
     }
 }
