@@ -62,13 +62,13 @@
             </thead>
             <tbody>
                 @php($k = 1)
-                @foreach(\App\Models\Subjects::where('semester_id', request('semester'))->get() as $subj)
+                @foreach(\App\Models\Subjects::where('semester_id', request('semester'))->orderBy('updated_at', 'DESC')->get() as $subj)
                 <tr>
                     <td>{{$k++}}</td>
                     <td>{{$subj->name}}</td>
                     <td>{{$subj->code}}</td>
                     <td>{{$subj->coef}}</td>
-                    <td>{{\App\Models\SchoolUnits::find($subj->level_id)->name}}</td>
+                    <td>{{\App\Models\Level::find($subj->level_id)->level}}</td>
                     <td>{{$subj->status}}</td>
                     <td>
                         <a href="{{route('admin.subjects.edit', $subj->id)}}" class="btn btn-primary btn-sm">{{__('text.word_edit')}}</a> | 

@@ -75,7 +75,7 @@
                         <td>{{$subj->name}}</td>
                         <td>{{$subj->code}}</td>
                         <td>{{$subj->coef}}</td>
-                        <td>{{\App\Models\SchoolUnits::find($subj->level_id)->name}}</td>
+                        <td>{{\App\Models\Level::find($subj->level_id)->level}}</td>
                         <td>{{$subj->status}}</td>
                         <td>
                             <a href="{{route('admin.subjects.edit', $subj->id)}}" class="btn btn-primary btn-sm">{{__('text.word_edit')}}</a> | 
