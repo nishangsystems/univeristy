@@ -15,9 +15,7 @@
                 <td>{{$level->level}}</td>
                 <td>
                     <a href="{{route('admin.units.subjects', [request('id'), $level->id])}}" class="btn btn-sm btn-primary">{{__('text.word_subjects')}}</a>|
-                    @if(in_array($level->id, $program_levels))
-                    <a href="{{route('admin.programs.levels.drop', [request('id'), $level->id])}}" class="btn btn-sm btn-danger">{{__('text.word_drop')}}</a>
-                    @else
+                    @if(!in_array($level->id, $program_levels))
                     <a href="{{route('admin.programs.levels.add', [request('id'), $level->id])}}" class="btn btn-sm btn-success">{{__('text.word_add')}}</a>
                     @endif
                 </td>
