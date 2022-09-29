@@ -5,9 +5,9 @@ use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-
-
+use phpDocumentor\Reflection\Element;
 
 Route::get('/clear', function () {
     $clearcache = Artisan::call('cache:clear');
@@ -278,7 +278,20 @@ Route::get('student_rank', 'HomeController@rank')->name('student_rank');
 Route::post('student_rank', 'HomeController@rankPost')->name('student_rank');
 
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
+Route::get('/campuses/{id}/programs', function(Request $request){
+    $resp = DB::table('campus_programs')->where('campus_id', '=', $request->id)
+                ->join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                ->get(['program_levels.*']);
+    $data = [];
+    foreach ($resp as $key => $value) {
 
+        $value->program = \App\Models\SchoolUnits::find($value->program_id)->name;
+        $value->level = \App\Models\Level::find($value->level_id)->level;
+        $data[] = $value;
+    }
+
+    return $data;
+})->name('campus.programs');
 Route::get('semesters/{background}', function(Request $request){
     return \App\Models\Semester::where('background_id', $request->background)->get();
 })->name('semesters');

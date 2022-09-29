@@ -96,27 +96,10 @@
                 </div>
             </div>
 
-            <div class="form-group @error('program_id') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_program')}}</label>
-                <div class="col-lg-10">
-                    <select class=" form-control" name="program_id" >
-                        <option value="">{{__('text.select_program')}}</option>
-                        @forelse(\App\Http\Controllers\Admin\StudentController::getMainClasses() as $k=>$v)
-                            <option value="{{$k}}">{{$v}}</option>
-                        @empty
-                            <option value="" selected>No data found</option>
-                        @endforelse
-                    </select>
-                    @error('program_id')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            
             <div class="form-group @error('campus_id') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_campus')}} </label>
                 <div class="col-lg-10">
-                    <select name="campus_id" class="form-control" id="">
+                    <select name="campus_id" class="form-control" id="" onchange="loadPrograms(event.target)">
                         <option value="">select campus</option>
                         @forelse(\App\Models\Campus::all() as $campus)
                             <option value="{{$campus->id}}">{{$campus->name}}</option>
@@ -125,6 +108,23 @@
                         @endforelse
                     </select>
                     @error('year')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="form-group @error('program_id') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_program')}}</label>
+                <div class="col-lg-10">
+                    <select class=" form-control" name="program_id" id="program_id">
+                        <option value="">{{__('text.select_program')}}</option>
+                        @forelse(\App\Http\Controllers\Admin\StudentController::getMainClasses() as $k=>$v)
+                            <option value="{{$k}}">{{$v}}</option>
+                        @empty
+                            <option value="" selected>No data found</option>
+                        @endforelse
+                    </select>
+                    @error('program_id')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
@@ -165,42 +165,23 @@
 @endsection
 
 @section('script')
-<!-- <script>
-    $('.section').on('change', function() {
-        refresh($(this));
-    })
-
-    function refresh(div) {
-        $(".pre-loader").css("display", "block");
-        url = "{{route('section-children', "+
-        VALUE +")}}";
-        url = url.replace('VALUE', div.val());
+<script>
+    function loadPrograms(element){
+        let val = element.value;
+        url = "{{route('campus.programs', ['__V__'])}}";
+        url =url.replace('__V__', val);
         $.ajax({
-            type: "GET",
+            method: 'get',
             url: url,
-            success: function(data) {
-                $(".pre-loader").css("display", "none");
-                let html = "";
-                if (data.valid == 1) {
-                    $('#save').css("display", "block");
-                } else {
-                    $('#save').css("display", "none");
-                }
-                if (data.array.length > 0) {
-                    html += '<div class="mt-3"><select onchange="refresh($(this))" class="form-control section" name="' + data.name + '">';
-                    html += '<option selected > Select ' + data.name + '</option>';
-                    for (i = 0; i < data.array.length; i++) {
-                        html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
-                    }
-                    html += '</select>' +
-                        '<div class="children"></div></div>';
-                }
-                div.parent().find('.children').html(html)
-            },
-            error: function(e) {
-                $(".pre-loader").css("display", "none");
+            success: function(data){
+                console.log(data);
+                let options = `<option value="">{{__('text.select_program')}}</option>`;
+                data.forEach(element => {
+                    options += `<option value="{{`+element.id+`}}">`+element.program+` : Level `+element.level+`</option>`;
+                });
+                $('#program_id').html(options);
             }
-        });
+        })
     }
-</script> -->
+</script>
 @endsection
