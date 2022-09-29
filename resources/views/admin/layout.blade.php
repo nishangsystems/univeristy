@@ -225,7 +225,7 @@
                         </li>
                         
                         <li>
-                            <a href="{{route('admin.sections')}}?action=class_list"  class="text-capitalize">
+                            <a href="{{route('admin.class.list')}}?action=class_list"  class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.class_list')}}
                             </a>

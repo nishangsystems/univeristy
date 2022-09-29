@@ -222,7 +222,6 @@ class ProgramController extends Controller
         $data['title'] = "Subjects under " . \App\Http\Controllers\Admin\StudentController::baseClasses()[$parent->id].' Level '.\App\Models\Level::find(request('level_id'))->level;
         $data['parent'] = $parent;
         $data['subjects'] = SchoolUnits::find(request('parent_id'))->subjects()->where('level_id', request('level_id'))->get();
-;
         return view('admin.units.subjects')->with($data);
     }
 
@@ -258,7 +257,7 @@ class ProgramController extends Controller
     $parent = \App\Models\SchoolUnits::find($id);
     $data['parent'] = $parent;
     $data['students'] = $students;
-    $data['classes'] = \App\Http\Controllers\Admin\StudentController::getMainClasses();
+    $data['classes'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
     $data['title'] = "Manage student under " . $parent->name;
     return view('admin.units.student-listing')->with($data);
     }
@@ -464,5 +463,12 @@ class ProgramController extends Controller
         \App\Models\ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->first()->delete();
         return back()->with('success', 'done');
         
+    }
+
+    public function program_levels_list()
+    {
+        # code...
+        $data['title'] = "Class List".(request()->has('campus_id') ? \App\Models\Campus::find(request('campus_id'))->first()->name : '').(request()->has('id') ? ' For '.\App\Models\ProgramLevel::find(request('id'))->program()->first()->name.' Level '.\App\Models\ProgramLevel::find(request('id'))->level()->first()->level : null);
+        return view('admin.student.class_list', $data);
     }
 }
