@@ -7,7 +7,7 @@
     <form method="post">
         @csrf
         <div class="flex-nowrap d-flex justify-content-between my-4">
-            <a href="{{route('admin.units.subjects',$parent->id)}}" class="btn btn-sm btn-default"><i class="fa fa-arrow-left"></i> Cancel</a>
+            <a href="{{route('admin.units.subjects',[$parent->id, request('level_id')])}}" class="btn btn-sm btn-default"><i class="fa fa-arrow-left"></i> Cancel</a>
             <input id="searchbox" class="flex-grow-1 mx-4 border px-5" placeholder="Type here to search" name="search">
             <button class="btn btn-sm btn-primary">Save</button>
         </div>
