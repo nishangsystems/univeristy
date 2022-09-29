@@ -23,21 +23,23 @@
             </tbody>
         @endif
         @if(request()->has('id') && request('action')!='campuses')
-        <thead class="text-capitalize">
-            <th>###</th>
-            <th>{{__('text.word_name')}}</th>
-            <th>{{__('text.word_matricule')}}</th>
-        </thead>
-        <tbody>
-            @php($k = 1)
-            @foreach(\App\Models\Students::where('program_id', request('id'))->get() as $stud)
-                <tr>
-                    <td>{{$k++}}</td>
-                    <td>{{$stud->name}}</td>
-                    <td>{{$stud->matric}}</td>
-                </tr>
-            @endforeach
-        </tbody>
+            <thead class="text-capitalize">
+                <th>###</th>
+                <th>{{__('text.word_name')}}</th>
+                <th>{{__('text.word_matricule')}}</th>
+            </thead>
+            <tbody>
+                @php($k = 1)
+                @foreach(\App\Models\Students::where('program_id', request('id'))->get() as $stud)
+                    <tr>
+                        <td>{{$k++}}</td>
+                        <td>{{$stud->name}}</td>
+                        <td>{{$stud->matric}}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        @endif
+        @if(request()->has('id') && request('action') =='campuses')
         @endif
     </table>
 </div>

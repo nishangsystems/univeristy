@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassSubject;
+use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
 use App\Models\Students;
 use App\Models\Subjects;
@@ -218,16 +219,16 @@ class ProgramController extends Controller
     // Request contains $program_id as $parent_id and $level_id
     public function subjects($id)
     {
-        $parent = \App\Models\SchoolUnits::find($id);
+        $parent = \App\Models\ProgramLevel::find($id);
         $data['title'] = "Subjects under " . \App\Http\Controllers\Admin\StudentController::baseClasses()[$parent->id].' Level '.\App\Models\Level::find(request('level_id'))->level;
         $data['parent'] = $parent;
-        $data['subjects'] = SchoolUnits::find(request('parent_id'))->subjects()->where('level_id', request('level_id'))->get();
+        $data['subjects'] = ProgramLevel::find(request('parent_id'))->subjects()->where('level_id', request('level_id'))->get();
         return view('admin.units.subjects')->with($data);
     }
 
     public function manageSubjects($parent_id)
     {
-        $parent = \App\Models\SchoolUnits::find($parent_id);
+        $parent = \App\Models\ProgramLevel::find($parent_id);
         $data['parent'] = $parent;
         $data['title'] = "Manage subjects under " . $parent->name .' Level '.\App\Models\Level::find(request('level_id'))->level;
         return view('admin.units.manage_subjects')->with($data);
@@ -275,10 +276,10 @@ class ProgramController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
-        $parent = \App\Models\SchoolUnits::find($id);
+        $parent = \App\Models\ProgramLevel::find($id);
 
         $new_subjects = $request->subjects;
-        foreach ($parent->subject as $subject) {
+        foreach ($parent->subjects() as $subject) {
             array_push($class_subjects, $subject->subject_id);
         }
 

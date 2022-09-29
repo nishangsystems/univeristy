@@ -9,7 +9,7 @@
     </p>
     <div class="content-panel">
         <div class="adv-table table-responsive">
-            <table cellpadding="0" cellspacing="0" border="0" class="table table-bordered" id="hidden-table-info">
+            <table cellpadding="0" cellspacing="0" border="0" class="table table-stripped table-bordered" id="hidden-table-info">
                 <thead>
                     <tr>
                     <th>#</th>
