@@ -279,7 +279,7 @@ class ProgramController extends Controller
         $parent = \App\Models\ProgramLevel::find($id);
 
         $new_subjects = $request->subjects;
-        foreach ($parent->subjects() as $subject) {
+        foreach ($parent->subjects()->get() as $subject) {
             array_push($class_subjects, $subject->subject_id);
         }
 
@@ -297,7 +297,8 @@ class ProgramController extends Controller
 
         foreach ($class_subjects as $k => $subject) {
             if (!in_array($subject, $new_subjects)) {
-                ClassSubject::where('class_id', $id)->where('subject_id', $subject)->first()->delete();
+                ClassSubject::where('class_id', $id)->where('subject_id', $subject)->count() > 0 ?
+                ClassSubject::where('class_id', $id)->where('subject_id', $subject)->first()->delete() : null;
             }
         }
 

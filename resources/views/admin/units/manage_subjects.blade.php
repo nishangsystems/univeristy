@@ -16,7 +16,7 @@
             @foreach(\App\Models\Subjects::orderBy('name')->get() as $subject)
             <div class="form-group col-md-3" data-role="subjects">
                 <div class="custom-control custom-checkbox">
-                    <input {{$parent->subjects->where('level_id', request('level_id'))->contains($subject)?'checked':''}} type="checkbox" class="custom-control-input toggle" value="{{$subject->id}}" name="subjects[]" id="subject{{$subject->id}}">
+                    <input {{$parent->subjects->contains($subject)?'checked':''}} type="checkbox" class="custom-control-input toggle" value="{{$subject->id}}" name="subjects[]" id="subject{{$subject->id}}">
                     <label class="custom-control-label px-5 font-weight-normal" for="subject{{$subject->id}}">
                        <span class="text-secondary">{{$subject->code}}</span> : {{$subject->name}}
                     </label>
