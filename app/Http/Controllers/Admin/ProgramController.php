@@ -214,17 +214,15 @@ class ProgramController extends Controller
         return redirect()->back()->with('success', "units deleted");
     }
 
+
+    // Request contains $program_id as $parent_id and $level_id
     public function subjects($id)
     {
         $parent = \App\Models\SchoolUnits::find($id);
-        $data['title'] = "Subjects under " . \App\Http\Controllers\Admin\StudentController::baseClasses()[$parent->id];
+        $data['title'] = "Subjects under " . \App\Http\Controllers\Admin\StudentController::baseClasses()[$parent->id].' Level '.\App\Models\Level::find(request('level_id'))->level;
         $data['parent'] = $parent;
-        $data['subjects'] = DB::table('class_subjects')
-            ->join('school_units', ['school_units.id' => 'class_subjects.class_id'])
-            ->join('subjects', ['subjects.id' => 'class_subjects.subject_id'])
-            ->where('class_subjects.class_id', $id)
-            ->select('subjects.id as subject_id', 'subjects.name', 'subjects.code', 'subjects.status', 'subjects.semester_id', 'subjects.level_id', 'class_subjects.coef', 'class_subjects.class_id')->paginate(15);
-        //  dd($data['subjects']);
+        $data['subjects'] = SchoolUnits::find(request('parent_id'))->subjects()->where('level_id', request('level_id'))->get();
+;
         return view('admin.units.subjects')->with($data);
     }
 
