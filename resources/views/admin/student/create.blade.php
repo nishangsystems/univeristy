@@ -82,7 +82,7 @@
             <div class="form-group @error('year') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.academic_year')}}</label>
                 <div class="col-lg-10">
-                    <select class=" form-control" name="year" >
+                    <select class=" form-control" name="year" required>
                         <option value="">select academic year</option>
                         @forelse(\App\Models\Batch::all() as $batch)
                             <option value="{{$batch->id}}">{{$batch->name}}</option>
@@ -116,13 +116,7 @@
             <div class="form-group @error('program_id') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_program')}}</label>
                 <div class="col-lg-10">
-                    <select class=" form-control" name="program_id" id="program_id">
-                        <option value="">{{__('text.select_program')}}</option>
-                        @forelse(\App\Http\Controllers\Admin\StudentController::getMainClasses() as $k=>$v)
-                            <option value="{{$k}}">{{$v}}</option>
-                        @empty
-                            <option value="" selected>No data found</option>
-                        @endforelse
+                    <select class=" form-control" name="program_id" id="program_id" required>
                     </select>
                     @error('program_id')
                     <span class="invalid-feedback">{{ $message }}</span>
@@ -130,26 +124,6 @@
                 </div>
             </div>
 
-            <div id="section">
-                <div class="form-group text-capitalize">
-                    <label for="cname" class="control-label col-lg-2"> Class <span style="color:red">*</span></label>
-                    <div class="col-lg-10">
-                        <div>
-                            <select name="section" class="form-control section" id="section0" required>
-                                <option selected disabled>{{__('text.select_class')}}</option>
-                                @if(isset($options))
-                                    @foreach($options as $key => $option)
-                                        <option value="{{$key}}">{{$option}}</option>
-                                    @endforeach
-                                @else
-                                    <option>{{__('text.no_sections_created')}}</option>
-                                @endif
-                            </select>
-                            <div class="children"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             
            
             <div class="form-group">
@@ -174,10 +148,10 @@
             method: 'get',
             url: url,
             success: function(data){
-                console.log(data);
                 let options = `<option value="">{{__('text.select_program')}}</option>`;
                 data.forEach(element => {
-                    options += `<option value="{{`+element.id+`}}">`+element.program+` : Level `+element.level+`</option>`;
+                    console.log(element);
+                    options += `<option value="`+element.program_id+`">`+element.program+` : Level `+element.level+`</option>`;
                 });
                 $('#program_id').html(options);
             }
