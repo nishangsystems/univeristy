@@ -31,7 +31,8 @@
                                     <td>{{$student->email}}</td>
                                     <td>{{$student->phone}}</td>
                                     <td>{{$student->address}}</td>
-                                    <td>{{$classes[$student->class_id]}}</td>
+                                    <td>{{\App\Models\ProgramLevel::find($student->program_id)->program()->first()->name.' : Level '.\App\Models\ProgramLevel::find($student->program_id)->level()->first()->level}}</td>
+                                    <?php //<td>{{$classes[$student->class_id]}}</td> ?>
                                     <td class="d-flex justify-content-end align-items-center" >
                                         <a class="btn btn-xs btn-primary" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-eye"> Profile</i></a>
                                         @if(request('action') != 'class_list')
