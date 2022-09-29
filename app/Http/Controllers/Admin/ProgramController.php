@@ -230,7 +230,7 @@ class ProgramController extends Controller
     {
         $parent = \App\Models\SchoolUnits::find($id);
         $data['parent'] = $parent;
-        $data['title'] = "Manage subjects under " . $parent->name;
+        $data['title'] = "Manage subjects under " . $parent->name .' Level '.\App\Models\Level::find(request('level_id'))->level;
         return view('admin.units.manage_subjects')->with($data);
     }
 
