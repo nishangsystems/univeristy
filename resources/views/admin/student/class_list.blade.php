@@ -3,9 +3,9 @@
 <div class="py-4">
     <table class="table">
         @if(!request()->has('id'))
-            <thead>
+            <thead class="text-capitalize">
                 <th>###</th>
-                <th>Class</th>
+                <th>{{__('text.word_class')}}</th>
                 <th></th>
             </thead>
             <tbody>
@@ -23,10 +23,21 @@
             </tbody>
         @endif
         @if(request()->has('id') && request('action')!='campuses')
-        <thead>
+        <thead class="text-capitalize">
             <th>###</th>
-            
+            <th>{{__('text.word_name')}}</th>
+            <th>{{__('text.word_matricule')}}</th>
         </thead>
+        <tbody>
+            @php($k = 1)
+            @foreach(\App\Models\Students::where('program_id', request('id'))->get() as $stud)
+                <tr>
+                    <td>{{$k++}}</td>
+                    <td>{{$stud->name}}</td>
+                    <td>{{$stud->matric}}</td>
+                </tr>
+            @endforeach
+        </tbody>
         @endif
     </table>
 </div>
