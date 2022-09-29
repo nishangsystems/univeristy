@@ -52,7 +52,7 @@
                                         @if($unit->subjects()->count() == 0)
                                             <a class="btn btn-xs btn-primary" href="{{route('admin.units.index', [$unit->id])}}">{{__('text.sub_unit')}}</a> |
                                         @endif
-                                        <a href="{{route('admin.units.subjects', [$unit->id])}}" class="btn btn-info btn-xs">{{trans_choice('text.word_subject', 2)}}</a> |
+                                        <?php //<a href="{{route('admin.units.subjects', [$unit->id])}}" class="btn btn-info btn-xs">{{trans_choice('text.word_subject', 2)}}</a> ?> |
                                     @else
                                         <a  class="btn btn-xs btn-primary" href="{{route('admin.units.index', [$unit->id])}}">{{__('text.sub_unit')}}</a> |
                                     @endif
