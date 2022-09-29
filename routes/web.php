@@ -279,6 +279,7 @@ Route::get('student_rank', 'HomeController@rank')->name('student_rank');
 Route::post('student_rank', 'HomeController@rankPost')->name('student_rank');
 
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
+
 Route::get('/campuses/{id}/programs', function(Request $request){
     $resp = DB::table('campus_programs')->where('campus_id', '=', $request->id)
                 ->join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')

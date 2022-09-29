@@ -254,11 +254,12 @@ class ProgramController extends Controller
             ->whereIn('class_id', $subUnits)
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->get();
-    $parent = \App\Models\SchoolUnits::find($id);
+    $parent = \App\Models\ProgramLevel::find($id);
     $data['parent'] = $parent;
     $data['students'] = $students;
+    // dd($parent);
     $data['classes'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
-    $data['title'] = "Manage student under " . $parent->name;
+    $data['title'] = "Manage student under " . $parent->program()->first()->name;
     return view('admin.units.student-listing')->with($data);
     }
 

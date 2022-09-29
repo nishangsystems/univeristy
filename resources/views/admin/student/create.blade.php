@@ -151,7 +151,7 @@
                 let options = `<option value="">{{__('text.select_program')}}</option>`;
                 data.forEach(element => {
                     console.log(element);
-                    options += `<option value="`+element.program_id+`">`+element.program+` : Level `+element.level+`</option>`;
+                    options += `<option value="`+element.id+`">`+element.program+` : Level `+element.level+`</option>`;
                 });
                 $('#program_id').html(options);
             }
