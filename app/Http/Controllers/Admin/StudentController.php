@@ -206,35 +206,40 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
+
         // return $request->all();
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'matric' => 'required',
             'year' => 'required',
             'campus_id' => 'required',
-            'section' => 'required',
             'program_id'=>'required',
         ]);
         try {
-            // return $request->all();
-            DB::beginTransaction();
-            // read user input
-            $input = $request->all();
-            $input['password'] = Hash::make('password');
-            // create a student
-            // $input['matric'] = $this->getNextAvailableMatricule($request->section);
-            $student = new \App\Models\Students($input);
-            $student->save();
-            // dd($student);
-            // create student class
-            $class = StudentClass::create([
-                'student_id' => $student->id,
-                'class_id' => $request->section,
-                'year_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
-            ]);
-
-            DB::commit();
-            return redirect()->to(route('admin.students.index', $request->section))->with('success', "Student saved successfully !");
+            if(Students::where('matric', $request->matric)->count() == 0){
+                // return $request->all();
+                DB::beginTransaction();
+                // read user input
+                $input = $request->all();
+                $input['password'] = Hash::make('password');
+                // create a student
+                // $input['matric'] = $this->getNextAvailableMatricule($request->section);
+                $student = new \App\Models\Students($input);
+                $student->save();
+                // dd($student);
+                // create student class
+                $class = StudentClass::create([
+                    'student_id' => $student->id,
+                    'class_id' => $request->program_id,
+                    'year_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
+                ]);
+    
+                DB::commit();
+                return redirect()->to(route('admin.students.index', $request->program_id))->with('success', "Student saved successfully !");
+            }
+            else {
+                return back()->with('error', 'User with matricule '.$request->matric.' already exist');
+            }
         } catch (\Exception $e) {
             DB::rollBack();
             echo $e;

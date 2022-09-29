@@ -226,9 +226,9 @@ class ProgramController extends Controller
         return view('admin.units.subjects')->with($data);
     }
 
-    public function manageSubjects($id)
+    public function manageSubjects($parent_id)
     {
-        $parent = \App\Models\SchoolUnits::find($id);
+        $parent = \App\Models\SchoolUnits::find($parent_id);
         $data['parent'] = $parent;
         $data['title'] = "Manage subjects under " . $parent->name .' Level '.\App\Models\Level::find(request('level_id'))->level;
         return view('admin.units.manage_subjects')->with($data);
