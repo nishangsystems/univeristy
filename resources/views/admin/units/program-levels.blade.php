@@ -14,9 +14,10 @@
                 <td>{{$k++}}</td>
                 <td>{{$level->level}}</td>
                 <td>
-                    <a href="{{route('admin.units.subjects', [request('id'), $level->id])}}" class="btn btn-sm btn-primary">{{__('text.word_subjects')}}</a>|
-                    @if(!in_array($level->id, $program_levels))
-                    <a href="{{route('admin.programs.levels.add', [request('id'), $level->id])}}" class="btn btn-sm btn-success">{{__('text.word_add')}}</a>
+                    @if(in_array($level->id, $program_levels))
+                    <a href="{{route('admin.units.subjects', [\App\Models\ProgramLevel::where('program_id', request('id'))->where('level_id', $level->id)->first()->id])}}" class="btn btn-sm btn-primary">{{__('text.word_subjects')}}</a>|
+                    @else
+                    <a href="{{route('admin.programs.levels.add', [request('id'), $level->id])}}" class="btn btn-sm btn-success"> <i class="fa fa-plus fa-lg  "></i> {{__('text.word_add')}}</a>
                     @endif
                 </td>
             </tr>

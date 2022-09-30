@@ -24,11 +24,15 @@ class ProgramLevel extends Model
 
     public function campuses()
     {
-        return $this->hasMany(Campus::class);
+        return $this->belongsToMany(Campus::class, CampusProgram::class, 'program_level_id', 'campus_id');
     }
 
+    public function class_subjects()
+    {
+        $this->hasMany(ClassSubject::class, 'class_id');
+    }
     public function subjects()
     {
-        return $this->belongsToMany( Subjects::class, ClassSubject::class, 'subject_id', 'class_id');
+        return $this->belongsToMany( Subjects::class, ClassSubject::class, 'class_id', 'subject_id');
     }
 }
