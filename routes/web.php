@@ -44,7 +44,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('new_units/{parent_id}', 'Admin\ProgramController@create')->name('units.create');
     Route::get('units/{parent_id}/edit', 'Admin\ProgramController@edit')->name('units.edit');
     Route::resource('units', 'Admin\ProgramController')->except(['index', 'create', 'edit']);
-    Route::get('units/{parent_id}/{level_id}/subjects', 'Admin\ProgramController@subjects')->name('units.subjects');
+    Route::get('units/{program_level_id}/subjects', 'Admin\ProgramController@subjects')->name('units.subjects');
     Route::get('sections/{section_id}/subjects/{id}', 'Admin\ClassSubjectController@edit')->name('edit.class_subjects');
     Route::put('sections/{section_id}/subjects/{id}', 'Admin\ClassSubjectController@update')->name('units.class_subjects.update');
 

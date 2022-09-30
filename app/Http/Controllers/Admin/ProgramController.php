@@ -217,12 +217,13 @@ class ProgramController extends Controller
 
 
     // Request contains $program_id as $parent_id and $level_id
-    public function subjects($id)
+    public function subjects($program_level_id)
     {
-        $parent = \App\Models\ProgramLevel::find($id);
-        $data['title'] = "Subjects under " . \App\Http\Controllers\Admin\StudentController::baseClasses()[$parent->id].' Level '.\App\Models\Level::find(request('level_id'))->level;
+        $parent = \App\Models\ProgramLevel::find($program_level_id);
+        $data['title'] = "Subjects under " . \App\Http\Controllers\Admin\StudentController::baseClasses()[$parent->program_id].' Level '.$parent->level()->first()->level;
         $data['parent'] = $parent;
-        $data['subjects'] = ProgramLevel::find(request('parent_id'))->subjects()->where('level_id', request('level_id'))->get();
+        // dd($parent->subjects()->get());
+        $data['subjects'] = ProgramLevel::find($program_level_id)->subjects()->get();
         return view('admin.units.subjects')->with($data);
     }
 
@@ -230,7 +231,9 @@ class ProgramController extends Controller
     {
         $parent = \App\Models\ProgramLevel::find($parent_id);
         $data['parent'] = $parent;
-        $data['title'] = "Manage subjects under " . $parent->name .' Level '.\App\Models\Level::find(request('level_id'))->level;
+        // return $parent;
+        
+        $data['title'] = "Manage subjects under " . $parent->program()->first()->name .' Level '.$parent->level()->first()->level;
         return view('admin.units.manage_subjects')->with($data);
     }
 
@@ -266,6 +269,7 @@ class ProgramController extends Controller
 
     public function saveSubjects(Request  $request, $id)
     {
+        $pl = ProgramLevel::find(request('parent_id'));
         $class_subjects = [];
         $validator = Validator::make($request->all(), [
             'subjects' => 'required',
@@ -276,9 +280,10 @@ class ProgramController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
-        $parent = \App\Models\ProgramLevel::find($id);
+        $parent = $pl;
 
         $new_subjects = $request->subjects;
+        // if($parent != null)
         foreach ($parent->subjects()->get() as $subject) {
             array_push($class_subjects, $subject->subject_id);
         }
@@ -287,7 +292,7 @@ class ProgramController extends Controller
         foreach ($new_subjects as $subject) {
             if (!in_array($subject, $class_subjects)) {
                 \App\Models\ClassSubject::create([
-                    'class_id' => $id,
+                    'class_id' => $pl->id,
                     'subject_id' => $subject,
                     'status'=> \App\Models\Subjects::find($subject)->status,
                     'coef'=> \App\Models\Subjects::find($subject)->coef
@@ -297,8 +302,8 @@ class ProgramController extends Controller
 
         foreach ($class_subjects as $k => $subject) {
             if (!in_array($subject, $new_subjects)) {
-                ClassSubject::where('class_id', $id)->where('subject_id', $subject)->count() > 0 ?
-                ClassSubject::where('class_id', $id)->where('subject_id', $subject)->first()->delete() : null;
+                ClassSubject::where('class_id', $pl->id)->where('subject_id', $subject)->count() > 0 ?
+                ClassSubject::where('class_id', $pl->id)->where('subject_id', $subject)->first()->delete() : null;
             }
         }
 

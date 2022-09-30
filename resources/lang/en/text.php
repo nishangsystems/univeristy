@@ -284,5 +284,8 @@ return [
     'word_fees'=>'fees',
     'manage_programs'=>'manage programs',
     'word_update'=>'update',
-    'word_fee'=>'fee'
+    'word_fee'=>'fee',
+    'word_students'=>'students',
+    'word_campuses'=>'campuses',
+    
 ];

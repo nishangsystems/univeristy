@@ -5,7 +5,7 @@
 
 <div class="col-sm-12">
     <p class="text-muted">
-        <a href="{{route('admin.units.subjects.manage_class_subjects', $parent->id).'?level_id='.request('level_id')}}" class="btn btn-info btn-xs text-capitalize">Manage Subjects</a>
+        <a href="{{route('admin.units.subjects.manage_class_subjects', $parent->id)}}" class="btn btn-info btn-xs text-capitalize">Manage Subjects</a>
     </p>
     <div class="content-panel">
         <div class="adv-table table-responsive">
@@ -32,8 +32,9 @@
                         <td>{{ $subject->coef }}</td>
                         <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
                         <td>{{ \App\Models\Level::find($subject->level_id)->level }}</td>
+                        <td>{{ $subject->status }}</td>
                         <td class="d-flex justify-content-end">
-                            <a class="btn btn-sm btn-primary" href="{{route('admin.edit.class_subjects',[request('parent_id'), $subject->id])}}">
+                            <a class="btn btn-sm btn-primary" href="{{route('admin.edit.class_subjects',[request('program_level_id'), $subject->id])}}">
                                 <i class="fa fa-edit"> Edit</i>
                             </a>
                         </td>
