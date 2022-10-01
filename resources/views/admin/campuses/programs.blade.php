@@ -14,7 +14,9 @@
             <tr>
                 <td>{{$k++}}</td>
                 <td>{{ \App\Models\SchoolUnits::find($program_level->program_id)->name.' : Level '. \App\Models\Level::find($program_level->level_id)->level }}</td>
-                <td>{{ \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', $program_level->id)->first()->fees ?? '----'}}</td>
+                <td>{{ \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', $program_level->id)->count() > 0 ?
+                    \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', $program_level->id)->first()->payment_items()->where('name', 'TUTION')->first()->amount ?? '----':
+                     '----'}}</td>
                 <td>
                     @if(in_array($program_level->id, $programs))
                     <a href="{{route('admin.campuses.set_fee', [request('id'), $program_level->id])}}" class="btn btn-sm btn-primary">{{__('text.word_fees')}}</a>

@@ -17,6 +17,16 @@
                         @enderror
                     </div>
                 </div>
+                
+                <div class="form-group @error('matric') has-error @enderror">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_matricule')}} ({{__('text.word_required')}})</label>
+                    <div class="col-lg-10">
+                        <input class=" form-control" name="matric" value="{{old('matric', $student->matric)}}" type="text" required/>
+                        @error('matric')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
 
 
                 <div class="form-group @error('email') has-error @enderror">
@@ -49,11 +59,11 @@
                     </div>
                 </div>
 
-                <div class="form-group @error('religion') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2">{{'text.word_denomination'}}</label>
+                <div class="form-group @error('pob') has-error @enderror">
+                    <label for="cname" class="control-label col-lg-2">{{__('text.place_of_birth')}}</label>
                     <div class="col-lg-10">
-                        <input class=" form-control" name="religion" value="{{old('religion', $student->religion)}}" type="text"  />
-                        @error('address')
+                        <input class=" form-control" name="pob" value="{{old('pob', $student->pob)}}" type="text"  />
+                        @error('pob')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
@@ -63,7 +73,7 @@
                     <label for="cname" class="control-label col-lg-2">{{__('text.word_gender')}}</label>
                     <div class="col-lg-10">
                         <select class="form-control text-capitalize" name="gender">
-                            <option selected disabled>{{__('text.select_gender')}}</option>
+                            <option disabled>{{__('text.select_gender')}}</option>
                             <option {{old('gender', $student->gender) == 'male'?'selected':''}} value="male">{{__('text.word_male')}}</option>
                             <option {{old('gender', $student->gender) == 'female'?'selected':''}} value="female">{{__('text.word_female')}}</option>
                         </select>
@@ -73,36 +83,55 @@
                     </div>
                 </div>
                 <h5 class="mt-5 mb-4 font-weight-bold text-capitalize">{{'text.admission_class_information'}}</h5>
-                <div class="form-group @error('type') has-error @enderror text-capitalize">
-                <label for="cname" class="control-label col-lg-2">{{__('text.school_section')}}</label>
-                    <div class="col-lg-10">
-                        <select class="form-control" name="type">
-                            <option selected disabled>{{__('text.word_section')}}</option>
-                            <option {{old('type', $student->type) == 'day'?'selected':''}} value="day">{{__('text.day_section')}}</option>
-                            <option {{old('type', $student -> type) == 'boarding'?'selected':''}} value="boarding">{{__('text.boarding_section')}}</option>
-                        </select>
-                        @error('type')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
+                
+                <div class="form-group @error('admission_batch_id') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.academic_year')}}</label>
+                <div class="col-lg-10">
+                    <select class=" form-control" name="admission_batch_id" required>
+                        <option value="">select academic year</option>
+                        @forelse(\App\Models\Batch::all() as $batch)
+                            <option {{ old('admission_batch_id', $student->admission_batch_id) == $batch->id ? 'selected' : ''}} value="{{$batch->id}}">{{$batch->name}}</option>
+                        @empty
+                            <option value="" selected>No data found</option>
+                        @endforelse
+                    </select>
+                    @error('admission_batch_id')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
                 </div>
-                <div id="section">
-                    <div class="form-group text-capitalize">
-                        <label for="cname" class="control-label col-lg-2">{{__('text.word_section')}}</label>
-                        <div class="col-lg-10">
-                            <div>
-                                <select class="form-control section" name="section" id="section0">
-                                    <option selected disabled>{{__('text.word_section')}}</option>
-                                    @foreach($classes as $key=>$section)
-                                        <option value="{{$key}}" {{\App\Models\StudentClass::where('student_id', $student->id)->first()->class_id == $key ? "selected" : ""}}>{{$section}}</option>
-                                    @endforeach
-                                    
-                                </select>
-                                <div class="children"></div>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+
+            <div class="form-group @error('campus_id') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_campus')}} </label>
+                <div class="col-lg-10">
+                    <select name="campus_id" class="form-control" id="" onchange="loadPrograms(event.target)" onload="loadPrograms(event.target)">
+                        <option value="">select campus</option>
+                        @forelse(\App\Models\Campus::all() as $campus)
+                            <option {{old('campus_id', $student->campus_id)==$campus->id ? 'selected' : ''}} value="{{$campus->id}}">{{$campus->name}}</option>
+                        @empty
+                            <option value="" selected>No data found</option>
+                        @endforelse
+                    </select>
+                    @error('year')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
                 </div>
+            </div>
+
+            <div class="form-group @error('program_id') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_program')}}</label>
+                <div class="col-lg-10">
+                    <select class=" form-control" name="program_id" id="program_id" required>
+                        <option value="">{{__('text.select_program')}}</option>
+                        @foreach(\App\Models\ProgramLevel::all() as $pl)
+                            <option value="{{$pl->id}}" {{old('program_id', $student->program_id) == $pl->id ? 'selected' : ''}}>{{$pl->program()->first()->name.' : '.$pl->level()->first()->level}}</option>
+                        @endforeach
+                    </select>
+                    @error('program_id')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
 
                 <div class="form-group">
                     <div class="d-flex justify-content-end col-lg-12">
@@ -117,40 +146,23 @@
 @endsection
 
 @section('script')
-    <script>
-        $('.section').on('change', function () {
-            // refresh($(this));
+<script>
+    function loadPrograms(element){
+        let val = element.value;
+        url = "{{route('campus.programs', ['__V__'])}}";
+        url =url.replace('__V__', val);
+        $.ajax({
+            method: 'get',
+            url: url,
+            success: function(data){
+                let options = `<option value="">{{__('text.select_program')}}</option>`;
+                data.forEach(element => {
+                    console.log(element);
+                    options += `<option {{old('program_id', $student->program_id)==`+element.id+` ? 'selected' : ''}} value="`+element.id+`">`+element.program+` : Level `+element.level+`</option>`;
+                });
+                $('#program_id').html(options);
+            }
         })
-
-        function refresh(div) {
-            $(".pre-loader").css("display", "block");
-            url = "{{route('section-children', "VALUE")}}";
-            url = url.replace('VALUE', div.val());
-            $.ajax({
-                type: "GET",
-                url: url,
-                success: function (data) {
-                    $(".pre-loader").css("display", "none");
-                    let html = "";
-                    if(data.valid == 1){
-                        $('#save').css("display", "block");
-                    }else{
-                        $('#save').css("display", "none");
-                    }
-                    if (data.array.length > 0) {
-                        html += '<div class="mt-3"><select onchange="refresh($(this))" class="form-control section" name="'+data.name+'">';
-                        html += '<option selected > Select ' + data.name + '</option>';
-                        for (i = 0; i < data.array.length; i++) {
-                            html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
-                        }
-                        html += '</select>' +
-                            '<div class="children"></div></div>';
-                    }
-                    div.parent().find('.children').html(html)
-                }, error: function (e) {
-                    $(".pre-loader").css("display", "none");
-                }
-            });
-        }
-    </script>
+    }
+</script>
 @endsection

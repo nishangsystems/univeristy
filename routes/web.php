@@ -281,9 +281,14 @@ Route::post('student_rank', 'HomeController@rankPost')->name('student_rank');
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
 
 Route::get('/campuses/{id}/programs', function(Request $request){
+    $order = \App\Models\SchoolUnits::orderBy('name', 'ASC')->pluck('id')->toArray();
     $resp = DB::table('campus_programs')->where('campus_id', '=', $request->id)
                 ->join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                 ->get(['program_levels.*']);
+    // $resp = \App\Models\CampusProgram::where('campus_id', $request->id)->get();
+    // $resp = \App\Models\CampusProgram::where('campus_id', $request->id)->orderBy(function($model) use ($order){
+    //     return array_search($model->getKey(), $order);
+    // });
     $data = [];
     foreach ($resp as $key => $value) {
 
@@ -297,7 +302,6 @@ Route::get('/campuses/{id}/programs', function(Request $request){
 Route::get('semesters/{background}', function(Request $request){
     return \App\Models\Semester::where('background_id', $request->background)->get();
 })->name('semesters');
-
 
 
 Route::get('mode/{locale}', function ($batch) {

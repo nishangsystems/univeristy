@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Campus;
+use App\Models\CampusProgram;
 use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class CampusesController extends Controller
@@ -170,8 +172,16 @@ class CampusesController extends Controller
             'fees'=>'required|int'
         ]);
 
-        $inst = \App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->first();
-        $inst->fees = $request->fees;
+        $cp_id = \App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->first()->id;
+
+
+        $inst = \App\Models\PaymentItem::where('campus_program_id', $cp_id)->where('name', 'TUTION')->first() ?? 
+                new \App\Models\PaymentItem();
+        $inst->campus_program_id = $cp_id;
+        $inst->name = 'TUTION';
+        $inst->year_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+        $inst->slug = Hash::make('TUTION');
+        $inst->amount = $request->fees;
         $inst->save();
         return back()->with('success', 'Done');
     }

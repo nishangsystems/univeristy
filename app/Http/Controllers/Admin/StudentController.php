@@ -211,7 +211,7 @@ class StudentController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'matric' => 'required',
-            'year' => 'required',
+            'admission_batch_id' => 'required',
             'campus_id' => 'required',
             'program_id'=>'required',
         ]);
@@ -312,9 +312,8 @@ class StudentController extends Controller
             'phone' => 'nullable',
             'address' => 'nullable',
             'gender' => 'nullable',
-            'section' => 'required',
-            'type' => 'required',
-            'religion' => 'nullable'
+            'program_id' => 'required',
+            'matric' => 'required',
         ]);
         try {       
 
@@ -323,7 +322,7 @@ class StudentController extends Controller
             $student = Students::find($id);
             $student->update($input);
             $class = StudentClass::where('student_id', $student->id)->where('year_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->first();
-            $class->class_id = $request->section;
+            $class->class_id = $request->program_id;
             $class->save();
             DB::commit();
             return redirect()->back()->with('success', "Student saved successfully !");
@@ -389,7 +388,7 @@ class StudentController extends Controller
         $request->validate([
             'batch' => 'required',
             'file' => 'required|mimes:csv,txt,xlsx',
-            'section' => 'required',
+            'campus_id' => 'required',
             'program_id'=> 'required'
         ]);
 
@@ -441,7 +440,7 @@ class StudentController extends Controller
                         dd($student);
                         $class = StudentClass::create([
                             'student_id' => $student->id,
-                            'class_id' => $request->section,
+                            'class_id' => $request->program_id,
                             'year_id' => $request->batch
                         ]);
                         $student->admission_batch_id = $class->id;

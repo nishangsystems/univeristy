@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\CampusProgram;
 use App\Models\PaymentItem;
 use App\Models\Payments;
 use App\Models\SchoolUnits;
@@ -40,6 +41,7 @@ class PaymentController extends Controller
         $data['student'] = $student;
         $data['scholarship'] = Helpers::instance()->getStudentScholarshipAmount($student_id);
         $data['total_fee'] = $student->total($student_id);
+        // $data['total_fee'] = CampusProgram::where('campus_id', $student->campus_id)->where('program_level_id', $student->program_id)->first()->payment_items()->first()->amount;
         $data['balance'] =  $student->bal($student_id);
         $data['title'] = "Collect Fee for " . $student->name;
         
