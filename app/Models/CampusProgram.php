@@ -20,4 +20,11 @@ class CampusProgram extends Model
     {
         return $this->belongsTo(Campus::class);
     }
+
+    public function payment_items()
+    {
+        return $this->hasMany(PaymentItem::class);
+    }
+
 }
+

@@ -62,6 +62,15 @@
                     @enderror
                 </div>
             </div>
+            <div class="form-group @error('pob') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.place_of_birth')}} </label>
+                <div class="col-lg-10">
+                    <input class=" form-control" name="pob" value="{{old('pob')}}" type="text"  />
+                    @error('pob')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
             <div class="form-group @error('gender') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_gender')}} </label>
                 <div class="col-lg-10">
@@ -82,10 +91,10 @@
             <div class="form-group @error('year') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.academic_year')}}</label>
                 <div class="col-lg-10">
-                    <select class=" form-control" name="year" required>
+                    <select class=" form-control" name="admission_batch_id" required>
                         <option value="">select academic year</option>
                         @forelse(\App\Models\Batch::all() as $batch)
-                            <option value="{{$batch->id}}">{{$batch->name}}</option>
+                            <option {{ \App\Helpers\Helpers::instance()->getCurrentAccademicYear() == $batch->id ? 'selected' : ''}} value="{{$batch->id}}">{{$batch->name}}</option>
                         @empty
                             <option value="" selected>No data found</option>
                         @endforelse
@@ -159,3 +168,4 @@
     }
 </script>
 @endsection
+

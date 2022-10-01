@@ -28,7 +28,7 @@
                 <div class="col-lg-10">
                     <select class="form-control" name="item">
                         <option value="" disabled class="text-capitalize">{{__('text.select_item')}}</option>
-                        @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->items as $item)
+                        @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->payment_items()->get() ?? [] as $item)
                         <option selected value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
                         @endforeach
                     </select>
@@ -62,3 +62,4 @@
     </div>
 </div>
 @endsection
+

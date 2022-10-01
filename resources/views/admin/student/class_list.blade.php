@@ -7,14 +7,16 @@
                 <th>###</th>
                 <th>{{__('text.word_name')}}</th>
                 <th>{{__('text.word_matricule')}}</th>
+                <th>{{__('text.academic_year')}}</th>
             </thead>
             <tbody>
                 @php($k = 1)
-                @foreach(\App\Models\Students::where('program_id', request('id'))->where('campus_id', request('campus_id'))->get() as $stud)
+                @foreach(\App\Models\Students::where('program_id', request('id'))->where('campus_id', request('campus_id'))->where('admission_batch_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->get() as $stud)
                     <tr>
                         <td>{{$k++}}</td>
                         <td>{{$stud->name}}</td>
                         <td>{{$stud->matric}}</td>
+                        <td>{{\App\Models\Batch::find($stud->admission_batch_id)->name ?? '----'}}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -44,16 +46,16 @@
                     <th>###</th>
                     <th>{{__('text.word_name')}}</th>
                     <th>{{__('text.word_matricule')}}</th>
-                    <th>{{__('text.word_campus')}}</th>
+                    <th>{{__('text.academic_year')}}</th>
                 </thead>
                 <tbody>
                     @php($k = 1)
-                    @foreach(\App\Models\Students::where('program_id', request('id'))->get() as $stud)
+                    @foreach(\App\Models\Students::where('program_id', request('id'))->where('admission_batch_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->get() as $stud)
                         <tr>
                             <td>{{$k++}}</td>
                             <td>{{$stud->name}}</td>
                             <td>{{$stud->matric}}</td>
-                            <td>{{\App\Models\campus::find($stud->campus_id)->name}}</td>
+                            <td>{{\App\Models\Batch::find($stud->admission_batch_id)->name ?? '----'}}</td>
                         </tr>
                     @endforeach
                 </tbody>

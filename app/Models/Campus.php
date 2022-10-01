@@ -18,7 +18,7 @@ class Campus extends Model
 
     public function programs()
     {
-        return $this->hasManyThrough(Program::class, CampusProgram::class);
+        return $this->hasManyThrough(ProgramLevel::class, CampusProgram::class, 'program_level_id', 'campus_id');
     }
 
     public function students()
@@ -40,4 +40,5 @@ class Campus extends Model
     {
         return $this->hasMany(CampusProgram::class);
     }
+
 }

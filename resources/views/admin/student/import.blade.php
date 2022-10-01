@@ -20,6 +20,7 @@
                     </div>
                 </div>
 
+
                 <div class="form-group @error('file') has-error @enderror text-capitalize">
                     <label for="cname" class="control-label col-lg-2">{{__('text.excel_file')}} ({{__('text.word_required')}})</label>
                     <div class="col-lg-10">
@@ -35,7 +36,7 @@
                 <div class="form-group text-capitalize">
                     <label for="cname" class="control-label col-lg-2">{{__('text.word_campus')}}</label>
                     <div class="col-lg-10">
-                        <select class="form-control" name="campus_id">
+                        <select class="form-control" name="campus_id" onchange="loadPrograms(event.target)">
                             <option selected disabled>{{__('text.select_campus')}}</option>
                             @forelse(\App\Models\Campus::all() as $section)
                                 <option value="{{$section->id}}">{{$section->name}}</option>
@@ -51,32 +52,13 @@
                         <label for="cname" class="control-label col-lg-2">Program</label>
                         <div class="col-lg-10">
                             <div>
-                                <select class="form-control section" name="program_id" id="section0">
-                                    <option selected disabled>{{__('text.select_section')}}</option>
-                                    @forelse(\App\Http\Controllers\Admin\StudentController::getMainClasses() as $i => $class)
-                                        <option value="{{$i}}">{{$class}}</option>
-                                    @empty
-                                        <option>{{__('text.no_sections_created')}}</option>
-                                    @endforelse
+                                <select class="form-control section" name="program_id" id="program_id">
+                                
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group text-capitalize">
-                        <label for="cname" class="control-label col-lg-2">Class</label>
-                        <div class="col-lg-10">
-                            <div>
-                                <select class="form-control section" name="section" id="section0">
-                                    <option selected disabled>{{__('text.select_section')}}</option>
-                                    @forelse(\App\Http\Controllers\Admin\StudentController::baseClasses() as $id => $section)
-                                        <option value="{{$id}}">{{$section}}</option>
-                                    @empty
-                                        <option>{{__('text.no_sections_created')}}</option>
-                                    @endforelse
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
 
                 <div class="form-group">
@@ -112,5 +94,23 @@
 @endsection
 
 @section('script')
-    
+<script>
+    function loadPrograms(element){
+        let val = element.value;
+        url = "{{route('campus.programs', ['__V__'])}}";
+        url =url.replace('__V__', val);
+        $.ajax({
+            method: 'get',
+            url: url,
+            success: function(data){
+                let options = `<option value="">{{__('text.select_program')}}</option>`;
+                data.forEach(element => {
+                    console.log(element);
+                    options += `<option value="`+element.id+`">`+element.program+` : Level `+element.level+`</option>`;
+                });
+                $('#program_id').html(options);
+            }
+        })
+    }
+</script>
 @endsection
