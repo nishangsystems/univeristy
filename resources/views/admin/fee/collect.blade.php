@@ -16,6 +16,7 @@
                         <th>#</th>
                         <th>{{__('text.word_matricule')}}</th>
                         <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_campus')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -45,6 +46,7 @@
                         '    <td>' + (i + 1) + '</td>' +
                         '    <td>' + data[i].matric + '</td>' +
                         '    <td>' + data[i].name + '</td>' +
+                        '    <td>' + data[i].campus + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
                         '        <a class="btn btn-xs btn-primary" href="' + data[i].link + '"> {{__("text.fee_collections")}}</a>' +
                         '    </td>' +
