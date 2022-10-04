@@ -50,6 +50,10 @@ class PaymentController extends Controller
 
             return back()->with('error', 'Student has already completed fee');
         }
+        if ($data['total_fee'] == -1) {
+
+            return back()->with('error', 'Fee not set');
+        }
         return view('admin.fee.payments.create')->with($data);
     }
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use App\Http\Resources\Fee;
 use App\Http\Resources\StudentFee;
-use App\Http\Resources\StudentResource2;
+use App\Http\Resources\StudentResource3;
 use App\Http\Resources\StudentRank;
 use App\Http\Resources\CollectBoardingFeeResource;
 use App\Models\Rank;
@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\SchoolUnitResource;
+use App\Models\Campus;
 
 class HomeController extends Controller
 {
@@ -68,10 +69,12 @@ class HomeController extends Controller
 
         $students  = DB::table('students')
             ->join('student_classes', ['students.id' => 'student_classes.student_id'])
+            ->join('campuses', ['students.campus_id'=>'campuses.id'])
             ->where('students.name', 'LIKE', "%{$name}%")
-            ->get()->toArray();
+            ->orWhere('campuses.name', 'LIKE', "%{$name}%")
+            ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])->toArray();
 
-        return \response()->json(StudentResource2::collection($students));
+        return \response()->json(StudentResource3::collection($students));
     }
 
     public function fee(Request  $request)
