@@ -38,17 +38,21 @@
                 </thead>
                 <tbody>
                     @forelse($data ?? [] as $value)
+                        @if(\App\Models\SchoolUnits::find($value['key'])->parent_id == 1)
+                            @continue;
+                        @endif
+
                         @if($value['target'] == 1)
                         <tr class="border-bottom border-dark" style="background-color: rgba(160, 160, 230, 0.4);">
                             <td class="border-left border-right">{{$count++}}</td>
-                            <td class="border-left border-right">{{str_replace(':', '/', $value['class'])}}</td>
+                            <td class="border-left border-right">{{$value['class']}}</td>
                             <td class="border-left border-right">{{$value['males']}}</td>
                             <td class="border-left border-right">{{$value['females']}}</td>
                         </tr>
                         @else
                         <tr class="border-bottom border-dark">
                             <td class="border-left border-right">{{$count++}}</td>
-                            <td class="border-left border-right">{{str_replace(':', '/', $value['class'])}}</td>
+                            <td class="border-left border-right">{{$value['class']}}</td>
                             <td class="border-left border-right">{{$value['males']}}</td>
                             <td class="border-left border-right">{{$value['females']}}</td>
                         </tr>
