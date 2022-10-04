@@ -291,6 +291,9 @@ class ProgramController extends Controller
 
         foreach ($new_subjects as $subject) {
             if (!in_array($subject, $class_subjects)) {
+                if(\App\Models\ClassSubject::where('class_id', $pl->id)->where('subject_id', $subject)->count()>0){
+                    continue;
+                }
                 \App\Models\ClassSubject::create([
                     'class_id' => $pl->id,
                     'subject_id' => $subject,
