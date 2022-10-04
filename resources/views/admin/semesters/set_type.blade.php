@@ -11,10 +11,10 @@
             </div>
         </div>
         <div class="row py-3 text-capitalize">
-            <label for="" class="col-md-3">{{__('text.semester_type')}}</label>
+            <label for="" class="col-md-3">{{__('text.background')}}</label>
             <div class="col-md-9 col-lg-9">
-                <select name="semester_type" id="" class="form-control">
-                    <option value="">{{__('text.semester_type')}}</option>
+                <select name="background_id" id="" class="form-control">
+                    <option value="">{{__('text.background')}}</option>
                     @foreach($semester_types as $type)
                         <option value="{{$type->id}}">{{$type->background_name}}</option>
                     @endforeach

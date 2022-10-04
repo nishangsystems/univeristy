@@ -14,7 +14,12 @@
             <div class="row my-2 text-capitalize">
                 <label for="" class="col-md-3 form-group-text">{{__('text.word_fee')}}</label>
                 <div class="col-md-9 col-lg-9">
-                    <input type="number" name="fees" id="" class="form-control" id="field" required>
+                    <input type="number" name="fees" id="" class="form-control" id="field" required
+                    value="{{
+                        \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', request('program_id'))->first()->payment_items()->where('name', 'TUTION')->count()==0 ?
+                        '----' :
+                        \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', request('program_id'))->first()->payment_items()->where('name', 'TUTION')->first()->amount
+                    }}">
                 </div>
             </div>
             <div class="d-flex justify-content-end py-2">

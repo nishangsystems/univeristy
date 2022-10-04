@@ -26,17 +26,14 @@ class StatisticsController extends Controller
         $base_classes = DB::table('school_units')
                 ->whereNotNull('base_class')
                 ->pluck('id')->toArray();
-        // $_classes =  array_map(function($key) use ($classes){
-        //         // dd($classes);
-        //         return [(int)$key => $classes[(int)$key] ?? \App\Models\SchoolUnits::find((int)$key)->name];
-        //     }, $sub_units);
-
 
         $data['data'] = array_map(function($key) use ($sub_units, $base_classes){
+                $cls = preg_split('/:/',  $sub_units[$key]);
+                count($cls) > 1 ? $cls[1]  = '' : null;
                 return  [
                             'key'=>$key,
                             'target'=>in_array($key, $base_classes) ? 1 : 0,
-                            'class'=>$sub_units[$key], 
+                            'class'=>collect($cls)->implode(':'), 
                             'males'=>$this->getMales($key, request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear()), 
                             'females'=>$this->getFemales($key, request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear()),
                             ];

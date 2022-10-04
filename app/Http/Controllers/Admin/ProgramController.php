@@ -396,7 +396,7 @@ class ProgramController extends Controller
         # code...
         $validator = Validator::make(
             $request->all(),
-            ['program_id'=>'required', 'semester_type'=>'required']
+            ['program_id'=>'required', 'background_id'=>'required']
         );
 
         if ($validator->fails()) {
@@ -404,7 +404,7 @@ class ProgramController extends Controller
             return back()->with('error', $validator->errors()->first());
         }
         $program = \App\Models\SchoolUnits::find($program_id);
-        $program->semester_type = $request->semester_type;
+        $program->background_id = $request->background_id;
         $program->save();
         return back()->with('success', 'Done!');
     }
