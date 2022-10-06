@@ -7,7 +7,6 @@
         <input class="form-control" id="search" placeholder="Search Student by Name or Matricule" required name="student_id" />
     </div>
 
-
     <div class="content-panel">
         <div class="table-responsive">
             <table class="table-bordered">
@@ -16,8 +15,9 @@
                         <th>#</th>
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.word_matricule')}}</th>
-                        <th>{{__('text.word_class')}}</th>
+                        <th>{{__('text.word_program')}}</th>
                         <th>{{__('text.word_gender')}}</th>
+                        <th>{{__('text.word_campus')}}</th>
                         <th></th>
 
                     </tr>
@@ -49,8 +49,9 @@
                         '    <td>' + (i + 1) + '</td>' +
                         '    <td>' + data[i].name + '</td>' +
                         '    <td>' + data[i].matric + '</td>' +
-                        '    <td>' + data[i].class_name + '</td>' +
+                        '    <td>' + data[i].class + '</td>' +
                         '    <td>' + data[i].gender + '</td>' +
+                        '    <td>' + data[i].campus + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
                         '        <a class="btn btn-xs btn-primary text-capitalize" href="' + data[i].link2 + '">{{__("text.award_scholarship")}}</a>' +
                         '    </td>' +

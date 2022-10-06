@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
 use App\Http\Resources\Fee;
-use App\Http\Resources\StudentFee;
 use App\Http\Resources\StudentResource3;
 use App\Http\Resources\StudentRank;
 use App\Http\Resources\CollectBoardingFeeResource;
@@ -16,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\SchoolUnitResource;
+use App\Http\Resources\StudentFee;
 use App\Models\Campus;
 
 class HomeController extends Controller
@@ -58,9 +58,14 @@ class HomeController extends Controller
     public function student($name)
     {
         $students = \App\Models\Students::join('student_classes', ['students.id' => 'student_classes.student_id'])
+            ->join('campuses', ['students.campus_id' => 'campuses.id'])
             ->where('student_classes.year_id', \App\Helpers\Helpers::instance()->getYear())
+            ->join('program_levels', ['students.program_id' => 'program_levels.id'])
+            ->join('school_units', ['program_levels.program_id' => 'school_units.id'])
+            ->join('levels', ['program_levels.level_id' => 'levels.id'])
             ->where('students.name', 'LIKE', "%{$name}%")
-            ->get();
+            ->orWhere('students.matric', '=', $name)
+            ->get(['students.*', 'campuses.name as campus']);
 
         return \response()->json(StudentFee::collection($students));
     }
@@ -71,7 +76,7 @@ class HomeController extends Controller
             ->join('student_classes', ['students.id' => 'student_classes.student_id'])
             ->join('campuses', ['students.campus_id'=>'campuses.id'])
             ->where('students.name', 'LIKE', "%{$name}%")
-            ->orWhere('campuses.name', 'LIKE', "%{$name}%")
+            ->orWhere('students.matric', '=', "$name")
             ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])->toArray();
 
         return \response()->json(StudentResource3::collection($students));

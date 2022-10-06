@@ -91,7 +91,7 @@ class PaymentController extends Controller
             "date" => $request->date
         ]);
 
-        return redirect()->to(route('admin.fee.student.payments.index', $student_id))->with('success', "Fee collection recorded successfully !");
+        return back()->with('success', "Fee collection recorded successfully !");
     }
 
     public function update(Request $request, $student_id, $id)

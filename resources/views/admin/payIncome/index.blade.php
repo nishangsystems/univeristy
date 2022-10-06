@@ -62,6 +62,7 @@
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.income_type')}}</th>
                         <th>{{__('text.word_amount')}} ({{__('text.currency_cfa')}})</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,6 +72,9 @@
                         <td>{{$income->student_name}}</td>
                         <td>{{$income->income_name}}</td>
                         <td>{{number_format($income->amount)}}</td>
+                        <td>
+                            <a href="{{route('admin.income.print_reciept', [$income->id, $income->pay_income_id])}}" class="btn btn-sm btn-primary">{{__('text.word_print')}}</a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

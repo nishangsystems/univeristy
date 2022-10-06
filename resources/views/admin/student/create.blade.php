@@ -17,9 +17,9 @@
                 </div>
             </div>
             <div class="form-group @error('matric') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_matricule')}} </label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_matricule')}} <span style="color:red">*</span></label>
                 <div class="col-lg-10">
-                    <input class=" form-control" name="matric" value="{{old('matric')}}" type="text"  />
+                    <input class=" form-control" name="matric" value="{{old('matric')}}" type="text" required />
                     @error('matric')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -89,7 +89,7 @@
             <h5 class="mt-5 mb-4 font-weight-bold text-capitalize">{{__('text.admission_class_information')}}</h5>
             
             <div class="form-group @error('year') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.academic_year')}}</label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.academic_year')}} <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <select class=" form-control" name="admission_batch_id" required>
                         <option value="">select academic year</option>
@@ -157,6 +157,11 @@
             method: 'get',
             url: url,
             success: function(data){
+                data.sort((a, b)=>{
+                    if (a.program > b.program) { return 1;}
+                    if (a.program < b.program) { return -1;}
+                    return 0;
+                })
                 let options = `<option value="">{{__('text.select_program')}}</option>`;
                 data.forEach(element => {
                     console.log(element);

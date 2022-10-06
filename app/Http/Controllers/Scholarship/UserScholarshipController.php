@@ -21,6 +21,8 @@ class UserScholarshipController extends Controller
         'students.email',
         'students.gender',
         'students.phone',
+        'students.campus_id',
+        'students.program_id',
         'students.address',
         'student_scholarships.amount'
     ];

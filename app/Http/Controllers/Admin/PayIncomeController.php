@@ -46,7 +46,30 @@ class PayIncomeController extends Controller
         return view('admin.payIncome.index')->with($data);
     }
 
-
+    public function print($student_id, $pay_income_id)
+    {
+        $reselect = [
+            'students.id',
+            'pay_incomes.id as pay_income_id',
+            'pay_incomes.created_at as created_at',
+            'students.name as student_name',
+            'incomes.name as income_name',
+            'incomes.amount',
+        ];
+        $batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
+        $data['reciept'] = DB::table('pay_incomes')
+            ->where('pay_incomes.id', '=', $pay_income_id)
+            ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
+            ->join('students', 'students.id', '=', 'pay_incomes.student_id')
+            ->where('students.id', '=', $student_id)
+            ->join('school_units', 'school_units.id', '=', 'pay_incomes.class_id')
+            ->where('pay_incomes.batch_id', $batch_id)
+            ->select($reselect)
+            ->first();
+   
+        // dd($data);
+        return view('admin.payIncome.print')->with($data);
+    }
 
 
     /**
@@ -93,13 +116,12 @@ class PayIncomeController extends Controller
      */
     public function searchStudent($name)
     {
-
         $students = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
             ->where('students.name', 'like', '%' . $name . '%')
             ->orWhere('students.matric', 'like', $name . '%')
-            ->select('students.id',  'students.name', 'students.matric', 'students.gender', 'school_units.name as class_name', 'school_units.id as class_id')->get();
+            ->select('students.*')->get();
 
         return response()->json(['data' => PayIncomeResource::collection($students)]);
     }
@@ -140,9 +162,6 @@ class PayIncomeController extends Controller
         return $student;
     }
 
-
-
-
     /**
      * store paid income
      * @param int $class_id
@@ -170,22 +189,15 @@ class PayIncomeController extends Controller
         return redirect()->route('admin.pay_income.index')->with('success', 'Payed Income successfully');
     }
 
-
-
-
-
     /**
      * get all sections of parent
      * @param int $id
      */
     public function getSections($id)
     {
-        $sections = SchoolUnits::where('parent_id', $id)->get()->toArray();
+        $sections = SchoolUnits::where('parent_id', $id)->orderBy('name', 'ASC')->get()->toArray();
         return response()->json(['data' => $sections]);
     }
-
-
-
 
     /**
      * get all classes of a section
