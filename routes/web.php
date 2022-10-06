@@ -102,6 +102,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('incomes/{id}', 'Admin\IncomeController@show')->name('income.show');
     Route::post('incomes/collect_income/{class_id}/{student_id}', 'Admin\PayIncomeController@store')->name('pay_income.store');
     Route::get('incomes/paid_income/list', 'Admin\PayIncomeController@index')->name('pay_income.index');
+    Route::get('{student_id}/incomes/{pay_income_id}/print_reciept', 'Admin\PayIncomeController@print')->name('income.print_reciept');
     Route::post('incomes/pay_income/list', 'Admin\PayIncomeController@getPayIncomePerClassYear')->name('pay_income.per_year');
 
 

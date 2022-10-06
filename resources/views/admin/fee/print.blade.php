@@ -10,7 +10,7 @@
 
         <div class="content-panel">
             <div class="table-responsive">
-                <table class="table-bordered">
+                <table class="table-bordered table">
                     <thead>
                     <tr class="text-capitalize">
                         <th>#</th>
@@ -19,6 +19,7 @@
                         <th>{{__('text.total_fee')}}</th>
                         <th>{{__('text.word_paid')}}</th>
                         <th>{{__('text.word_balance')}}</th>
+                        <th>{{__('text.word_campus')}}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -36,12 +37,13 @@
         $('#search').on('keyup', function () {
 
             val = $(this).val()
-            url = "{{route('student-search', "VALUE")}}";
+            url = "{{route('student-search', 'VALUE')}}";
             url = url.replace('VALUE', val);
             $.ajax({
                 type: "GET",
                 url: url,
-                success: function (data) {
+                success: function(data) {
+                    console.log(data);
                     let html = "";
                     for (i = 0; i < data.length; i++) {
                         html += '<tr>' +
@@ -51,6 +53,7 @@
                             '    <td>'+data[i].total+'</td>' +
                             '    <td>'+data[i].paid+'</td>' +
                             '    <td>'+data[i].bal+'</td>' +
+                            '    <td>'+data[i].campus+'</td>' +
                             '    <td class="d-flex justify-content-between align-items-center">' +
                             '        <a target="_blank" class="btn btn-xs btn-primary" href="'+data[i].rlink+'"> {{__("text.print_reciept")}}</a>' +
                             '    </td>' +

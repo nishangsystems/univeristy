@@ -37,8 +37,10 @@
                         <th>{{__('text.word_phone')}}</th>
                         <th>{{__('text.word_address')}}</th>
                         <th>{{__('text.word_gender')}}</th>
+                        <th>{{__('text.word_program')}}</th>
+                        <th>{{__('text.word_campus')}}</th>
                         <th>{{__('text.scholarship_amount')}} </th>
-
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,7 +52,13 @@
                         <td>{{$student->phone}}</td>
                         <td>{{$student->address}}</td>
                         <td>{{$student->gender}}</td>
+                        <td>{{\App\Models\ProgramLevel::find($student->program_id)->program()->first()->name.' : Level '.
+                            \App\Models\ProgramLevel::find($student->program_id)->level()->first()->level}}</td>
+                        <td>{{\App\Models\Campus::find($student->campus_id)->name}}</td>
                         <td>{{number_format($student->amount)}}</td>
+                        <td>
+                            <a href="{{route('admin.ascholarship.edit', $student->id)}}" class="btn btn-sm btn-primary">{{__('text.word_edit')}}</a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

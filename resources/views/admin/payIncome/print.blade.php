@@ -4,7 +4,7 @@
     <div class="card-body">
         <div class="heading-layout1">
             <div class="item-title">
-                <h3 class="text-capitalize">{{$student->name}} {{__('text.fee_payment')}}</h3>
+                <h3 class="text-capitalize">{{$reciept->student_name}} {{__('text.fee_payment')}}</h3>
             </div>
         </div>
         <div class="table-responsive">
@@ -18,32 +18,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($student->payments()->where(['batch_id'=>$year])->get() as $payment)
+                    <?php /*@foreach($student->payments()->where(['batch_id'=>$year])->get() as $payment)
                     @php
                     $fee = $payment;
                     $year = $year;
-                    @endphp
+                    @endphp */
+                    ?>
                     <tr>
-                        <td>{{$payment->user->name}}</td>
-                        <td>{{($payment->created_at->diffForHumans())}}</td>
-                        <td>{{$payment->amount}}</td>
+                        <td>{{$reciept->student_name}}</td>
+                        <td>{{date('Y-m-d', strtotime($reciept->created_at))}}</td>
+                        <td>{{$reciept->amount}}</td>
                         <td>
-                            <button onclick="printDiv('printHERE{{$payment->id}}')" class="btn btn-primary"><i class="fas fa-print text-capitalize"></i>{{__('text.word_print')}}</button>
+                            <button onclick="printDiv('printHERE{{$reciept->id}}')" class="btn btn-primary"><i class="fas fa-print text-capitalize"></i>{{__('text.word_print')}}</button>
                             <div class="d-none">
-                                <div id="printHERE{{$payment->id}}" class="eachrec">
+                                <div id="printHERE{{$reciept->id}}" class="eachrec">
                                     
                                    <div class="mb-5">
                                    <div style="height:120px; width:95% ; ">
                                         <img width="100%" src="{{asset('assets/images')}}/header.jpg" />
                                     </div>
                                     <div style=" float:left; width:100%; margin-top:100px;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; margin-bottom:10px; text-transform: uppercase;">
-                                        {{__('text.cash_reciept')}} N<SUP>0</SUP> 00{{$fee->id}}
+                                        {{__('text.cash_reciept')}} N<SUP>0</SUP> 00{{$reciept->id}}
                                     </div>
                                     <div style=" float:left; width:900px; margin-top:0px;TEXT-ALIGN:CENTER; font-family:arial; height:300px;font-size:13px; ">
                                         <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.word_name')}} :</div>
                                         <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
                                             <div style=" text-align:center; width:300px;margin-top:3px;">
-                                                {{$fee->student->name}}
+                                                {{$reciept->student_name}}
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:15px;">
 
@@ -52,7 +53,7 @@
                                         <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.word_purpose')}} :</div>
                                         <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
                                             <div style=" float:left; width:500px;margin-top:3px;">
-                                                {{$fee->item ? $fee->item->name : $payment->user->class($year)->name.' - Fees '}}
+                                                {{$reciept->income_name}}
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:15px;"></div>
                                         </div>
@@ -60,7 +61,7 @@
                                         <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform: capitalize"> {{__('text.academic_year')}}:</div>
                                         <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
                                             <div style=" float:left; width:300px;margin-top:3px;">
-                                                {{\App\Models\Batch::find($year)->name}}
+                                                {{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name}}
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
                                         </div>
@@ -69,24 +70,24 @@
                                             <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.amount_in_figures')}}</div>
                                             <div style=" float:left; width:700px; height:25px;font-size:17px;">
                                                 <div style=" float:left; width:400px;border:1px solid #000;margin-top:3px;">
-                                                    {{__('text.currency_cfa')}} {{$fee->amount}}
+                                                    {{__('text.currency_cfa')}} {{$reciept->amount}}
                                                 </div>
                                                 <div style=" float:left; width:100px;margin-top:5px; text-transform:uppercase">
                                                     {{__('text.word_date')}}
                                                 </div>
                                                 <div style=" float:left; border-bottom:1px solid #000;">
-                                                    {{$fee->created_at->format('d/m/Y')}}
+                                                    {{date('Y-m-d', strtotime($reciept->created_at))}}
                                                 </div>
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
                                             <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
                                                 <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> <i>{{__('text.amount_in_words')}}</i></div>
-                                                <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{\App\Helpers\Helpers::instance()->numToWord($fee->amount)}}</i></div>
+                                                <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{\App\Helpers\Helpers::instance()->numToWord($reciept->amount)}}</i></div>
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
                                             <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
                                                 <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> <i>{{__('text.balance_due')}}</i></div>
-                                                <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{$student->bal($student->id)}}</i></div>
+                                                <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>----</i></div>
                                             </div>
                                             
                                             <div style=" clear:both; height:30px"></div>
@@ -109,13 +110,13 @@
                                             <img width="100%" src="{{asset('assets/images')}}/header.jpg" />
                                         </div>
                                         <div style=" float:left; width:100%; margin-top:100px;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; margin-bottom:10px; text-transform:capitalize">
-                                        {{__('text.cash_reciept')}} N<SUP>0</SUP> 00{{$fee->id}}
+                                        {{__('text.cash_reciept')}} N<SUP>0</SUP> 00{{$reciept->id}}
                                     </div>
                                     <div style=" float:left; width:900px; margin-top:0px;TEXT-ALIGN:CENTER; font-family:arial; height:300px;font-size:13px; ">
                                         <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.word_name')}} :</div>
                                         <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
                                             <div style=" text-align:center; width:300px;margin-top:3px;">
-                                                {{$fee->student->name}}
+                                                {{$reciept->student_name}}
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:15px;">
 
@@ -124,7 +125,7 @@
                                         <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.word_purpose')}} :</div>
                                         <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
                                             <div style=" float:left; width:500px;margin-top:3px;">
-                                                {{$fee->item ? $fee->item->name : $payment->user->class($year)->name.' - Fees '}}
+                                                {{$reciept->income_name }}
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:15px;"></div>
                                         </div>
@@ -132,7 +133,7 @@
                                         <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.academic_year')}}:</div>
                                         <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
                                             <div style=" float:left; width:300px;margin-top:3px;">
-                                                {{\App\Models\Batch::find($year)->name}}
+                                                {{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name}}
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
                                         </div>
@@ -141,24 +142,24 @@
                                             <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.amount_in_figures')}}</div>
                                             <div style=" float:left; width:700px; height:25px;font-size:17px;">
                                                 <div style=" float:left; width:400px;border:1px solid #000;margin-top:3px;">
-                                                    {{__('text.currency_cfa')}} {{$fee->amount}}
+                                                    {{__('text.currency_cfa')}} {{$reciept->amount}}
                                                 </div>
                                                 <div style=" float:left; width:100px;margin-top:5px; text-transform:uppercase">
                                                     {{__('text.word_date')}}
                                                 </div>
                                                 <div style=" float:left; border-bottom:1px solid #000; margin-top:53px;">
-                                                    {{$fee->created_at->format('d/m/Y')}}
+                                                    {{date('Y/m/d', strtotime($reciept->created_at))}}
                                                 </div>
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
                                             <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
                                                 <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> <i>{{__('text.amount_in_words')}}</i></div>
-                                                <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{\App\Helpers\Helpers::instance()->numToWord($fee->amount)}}</i></div>
+                                                <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{\App\Helpers\Helpers::instance()->numToWord($reciept->amount)}}</i></div>
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
                                             <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
                                                 <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> <i>{{__('text.balance_due')}}</i></div>
-                                                <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{$student->bal($student->id)}}</i></div>
+                                                <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>----</i></div>
                                             </div>
                                             
                                             <div style=" clear:both; height:30px"></div>
@@ -182,7 +183,8 @@
                             
                         </td>
                     </tr>
-                    @endforeach
+                    <?php //@endforeach
+                    ?>
                 </tbody>
             </table>
         </div>
