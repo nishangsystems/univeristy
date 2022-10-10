@@ -12,6 +12,10 @@ class ProgramLevel extends Model
     
     protected $fillable = ['program_id', 'level_id'];
     
+    public function students()
+    {
+        return $this->hasMany(Students::class, 'program_id');
+    }
     public function program()
     {
         return $this->belongsTo(SchoolUnits::class, 'program_id');

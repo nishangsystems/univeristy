@@ -114,13 +114,25 @@ class PayIncomeController extends Controller
     /**
      * get student by name or matricule
      */
+    public function get_searchStudent()
+    {
+        $name = request('name');
+        $students = DB::table('student_classes')
+            ->join('students', 'students.id', '=', 'student_classes.student_id')
+            ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
+            ->where('students.name', 'like', "%{$name}%")
+            ->orWhere('students.matric', 'like', "%{$name}%")
+            ->select('students.*')->get();
+
+        return response()->json(['data' => PayIncomeResource::collection($students)]);
+    }
     public function searchStudent($name)
     {
         $students = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
-            ->where('students.name', 'like', '%' . $name . '%')
-            ->orWhere('students.matric', 'like', $name . '%')
+            ->where('students.name', 'like', "%{$name}%")
+            ->orWhere('students.matric', '=', $name)
             ->select('students.*')->get();
 
         return response()->json(['data' => PayIncomeResource::collection($students)]);
@@ -219,5 +231,12 @@ class PayIncomeController extends Controller
     {
         $school_unit = SchoolUnits::where('id', $id)->pluck('name')[0];
         return $school_unit;
+    }
+
+    public function delete_income($student_id, $pay_income_id)
+    {
+        # code...
+        PayIncome::find($pay_income_id)->delete();
+        return back()->with('success', 'Done');
     }
 }
