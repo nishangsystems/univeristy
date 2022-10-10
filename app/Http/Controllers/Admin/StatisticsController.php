@@ -28,12 +28,12 @@ class StatisticsController extends Controller
                 $data['data'] = array_map(function($program_id) use ($request){
                     return [
                         'unit' => \App\Models\SchoolUnits::find($program_id)->name,
-                        'males' => \App\Models\ProgramLevel::where('program_id', $program_id)
+                        'males' => \App\Models\ProgramLevel::where('program_levels.program_id', $program_id)
                                     ->join('students', ['students.program_id'=>'program_levels.id'])
                                     ->where('students.gender', '=', 'male')
                                     ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                     ->where('student_classes.year_id', '=', $request->year_id)->count(),
-                        'females' => \App\Models\ProgramLevel::where('program_id', $program_id)
+                        'females' => \App\Models\ProgramLevel::where('program_levels.program_id', $program_id)
                                     ->join('students', ['students.program_id'=>'program_levels.id'])
                                     ->where('students.gender', '=', 'female')
                                     ->join('student_classes', ['student_classes.student_id'=>'students.id'])
@@ -46,12 +46,12 @@ class StatisticsController extends Controller
                     $data['data'] = array_map(function($level_id) use ($request){
                         return [
                             'unit' => \App\Models\Level::find($level_id)->level,
-                            'males' => \App\Models\ProgramLevel::where('le$level_id', $level_id)
+                            'males' => \App\Models\ProgramLevel::where('program_levels.level_id', $level_id)
                                         ->join('students', ['students.le$level_id'=>'program_levels.id'])
                                         ->where('students.gender', '=', 'male')
                                         ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                         ->where('student_classes.year_id', '=', $request->year_id)->count(),
-                            'females' => \App\Models\ProgramLevel::where('le$level_id', $level_id)
+                            'females' => \App\Models\ProgramLevel::where('program_levels.level_id', $level_id)
                                         ->join('students', ['students.le$level_id'=>'program_levels.id'])
                                         ->where('students.gender', '=', 'female')
                                         ->join('student_classes', ['student_classes.student_id'=>'students.id'])
@@ -66,7 +66,15 @@ class StatisticsController extends Controller
                         'unit' => \App\Models\ProgramLevel::find($class_id)->program()->first()->name
                                 . ' : LEVEL '
                                 . \App\Models\ProgramLevel::find($class_id)->level()->first()->level,
-                        'males' => \App\Models\ProgramLevel::find($class_id)->student()
+                        'males' => \App\Models\ProgramLevel::find($class_id)->students()
+                                    ->where('students.gender', '=', 'male')
+                                    ->join('student_classes', ['student_classes.student_id'=>'students.id'])
+                                    ->where('student_classes.year_id', '=', $request->year_id)->count(),
+                        'females' => \App\Models\ProgramLevel::find($class_id)->students()
+                                    ->where('students.gender', '=', 'female')
+                                    ->join('student_classes', ['student_classes.student_id'=>'students.id'])
+                                    ->where('student_classes.year_id', '=', $request->year_id)->count(),
+                        
                     ];
                 }, \App\Models\ProgramLevel::pluck('id')->toArray());
                 break;
