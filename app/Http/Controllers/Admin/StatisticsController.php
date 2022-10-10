@@ -45,14 +45,14 @@ class StatisticsController extends Controller
                     # code...
                     $data['data'] = array_map(function($level_id) use ($request){
                         return [
-                            'unit' => \App\Models\Level::find($level_id)->level,
+                            'unit' => 'LEVEL '.\App\Models\Level::find($level_id)->level,
                             'males' => \App\Models\ProgramLevel::where('program_levels.level_id', $level_id)
-                                        ->join('students', ['students.le$level_id'=>'program_levels.id'])
+                                        ->join('students', ['students.program_id'=>'program_levels.id'])
                                         ->where('students.gender', '=', 'male')
                                         ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                         ->where('student_classes.year_id', '=', $request->year_id)->count(),
                             'females' => \App\Models\ProgramLevel::where('program_levels.level_id', $level_id)
-                                        ->join('students', ['students.le$level_id'=>'program_levels.id'])
+                                        ->join('students', ['students.program_id'=>'program_levels.id'])
                                         ->where('students.gender', '=', 'female')
                                         ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                         ->where('student_classes.year_id', '=', $request->year_id)->count(),
