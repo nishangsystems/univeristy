@@ -71,15 +71,43 @@ class HomeController extends Controller
     }
     public function searchStudents($name)
     {
+        $name = str_replace('/', '\/', $name);
+        try {
+            //code...
+            // $sql = "SELECT students.*, student_classes.student_id, student_classes.class_id, campuses.name as campus from students, student_classes, campuses where students.id = student_classes.student_id and students.campus_id = campuses.id and students.name like '%{$name}%' or students.matric like '%{$name}%'";
 
-        $students  = DB::table('students')
-            ->join('student_classes', ['students.id' => 'student_classes.student_id'])
-            ->join('campuses', ['students.campus_id'=>'campuses.id'])
-            ->where('students.name', 'LIKE', "%{$name}%")
-            ->orWhere('students.matric', '=', "$name")
-            ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])->toArray();
+            // return DB::select($sql);
+            $students  = DB::table('students')
+                ->join('student_classes', ['students.id' => 'student_classes.student_id'])
+                ->join('campuses', ['students.campus_id'=>'campuses.id'])
+                ->where('students.name', 'LIKE', "%$name%")
+                ->orWhere('students.matric', 'LIKE', "%$name%")
+                ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])->toArray();
+            return \response()->json(StudentResource3::collection($students));
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+    }
+    public function searchStudents_get()
+    {
+        $name = request('key');
+        // return $name;
+        $name = str_replace('/', '\/', $name);
+        try {
+            //code...
+            // $sql = "SELECT students.*, student_classes.student_id, student_classes.class_id, campuses.name as campus from students, student_classes, campuses where students.id = student_classes.student_id and students.campus_id = campuses.id and students.name like '%{$name}%' or students.matric like '%{$name}%'";
 
-        return \response()->json(StudentResource3::collection($students));
+            // return DB::select($sql);
+            $students  = DB::table('students')
+                ->join('student_classes', ['students.id' => 'student_classes.student_id'])
+                ->join('campuses', ['students.campus_id'=>'campuses.id'])
+                ->where('students.name', 'LIKE', "%$name%")
+                ->orWhere('students.matric', 'LIKE', "%$name%")
+                ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])->toArray();
+            return \response()->json(StudentResource3::collection($students));
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
     }
 
     public function fee(Request  $request)

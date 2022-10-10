@@ -17,6 +17,7 @@
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.word_matricule')}}</th>
                         <th>{{__('text.word_class')}}</th>
+                        <th>{{__('text.word_campus')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -33,13 +34,15 @@
 <script>
     $('#search').on('keyup', function() {
         val = $(this).val();
-        url = "{{route('admin.searchStudent', ':id')}}";
-        search_url = url.replace(':id', val);
+        url = "{{route('admin.get_searchStudent')}}";
+        // search_url = url.replace(':id', val);
         $.ajax({
             type: 'GET',
-            url: search_url,
+            data: {'name': val},
+            url: url,
             success: function(response) {
                 let html = new String();
+                // console.log(response);
                 let size = response.data.length;
                 let data = response.data;
                 for (i = 0; i < size; i++) {
@@ -47,7 +50,8 @@
                         '    <td>' + (i + 1) + '</td>' +
                         '    <td>' + data[i].name + '</td>' +
                         '    <td>' + data[i].matric + '</td>' +
-                        '    <td>' + data[i].class_name + '</td>' +
+                        '    <td>' + data[i].class + '</td>' +
+                        '    <td>' + data[i].campus + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
                         '        <a class="btn btn-xs btn-primary text-capitalize" href="' + data[i].link + '"> {{__("text.collect_income")}}</a>' +
                         '    </td>' +

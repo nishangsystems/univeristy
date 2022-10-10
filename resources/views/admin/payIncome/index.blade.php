@@ -74,6 +74,9 @@
                         <td>{{number_format($income->amount)}}</td>
                         <td>
                             <a href="{{route('admin.income.print_reciept', [$income->id, $income->pay_income_id])}}" class="btn btn-sm btn-primary">{{__('text.word_print')}}</a>
+                            @if(auth()->user()->roleR()->first()->role_id == 1)
+                                <a href="{{route('admin.income.delete', [$income->id, $income->pay_income_id])}}" class="btn btn-sm btn-danger">{{__('text.word_delete')}}</a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

@@ -33,11 +33,14 @@
 <script>
     $('#search').on('keyup', function() {
         val = $(this).val()
-        url = "{{route('search-all-students', ':id')}}";
+        // val = val.replace('/', '\\/', val);
+        console.log(val);
+        url = "{{route('get-search-all-students')}}";
         url = url.replace(':id', val);
         $.ajax({
-            type: "GET",
+            type: "get",
             url: url,
+            data: {'key' : val},
             success: function(data) {
                 console.log(data)
                 let html = "";

@@ -20,7 +20,7 @@ class PayIncomeResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'matric' => $this->matric,
-            'class' => ProgramLevel::find($this->program_id)->program()->first()->name .' : '.ProgramLevel::find($this->program_id)->level()->first()->level,
+            'class' => ProgramLevel::find($this->program_id)->program()->first()->name .' : LEVEL '.ProgramLevel::find($this->program_id)->level()->first()->level,
             'campus' => Campus::find($this->campus_id)->name,
             'campus_id' => $this->campus_id,
             'gender' => $this->gender,

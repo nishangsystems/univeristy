@@ -287,5 +287,6 @@ return [
     'word_fee'=>'fee',
     'word_students'=>'students',
     'word_campuses'=>'campuses',
+    'filter_statistics_by'=>'filter statistics by',
     
 ];

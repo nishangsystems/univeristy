@@ -77,6 +77,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('sections/{id}', 'Admin\PayIncomeController@getSections')->name('getSections');
     Route::get('classes/{id}', 'Admin\PayIncomeController@getClasses')->name('getClasses');
     Route::get('search/students/{name}', 'Admin\PayIncomeController@searchStudent')->name('searchStudent');
+    Route::get('search/students/', 'Admin\PayIncomeController@get_searchStudent')->name('get_searchStudent');
 
     Route::get('scholarships', 'Scholarship\ScholarshipController@index')->name('scholarship.index');
     Route::get('scholarship/create', 'Scholarship\ScholarshipController@create')->name('scholarship.create');
@@ -102,6 +103,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('incomes/{id}', 'Admin\IncomeController@show')->name('income.show');
     Route::post('incomes/collect_income/{class_id}/{student_id}', 'Admin\PayIncomeController@store')->name('pay_income.store');
     Route::get('incomes/paid_income/list', 'Admin\PayIncomeController@index')->name('pay_income.index');
+    Route::get('incomes/{student_id}/paid_income/{pay_income_id}/delete', 'Admin\PayIncomeController@delete_income')->name('income.delete');
     Route::get('{student_id}/incomes/{pay_income_id}/print_reciept', 'Admin\PayIncomeController@print')->name('income.print_reciept');
     Route::post('incomes/pay_income/list', 'Admin\PayIncomeController@getPayIncomePerClassYear')->name('pay_income.per_year');
 
@@ -275,6 +277,7 @@ Route::get('section-children/{parent}', 'HomeController@children')->name('sectio
 Route::get('section-subjects/{parent}', 'HomeController@subjects')->name('section-subjects');
 Route::get('student-search/{name}', 'HomeController@student')->name('student-search');
 Route::get('search-all-students/{name}', 'HomeController@searchStudents')->name('search-all-students');
+Route::get('search-all-students', 'HomeController@searchStudents_get')->name('get-search-all-students');
 Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search');
 Route::get('student_rank', 'HomeController@rank')->name('student_rank');
 Route::post('student_rank', 'HomeController@rankPost')->name('student_rank');

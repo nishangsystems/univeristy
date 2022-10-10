@@ -22,22 +22,59 @@ class StatisticsController extends Controller
         # code...
         // $classes = \App\Http\Controllers\Admin\ProgramController::allUnitNames();
         $data['title'] = "Student Statistics";
-        $sub_units = \App\Http\Controllers\Admin\ProgramController::orderedUnitsTree();
-        $base_classes = DB::table('school_units')
-                ->whereNotNull('base_class')
-                ->pluck('id')->toArray();
-
-        $data['data'] = array_map(function($key) use ($sub_units, $base_classes){
-                $cls = preg_split('/:/',  $sub_units[$key]);
-                count($cls) > 1 ? $cls[1]  = '' : null;
-                return  [
-                            'key'=>$key,
-                            'target'=>in_array($key, $base_classes) ? 1 : 0,
-                            'class'=>collect($cls)->implode(':'), 
-                            'males'=>$this->getMales($key, request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear()), 
-                            'females'=>$this->getFemales($key, request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear()),
-                            ];
-            }, array_keys($sub_units));
+        switch ($request->filter_key) {
+            case 'program':
+                # code...
+                $data['data'] = array_map(function($program_id) use ($request){
+                    return [
+                        'unit' => \App\Models\SchoolUnits::find($program_id)->name,
+                        'males' => \App\Models\ProgramLevel::where('program_id', $program_id)
+                                    ->join('students', ['students.program_id'=>'program_levels.id'])
+                                    ->where('students.gender', '=', 'male')
+                                    ->join('student_classes', ['student_classes.student_id'=>'students.id'])
+                                    ->where('student_classes.year_id', '=', $request->year_id)->count(),
+                        'females' => \App\Models\ProgramLevel::where('program_id', $program_id)
+                                    ->join('students', ['students.program_id'=>'program_levels.id'])
+                                    ->where('students.gender', '=', 'female')
+                                    ->join('student_classes', ['student_classes.student_id'=>'students.id'])
+                                    ->where('student_classes.year_id', '=', $request->year_id)->count(),
+                    ];
+                }, \App\Models\SchoolUnits::where('unit_id', 4)->pluck('id')->toArray());
+                break;
+                case 'level':
+                    # code...
+                    $data['data'] = array_map(function($level_id) use ($request){
+                        return [
+                            'unit' => \App\Models\Level::find($level_id)->level,
+                            'males' => \App\Models\ProgramLevel::where('le$level_id', $level_id)
+                                        ->join('students', ['students.le$level_id'=>'program_levels.id'])
+                                        ->where('students.gender', '=', 'male')
+                                        ->join('student_classes', ['student_classes.student_id'=>'students.id'])
+                                        ->where('student_classes.year_id', '=', $request->year_id)->count(),
+                            'females' => \App\Models\ProgramLevel::where('le$level_id', $level_id)
+                                        ->join('students', ['students.le$level_id'=>'program_levels.id'])
+                                        ->where('students.gender', '=', 'female')
+                                        ->join('student_classes', ['student_classes.student_id'=>'students.id'])
+                                        ->where('student_classes.year_id', '=', $request->year_id)->count(),
+                        ];
+                    }, \App\Models\Level::pluck('id')->toArray());
+                break;
+            case 'class':
+                # code...
+                $data['data'] = array_map(function($class_id) use ($request){
+                    return [
+                        'unit' => \App\Models\ProgramLevel::find($class_id)->program()->first()->name
+                                . ' : LEVEL '
+                                . \App\Models\ProgramLevel::find($class_id)->level()->first()->level,
+                        'males' => \App\Models\ProgramLevel::find($class_id)->student()
+                    ];
+                }, \App\Models\ProgramLevel::pluck('id')->toArray());
+                break;
+            
+            default:
+                # code...
+                break;
+        }
         // return $data['data'];
         return view('admin.statistics.students')->with($data);
     }
