@@ -68,6 +68,14 @@
                             {{__('text.phrase_6')}}
                         </tr>
                     @endforelse
+                    @if(isset($data))
+                        <tr class="border-top border-bottom" style="background-color: #fcfcfc;">
+                            <td class="border-right border-left" colspan="2">{{__('text.word_total')}}</td>
+                            <td class="border-right border-left">{{$data->sum('total')}}</td>
+                            <td class="border-right border-left">{{$data->sum('males')}}</td>
+                            <td class="border-right border-left">{{$data->sum('females')}}</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
             @endif
