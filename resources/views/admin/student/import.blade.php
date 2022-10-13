@@ -22,7 +22,7 @@
 
 
                 <div class="form-group @error('file') has-error @enderror text-capitalize">
-                    <label for="cname" class="control-label col-lg-2">{{__('text.excel_file')}} ({{__('text.word_required')}})</label>
+                    <label for="cname" class="control-label col-lg-2">{{__('text.csv_file')}} ({{__('text.word_required')}})</label>
                     <div class="col-lg-10">
                         <input class=" form-control" name="file" value="{{old('file')}}" type="file" required/>
                         @error('file')

@@ -387,7 +387,7 @@ class StudentController extends Controller
         // Validate request
         $request->validate([
             'batch' => 'required',
-            'file' => 'required|mimes:csv,txt,xlsx',
+            'file' => 'required|mimes:csv',
             'campus_id' => 'required',
             'program_id'=> 'required'
         ]);
@@ -401,7 +401,7 @@ class StudentController extends Controller
         $extension = $file->getClientOriginalExtension();
         $filename = "Names." . $extension;
         // Valid File Extensions;
-        $valid_extension = array("csv", "xlsx");
+        $valid_extension = array("csv");
         if (in_array(strtolower($extension), $valid_extension)) {
             // File upload location
             $location = public_path() . '/files/';
@@ -437,7 +437,6 @@ class StudentController extends Controller
                             'campus_id'=> $request->campus_id ?? null,
                             'program_id' => $request->program_id ?? null
                         ]);
-                        dd($student);
                         $class = StudentClass::create([
                             'student_id' => $student->id,
                             'class_id' => $request->program_id,
@@ -445,13 +444,14 @@ class StudentController extends Controller
                         ]);
                         $student->admission_batch_id = $class->id;
                         $student->save();
-
+                        
                         // echo ($importData[0]." Inserted Successfully<br>");
                     } else {
                         $duplicates .= $importData[1].' : '.$importData[0].', ';
                         //  echo ($importData[0]."  <b style='color:#ff0000;'> Exist already on DB and wont be added. Please verify <br></b>");
                     }
                 }
+                // dd($student);
 
                 DB::commit();
             } catch (\Exception $e) {
@@ -466,7 +466,7 @@ class StudentController extends Controller
             session('message', 'Invalid File Extension.');
         }
 
-        return redirect()->to(route('admin.students.index', [$request->section]))->with('success', $duplicates == '' ? 'Student Imported successfully!' : 'Student Imported successfully! The following students where not imported because they are already in the database;\n'.$duplicates);
+        return redirect()->to(route('admin.students.index', [$request->program_id]))->with('success', $duplicates == '' ? 'Student Imported successfully!' : 'Student Imported successfully! The following students where not imported because they are already in the database;\n'.$duplicates);
     }
     
     function getSubunitsOf($id){
