@@ -408,7 +408,7 @@ class StudentController extends Controller
             // Upload file
             $file->move($location, $filename);
             $filepath = public_path('/files/' . $filename);
-
+            
             $file = fopen($filepath, "r");
 
             $importData_arr = array();
@@ -422,7 +422,7 @@ class StudentController extends Controller
                 $i++;
             }
             fclose($file);
-
+            // dd($importData_arr);
 
             DB::beginTransaction();
             try {
