@@ -288,5 +288,7 @@ return [
     'word_students'=>'students',
     'word_campuses'=>'campuses',
     'filter_statistics_by'=>'filter statistics by',
-    
+    'word_complete' =>'complete',
+    'percentage_recieved' => '% recieved',
+
 ];

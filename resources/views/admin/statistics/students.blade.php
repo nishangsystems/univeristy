@@ -48,15 +48,17 @@
                     @php($count = 1)
                     <th>##</th>
                     <th>{{__('text.word_unit')}}</th>
+                    <th>{{__('text.word_total')}}</th>
                     <th>{{__('text.word_males')}}</th>
                     <th>{{__('text.word_females')}}</th>
                 </thead>
                 <tbody>
                     @forelse($data ?? [] as $value)
 
-                        <tr class="border-bottom border-dark" style="background-color: rgba(160, 160, 230, 0.4);">
+                        <tr class="border-bottom border-dark" style="background-color: rgba(243, 243, 252, 0.4);">
                             <td class="border-left border-right">{{$count++}}</td>
                             <td class="border-left border-right">{{$value['unit']}}</td>
+                            <td class="border-left border-right">{{$value['total']}}</td>
                             <td class="border-left border-right">{{$value['males']}}</td>
                             <td class="border-left border-right">{{$value['females']}}</td>
                         </tr>
@@ -66,6 +68,14 @@
                             {{__('text.phrase_6')}}
                         </tr>
                     @endforelse
+                    @if(isset($data))
+                        <tr class="border-top border-bottom" style="background-color: #fcfcfc;">
+                            <td class="border-right border-left" colspan="2">{{__('text.word_total')}}</td>
+                            <td class="border-right border-left">{{$data->sum('total')}}</td>
+                            <td class="border-right border-left">{{$data->sum('males')}}</td>
+                            <td class="border-right border-left">{{$data->sum('females')}}</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
             @endif
