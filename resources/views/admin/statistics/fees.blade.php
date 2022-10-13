@@ -48,14 +48,14 @@
                     @php($count = 1)
                     <th>##</th>
                     <th>{{__('text.word_unit')}}</th>
-                    <th>{{__('text.word_students')}}</th>
-                    <th>#{{__('text.word_complete')}}</th>
-                    <th>#{{__('text.word_incomplete')}}</th>
-                    <th>{{__('text.word_expected')}}</th>
-                    <th>{{__('text.word_recieved')}}</th>
-                    <th>{{__('text.percentage_complete')}}</th>
-                    <th>{{__('text.percentage_uncompleted')}}</th>
-                    <th>{{__('text.percentage_recieved')}}</th>
+                    <th>{{__('text.no_of_students')}}</th>
+                    <th>{{__('text.number_completed')}}</th>
+                    <th>{{__('text.number_uncompleted')}}</th>
+                    <th>{{__('text.amount_expected')}}</th>
+                    <th>{{__('text.amount_recieved')}}</th>
+                    <th>{{__('text.percentage_students_completed')}}</th>
+                    <th>{{__('text.percentage_students_uncompleted')}}</th>
+                    <th>{{__('text.percentage_amount_recieved')}}</th>
                 </thead>
                 <tbody>
                     @forelse($data ?? [] as $value)

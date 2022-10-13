@@ -290,5 +290,13 @@ return [
     'filter_statistics_by'=>'filter statistics by',
     'word_complete' =>'complete',
     'percentage_recieved' => '% recieved',
-
+    'no_of_students'=>'No of students',
+    'number_completed'=>'number completed',
+    'number_uncompleted'=>'number uncompleted',
+    'amount_expected'=>'amount extected',
+    'amount_recieved'=>'amount recieved',
+    'percentage_students_completed'=>'% students completed',
+    'percentage_students_uncompleted'=>'% students uncompleted',
+    'percentage_amount_recieved'=>'% amount recieved',
+    
 ];
