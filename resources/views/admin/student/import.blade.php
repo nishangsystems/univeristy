@@ -69,7 +69,7 @@
 
             </form>
             <div class="col-md-6 col-lg-4 py-3 px-2">
-                <div class="text-center text-capitalize text-primary py-3">File Format</div>
+                <div class="text-center text-capitalize text-primary py-3">{{__('text.file_format_csv')}}</div>
                 <table class="bg-light">
                     <thead class="text-capitalize bg-dark text-light fs-6">
                         <th>name</th>

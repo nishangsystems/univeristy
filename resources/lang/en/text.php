@@ -299,5 +299,7 @@ return [
     'percentage_students_uncompleted'=>'% students uncompleted',
     'percentage_amount_recieved'=>'% amount recieved',
     'csv_file'=> 'csv file',
-    
+    'import_fees'=>'import fees',
+    'file_format_csv' => 'file format (csv)',
+
 ];

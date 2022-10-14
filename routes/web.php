@@ -73,6 +73,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::delete('fee/{id}', 'Admin\FeesController@delete')->name('fee.destroy');
     Route::get('fee/{class_id}/report', 'Admin\FeesController@report')->name('fee.report');
     Route::get('fee/{class_id}/student', 'Admin\FeesController@student')->name('fee.student');
+    Route::get('import_fee/', 'Admin\FeesController@import')->name('import_fee');
+    Route::post('import_fee/', 'Admin\FeesController@import_save');
 
     Route::get('sections/{id}', 'Admin\PayIncomeController@getSections')->name('getSections');
     Route::get('classes/{id}', 'Admin\PayIncomeController@getClasses')->name('getClasses');
