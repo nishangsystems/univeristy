@@ -387,7 +387,7 @@ class StudentController extends Controller
         // Validate request
         $request->validate([
             'batch' => 'required',
-            'file' => 'required|mimes:csv',
+            'file' => 'required',
             'campus_id' => 'required',
             'program_id'=> 'required'
         ]);
