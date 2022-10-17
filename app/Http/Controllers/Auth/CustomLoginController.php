@@ -55,7 +55,14 @@ class CustomLoginController extends Controller
                 if(Auth::user()->type == 'teacher'){
                     return redirect()->route('user.home')->with('success','Welcome to Teachers Dashboard '.Auth::user()->name);
                 }else{
-                    return redirect()->route('admin.home')->with('success','Welcome to Admin Dashboard '.Auth::user()->name);
+                    if (Auth::user()->type == 'campus_admin') {
+                        # code...
+                        return redirect()->route('campus_admin.home')->with('success','Welcome to Campus Admin Dashboard '.Auth::user()->name);
+                    } else {
+                        # code...
+                        return redirect()->route('admin.home')->with('success','Welcome to Admin Dashboard '.Auth::user()->name);
+                    }
+                    
                 }
             }
         }

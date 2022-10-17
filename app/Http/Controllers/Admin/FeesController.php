@@ -130,6 +130,7 @@ class FeesController extends Controller
                 // return $file_data;
     
                 $matric_probs = '';
+                $ref_probs = '';
                 $fee_settings_probs = '';
                 if (count($file_data) > 0){
                     DB::beginTransaction();
@@ -157,7 +158,8 @@ class FeesController extends Controller
                                 'student_id' => $student->id,
                                 'batch_id' => $request->batch_id,
                                 'unit_id' => \App\Models\StudentClass::where('student_id', '=', $student->id)->pluck('class_id')[0],
-                                'amount' => $value[1]
+                                'amount' => $value[1],
+                                'reference_number' => $value['2'] ?? ''
                             ];
                         }else{
                             $matric_probs .= ' matricule '.$value[0].' not found,';
@@ -165,11 +167,17 @@ class FeesController extends Controller
                     }
                     // return $payments;
                     foreach ($payments as $value) {
-                        \App\Models\Payments::create($value);
+                        if ($value['reference_number'] != '' && \App\Models\Payments::where('reference_number', '=', $value['reference_number'])->count() == 0) {
+                            # code...
+                            \App\Models\Payments::create($value);
+                        }
+                        else{
+                            $ref_probs .= " reference error with ".\App\Models\Students::find($value['student_id'])->matric;
+                        }
                     }
                     DB::commit();
-                    return (strlen($matric_probs) || strlen($fee_settings_probs) > 0) ?
-                    back()->with('error', $matric_probs.'. '.$fee_settings_probs):
+                    return (strlen($matric_probs) || strlen($fee_settings_probs) || strlen($ref_probs) > 0) ?
+                    back()->with('error', $matric_probs.'. '.$fee_settings_probs.'. '.$ref_probs):
                     back()->with('success', 'Done');
                 }
                 else {
@@ -181,8 +189,8 @@ class FeesController extends Controller
             }
         } catch (\Throwable $th) {
             DB::rollBack();
-            // throw $th;
-            return back()->with('error', 'Error encountered. Process failed');
+            throw $th;
+            // return back()->with('error', 'Error encountered. Process failed');
         }
     }
 }

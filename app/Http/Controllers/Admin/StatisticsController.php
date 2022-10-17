@@ -432,7 +432,7 @@ class StatisticsController extends Controller
                 case 'year':
                     # code...
                     $expenditureItems = DB::table('pay_incomes')
-                        ->whereYear('pay_incomes.created_at', '=', date('Y',strtotime($request->value)))
+                        ->where('pay_incomes.batch_id', '=', $request->value)
                         ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
                         ->get();
                     $names = array_unique($expenditureItems->pluck('name')->toArray());

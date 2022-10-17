@@ -31,11 +31,13 @@
                 <thead class="text-capitalize" style="background-color: #dfdedf; border-bottom: 1px solid white;">
                     <th>{{__('text.word_matricule')}}</th>
                     <th>{{__('text.word_amount')}}</th>
+                    <th>{{__('text.reference_number')}}</th>
                 </thead>
                 @for($i = 0; $i < 4; $i++)
                     <tr class="border-bottom">
                         <td class="border-left">FT23CR194</td>
                         <td class="border-left">800000</td>
+                        <td class="border-left">rf32342d</td>
                     </tr>
                 @endfor
             </table>
