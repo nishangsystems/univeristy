@@ -62,6 +62,39 @@ class SchoolsController extends Controller
     public function update($id, Request $request)
     {
         # code...
+        $validator = Validator::make($request->all(), [
+            'name'=>'required',
+            'contact'=>'required',
+            'address'=>'required',
+        ]);
+        if (!$validator->fails()) {
+            # code...
+            try {
+                $school = \App\Models\School::find($id);
+                if (\App\Models\School::where('name', '=', $request->name)->count()>0 && $school->name != $request->name) {
+                    # code...
+                    return back()->with('error', 'School name already exists');
+                }
+                $school->name = $request->name;
+                $school->contact = $request->contact;
+                $school->address = $request->address;
+
+                if ($request->has('logo_path')) {
+                    # code...
+                    $filename = time().str_shuffle("lorem98346dsfde43ocf9840021bvd").'.'. $request->file('logo_path')->getClientOriginalExtension();
+                    $request->file('logo_path')->storeAs('public/images/logos', $filename);
+                    $filename = public_path('storage/public/images/logos/').$filename;
+                    $school->logo_path = $filename;
+                }
+                $school->save();
+                return back()->with('success', 'School updated');
+            } catch (\Throwable $th) {
+                //throw $th;
+                return back()->with('error', $th->getMessage());
+            }
+        }else {
+            return back()->with('error', $validator->errors()->first());
+        }
     }
 
     public function preview($id)

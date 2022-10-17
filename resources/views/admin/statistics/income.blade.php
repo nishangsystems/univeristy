@@ -81,7 +81,12 @@
                     html = `<div class="w-100">
                                 <div class="form-group">
                                     <label for="" class="text-secondary h4 fw-bold">{{__("text.pick_a_year")}}:</label>
-                                    <input type="number" min="2010" name="value" class="form-control" placeholder="pick a year" id="">
+                                    <select name="value" class="form-control" id="">
+                                        <option value="" selected>{{__('text.academic_year')}}</option>
+                                        @foreach(\App\Models\Batch::all() as $batch)
+                                            <option value="{{$batch->id}}">{{$batch->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>`;
                     $('#filterLoader').html(html);

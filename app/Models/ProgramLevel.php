@@ -16,6 +16,10 @@ class ProgramLevel extends Model
     {
         return $this->hasMany(Students::class, 'program_id');
     }
+    public function _students($year)
+    {
+        return $this->belongsToMany(Students::class, 'student_classes', 'class_id', 'program_id')->where('year_id', '=', $year);
+    }
     public function program()
     {
         return $this->belongsTo(SchoolUnits::class, 'program_id');

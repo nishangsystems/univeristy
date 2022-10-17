@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\SchoolUnitResource;
 use App\Http\Resources\StudentFee;
 use App\Models\Campus;
+use App\Models\ProgramLevel;
 
 class HomeController extends Controller
 {
@@ -113,13 +114,63 @@ class HomeController extends Controller
     public function fee(Request  $request)
     {
         $type = request('type', 'completed');
-        $unit = SchoolUnits::find(\request('section'));
-        $title = $type . " fee " . ($unit != null ? "for " . $unit->name : '');
+        $year = request('year', \App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+        $class = ProgramLevel::find(\request('class'));
+
+        $title = $type . " fee " . ($class != null ? "for " . $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level : '');
         $students = [];
-        if ($unit) {
-            $students = array_merge($students, $this->load($unit, $type, $request->get('bal', 0)));
+ 
+        $studs = \App\Models\StudentClass::where('student_classes.class_id', '=', $request->class)->where('year_id', '=', $year)->join('students', 'students.id', '=', 'student_classes.student_id')->pluck('students.id')->toArray();
+        $results = [];
+        
+
+        $fees = array_map(function($stud) use ($year){
+            return [
+                'amount' => array_sum(
+                    \App\Models\Payments::where('payments.student_id', '=', $stud)
+                    ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
+                    ->where('payment_items.name', '=', 'TUTION')
+                    ->where('payments.batch_id', '=', $year)
+                    ->pluck('payments.amount')
+                    ->toArray()
+                ),
+                'total' => 
+                        \App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                        ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+                        ->where('payment_items.name', '=', 'TUTION')
+                        ->whereNotNull('payment_items.amount')
+                        ->join('students', 'students.program_id', '=', 'program_levels.id')
+                        ->where('students.id', '=', $stud)->pluck('payment_items.amount')[0] ?? 0
+                    ,
+                'stud' => $stud
+            ];
+        }, $studs);
+
+        foreach ($fees as $key => $value) {
+            # code...
+            $stdt = Students::find($value['stud']);
+            if(($value['amount'] == $value['total'] && $value['total'] > 0) && $type == 'completed'){
+                $students[] = [
+                    'id'=> $stdt->id,
+                    'name'=> $stdt->name,
+                    'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
+                    'total'=> $value['amount'],
+                    'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
+                ];
+            }
+            if(($value['amount'] < $value['total'] || $value['total'] == 0) && $type == 'uncompleted'){
+                $students[] = [
+                    'id'=> $stdt->id,
+                    'name'=> $stdt->name,
+                    'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
+                    'total'=> $value['amount'],
+                    'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
+                ];
+            }
         }
-        return response()->json(['students' => Fee::collection($students), 'title' => $title]);
+
+        $students = collect($students)->sortBy('name')->toArray();
+        return response()->json(['students' => $students, 'title' => $title]);
     }
 
     public function rank(Request  $request)
@@ -131,19 +182,19 @@ class HomeController extends Controller
         return response()->json(['students' => StudentRank::collection($students), 'title' => $title]);
     }
 
-    public function load(SchoolUnits $unit, $type, $bal)
+    public function load($unit, $type, $bal)
     {
         $students = [];
-        foreach ($unit->students(Helpers::instance()->getYear())->get() as $student) {
+        foreach ($unit->_students(Helpers::instance()->getYear())->get() as $student) {
             if ($type == 'completed' && $student->bal($student->id) == 0) {
                 array_push($students, $student);
-            } elseif ($type == 'uncompleted' && $student->bal($student->id) > $bal) {
+            } elseif ($type == 'uncompleted' && $student->bal($student->id) > 0) {
                 array_push($students, $student);
             }
         }
-        foreach ($unit->unit as $unit) {
-            $students = array_merge($students, $this->load($unit, $type, $bal));
-        }
+        // foreach ($unit->unit as $unit) {
+        //     $students = array_merge($students, $this->load($unit, $type, $bal));
+        // }
 
         return $students;
     }
