@@ -312,4 +312,9 @@ return [
     'word_expenditure'=>'expenditure',
     'select_month'=>'select month',
     'clear_fees'=>'clear fees',
+    'word_file' =>'file',
+    'ca_mark'=>'ca mark',
+    'exam_mark'=>'exam mark',
+    'word_reference'=>'reference',
+    
 ];

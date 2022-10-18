@@ -49,6 +49,14 @@
                         <td class="border-left border-right">`+ resp.report[key].expenditure +`</td> 
                         <td class="border-left border-right">`+ resp.report[key].balance +`</td> `
                 }
+                html += `
+                    <tr class="border-top border-bottom bg-light text-capitalize ">
+                        <td class="border-left border-right" colspan="2">{{__('text.word_total')}}</td>
+                        <td class="border-left border-right">`+resp.totals.income+`</td>
+                        <td class="border-left border-right">`+resp.totals.expenditure+`</td>
+                        <td class="border-left border-right">`+resp.totals.balance+`</td>
+                    </tr>
+                    `;
                 $('#table_data').html(html);
                 $('#title').text(resp.title);
             }
