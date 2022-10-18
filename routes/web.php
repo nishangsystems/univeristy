@@ -208,6 +208,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('income', 'Admin\StatisticsController@income')->name('income');
         Route::get('expenditure', 'Admin\StatisticsController@expenditure')->name('expenditure');
         Route::get('fees/{class_id}', 'Admin\StatisticsController@unitFees')->name('unit-fees');
+        Route::get('ie_report', 'Admin\StatisticsController@ie_report')->name('ie_report');
+        Route::get('ie_report/monthly', 'Admin\StatisticsController@ie_monthly_report')->name('ie.report');
     });
     Route::prefix('campuses')->name('campuses.')->group(function(){
         Route::get('/', 'Admin\CampusesController@index')->name('index');
@@ -241,6 +243,19 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('update/{program_id}/{id}', 'Admin\ProgramController@update')->name('update');
         Route::get('set_type/{program_id}', 'Admin\ProgramController@set_program_semester_type')->name('set_type');
         Route::post('set_type/{program_id}', 'Admin\ProgramController@post_program_semester_type');
+    });
+
+    Route::prefix('imports')->name('imports.')->group(function(){
+        Route::get('import_ca', 'Admin\ImportCenter@import_ca')->name('import_ca');
+        Route::post('import_ca', 'Admin\ImportCenter@import_ca_save');
+        Route::get('clear_ca', 'Admin\ImportCenter@clear_ca')->name('clear_ca');
+        Route::post('import_ca', 'Admin\ImportCenter@clear_ca_save');
+        Route::get('import_exam', 'Admin\ImportCenter@import_exam')->name('import_exam');
+        Route::post('import_exam', 'Admin\ImportCenter@import_exam_save');
+        Route::get('clear_exam', 'Admin\ImportCenter@clear_exam')->name('clear_exam');
+        Route::post('clear_exam', 'Admin\ImportCenter@clear_exam_save');
+        Route::get('clear_fee', 'Admin\ImportCenter@clear_fee')->name('clear_fee');
+        Route::post('clear_fee', 'Admin\ImportCenter@clear_fee_save');
     });
 });
 

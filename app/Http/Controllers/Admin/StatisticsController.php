@@ -585,4 +585,36 @@ class StatisticsController extends Controller
         }
         
     }
+
+    public function ie_report()
+    {
+        # code...
+        $data['title'] = "IMCOME-EXPENDITURE STATISTICS";
+        return view('admin.statistics.ie_report', $data);
+    }
+
+    public function ie_monthly_report()
+    {
+        $month = request('month');
+        $data['title'] = "Income-Expenditure Report for ".date('F Y', strtotime($month));
+        $data['report'] = [];
+        $days = cal_days_in_month(CAL_GREGORIAN, (int)date('m', strtotime($month)), (int)date('Y', strtotime($month)));
+        for($i=01; $i <= $days; $i++){
+            
+            $income = DB::table('pay_incomes')
+                        ->whereDate('pay_incomes.created_at', '=', date('Y-m-d', strtotime($month.'-'.$i)))
+                        ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')->sum('incomes.amount');
+            $expenditure = DB::table('expenses')
+                        ->whereDate('date', '=', date('Y-m-d', strtotime($month.'-'.$i)))
+                        ->sum('amount_spend');
+
+            $data['report'][] = [
+                'date' => date('d-m-Y', strtotime($month.'-'.$i)),
+                'income' => $income,
+                'expenditure' => $expenditure,
+                'balance' => $income - $expenditure
+            ];
+        }
+        return $data;
+    }
 }
