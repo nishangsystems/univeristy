@@ -316,5 +316,5 @@ return [
     'ca_mark'=>'ca mark',
     'exam_mark'=>'exam mark',
     'word_reference'=>'reference',
-    
+    'word_users'=> 'users',
 ];

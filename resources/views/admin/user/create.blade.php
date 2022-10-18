@@ -18,9 +18,9 @@
 
 
                 <div class="form-group @error('email') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2">Username (required)</label>
+                    <label for="cname" class="control-label col-lg-2">{{__('text.word_email')}} ({{__('text.word_required')}})</label>
                     <div class="col-lg-10">
-                        <input class=" form-control" name="email" value="{{old('email')}}" type="text" required />
+                        <input class=" form-control" name="email" value="{{old('email')}}" type="email" required />
                         @error('email')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
