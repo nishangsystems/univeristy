@@ -114,11 +114,24 @@
 
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav d-flex flex-nowrap" style="">
+
+                <li class="light-blue">
+                    <span>
+                        <img class="nav-user-photo fa fa-globe"></img>
+                        <span>
+                            <small class="text-capitalize text-white">
+                                {{\Auth::user()->campus_id ? \App\Models\Campus::find(\Auth::user()->campus_id)->name : 'campus'}}
+                            </small>
+						</span>
+                    </span>
+                </li>
+
                 <li class="grenn dropdown-modal">
                     <a data-toggle="dropdown" class="dropdown-toggle text-white font-weight-bold text-capitalize">
                       {{__('text.word_batch')}} : {{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name}}
                         <i class="ace-icon fa fa-caret-down"></i>
                     </a>
+
 
                     <ul class="dropdown-menu">
                        @foreach(\App\Models\Batch::all() as $batch)

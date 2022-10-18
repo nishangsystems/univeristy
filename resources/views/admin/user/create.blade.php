@@ -27,6 +27,21 @@
                     </div>
                 </div>
 
+                <div class="form-group @error('campus') has-error @enderror">
+                    <label for="cname" class="control-label col-lg-2">Phone</label>
+                    <div class="col-lg-10">
+                        <select class=" form-control" name="campus" type="text" required >
+                            <option value="" selected>{{__('text.word_campus')}}</option>
+                            @foreach(\App\Models\Campus::all()  as $cmps)
+                                <option value="{{$cmps->id}}">{{$cmps->name}}</option>
+                            @endforeach
+                        </select>
+                        @error('campus')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="form-group @error('phone') has-error @enderror">
                     <label for="cname" class="control-label col-lg-2">Phone</label>
                     <div class="col-lg-10">

@@ -64,6 +64,7 @@ class UserController extends Controller
             'email' => 'required|unique:users',
             'phone' => 'required',
             'address' => 'nullable',
+            'campus' => 'nullable',
             'gender' => 'required',
             'type' => 'required',
         ]);
@@ -71,6 +72,7 @@ class UserController extends Controller
         $input = $request->all();
         $input['password'] = Hash::make('password');
         $input['username'] = $request->email;
+        $input['campus_id'] = $request->campus ?? null;
         if($request->type === "TEACHER"){
             $input['type'] = "teacher";
         }else{
