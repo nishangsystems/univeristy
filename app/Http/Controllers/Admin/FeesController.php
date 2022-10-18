@@ -102,6 +102,7 @@ class FeesController extends Controller
     public function import_save(Request $request)
     {
         # code...
+        return $request->all();
         $validator = Validator::make($request->all(), [
             'file'=>'required|file',
             // 'unit_id'=>'required',

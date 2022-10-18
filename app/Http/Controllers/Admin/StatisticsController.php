@@ -610,9 +610,15 @@ class StatisticsController extends Controller
 
             $data['report'][] = [
                 'date' => date('d-m-Y', strtotime($month.'-'.$i)),
-                'income' => $income,
-                'expenditure' => $expenditure,
-                'balance' => $income - $expenditure
+                'income' => (int)$income,
+                'expenditure' => (int)$expenditure,
+                'balance' => (int)($income - $expenditure)
+            ];
+            $data['report'] = collect($data['report']);
+            $data['totals'] = [
+                'income' => (int)$data['report']->sum('income'),
+                'expenditure' => (int)$data['report']->sum('expenditure'),
+                'balance' => (int)$data['report']->sum('balance')
             ];
         }
         return $data;

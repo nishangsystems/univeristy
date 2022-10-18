@@ -11,9 +11,9 @@ class Semester extends Model
 
     protected $fillable = ['name', 'background_id', 'sem', 'program_id'];
 
-    public function backgroound()
+    public function background()
     {
         # code...
-        return $this->belongsTo(SchoolUnits::class, 'background_id');
+        return $this->belongsTo(Background::class, 'background_id');
     }
 }

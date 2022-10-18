@@ -37,11 +37,12 @@
         $('#search').on('keyup', function () {
 
             val = $(this).val()
-            url = "{{route('student-search', 'VALUE')}}";
+            url = "{{route('student-search-get')}}";
             url = url.replace('VALUE', val);
             $.ajax({
                 type: "GET",
                 url: url,
+                data: {'name':val},
                 success: function(data) {
                     console.log(data);
                     let html = "";

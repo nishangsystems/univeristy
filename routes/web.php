@@ -293,6 +293,7 @@ Route::prefix('student')->name('student.')->group(function () {
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');
 Route::get('section-subjects/{parent}', 'HomeController@subjects')->name('section-subjects');
 Route::get('student-search/{name}', 'HomeController@student')->name('student-search');
+Route::get('student-search', 'HomeController@student_get')->name('student-search-get');
 Route::get('search-all-students/{name}', 'HomeController@searchStudents')->name('search-all-students');
 Route::get('search-all-students', 'HomeController@searchStudents_get')->name('get-search-all-students');
 Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search');
