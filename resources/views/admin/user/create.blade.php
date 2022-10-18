@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="form-group @error('campus') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2">Phone</label>
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_campus')}}</label>
                     <div class="col-lg-10">
                         <select class=" form-control" name="campus" type="text" required >
                             <option value="" selected>{{__('text.word_campus')}}</option>
