@@ -246,14 +246,6 @@
                         </li>
 
                         <li>
-                            <a href="{{route('admin.students.matricule')}}"  class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.generate_matricule')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-
-                        <li>
                             <a href="{{route('admin.students.import')}}"  class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{trans_choice('text.import_student', 2)}}

@@ -2,6 +2,7 @@
 @section('section')
 <div class="py-4">
     <table class="table">
+        <!-- list program level students per campus -->
         @if(request()->has('campus_id'))
             <thead class="text-capitalize">
                 <th>###</th>
@@ -21,6 +22,7 @@
                 @endforeach
             </tbody>
         @else
+        <!-- list program levels (classes) -->
             @if(!request()->has('id'))
                 <thead class="text-capitalize">
                     <th>###</th>
@@ -29,18 +31,30 @@
                 </thead>
                 <tbody>
                     @php($k = 1)
-                    @foreach(\App\Models\ProgramLevel::orderBy('program_id', 'ASC')->get() as $pl)
+                    @foreach(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                        @if((\Auth::user()->campus_id != null) && in_array($pl['id'], \App\Models\Campus::find(\Auth::user()->campus_id)->campus_programs()->pluck('program_level_id')->toArray()))
                         <tr>
                             <td>{{ $k++ }}</td>
-                            <td>{{ $pl->program()->first()->name .' : Level '.$pl->level()->first()->level }}</td>
+                            <td>{{ $pl['name'] }}</td>
                             <td>
-                                <a href="{{Request::url().'?id='.$pl->id}}" class="btn btn-sm btn-primary">{{__('text.word_students')}}</a>
-                                <a href="{{Request::url().'?action=campuses&id='.$pl->id}}" class="btn btn-sm btn-success">{{__('text.word_campuses')}}</a>
+                                <a href="{{Request::url().'?id='.$pl['id']}}" class="btn btn-sm btn-primary">{{__('text.word_students')}}</a>
                             </td>
                         </tr>
+                        @endif
+                        @if(\Auth::user()->campus_id == null)
+                        <tr>
+                            <td>{{ $k++ }}</td>
+                            <td>{{ $pl['name'] }}</td>
+                            <td>
+                                <a href="{{Request::url().'?id='.$pl['id']}}" class="btn btn-sm btn-primary">{{__('text.word_students')}}</a>
+                                <a href="{{Request::url().'?action=campuses&id='.$pl['id']}}" class="btn btn-sm btn-success">{{__('text.word_campuses')}}</a>
+                            </td>
+                        </tr>
+                        @endif
                     @endforeach
                 </tbody>
             @endif
+            <!-- general class list for a program level -->
             @if(request()->has('id') && request('action')!='campuses')
                 <thead class="text-capitalize">
                     <th>###</th>
@@ -51,15 +65,27 @@
                 <tbody>
                     @php($k = 1)
                     @foreach(\App\Models\Students::where('program_id', request('id'))->where('admission_batch_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->get() as $stud)
+                        @if((\Auth::user()->campus_id != null) && ($stud->campus_id == \Auth::user()->campus_id))
                         <tr>
                             <td>{{$k++}}</td>
                             <td>{{$stud->name}}</td>
                             <td>{{$stud->matric}}</td>
                             <td>{{\App\Models\Batch::find($stud->admission_batch_id)->name ?? '----'}}</td>
                         </tr>
+                        @endif
+                        @if(\Auth::user()->campus_id != null)
+                        <tr>
+                            <td>{{$k++}}</td>
+                            <td>{{$stud->name}}</td>
+                            <td>{{$stud->matric}}</td>
+                            <td>{{\App\Models\Batch::find($stud->admission_batch_id)->name ?? '----'}}</td>
+                        </tr>
+                        @endif
                     @endforeach
                 </tbody>
             @endif
+
+            <!-- List campuses for a given program level -->
             @if(request()->has('id') && request('action') =='campuses')
                 <thead class="text-capitalize">
                     <th>###</th>

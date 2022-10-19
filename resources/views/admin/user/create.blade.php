@@ -33,7 +33,7 @@
                         <select class=" form-control" name="campus" type="text" required >
                             <option value="" selected>{{__('text.word_campus')}}</option>
                             @foreach(\App\Models\Campus::all()  as $cmps)
-                                <option value="{{$cmps->id}}">{{$cmps->name}}</option>
+                                <option value="{{$cmps->id}}" {{\Auth::user()->campus_id == $cmps->id ? 'selected' : ''}}>{{$cmps->name}}</option>
                             @endforeach
                         </select>
                         @error('campus')
@@ -41,6 +41,7 @@
                         @enderror
                     </div>
                 </div>
+
 
                 <div class="form-group @error('phone') has-error @enderror">
                     <label for="cname" class="control-label col-lg-2">Phone</label>

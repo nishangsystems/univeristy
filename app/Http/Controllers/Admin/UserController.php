@@ -85,7 +85,7 @@ class UserController extends Controller
         $user_role->user_id = $user->id;
         $user_role->save();
 
-        return redirect()->to(route('admin.users.index', ['type' =>$request->type]))->with('success', "User Created Successfully !");
+        return redirect()->to(route('admin.users.index', ['role' =>$request->type]))->with('success', "User Created Successfully !");
     }
 
     /**
@@ -150,7 +150,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = \App\Models\User::find($id);
-        if (\Auth::user()->id == $id || \Auth::user()->id == 1) {
+        if (\Auth::user()->id == $id || \Auth::user()->id != 1) {
             return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('error', "User can't be deleted");
         }
         $user->delete();
