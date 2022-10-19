@@ -249,7 +249,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('import_ca', 'Admin\ImportCenter@import_ca')->name('import_ca');
         Route::post('import_ca', 'Admin\ImportCenter@import_ca_save');
         Route::get('clear_ca', 'Admin\ImportCenter@clear_ca')->name('clear_ca');
-        Route::post('import_ca', 'Admin\ImportCenter@clear_ca_save');
+        Route::post('clear_ca', 'Admin\ImportCenter@clear_ca_save');
         Route::get('import_exam', 'Admin\ImportCenter@import_exam')->name('import_exam');
         Route::post('import_exam', 'Admin\ImportCenter@import_exam_save');
         Route::get('clear_exam', 'Admin\ImportCenter@clear_exam')->name('clear_exam');

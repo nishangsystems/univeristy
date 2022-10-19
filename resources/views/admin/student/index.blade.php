@@ -22,23 +22,44 @@
                 </thead>
                 <tbody>
                     @foreach($students as $k=>$student)
-                    <tr>
-                        <td>{{$k+1}}</td>
-                        <td>{{$student->name}}</td>
-                        <td>{{$student->matric}}</td>
-                        <td>{{$student->email}}</td>
-                        <td>{{$student->phone}}</td>
-                        <td class="d-flex justify-content-end  align-items-start text-capitalize">
-                            <a class="btn btn-sm btn-primary m-1" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
-                            <a class="btn btn-sm btn-success m-1" href="{{route('admin.student.edit',[$student->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>|
-                            <a onclick="event.preventDefault();
-                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-1"><i class="fa fa-trash"> {{__('text.word_delete')}}</i></a>
-                            <form id="delete" action="{{route('admin.student.destroy',[$student->id])}}" method="POST" style="display: none;">
-                                @method('DELETE')
-                                {{ csrf_field() }}
-                            </form>
-                        </td>
-                    </tr>
+                    @if((\Auth::user()->campus_id != null) && ($student->campus_id == \Auth::user()->campus_id))
+                        <tr>
+                            <td>{{$k+1}}</td>
+                            <td>{{$student->name}}</td>
+                            <td>{{$student->matric}}</td>
+                            <td>{{$student->email}}</td>
+                            <td>{{$student->phone}}</td>
+                            <td class="d-flex justify-content-end  align-items-start text-capitalize">
+                                <a class="btn btn-sm btn-primary m-1" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
+                                <a class="btn btn-sm btn-success m-1" href="{{route('admin.student.edit',[$student->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>|
+                                <a onclick="event.preventDefault();
+                                                document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-1"><i class="fa fa-trash"> {{__('text.word_delete')}}</i></a>
+                                <form id="delete" action="{{route('admin.student.destroy',[$student->id])}}" method="POST" style="display: none;">
+                                    @method('DELETE')
+                                    {{ csrf_field() }}
+                                </form>
+                            </td>
+                        </tr>
+                    @endif
+                    @if((\Auth::user()->campus_id == null))
+                        <tr>
+                            <td>{{$k+1}}</td>
+                            <td>{{$student->name}}</td>
+                            <td>{{$student->matric}}</td>
+                            <td>{{$student->email}}</td>
+                            <td>{{$student->phone}}</td>
+                            <td class="d-flex justify-content-end  align-items-start text-capitalize">
+                                <a class="btn btn-sm btn-primary m-1" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
+                                <a class="btn btn-sm btn-success m-1" href="{{route('admin.student.edit',[$student->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>|
+                                <a onclick="event.preventDefault();
+                                                document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-1"><i class="fa fa-trash"> {{__('text.word_delete')}}</i></a>
+                                <form id="delete" action="{{route('admin.student.destroy',[$student->id])}}" method="POST" style="display: none;">
+                                    @method('DELETE')
+                                    {{ csrf_field() }}
+                                </form>
+                            </td>
+                        </tr>
+                    @endif
                     @endforeach
                 </tbody>
             </table>

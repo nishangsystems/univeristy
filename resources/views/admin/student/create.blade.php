@@ -108,10 +108,10 @@
             <div class="form-group @error('campus_id') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_campus')}} </label>
                 <div class="col-lg-10">
-                    <select name="campus_id" class="form-control" id="" onchange="loadPrograms(event.target)">
+                    <select name="campus_id" class="form-control" id="campus_id" onchange="loadPrograms(event.target)" {{ \Auth::user()->campus_id != null ? 'disabled' : ''}}>
                         <option value="">select campus</option>
                         @forelse(\App\Models\Campus::all() as $campus)
-                            <option value="{{$campus->id}}">{{$campus->name}}</option>
+                            <option value="{{$campus->id}}" {{ \Auth::user()->campus_id == $campus->id ? 'selected' : ''}}>{{$campus->name}}</option>
                         @empty
                             <option value="" selected>No data found</option>
                         @endforelse
@@ -149,6 +149,10 @@
 
 @section('script')
 <script>
+    $(document).ready(function(){
+        loadPrograms(document.getElementById('campus_id'));
+    });
+
     function loadPrograms(element){
         let val = element.value;
         url = "{{route('campus.programs', ['__V__'])}}";

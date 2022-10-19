@@ -33,33 +33,33 @@
 
                 <h5 class="mt-5 mb-4 font-weight-bold text-capitalize">{{__('text.admission_class_information')}}</h5>
 
-                <div class="form-group text-capitalize">
-                    <label for="cname" class="control-label col-lg-2">{{__('text.word_campus')}}</label>
-                    <div class="col-lg-10">
-                        <select class="form-control" name="campus_id" onchange="loadPrograms(event.target)">
-                            <option selected disabled>{{__('text.select_campus')}}</option>
-                            @forelse(\App\Models\Campus::all() as $section)
-                                <option value="{{$section->id}}">{{$section->name}}</option>
-                            @empty
-                                <option>{{__('text.no_data_available')}}</option>
-                            @endforelse
-                        </select>
-                    </div>
+                <div class="form-group @error('campus_id') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_campus')}} </label>
+                <div class="col-lg-10">
+                    <select name="campus_id" class="form-control" id="campus_id" onchange="loadPrograms(event.target)" {{ \Auth::user()->campus_id != null ? 'disabled' : ''}}>
+                        <option value="">select campus</option>
+                        @forelse(\App\Models\Campus::all() as $campus)
+                            <option value="{{$campus->id}}" {{ \Auth::user()->campus_id == $campus->id ? 'selected' : ''}}>{{$campus->name}}</option>
+                        @empty
+                            <option value="" selected>No data found</option>
+                        @endforelse
+                    </select>
+                    @error('year')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
                 </div>
+            </div>
 
-                <div id="section">
-                    <div class="form-group text-capitalize">
-                        <label for="cname" class="control-label col-lg-2">Program</label>
-                        <div class="col-lg-10">
-                            <div>
-                                <select class="form-control section" name="program_id" id="program_id">
-                                
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
+            <div class="form-group @error('program_id') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_program')}}</label>
+                <div class="col-lg-10">
+                    <select class=" form-control" name="program_id" id="program_id" required>
+                    </select>
+                    @error('program_id')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
                 </div>
+            </div>
 
                 <div class="form-group">
                     <div class="d-flex justify-content-end col-lg-12">
@@ -95,6 +95,10 @@
 
 @section('script')
 <script>
+    $(document).ready(function(){
+        loadPrograms(document.getElementById('campus_id'));
+    });
+
     function loadPrograms(element){
         let val = element.value;
         url = "{{route('campus.programs', ['__V__'])}}";
@@ -103,6 +107,11 @@
             method: 'get',
             url: url,
             success: function(data){
+                data.sort((a, b)=>{
+                    if (a.program > b.program) { return 1;}
+                    if (a.program < b.program) { return -1;}
+                    return 0;
+                })
                 let options = `<option value="">{{__('text.select_program')}}</option>`;
                 data.forEach(element => {
                     console.log(element);
