@@ -512,13 +512,7 @@
                         <b class="arrow"></b>
                     </li>
 
-                      <li>
-                        <a href="{{route('admin.collect_boarding_fee.create')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.collect_boarding_fee')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+
 
                     <li>
                         <a href="{{route('admin.print_fee')}}" class="text-capitalize">
@@ -536,13 +530,7 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-                     <li>
-                        <a href="{{route('admin.collect_boarding_fee.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.boarding_fees')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+
                      <li>
                         <a href="{{route('admin.import_fee')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -575,13 +563,6 @@
                         <b class="arrow"></b>
                     </li>
 
-                    <li>
-                        <a href="{{route('admin.fee.classes')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.set_class_fee')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
                 </ul>
             </li>
             @endif

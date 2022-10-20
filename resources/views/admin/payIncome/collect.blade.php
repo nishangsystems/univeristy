@@ -39,7 +39,7 @@
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
                     <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">{{__('text.word_save')}}</button>
-                    <a class="btn btn-xs btn-danger" type="button">{{__('text.worda_cancel')}}</a>
+                    <a class="btn btn-xs btn-danger" type="button">{{__('text.word_cancel')}}</a>
                 </div>
             </div>
         </form>

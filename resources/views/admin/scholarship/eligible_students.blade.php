@@ -35,11 +35,12 @@
 <script>
     $('#search').on('keyup', function() {
         val = $(this).val();
-        url = "{{route('admin.searchStudent',':id')}}";
+        url = "{{route('admin.get_searchStudent')}}";
         search_url = url.replace(':id', val);
         $.ajax({
             type: 'GET',
             url: search_url,
+            data: {'name': val},
             success: function(response) {
                 let html = new String();
                 let size = response.data.length;

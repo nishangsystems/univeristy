@@ -25,7 +25,11 @@ class ExpenseController extends Controller
     public function index()
     {
         $user_id = Auth::id();
-        $data['expenses'] = Expenses::where('user_id', $user_id)->select($this->select)->paginate(5);
+        $data['expenses'] = Expenses::join('users', 'users.id', '=', 'expenses.user_id')
+        ->where(function($query){
+            auth()->user()->campus_id != null ? $query->where('users.campus_id', '=', auth()->user()->campus_id):null;
+        })
+        ->select($this->select)->paginate(5);
         $data['title'] = 'School expense';
 
         return view('admin.expense.index')->with($data);
