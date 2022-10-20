@@ -35,6 +35,9 @@ class PayIncomeController extends Controller
         $data['pay_incomes'] = DB::table('pay_incomes')
             ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
             ->join('students', 'students.id', '=', 'pay_incomes.student_id')
+            ->where(function($query){
+                auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+            })
             ->join('school_units', 'school_units.id', '=', 'pay_incomes.class_id')
             ->where('pay_incomes.batch_id', $batch_id)
             ->select($this->select)
@@ -120,8 +123,13 @@ class PayIncomeController extends Controller
         $students = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
-            ->where('students.name', 'like', "%{$name}%")
-            ->orWhere('students.matric', 'like', "%{$name}%")
+            ->where(function($query)use($name){
+                $query->where('students.name', 'like', "%{$name}%")
+                ->orWhere('students.matric', 'like', "%{$name}%");
+            })
+            ->where(function($query){
+                auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id): null;
+            })
             ->select('students.*')->get();
 
         return response()->json(['data' => PayIncomeResource::collection($students)]);
@@ -131,8 +139,13 @@ class PayIncomeController extends Controller
         $students = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
-            ->where('students.name', 'like', "%{$name}%")
-            ->orWhere('students.matric', '=', $name)
+            ->where(function($query)use($name){
+                $query->where('students.name', 'like', "%{$name}%")
+                ->orWhere('students.matric', '=', $name);
+            })
+            ->where(function($query){
+                auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+            })
             ->select('students.*')->get();
 
         return response()->json(['data' => PayIncomeResource::collection($students)]);

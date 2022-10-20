@@ -9,6 +9,7 @@ use App\Models\SchoolUnits;
 use App\Models\Students;
 use App\Models\TeachersSubject;
 use Carbon\Carbon;
+use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -56,7 +57,12 @@ class FeesController extends Controller
     public function daily_report(Request  $request)
     {
         $title = "Fee Daily Report for " . ($request->date ? $request->date : Carbon::now()->format('d/m/Y'));
-        $fees = Payments::whereDate('created_at', $request->date ? $request->date : Carbon::now())->get();
+        $fees = Payments::whereDate('payments.created_at', $request->date ? $request->date : Carbon::now());
+        if (auth()->user()->campus_id != null) {
+            # code...
+            $fees = $fees->join('students', 'students.id', '=', 'payments.student_id')->where('students.campus_id', '=', auth()->user()->campus_id);
+        }
+        $fees = $fees->get();
         return view('admin.fee.daily_report', compact('fees', 'title'));
     }
 
@@ -86,23 +92,12 @@ class FeesController extends Controller
     {
         # code...
         $data['title'] = "Import Fee";
-        // $data['classes'] = [];
-        // foreach (\App\Models\ProgramLevel::all() as $value) {
-        //     # code...
-        //     $data['classes'][] = [
-        //         'id'=>$value->id,
-        //         'name'=>$value->program()->first()->name.' :LEVEL '.$value->level()->first()->level
-        //     ];
-
-        // }
-        // $data['classes'] = collect($data['classes'])->sortBy('name');
         return view('admin.fee.import', $data);
     }
 
     public function import_save(Request $request)
     {
         # code...
-        return $request->all();
         $validator = Validator::make($request->all(), [
             'file'=>'required|file',
             // 'unit_id'=>'required',
@@ -113,7 +108,6 @@ class FeesController extends Controller
             # code...
             return back()->with('error', $validator->errors()->first());
         }
-        
         try {
             //code...
             $file = $request->file('file');
@@ -122,16 +116,18 @@ class FeesController extends Controller
                 $filename = 'fee-'.date('Y_m_d@H_i_s',time()).'_'.random_int(100, 999).'.'.$file->getClientOriginalExtension();
                 $file->move(public_path('files'), $filename);
                 $file_path = public_path('files/'.$filename);
-    
+                
                 $pointer = fopen($file_path, 'r');
                 $file_data = [];
                 while (($data_row = fgetcsv($pointer, 1000, ',')) !== false) {
                     $file_data[] = $data_row;
                 }
                 // return $file_data;
-    
+                
                 $matric_probs = '';
                 $ref_probs = '';
+                $campus_access = '';
+                $campus_access_prefix= "Permission denied. Wrong campus. Can not import for ";
                 $fee_settings_probs = '';
                 if (count($file_data) > 0){
                     DB::beginTransaction();
@@ -139,6 +135,11 @@ class FeesController extends Controller
                     foreach ($file_data as $value) {
                         # code...
                         $student = \App\Models\Students::where('matric', '=', $value[0])->first() ?? null;
+                        if (auth()->user()->campus_id != null && $student != null && $student->campus_id != auth()->user()->campus_id) {
+                            # code...
+                            $campus_access .= $student->matric .', ';
+                            continue;
+                        }
                         if ($student !== null) {
                             # code...
                             $p_i = \App\Models\CampusProgram::where('campus_id', '=', $student->campus_id)
@@ -166,7 +167,6 @@ class FeesController extends Controller
                             $matric_probs .= ' matricule '.$value[0].' not found,';
                         }
                     }
-                    // return $payments;
                     foreach ($payments as $value) {
                         if ($value['reference_number'] != '' && \App\Models\Payments::where('reference_number', '=', $value['reference_number'])->count() == 0) {
                             # code...
@@ -177,9 +177,12 @@ class FeesController extends Controller
                         }
                     }
                     DB::commit();
-                    return (strlen($matric_probs) || strlen($fee_settings_probs) || strlen($ref_probs) > 0) ?
-                    back()->with('error', $matric_probs.'. '.$fee_settings_probs.'. '.$ref_probs):
-                    back()->with('success', 'Done');
+                    if(strlen($campus_access) > 0){throw new Error($campus_access_prefix.$campus_access);}
+                    if(strlen($fee_settings_probs) > 0) {throw new Error($fee_settings_probs);}
+                    if(strlen($matric_probs) > 0) {throw new Error($matric_probs);}
+                    if(strlen($ref_probs) > 0){throw new Error($ref_probs);}
+                    return back()->with('success', 'Done');
+                    return $request->all();
                 }
                 else {
                     return back()->with('error', 'No data could be read from file');
@@ -190,8 +193,8 @@ class FeesController extends Controller
             }
         } catch (\Throwable $th) {
             DB::rollBack();
-            throw $th;
-            // return back()->with('error', 'Error encountered. Process failed');
+            // throw $th;
+            return back()->with('error', $th->getMessage());
         }
     }
 }

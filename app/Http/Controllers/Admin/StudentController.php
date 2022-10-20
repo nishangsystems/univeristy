@@ -385,12 +385,17 @@ class StudentController extends Controller
     public  function importPost(Request  $request)
     {
         // Validate request
-        $request->validate([
+        $validate = Validator::make($request->all(), [
             'batch' => 'required',
             'file' => 'required',
             'campus_id' => 'required',
             'program_id'=> 'required'
         ]);
+
+        if ($validate->fails()) {
+            # code...
+            return back()->with('error', $validate->errors()->first());
+        }
 
         // used to track duplicate records that won't be inserted/saved.
         $duplicates = '';
@@ -431,7 +436,7 @@ class StudentController extends Controller
                         $student = \App\Models\Students::create([
                             'name' => str_replace('’', "'", $importData[0]),
                             'matric' => $importData[1],
-                            'email' => explode(' ', str_replace('’', "'", $importData[2]))[0],
+                            // 'email' => explode(' ', str_replace('’', "'", $importData[2]))[0],
                             'gender' => $importData[3],
                             'password' => Hash::make('12345678'),
                             'campus_id'=> $request->campus_id ?? null,

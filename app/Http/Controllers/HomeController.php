@@ -80,8 +80,12 @@ class HomeController extends Controller
             ->join('program_levels', ['students.program_id' => 'program_levels.id'])
             ->join('school_units', ['program_levels.program_id' => 'school_units.id'])
             ->join('levels', ['program_levels.level_id' => 'levels.id'])
-            ->where('students.name', 'LIKE', "%{$name}%")
-            ->orWhere('students.matric', 'LIKE', "%{$name}%")
+            ->where(function($query)use($name){
+                $query->where('students.name', 'LIKE', "%{$name}%")
+                ->orWhere('students.matric', 'LIKE', "%{$name}%");
+            })->where(function($query){
+                \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
+                        })
             ->get(['students.*', 'campuses.name as campus']);
 
         return \response()->json(StudentFee::collection($students));
@@ -118,9 +122,16 @@ class HomeController extends Controller
             $students  = DB::table('students')
                 ->join('student_classes', ['students.id' => 'student_classes.student_id'])
                 ->join('campuses', ['students.campus_id'=>'campuses.id'])
-                ->where('students.name', 'LIKE', "%$name%")
-                ->orWhere('students.matric', 'LIKE', "%$name%")
-                ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])->toArray();
+                ->where(function($query)use($name){
+                    $query->where('students.name', 'LIKE', "%$name%")
+                    ->orWhere('students.matric', 'LIKE', "%$name%");
+                })
+                ->where(function($query){
+                    \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
+                })
+                ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])
+                ->toArray();
+            
             return \response()->json(StudentResource3::collection($students));
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -136,7 +147,12 @@ class HomeController extends Controller
         $title = $type . " fee " . ($class != null ? "for " . $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level : '');
         $students = [];
  
-        $studs = \App\Models\StudentClass::where('student_classes.class_id', '=', $request->class)->where('year_id', '=', $year)->join('students', 'students.id', '=', 'student_classes.student_id')->pluck('students.id')->toArray();
+        $studs = \App\Models\StudentClass::where('student_classes.class_id', '=', $request->class)->where('year_id', '=', $year)->join('students', 'students.id', '=', 'student_classes.student_id');
+        if(auth()->user()->campus_id != null) {
+            # code...
+            $studs = $studs->where('students.campus_id', '=', auth()->user()->campus_id);
+        }
+        $studs = $studs->pluck('students.id')->toArray();
         $results = [];
         
 
@@ -186,6 +202,7 @@ class HomeController extends Controller
         }
 
         $students = collect($students)->sortBy('name')->toArray();
+
         return response()->json(['students' => $students, 'title' => $title]);
     }
 

@@ -4,8 +4,9 @@
 
 <div class="col-sm-12">
     <div>
-        @include("admin.scholarship.create")
-
+        @if(auth()->user()->campus_id == null)
+            @include("admin.scholarship.create")
+        @endif
     </div>
     <div class="content-panel">
         <div class="adv-table table-responsive">

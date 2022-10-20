@@ -108,6 +108,9 @@
             <div class="form-group @error('campus_id') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_campus')}} </label>
                 <div class="col-lg-10">
+                    @if(\Auth::user()->campus_id != null)
+                    <input type="hidden" name="campus_id" id="" value="{{\Auth::user()->campus_id}}">
+                    @endif
                     <select name="campus_id" class="form-control" id="campus_id" onchange="loadPrograms(event.target)" {{ \Auth::user()->campus_id != null ? 'disabled' : ''}}>
                         <option value="">select campus</option>
                         @forelse(\App\Models\Campus::all() as $campus)

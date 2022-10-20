@@ -47,6 +47,9 @@ class UserScholarshipController extends Controller
         $data['years'] = Batch::all();
         $data['students'] = DB::table('student_scholarships')
             ->join('students', 'students.id', '=', 'student_scholarships.student_id')
+            ->where(function($query){
+                auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+            })
             ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
             ->where('student_scholarships.batch_id', $request->year)
             ->select($this->select)->paginate(10);

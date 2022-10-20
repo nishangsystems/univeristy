@@ -317,4 +317,8 @@ return [
     'exam_mark'=>'exam mark',
     'word_reference'=>'reference',
     'word_users'=> 'users',
+    'personal_information' => 'personal information',
+    'first_semester_minimum' => 'first semester minimum',
+    'second_semester_minimum' => 'second semester minimum',
+    'exam_results_charges' => 'exam results charges',
 ];

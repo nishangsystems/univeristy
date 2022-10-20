@@ -137,6 +137,10 @@ class CampusesController extends Controller
     {
         # code...
         $data['title'] = "Manage Fee Under ".Campus::find($id)->name.' For '.SchoolUnits::find(ProgramLevel::find($program_id)->program_id)->name;
+        // $data['data'] = [
+        //     'tution' = \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', request('program_id'))->first()->payment_items()->where('name', 'TUTION')->first()->amount ?? '----',
+        //     'min-1'
+        // ]
         return view('admin.fee.create', $data);
     }
 
@@ -183,6 +187,6 @@ class CampusesController extends Controller
         $inst->slug = Hash::make('TUTION');
         $inst->amount = $request->fees;
         $inst->save();
-        return back()->with('success', 'Done');
+        return redirect(route('admin.campuses.programs', $id))->with('success', 'Done');
     }
 }

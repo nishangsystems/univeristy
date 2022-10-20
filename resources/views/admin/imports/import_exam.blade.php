@@ -2,7 +2,7 @@
 @section('section')
 <div class="py-3">
     <div class="row">
-        <form action="{{route('admin.imports.import_exam')}}" method="post" class="col-md-9 col-lg-9">
+        <form action="{{\Request::url()}}" method="post" class="col-md-9 col-lg-9" enctype="multipart/form-data">
             @csrf
             <div class="row py-2">
                 <label for="" class="col-md-2">{{__('text.academic_year')}}</label>
