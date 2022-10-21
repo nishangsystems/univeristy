@@ -47,7 +47,7 @@ class StudentController extends Controller
         $data['school_units'] = DB::table('school_units')->where('parent_id', 0)->get()->toArray();
         $data['years'] = $this->years;
         // $data['students'] = DB::table('students')->whereYear('students.created_at', $curent_year)->get()->toArray();
-        $data['students'] = Students::all();
+        $data['students'] = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')->get(['students.*', 'student_classes.class_id']);
         return view('admin.student.index')->with($data);
     }
     public function getStudentsPerClass(Request $request)
@@ -221,6 +221,7 @@ class StudentController extends Controller
                 DB::beginTransaction();
                 // read user input
                 $input = $request->all();
+                $input['name'] = mb_convert_case($request->name, MB_CASE_UPPER);
                 $input['password'] = Hash::make('password');
                 // create a student
                 // $input['matric'] = $this->getNextAvailableMatricule($request->section);
@@ -308,7 +309,6 @@ class StudentController extends Controller
 
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'nullable',
             'phone' => 'nullable',
             'address' => 'nullable',
             'gender' => 'nullable',
@@ -434,21 +434,20 @@ class StudentController extends Controller
                 foreach ($importData_arr as $importData) {
                     if (Students::where('name', $importData[0])->orWhere('matric', $importData[1])->count() === 0) {
                         $student = \App\Models\Students::create([
-                            'name' => str_replace('’', "'", $importData[0]),
+                            'name' => mb_convert_case(str_replace('’', "'", $importData[0]), MB_CASE_UPPER),
                             'matric' => $importData[1],
                             // 'email' => explode(' ', str_replace('’', "'", $importData[2]))[0],
                             'gender' => $importData[3],
                             'password' => Hash::make('12345678'),
                             'campus_id'=> $request->campus_id ?? null,
-                            'program_id' => $request->program_id ?? null
+                            'program_id' => $request->program_id ?? null,
+                            'admission_batch_id' => $request->batch
                         ]);
                         $class = StudentClass::create([
                             'student_id' => $student->id,
                             'class_id' => $request->program_id,
                             'year_id' => $request->batch
                         ]);
-                        $student->admission_batch_id = $class->id;
-                        $student->save();
                         
                         // echo ($importData[0]." Inserted Successfully<br>");
                     } else {

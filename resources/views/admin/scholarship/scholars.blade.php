@@ -57,7 +57,7 @@
                         <td>{{\App\Models\Campus::find($student->campus_id)->name}}</td>
                         <td>{{number_format($student->amount)}}</td>
                         <td>
-                            <a href="{{route('admin.ascholarship.edit', $student->id)}}" class="btn btn-sm btn-primary">{{__('text.word_edit')}}</a>
+                            <a href="{{route('admin.scholarship.edit', $student->id)}}" class="btn btn-sm btn-primary">{{__('text.word_edit')}}</a>
                         </td>
                     </tr>
                     @endforeach

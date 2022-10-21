@@ -136,7 +136,7 @@ class CampusesController extends Controller
     public function set_program_fee($id, $program_id)
     {
         # code...
-        $data['title'] = "Manage Fee Under ".Campus::find($id)->name.' For '.SchoolUnits::find(ProgramLevel::find($program_id)->program_id)->name;
+        $data['title'] = "Manage Fee Under ".Campus::find($id)->name.' For '.ProgramLevel::find($program_id)->program()->first()->name . ' : LEVEL '.ProgramLevel::find($program_id)->level()->first()->level;
         // $data['data'] = [
         //     'tution' = \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', request('program_id'))->first()->payment_items()->where('name', 'TUTION')->first()->amount ?? '----',
         //     'min-1'
