@@ -55,7 +55,7 @@
                 </tbody>
             @endif
             <!-- general class list for a program level -->
-            @if(request()->has('id') && request('action')!='campuses')
+            @if(request()->has('id') && !request()->has('action'))
                 <thead class="text-capitalize">
                     <th>###</th>
                     <th>{{__('text.word_name')}}</th>
@@ -73,7 +73,7 @@
                             <td>{{\App\Models\Batch::find($stud->admission_batch_id)->name ?? '----'}}</td>
                         </tr>
                         @endif
-                        @if(\Auth::user()->campus_id != null)
+                        @if(\Auth::user()->campus_id == null)
                         <tr>
                             <td>{{$k++}}</td>
                             <td>{{$stud->name}}</td>

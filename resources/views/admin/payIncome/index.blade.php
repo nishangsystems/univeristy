@@ -3,7 +3,8 @@
 @section('section')
 
 <div class="col-sm-12">
-    <div class="col-lg-12">
+    <?php
+    /*<div class="col-lg-12">
         <div class="form-panel mb-5 ml-2">
             <form class="form-horizontal" role="form" method="POST" action="{{route('admin.pay_income.per_year')}}">
                 <div class="form-group @error('class_id') has-error @enderror ">
@@ -52,7 +53,7 @@
                 @csrf
             </form>
         </div>
-    </div>
+    </div>*/ ?>
     <div class="content-panel">
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
@@ -62,6 +63,8 @@
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.income_type')}}</th>
                         <th>{{__('text.word_amount')}} ({{__('text.currency_cfa')}})</th>
+                        <th>{{__('text.word_campus')}}</th>
+                        <th>{{__('text.word_class')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -72,6 +75,8 @@
                         <td>{{$income->student_name}}</td>
                         <td>{{$income->income_name}}</td>
                         <td>{{number_format($income->amount)}}</td>
+                        <td>{{\App\Models\Campus::find($income->campus_id)->name}}</td>
+                        <td>{{\App\Models\ProgramLevel::find($income->class_id)->program()->first()->name .' : LEVEL '.\App\Models\ProgramLevel::find($income->class_id)->level()->first()->level}}</td>
                         <td>
                             <a href="{{route('admin.income.print_reciept', [$income->id, $income->pay_income_id])}}" class="btn btn-sm btn-primary">{{__('text.word_print')}}</a>
                             @if(auth()->user()->roleR()->first()->role_id == 1)
@@ -92,67 +97,67 @@
 
 @section('script')
 <script>
-    $('.section').on('change', function() {
+    // $('.section').on('change', function() {
 
-        let value = $(this).val();
-        url = "{{route('admin.getSections', ':id')}}";
-        search_url = url.replace(':id', value);
-        $.ajax({
-            type: 'GET',
-            url: search_url,
-            success: function(response) {
-                let size = response.data.length;
-                let data = response.data;
-                let html = "";
-                if (size > 0) {
-                    html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option selected class="text-capitalize"> {{__("text.select_circle")}}</option>'
-                    for (i = 0; i < size; i++) {
-                        html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
-                    }
-                    html += '</select></div>';
-                } else {
-                    html += '<div><select class="form-control"  >';
-                    html += '<option selected> {{__("text.no_data_available")}}</option>'
-                    html += '</select></div>';
-                }
-                $('.circle').html(html);
-            },
-            error: function(e) {
-                console.log(e)
-            }
-        })
-    })
-    $('#circle').on('change', function() {
+    //     let value = $(this).val();
+    //     url = "{{route('admin.getSections', ':id')}}";
+    //     search_url = url.replace(':id', value);
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: search_url,
+    //         success: function(response) {
+    //             let size = response.data.length;
+    //             let data = response.data;
+    //             let html = "";
+    //             if (size > 0) {
+    //                 html += '<div><select class="form-control"  name="' + data[0].id + '" >';
+    //                 html += '<option selected class="text-capitalize"> {{__("text.select_circle")}}</option>'
+    //                 for (i = 0; i < size; i++) {
+    //                     html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
+    //                 }
+    //                 html += '</select></div>';
+    //             } else {
+    //                 html += '<div><select class="form-control"  >';
+    //                 html += '<option selected> {{__("text.no_data_available")}}</option>'
+    //                 html += '</select></div>';
+    //             }
+    //             $('.circle').html(html);
+    //         },
+    //         error: function(e) {
+    //             console.log(e)
+    //         }
+    //     })
+    // })
+    // $('#circle').on('change', function() {
 
-        let value = $(this).val();
-        url = "{{route('admin.getClasses',':id')}}";
-        search_url = url.replace(':id', value);
-        $.ajax({
-            type: 'GET',
-            url: search_url,
-            success: function(response) {
-                let size = response.data.length;
-                let data = response.data;
-                let html = "";
-                if (size > 0) {
-                    html += '<div><select class="form-control"  name="' + data[0].id + '" >';
-                    html += '<option selected class="text-capitalize"> {{__("text.select_class")}}</option>'
-                    for (i = 0; i < size; i++) {
-                        html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
-                    }
-                    html += '</select></div>';
-                } else {
-                    html += '<div><select class="form-control"  >';
-                    html += '<option selected> {{__("text.no_data_available")}}</option>'
-                    html += '</select></div>';
-                }
-                $('.class').html(html);
-            },
-            error: function(e) {
-                console.log(e)
-            }
-        })
-    })
+    //     let value = $(this).val();
+    //     url = "{{route('admin.getClasses',':id')}}";
+    //     search_url = url.replace(':id', value);
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: search_url,
+    //         success: function(response) {
+    //             let size = response.data.length;
+    //             let data = response.data;
+    //             let html = "";
+    //             if (size > 0) {
+    //                 html += '<div><select class="form-control"  name="' + data[0].id + '" >';
+    //                 html += '<option selected class="text-capitalize"> {{__("text.select_class")}}</option>'
+    //                 for (i = 0; i < size; i++) {
+    //                     html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
+    //                 }
+    //                 html += '</select></div>';
+    //             } else {
+    //                 html += '<div><select class="form-control"  >';
+    //                 html += '<option selected> {{__("text.no_data_available")}}</option>'
+    //                 html += '</select></div>';
+    //             }
+    //             $('.class').html(html);
+    //         },
+    //         error: function(e) {
+    //             console.log(e)
+    //         }
+    //     })
+    // })
 </script>
 @endsection

@@ -29,7 +29,7 @@ class ExpenseController extends Controller
         ->where(function($query){
             auth()->user()->campus_id != null ? $query->where('users.campus_id', '=', auth()->user()->campus_id):null;
         })
-        ->select($this->select)->paginate(5);
+        ->select('expenses.*')->paginate(5);
         $data['title'] = 'School expense';
 
         return view('admin.expense.index')->with($data);

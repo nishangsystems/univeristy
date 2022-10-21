@@ -18,6 +18,8 @@ class PayIncomeController extends Controller
 
     private $select = [
         'students.id',
+        'students.campus_id',
+        'student_classes.class_id',
         'pay_incomes.id as pay_income_id',
         'students.name as student_name',
         'incomes.name as income_name',
@@ -35,6 +37,8 @@ class PayIncomeController extends Controller
         $data['pay_incomes'] = DB::table('pay_incomes')
             ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
             ->join('students', 'students.id', '=', 'pay_incomes.student_id')
+            ->join('student_classes', 'student_classes.student_id', '=', 'students.id')
+            ->where('student_classes.year_id', '=', $batch_id)
             ->where(function($query){
                 auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
             })
@@ -123,33 +127,34 @@ class PayIncomeController extends Controller
         $students = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
+            ->distinct()
             ->where(function($query)use($name){
                 $query->where('students.name', 'like', "%{$name}%")
                 ->orWhere('students.matric', 'like', "%{$name}%");
             })
-            ->where(function($query){
-                auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id): null;
-            })
+            // ->where(function($query){
+            //     auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id): null;
+            // })
             ->select('students.*')->get();
 
         return response()->json(['data' => PayIncomeResource::collection($students)]);
     }
-    public function searchStudent($name)
-    {
-        $students = DB::table('student_classes')
-            ->join('students', 'students.id', '=', 'student_classes.student_id')
-            ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
-            ->where(function($query)use($name){
-                $query->where('students.name', 'like', "%{$name}%")
-                ->orWhere('students.matric', '=', $name);
-            })
-            ->where(function($query){
-                auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
-            })
-            ->select('students.*')->get();
+    // public function searchStudent($name)
+    // {
+    //     $students = DB::table('student_classes')
+    //         ->join('students', 'students.id', '=', 'student_classes.student_id')
+    //         ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
+    //         ->where(function($query)use($name){
+    //             $query->where('students.name', 'like', "%{$name}%")
+    //             ->orWhere('students.matric', '=', $name);
+    //         })
+    //         ->where(function($query){
+    //             auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+    //         })
+    //         ->select('students.*')->get();
 
-        return response()->json(['data' => PayIncomeResource::collection($students)]);
-    }
+    //     return response()->json(['data' => PayIncomeResource::collection($students)]);
+    // }
 
 
 

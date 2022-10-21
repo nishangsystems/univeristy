@@ -25,7 +25,8 @@
                     @enderror
                 </div>
             </div>
-            <div class="form-group @error('email') has-error @enderror">
+            <?php 
+            /*<div class="form-group @error('email') has-error @enderror">
                 <label for="email" class="control-label col-lg-2 text-capitalize">{{__('text.word_email')}} </label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="email" value="{{old('email')}}" type="email"  />
@@ -33,11 +34,12 @@
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
-            </div>
+            </div>*/
+            ?>
             <div class="form-group @error('phone') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_phone')}} </label>
                 <div class="col-lg-10">
-                    <input class=" form-control" name="phone" value="{{old('phone')}}" type="tel"  />
+                    <input class=" form-control" name="phone" value="{{old('phone')}}" type="tel" required />
                     @error('phone')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -180,4 +182,3 @@
     }
 </script>
 @endsection
-

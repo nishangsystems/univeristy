@@ -70,7 +70,7 @@
                                             <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.amount_in_figures')}}</div>
                                             <div style=" float:left; width:700px; height:25px;font-size:17px;">
                                                 <div style=" float:left; width:400px;border:1px solid #000;margin-top:3px;">
-                                                    {{__('text.currency_cfa')}} {{$reciept->amount}}
+                                                    {{__('text.currency_cfa')}} {{number_format($reciept->amount)}}
                                                 </div>
                                                 <div style=" float:left; width:100px;margin-top:5px; text-transform:uppercase">
                                                     {{__('text.word_date')}}
@@ -142,7 +142,7 @@
                                             <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.amount_in_figures')}}</div>
                                             <div style=" float:left; width:700px; height:25px;font-size:17px;">
                                                 <div style=" float:left; width:400px;border:1px solid #000;margin-top:3px;">
-                                                    {{__('text.currency_cfa')}} {{$reciept->amount}}
+                                                    {{__('text.currency_cfa')}} {{number_format($reciept->amount)}}
                                                 </div>
                                                 <div style=" float:left; width:100px;margin-top:5px; text-transform:uppercase">
                                                     {{__('text.word_date')}}

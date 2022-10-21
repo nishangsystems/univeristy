@@ -7,7 +7,7 @@
                  <label for="cname" class="control-label  text-capitalize">{{__('text.word_name')}} <span style="color:red">*</span></label>
              </div>
              <div class="form-group @error('name') has-error @enderror col-sm-2">
-                 <input class=" form-control" name="name" value="{{old('name')}}" type="text" required />
+                 <textarea class=" form-control" name="name" rows="2" required >{{old('name')}}</textarea>
                  @error('name')
                  <span class="invalid-feedback">{{ $message }}</span>
                  @enderror
@@ -33,7 +33,7 @@
              </div>
              <div class="form-group col-sm-1">
                  <div class="d-flex justify-content-end">
-                     <button id="save" class="btn btn-xs btn-primary mx-3 text-capitalize" type="submit">{{__('text.word_save')}}</button>
+                     <button id="save" class="btn btn-xs btn-primary ml-3 text-capitalize" type="submit">{{__('text.word_save')}}</button>
                  </div>
              </div>
          </div>

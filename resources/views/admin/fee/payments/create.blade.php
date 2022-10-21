@@ -6,7 +6,7 @@
             <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_fee_details')}}</h5>
             @csrf
             <div class="form-group row">
-                <label for="cname" class="control-label col-sm-2 text-capitalize">{{__('text.totoal_fee')}}: </label>
+                <label for="cname" class="control-label col-sm-2 text-capitalize">{{__('text.total_fee')}}: </label>
                 <div class="col-sm-10">
                     <input for="cname" class="form-control" value="{{number_format($total_fee)}} CFA" disabled></input>
                 </div>
@@ -29,7 +29,7 @@
                     <select class="form-control" name="item">
                         <option value="" disabled class="text-capitalize">{{__('text.select_item')}}</option>
                         @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->payment_items()->get() ?? [] as $item)
-                        <option selected value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
+                        <option value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
                         @endforeach
                     </select>
                     @error('item')
@@ -50,6 +50,12 @@
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_date')}}<span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="date" value="{{old('amount')}}" type="date" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.reference_number')}}<span style="color:red">*</span></label>
+                <div class="col-lg-10">
+                    <input class=" form-control" name="reference_number" value="{{old('reference_number')}}" type="text" required />
                 </div>
             </div>
             <div class="form-group">
