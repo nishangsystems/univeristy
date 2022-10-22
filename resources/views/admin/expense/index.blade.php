@@ -23,7 +23,7 @@
                     @foreach($expenses as $k=>$expense)
                     <tr>
                         <td>{{$k+1}}</td>
-                        <td>{{$expense->name}}</td>
+                        <td>{!! $expense->name !!}</td>
                         <td>{{number_format($expense->amount_spend)}}</td>
                         <td>{{date('jS F Y', strtotime($expense->date))}}</td>
                         <td class="d-flex justify-content-end  align-items-center">

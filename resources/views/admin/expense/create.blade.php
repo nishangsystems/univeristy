@@ -7,7 +7,7 @@
                  <label for="cname" class="control-label  text-capitalize">{{__('text.word_name')}} <span style="color:red">*</span></label>
              </div>
              <div class="form-group @error('name') has-error @enderror col-sm-2">
-                 <textarea class=" form-control" name="name" rows="2" required >{{old('name')}}</textarea>
+                 <textarea  class=" form-control" name="name" rows="2" required >{{old('name')}}</textarea>
                  @error('name')
                  <span class="invalid-feedback">{{ $message }}</span>
                  @enderror

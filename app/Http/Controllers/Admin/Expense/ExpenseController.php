@@ -70,7 +70,7 @@ class ExpenseController extends Controller
     public function store(Request $request)
     {
         $expense = new Expenses();
-        $expense->name = $request->name;
+        $expense->name = nl2br($request->name);
         $expense->amount_spend = $request->amount_spend;
         $expense->user_id = Auth::id();
         $expense->date = $request->date;

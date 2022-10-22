@@ -16,6 +16,7 @@ use Session;
 use Redirect;
 
 use Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
@@ -90,7 +91,8 @@ class PaymentController extends Controller
                 "batch_id" => Helpers::instance()->getYear(),
                 "amount" => $request->amount,
                 "date" => $request->date,
-                'reference_number' => $request->reference_number
+                'reference_number' => $request->reference_number,
+                'user_id' => auth()->user()->id
             ]);
         }
         else{return back()->with('error', 'dublicate referernce error');}
