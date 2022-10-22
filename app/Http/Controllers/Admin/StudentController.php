@@ -42,12 +42,12 @@ class StudentController extends Controller
     }
     public function index()
     {
-        $curent_year = substr($this->year, 5);
+        $curent_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
         $data['title'] = 'Manage Students';
         $data['school_units'] = DB::table('school_units')->where('parent_id', 0)->get()->toArray();
         $data['years'] = $this->years;
         // $data['students'] = DB::table('students')->whereYear('students.created_at', $curent_year)->get()->toArray();
-        $data['students'] = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')->get(['students.*', 'student_classes.class_id']);
+        $data['students'] = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')->where('student_classes.year_id', '=', $curent_year)->get(['students.*', 'student_classes.class_id']);
         return view('admin.student.index')->with($data);
     }
     public function getStudentsPerClass(Request $request)

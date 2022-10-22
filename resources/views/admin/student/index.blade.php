@@ -46,8 +46,8 @@
                             <td>{{$k+1}}</td>
                             <td>{{$student->name}}</td>
                             <td>{{$student->matric}}</td>
-                            <td>{{$student->email}}</td>
-                            <td>{{$student->phone}}</td>
+                            <td>{{\App\Models\Campus::find($student->campus_id)->name}}</td>
+                            <td>{{\App\Models\ProgramLevel::find($student->class_id)->program()->first()->name.' : LEVEL '.\App\Models\ProgramLevel::find($student->class_id)->level()->first()->level}}</td>
                             <td class="d-flex justify-content-end  align-items-start text-capitalize">
                                 <a class="btn btn-sm btn-primary m-1" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
                                 <a class="btn btn-sm btn-success m-1" href="{{route('admin.student.edit',[$student->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>|

@@ -42,9 +42,9 @@ class PayIncomeController extends Controller
             ->where(function($query){
                 auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
             })
-            ->join('school_units', 'school_units.id', '=', 'pay_incomes.class_id')
+            // ->join('school_units', 'school_units.id', '=', 'pay_incomes.class_id')
             ->where('pay_incomes.batch_id', $batch_id)
-            ->select($this->select)
+            ->select($this->select)->distinct()
             ->paginate(5);
         $data['title'] = 'Pay Incomes';
         $data['years'] = Batch::all();
@@ -132,6 +132,9 @@ class PayIncomeController extends Controller
                 $query->where('students.name', 'like', "%{$name}%")
                 ->orWhere('students.matric', 'like', "%{$name}%");
             })
+            ->where(function($query){
+                    auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+                })
             // ->where(function($query){
             //     auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id): null;
             // })
@@ -214,7 +217,8 @@ class PayIncomeController extends Controller
             'income_id' => $validate_data['income_id'],
             'batch_id' => $validate_data['batch_id'],
             'class_id' => $class_id,
-            'student_id' => $student_id
+            'student_id' => $student_id,
+            'user_id' => auth()->user()->id
         ]);
         return redirect()->route('admin.pay_income.index')->with('success', 'Payed Income successfully');
     }

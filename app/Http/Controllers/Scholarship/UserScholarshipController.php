@@ -10,6 +10,7 @@ use App\Models\StudentScholarship;
 use App\Models\User;
 use App\Models\UserScholarship;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserScholarshipController extends Controller
@@ -66,6 +67,9 @@ class UserScholarshipController extends Controller
         return DB::table('student_scholarships')
             ->join('students', 'students.id', '=', 'student_scholarships.student_id')
             ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
+            ->where(function($query){
+                auth()->user()->campus_id != null ? $query->where('students.campus_id','=', auth()->user()->campus_id): null;
+            })
             ->select($this->select)->paginate(10);
     }
     /**
@@ -81,6 +85,7 @@ class UserScholarshipController extends Controller
         $user_scholarship->student_id  = $id;
         $user_scholarship->amount = $request->amount;
         $user_scholarship->batch_id = $request->year;
+        $user_scholarship->user_id = Auth::id();
         $user_scholarship->save();
         return redirect()->route('admin.scholarship.awarded_students')->with('success', 'Awarded Scholarship successfully !');
     }
