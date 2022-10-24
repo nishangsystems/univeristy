@@ -20,10 +20,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if(\request('role') || \request('type')){
-            $data['type'] = \request('role')?\request('role'):\request('type');
+        if(\request()->has('role') || \request()->has('type')){
+            $data['type'] = \request('role') ? \request('role') : \request('type');
             $data['title'] = "Role ".($data['type'] ?? " Users");
-            if(\request('role')){
+            if(\request()->has('role')){
                 $data['users'] = DB::table('roles')->where('slug', '=', $request->role)
                     ->join('users_roles', 'users_roles.role_id', '=', 'roles.id')
                     ->join('users', 'users.id', '=', 'users_roles.user_id')
@@ -73,19 +73,21 @@ class UserController extends Controller
         $input['password'] = Hash::make('password');
         $input['username'] = $request->email;
         $input['campus_id'] = $request->campus ?? null;
-        if($request->type === "TEACHER"){
+        if($request->type == "teacher"){
             $input['type'] = "teacher";
         }else{
             $input['type'] = "admin";
         }
         $user = new \App\Models\User($input);
         $user->save();
-        $user_role = new \App\Models\UserRole();
-        $user_role->role_id = DB::table('roles')->where('slug', '=', $request->type)->first()->id;
-        $user_role->user_id = $user->id;
-        $user_role->save();
+        if($request->type != "teacher"){
+            $user_role = new \App\Models\UserRole();
+            $user_role->role_id = DB::table('roles')->where('slug', '=', $request->type)->first()->id;
+            $user_role->user_id = $user->id;
+            $user_role->save();
+        }
 
-        return redirect()->to(route('admin.users.index', ['role' =>$request->type]))->with('success', "User Created Successfully !");
+        return redirect()->to(route('admin.users.index', [$request->type=='teacher' ? 'type' : 'role' =>$request->type]))->with('success', "User Created Successfully !");
     }
 
     /**
