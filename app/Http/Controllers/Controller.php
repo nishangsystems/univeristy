@@ -19,7 +19,7 @@ class Controller extends BaseController
             # code...
             $pls[] = [
                 'id' => $value->id,
-                'campus_id'=>$value->campus_id,
+                'level_id'=>$value->level_id,
                 'program_id'=>$value->program_id,
                 'name' => $value->program()->first()->name.': LEVEL '.$value->level()->first()->level
             ];
