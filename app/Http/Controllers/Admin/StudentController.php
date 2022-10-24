@@ -228,12 +228,17 @@ class StudentController extends Controller
                 $student = new \App\Models\Students($input);
                 $student->save();
                 // dd($student);
-                // create student class
-                $class = StudentClass::create([
+                // create student class (check to be sure student class doesn't already exist for current academic year before creating one)
+                $classes = StudentClass::where(['student_id' => $student->id])
+                    ->where(['class_id' => $request->program_id])
+                    ->where(['year_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()]);
+                
+                $classes->count() == 0 ?
+                StudentClass::create([
                     'student_id' => $student->id,
                     'class_id' => $request->program_id,
                     'year_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
-                ]);
+                ]):null;
     
                 DB::commit();
                 return redirect()->to(route('admin.students.index', $request->program_id))->with('success', "Student saved successfully !");
@@ -243,7 +248,7 @@ class StudentController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e;
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -355,6 +360,30 @@ class StudentController extends Controller
     {
         $data['title'] = "Import Student";
         return view('admin.student.import')->with($data);
+    }
+
+    public function clearStudents(Request $request)
+    {
+        $this->validate($request, [
+            'campus'=>'required',
+            'class'=>'required',
+            'year'=>'required'
+        ]);
+        try {
+            DB::beginTransaction();
+            //code...
+            \App\Models\StudentClass::where(['student_classes.year_id' => $request->year])
+                    ->where(['student_classes.class_id' => $request->class])
+                    ->join('students', ['students.id' => 'student_classes.student_id'])
+                    ->where(['students.campus_id' => $request->campus])->delete();
+
+            DB::commit();
+            return redirect()->to(route('admin.students.index', $request->class))->with('success', "Student saved successfully !");
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
     }
 
     public  function matric()

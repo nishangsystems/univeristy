@@ -321,4 +321,5 @@ return [
     'first_semester_minimum' => 'first semester minimum',
     'second_semester_minimum' => 'second semester minimum',
     'exam_results_charges' => 'exam results charges',
+    'clear_students' => 'clear students'
 ];

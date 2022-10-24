@@ -159,6 +159,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('promotion_batch/{id}', 'Admin\StudentController@promotionBatch')->name('promotion_batch');
     Route::get('students/import', 'Admin\StudentController@import')->name('students.import');
     Route::post('students/import', 'Admin\StudentController@importPost')->name('students.import');
+    Route::post('students/clear', 'Admin\StudentController@clearStudents')->name('students.clear');
     Route::get('student/matricule', 'Admin\StudentController@matric')->name('students.matricule');
     Route::post('student/matricule', 'Admin\StudentController@matricPost')->name('students.matricule');
     Route::resource('student', 'Admin\StudentController');
