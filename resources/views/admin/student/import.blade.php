@@ -123,8 +123,8 @@
                 <div class="text-center text-capitalize text-primary py-3">{{__('text.file_format_csv')}}</div>
                 <table class="bg-light">
                     <thead class="text-capitalize bg-dark text-light fs-6">
-                        <th>name</th>
-                        <th>matric</th>
+                        <th>name <span class="text-danger">*</span></th>
+                        <th>matric <span class="text-danger">*</span></th>
                         <th>gender</th>
                     </thead>
                     <tbody>
@@ -149,7 +149,7 @@
     }
 
     $(document).ready(function(){
-        loadPrograms(document.getElementById('campus_id', 'program_id'));
+        loadPrograms(document.getElementById('campus_id'), 'program_id');
     });
 
     function loadPrograms(element, space_id){

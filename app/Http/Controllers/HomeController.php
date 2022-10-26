@@ -18,6 +18,8 @@ use App\Http\Resources\SchoolUnitResource;
 use App\Http\Resources\StudentFee;
 use App\Models\Campus;
 use App\Models\ProgramLevel;
+use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class HomeController extends Controller
 {
@@ -50,9 +52,11 @@ class HomeController extends Controller
 
     public function  subjects($parent)
     {
-        $parent = \App\Models\SchoolUnits::find($parent);
+        $subjects = \App\Models\ClassSubject::where(['class_id' => $parent])
+                    ->join('subjects', ['subjects.id' => 'class_subjects.subject_id'])
+                    ->get(['subjects.id', 'subjects.name', 'subjects.code', 'class_subjects.class_id']);
         return response()->json([
-            'array' => $parent->subject()->with('subject')->get(),
+            'array' => $subjects,
         ]);
     }
 

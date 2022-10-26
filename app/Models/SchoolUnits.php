@@ -101,4 +101,9 @@ class SchoolUnits extends Model
     {
         return $this->hasManyThrough(Level::class, ProgramLevel::class);
     }
+
+    public function background()
+    {
+        return $this->belongsTo(Background::class);
+    }
 }

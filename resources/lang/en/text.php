@@ -321,5 +321,12 @@ return [
     'first_semester_minimum' => 'first semester minimum',
     'second_semester_minimum' => 'second semester minimum',
     'exam_results_charges' => 'exam results charges',
-    'clear_students' => 'clear students'
+    'clear_students' => 'clear students',
+    'word_courses'=>'courses',
+    'FORM_B'=>'FORM B',
+    'course_registration'=>'course registration',
+    'course_title'=>'course title',
+    'word_action'=>'action',
+    'sign_course'=>'sign course',
+    'view_courses'=>'view courses',
 ];
