@@ -257,6 +257,22 @@ class HomeController extends Controller
         catch(Throwable $th){return $th->getLine() . '  '.$th->getMessage();}
     }
 
+    public function register_courses(Request $request)//takes class course id
+    {
+        # code...
+        // first clear all registered courses for the year, semester, student then rewrite
+        $year = Helpers::instance()->getYear();
+        $semester = Helpers::instance()->getSemester(auth()->user()->program_id)->id;
+        $user = auth()->id();
+
+        try {
+            DB::beginTransaction();
+            \App\Models\StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->delete();
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
     public function add_course()//takes class course id
     {
         // add course to current auth user for current academic year
