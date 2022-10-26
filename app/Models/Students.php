@@ -26,7 +26,8 @@ class Students extends Authenticatable
         'password',
         'parent_name',
         'program_id',
-        'parent_phone_number'
+        'parent_phone_number',
+        'imported'
     ];
 
     public function class($year)

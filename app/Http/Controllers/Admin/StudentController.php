@@ -365,17 +365,24 @@ class StudentController extends Controller
     public function clearStudents(Request $request)
     {
         $this->validate($request, [
-            'campus'=>'required',
             'class'=>'required',
             'year'=>'required'
         ]);
         try {
             DB::beginTransaction();
             //code...
-            \App\Models\StudentClass::where(['student_classes.year_id' => $request->year])
+            $ids = \App\Models\StudentClass::where(['student_classes.year_id' => $request->year])
                     ->where(['student_classes.class_id' => $request->class])
                     ->join('students', ['students.id' => 'student_classes.student_id'])
-                    ->where(['students.campus_id' => $request->campus])->delete();
+                    ->where(['students.imported'=>1])
+                    ->where(function($q)use($request){
+                        $request->has('campus') ? $q->where(['students.campus_id' => $request->campus]) : null;
+                    })
+                    ->pluck('students.id');
+            foreach ($ids as $key => $value) {
+                # code...
+                Students::find($value)->delete();
+            };
 
             DB::commit();
             return redirect()->to(route('admin.students.index', $request->class))->with('success', "Student saved successfully !");
@@ -470,7 +477,8 @@ class StudentController extends Controller
                             'password' => Hash::make('12345678'),
                             'campus_id'=> $request->campus_id ?? null,
                             'program_id' => $request->program_id ?? null,
-                            'admission_batch_id' => $request->batch
+                            'admission_batch_id' => $request->batch,
+                            'imported' => 1
                         ]);
                         $class = StudentClass::create([
                             'student_id' => $student->id,

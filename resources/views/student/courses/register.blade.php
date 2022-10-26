@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="py-3">
-            <form action="" method="post">
+            <form method="post">
                 <table>
                     <thead class="text-capitalize bg-secondary text-white">
                         <th class="border-left border-right">{{__('text.course_code')}}</th>
@@ -108,29 +108,63 @@
                             <td class="border-left border-right">`+data[key]['name']+`</td>
                             <td class="border-left border-right">`+data[key]['coef']+`</td>
                             <td class="border-left border-right">`+data[key]['status']+`</td>
-                            <td class="border-left border-right"><button class="btn btn-sm btn-primary" onclick="add(`+data[key]['id']+`)">{{__('text.word_add')}}</button></td>
+                            <td class="border-left border-right"><button class="btn btn-sm btn-primary" onclick="add(`+data[key]+`)">{{__('text.word_add')}}</button></td>
                         </tr>`
                 }
                 $('#modal_table').html(html);
             }
         })
     }
+
+    function refresh(){
+        let html = ``;
+                class_courses;
+                for (const key in class_courses) {
+                    if(registered_courses.includes(class_courses[key])){continue;}
+                    html += `<tr class="border-bottom `+class_courses[key]['id']+`">
+                            <td class="border-left border-right">`+class_courses[key]['code']+`</td>
+                            <td class="border-left border-right">`+class_courses[key]['name']+`</td>
+                            <td class="border-left border-right">`+class_courses[key]['coef']+`</td>
+                            <td class="border-left border-right">`+class_courses[key]['status']+`</td>
+                            <td class="border-left border-right"><button class="btn btn-sm btn-primary" onclick="add(`+class_courses[key]+`)">{{__('text.word_add')}}</button></td>
+                        </tr>`
+                }
+                $('#modal_table').html(html);
+    }
+
+    function findCourseById(key, array){
+        for(const key in array){
+            if (array[key]['id'] == key) {
+                return array[key];
+            }
+        }
+        return null;
+    }
     
     function add(course) {
-        registered_courses.push(class_courses[course]);
-        html = `<tr class="border-bottom" id="table-`+class_courses[course]['id']+`">
-                            <input type="hidden" name="class_courses[course]s[]" value="`+class_courses[course]['id']+`">
-                            <td class="border-left border-right">`+class_courses[course]['code']+`</td>
-                            <td class="border-left border-right">`+class_courses[course]['name']+`</td>
-                            <td class="border-left border-right">`+class_courses[course]['coef']+`</td>
-                            <td class="border-left border-right">`+class_courses[course]['status']+`</td>
-                            <td class="border-left border-right"><button type="button" class="btn btn-sm btn-danger" onclick="drop(`+class_courses[course]['id']+`)">{{__('text.word_drop')}}</button></td>
+
+        _course = course;
+        console.log(course);
+        html = `<tr class="border-bottom `+_course['code']+`">
+                            <input type="hidden" name="courses[]" value="`+_course['id']+`">
+                            <td class="border-left border-right">`+_course['code']+`</td>
+                            <td class="border-left border-right">`+_course['name']+`</td>
+                            <td class="border-left border-right">`+_course['coef']+`</td>
+                            <td class="border-left border-right">`+_course['status']+`</td>
+                            <td class="border-left border-right"><button type="button" class="btn btn-sm btn-danger" onclick="drop(`+_course['id']+`)">{{__('text.word_drop')}}</button></td>
                         </tr>`
         
         // add row to table
         $('#course_table').append(html);
         // drop row from modal
-        $('#modal-'+class_courses[course]['id']).remove();
+        refresh();
+    }
+
+    function drop(course) {
+        index = registered_courses.findIndex(course);
+        registered_courses.splice(index, 1);
+        // document.querySelector('#course_table .'+registered_courses[]).remove;
+        refresh();
     }
 </script>
 @endsection
