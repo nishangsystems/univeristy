@@ -378,10 +378,11 @@ class StudentController extends Controller
                     ->where(function($q)use($request){
                         $request->has('campus') ? $q->where(['students.campus_id' => $request->campus]) : null;
                     })
-                    ->pluck('students.id');
+                    ->get(['students.id as student', 'student_classes.id as class']);
             foreach ($ids as $key => $value) {
                 # code...
-                Students::find($value)->delete();
+                Students::find($value->student)->delete();
+                StudentClass::find($value->class)->delete();
             };
 
             DB::commit();
