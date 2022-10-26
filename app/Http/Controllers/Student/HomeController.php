@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
 use App\Models\Sequence;
+use App\Models\Students;
+use App\Models\StudentSubject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class HomeController extends Controller
 {
@@ -201,5 +206,66 @@ class HomeController extends Controller
 
             'batch_id' => 'required|numeric'
         ]);
+    }
+
+    public function course_registration()
+    {
+        # code...
+        $data['title'] = "Course Registration For " .Helpers::instance()->getSemester(Students::find(auth()->id())->program_id)->name." ".\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
+        $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>\App\Helpers\Helpers::instance()->getYear()])->first()->class_id);
+        return view('student.courses.register', $data);
+    }
+
+    public function form_b()
+    {
+        # code...
+        $data['title'] = "Registered Courses";
+        return view('student.courses.form_b', $data);
+    }
+
+    public static function registerd_courses($year = null, $semester = null, $student = null )
+    {
+        try {
+            //code...
+            $_student = $student ?? auth()->id();
+            $_year = $year ?? Helpers::instance()->getYear();
+            $_semester = $semester ?? Helpers::instance()->getSemester(auth()->user()->program_id)->id;
+            # code...
+            $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year])
+                    ->join('subjects', ['subjects.id'=>'student_courses.course_id'])->where(['subjects.semester_id'=>$_semester])
+                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->get(['subjects.*', 'class_subjects.coef as cv'])->sortBy('name');
+                    return response()->json(['ids'=>$courses->pluck('id'), 'courses'=>$courses]);
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+            
+        }
+    }
+
+    public function class_subjects($level)
+    {
+        # code...
+        
+        try{
+            $pl = DB::table('students')->find(auth()->id())->program_id;
+            $program_id = \App\Models\ProgramLevel::find($pl)->program_id;
+            $subjects = \App\Models\ProgramLevel::where(['program_levels.program_id'=>$program_id])->where(['program_levels.level_id'=>$level])
+                        ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
+                        ->where(['subjects.semester_id'=>Helpers::instance()->getSemester($pl)->id])
+                        ->get(['subjects.id', 'subjects.code', 'subjects.name', 'class_subjects.coef', 'class_subjects.status'])->sortBy('name')->toArray();
+            return $subjects;
+        }
+        catch(Throwable $th){return $th->getLine() . '  '.$th->getMessage();}
+    }
+
+    public function add_course()//takes class course id
+    {
+        // add course to current auth user for current academic year
+        # code...
+    }
+
+    public function drop_course()//takes class course id
+    {
+        // drop course for current auth user for current academic year
+        # code...
     }
 }

@@ -15,4 +15,9 @@ class Background extends Model
         # code...
         return $this->hasMany(Semester::class, 'background_id');
     }
+    public function currentSemesters()
+    {
+        # code...
+        return $this->hasMany(Semester::class, 'background_id')->where(['semesters.status'=>1]);
+    }
 }

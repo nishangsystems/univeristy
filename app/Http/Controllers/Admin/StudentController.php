@@ -466,7 +466,7 @@ class StudentController extends Controller
                             'name' => mb_convert_case(str_replace('’', "'", $importData[0]), MB_CASE_UPPER),
                             'matric' => $importData[1],
                             // 'email' => explode(' ', str_replace('’', "'", $importData[2]))[0],
-                            'gender' => $importData[3],
+                            'gender' => $importData[2] ?? null,
                             'password' => Hash::make('12345678'),
                             'campus_id'=> $request->campus_id ?? null,
                             'program_id' => $request->program_id ?? null,
@@ -489,7 +489,8 @@ class StudentController extends Controller
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollback();
-                return back()->with('error', $e->getMessage());
+                throw $e;
+                // return back()->with('error', $e->getMessage());
             }
             session('message', 'Import Successful.');
             //echo("<h3 style='color:#0000ff;'>Import Successful.</h3>");
