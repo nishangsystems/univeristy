@@ -204,14 +204,35 @@
             </li>
            @endif
 
-            <li>
-                <a href="{{route('student.subject')}}">
+           <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
                     <i class="menu-icon fa fa-book"></i>
-                    <span class="menu-text">Subject</span>
+                    <span class="menu-text">{{__('text.word_courses')}}</span>
+                    <b class="arrow fa fa-angle-down"></b>
                 </a>
-                <b class="arrow"></b>
-            </li>
 
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('student.courses.registration')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.course_registration')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+
+                    <li>
+                        <a href="{{route('student.courses.form_b')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.FORM_B')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                </ul>
+            </li>
 
             <li>
                 <a href="{{route('student.result')}}">

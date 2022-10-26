@@ -289,6 +289,16 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('subjects/{id}/notes', 'Student\HomeController@subjectNotes')->name('subject.notes');
     Route::get('boarding_fees/details', 'Student\HomeController@boarding')->name('boarding');
     Route::post('boarding_fees/details/', 'Student\HomeController@getBoardingFeesYear')->name('boarding_fees_details');
+    Route::prefix('courses')->name('courses.')->group(function(){
+        Route::get('registration', 'Student\HomeController@course_registration')->name('registration');
+        Route::post('registration', 'Student\HomeController@register_courses')->name('registration');
+        Route::get('form_b', 'Student\HomeController@form_b')->name('form_b');
+        Route::get('drop', 'Student\HomeController@drop_course')->name('drop');
+        Route::get('add', 'Student\HomeController@add_course')->name('add');
+    });
+    Route::get('registered_courses/{year?}/{semester?}/{student?}', 'Student\HomeController@registerd_courses')->name('registered_courses');
+    Route::get('class-subjects/{level}', 'Student\HomeController@class_subjects')->name('class-subjects');
+
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');

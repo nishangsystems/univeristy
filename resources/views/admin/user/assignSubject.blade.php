@@ -9,13 +9,13 @@
 
                 <div id="section">
                     <div class="form-group">
-                        <label for="cname" class="control-label col-lg-2">Section</label>
+                        <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_class')}}</label>
                         <div class="col-lg-10">
                             <div>
                                 <select class="form-control section" name="section" id="section0">
-                                    <option selected disabled>Select Section</option>
-                                    @foreach($classes as $key => $section)
-                                        <option value="{{$key}}">{{$section}}</option>
+                                    <option selected disabled>{{__('text.select_class')}}</option>
+                                    @foreach(\App\Http\Controllers\Controller::sorted_program_levels()  as $class)
+                                        <option value="{{$class['id']}}">{{$class['name']}}</option>
                                     @endforeach
                                 </select>
                                 <div class="children"></div>
@@ -80,7 +80,7 @@
                         if (data.array.length > 0) {
                             html += '<option selected value="" > Select Subjects </option>';
                             for (i = 0; i < data.array.length; i++) {
-                                html += '<option value="' + data.array[i].id + '">' + data.array[i].subject.name + '</option>';
+                                html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
                             }
                         }else{
                             html += ' <option selected disabled>Select Subjects, if the list is empty, select a class, or add subject to the class you have selected</option>';
