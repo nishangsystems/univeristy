@@ -298,6 +298,7 @@ Route::prefix('student')->name('student.')->group(function () {
     });
     Route::get('registered_courses/{year?}/{semester?}/{student?}', 'Student\HomeController@registerd_courses')->name('registered_courses');
     Route::get('class-subjects/{level}', 'Student\HomeController@class_subjects')->name('class-subjects');
+    Route::get('courses/download/{year}/{semester}', 'Student\HomeController@download_courses')->name('courses.download');
 
 });
 
@@ -335,7 +336,6 @@ Route::get('/campuses/{id}/programs', function(Request $request){
 Route::get('semesters/{background}', function(Request $request){
     return \App\Models\Semester::where('background_id', $request->background)->get();
 })->name('semesters');
-
 
 Route::get('mode/{locale}', function ($batch) {
     session()->put('mode', $batch);

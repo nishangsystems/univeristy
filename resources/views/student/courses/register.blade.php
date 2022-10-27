@@ -1,66 +1,73 @@
 @extends('student.layout')
 @section('section')
 <div class="py-3">
-    <div class="form-group">
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modelId">
-            <i class="fa fa-plus mx-1"></i>{{__('text.sign_course')}}
-        </button>
-        
-        <!-- Modal -->
-        <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary d-flex justify-content-around">
-                        <h5 class="modal-title" id="modal-title">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="false">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group form-group-merged d-flex border">
-                            <select name="level" class="form-control border-0" id="modal-level" required>
-                                <option value="">{{__('text.select_level')}}</option>
-                                @foreach(\App\Models\Level::all() as $level)
-                                    <option value="{{$level->id}}">{{$level->level}}</option>
-                                @endforeach
-                            </select>
-                            <button class="btn btn-sm btn-light text-capitalize border-0" onclick="getCourses('#modal-level')">{{__('text.view_courses')}}</button>
+
+    @if($access)
+        <div class="form-group">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modelId">
+                <i class="fa fa-plus mx-1"></i>{{__('text.sign_course')}}
+            </button>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary d-flex justify-content-around">
+                            <h5 class="modal-title" id="modal-title">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="false">&times;</span>
+                            </button>
                         </div>
-                        <table>
-                            <thead class="text-capitalize bg-light text-primary">
-                                <th class="border-left border-right">{{__('text.course_code')}}</th>
-                                <th class="border-left border-right">{{__('text.course_title')}}</th>
-                                <th class="border-left border-right">{{__('text.credit_value')}}</th>
-                                <th class="border-left border-right">{{__('text.word_status')}}</th>
-                                <th class="border-left border-right">{{__('text.word_action')}}</th>
-                            </thead>
-                            <tbody id="modal_table"></tbody>
-                        </table>
+                        <div class="modal-body">
+                            <div class="form-group form-group-merged d-flex border">
+                                <select name="level" class="form-control border-0" id="modal-level" required>
+                                    <option value="">{{__('text.select_level')}}</option>
+                                    @foreach(\App\Models\Level::all() as $level)
+                                        <option value="{{$level->id}}">{{$level->level}}</option>
+                                    @endforeach
+                                </select>
+                                <button class="btn btn-sm btn-light text-capitalize border-0" onclick="getCourses('#modal-level')">{{__('text.view_courses')}}</button>
+                            </div>
+                            <table>
+                                <thead class="text-capitalize bg-light text-primary">
+                                    <th class="border-left border-right">{{__('text.course_code')}}</th>
+                                    <th class="border-left border-right">{{__('text.course_title')}}</th>
+                                    <th class="border-left border-right">{{__('text.credit_value')}}</th>
+                                    <th class="border-left border-right">{{__('text.word_status')}}</th>
+                                    <th class="border-left border-right">{{__('text.word_action')}}</th>
+                                </thead>
+                                <tbody id="modal_table"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="py-3">
+                <form method="post">
+                    @csrf
+                    <table>
+                        <thead class="text-capitalize bg-secondary text-white">
+                            <th class="border-left border-right">{{__('text.course_code')}}</th>
+                            <th class="border-left border-right">{{__('text.course_title')}}</th>
+                            <th class="border-left border-right">{{__('text.credit_value')}}</th>
+                            <th class="border-left border-right">{{__('text.word_status')}}</th>
+                            <th class="border-left border-right">{{__('text.word_action')}}</th>
+                        </thead>
+                        <tbody id="course_table"></tbody>
+                    </table>
+                    <div class="d-flex py-3">
+                        <button type="submit" class="btn btn-success btn-sm mr-4 text-capitalize"><i class="fa fa-save mx-1"></i>{{__('text.word_save')}}</button>
+                        <div class="btn btn-primary btn-sm mr-4 text-capitalize">{{__('text.credit_value')}} : <span id="cv-sum"></span>/<span id="cv-total">{{$cv_total}}</span></button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="py-3">
-            <form method="post">
-                @csrf
-                <table>
-                    <thead class="text-capitalize bg-secondary text-white">
-                        <th class="border-left border-right">{{__('text.course_code')}}</th>
-                        <th class="border-left border-right">{{__('text.course_title')}}</th>
-                        <th class="border-left border-right">{{__('text.credit_value')}}</th>
-                        <th class="border-left border-right">{{__('text.word_status')}}</th>
-                        <th class="border-left border-right">{{__('text.word_action')}}</th>
-                    </thead>
-                    <tbody id="course_table"></tbody>
-                </table>
-                <div class="d-flex py-3">
-                    <button type="submit" class="btn btn-success btn-sm mr-4 text-capitalize"><i class="fa fa-save mx-1"></i>{{__('text.word_save')}}</button>
-                    <div class="btn btn-primary btn-sm mr-4 text-capitalize">{{__('text.credit_value')}} : <span id="cv-sum"></span>/<span id="cv-total">{{$cv_total}}</span></button>
-                </div>
-            </form>
+    @else
+        <div class="py-4 text-center h4 text-danger bg-light my-4">
+            {{trans('text.fee_access_phrase', ['amount'=>$min_fee, 'action'=>'sign up courses'])}}
         </div>
-    </div>
+    @endif
 </div>
 @endsection
 @section('script')
@@ -71,8 +78,10 @@
     let cv_total = parseInt("{{$cv_total}}");
 
     $(document).ready(function(){
-        loadCourses();
-        getCourses();
+        if ("{{$access}}") {
+            loadCourses();
+            getCourses();
+        }
     })
 
     function loadCourses() {
