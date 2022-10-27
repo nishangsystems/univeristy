@@ -81,21 +81,19 @@
             method: 'GET',
             url: url,
             success: function(data){
-                // console.log(data);
                 if (data != null) {
                     registered_courses = data.courses;
                     cv_sum = data.cv_sum;
                     if(cv_sum > cv_total){alert("Problem encountered. Maximum credits excceded");}
                     let html2 = ``;
                     for (const key in registered_courses) {
-                        cv_sum += parseInt(registered_courses[key]['cv']);
                         html2 += `<tr class="border-bottom" id="modal-`+registered_courses[key]['id']+`">
                                 <input type="hidden" name="courses[]" value="`+registered_courses[key]['id']+`">
                                 <td class="border-left border-right">`+registered_courses[key]['code']+`</td>
                                 <td class="border-left border-right">`+registered_courses[key]['name']+`</td>
                                 <td class="border-left border-right">`+registered_courses[key]['cv']+`</td>
                                 <td class="border-left border-right">`+registered_courses[key]['status']+`</td>
-                                <td class="border-left border-right"><button class="btn btn-sm btn-danger" onclick='drop(`+JSON.stringify(registered_courses[key])+`)'>{{__('text.word_drop')}}</button></td>
+                                <td class="border-left border-right"><span class="btn btn-sm btn-danger" onclick='drop(`+JSON.stringify(registered_courses[key])+`)'>{{__('text.word_drop')}}</span></td>
                             </tr>`
                     }
                     $('#course_table').html(html2);
@@ -126,7 +124,7 @@
                             <td class="border-left border-right">`+data[key]['name']+`</td>
                             <td class="border-left border-right">`+data[key]['cv']+`</td>
                             <td class="border-left border-right">`+data[key]['status']+`</td>
-                            <td class="border-left border-right"><button class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(data[key])+`)'>{{__('text.word_add')}}</button></td>
+                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(data[key])+`)'>{{__('text.word_add')}}</span></td>
                         </tr>`
                 }
                 $('#modal_table').html(html);
@@ -135,8 +133,6 @@
     }
 
     function refresh(){
-        // console.log(class_courses);
-
         let html = ``;
         for (const key in class_courses) {
                     if(registered_courses.filter(e => e['id'] == class_courses[key]['id']).length > 0){continue;}
@@ -145,7 +141,7 @@
                             <td class="border-left border-right">`+class_courses[key]['name']+`</td>
                             <td class="border-left border-right">`+class_courses[key]['cv']+`</td>
                             <td class="border-left border-right">`+class_courses[key]['status']+`</td>
-                            <td class="border-left border-right"><button class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(class_courses[key])+`)'>{{__('text.word_add')}}</button></td>
+                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(class_courses[key])+`)'>{{__('text.word_add')}}</span></td>
                         </tr>`
                 }
                 $('#modal_table').html(html);
@@ -158,7 +154,7 @@
                             <td class="border-left border-right">`+registered_courses[key]['name']+`</td>
                             <td class="border-left border-right">`+registered_courses[key]['cv']+`</td>
                             <td class="border-left border-right">`+registered_courses[key]['status']+`</td>
-                            <td class="border-left border-right"><button class="btn btn-sm btn-danger" onclick='drop(`+JSON.stringify(registered_courses[key])+`)'>{{__('text.word_drop')}}</button></td>
+                            <td class="border-left border-right"><span class="btn btn-sm btn-danger" onclick='drop(`+JSON.stringify(registered_courses[key])+`)'>{{__('text.word_drop')}}</span></td>
                         </tr>`
                 }
                 $('#course_table').html(html2);
@@ -167,7 +163,7 @@
     }
     
     function add(course) {
-        if(cv_sum + parseInt(course['cv']) > parseInt("{{$cv_total}}")){
+        if((cv_sum + parseInt(course['cv'])) > parseInt("{{$cv_total}}")){
             alert("Can't add this course. Maximum credits can not be exceeded");
             return;
         }

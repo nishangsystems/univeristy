@@ -234,7 +234,7 @@ class HomeController extends Controller
             # code...
             $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year])
                     ->join('subjects', ['subjects.id'=>'student_courses.course_id'])->where(['subjects.semester_id'=>$_semester])
-                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->distinct()->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.coef as status'])->sortBy('name');
+                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.coef as status']);
                     return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
         } catch (\Throwable $th) {
             return $th->getMessage();
