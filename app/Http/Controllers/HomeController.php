@@ -20,6 +20,7 @@ use App\Models\Campus;
 use App\Models\ProgramLevel;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
+use \PDF;
 
 class HomeController extends Controller
 {

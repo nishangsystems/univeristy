@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
+use PDF;
 
 class HomeController extends Controller
 {
@@ -214,13 +215,61 @@ class HomeController extends Controller
         $data['title'] = "Course Registration For " .Helpers::instance()->getSemester(Students::find(auth()->id())->program_id)->name." ".\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
         $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>\App\Helpers\Helpers::instance()->getYear()])->first()->class_id);
         $data['cv_total'] = ProgramLevel::find(auth()->user()->program_id)->program()->first()->max_credit;        
+        
+        $student = auth()->id();
+        $year = Helpers::instance()->getYear();
+        $fee = [
+            'amount' => array_sum(
+                \App\Models\Payments::where('payments.student_id', '=', $student)
+                ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
+                ->where('payment_items.name', '=', 'TUTION')
+                ->where('payments.batch_id', '=', $year)
+                ->pluck('payments.amount')
+                ->toArray()
+            ),
+            'total' => 
+                    \App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                    ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+                    ->where('payment_items.name', '=', 'TUTION')
+                    ->whereNotNull('payment_items.amount')
+                    ->join('students', 'students.program_id', '=', 'program_levels.id')
+                    ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
+            'fraction' => Helpers::instance()->getSemester(auth()->user()->program_id)->courses_min_fee
+        ];
+        $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
+        $data['access'] = $fee['amount'] >= $data['min_fee'];
         return view('student.courses.register', $data);
     }
 
     public function form_b()
     {
         # code...
-        $data['title'] = "Registered Courses";
+        $data['title'] = "Registered Courses ".Helpers::instance()->getSemester(Students::find(auth()->id())->program_id)->name." ".\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
+        $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>\App\Helpers\Helpers::instance()->getYear()])->first()->class_id);
+        $data['cv_total'] = ProgramLevel::find(auth()->user()->program_id)->program()->first()->max_credit;        
+        
+        $student = auth()->id();
+        $year = Helpers::instance()->getYear();
+        $fee = [
+            'amount' => array_sum(
+                \App\Models\Payments::where('payments.student_id', '=', $student)
+                ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
+                ->where('payment_items.name', '=', 'TUTION')
+                ->where('payments.batch_id', '=', $year)
+                ->pluck('payments.amount')
+                ->toArray()
+            ),
+            'total' => 
+                    \App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                    ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+                    ->where('payment_items.name', '=', 'TUTION')
+                    ->whereNotNull('payment_items.amount')
+                    ->join('students', 'students.program_id', '=', 'program_levels.id')
+                    ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
+            'fraction' => Helpers::instance()->getSemester(auth()->user()->program_id)->courses_min_fee
+        ];
+        $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
+        $data['access'] = $fee['amount'] >= $data['min_fee'];
         return view('student.courses.form_b', $data);
     }
 
@@ -234,7 +283,7 @@ class HomeController extends Controller
             # code...
             $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year])
                     ->join('subjects', ['subjects.id'=>'student_courses.course_id'])->where(['subjects.semester_id'=>$_semester])
-                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.coef as status']);
+                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
                     return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -287,6 +336,18 @@ class HomeController extends Controller
             // DB::rollBack();
             return back()->with('error', $th->getFile().' : '.$th->getLine().' :: '.$th->getMessage());
         }
+    }
+    public function download_courses($year, $semester)//takes class course id
+    {
+        # code...
+        $reg = $this->registerd_courses($year, $semester)->getData();
+        $data['cv_sum'] = $reg->cv_sum;
+        $data['courses'] = $reg->courses;
+        $data['user'] = auth()->user();
+        
+        $pdf = PDF::loadView('student.courses.form_b_template',$data);
+        return $pdf->download(auth()->user()->matric.'_FORM-B.pdf');
+        return view('student.courses.form_b_template', $data);
     }
     public function add_course()//takes class course id
     {

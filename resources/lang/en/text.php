@@ -329,4 +329,10 @@ return [
     'word_action'=>'action',
     'sign_course'=>'sign course',
     'view_courses'=>'view courses',
+    'fee_access_phrase'=>'You must pay a minimum fee of :amount to :action. If you have already paid, contact the office',
+    'attempted_credit_value'=>'attempted credit value',
+    'formb_title'=>'registered courses for :semester :year',
+    'download_formb'=>'download form-b',
+    'formb_title2' => 'form b :semester :year',
+    'total_credit_attempted'=>'total credit attempted',
 ];
