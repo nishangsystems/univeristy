@@ -69,7 +69,6 @@
     let class_courses = [];
     let cv_sum = 0;
     let cv_total = parseInt("{{$cv_total}}");
-    alert(cv_total);
 
     $(document).ready(function(){
         loadCourses();
@@ -82,11 +81,11 @@
             method: 'GET',
             url: url,
             success: function(data){
-                console.log(data);
+                // console.log(data);
                 if (data != null) {
                     registered_courses = data.courses;
                     cv_sum = data.cv_sum;
-                    if(parseInt(cv_sum) > parseInt("{{$cv_total}}")){alert("Problem encountered. Maximum credits excceded");}
+                    if(cv_sum > cv_total){alert("Problem encountered. Maximum credits excceded");}
                     let html2 = ``;
                     for (const key in registered_courses) {
                         cv_sum += parseInt(registered_courses[key]['cv']);
@@ -136,7 +135,7 @@
     }
 
     function refresh(){
-        console.log(class_courses);
+        // console.log(class_courses);
 
         let html = ``;
         for (const key in class_courses) {
@@ -153,7 +152,6 @@
 
                 let html2 = ``;
                 for (const key in registered_courses) {
-                    cv_sum += parseInt(registered_courses[key]['cv']);
                     html2 += `<tr class="border-bottom" id="modal-`+registered_courses[key]['id']+`">
                             <input type="hidden" name="courses[]" value="`+registered_courses[key]['id']+`">
                             <td class="border-left border-right">`+registered_courses[key]['code']+`</td>

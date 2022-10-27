@@ -266,20 +266,20 @@ class HomeController extends Controller
         $year = Helpers::instance()->getYear();
         $semester = Helpers::instance()->getSemester(auth()->user()->program_id)->id;
         $user = auth()->id();
-        $vad = Validator::make($request->all(), ['courses'=>'required']);
-        if ($vad->fails()) {
-            return back()->with('error', $vad->errors()->first());
-        }
         try {
+
             // DB::beginTransaction();
             $ids = \App\Models\StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->pluck('id');
             foreach ($ids as $key => $value) {
                 # code...
                 StudentSubject::find($value)->delete();
             }
-            foreach (array_unique($request->courses) as $key => $value) {
+            if ($request->has('courses')) {
                 # code...
-                StudentSubject::create(['year_id'=>$year, 'semester_id'=>$semester, 'student_id'=>$user, 'course_id'=>$value]);
+                foreach (array_unique($request->courses) as $key => $value) {
+                    # code...
+                    StudentSubject::create(['year_id'=>$year, 'semester_id'=>$semester, 'student_id'=>$user, 'course_id'=>$value]);
+                }
             }
             // DB::commit();
             return back()->with('success', "!Done");
