@@ -9,7 +9,7 @@ class ClassSubject extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['class_id', 'coef', 'subject_id'];
+    protected $fillable = ['class_id', 'coef', 'status', 'subject_id'];
 
     public function subject()
     {
@@ -18,7 +18,7 @@ class ClassSubject extends Model
 
     public function class()
     {
-        return $this->belongsTo(SchoolUnits::class, 'class_id');
+        return $this->belongsTo(ProgramLevel::class, 'class_id');
     }
 
     /**

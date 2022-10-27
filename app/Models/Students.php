@@ -16,21 +16,23 @@ class Students extends Authenticatable
         'email',
         'phone',
         'address',
-        'religion',
         'gender',
         'username',
+        'matric',
         'dob',
         'pob',
+        'campus_id',
         'admission_batch_id',
         'password',
-        'type',
         'parent_name',
-        'parent_phone_number'
+        'program_id',
+        'parent_phone_number',
+        'imported'
     ];
 
     public function class($year)
     {
-        return $this->belongsToMany(SchoolUnits::class, 'student_classes', 'student_id', 'class_id')->where('year_id', $year)->first();
+        return CampusProgram::where('campus_id', $this->campus_id)->where('program_level_id', $this->program_id)->first();
     }
 
     public function classes()
@@ -48,10 +50,15 @@ class Students extends Authenticatable
         return $this->hasMany(Payments::class, 'student_id');
     }
 
+    public function campus()
+    {
+        return $this->belongsTo(Campus::class);
+    }
+
     public function total()
     {
 
-        return ($this->class(Helpers::instance()->getYear())->fee());
+        return $this->campus()->first()->campus_programs()->where('program_level_id', $this->program_id)->first()->payment_items()->first()->amount ?? -1;
     }
 
     public function paid()
@@ -65,7 +72,6 @@ class Students extends Authenticatable
         $scholarship = Helpers::instance()->getStudentScholarshipAmount($student_id);
         return $this->total() - $this->paid() - ($scholarship);
     }
-
 
 
     public function totalScore($sequence, $year)

@@ -9,7 +9,7 @@
             <td>{{$student->phone}}</td>
             <td>{{$student->address}}</td>
             <td>{{$student->class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name}}</td>
-            <td class="d-flex justify-content-end align-items-center" >
+            <td class="d-flex justify-content-end align-items-center " >
                 <a class="btn btn-xs btn-primary" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-eye"> Profile</i></a>
                 @if(request('action') != 'class_list')
                     | <a class="btn btn-xs btn-success" href="{{route('admin.student.edit',[$student->id])}}"><i class="fa fa-edit"> Edit</i></a> |

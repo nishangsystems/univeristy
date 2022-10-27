@@ -27,6 +27,8 @@ class User extends Authenticatable
         'username',
         'type',
         'password',
+        'campus_id',
+        'school_id'
     ];
 
     /**
@@ -47,6 +49,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected function campus(){
+        return $this->belongsTo(Campus::class);
+    }
 
     public function subject()
     {

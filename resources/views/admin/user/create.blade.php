@@ -18,14 +18,30 @@
 
 
                 <div class="form-group @error('email') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2">Username (required)</label>
+                    <label for="cname" class="control-label col-lg-2">{{__('text.word_email')}} ({{__('text.word_required')}})</label>
                     <div class="col-lg-10">
-                        <input class=" form-control" name="email" value="{{old('email')}}" type="text" required />
+                        <input class=" form-control" name="email" value="{{old('email')}}" type="email" required />
                         @error('email')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>
+
+                <div class="form-group @error('campus') has-error @enderror">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_campus')}}</label>
+                    <div class="col-lg-10">
+                        <select class=" form-control" name="campus" type="text" required >
+                            <option value="" selected>{{__('text.word_campus')}}</option>
+                            @foreach(\App\Models\Campus::all()  as $cmps)
+                                <option value="{{$cmps->id}}" {{\Auth::user()->campus_id == $cmps->id ? 'selected' : ''}}>{{$cmps->name}}</option>
+                            @endforeach
+                        </select>
+                        @error('campus')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
 
                 <div class="form-group @error('phone') has-error @enderror">
                     <label for="cname" class="control-label col-lg-2">Phone</label>
@@ -60,7 +76,7 @@
                         @enderror
                     </div>
                 </div>
-
+                <input type="hidden" name="type" id="" value="{{request('type') ?? ''}}">
                 <div class="form-group">
                     <div class="col-lg-offset-2 col-lg-10">
                         <button class="btn btn-xs btn-primary" type="submit">Save</button>

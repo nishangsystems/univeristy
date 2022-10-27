@@ -5,141 +5,145 @@
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.student.store')}}">
 
             <input name="type" value="{{request('type','teacher')}}" type="hidden" />
-            <h5 class="mt-5 font-weight-bold">Personal Information</h5>
+            <h5 class="mt-5 font-weight-bold text-capitalize">{{_('text.personal_information')}}</h5>
             @csrf
             <div class="form-group @error('name') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Full Name <span style="color:red">*</span></label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.full_name')}} <span style="color:red">*</span></label>
                 <div class="col-lg-10">
-                    <input class=" form-control" name="name" value="{{old('name')}}" type="text" required />
+                    <input class=" form-control" name="name" type="text" required />
                     @error('name')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
-            <div class="form-group @error('phone') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Phone </label>
+            <div class="form-group @error('matric') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_matricule')}} <span style="color:red">*</span></label>
                 <div class="col-lg-10">
-                    <input class=" form-control" name="phone" value="{{old('phone')}}" type="text"  />
+                    <input class=" form-control" name="matric" value="{{old('matric')}}" type="text" required />
+                    @error('matric')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <?php 
+            /*<div class="form-group @error('email') has-error @enderror">
+                <label for="email" class="control-label col-lg-2 text-capitalize">{{__('text.word_email')}} </label>
+                <div class="col-lg-10">
+                    <input class=" form-control" name="email" value="{{old('email')}}" type="email"  />
+                    @error('email')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>*/
+            ?>
+            <div class="form-group @error('phone') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_phone')}} </label>
+                <div class="col-lg-10">
+                    <input class=" form-control" name="phone" value="{{old('phone')}}" type="tel" required />
                     @error('phone')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
-
             <div class="form-group @error('address') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Address</label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_address')}} </label>
                 <div class="col-lg-10">
-                    <input class=" form-control" name="address" value="{{old('address')}}" type="text" />
+                    <input class=" form-control" name="address" value="{{old('address')}}" type="text"  />
                     @error('address')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
 
-            <div class="form-group @error('address') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Denomination</label>
-                <div class="col-lg-10">
-                    <input class=" form-control" name="religion" value="{{old('religion')}}" type="text" />
-                    @error('religion')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
             <div class="form-group @error('dob') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Date of Birth</label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.date_of_birth')}} </label>
                 <div class="col-lg-10">
-                    <input class=" form-control" name="dob" value="{{old('dob')}}" type="date" />
+                    <input class=" form-control" name="dob" value="{{old('dob')}}" type="date"  />
                     @error('dob')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
-
             <div class="form-group @error('pob') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Place of Birth</label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.place_of_birth')}} </label>
                 <div class="col-lg-10">
-                    <input class=" form-control" name="pob" value="{{old('pob')}}" type="text" />
+                    <input class=" form-control" name="pob" value="{{old('pob')}}" type="text"  />
                     @error('pob')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
-
-            <div class="form-group @error('parent_name') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Parent's Name</label>
-                <div class="col-lg-10">
-                    <input class=" form-control" name="parent_name" value="{{old('parent_name')}}" type="text" />
-                    @error('parent_name')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <div class="form-group @error('parent_phone_number') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Parent's or Guardian Phone Number </label>
-                <div class="col-lg-10">
-                    <input class=" form-control" name="parent_phone_number" value="{{old('parent_phone_number')}}" type="text" />
-                    @error('parent_phone_number')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-
             <div class="form-group @error('gender') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Gender</label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_gender')}} </label>
                 <div class="col-lg-10">
-                    <select class="form-control" name="gender">
-                        <option selected disabled>Select Gender</option>
-                        <option {{old('gender') == 'male'?'selected':''}} value="male">Male</option>
-                        <option {{old('gender') == 'female'?'selected':''}} value="female">Female</option>
+                    <select class=" form-control" name="gender" >
+                        <option value="">{{__('text.word_gender')}}</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
                     </select>
                     @error('gender')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
-
-            <h5 class="mt-5 mb-4 font-weight-bold">Admission Class Information</h5>
-
-
-            <div class="form-group @error('type') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">School Section <span style="color:red">*</span></label>
+            
+            
+            <h5 class="mt-5 mb-4 font-weight-bold text-capitalize">{{__('text.admission_class_information')}}</h5>
+            
+            <div class="form-group @error('year') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.academic_year')}} <span style="color:red">*</span></label>
                 <div class="col-lg-10">
-                    <select class="form-control" name="type" required>
-                        <option selected disabled>Select</option>
-                        <option {{old('type') == 'day'?'selected':''}} value="day">Day Section</option>
-                        <option {{old('type') == 'boarding'?'selected':''}} value="boarding">Boarding Section</option>
+                    <select class=" form-control" name="admission_batch_id" required>
+                        <option value="">select academic year</option>
+                        @forelse(\App\Models\Batch::all() as $batch)
+                            <option {{ \App\Helpers\Helpers::instance()->getCurrentAccademicYear() == $batch->id ? 'selected' : ''}} value="{{$batch->id}}">{{$batch->name}}</option>
+                        @empty
+                            <option value="" selected>No data found</option>
+                        @endforelse
                     </select>
-                    @error('type')
+                    @error('year')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
 
-            <div id="section">
-                <div class="form-group">
-                    <label for="cname" class="control-label col-lg-2">Section <span style="color:red">*</span></label>
-                    <div class="col-lg-10">
-                        <div>
-                            <select name="section" class="form-control section" id="section0" required>
-                                <option selected disabled>Select Section</option>
-                                @if(isset($options))
-                                    @foreach($options as $key => $option)
-                                        <option value="{{$key}}">{{$option}}</option>
-                                    @endforeach
-                                @else
-                                    <option>No Sections Created</option>
-                                @endif
-                            </select>
-                            <div class="children"></div>
-                        </div>
-                    </div>
+            <div class="form-group @error('campus_id') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_campus')}} </label>
+                <div class="col-lg-10">
+                    @if(\Auth::user()->campus_id != null)
+                    <input type="hidden" name="campus_id" id="" value="{{\Auth::user()->campus_id}}">
+                    @endif
+                    <select name="campus_id" class="form-control" id="campus_id" onchange="loadPrograms(event.target)" {{ \Auth::user()->campus_id != null ? 'disabled' : ''}}>
+                        <option value="">select campus</option>
+                        @forelse(\App\Models\Campus::all() as $campus)
+                            <option value="{{$campus->id}}" {{ \Auth::user()->campus_id == $campus->id ? 'selected' : ''}}>{{$campus->name}}</option>
+                        @empty
+                            <option value="" selected>No data found</option>
+                        @endforelse
+                    </select>
+                    @error('year')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
 
+            <div class="form-group @error('program_id') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_program')}}</label>
+                <div class="col-lg-10">
+                    <select class=" form-control" name="program_id" id="program_id" required>
+                    </select>
+                    @error('program_id')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
+            
+           
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
-                    <button id="save" class="btn btn-xs btn-primary mx-3" style="display: block" type="submit">Save</button>
-                    <a class="btn btn-xs btn-danger" href="{{route('admin.users.index')}}" type="button">Cancel</a>
+                    <button id="save" class="btn btn-xs btn-primary mx-3" style="display: block" type="submit">{{__('text.word_save')}}</button>
+                    <a class="btn btn-xs btn-danger" href="{{route('admin.users.index')}}" type="button">{{__('text.word_cancel')}}</a>
                 </div>
             </div>
 
@@ -149,42 +153,32 @@
 @endsection
 
 @section('script')
-<!-- <script>
-    $('.section').on('change', function() {
-        refresh($(this));
-    })
+<script>
+    $(document).ready(function(){
+        loadPrograms(document.getElementById('campus_id'));
+    });
 
-    function refresh(div) {
-        $(".pre-loader").css("display", "block");
-        url = "{{route('section-children', "+
-        VALUE +")}}";
-        url = url.replace('VALUE', div.val());
+    function loadPrograms(element){
+        let val = element.value;
+        url = "{{route('campus.programs', ['__V__'])}}";
+        url =url.replace('__V__', val);
         $.ajax({
-            type: "GET",
+            method: 'get',
             url: url,
-            success: function(data) {
-                $(".pre-loader").css("display", "none");
-                let html = "";
-                if (data.valid == 1) {
-                    $('#save').css("display", "block");
-                } else {
-                    $('#save').css("display", "none");
-                }
-                if (data.array.length > 0) {
-                    html += '<div class="mt-3"><select onchange="refresh($(this))" class="form-control section" name="' + data.name + '">';
-                    html += '<option selected > Select ' + data.name + '</option>';
-                    for (i = 0; i < data.array.length; i++) {
-                        html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
-                    }
-                    html += '</select>' +
-                        '<div class="children"></div></div>';
-                }
-                div.parent().find('.children').html(html)
-            },
-            error: function(e) {
-                $(".pre-loader").css("display", "none");
+            success: function(data){
+                data.sort((a, b)=>{
+                    if (a.program > b.program) { return 1;}
+                    if (a.program < b.program) { return -1;}
+                    return 0;
+                })
+                let options = `<option value="">{{__('text.select_program')}}</option>`;
+                data.forEach(element => {
+                    console.log(element);
+                    options += `<option value="`+element.id+`">`+element.program+` : Level `+element.level+`</option>`;
+                });
+                $('#program_id').html(options);
             }
-        });
+        })
     }
-</script> -->
+</script>
 @endsection

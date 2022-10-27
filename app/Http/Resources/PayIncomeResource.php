@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Campus;
+use App\Models\ProgramLevel;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PayIncomeResource extends JsonResource
@@ -18,10 +20,11 @@ class PayIncomeResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'matric' => $this->matric,
-            'class_name' => $this->class_name,
-            'class_id' => $this->class_id,
+            'class' => ProgramLevel::find($this->program_id)->program()->first()->name .' : LEVEL '.ProgramLevel::find($this->program_id)->level()->first()->level,
+            'campus' => Campus::find($this->campus_id)->name,
+            'campus_id' => $this->campus_id,
             'gender' => $this->gender,
-            'link' => route('admin.income.pay_income.collect', [$this->class_id, $this->id]),
+            'link' => route('admin.income.pay_income.collect', [$this->program_id, $this->id]),
             'link2' => route('admin.scholarship.award', $this->id)
         ];
     }

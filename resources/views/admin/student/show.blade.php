@@ -40,7 +40,7 @@
             <div class="profile-user-info profile-user-info-striped mx-0">
 
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Gender</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.word_gender')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->gender}}</span>
@@ -48,56 +48,56 @@
                 </div>
 
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Email</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.word_email')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->email}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Address</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.word_address')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->address}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Date of Birth</div>
+                    <div class="profile-info-name text-capitalize">{{__('text.date_of_birth')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->dob}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Place of Birth</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.place_of_birth')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->pob}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Contact</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.word_contact')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->phone}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Parent or Guardian Name</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.phrase_10')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->parent_name}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
-                    <div class="profile-info-name">Parent or Guardian Phone Number</div>
+                    <div class="profile-info-name text-capitalize">{{__('text.phrase_8')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->parent_phone_number}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Class</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.word_class')}}</div>
 
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$user->class(Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->name}}</span>
@@ -105,13 +105,13 @@
                 </div>
 
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Section</div>
+                    <div class="profile-info-name text-capitalize"> {{__('text.word_section')}}</div>
 
-                    <div class="profile-info-value">
+                    <div class="profile-info-value text-capitalize">
                         @if($user->type == 'day')
-                        <span class="editable" id="username"> Day Section</span>
+                        <span class="editable" id="username"> {{__('text.day_section')}}</span>
                         @else
-                        <span class="editable" id="username"> Boarding Section</span>
+                        <span class="editable" id="username"> {{__('text.boarding_section')}}</span>
                         @endif
                     </div>
                 </div>

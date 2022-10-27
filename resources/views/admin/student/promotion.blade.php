@@ -3,26 +3,26 @@
 <div class="container-fluid h-screen d-flex flex-column justify-content-center">
     <div class="w-100 d-block py-3  rounded-lg bg-light">
             <h2 class="my-3 text-dark fw-bolder text-center w-100">{{$title}}</h2>
-            <div class="w-100 py-2 d-md-flex">
+            <div class="w-100 py-2 d-md-flex text-capitalize">
                 <div class="w-50 px-4">
-                    <h3 class="py-1 fw-bold text-dark">Academic Year</h3>
+                    <h3 class="py-1 fw-bold text-dark">{{__('text.academic_year')}}</h3>
                     <div class="form-group w-100 py-1">
-                        <label for="year_from" class="text-secondary">From:</label>
+                        <label for="year_from" class="text-secondary">{{__('text.word_from')}}:</label>
                         <span id="" class="form-control text-dark rounded">{{\App\Models\Batch::find($request->year_from)->name}}</span>
                     </div>
                     <div class="form-group w-100 py-1">
-                        <label for="year_to" class="text-secondary">To:</label>
+                        <label for="year_to" class="text-secondary">{{__('text.word_to')}}:</label>
                         <span id="" class="form-control text-dark rounded">{{\App\Models\Batch::find($request->year_to)->name}}</span>
                     </div>
                 </div>
                 <div class="w-50 px-4">
-                    <h3 class="py-1 fw-bold text-dark">Class</h3>
+                    <h3 class="py-1 fw-bold text-dark">{{__('text.word_class')}}</h3>
                     <div class="form-group w-100 py-1">
-                        <label for="class_from" class="text-secondary">From:</label>
+                        <label for="class_from" class="text-secondary">{{__('text.word_from')}}:</label>
                         <span id="" class="form-control text-dark rounded">{{$classes['cf']['name']}}</span>
                     </div>
                     <div class="form-group w-100 py-1">
-                        <label for="class_to" class="text-secondary">To:</label>
+                        <label for="class_to" class="text-secondary">{{__('text.word_to')}}:</label>
                         <span id="" class="form-control text-dark rounded">{{$classes['ct']['name']}}</span>
                     </div>
                 </div>
@@ -40,24 +40,24 @@
         <div class="w-100 py-2">
             <div class="d-flex justify-content-center align-moddle">
                 <div class="mx-4">
-                    <label for="total" class="text-secondary">Total:</label>
+                    <label for="total" class="text-secondary text-capitalize">{{__('text.word_total')}}:</label>
                     <span class="text-dark fw-bold fs-3" id="student-total">{{count($students)}}</span>
                 </div>
                 <div class="mx-4">
-                    <label for="total" class="text-secondary">Selected:</label>
+                    <label for="total" class="text-secondary text-capitalize">{{__('text.word_selected')}}:</label>
                     <span class="text-dark fw-bold fs-3" id="selected">-</span>
                 </div>
             </div>
             <div class="w-100">
                 
                 <table class="w-100 table-striped">
-                    <thead class="w-100 bg-secondary text-light">
-                        <th class="border-left border-right"><input type="checkbox" value="1" id="checkall" onchange="updateSelection(event)"><span>all</span></th>
-                        <th class="border-left border-right">S/N</th>
+                    <thead class="w-100 bg-secondary text-light text-capitalize">
+                        <th class="border-left border-right"><input type="checkbox" value="1" id="checkall" onchange="updateSelection(event)"><span>{{__('text.word_all')}}</span></th>
+                        <th class="border-left border-right">{{__('text.sn')}}</th>
                         <!-- <th class="border-left border-right">Matric</th> -->
-                        <th class="border-left border-right">Name</th>
-                        <th class="border-left border-right">Email</th>
-                        <th class="border-left border-right">Average</th>
+                        <th class="border-left border-right">{{__('text.word_name')}}</th>
+                        <th class="border-left border-right">{{__('text.word_email')}}</th>
+                        <th class="border-left border-right">{{__('text.word_average')}}</th>
                         @php $sn = 0; @endphp
                     </thead>
                     <tbody>
@@ -68,7 +68,7 @@
                             <!-- <td class="border-left border-right"><span>{{$student->matric}}</span></td> -->
                             <td class="border-left border-right"><span>{{$student->name}}</span></td>
                             <td class="border-left border-right"><span>{{$student->email}}</span></td>
-                            <td class="border-left border-right"><span onload="getAverage(this, '{{$student->id}}')">student av</span></td>
+                            <td class="border-left border-right"><span onload="getAverage(this, '{{$student->id}}')">--</span></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -76,7 +76,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary mx-4 my-2">promote</button>
+            <button type="submit" class="btn btn-primary mx-4 my-2">{{__('text.word_promote')}}</button>
         </div>
     </form>
 </div>

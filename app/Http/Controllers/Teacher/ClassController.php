@@ -9,6 +9,7 @@ use App\Models\Term;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use \Session;
 
 class ClassController extends Controller
@@ -16,6 +17,7 @@ class ClassController extends Controller
 
     public function index()
     {
+        $data['options'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
         if (\request('type') == 'master') {
             $data['classes'] = ClassMaster::where('batch_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->where('user_id', Auth::user()->id)->get();
             return view('teacher.class_master')->with($data);
@@ -42,8 +44,18 @@ class ClassController extends Controller
         $class = SchoolUnits::find($class_id);
         $data['class'] = $class;
 
-        $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
+        // $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
+        $data['students'] = DB::table('student_classes')->where('class_id', '=', $class_id)
+                ->where('year_id', '=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
+                ->join('students', 'students.id', '=', 'student_classes.student_id')
+                ->get('students.*');
         return view('teacher.student')->with($data);
+    }
+
+    public function master_sheet(Request $request)
+    {
+        # code...
+        return view('teacher.master_sheet');
     }
 
     public function student($student_id)

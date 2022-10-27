@@ -4,7 +4,7 @@
 <div class="col-sm-12">
 
     <div class="my-3">
-        <input class="form-control" id="search" placeholder="Search Student by Name or Matricule" required name="student_id" />
+        <input class="form-control" id="search" placeholder="{{__('text.place_holder1')}}" required name="student_id" />
     </div>
 
 
@@ -12,11 +12,11 @@
         <div class="table-responsive">
             <table class="table-bordered">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Matricule</th>
-                        <th>Class</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_matricule')}}</th>
+                        <th>{{__('text.word_class')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -33,7 +33,7 @@
 <script>
     $('#search').on('keyup', function() {
         val = $(this).val();
-        url = "{{route('getStudentBoarder', "VALUE")}}";
+        url = "{{route('getStudentBoarder', 'VALUE')}}";
         search_url = url.replace('VALUE', val);
         $.ajax({
             type: 'GET',

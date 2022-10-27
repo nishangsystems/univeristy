@@ -7,6 +7,7 @@ use App\Models\ClassMaster;
 use App\Models\TeachersSubject;
 use App\Option;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Session;
 
@@ -19,24 +20,34 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if(\request('role')){
-            $data['title'] = "Role ( ".\App\Models\Role::whereSlug(\request('role'))->first()->name." ) Users";
-            $data['users'] =\App\Models\Role::whereSlug(\request('role'))->first()->users()->paginate(15);
+        if(\request()->has('role') || \request()->has('type')){
+            $data['type'] = \request('role') ? \request('role') : \request('type');
+            $data['title'] = "Role ".($data['type'] ?? " Users");
+            if(\request()->has('role')){
+                $data['users'] = DB::table('roles')->where('slug', '=', $request->role)
+                    ->join('users_roles', 'users_roles.role_id', '=', 'roles.id')
+                    ->join('users', 'users.id', '=', 'users_roles.user_id')
+                    ->get('users.*');
+            }else{
+                $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
+            }
             return view('admin.user.index')->with($data);
         }else if(\request('permission')){
-            $data['title'] = "Permission ( ".\App\Models\Permission::whereSlug(\request('permission'))->first()->name." ) Users";
+            $data['type'] = \App\Models\Permission::whereSlug(\request('permission'))->first()->name;
+            $data['title'] = "Permission ".($data['type'] ?? "Users");
             $data['users'] =\App\Models\Permission::whereSlug(\request('permission'))->first()->users()->paginate(15);
             return view('admin.user.index')->with($data);
         }else{
+            $data['type'] = request('teacher', 'user');
             $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
-            $data['title'] = "Manage " . request('teacher', 'user') . 's';
+            $data['title'] = "Manage " . $data['type']. 's';
             return view('admin.user.index')->with($data);
         }
     }
 
     public function create(Request $request)
     {
-        $data['title'] = "Add User";
+        $data['title'] = "Add ".(request('type') ?? "User");
         return view('admin.user.create')->with($data);
     }
 
@@ -50,9 +61,10 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|unique:users',
+            'email' => 'required|unique:users|email',
             'phone' => 'required',
             'address' => 'nullable',
+            'campus' => 'nullable',
             'gender' => 'required',
             'type' => 'required',
         ]);
@@ -60,9 +72,22 @@ class UserController extends Controller
         $input = $request->all();
         $input['password'] = Hash::make('password');
         $input['username'] = $request->email;
-        $user = \App\Models\User::create($input);
+        $input['campus_id'] = $request->campus ?? null;
+        if($request->type == "teacher"){
+            $input['type'] = "teacher";
+        }else{
+            $input['type'] = "admin";
+        }
+        $user = new \App\Models\User($input);
+        $user->save();
+        if($request->type != "teacher"){
+            $user_role = new \App\Models\UserRole();
+            $user_role->role_id = DB::table('roles')->where('slug', '=', $request->type)->first()->id;
+            $user_role->user_id = $user->id;
+            $user_role->save();
+        }
 
-        return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('success', "User Created Successfully !");
+        return redirect()->to(route('admin.users.index', [$request->type=='teacher' ? 'type' : 'role' =>$request->type]))->with('success', "User Created Successfully !");
     }
 
     /**
@@ -127,7 +152,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = \App\Models\User::find($id);
-        if (\Auth::user()->id == $id || \Auth::user()->id == 1) {
+        if (\Auth::user()->id == $id || \Auth::user()->id != 1) {
             return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('error', "User can't be deleted");
         }
         $user->delete();
@@ -139,6 +164,7 @@ class UserController extends Controller
     {
         $data['user'] = \App\Models\User::find($id);
         $data['title'] = "Assign Subject to " . $data['user']->name;
+        $data['classes'] = StudentController::baseClasses();
         return view('admin.user.assignSubject')->with($data);
     }
 
@@ -152,6 +178,7 @@ class UserController extends Controller
     public function classmasterCreate()
     {
         $data['title'] = "Assign Class Master";
+        $data['classes'] = StudentController::baseClasses();
         $data['units'] = \App\Models\SchoolUnits::where('parent_id', 0)->get();
         return view('admin.user.create_classmaster')->with($data);
     }

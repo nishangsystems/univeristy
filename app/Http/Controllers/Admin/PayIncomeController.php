@@ -18,6 +18,8 @@ class PayIncomeController extends Controller
 
     private $select = [
         'students.id',
+        'students.campus_id',
+        'student_classes.class_id',
         'pay_incomes.id as pay_income_id',
         'students.name as student_name',
         'incomes.name as income_name',
@@ -35,9 +37,14 @@ class PayIncomeController extends Controller
         $data['pay_incomes'] = DB::table('pay_incomes')
             ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
             ->join('students', 'students.id', '=', 'pay_incomes.student_id')
-            ->join('school_units', 'school_units.id', '=', 'pay_incomes.class_id')
+            ->join('student_classes', 'student_classes.student_id', '=', 'students.id')
+            ->where('student_classes.year_id', '=', $batch_id)
+            ->where(function($query){
+                auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+            })
+            // ->join('school_units', 'school_units.id', '=', 'pay_incomes.class_id')
             ->where('pay_incomes.batch_id', $batch_id)
-            ->select($this->select)
+            ->select($this->select)->distinct()
             ->paginate(5);
         $data['title'] = 'Pay Incomes';
         $data['years'] = Batch::all();
@@ -46,7 +53,30 @@ class PayIncomeController extends Controller
         return view('admin.payIncome.index')->with($data);
     }
 
-
+    public function print($student_id, $pay_income_id)
+    {
+        $reselect = [
+            'students.id',
+            'pay_incomes.id as pay_income_id',
+            'pay_incomes.created_at as created_at',
+            'students.name as student_name',
+            'incomes.name as income_name',
+            'incomes.amount',
+        ];
+        $batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
+        $data['reciept'] = DB::table('pay_incomes')
+            ->where('pay_incomes.id', '=', $pay_income_id)
+            ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
+            ->join('students', 'students.id', '=', 'pay_incomes.student_id')
+            ->where('students.id', '=', $student_id)
+            ->join('school_units', 'school_units.id', '=', 'pay_incomes.class_id')
+            ->where('pay_incomes.batch_id', $batch_id)
+            ->select($reselect)
+            ->first();
+   
+        // dd($data);
+        return view('admin.payIncome.print')->with($data);
+    }
 
 
     /**
@@ -91,18 +121,43 @@ class PayIncomeController extends Controller
     /**
      * get student by name or matricule
      */
-    public function searchStudent($name)
+    public function get_searchStudent()
     {
-
+        $name = request('name');
         $students = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
-            ->where('students.name', 'like', '%' . $name . '%')
-            ->orWhere('students.matric', 'like', $name . '%')
-            ->select('students.id',  'students.name', 'students.matric', 'students.gender', 'school_units.name as class_name', 'school_units.id as class_id')->get();
+            ->distinct()
+            ->where(function($query)use($name){
+                $query->where('students.name', 'like', "%{$name}%")
+                ->orWhere('students.matric', 'like', "%{$name}%");
+            })
+            ->where(function($query){
+                    auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+                })
+            // ->where(function($query){
+            //     auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id): null;
+            // })
+            ->select('students.*')->get();
 
         return response()->json(['data' => PayIncomeResource::collection($students)]);
     }
+    // public function searchStudent($name)
+    // {
+    //     $students = DB::table('student_classes')
+    //         ->join('students', 'students.id', '=', 'student_classes.student_id')
+    //         ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
+    //         ->where(function($query)use($name){
+    //             $query->where('students.name', 'like', "%{$name}%")
+    //             ->orWhere('students.matric', '=', $name);
+    //         })
+    //         ->where(function($query){
+    //             auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+    //         })
+    //         ->select('students.*')->get();
+
+    //     return response()->json(['data' => PayIncomeResource::collection($students)]);
+    // }
 
 
 
@@ -140,9 +195,6 @@ class PayIncomeController extends Controller
         return $student;
     }
 
-
-
-
     /**
      * store paid income
      * @param int $class_id
@@ -165,14 +217,11 @@ class PayIncomeController extends Controller
             'income_id' => $validate_data['income_id'],
             'batch_id' => $validate_data['batch_id'],
             'class_id' => $class_id,
-            'student_id' => $student_id
+            'student_id' => $student_id,
+            'user_id' => auth()->user()->id
         ]);
         return redirect()->route('admin.pay_income.index')->with('success', 'Payed Income successfully');
     }
-
-
-
-
 
     /**
      * get all sections of parent
@@ -180,12 +229,9 @@ class PayIncomeController extends Controller
      */
     public function getSections($id)
     {
-        $sections = SchoolUnits::where('parent_id', $id)->get()->toArray();
+        $sections = SchoolUnits::where('parent_id', $id)->orderBy('name', 'ASC')->get()->toArray();
         return response()->json(['data' => $sections]);
     }
-
-
-
 
     /**
      * get all classes of a section
@@ -207,5 +253,12 @@ class PayIncomeController extends Controller
     {
         $school_unit = SchoolUnits::where('id', $id)->pluck('name')[0];
         return $school_unit;
+    }
+
+    public function delete_income($student_id, $pay_income_id)
+    {
+        # code...
+        PayIncome::find($pay_income_id)->delete();
+        return back()->with('success', 'Done');
     }
 }

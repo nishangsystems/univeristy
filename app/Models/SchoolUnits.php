@@ -16,6 +16,7 @@ class SchoolUnits extends Model
         'name',
         'unit_id',
         'parent_id',
+
     ];
 
     public function getParentKeyName()
@@ -37,6 +38,10 @@ class SchoolUnits extends Model
     {
         return $this->belongsToMany(Students::class, 'student_classes', 'class_id', 'student_id')->where('year_id', $year);
     }
+    // public function students($year)
+    // {
+    //     return $this->hasManyThrough(Students::class, StudentClass::class, 'class_id', 'student_id')->where('year_id', $year);
+    // }
 
 
     public function subjects()
@@ -85,5 +90,20 @@ class SchoolUnits extends Model
 
     public function parent(){
         return $this->hasMany(BoardingFee::class, 'parent_id');
+    }
+
+    public function semesters()
+    {
+        return $this->hasMany(Semester::class, 'background_id');
+    }
+
+    public function programLevels()
+    {
+        return $this->hasManyThrough(Level::class, ProgramLevel::class);
+    }
+
+    public function background()
+    {
+        return $this->belongsTo(Background::class);
     }
 }

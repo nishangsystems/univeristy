@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Stringable;
+use phpDocumentor\Reflection\Types\Self_;
 use Prophecy\Util\StringUtil;
 
 use function PHPUnit\Framework\stringStartsWith;
@@ -41,21 +42,28 @@ class StudentController extends Controller
     }
     public function index()
     {
-        $curent_year = substr($this->year, 5);
+        $curent_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
         $data['title'] = 'Manage Students';
         $data['school_units'] = DB::table('school_units')->where('parent_id', 0)->get()->toArray();
         $data['years'] = $this->years;
         // $data['students'] = DB::table('students')->whereYear('students.created_at', $curent_year)->get()->toArray();
-        $data['students'] = Students::all();
+        $data['students'] = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')->where('student_classes.year_id', '=', $curent_year)->get(['students.*', 'student_classes.class_id']);
         return view('admin.student.index')->with($data);
     }
     public function getStudentsPerClass(Request $request)
     {
+        // return $request->all();
         $type = $this->CheckoutSchoolType($request);
         $data['school_units'] = DB::table('school_units')->where('parent_id', 0)->get()->toArray();
         $data['years'] = $this->years;
         $class_name =  DB::table('school_units')->where('id', $request->class_id)->pluck('name')->first();
-        $data['title'] = 'Manage Students Under ' .  $type . ' in ' . $class_name;
+        
+        $data['title'] = 'Manage Students Under '.$type.' in '.$class_name;
+        $success = $request->type != null ? $request->type.' ' : '';
+        $success .= $request->circle != null ? \App\Models\SchoolUnits::find($request->circle)->name .' ' : '';
+        $success .= $request->class_id != null ? Self::baseClasses()[$request->class_id].' ' : '';
+        $success .= $request->batch_id != null ? 'For '.\App\Models\Batch::find($request->batch_id)->name.' ': '';
+        $success .= $request->class != null ? ' in ' . $class_name : '';
         $data['students'] = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
@@ -63,7 +71,7 @@ class StudentController extends Controller
             ->where('school_units.id', $request->class_id)
             ->where('students.type', $request->type)
             ->select($this->select)->paginate(15);
-        return view('admin.student.index')->with($data);
+        return view('admin.student.index')->with($data)->with('success', $success);
     }
     private function CheckoutSchoolType($request)
     {
@@ -81,7 +89,7 @@ class StudentController extends Controller
         # code...
         // added by Germanus. Loads listing of all classes accross all sections in a given school
         
-        $base_units = DB::table('school_units')->where('parent_id', '>', 0)->get();
+        $base_units = DB::table('school_units')->get();
     
         // return $base_units;
         $listing = [];
@@ -90,7 +98,7 @@ class StudentController extends Controller
         foreach ($base_units as $key => $value) {
             # code...
             // set current parent as key and name as value, appending from the parent_array
-            if (array_key_exists($value->parent_id, $listing)) {
+            if (array_key_exists($value->parent_id, $listing) ) {
                 $listing[$value->id] = $listing[$value->parent_id] . $separator . $value->name; 
             }else {$listing[$value->id] = $value->name;}
     
@@ -109,9 +117,74 @@ class StudentController extends Controller
             }
             // if unit has no child, add to options
             if ($base_units->where('parent_id', '=', $value->id)->count() == 0) {
-                $options[$value->id] = $listing[$value->id];
+                $options[$value->id] = '';
+
+                // remove second highest child before adding
+                // $options[$value->id] = mb_split(':', $listing[$value->id]); old format with complete hierarchy
+                $split = mb_split(':', $listing[$value->id]);
+                foreach ($split as $i => $word) {
+                    # code...
+                    if($i != 1)
+                    $options[$value->id] .= ' : '.$word;
+                }
+                $options[$value->id] = substr($options[$value->id], 2);
+
             }
+
         }
+
+        return $options;
+    }
+
+    public static function baseClasses()
+    {
+             # code...
+        // added by Germanus. Loads listing of all classes accross all sections in a given school
+        
+        $base_units = DB::table('school_units')->get();
+    
+        // return $base_units;
+        $listing = [];
+        $options = [];
+        $separator = ' : ';
+        foreach ($base_units as $key => $value) {
+            # code...
+            // set current parent as key and name as value, appending from the parent_array
+            if (array_key_exists($value->parent_id, $listing) ) {
+                $listing[$value->id] = $listing[$value->parent_id] . $separator . $value->name; 
+            }else {$listing[$value->id] = $value->name;}
+    
+            // atatch parent units if there be any
+            if ($base_units->where('id', '=', $value->parent_id)->count() > 0) {
+                // return $base_units->where('id', '=', $value->parent_id)->pluck('name')[0];
+                $listing[$value->id] = array_key_exists($value->parent_id, $listing) ? 
+                $listing[$value->parent_id] . $separator . $value->name :
+                $base_units->where('id', '=', $value->parent_id)->pluck('name')[0] . $separator . $value->name ;
+            }
+            // if children are obove, move over and prepend to children listing
+            foreach ($base_units->where('parent_id', '=', $value->id) as $keyi => $valuei) {
+                $value->id > $valuei->id ?
+                $listing[$valuei->id] = $listing[$value->id] . $separator . $listing[$value->id]:
+                null;
+            }
+            // if unit has no child, add to options
+            if ($base_units->where('parent_id', '=', $value->id)->count() == 0) {
+                $options[$value->id] = '';
+
+                // remove second highest child before adding
+                // $options[$value->id] = mb_split(':', $listing[$value->id]); old format with complete hierarchy
+                $split = mb_split(':', $listing[$value->id]);
+                foreach ($split as $i => $word) {
+                    # code...
+                    if($i != 1)
+                    $options[$value->id] .= ' : '.$word;
+                }
+                $options[$value->id] = substr($options[$value->id], 2);
+
+            }
+
+        }
+
         return $options;
     }
 
@@ -133,85 +206,72 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
+
         // return $request->all();
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'phone' => 'regex:/^([0-9\s\-\+\(\)]*)$/',
-            'address' => 'nullable',
-            'religion' => 'nullable',
-            'gender' => 'nullable',
-            'section' => 'required',
-            'type'  => 'required|string',
-            'dob' => 'nullable|date',
-            'pob' => 'nullable|string',
-            'parent_name' => 'nullable|string',
-            'parent_phone_number' => 'nulla|unique:students|regex:/^([0-9\s\-\+\(\)]*)$/'
+            'matric' => 'required',
+            'admission_batch_id' => 'required',
+            'campus_id' => 'required',
+            'program_id'=>'required',
         ]);
         try {
-            DB::beginTransaction();
-            // read user input
-            $input = $request->all();
-            $input['password'] = Hash::make('password');
-            // create a student
-            $student = \App\Models\Students::create($input);
-            // create student class
-            $class = StudentClass::create([
-                'student_id' => $student->id,
-                'class_id' => $request->section,
-                'year_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
-            ]);
-
-            // create student matricule with the given section ID
-            // first check if section has prefix and/ot suffix
-            $unit = \App\Models\SchoolUnits::find($request->section);
-            if ($unit->prefix == null ) {
-                # code...
-                return back()->with('error', "Sorry prefix not set. Go to Settings Zone > Manage sections to set prefix");
+            if(Students::where('matric', $request->matric)->count() == 0){
+                // return $request->all();
+                DB::beginTransaction();
+                // read user input
+                $input = $request->all();
+                $input['name'] = mb_convert_case($request->name, MB_CASE_UPPER);
+                $input['password'] = Hash::make('password');
+                // create a student
+                // $input['matric'] = $this->getNextAvailableMatricule($request->section);
+                $student = new \App\Models\Students($input);
+                $student->save();
+                // dd($student);
+                // create student class (check to be sure student class doesn't already exist for current academic year before creating one)
+                $classes = StudentClass::where(['student_id' => $student->id])
+                    ->where(['class_id' => $request->program_id])
+                    ->where(['year_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()]);
+                
+                $classes->count() == 0 ?
+                StudentClass::create([
+                    'student_id' => $student->id,
+                    'class_id' => $request->program_id,
+                    'year_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
+                ]):null;
+    
+                DB::commit();
+                return redirect()->to(route('admin.students.index', $request->program_id))->with('success', "Student saved successfully !");
             }
-            if ($unit->suffix == null) {
-                # code...
-                return back()->with('error', "Sorry, suffix not set. Go to Settings Zone > Manage sections to set suffix");
+            else {
+                return back()->with('error', 'User with matricule '.$request->matric.' already exist');
             }
-            // get the first part of matric
-            $academic_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
-            $matric = $unit->prefix . substr($academic_year_name, 2, 2) . $unit->suffix;
-         
-            // get the highest available matric for this class
-            $mats = DB::table('student_classes')
-                    ->where('class_id', '=', $request->section)
-                    ->join('students', 'students.id', '=', 'student_classes.student_id')
-                    ->whereNotNull('matric')
-                    ->distinct()
-                    ->orderByDesc('students.matric')
-                    ->get('matric');
-
-                    if (count($mats) == null) {
-                        # code...
-                        $mats[0] = $matric.'000';
-                        
-                    }
-                    else {
-                        $mats = $mats->pluck('matric')->toArray();
-                }
-
-                // extract last 3 digits; serial number, increment and append to class matric template
-                $matric_end = (int)substr($mats[0], -3) + 1;
-                while (strlen($matric_end)<3) {
-                    # code...
-                $matric_end = '0'.$matric_end;
-                }
-                $matric .= $matric_end;
-
-
-            // set student matric
-            $student->matric = $matric;
-            $student->admission_batch_id = $class->id;
-            $student->save();
-            DB::commit();
-            return redirect()->to(route('admin.students.index', $request->section))->with('success', "Student saved successfully !");
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e;
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function getNextAvailableMatricule($section)
+    {
+        $unit = \App\Models\SchoolUnits::find($section);
+        $academic_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
+        $matric_template = $unit->prefix . substr($academic_year_name, 2, 2) . $unit->suffix;
+
+        $last_matric = DB::table('students')
+                        ->whereRaw('students.matric like "'.$matric_template.'%"')
+                        ->orderBy('matric', 'desc')
+                        ->first();
+
+        if($last_matric){
+            $next = ((int)substr($last_matric->matric, -3, 3)) + 1;
+            while(strlen($next) < 3){
+                $next = '0'.$next;
+            }
+            return substr($last_matric->matric, 0, -3).$next;
+        }
+        else {
+            return $matric_template.'001';
         }
     }
 
@@ -238,6 +298,7 @@ class StudentController extends Controller
     {
         $data['title'] = "Edit Student Profile";
         $data['student'] = \App\Models\Students::find($id);
+        $data['classes'] = $this->getBaseClasses();
         return view('admin.student.edit')->with($data);
     }
 
@@ -253,21 +314,20 @@ class StudentController extends Controller
 
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'nullable',
             'phone' => 'nullable',
             'address' => 'nullable',
             'gender' => 'nullable',
-            'section' => 'required',
-            'type' => 'required',
-            'religion' => 'nullable'
+            'program_id' => 'required',
+            'matric' => 'required',
         ]);
-        try {
+        try {       
+
             DB::beginTransaction();
             $input = $request->all();
             $student = Students::find($id);
             $student->update($input);
             $class = StudentClass::where('student_id', $student->id)->where('year_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->first();
-            $class->class_id = $request->section;
+            $class->class_id = $request->program_id;
             $class->save();
             DB::commit();
             return redirect()->back()->with('success', "Student saved successfully !");
@@ -286,7 +346,9 @@ class StudentController extends Controller
     public function destroy($id)
     {
         $student = Students::find($id);
-        if ($student->classes->count() > 1 || $student->result->count() > 0 || $student->payment->count() > 0) {
+        if ($student->classes->count() > 1 
+        || $student->result->count() > 0
+         || $student->payment) {
             return redirect()->back()->with('error', "Student cant be deleted !");
         }
         $student->classes->first()->delete();
@@ -298,6 +360,38 @@ class StudentController extends Controller
     {
         $data['title'] = "Import Student";
         return view('admin.student.import')->with($data);
+    }
+
+    public function clearStudents(Request $request)
+    {
+        $this->validate($request, [
+            'class'=>'required',
+            'year'=>'required'
+        ]);
+        try {
+            DB::beginTransaction();
+            //code...
+            $ids = \App\Models\StudentClass::where(['student_classes.year_id' => $request->year])
+                    ->where(['student_classes.class_id' => $request->class])
+                    ->join('students', ['students.id' => 'student_classes.student_id'])
+                    ->where(['students.imported'=>1])
+                    ->where(function($q)use($request){
+                        $request->has('campus') ? $q->where(['students.campus_id' => $request->campus]) : null;
+                    })
+                    ->get(['students.id as student', 'student_classes.id as class']);
+            foreach ($ids as $key => $value) {
+                # code...
+                Students::find($value->student)->delete();
+                StudentClass::find($value->class)->delete();
+            };
+
+            DB::commit();
+            return redirect()->to(route('admin.students.index', $request->class))->with('success', "Student saved successfully !");
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
     }
 
     public  function matric()
@@ -328,11 +422,20 @@ class StudentController extends Controller
     public  function importPost(Request  $request)
     {
         // Validate request
-        $request->validate([
+        $validate = Validator::make($request->all(), [
             'batch' => 'required',
-            'file' => 'required|mimes:csv,txt,xlxs',
-            'section' => 'required',
+            'file' => 'required',
+            'campus_id' => 'required',
+            'program_id'=> 'required'
         ]);
+
+        if ($validate->fails()) {
+            # code...
+            return back()->with('error', $validate->errors()->first());
+        }
+
+        // used to track duplicate records that won't be inserted/saved.
+        $duplicates = '';
 
         $file = $request->file('file');
         // File Details
@@ -340,14 +443,14 @@ class StudentController extends Controller
         $extension = $file->getClientOriginalExtension();
         $filename = "Names." . $extension;
         // Valid File Extensions;
-        $valid_extension = array("csv", "xls");
+        $valid_extension = array("csv");
         if (in_array(strtolower($extension), $valid_extension)) {
             // File upload location
             $location = public_path() . '/files/';
             // Upload file
             $file->move($location, $filename);
             $filepath = public_path('/files/' . $filename);
-
+            
             $file = fopen($filepath, "r");
 
             $importData_arr = array();
@@ -355,57 +458,58 @@ class StudentController extends Controller
 
             while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
                 $num = count($filedata);
-
                 for ($c = 0; $c < $num; $c++) {
                     $importData_arr[$i][] = $filedata[$c];
                 }
                 $i++;
             }
             fclose($file);
-
-
+            // dd($importData_arr);
 
             DB::beginTransaction();
             try {
-
                 foreach ($importData_arr as $importData) {
-                    if (Students::where('name', $importData[0])->count() === 0) {
+                    if (Students::where('name', $importData[0])->orWhere('matric', $importData[1])->count() === 0) {
                         $student = \App\Models\Students::create([
-                            'name' => str_replace('’', "'", $importData[0]),
-                            'gender' => 'male',
+                            'name' => mb_convert_case(str_replace('’', "'", $importData[0]), MB_CASE_UPPER),
+                            'matric' => $importData[1],
+                            // 'email' => explode(' ', str_replace('’', "'", $importData[2]))[0],
+                            'gender' => $importData[2] ?? null,
                             'password' => Hash::make('12345678'),
-                            'email' => explode(' ', str_replace('’', "'", $importData[0]))[0]
+                            'campus_id'=> $request->campus_id ?? null,
+                            'program_id' => $request->program_id ?? null,
+                            'admission_batch_id' => $request->batch,
+                            'imported' => 1
                         ]);
-
                         $class = StudentClass::create([
                             'student_id' => $student->id,
-                            'class_id' => $request->section,
+                            'class_id' => $request->program_id,
                             'year_id' => $request->batch
                         ]);
-                        $student->admission_batch_id = $class->id;
-                        $student->save();
-
+                        
                         // echo ($importData[0]." Inserted Successfully<br>");
                     } else {
+                        $duplicates .= $importData[1].' : '.$importData[0].', ';
                         //  echo ($importData[0]."  <b style='color:#ff0000;'> Exist already on DB and wont be added. Please verify <br></b>");
                     }
                 }
+                // dd($student);
 
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollback();
-                echo ($e);
+                throw $e;
+                // return back()->with('error', $e->getMessage());
             }
             session('message', 'Import Successful.');
             //echo("<h3 style='color:#0000ff;'>Import Successful.</h3>");
-
         } else {
             //echo("<h3 style='color:#ff0000;'>Invalid File Extension.</h3>");
 
             session('message', 'Invalid File Extension.');
         }
 
-        return redirect()->to(route('admin.students.index', [$request->section]))->with('success', 'Student Imported successfully!');
+        return redirect()->to(route('admin.students.index', [$request->program_id]))->with('success', $duplicates == '' ? 'Student Imported successfully!' : 'Student Imported successfully! The following students where not imported because they are already in the database;\n'.$duplicates);
     }
     
     function getSubunitsOf($id){
@@ -417,10 +521,11 @@ class StudentController extends Controller
         # code...
         // added by Germanus. Loads listing of all classes accross all sections in a given school
         
-        $base_units = DB::table('school_units')->where('parent_id', '>', 0)->get();
+        $base_units = DB::table('school_units')->where('parent_id', '>', 1)->get();
     
         // return $base_units;
         $listing = [];
+        $options = [];
         $separator = ' : ';
         foreach ($base_units as $key => $value) {
             # code...
@@ -442,8 +547,21 @@ class StudentController extends Controller
                 $listing[$valuei->id] = $listing[$value->id] . $separator . $listing[$value->id]:
                 null;
             }
+
+            $options[$value->id] = '';
+
+                // remove second highest child before adding
+                // $options[$value->id] = mb_split(':', $listing[$value->id]); old format with complete hierarchy
+                $split = mb_split(':', $listing[$value->id]);
+                foreach ($split as $i => $word) {
+                    # code...
+                    if($i < 3)
+                    $options[$value->id] .= ' : '.$word;
+                }
+                $options[$value->id] = substr($options[$value->id], 2);
+
         }
-        return $listing;
+        return $options;
     }
     // get promotion base classes
     function _getBaseClasses(){
@@ -477,14 +595,14 @@ class StudentController extends Controller
             # code...
             return back()->with('error', json_encode($validator->getMessageBag()->getMessages()));
         }
-        if ($request->class_from >= $request->class_to) {
-            # code...
-            return back()->with('error', 'next class must be higher than the current');
-        }
-        if ($request->year_from >= $request->year_to) {
-            # code...
-            return back()->with('error', 'next academic year must be higher than the current');
-        }
+        // if ($request->class_from >= $request->class_to) {
+        //     # code...
+        //     return back()->with('error', 'next class must be higher than the current');
+        // }
+        // if ($request->year_from >= $request->year_to) {
+        //     # code...
+        //     return back()->with('error', 'next academic year must be higher than the current');
+        // }
         
         $mainClasses = $this->getMainClasses();
 
@@ -576,14 +694,14 @@ class StudentController extends Controller
             # code...
             return back()->with('error', json_encode($validator->getMessageBag()->getMessages()));
         }
-        if ($request->class_from >= $request->class_to) {
-            # code...
-            return back()->with('error', 'next class must be higher than the current');
-        }
-        if ($request->year_from >= $request->year_to) {
-            # code...
-            return back()->with('error', 'next academic year must be higher than the current');
-        }
+        // if ($request->class_from >= $request->class_to) {
+        //     # code...
+        //     return back()->with('error', 'next class must be higher than the current');
+        // }
+        // if ($request->year_from >= $request->year_to) {
+        //     # code...
+        //     return back()->with('error', 'next academic year must be higher than the current');
+        // }
         
         $mainClasses = $this->getMainClasses();
 
@@ -758,10 +876,6 @@ class StudentController extends Controller
 
         return view('admin.student.promotion', $data);
     }
-
-    
-    public function demote(Request $request){}
-
 
     public function unitDemoteTarget(Request $request){
         return DB::table('school_units')->where('target_class', '=', $request->id)->first();

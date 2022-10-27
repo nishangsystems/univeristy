@@ -25,7 +25,11 @@ class ExpenseController extends Controller
     public function index()
     {
         $user_id = Auth::id();
-        $data['expenses'] = Expenses::where('user_id', $user_id)->select($this->select)->paginate(5);
+        $data['expenses'] = Expenses::join('users', 'users.id', '=', 'expenses.user_id')
+        ->where(function($query){
+            auth()->user()->campus_id != null ? $query->where('users.campus_id', '=', auth()->user()->campus_id):null;
+        })
+        ->select('expenses.*')->paginate(5);
         $data['title'] = 'School expense';
 
         return view('admin.expense.index')->with($data);
@@ -66,7 +70,7 @@ class ExpenseController extends Controller
     public function store(Request $request)
     {
         $expense = new Expenses();
-        $expense->name = $request->name;
+        $expense->name = nl2br($request->name);
         $expense->amount_spend = $request->amount_spend;
         $expense->user_id = Auth::id();
         $expense->date = $request->date;

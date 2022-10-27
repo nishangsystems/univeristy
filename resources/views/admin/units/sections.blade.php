@@ -24,10 +24,13 @@
                             <td>{{ $unit->name }}</td>
                             <td>{{$unit->type->name}}</td>
                             <td class="d-flex justify-content-end align-items-center">
+                                @if($unit->unit_id == 1)
+                                    <a class="btn btn-xs btn-primary" href="{{route('admin.semesters.index', [$unit->id])}}">Semesters</a> | 
+                                @endif
                                 @if(request('action') == "class_list")
                                     <a class="btn btn-xs btn-success" href="{{route('admin.students.index', [$unit->id])}}">Students</a> |
                                     <a class="btn btn-xs btn-primary" href="{{route('admin.units.index', [$unit->id])}}?action={{request('action')}}">Sub Units</a>
-                                 @else
+                                @else
                                     @if($unit->unit()->count() == 0)
                                         @if($unit->subjects()->count() == 0)
                                             <a class="btn btn-xs btn-primary" href="{{route('admin.units.index', [$unit->id])}}?action={{request('action')}}">Sub Units</a> |

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\CampusProgram;
 use App\Models\PaymentItem;
 use App\Models\Payments;
 use App\Models\SchoolUnits;
@@ -15,6 +16,7 @@ use Session;
 use Redirect;
 
 use Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
@@ -40,13 +42,18 @@ class PaymentController extends Controller
         $data['student'] = $student;
         $data['scholarship'] = Helpers::instance()->getStudentScholarshipAmount($student_id);
         $data['total_fee'] = $student->total($student_id);
+        // $data['total_fee'] = CampusProgram::where('campus_id', $student->campus_id)->where('program_level_id', $student->program_id)->first()->payment_items()->first()->amount;
         $data['balance'] =  $student->bal($student_id);
         $data['title'] = "Collect Fee for " . $student->name;
         
 
         if ($data['balance'] == 0) {
 
-            return back()->with('error', 'Student has already completed fee');
+            return redirect(route('admin.fee.collect'))->with('success', 'Student has already completed fee');
+        }
+        if ($data['total_fee'] == -1) {
+
+            return redirect(route('admin.fee.collect'))->with('error', 'Fee not set');
         }
         return view('admin.fee.payments.create')->with($data);
     }
@@ -69,23 +76,28 @@ class PaymentController extends Controller
         $this->validate($request, [
             'item' =>  'required',
             'amount' => 'required',
-            'date' => 'required|date'
+            'date' => 'required|date',
+            'reference_number' => 'required'
         ]);
-        if ($request->amount > $total_fee) {
-            return back()->with('error', 'The amount deposited has exceeded the total fee amount');
-        }if($request->amount >  $balance) {
+        if ($request->amount > $total_fee  || $request->amount >  $balance) {
             return back()->with('error', 'The amount deposited has exceeded the total fee amount');
         }
-        Payments::create([
-            "payment_id" => $request->item,
-            "student_id" => $student->id,
-            "unit_id" => $student->class(Helpers::instance()->getYear())->id,
-            "batch_id" => Helpers::instance()->getYear(),
-            "amount" => $request->amount,
-            "date" => $request->date
-        ]);
+        if (Payments::where(['reference_number' => $request->reference_number])->count() == 0) {
+            # code...
+            Payments::create([
+                "payment_id" => $request->item,
+                "student_id" => $student->id,
+                "unit_id" => $student->class(Helpers::instance()->getYear())->id,
+                "batch_id" => Helpers::instance()->getYear(),
+                "amount" => $request->amount,
+                "date" => $request->date,
+                'reference_number' => $request->reference_number,
+                'user_id' => auth()->user()->id
+            ]);
+        }
+        else{return back()->with('error', 'dublicate referernce error');}
 
-        return redirect()->to(route('admin.fee.student.payments.index', $student_id))->with('success', "Fee collection recorded successfully !");
+        return back()->with('success', "Fee collection recorded successfully !");
     }
 
     public function update(Request $request, $student_id, $id)

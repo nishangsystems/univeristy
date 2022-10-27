@@ -1,15 +1,16 @@
 @extends('admin.layout')
 
 @section('section')
-    <div>
-        <div id="user-profile-1" class="user-profile row">
-            <div class=" col-md-6 center">
-                <div>
-							<span class="profile-picture">
-								<img width="200px" height="" id="avatar" class="editable img-responsive"
-                                     alt="Alex's Avatar" src="{{url('assets/images/avatars/profile-pic.jpg')}}"/>
-							</span>
 
+<div>
+    <div id="user-profile-1" class="user-profile row">
+        <div class=" col-md-6 center">
+            <div>
+                <span class="profile-picture">
+                    <img width="200px" height="" id="avatar" class="editable img-responsive"
+                    alt="Alex's Avatar" src="{{url('assets/images/avatars/profile-pic.jpg')}}"/>
+                </span>
+                
                     <div class="space-4"></div>
 
                     <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
@@ -99,19 +100,22 @@
             <div class="adv-table table-responsive">
                 <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                     <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Class</th>
-                        <th></th>
-                    </tr>
+                        <tr class="text-capitalize">
+                            <th>#</th>
+                            <th>{{__('text.course_code')}}</th>
+                            <th>{{__('text.word_name')}}</th>
+                            <th>{{__('text.word_class')}}</th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
                     @foreach($user->subjectR(\App\Helpers\Helpers::instance()->getCurrentAccademicYear()) as $k=>$subject)
                         <tr>
+                            @php($value = \App\Models\ProgramLevel::find($subject->class_id))
                             <td>{{$k+1}}</td>
+                            <td>{{$subject->subject->subject->code}}</td>
                             <td>{{$subject->subject->subject->name}}</td>
-                            <td>{{$subject->class->name}}</td>
+                            <td>{{$value->program()->first()->name.': LEVEL '.$value->level()->first()->level}}</td>
                             <td style="float: right;">
                                 <a onclick="event.preventDefault();
                                             document.getElementById('delete{{$subject->id}}').submit();" class=" btn btn-danger btn-xs m-2">DROP</a>

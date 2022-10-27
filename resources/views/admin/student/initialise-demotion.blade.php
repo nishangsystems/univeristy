@@ -44,9 +44,6 @@ use Illuminate\Support\Facades\Http;
                             </div>
                        </div>
                     @endif
-                    @if(request('promotion_method') == 'custom')
-                       working on custom
-                    @endif
                 </div>
             </form>
 			@if(request('promotion_batch') != '')

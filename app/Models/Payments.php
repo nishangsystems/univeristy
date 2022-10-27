@@ -9,7 +9,7 @@ class Payments extends Model
 {
     use HasFactory;
 
-    protected $fillable = [	"payment_id","student_id","batch_id",'unit_id',"amount"];
+    protected $fillable = [	"payment_id","student_id","batch_id",'unit_id',"amount","reference_number", 'user_id'];
 
     public function item(){
         return $this->belongsTo(PaymentItem::class, 'payment_id');

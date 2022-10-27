@@ -7,18 +7,20 @@
             <div class="form-group">
                 <div>
                     <div class="input-group input-group-merge border">
-                        <select class="w-100 border-0 section" id="section0">
-                            <option selected disabled>Select Section</option>
-                            @forelse(\App\Models\SchoolUnits::where('parent_id',0)->get() as $section)
-                                <option value="{{$section->id}}">{{$section->name}}</option>
-                            @empty
-                                <option>No Sections Created</option>
-                            @endforelse
+                        <select class="w-100 border-0 section form-control" id="year_id" required>
+                            <option selected class="text-capitalize">{{__('text.select_year')}}</option>
+                            @forelse(\App\Models\Batch::all() as $batch)
+                                <option value="{{$batch->id}}">{{$batch->name}}</option>
+                            @endforeach
                         </select>
-                        <button type="submit" onclick="getStudent($(this))" class="border-0" >GET</button>
+                        <select class="w-100 border-0  section form-control" id="class_id" required>
+                            <option selected class="text-capitalize">{{__('text.select_class')}}</option>
+                            @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                                <option value="{{$pl['id']}}">{{$pl['name']}}</option>
+                            @endforeach
+                        </select>
+                        <button type="submit" onclick="getStudents()" class="border-0 text-uppercase" >{{__('text.word_get')}}</button>
                     </div>
-
-                    <div class="children"></div>
                 </div>
             </div>
         </div>
@@ -46,73 +48,45 @@
 @endsection
 @section('script')
     <script>
-        $('.section').on('change', function () {
-            refresh($(this));
-        })
-        function refresh(div) {
-            $(".pre-loader").css("display", "block");
-            url = "{{route('section-children', "VALUE")}}";
-            url = url.replace('VALUE', div.val());
-            $.ajax({
-                type: "GET",
-                url: url,
-                success: function (data) {
-                    $(".pre-loader").css("display", "none");
-                    let html = "";
-                    if(data.valid == 1){
-                        $('#save').css("display", "block");
-                    }else{
-                        $('#save').css("display", "none");
-                    }
-                    if (data.array.length > 0) {
-                        html += '<div class="mt-3"> <div class="input-group input-group-merge border">' +
-                            '                        <select onchange="refresh($(this))" class="w-100 border-0 section" name="'+data.name+'" id="section0">';
-                        html += '<option selected > Select ' + data.name + '</option>';
-                        for (i = 0; i < data.array.length; i++) {
-                            html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
-                        }
-                        html += '</select>  <button type="submit" onclick="getStudent($(this))" class="border-0" >GET</button>' +
-                            '                    </div>' +
-                            '<div class="children"></div></div>';
-                    }
-                    div.parent().parent().find('.children').html(html)
-                }, error: function (e) {
-                    $(".pre-loader").css("display", "none");
-                }
-            });
-        }
 
-        function getStudent(div){
-            if(div.siblings('select').val() == null){
-                alert("Invalid Class or Section")
-            }
+        function getStudents(){
 
+            year = $("#year_id").val();
+            clss = $("#class_id").val();
+// console.log(year +' : '+ clss);
             url = "{{route('student-fee-search')}}";
             $(".pre-loader").css("display", "block");
             $.ajax({
                 type: "GET",
                 url: url,
                 data:{
-                    "section":div.siblings('select').val(),
-                    'type':'{{request('type', 'completed')}}',
+                    'year': year,
+                    'class':clss,
+                    'type':'{{request("type", "completed")}}',
                 },
-                success: function (data) {
+                success: function (resp) {
                     let html = "";
-                    for (i = 0; i < data.students.length; i++) {
-                        html += '<tr>' +
-                            '    <td>'+(i+1)+'</td>' +
-                            '    <td>'+data.students[i].name+'</td>' +
-                            '    <td>'+data.students[i].class+'</td>' +
-                            '    <td>'+data.students[i].total+'</td>' +
-                            @if(request('type','completed') != 'completed') '    <td class="d-flex justify-content-between align-items-center">' +
-                            '        <a class="btn btn-xs btn-primary" href="'+data.students[i].link+'"> Fee Collections</a>' +
-                            '    </td>' +@endif
-                            '</tr>';
+                    let students = resp.students;
+                    let i = 1
+                    for (const key in students) {
+                        console.log(typeof(students));
+                        html += '<tr>'+
+                            '<td>'+(i++)+'</td>'+
+                            '<td>'+students[key].name+'</td>'+
+                            '<td>'+students[key].class+'</td>'+
+                            '<td>'+students[key].total+'</td>'+
+                            '@if(request("type","completed") != "completed")'+
+                                '<td class="d-flex justify-content-between align-items-center">'+
+                                    '<a class="btn btn-xs btn-primary text-capitalize" href="'+students[key].link+'"> {{__("text.fee_collections")}}</a>'+
+                                '</td>'+ 
+                            '@endif'+
+                        '</tr>';
                     }
                     $('#content').html(html)
-                    $('#title').html(data.title)
+                    $('title').html(resp.title)
                     $(".pre-loader").css("display", "none");
-                }, error: function (e) {
+                }, 
+                error: function (e) {
                     $(".pre-loader").css("display", "none");
                 }
             });

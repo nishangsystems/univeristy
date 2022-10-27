@@ -12,10 +12,11 @@
         <div class="table-responsive">
             <table class="table-bordered">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Matricule</th>
-                        <th>Name</th>
+                        <th>{{__('text.word_matricule')}}</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_campus')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -32,11 +33,14 @@
 <script>
     $('#search').on('keyup', function() {
         val = $(this).val()
-        url = "{{route('search-all-students', ':id')}}";
+        // val = val.replace('/', '\\/', val);
+        console.log(val);
+        url = "{{route('get-search-all-students')}}";
         url = url.replace(':id', val);
         $.ajax({
-            type: "GET",
+            type: "get",
             url: url,
+            data: {'key' : val},
             success: function(data) {
                 console.log(data)
                 let html = "";
@@ -45,8 +49,9 @@
                         '    <td>' + (i + 1) + '</td>' +
                         '    <td>' + data[i].matric + '</td>' +
                         '    <td>' + data[i].name + '</td>' +
+                        '    <td>' + data[i].campus + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
-                        '        <a class="btn btn-xs btn-primary" href="' + data[i].link + '"> Fee Collections</a>' +
+                        '        <a class="btn btn-xs btn-primary" href="' + data[i].link + '"> {{__("text.fee_collections")}}</a>' +
                         '    </td>' +
                         '</tr>';
                 }

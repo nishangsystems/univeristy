@@ -196,6 +196,7 @@
                 <b class="arrow"></b>
             </li>
 
+            @if(count(\App\Models\ClassMaster::where('user_id', auth()->user()->id)->get()) > 0)
             <li>
                 <a href="{{route('user.class')}}?type=master">
                     <i class="menu-icon text-primary fa fa-graduation-cap"></i>
@@ -204,21 +205,29 @@
                 <b class="arrow"></b>
             </li>
             <li>
-                <a href="{{route('user.students.init_promotion')}}?type=master">
-                    <i class="menu-icon text-primary fa fa-bullhorn"></i>
-                    <span class="menu-text">Promote Students</span>
-                </a>
-                <b class="arrow"></b>
-            </li>
-
-            <li>
                 <a href="{{route('user.rank.class')}}">
                     <i class="menu-icon text-primary fa fa-star"></i>
                     <span class="menu-text">Class Rank Sheet</span>
                 </a>
                 <b class="arrow"></b>
             </li>
-
+            <li>
+                <a href="{{route('user.master_sheet')}}">
+                    <i class="menu-icon text-primary fa fa-star"></i>
+                    <span class="menu-text">Master Sheet</span>
+                </a>
+                <b class="arrow"></b>
+            </li>
+            @endif
+            @if (\Auth::user()->hasPermissionTo('promote_students'))
+                <li>
+                    <a href="{{route('user.students.init_promotion')}}?type=master"  class="text-capitalize">
+                        <i class="menu-icon text-primary fa fa-bullhorn"></i>
+                        {{__('text.promote_students')}}
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+            @endif
             <li>
                 <a href="{{route('user.subject')}}">
                     <i class="menu-icon text-primary fa fa-book"></i>

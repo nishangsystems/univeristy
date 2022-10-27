@@ -7,7 +7,7 @@
             @csrf
             @method('PUT')
             <div class="form-group @error('installment_name') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Installlment <span style="color:red">*</span></label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_installment')}} <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="installment_name" value="{{old('installment_name') ?? $installment->installment_name}}" type="text" required />
                     @error('installment_name')
@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="form-group @error('installment_amount') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2">Amount<span style="color:red">*</span></label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_amount')}}<span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <input class=" form-control" name="installment_amount" value="{{old('installment_amount') ?? $installment->installment_amount}}" type="number" required />
                     @error('installment_amount')
@@ -26,8 +26,8 @@
             </div>
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
-                    <button id="save" class="btn btn-sm btn-primary mx-3" type="submit">Save</button>
-                    <a class="btn btn-sm btn-danger" href="#" type="button">Cancel</a>
+                    <button id="save" class="btn btn-sm btn-primary mx-3 text-capitalize" type="submit">{{__('text.word_save')}}</button>
+                    <a class="btn btn-sm btn-danger text-capitalize" href="#" type="button">{{__('text.word_cancel')}}</a>
                 </div>
             </div>
         </form>

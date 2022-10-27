@@ -4,9 +4,9 @@
 
 <table class="table table-bordered">
     <thead>
-        <tr>
-            <th>S/N</th>
-            <th>Year</th>
+        <tr class="text-capitalize">
+            <th>{{__('text.sn')}}</th>
+            <th>{{__('text.word_year')}}</th>
             <th></th>
             <th></th>
         </tr>
@@ -22,8 +22,8 @@
 
             <td>
                 <form method="POST" action="{{ route('admin.createacademicyear', $row->id)}}" role="form">
-                    <button type="submit" class="btn btn-primary btn-xs ">
-                        Set Academic Year
+                    <button type="submit" class="btn btn-primary btn-xs text-capitalize">
+                        {{__('text.set_academic_year')}}
                     </button>
                     @csrf
                 </form>

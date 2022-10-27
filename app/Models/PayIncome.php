@@ -13,8 +13,8 @@ class PayIncome extends Model
         'income_id',
         'batch_id',
         'class_id',
-        'student_id'
-
+        'student_id',
+        'user_id'
     ];
 
     /**

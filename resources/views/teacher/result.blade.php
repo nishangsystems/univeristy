@@ -77,6 +77,13 @@
 @section('script')
     <script>
         $('.score').on('change', function (){
+            if(event.target.value < 10){
+                event.target.style.color = 'red';
+            }
+            else{
+                event.target.style.color = 'black';
+            }
+
             let subject_url = "{{route('user.store_result',$subject->subject_id)}}";
             // $(".pre-loader").css("display", "block");
 
@@ -114,6 +121,24 @@
                 $(this).toggle($(this).find('.name').text().toLowerCase().indexOf(value) > -1)
             });
         });
+        $('.score').on('load', ColorValues(this));
+        // $('.score').on('change', ColorValue(event));
+        function ColorValue(evt){
+            if(evt.target.value < 10){
+                evt.target.style.color = 'red';
+            }
+            else{evt.target.style.color = 'black';}
+        }
+        function ColorValues(input){
+            document.querySelectorAll('.score').forEach(function(elt, key, parent){
+                if(elt.value < 10){
+                    elt.style.color = 'red';
+                }
+                else{
+                    elt.style.color = 'black';
+                }
+            })
+        }
     </script>
 
 @endsection
