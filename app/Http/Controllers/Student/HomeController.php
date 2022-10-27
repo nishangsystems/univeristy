@@ -213,6 +213,7 @@ class HomeController extends Controller
         # code...
         $data['title'] = "Course Registration For " .Helpers::instance()->getSemester(Students::find(auth()->id())->program_id)->name." ".\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
         $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>\App\Helpers\Helpers::instance()->getYear()])->first()->class_id);
+        $data['cv_total'] = ProgramLevel::find(auth()->user()->program_id)->program()->first()->max_credit;        
         return view('student.courses.register', $data);
     }
 
@@ -233,8 +234,8 @@ class HomeController extends Controller
             # code...
             $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year])
                     ->join('subjects', ['subjects.id'=>'student_courses.course_id'])->where(['subjects.semester_id'=>$_semester])
-                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->get(['subjects.*', 'class_subjects.coef as cv'])->sortBy('name');
-                    return response()->json(['ids'=>$courses->pluck('id'), 'courses'=>$courses]);
+                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.coef as status']);
+                    return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
         } catch (\Throwable $th) {
             return $th->getMessage();
             
@@ -251,7 +252,7 @@ class HomeController extends Controller
             $subjects = \App\Models\ProgramLevel::where(['program_levels.program_id'=>$program_id])->where(['program_levels.level_id'=>$level])
                         ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
                         ->where(['subjects.semester_id'=>Helpers::instance()->getSemester($pl)->id])
-                        ->get(['subjects.id', 'subjects.code', 'subjects.name', 'class_subjects.coef', 'class_subjects.status'])->sortBy('name')->toArray();
+                        ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.coef as status'])->sortBy('name')->toArray();
             return $subjects;
         }
         catch(Throwable $th){return $th->getLine() . '  '.$th->getMessage();}
@@ -259,18 +260,32 @@ class HomeController extends Controller
 
     public function register_courses(Request $request)//takes class course id
     {
+        // return $request->all();
         # code...
         // first clear all registered courses for the year, semester, student then rewrite
         $year = Helpers::instance()->getYear();
         $semester = Helpers::instance()->getSemester(auth()->user()->program_id)->id;
         $user = auth()->id();
-
         try {
-            DB::beginTransaction();
-            \App\Models\StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->delete();
-            
+
+            // DB::beginTransaction();
+            $ids = \App\Models\StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->pluck('id');
+            foreach ($ids as $key => $value) {
+                # code...
+                StudentSubject::find($value)->delete();
+            }
+            if ($request->has('courses')) {
+                # code...
+                foreach (array_unique($request->courses) as $key => $value) {
+                    # code...
+                    StudentSubject::create(['year_id'=>$year, 'semester_id'=>$semester, 'student_id'=>$user, 'course_id'=>$value]);
+                }
+            }
+            // DB::commit();
+            return back()->with('success', "!Done");
         } catch (\Throwable $th) {
-            //throw $th;
+            // DB::rollBack();
+            return back()->with('error', $th->getFile().' : '.$th->getLine().' :: '.$th->getMessage());
         }
     }
     public function add_course()//takes class course id
