@@ -252,7 +252,7 @@ class HomeController extends Controller
             $subjects = \App\Models\ProgramLevel::where(['program_levels.program_id'=>$program_id])->where(['program_levels.level_id'=>$level])
                         ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
                         ->where(['subjects.semester_id'=>Helpers::instance()->getSemester($pl)->id])
-                        ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.coef as status'])->sortBy('name')->toArray();
+                        ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->toArray();
             return $subjects;
         }
         catch(Throwable $th){return $th->getLine() . '  '.$th->getMessage();}
