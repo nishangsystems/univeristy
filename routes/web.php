@@ -2,6 +2,7 @@
 
 use App\Http\Controllers;
 use App\Http\Controllers\Auth\CustomLoginController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -336,7 +337,7 @@ Route::get('/campuses/{id}/programs', function(Request $request){
 Route::get('semesters/{background}', function(Request $request){
     return \App\Models\Semester::where('background_id', $request->background)->get();
 })->name('semesters');
-
+Route::get('campus/{campus}/program_levels', [Controller::class, 'sorted_campus_program_levels'])->name('campus.program_levels');
 Route::get('mode/{locale}', function ($batch) {
     session()->put('mode', $batch);
     return redirect()->back();

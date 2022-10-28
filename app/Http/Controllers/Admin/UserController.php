@@ -225,6 +225,7 @@ class UserController extends Controller
             'teacher_id' => $id,
             'subject_id' => $request->subject,
             'class_id' => $request->section,
+            'campus_id' => $request->campus,
             'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
         ]);
 
@@ -233,6 +234,7 @@ class UserController extends Controller
                 'teacher_id' => $id,
                 'subject_id' => $request->subject,
                 'class_id' => $request->section,
+                'campus_id' => $request->campus,
                 'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
             ]);
             Session::flash('success', "Subject assigned successfully!");

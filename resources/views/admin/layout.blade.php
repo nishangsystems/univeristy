@@ -287,6 +287,7 @@
                 <b class="arrow"></b>
 
                 <ul class="submenu">
+                    @if(auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.setayear')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -295,15 +296,8 @@
 
                         <b class="arrow"></b>
                     </li>
+                    @endif
 
-                     <li>
-                        <a href="{{route('admin.boarding_fee.index')}}"  class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.set_boarding_fee')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
 
                     <li>
                         <a href="{{route('admin.sections')}}" class="text-capitalize">
@@ -349,7 +343,7 @@
             </li>
             @endif
 
-            @if (\Auth::user()->hasPermissionTo('manage_setting'))
+            @if (\Auth::user()->hasPermissionTo('view_statistics'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i class="menu-icon  text-primary fa fa-signal"></i>
