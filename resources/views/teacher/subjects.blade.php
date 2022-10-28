@@ -11,11 +11,12 @@
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                 <thead>
-                    <tr>
+                    <tr class="text-capitalize">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Coefficient</th>
-                        <th>Class</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.credit_value')}}</th>
+                        <th>{{__('text.word_class')}}</th>
+                        <th>{{__('text.word_campus')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -25,10 +26,12 @@
                 
                         @foreach($subjects as $k=>$subject)
                         <tr>
+                            @php($class = \App\Models\ProgramLevel::find(request('class')))
                             <td>{{ $k+1 }}</td>
                             <td>{{ $subject->subject->name }}</td>
                             <td>{{ $subject->subject->coef }}</td>
-                            <td>{{$classes[request('class')]}}</td>
+                            <td>{{$class->program()->first()->name.': LEVEL '.$class->level()->first()->level}}</td>
+                            <td>{{ \App\Models\Campus::find($subject->campus_id)->name ?? '----' }}</td>
                             <td style="float: right;">
                                 <a class="btn btn-xs btn-primary" href="{{route('user.result', ['subject'=>$subject->id, 'class'=>request('class')])}}">Result</a>
                             </td>
@@ -38,10 +41,12 @@
 
                     @foreach($subjects as $k=>$subject)
                     <tr>
+                        @php($class = \App\Models\ProgramLevel::find($subject->class_id))
                         <td>{{ $k+1 }}</td>
                         <td>{{ $subject->subject->subject->name }}</td>
                         <td>{{ $subject->subject->subject->coef }}</td>
-                        <td>{{$classes[$subject->class_id]}}</td>
+                        <td>{{$class->program()->first()->name.': LEVEL '.$class->level()->first()->level}}</td>
+                        <td>{{ \App\Models\Campus::find($subject->campus_id)->name ?? '----' }}</td>
                         <td style="float: right;">
                             <a class="btn btn-xs btn-primary" href="{{route('user.result', [$subject->id])}}">Result</a>
                         </td>

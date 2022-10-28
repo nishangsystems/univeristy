@@ -105,6 +105,7 @@
                             <th>{{__('text.course_code')}}</th>
                             <th>{{__('text.word_name')}}</th>
                             <th>{{__('text.word_class')}}</th>
+                            <th>{{__('text.word_campus')}}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -116,6 +117,7 @@
                             <td>{{$subject->subject->subject->code}}</td>
                             <td>{{$subject->subject->subject->name}}</td>
                             <td>{{$value->program()->first()->name.': LEVEL '.$value->level()->first()->level}}</td>
+                            <td>{{\App\Models\Campus::find($subject->campus_id)->name ?? '----'}}</td>
                             <td style="float: right;">
                                 <a onclick="event.preventDefault();
                                             document.getElementById('delete{{$subject->id}}').submit();" class=" btn btn-danger btn-xs m-2">DROP</a>

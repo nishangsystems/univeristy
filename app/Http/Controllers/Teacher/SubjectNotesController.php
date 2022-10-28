@@ -17,7 +17,7 @@ class SubjectNotesController extends Controller
         'class_id',
         'subject_id',
         'subjects.name',
-        'coef',
+        'class_subjects.coef',
         'code'
     ];
 

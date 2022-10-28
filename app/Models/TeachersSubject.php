@@ -14,6 +14,7 @@ class TeachersSubject extends Model
         'subject_id',
         'batch_id',
         'class_id',
+        'campus_id'
     ];
 
     public function subject(){
