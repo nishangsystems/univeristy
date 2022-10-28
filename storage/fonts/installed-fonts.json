@@ -1,8 +1,11 @@
 {
     "glyphicons halflings": {
-        "normal": "glyphicons_halflings_normal_e1335d87f4a25aba624e85c564c97ba1"
+        "normal": "glyphicons_halflings_normal_cbb1b344d90334375fdf771ce0501213"
     },
     "fontawesome": {
-        "normal": "fontawesome_normal_2e126a2c475c749d5de1614f6d5f16dd"
+        "normal": "fontawesome_normal_8086fab2a2174c24e3f2f07d84b29cf5"
+    },
+    "nunito": {
+        "normal": "nunito_normal_586f3f8a461df5c8635a870033365d5e"
     }
 }
