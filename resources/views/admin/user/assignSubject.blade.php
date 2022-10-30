@@ -86,6 +86,7 @@
                 method: 'GET',
                 url: url, 
                 success: function(data){
+                    console.log(data);
                     html = `<select class="form-control section" name="section" id="section0" onclick="refresh(event.target)">
                                     <option selected disabled>{{__('text.select_class')}}</option>`;
                     for(key  in data){
@@ -96,6 +97,7 @@
                 }
             })
         }
+        
         $('#subjects').on('change', function (){
             console.log($(this).val());
             if($(this).val() != ""){
@@ -108,7 +110,7 @@
         function refresh(div) {
 
             
-            let subject_url = "{{route('section-subjects', "VALUE")}}";
+            let subject_url = "{{route('section-subjects', 'VALUE')}}";
                 subject_url = subject_url.replace('VALUE', div.value);
                 $.ajax({
                     type: "GET",
@@ -118,8 +120,9 @@
                         let html = "";
                         if (data.array.length > 0) {
                             html += '<option selected value="" > Select Subjects </option>';
+                            console.log(data.array);
                             for (i = 0; i < data.array.length; i++) {
-                                html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
+                                html += '<option value="' + data.array[i].id + '">' + data.array[i].code + ' : ' + data.array[i].name + '</option>';
                             }
                         }else{
                             html += ' <option selected disabled>Select Subjects, if the list is empty, select a class, or add subject to the class you have selected</option>';
@@ -129,38 +132,6 @@
                         $(".pre-loader").css("display", "none");
                     }
                 });
-            
-
-
-            // $(".pre-loader").css("display", "block");
-            // url = "{{route('section-children', "VALUE")}}";
-            // url = url.replace('VALUE', div.val());
-            // $.ajax({
-            //     type: "GET",
-            //     url: url,
-            //     success: function (data) {
-
-            //         let html = "";
-
-            //         if (data.array.length > 0) {
-            //             html += '<div class="mt-3"><select onchange="refresh($(this))" class="form-control section" name="'+data.name+'">';
-            //             html += '<option selected > Select ' + data.name + '</option>';
-            //             for (i = 0; i < data.array.length; i++) {
-            //                 html += '<option value="' + data.array[i].id + '">' + data.array[i].name + '</option>';
-            //             }
-            //             html += '</select>' +
-            //                 '<div class="children"></div></div>';
-            //         }else{}
-            //         $(".pre-loader").css("display", "none");
-            //         if(data.valid == 1){
-            //         }else{
-            //             $('#save').css("display", "none");
-            //         }
-            //         div.parent().find('.children').html(html)
-            //     }, error: function (e) {
-            //         $(".pre-loader").css("display", "none");
-            //     }
-            // });
         }
     </script>
 @endsection

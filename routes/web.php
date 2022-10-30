@@ -23,6 +23,9 @@ Route::get('/clear', function () {
 
 Route::post('login', [CustomLoginController::class, 'login'])->name('login.submit');
 Route::get('login', [CustomLoginController::class, 'showLoginForm'])->name('login');
+Route::get('registration', [CustomLoginController::class, 'registration'])->name('registration');
+Route::post('check_matricule', [CustomLoginController::class, 'check_matricule'])->name('check_matricule');
+Route::post('createAccount', [CustomLoginController::class, 'createAccount'])->name('createAccount');
 Route::post('logout', [CustomLoginController::class, 'logout'])->name('logout');
 
 Route::post('reset_password_with_token/password/reset', [CustomForgotPasswordController::class, 'validatePasswordRequest'])->name('reset_password_without_token');
@@ -277,6 +280,7 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::get('subject/{subject}/result', 'Teacher\SubjectController@result')->name('result');
     Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
     Route::get('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@show')->name('subject.show');
+    Route::get('subjects/students/{class_id}/{course_id}', 'Teacher\SubjectController@course_list')->name('subject.students');
     Route::put('subjects/notes/{id}', 'Teacher\SubjectNotesController@publish_notes')->name('subject.note.publish');
     Route::post('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@store')->name('subject.note.store');
     Route::delete('subjects/notes/{id}', 'Teacher\SubjectNotesController@destroy')->name('subject.note.destroy');

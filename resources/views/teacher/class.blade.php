@@ -18,8 +18,11 @@
                     <tbody>
 
                     @foreach($units as $unit)
+
+                    @php(dd($unit))
+                        @php($class = \App\Models\ProgramLevel::find($unit->id))
                         <tr>
-                            <td>{{ $options[$unit->id] }}</td>
+                            <td>{{ \App\Http\Controllers\Controller::sorted_program_levels()->where('id', '=', [$unit->id])->first() }}</td>
                             <td>{{$unit->type->name}}</td>
                             <td style="float: right;">
                                 <a class="btn btn-xs btn-primary" href="{{route('user.class.student', [$unit->id])}}">Students</a>

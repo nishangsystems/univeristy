@@ -100,6 +100,12 @@ class UserController extends Controller
     {
         $data['title'] = "User details";
         $data['user'] = \App\Models\User::find($id);
+        $data['courses'] = \App\Models\TeachersSubject::where([
+            'teacher_id' => $id,
+            'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear(),
+        ])->join('subjects', ['subjects.id'=>'teachers_subjects.subject_id'])
+        ->distinct()->select('subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id')->get();
+        // dd($data);
         return view('admin.user.show')->with($data);
     }
 
@@ -223,10 +229,10 @@ class UserController extends Controller
     {
         $subject = TeachersSubject::where([
             'teacher_id' => $id,
+            'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear(),
             'subject_id' => $request->subject,
             'class_id' => $request->section,
             'campus_id' => $request->campus,
-            'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
         ]);
 
         if ($subject->count() == 0) {

@@ -139,7 +139,7 @@
 											</div>
 
 											<div>
-												<a href="{{ route('registration') }}" >
+												<a href="" >
 
 												{{__('text.want_to_register')}}
 													<i class="ace-icon fa fa-arrow-right"></i>

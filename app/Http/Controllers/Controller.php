@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CampusProgram;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -26,14 +27,15 @@ class Controller extends BaseController
             ];
         }
         $pls = collect($pls)->sortBy('name');
+        // $pls->where('id')
         return $pls;
     }
     public static function sorted_campus_program_levels($campus)
     {
         $pls = [];
         # code...
-        $ids = CampusProgram::where(['campus_id'=>$campus])->pluck('id');
-        foreach (\App\Models\ProgramLevel::whereIn('id', $ids)->get() as $key => $value) {
+        $program_level_ids = CampusProgram::where(['campus_id'=>$campus])->pluck('program_level_id');
+        foreach (\App\Models\ProgramLevel::whereIn('id', $program_level_ids)->get() as $key => $value) {
             # code...
             $pls[] = [
                 'id' => $value->id,
@@ -42,7 +44,7 @@ class Controller extends BaseController
                 'name' => $value->program()->first()->name.': LEVEL '.$value->level()->first()->level
             ];
         }
-        $pls = collect($pls)->sortBy('name');
+        $pls = collect($pls)->sortBy('si');
         return $pls;
     }
 }

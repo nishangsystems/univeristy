@@ -43,8 +43,10 @@ class SubjectNotesController extends Controller
      */
     public function publish_notes($id)
     {
-        $data = [
-            'status' => 1
+        $data = request()->has('action') ? [
+            'status' =>  0
+        ] : [
+            'status' =>  1
         ];
         $subject_note = SubjectNotes::findOrFail($id)->update($data);
         return  back()->with('success', 'Publish note successfully');
@@ -74,6 +76,7 @@ class SubjectNotesController extends Controller
         $notes->class_subject_id = $id;
         $notes->note_path = $path;
         $notes->note_name = $name;
+        $notes->type = $request->option;
         $notes->status = 0;
         $notes->batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
         $notes->save();
@@ -118,8 +121,11 @@ class SubjectNotesController extends Controller
                 'subject_notes.id as id',
                 'subject_notes.note_name',
                 'subject_notes.note_path',
+                'subject_notes.type',
+                'subject_notes.status',
                 'subject_notes.created_at'
             )
+            ->orderBy('id', 'DESC')
             ->paginate(5);
         return $notes;
         // return view('student.subject_notes')->with($data);

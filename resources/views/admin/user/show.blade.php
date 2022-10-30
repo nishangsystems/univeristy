@@ -93,7 +93,7 @@
     </div>
     <div class="col-sm-12">
         <p class="text-muted">
-            <a href="{{route('admin.users.subjects.add', $user->id)}}" class="btn btn-info btn-xs">Add Subject</a>
+            <a href="{{route('admin.users.subjects.add', $user->id)}}" class="btn btn-info btn-xs text-capitalize">{{__('text.assign_course')}}</a>
         </p>
 
         <div class="content-panel">
@@ -110,12 +110,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach($user->subjectR(\App\Helpers\Helpers::instance()->getCurrentAccademicYear()) as $k=>$subject)
+                    @foreach($courses as $k=>$subject)
                         <tr>
-                            @php($value = \App\Models\ProgramLevel::find($subject->class_id))
+                            @php($value = \App\Models\ProgramLevel::find($subject->class))
                             <td>{{$k+1}}</td>
-                            <td>{{$subject->subject->subject->code}}</td>
-                            <td>{{$subject->subject->subject->name}}</td>
+                            <td>{{$subject->code}}</td>
+                            <td>{{$subject->name}}</td>
                             <td>{{$value->program()->first()->name.': LEVEL '.$value->level()->first()->level}}</td>
                             <td>{{\App\Models\Campus::find($subject->campus_id)->name ?? '----'}}</td>
                             <td style="float: right;">

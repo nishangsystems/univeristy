@@ -4,7 +4,7 @@
 
 <div class="col-sm-12">
     <p class="text-muted">
-    <h4>My Subjects</h4>
+    <h4 class="text-capitalize">{{__('text.my_courses')}}</h4>
     </p>
 
     <div class="content-panel">
@@ -13,10 +13,11 @@
                 <thead>
                     <tr class="text-capitalize">
                         <th>#</th>
+                        <th>{{__('text.course_code')}}</th>
                         <th>{{__('text.word_name')}}</th>
-                        <th>{{__('text.credit_value')}}</th>
                         <th>{{__('text.word_class')}}</th>
                         <th>{{__('text.word_campus')}}</th>
+                        <th>{{__('text.word_semester')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -28,30 +29,35 @@
                         <tr>
                             @php($class = \App\Models\ProgramLevel::find(request('class')))
                             <td>{{ $k+1 }}</td>
+                            <td>{{ $subject->subject->code }}</td>
                             <td>{{ $subject->subject->name }}</td>
-                            <td>{{ $subject->subject->coef }}</td>
                             <td>{{$class->program()->first()->name.': LEVEL '.$class->level()->first()->level}}</td>
                             <td>{{ \App\Models\Campus::find($subject->campus_id)->name ?? '----' }}</td>
-                            <td style="float: right;">
+                            <td>{{ $subject->subject->coef }}</td>
+                            <?php /*<td style="float: right;">
                                 <a class="btn btn-xs btn-primary" href="{{route('user.result', ['subject'=>$subject->id, 'class'=>request('class')])}}">Result</a>
-                            </td>
+                            </td> */
+                            ?>
                         </tr>
                         @endforeach
                     @else
 
-                    @foreach($subjects as $k=>$subject)
+                    @foreach($courses as $k=>$subject)
                     <tr>
-                        @php($class = \App\Models\ProgramLevel::find($subject->class_id))
+                        @php($class = \App\Models\ProgramLevel::find($subject->class))
                         <td>{{ $k+1 }}</td>
-                        <td>{{ $subject->subject->subject->name }}</td>
-                        <td>{{ $subject->subject->subject->coef }}</td>
+                        <td>{{ $subject->code }}</td>
+                        <td>{{ $subject->name }}</td>
                         <td>{{$class->program()->first()->name.': LEVEL '.$class->level()->first()->level}}</td>
                         <td>{{ \App\Models\Campus::find($subject->campus_id)->name ?? '----' }}</td>
-                        <td style="float: right;">
+                        <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
+                        <?php /* <td style="float: right;">
                             <a class="btn btn-xs btn-primary" href="{{route('user.result', [$subject->id])}}">Result</a>
-                        </td>
-                        <td style="float: right;">
-                            <a class="btn btn-xs btn-success" href="{{route('user.subject.show', [$subject->class_id, $subject->id])}}">View More</a>
+                        </td> */
+                        ?>
+                        <td style="float: right;" class="d-flex">
+                            <a class="btn btn-xs btn-primary text-capitalize" href="{{route('user.subject.students', [$subject->class, $subject->id])}}?campus_id={{$subject->campus_id}}">{{__('text.word_students')}}</a> |
+                            <a class="btn btn-xs btn-success text-capitalize" href="{{route('user.subject.show', [$subject->class, $subject->id])}}">{{__('text.upload_material')}}</a>
                         </td>
                     </tr>
                     @endforeach

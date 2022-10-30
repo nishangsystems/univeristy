@@ -12,7 +12,8 @@ class SubjectNotes extends Model
         'class_subject_id',
         'note_name',
         'note_path',
-        'status'
+        'status',
+        'type'
     ];
 
     /**

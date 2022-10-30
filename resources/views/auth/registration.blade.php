@@ -71,7 +71,7 @@
 										<div class="widget-main">
 											<h4 class="header blue lighter bigger">
 												<i class="ace-icon fa fa-coffee green"></i>
-											 {{__('auth.auth_request')}}
+											 Start Account Creation
 											</h4>
 											@if(Session::has('error'))
 												<div class="alert alert-danger"><em> {!! session('error') !!}</em>
@@ -90,38 +90,30 @@
 											@endif
 											<div class="space-6"></div>
 
-											<form method="post" action="{{route('login.submit')}}">
+											<form method="post" action="{{ route('check_matricule') }}">
 											@csrf
 												<fieldset>
-													<label class="block clearfix">
+													<label class="block clearfix"> Registration Number
 														<span class="block input-icon input-icon-right">
-															<input type="text" required class="form-control" value="{{old("username")}}" name="username" placeholder="{{__('text.word_username')}}" />
+															<input type="text" required class="form-control" value="{{old("reg_no")}}" name="reg_no" placeholder="Registration Number" />
 															<i class="ace-icon fa fa-user"></i>
 														</span>
-														@error('username')
+														@error('reg_no')
 															<span class="invalid-feedback red" role="alert">
 																<strong>{{ $message }}</strong>
 															</span>
 														@enderror
 													</label>
 													<div class="space"></div>
-													<label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input  type="password" id="password" name="password" data-toggle="password" required class="form-control" placeholder="{{__('text.word_password')}}" />
-														</span>
-														@error('password')
-															<span class="invalid-feedback red" role="alert">
-																<strong>{{ $message }}</strong>
-															</span>
-														@enderror
-													</label>
+													
 
 													<div class="space"></div>
 
 													<div class="clearfix">
 														<button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
-															<i class="ace-icon fa fa-key"></i>
-															<span class="bigger-110">{{__('text.word_login')}}</span>
+															<!--<i class="ace-icon fa fa-key"></i>-->
+															<!--<span class="bigger-110">{{__('text.word_login')}}</span>-->
+															<span class="bigger-110">Next Step</span>
 														</button>
 													</div>
 
@@ -132,17 +124,14 @@
 
 										<div class="toolbar clearfix">
 										<div>
-										<a  href="#" data-target="#forgot-box" class="forgot-password-link">
-													<i class="ace-icon fa fa-arrow-left"></i>
-													{{__('text.forgot_password')}}
-												</a>
+										
 											</div>
 
 											<div>
-												<a href="{{ route('registration') }}" >
+												<a href="{{route('login')}}" >
 
-												{{__('text.want_to_register')}}
-													<i class="ace-icon fa fa-arrow-right"></i>
+												Already Have an Account
+													
 													</a>
 												</a>
 											</div>
@@ -163,7 +152,7 @@
 												Enter your email where you want to receive instructions from
 											</p>
 
-											<form method="POST" action="{{ route('reset_password_without_token') }}">
+											<form method="POST" action="#">
 											@csrf
 												<fieldset>
 													<label class="block clearfix">

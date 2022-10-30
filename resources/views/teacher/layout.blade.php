@@ -191,7 +191,7 @@
             <li>
                 <a href="{{route('user.class')}}">
                     <i class="menu-icon text-primary fa fa-group"></i>
-                    <span class="menu-text">Class</span>
+                    <span class="menu-text">{{__('text.word_classes')}}</span>
                 </a>
                 <b class="arrow"></b>
             </li>
@@ -231,7 +231,7 @@
             <li>
                 <a href="{{route('user.subject')}}">
                     <i class="menu-icon text-primary fa fa-book"></i>
-                    <span class="menu-text">Subject</span>
+                    <span class="menu-text text-capitalize">{{__('text.word_courses')}}</span>
                 </a>
                 <b class="arrow"></b>
             </li>

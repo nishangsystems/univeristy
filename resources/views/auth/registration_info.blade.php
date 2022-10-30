@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -71,7 +73,7 @@
 										<div class="widget-main">
 											<h4 class="header blue lighter bigger">
 												<i class="ace-icon fa fa-coffee green"></i>
-											 {{__('auth.auth_request')}}
+											Completing Account Creation
 											</h4>
 											@if(Session::has('error'))
 												<div class="alert alert-danger"><em> {!! session('error') !!}</em>
@@ -90,13 +92,46 @@
 											@endif
 											<div class="space-6"></div>
 
-											<form method="post" action="{{route('login.submit')}}">
+											<form method="post" action="{{ route('createAccount') }}">
 											@csrf
 												<fieldset>
-													<label class="block clearfix">
+													<label class="block clearfix"> First Name
 														<span class="block input-icon input-icon-right">
-															<input type="text" required class="form-control" value="{{old("username")}}" name="username" placeholder="{{__('text.word_username')}}" />
-															<i class="ace-icon fa fa-user"></i>
+															<input type="text" readonly required class="form-control" value="{{ $student_d->name ?? ''}}" name="name" placeholder="First Name" />
+															<!--<i class="ace-icon fa fa-user"></i>-->
+														</span>
+														@error('name')
+															<span class="invalid-feedback red" role="alert">
+																<strong>{{ $message }}</strong>
+															</span>
+														@enderror
+													</label>
+													<label class="block clearfix"> Phone Number
+														<span class="block input-icon input-icon-right">
+															<input type="text" required class="form-control" value="" name="phone" placeholder="Phone Number" />
+															<!--<i class="ace-icon fa fa-user"></i>-->
+														</span>
+														@error('phone')
+															<span class="invalid-feedback red" role="alert">
+																<strong>{{ $message }}</strong>
+															</span>
+														@enderror
+													</label>
+														<label class="block clearfix"> E-Mail Address
+														<span class="block input-icon input-icon-right">
+															<input type="text" required class="form-control" value="" name="email" placeholder="E-Mail Address" />
+															<!--<i class="ace-icon fa fa-user"></i>-->
+														</span>
+														@error('email')
+															<span class="invalid-feedback red" role="alert">
+																<strong>{{ $message }}</strong>
+															</span>
+														@enderror
+													</label>
+														<label class="block clearfix"> User Name
+														<span class="block input-icon input-icon-right">
+															<input type="text" readonly required class="form-control" value="{{ $student_d->matric ?? ''}}" name="username" placeholder="User Name" />
+															<!--<i class="ace-icon fa fa-user"></i>-->
 														</span>
 														@error('username')
 															<span class="invalid-feedback red" role="alert">
@@ -104,10 +139,10 @@
 															</span>
 														@enderror
 													</label>
-													<div class="space"></div>
-													<label class="block clearfix">
+														<label class="block clearfix"> Password
 														<span class="block input-icon input-icon-right">
-															<input  type="password" id="password" name="password" data-toggle="password" required class="form-control" placeholder="{{__('text.word_password')}}" />
+															<input type="password" required class="form-control" value="{{old("password")}}" id="password" name="password" placeholder="Password" />
+															<i class="ace-icon fa fa-eye-slash"  id="eye"></i>
 														</span>
 														@error('password')
 															<span class="invalid-feedback red" role="alert">
@@ -115,13 +150,27 @@
 															</span>
 														@enderror
 													</label>
+														<label class="block clearfix"> Confirm Password
+														<span class="block input-icon input-icon-right">
+															<input type="password" required class="form-control" value="{{old("cpassword")}}" id="cpassword" name="cpassword" placeholder="Confirm Password" />
+															<i class="ace-icon fa fa-eye-slash"  id="eye1"></i>
+														</span>
+														@error('cpassword')
+															<span class="invalid-feedback red" role="alert">
+																<strong>{{ $message }}</strong>
+															</span>
+														@enderror
+													</label>
+													<div class="space"></div>
+													
 
 													<div class="space"></div>
 
 													<div class="clearfix">
-														<button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
-															<i class="ace-icon fa fa-key"></i>
-															<span class="bigger-110">{{__('text.word_login')}}</span>
+														<button type="submit" id="btnSubmit" class="width-35 pull-right btn btn-sm btn-primary">
+															<!--<i class="ace-icon fa fa-key"></i>-->
+															<!--<span class="bigger-110">{{__('text.word_login')}}</span>-->
+															<span class="bigger-110">Register</span>
 														</button>
 													</div>
 
@@ -132,19 +181,11 @@
 
 										<div class="toolbar clearfix">
 										<div>
-										<a  href="#" data-target="#forgot-box" class="forgot-password-link">
-													<i class="ace-icon fa fa-arrow-left"></i>
-													{{__('text.forgot_password')}}
-												</a>
+										
 											</div>
 
 											<div>
-												<a href="{{ route('registration') }}" >
-
-												{{__('text.want_to_register')}}
-													<i class="ace-icon fa fa-arrow-right"></i>
-													</a>
-												</a>
+											
 											</div>
 										</div>
 									</div><!-- /.widget-body -->
@@ -163,7 +204,7 @@
 												Enter your email where you want to receive instructions from
 											</p>
 
-											<form method="POST" action="{{ route('reset_password_without_token') }}">
+											<form method="POST" action="#">
 											@csrf
 												<fieldset>
 													<label class="block clearfix">
@@ -209,6 +250,8 @@
 {{--		@include('inc.student.footer')--}}
 				</div>
 		<script src="{{asset('assets/js/jquery-2.1.4.min.js')}}"></script>
+			<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js"></script>
+	
 		<script type="text/javascript">
 			if('ontouchstart' in document.documentElement) document.write("<script src='{{asset('assets/js/jquery.mobile.custom.min.js')}}'>"+"<"+"/script>");
 		</script>
@@ -229,6 +272,65 @@
 $("#password").password('toggle');
 
 </script>
-
+	<script src="{{asset('js/jquery.min.js')}}"></script>
+ <script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {
+            var password = $("#password").val();
+            var confirmPassword = $("#cpassword").val();
+            if (password != confirmPassword) {
+                alert("confirm password do not match.");
+                return false;
+            }
+            return true;
+        });
+    });
+</script>
+<script>
+   $(function(){
+  
+  $('#eye').click(function(){
+       
+        if($(this).hasClass('fa-eye-slash')){
+           
+          $(this).removeClass('fa-eye-slash');
+          
+          $(this).addClass('fa-eye');
+          
+          $('#password').attr('type','text');
+            
+        }else{
+         
+          $(this).removeClass('fa-eye');
+          
+          $(this).addClass('fa-eye-slash');  
+          
+          $('#password').attr('type','password');
+        }
+    });
+});
+$(function(){
+  
+  $('#eye1').click(function(){
+       
+        if($(this).hasClass('fa-eye-slash')){
+           
+          $(this).removeClass('fa-eye-slash');
+          
+          $(this).addClass('fa-eye');
+          
+          $('#cpassword').attr('type','text');
+            
+        }else{
+         
+          $(this).removeClass('fa-eye');
+          
+          $(this).addClass('fa-eye-slash');  
+          
+          $('#cpassword').attr('type','password');
+        }
+    });
+});
+</script>
 	</body>
 </html>
