@@ -22,8 +22,13 @@ class SubjectController extends Controller
     public function index(Request $request)
     {
         if ($request->class) {
-           $unit = SchoolUnits::find($request->class);
-           $data['subjects'] = $unit->subject;
+           $unit = ProgramLevel::find($request->class);
+           $data['title'] = 'My '.$unit->program()->first()->name.' : LEVEL '.$unit->level()->first()->level;
+           $data['subjects'] = \App\Models\Subjects::join('teachers_subjects', ['teachers_subjects.subject_id'=>'subjects.id'])
+                        ->where(['teachers_subjects.class_id'=>$request->class])
+                        ->where(function($q)use ($request){
+                            $request->has('campus') ? $q->where(['teachers_subjects.campus_id'=>$request->campus]):null;
+                        })->distinct()->select(['subjects.*','teachers_subjects.class_id as class', 'teachers_subjects.campus_id'])->get();
         } else {
             $data['courses'] = \App\Models\TeachersSubject::where([
                 'teacher_id' => auth()->id(),
@@ -31,6 +36,7 @@ class SubjectController extends Controller
             ])->join('subjects', ['subjects.id'=>'teachers_subjects.subject_id'])
             ->distinct()->select('subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id')->get();
         }
+        // dd($data);
         return view('teacher.subjects')->with($data);
     }
 

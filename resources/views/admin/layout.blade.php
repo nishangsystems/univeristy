@@ -299,6 +299,7 @@
                     @endif
 
 
+                    @if(auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.sections')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -317,6 +318,7 @@
                         <b class="arrow"></b>
                     </li>
 
+                    
                     <li>
                         <a href="{{route('admin.result_release.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -324,6 +326,7 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+
                     
                     <li>
                         <a href="{{route('admin.schools.index')}}" class="text-capitalize">
@@ -332,6 +335,8 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    @endif
+
                     <li>
                         <a href="{{route('admin.campuses.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -451,6 +456,7 @@
                 </a>
 
                 <ul class="submenu">
+                    @if(auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.users.index')}}?type=admin" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -458,6 +464,7 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    @endif
 
                     <li>
                         <a href="{{route('admin.users.index')}}?type=teacher" class="text-capitalize">
@@ -470,7 +477,7 @@
                     <li>
                         <a href="{{route('admin.users.classmaster')}}?type=teacher" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                           {{trans_choice('text.class_master', 2)}}
+                           {{trans_choice('text.word_HOD', 2)}}
                         </a>
                         <b class="arrow"></b>
                     </li>

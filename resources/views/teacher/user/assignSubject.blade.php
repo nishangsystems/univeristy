@@ -1,9 +1,9 @@
-@extends('admin.layout')
+@extends('teacher.layout')
 
 @section('section')
     <div class="mx-3">
         <div class="form-panel">
-            <form class="form-horizontal" role="form" method="POST" action="{{route('admin.users.subjects.save', $user->id)}}">
+            <form class="form-horizontal" role="form" method="POST" action="{{route('users.teacher.subjects.save', $user->id)}}">
                 @csrf
 
                 <div id="section">

@@ -31,7 +31,7 @@
                                 <tr>
                                     <td>{{$role->byLocale()->name}}</td>
                                     <td align="right">
-                                        <a class="btn btn-success" href="{{route('admin.roles.edit',$role->slug)}}?role={{$role->slug}}"> {{__('text.word_edit')}}</a>
+                                        @if(\Auth::user()->campus_id == null)<a class="btn btn-success" href="{{route('admin.roles.edit',$role->slug)}}?role={{$role->slug}}"> {{__('text.word_edit')}}</a>@endif
                                         <a class="btn btn-primary" href="{{route('admin.users.index')}}?role={{$role->slug}}">{{__('text.word_users')}}</a>
                                         <a class="btn btn-danger" href="{{route('admin.roles.permissions')}}?role={{$role->slug}}">{{__('text.word_permissions')}}</a>
                                     </td>

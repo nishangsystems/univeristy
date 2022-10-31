@@ -5,9 +5,11 @@
 
     <div class="col-sm-12">
         <div class="content-panel">
-            <div class="py-3 container">
-                <a href="{{route('admin.campuses.create')}}" class="btn btn-sm btn-primary text-capitalize">add campus</a>
-            </div>
+            @if(auth()->user()->campus_id == null)
+                <div class="py-3 container">
+                    <a href="{{route('admin.campuses.create')}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.add_campus')}}</a>
+                </div>
+            @endif
             <div class="adv-table table-responsive">
                 <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                     <thead>
@@ -22,15 +24,17 @@
                     <tbody>
 
                     @foreach($campuses as $cps)
-                        @php($k = 0)
+                        @php($k = 1)
                         <tr>
-                            <td>{{ $k+1 }}</td>
+                            <td>{{ $k++ }}</td>
                             <td>{{ $cps->name }}</td>
                             <td>{{ $cps->address }}</td>
                             <td>{{ $cps->telephone }}</td>
                             <td>
-                                <a href="{{route('admin.campuses.edit', $cps->id)}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_edit')}}</a>
-                                <a href="{{route('admin.campuses.programs', $cps->id)}}" class="btn btn-sm btn-success text-capitalize">{{__('text.word_programs')}}</a>
+                                @if(auth()->user()->campus_id == null || auth()->user()->campus_id == $cps->id)
+                                    <a href="{{route('admin.campuses.edit', $cps->id)}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_edit')}}</a>
+                                    <a href="{{route('admin.campuses.programs', $cps->id)}}" class="btn btn-sm btn-success text-capitalize">{{__('text.word_programs')}}</a>
+                                @endif
                                 @if($cps->students()->count() == 0)
                                     <!-- <a href="{{route('admin.campuses.delete', $cps->id)}}" class="btn btn-sm btn-danger text-capitalize">{{__('text.word_delete')}}</a> -->
                                 @endif

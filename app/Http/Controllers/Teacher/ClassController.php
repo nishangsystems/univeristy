@@ -8,6 +8,8 @@ use App\Models\SchoolUnits;
 use App\Models\Term;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ProgramLevel;
+use App\Models\StudentClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use \Session;
@@ -22,7 +24,10 @@ class ClassController extends Controller
             $data['classes'] = ClassMaster::where('batch_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->where('user_id', Auth::user()->id)->get();
             return view('teacher.class_master')->with($data);
         } else {
-            $data['units']  = Auth::user()->classR(\App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+            $data['units']  = \App\Models\ProgramLevel::join('teachers_subjects', ['teachers_subjects.class_id'=>'program_levels.id'])
+                                ->where(['teachers_subjects.teacher_id'=>auth()->id()])
+                                ->select(['program_levels.*', 'teachers_subjects.campus_id'])
+                                ->get();
             return view('teacher.class')->with($data);
         }
     }
@@ -41,14 +46,17 @@ class ClassController extends Controller
 
     public function students($class_id)
     {
-        $class = SchoolUnits::find($class_id);
+        $class = ProgramLevel::find($class_id);
         $data['class'] = $class;
 
         // $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
-        $data['students'] = DB::table('student_classes')->where('class_id', '=', $class_id)
+        $data['students'] = StudentClass::where('class_id', '=', $class_id)
                 ->where('year_id', '=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
-                ->join('students', 'students.id', '=', 'student_classes.student_id')
-                ->get('students.*');
+                ->join('students', ['students.id'=>'student_classes.student_id'])
+                ->where(function($q){
+                    request()->has('campus') ? $q->where(['students.campus_id'=>request('campus')]) : null;
+                })
+                ->orderBy('students.name', 'ASC')->get('students.*');
         return view('teacher.student')->with($data);
     }
 

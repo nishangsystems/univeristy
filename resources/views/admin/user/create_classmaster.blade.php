@@ -9,22 +9,37 @@
                 <h5 class="mt-5 font-weight-bold">Teachers Info</h5>
                 @csrf
 
-                <div class="form-group @error('gender') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2">Teacher</label>
+                <div class="form-group @error('user_id') has-error @enderror">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{trans_choice('text.word_teacher', 1)}}</label>
                     <div class="col-lg-10">
                         <select required  class="form-control" name="user_id">
-                            <option selected disabled>Select Teacher</option>
+                            <option selected disabled>{{__('text.select_teacher')}}</option>
                           @foreach(\App\Models\User::where('type','teacher')->get() as $user)
                                 <option {{old('user_id') == $user->id?'selected':''}} value="{{$user->id}}">{{$user->name}}</option>
                           @endforeach
                         </select>
-                        @error('gender')
+                        @error('user_id')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>
-
+                
                 <h5 class="mt-5 mb-4 font-weight-bold">Class Information</h5>
+                
+                <div class="form-group @error('campus_id') has-error @enderror">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_campus')}}</label>
+                    <div class="col-lg-10">
+                        <select required  class="form-control" name="campus_id">
+                            <option selected disabled>{{__('text.select_campus')}}</option>
+                            @foreach(\App\Models\Campus::all() as $campus)
+                                <option {{old('campus_id') == $campus->id?'selected':''}} value="{{$campus->id}}">{{$campus->name}}</option>
+                            @endforeach
+                        </select>
+                        @error('campus_id')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
 
                 <div id="section">
                     <div class="form-group">
@@ -33,8 +48,8 @@
                             <div>
                                 <select class="form-control section" name="section" id="section0">
                                     <option selected disabled>Select Section</option>
-                                    @forelse($classes as $id => $section)
-                                        <option value="{{$id}}">{{$section}}</option>
+                                    @forelse(\App\Models\SchoolUnits::where(['unit_id'=>3])->get() as $id => $section)
+                                        <option value="{{$section->id}}">{{$section->name}}</option>
                                     @empty
                                         <option>No Sections Created</option>
                                     @endforelse

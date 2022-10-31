@@ -284,6 +284,10 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::put('subjects/notes/{id}', 'Teacher\SubjectNotesController@publish_notes')->name('subject.note.publish');
     Route::post('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@store')->name('subject.note.store');
     Route::delete('subjects/notes/{id}', 'Teacher\SubjectNotesController@destroy')->name('subject.note.destroy');
+    Route::get('{user_id}/subjects', 'Teacher\UserController@createSubject')->name('teachers.subjects.add');
+    Route::delete('{user_id}/subjects', 'Teacher\UserController@dropSubject')->name('teachers.subjects.drop');
+    Route::post('{user_id}/subjects', 'Teacher\UserController@saveSubject')->name('teachers.subjects.save');
+    Route::resource('teacher', 'Teacher\UserController');
 });
 
 Route::prefix('student')->name('student.')->group(function () {

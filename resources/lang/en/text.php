@@ -348,4 +348,11 @@ return [
     'word_classes'=>'classes',
     'assign_course'=>'assign course',
     'upload_material'=>'upload material',
+    'my_classes'=>'my classes',
+    'HOD_OF'=>'HOD OF',
+    'word_HOD'=>'HOD',
+    'add_HOD'=>'add HOD',
+    'word_unassign'=>'unassign',
+    'select_teacher'=>'select teacher',
+    'word_department'=>'department',
 ];

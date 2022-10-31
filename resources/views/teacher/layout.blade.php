@@ -187,20 +187,19 @@
                 </a>
                 <b class="arrow"></b>
             </li>
-
-            <li>
-                <a href="{{route('user.class')}}">
-                    <i class="menu-icon text-primary fa fa-group"></i>
-                    <span class="menu-text">{{__('text.word_classes')}}</span>
-                </a>
-                <b class="arrow"></b>
-            </li>
-
-            @if(count(\App\Models\ClassMaster::where('user_id', auth()->user()->id)->get()) > 0)
+            
+            @if(auth()->user()->classes()->count() > 0)
             <li>
                 <a href="{{route('user.class')}}?type=master">
                     <i class="menu-icon text-primary fa fa-graduation-cap"></i>
-                    <span class="menu-text">ClassMaster Of</span>
+                    <span class="menu-text">{{__('text.HOD_OF')}}</span>
+                </a>
+                <b class="arrow"></b>
+            </li>
+            <li>
+                <a href="{{route('user.teacher.index')}}?type=teacher" class="text-capitalize">
+                    <i class="menu-icon text-primary fa fa-user" aria-hidden="true"></i>
+                    {{trans_choice('text.word_teacher', 2)}}
                 </a>
                 <b class="arrow"></b>
             </li>
@@ -219,6 +218,14 @@
                 <b class="arrow"></b>
             </li>
             @endif
+            <li>
+                <a href="{{route('user.class')}}">
+                    <i class="menu-icon text-primary fa fa-group"></i>
+                    <span class="menu-text">{{__('text.word_classes')}}</span>
+                </a>
+                <b class="arrow"></b>
+            </li>
+
             @if (\Auth::user()->hasPermissionTo('promote_students'))
                 <li>
                     <a href="{{route('user.students.init_promotion')}}?type=master"  class="text-capitalize">

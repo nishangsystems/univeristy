@@ -2,7 +2,14 @@
 
 @section('section')
 <!-- page start-->
-
+<?php /* @php
+    if(auth()->user()->campus_id != null){
+        $campus_subjects = \App\Models\CampusProgram::where('campus_programs.campus_id', auth()->user()->campus_id)
+                    ->join('program_levels', ['program_levels.id'=>'campus_programs.program_level_id'])
+                    ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])
+                    ->distinct()->pluck('class_subjects.subject_id');
+    }
+@endphp */ ?>
 <div class="col-sm-12">
     <form method="post">
         @csrf

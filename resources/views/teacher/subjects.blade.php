@@ -24,16 +24,16 @@
                 <tbody>
 
                     @if(\request('class'))
-                
-                        @foreach($subjects as $k=>$subject)
+                        @php($k = 1)
+                        @foreach($subjects as $subject)
                         <tr>
                             @php($class = \App\Models\ProgramLevel::find(request('class')))
-                            <td>{{ $k+1 }}</td>
-                            <td>{{ $subject->subject->code }}</td>
-                            <td>{{ $subject->subject->name }}</td>
+                            <td>{{ $k++ }}</td>
+                            <td>{{ $subject->code }}</td>
+                            <td>{{ $subject->name }}</td>
                             <td>{{$class->program()->first()->name.': LEVEL '.$class->level()->first()->level}}</td>
                             <td>{{ \App\Models\Campus::find($subject->campus_id)->name ?? '----' }}</td>
-                            <td>{{ $subject->subject->coef }}</td>
+                            <td>{{ $subject->coef }}</td>
                             <?php /*<td style="float: right;">
                                 <a class="btn btn-xs btn-primary" href="{{route('user.result', ['subject'=>$subject->id, 'class'=>request('class')])}}">Result</a>
                             </td> */

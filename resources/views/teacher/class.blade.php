@@ -1,32 +1,33 @@
 @extends('teacher.layout')
 @section('section')
     <div class="col-sm-12">
-        <p class="text-muted">
-           My Classes
+        <p class="text-muted text-capitalize">
+           {{__('text.my_classes')}}
         </p>
 
         <div class="content-panel">
             <div class="adv-table table-responsive">
                 <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                     <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th></th>
-                    </tr>
+                        <tr class="text-capitalize">
+                            <th>{{__('text.sn')}}</th>
+                            <th>{{__('text.word_class')}}</th>
+                            <th>{{__('text.word_campus')}}</th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
 
+                    @php($k = 1)
                     @foreach($units as $unit)
 
-                    @php(dd($unit))
-                        @php($class = \App\Models\ProgramLevel::find($unit->id))
                         <tr>
-                            <td>{{ \App\Http\Controllers\Controller::sorted_program_levels()->where('id', '=', [$unit->id])->first() }}</td>
-                            <td>{{$unit->type->name}}</td>
+                            <td>{{$k++}}</td>
+                            <td>{{ $unit->program()->first()->name.' : LEVEL '.$unit->level()->first()->level}}</td>
+                            <td>{{\App\Models\Campus::find($unit->campus_id)->name}}</td>
                             <td style="float: right;">
-                                <a class="btn btn-xs btn-primary" href="{{route('user.class.student', [$unit->id])}}">Students</a>
-                                <a class="btn btn-xs btn-success" href="{{route('user.subject')}}?class={{$unit->id}}">Subjects</a>
+                                <a class="btn btn-xs btn-primary" href="{{route('user.class.student', [$unit->id])}}?campus={{$unit->campus_id}}">Students</a>
+                                <a class="btn btn-xs btn-success" href="{{route('user.subject')}}?class={{$unit->id}}&campus={{$unit->campus_id}}">Subjects</a>
                             </td>
                         </tr>
                     @endforeach

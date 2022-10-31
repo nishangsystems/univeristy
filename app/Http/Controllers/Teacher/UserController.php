@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassMaster;
@@ -31,24 +31,24 @@ class UserController extends Controller
             }else{
                 $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
             }
-            return view('admin.user.index')->with($data);
+            return view('teacher.user.index')->with($data);
         }else if(\request('permission')){
             $data['type'] = \App\Models\Permission::whereSlug(\request('permission'))->first()->name;
             $data['title'] = "Permission ".($data['type'] ?? "Users");
             $data['users'] =\App\Models\Permission::whereSlug(\request('permission'))->first()->users()->paginate(15);
-            return view('admin.user.index')->with($data);
+            return view('teacher.user.index')->with($data);
         }else{
             $data['type'] = request('teacher', 'user');
             $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
             $data['title'] = "Manage " . $data['type']. 's';
-            return view('admin.user.index')->with($data);
+            return view('teacher.user.index')->with($data);
         }
     }
 
     public function create(Request $request)
     {
         $data['title'] = "Add ".(request('type') ?? "User");
-        return view('admin.user.create')->with($data);
+        return view('teacher.user.create')->with($data);
     }
 
     /**
@@ -87,7 +87,7 @@ class UserController extends Controller
             $user_role->save();
         }
 
-        return redirect()->to(route('admin.users.index', [$request->type=='teacher' ? 'type' : 'role' =>$request->type]))->with('success', "User Created Successfully !");
+        return redirect()->to(route('user.teacher.index', [$request->type=='teacher' ? 'type' : 'role' =>$request->type]))->with('success', "User Created Successfully !");
     }
 
     /**
@@ -106,7 +106,7 @@ class UserController extends Controller
         ])->join('subjects', ['subjects.id'=>'teachers_subjects.subject_id'])
         ->distinct()->select('subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id')->get();
         // dd($data);
-        return view('admin.user.show')->with($data);
+        return view('teacher.user.show')->with($data);
     }
 
     /**
@@ -119,7 +119,7 @@ class UserController extends Controller
     {
         $data['title'] = "Edit user details";
         $data['user'] = \App\Models\User::find($id);
-        return view('admin.user.edit')->with($data);
+        return view('teacher.user.edit')->with($data);
     }
 
     /**
@@ -146,7 +146,7 @@ class UserController extends Controller
 
         $input = $request->all();
         $user->update($input);
-        return redirect()->to(route('admin.users.show', [$user->id]))->with('success', "User updated Successfully !");
+        return redirect()->to(route('user.teacher.show', [$user->id]))->with('success', "User updated Successfully !");
     }
 
     /**
@@ -162,7 +162,7 @@ class UserController extends Controller
             return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('error', "User can't be deleted");
         }
         $user->delete();
-        return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('success', "User deleted successfully!");
+        return redirect()->to(route('user.teacher.index', ['type' => $user->type]))->with('success', "User deleted successfully!");
     }
 
 
@@ -172,49 +172,6 @@ class UserController extends Controller
         $data['title'] = "Assign Subject to " . $data['user']->name;
         $data['classes'] = StudentController::baseClasses();
         return view('admin.user.assignSubject')->with($data);
-    }
-
-    public function classmaster()
-    {
-        $data['users'] = \App\Models\ClassMaster::paginate(20);
-        $data['title'] = "HOD";
-        return view('admin.user.classmaster')->with($data);
-    }
-
-    public function classmasterCreate()
-    {
-        $data['title'] = "Assign HOD";
-        $data['classes'] = StudentController::baseClasses();
-        $data['units'] = \App\Models\SchoolUnits::where('parent_id', 0)->get();
-        return view('admin.user.create_classmaster')->with($data);
-    }
-
-    public function saveClassmaster(Request  $request)
-    {
-        $this->validate($request, [
-            'user_id' => 'required',
-            'campus_id' => 'required',
-            'section' => 'required',
-        ]);
-        if (ClassMaster::where('user_id', $request->user_id)->where('department_id',  $request->section)->where('campus_id',  $request->campus_id)->count() > 0) {
-            return redirect()->back()->with('error', "User already assigned to this class !");
-        }
-
-        $master = new ClassMaster();
-        $master->user_id = $request->user_id;
-        $master->campus_id = $request->campus_id;
-        $master->department_id = $request->section;
-        $master->batch_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-        $master->save();
-
-        return redirect()->to(route('admin.users.classmaster'))->with('success', "User updated Successfully !");
-    }
-
-    public function  deleteMaster(Request  $request)
-    {
-        $master = ClassMaster::findOrFail($request->master);
-        $master->delete();
-        return redirect()->to(route('admin.users.classmaster'))->with('success', "User unassigned Successfully !");
     }
 
 

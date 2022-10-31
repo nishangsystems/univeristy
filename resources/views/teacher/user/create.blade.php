@@ -1,9 +1,9 @@
-@extends('admin.layout')
+@extends('teacher.layout')
 
 @section('section')
     <div class="mx-3">
         <div class="form-panel">
-            <form class="form-horizontal" role="form" method="POST" action="{{route('admin.users.store')}}">
+            <form class="form-horizontal" role="form" method="POST" action="{{route('user.teacher.store')}}">
                 <input name="type" value="{{request('type','teacher')}}" type="hidden" />
                 @csrf
                 <div class="form-group @error('name') has-error @enderror">

@@ -3,7 +3,7 @@
 @section('section')
     <div class="col-sm-12">
         <p class="text-muted">
-            <a href="{{route('admin.users.classmaster.create')}}?type={{request('type')}}" class="btn btn-info btn-xs">Add Class Master</a>
+            <a href="{{route('admin.users.classmaster.create')}}?type={{request('type')}}" class="btn btn-info btn-xs text-capitalize">{{__('text.add_HOD')}}</a>
         </p>
 
         <div class="content-panel">
@@ -12,9 +12,9 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Class</th>
-                        <th>Batch</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_department')}}</th>
+                        <th>{{__('text.word_campus')}}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -24,10 +24,10 @@
                                 <td>{{$k+1}}</td>
                                 <td>{{$user->user->name}}</td>
                                 <td>{{$user->class->name}}</td>
-                                <td>{{$user->batch->name}}</td>
+                                <td>{{\App\Models\Campus::find($user->campus_id)->name}}</td>
                                 <td  class="d-flex justify-content-end align-items-center" >
                                     <a onclick="event.preventDefault();
-                                            document.getElementById('delete{{$user->id}}').submit();" class=" btn btn-danger btn-xs m-2">Un Assign</a>
+                                            document.getElementById('delete{{$user->id}}').submit();" class=" btn btn-danger btn-xs m-2">{{__('text.word_unassign')}}</a>
                                     <form id="delete{{$user->id}}" action="{{route('admin.users.classmaster')}}" method="POST" style="display: none;">
                                         @method('DELETE')
                                         <input type="hidden" name="master" value="{{$user->id}}">

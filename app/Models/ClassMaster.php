@@ -10,7 +10,7 @@ class ClassMaster extends Model
     use HasFactory;
 
     public function class(){
-        return  $this->belongsTo(SchoolUnits::class, 'class_id');
+        return  $this->belongsTo(SchoolUnits::class, 'department_id');
     }
 
     public function user(){
