@@ -50,6 +50,12 @@ class HomeController extends Controller
             'total' => count($school_unit)
         ]);
     }
+    public static function x_children($parent)
+    {
+        $id = trim($parent);
+        $school_unit = SchoolUnits::where('parent_id',$id)->get();
+        return $school_unit;
+    }
 
     public function  subjects($parent)
     {

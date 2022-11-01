@@ -355,4 +355,6 @@ return [
     'word_unassign'=>'unassign',
     'select_teacher'=>'select teacher',
     'word_department'=>'department',
+    'program_material'=>'program material',
+    'word_notifications'=>'notifications',
 ];

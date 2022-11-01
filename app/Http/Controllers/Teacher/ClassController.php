@@ -17,11 +17,26 @@ use \Session;
 class ClassController extends Controller
 {
 
+    public function program_courses()
+    {
+        # code...
+        $data['title'] = 'Courses For '.SchoolUnits::find(ClassMaster::where('user_id', '=', auth()->id)->first()->department_id)->name;
+        // $data['courses'] = 
+    }
+
+    public function program_levels_list()
+    {
+        # code...
+        $data['title'] = "Class List".(request()->has('campus_id') ? \App\Models\Campus::find(request('campus_id'))->first()->name : '').(request()->has('id') ? ' For '.\App\Models\ProgramLevel::find(request('id'))->program()->first()->name.' Level '.\App\Models\ProgramLevel::find(request('id'))->level()->first()->level : null);
+        return view('teacher.class_list', $data);
+    }
+
     public function index()
     {
         $data['options'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
         if (\request('type') == 'master') {
             $data['classes'] = ClassMaster::where('batch_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->where('user_id', Auth::user()->id)->get();
+            // dd($data);
             return view('teacher.class_master')->with($data);
         } else {
             $data['units']  = \App\Models\ProgramLevel::join('teachers_subjects', ['teachers_subjects.class_id'=>'program_levels.id'])
@@ -86,5 +101,18 @@ class ClassController extends Controller
         $data['year'] = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
         $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
         return view('teacher.rank')->with($data);
+    }
+
+    public function notifications(Request $request)
+    {
+        # code...
+        $pl = ProgramLevel::find($request->id) ?? null;
+        $data['title'] = 'Notifications For '.($pl->program()->first()->name.' : LEVEL '.$pl->level()->first()->level ?? '');
+        
+    }
+
+    public function material(Request $request)
+    {
+        # code...
     }
 }

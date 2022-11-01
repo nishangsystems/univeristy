@@ -267,6 +267,20 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
     Route::get('',  'Teacher\HomeController@index')->name('home');
+    Route::get('class_list',  'Teacher\ClassController@program_levels_list')->name('class_list');
+    Route::get('course_list',  'Teacher\ClassController@program_courses')->name('course_list');
+    Route::name('notifications.')->prefix('notifications')->group(function(){
+        Route::get('', 'Teacher\NotificationsController@index')->name('index');
+        Route::get('create', 'Teacher\NotificationsController@create')->name('create');
+        Route::post('create', 'Teacher\NotificationsController@save')->name('save');
+        Route::get('delete', 'Teacher\NotificationsController@drop')->name('drop');
+    });
+    Route::name('material.')->prefix('material')->group(function(){
+        Route::get('', 'Teacher\MaterialController@material')->name('index');
+        Route::get('create', 'Teacher\MaterialController@create')->name('create');
+        Route::post('create', 'Teacher\MaterialController@save')->name('save');
+        Route::get('delete', 'Teacher\MaterialController@drop')->name('drop');
+    });
     Route::get('class', 'Teacher\ClassController@index')->name('class');
     Route::get('students/init_promotion', 'Admin\StudentController@teacherInitPromotion')->name('students.init_promotion');
     Route::get('students/promote', 'Admin\StudentController@teacherPromotion')->name('students.promotion');
@@ -285,9 +299,9 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::put('subjects/notes/{id}', 'Teacher\SubjectNotesController@publish_notes')->name('subject.note.publish');
     Route::post('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@store')->name('subject.note.store');
     Route::delete('subjects/notes/{id}', 'Teacher\SubjectNotesController@destroy')->name('subject.note.destroy');
-    Route::get('{user_id}/subjects', 'Teacher\UserController@createSubject')->name('teachers.subjects.add');
-    Route::delete('{user_id}/subjects', 'Teacher\UserController@dropSubject')->name('teachers.subjects.drop');
-    Route::post('{user_id}/subjects', 'Teacher\UserController@saveSubject')->name('teachers.subjects.save');
+    Route::get('{user_id}/subjects', 'Teacher\UserController@createSubject')->name('teacher.subjects.add');
+    Route::delete('{user_id}/subjects', 'Teacher\UserController@dropSubject')->name('teacher.subjects.drop');
+    Route::post('{user_id}/subjects', 'Teacher\UserController@saveSubject')->name('teacher.subjects.save');
     Route::resource('teacher', 'Teacher\UserController');
 });
 

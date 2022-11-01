@@ -104,6 +104,7 @@ class UserController extends Controller
             'teacher_id' => $id,
             'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear(),
         ])->join('subjects', ['subjects.id'=>'teachers_subjects.subject_id'])
+        ->orderBy('teachers_subjects.created_at', 'DESC')
         ->distinct()->select('subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id')->get();
         // dd($data);
         return view('teacher.user.show')->with($data);
@@ -170,8 +171,8 @@ class UserController extends Controller
     {
         $data['user'] = \App\Models\User::find($id);
         $data['title'] = "Assign Subject to " . $data['user']->name;
-        $data['classes'] = StudentController::baseClasses();
-        return view('admin.user.assignSubject')->with($data);
+        // $data['classes'] = StudentController::baseClasses();
+        return view('teacher.user.assignSubject')->with($data);
     }
 
 
@@ -207,6 +208,6 @@ class UserController extends Controller
             Session::flash('error', "Subject assigned already");
         }
 
-        return redirect()->to(route('admin.users.show', $id));
+        return redirect()->to(route('user.teacher.show', $id));
     }
 }

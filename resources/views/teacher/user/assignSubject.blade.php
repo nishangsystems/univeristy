@@ -3,7 +3,7 @@
 @section('section')
     <div class="mx-3">
         <div class="form-panel">
-            <form class="form-horizontal" role="form" method="POST" action="{{route('users.teacher.subjects.save', $user->id)}}">
+            <form class="form-horizontal" role="form" method="POST" action="{{route('user.teacher.subjects.save', $user->id)}}">
                 @csrf
 
                 <div id="section">
@@ -66,7 +66,7 @@
                 <div class="form-group">
                     <div class="d-flex justify-content-end col-lg-12">
                         <button id="save" class="btn btn-xs btn-primary mx-3" style="display: none" type="submit">Save</button>
-                        <a class="btn btn-xs btn-danger" href="{{route('admin.users.show', $user->id)}}" type="button">Cancel</a>
+                        <a class="btn btn-xs btn-danger" href="{{route('user.teacher.show', $user->id)}}" type="button">Cancel</a>
                     </div>
                 </div>
 

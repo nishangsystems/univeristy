@@ -110,10 +110,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach($courses as $k=>$subject)
+                    @php($c = 1)
+                    @foreach($courses as $subject)
                         <tr>
                             @php($value = \App\Models\ProgramLevel::find($subject->class))
-                            <td>{{$k+1}}</td>
+                            <td>{{$c++}}</td>
                             <td>{{$subject->code}}</td>
                             <td>{{$subject->name}}</td>
                             <td>{{$value->program()->first()->name.': LEVEL '.$value->level()->first()->level}}</td>

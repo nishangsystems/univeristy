@@ -19,11 +19,11 @@
 
                     @foreach($classes as $class)
                         <tr>
-                            <td>{{ $options[$class->class->id] }}</td>
+                            <td>{{ \App\Models\SchoolUnits::find($class->department_id)->name }}</td>
                             <td>{{$class->class->type->name}}</td>
-                            <td>
-                                <a class="btn btn-xs btn-primary" href="{{route('user.class.student', [$class->class->id])}}">Students</a>
-                                <a class="btn btn-xs btn-success" href="{{route('user.subject')}}?class={{$class->class->id}}">Subjects</a>
+                            <td class="text-capitalize">
+                                <a class="btn btn-xs btn-primary" href="{{route('user.class_list')}}">{{__('text.word_students')}}</a>
+                                <a class="btn btn-xs btn-success" href="{{route('user.course_list}}">{{__('text.word_courses')}}</a>
                             </td>
                         </tr>
                     @endforeach
