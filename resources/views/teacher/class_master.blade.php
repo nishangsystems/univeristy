@@ -23,7 +23,7 @@
                             <td>{{$class->class->type->name}}</td>
                             <td class="text-capitalize">
                                 <a class="btn btn-xs btn-primary" href="{{route('user.class_list')}}">{{__('text.word_students')}}</a>
-                                <a class="btn btn-xs btn-success" href="{{route('user.course_list}}">{{__('text.word_courses')}}</a>
+                                <a class="btn btn-xs btn-success" href="{{route('user.course_list')}}">{{__('text.word_courses')}}</a>
                             </td>
                         </tr>
                     @endforeach
