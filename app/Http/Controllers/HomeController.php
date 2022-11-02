@@ -206,6 +206,7 @@ class HomeController extends Controller
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
+                    'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
                     'total'=> $value['amount'],
                     'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
