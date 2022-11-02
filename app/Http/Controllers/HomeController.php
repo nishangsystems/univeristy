@@ -179,7 +179,7 @@ class HomeController extends Controller
                     ->toArray()
                 ),
                 'total' => 
-                        \App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                        \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                         ->where('payment_items.name', '=', 'TUTION')
                         ->whereNotNull('payment_items.amount')
@@ -247,7 +247,7 @@ class HomeController extends Controller
                     ->toArray()
                 ),
                 'total' => 
-                        \App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                        \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                         ->where('payment_items.name', '=', 'TUTION')
                         ->whereNotNull('payment_items.amount')
