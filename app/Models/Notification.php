@@ -38,7 +38,7 @@ class Notification extends Model
         $audience = '';
         # code...
         $audience .= $this->schoolUnit() == null ? '' : $this->schoolUnit()->first()->name;
-        $audience .= ' - '.$this->level()->first()->level ?? '';
+        $audience .= $this->level()->first() == null ? '' :' - Level '.$this->level()->first()->level;
         return $audience;
     }
 
