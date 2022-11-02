@@ -68,6 +68,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('programs/index', 'Admin\ProgramController@program_index')->name('programs.index');
     
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
+    Route::get('fee/fee_list', 'Admin\FeesController@fee_list');
     Route::get('print_fee', 'Admin\FeesController@printFee')->name('print_fee');
     Route::get('print_fee/{student_id}', 'Admin\FeesController@printStudentFee')->name('print_fee.student');
     Route::get('fee/classes', 'Admin\FeesController@classes')->name('fee.classes');
@@ -269,18 +270,6 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::get('',  'Teacher\HomeController@index')->name('home');
     Route::get('class_list',  'Teacher\ClassController@program_levels_list')->name('class_list');
     Route::get('course_list',  'Teacher\ClassController@program_courses')->name('course_list');
-    Route::name('notifications.')->prefix('notifications')->group(function(){
-        Route::get('', 'Teacher\NotificationsController@index')->name('index');
-        Route::get('create', 'Teacher\NotificationsController@create')->name('create');
-        Route::post('create', 'Teacher\NotificationsController@save')->name('save');
-        Route::get('delete', 'Teacher\NotificationsController@drop')->name('drop');
-    });
-    Route::name('material.')->prefix('material')->group(function(){
-        Route::get('', 'Teacher\MaterialController@material')->name('index');
-        Route::get('create', 'Teacher\MaterialController@create')->name('create');
-        Route::post('create', 'Teacher\MaterialController@save')->name('save');
-        Route::get('delete', 'Teacher\MaterialController@drop')->name('drop');
-    });
     Route::get('class', 'Teacher\ClassController@index')->name('class');
     Route::get('students/init_promotion', 'Admin\StudentController@teacherInitPromotion')->name('students.init_promotion');
     Route::get('students/promote', 'Admin\StudentController@teacherPromotion')->name('students.promotion');
@@ -303,6 +292,14 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::delete('{user_id}/subjects', 'Teacher\UserController@dropSubject')->name('teacher.subjects.drop');
     Route::post('{user_id}/subjects', 'Teacher\UserController@saveSubject')->name('teacher.subjects.save');
     Route::resource('teacher', 'Teacher\UserController');
+    Route::prefix('programs')->name('programs.')->group(function(){
+        Route::get('{department_id}', 'Teacher\HomeController@program_index')->name('index');
+        Route::get('{program_id}/levels', 'Teacher\HomeController@program_levels')->name('levels');
+        Route::get('{program_level_id}/courses', 'Teacher\HomeController@unit_courses')->name('courses');
+        Route::get('{program_level_id}/manage_courses', 'Teacher\HomeController@manage_courses')->name('manage_courses');
+        Route::post('{program_level_id}/manage_courses', 'Teacher\HomeController@save_courses')->name('save_courses');
+    });
+    Route::get('{program_level_id}/class_courses', 'Teacher\HomeController@manage_courses')->name('edit.class_courses');
 });
 
 Route::prefix('student')->name('student.')->group(function () {
@@ -335,6 +332,22 @@ Route::get('search-all-students', 'HomeController@searchStudents_get')->name('ge
 Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search');
 Route::get('student_rank', 'HomeController@rank')->name('student_rank');
 Route::post('student_rank', 'HomeController@rankPost')->name('student_rank');
+
+Route::name('notifications.')->prefix('notifications')->group(function(){
+    Route::get('', 'NotificationsController@index')->name('index');
+    Route::get('create', 'NotificationsController@create')->name('create');
+    Route::post('create', 'NotificationsController@save')->name('save');
+    Route::post('delete/{id}', 'NotificationsController@drop')->name('drop');
+    Route::get('edit/{id}', 'NotificationsController@edit')->name('edit');
+    Route::post('update/{id}', 'NotificationsController@update')->name('update');
+    Route::get('show/{id}', 'NotificationsController@show')->name('show');
+});
+Route::name('material.')->prefix('material')->group(function(){
+    Route::get('', 'MaterialController@material')->name('index');
+    Route::get('create', 'MaterialController@create')->name('create');
+    Route::post('create', 'MaterialController@save')->name('save');
+    Route::get('delete', 'MaterialController@drop')->name('drop');
+});
 
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
 

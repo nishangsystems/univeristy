@@ -14,6 +14,7 @@
                     <thead>
                     <tr class="text-capitalize">
                         <th>#</th>
+                        <th>{{__('text.word_matricule')}}</th>
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.word_class')}}</th>
                         <th>{{__('text.word_amount')}}</th>
@@ -22,11 +23,12 @@
                     </thead>
                     <tbody id="content">
                     @php($total = 0)
-                        @foreach($fees as $k=>$fee)
-                            <tr>
+                    @foreach($fees as $k=>$fee)
+                        <tr>
                                 <td>{{$k+1}}</td>
-                                <td>{{$fee->student->name}}</td>
-                                <td>{{$fee->class->name}}</td>
+                                <td>{{$fee->student->matric ?? ''}}</td>
+                                <td>{{$fee->student->name ?? ''}}</td>
+                                <td>{{$fee->class->program->name .' : Level '.$fee->class->level->level}}</td>
                                 <td>{{$fee->amount}} XAF</td>
                                 <td>
                                     <a onclick="event.preventDefault();

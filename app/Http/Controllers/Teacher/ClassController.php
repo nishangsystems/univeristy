@@ -103,16 +103,5 @@ class ClassController extends Controller
         return view('teacher.rank')->with($data);
     }
 
-    public function notifications(Request $request)
-    {
-        # code...
-        $pl = ProgramLevel::find($request->id) ?? null;
-        $data['title'] = 'Notifications For '.($pl->program()->first()->name.' : LEVEL '.$pl->level()->first()->level ?? '');
-        
-    }
 
-    public function material(Request $request)
-    {
-        # code...
-    }
 }
