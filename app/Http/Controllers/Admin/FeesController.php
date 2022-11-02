@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\HomeController;
 use App\Models\Payments;
 use App\Models\SchoolUnits;
 use App\Models\Students;
@@ -69,9 +70,17 @@ class FeesController extends Controller
     public function fee(Request  $request)
     {
         $type = request('type', 'completed');
-        $title = $type . " fee ";
-        $students = [];
-        return view('admin.fee.fee', compact('students', 'title'));
+        $data['title'] = $type . " fee ";
+        // dd($data);
+        return view('admin.fee.fee', $data);
+    }
+    public function fee_list(Request  $request)
+    {
+        $type = request('type', 'completed');
+        $data['title'] = $type . " Fee ";
+        $data['students'] = HomeController::_fee($request)['students'];
+        // return $data;
+        return view('admin.fee.fee_listing', $data);
     }
 
     public function drive(Request  $request)

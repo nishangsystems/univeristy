@@ -204,30 +204,9 @@
                 <b class="arrow"></b>
             </li>
             <li>
-                <a href="{{route('user.class_list')}}" class="text-capitalize">
-                    <i class="menu-icon text-primary fa fa-user" aria-hidden="true"></i>
-                    {{__('text.class_list')}}
-                </a>
-                <b class="arrow"></b>
-            </li>
-            <li>
-                <a href="{{route('user.rank.class')}}">
+                <a href="{{route('notifications.index')}}?type=departmental">
                     <i class="menu-icon text-primary fa fa-star"></i>
-                    <span class="menu-text">Class Rank Sheet</span>
-                </a>
-                <b class="arrow"></b>
-            </li>
-            <li>
-                <a href="{{route('user.master_sheet')}}">
-                    <i class="menu-icon text-primary fa fa-star"></i>
-                    <span class="menu-text">Master Sheet</span>
-                </a>
-                <b class="arrow"></b>
-            </li>
-            <li>
-                <a href="{{route('user.master_sheet')}}">
-                    <i class="menu-icon text-primary fa fa-star"></i>
-                    <span class="menu-text">{{__('text.word_notifications')}}</span>
+                    <span class="menu-text">{{__('text.dep_notifications')}}</span>
                 </a>
                 <b class="arrow"></b>
             </li>

@@ -85,7 +85,7 @@ class User extends Authenticatable
     {
         return ClassMaster::where([
             'batch_id' => $year,
-            'class_id' => $class,
+            'department_id' => $class,
             'user_id' => $this->id
         ])->count() > 0;
     }

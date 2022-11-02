@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id', 'name', 'message', 'date', 'status', 'campus_id', 'department_id', 'program_id', 'level_id'];
+    protected $fillable = ['user_id', 'title', 'message', 'date', 'status', 'campus_id', 'visibility', 'school_unit_id', 'level_id'];
     protected $table = 'notifications';
 
     public function campus()
@@ -17,16 +17,10 @@ class Notification extends Model
         return $this->belongsTo(Campus::class, 'campus_id');
     }
 
-    public function department()
+    public function schoolUnit()
     {
         # code...
-        return $this->belongsTo(SchoolUnits::class, 'department_id');
-    }
-
-    public function program()
-    {
-        # code...
-        return $this->belongsTo(SchoolUnits::class, 'program_id');
+        return $this->belongsTo(SchoolUnits::class, 'school_unit_id');
     }
 
     public function level()
@@ -37,11 +31,15 @@ class Notification extends Model
 
     public function audience()
     {
+        if ($this->schoolUnit() == null && $this->level() == null) {
+            # code...
+            return 'All';
+        }
         $audience = '';
         # code...
-        $audience .= $this->department() == null ? '' : $this->department()->first()->name;
-        $audience .= $this->program() == null ? '' : ' - '.$this->program()->first()->name;
-        $audience .= $this->level() == null ? '' : ' - '.$this->level()->first()->level;
+        $audience .= $this->schoolUnit() == null ? '' : $this->schoolUnit()->first()->name;
+        $audience .= ' - '.$this->level()->first()->level ?? '';
+        return $audience;
     }
 
     public function created_by()
@@ -49,4 +47,9 @@ class Notification extends Model
         # code...
         return $this->belongsTo(User::class);
     }
+
+//     public function created_at()
+//     {
+//         # code...
+//     }
 }

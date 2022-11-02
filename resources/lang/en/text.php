@@ -357,4 +357,12 @@ return [
     'word_department'=>'department',
     'program_material'=>'program material',
     'word_notifications'=>'notifications',
+    'departmental_notifications'=>'departmental Notifications',
+    'dep_notifications'=>'dep notifications',
+    'submission_date'=>'submission date',
+    'word_visibility'=>'visibility',
+    'select_visibility'=>'select visibility',
+    'word_general'=>'general',
+    'word_teachers'=>'teachers',
+    'word_description'=>'description',
 ];

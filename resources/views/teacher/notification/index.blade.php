@@ -5,7 +5,7 @@
 
 <div class="row flex" style="padding:20px;">
     <div>
-        <a href="{{route('user.notifications.create')}}" style="padding:5px; margin:10px; float:bottom;" class="btn-primary">Create New Notification</a>
+        <a href="{{route('notifications.create').'?'.('type='.request('type')??'').('&program_level_id='.request('program_level_id')??'').('&campus_id='.request('campus_id')??'')}}" style="padding:5px; margin:10px; float:bottom;" class="btn-primary">Create New Notification</a>
     </div>
    
 </div>
@@ -27,31 +27,28 @@
                         <th>Title</th>
                         <th>Audience</th>
                         <th>Created on</th>
+                        <th>Due date</th>
                         <th>Status</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse(\App\Models\Notifications::orderBy('created_at', 'DESC')->get(); as $notification)
+                    @forelse(\App\Models\Notification::orderBy('created_at', 'DESC')->get(); as $notification)
 
                         <tr>  
-                            <td>{{$notification->name}}</td>
-                            <td>{{($notification->program == null)?"For all Programs":$notification->program->name}} - 
-                            {{($notification->level == null)?"For all Levels":$notification->level->name}}</td>
+                            <td>{{$notification->title}}</td>
+                            <td>{{$notification->audience()}}</td>
                             <td>  <h6 class="mb-0">{{ $notification->created_at }}</h6>
-                            {{ $notification->created_at->diffForHumans() }}</td></td>
+                            {{ $notification->created_at->diffForHumans() }}</td>
                             <td><span class="btn btn-xs {{(time() > strtotime($notification->date))?'btn-danger':'btn-success'}} m-2">{{(time() >= strtotime($notification->date))?"Passed":"Pending"}}</span></td>
-                        <td>
-                                <a href="{{route('admin.notification.edit',$notification->id)}}" class=" btn btn-primary btn-xs m-2">Edit</a>
-                                <a href="{{route('admin.notification.show',$notification->id)}}" class=" btn btn-success btn-xs m-2">View</a>
+                            <td>
+                                <a href="{{route('notifications.edit',$notification->id)}}" class=" btn btn-primary btn-xs m-2">Edit</a>
+                                <a href="{{route('notifications.show',$notification->id)}}" class=" btn btn-success btn-xs m-2">View</a>
                                 <a onclick="event.preventDefault();
 												document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">Delete</a>
-
-
-                            <form id="delete" action="{{route('admin.notification.destroy',$notification->id)}}" method="POST" style="display: none;">
-                            @method('DELETE')
-                                {{ csrf_field() }}
-                            </form>
+                                <form id="delete" action="{{route('notifications.drop',$notification->id)}}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
                             </td>
                         </tr>
                     @empty

@@ -150,6 +150,73 @@ class HomeController extends Controller
         }
     }
 
+    public static function _fee(Request  $request)
+    {
+        $type = request('type', 'completed');
+        $year = request('year', \App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+        $class = ProgramLevel::find(\request('class'));
+
+        $title = $type . " fee " . ($class != null ? "for " . $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level : '');
+        $students = [];
+ 
+        $studs = \App\Models\StudentClass::where('student_classes.class_id', '=', $request->class)->where('year_id', '=', $year)->join('students', 'students.id', '=', 'student_classes.student_id');
+        if(auth()->user()->campus_id != null) {
+            # code...
+            $studs = $studs->where('students.campus_id', '=', auth()->user()->campus_id);
+        }
+        $studs = $studs->pluck('students.id')->toArray();
+        $results = [];
+        
+
+        $fees = array_map(function($stud) use ($year){
+            return [
+                'amount' => array_sum(
+                    \App\Models\Payments::where('payments.student_id', '=', $stud)
+                    ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
+                    ->where('payment_items.name', '=', 'TUTION')
+                    ->where('payments.batch_id', '=', $year)
+                    ->pluck('payments.amount')
+                    ->toArray()
+                ),
+                'total' => 
+                        \App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                        ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+                        ->where('payment_items.name', '=', 'TUTION')
+                        ->whereNotNull('payment_items.amount')
+                        ->join('students', 'students.program_id', '=', 'program_levels.id')
+                        ->where('students.id', '=', $stud)->pluck('payment_items.amount')[0] ?? 0
+                    ,
+                'stud' => $stud
+            ];
+        }, $studs);
+
+        foreach ($fees as $key => $value) {
+            # code...
+            $stdt = Students::find($value['stud']);
+            if(($value['amount'] == $value['total'] && $value['total'] > 0) && $type == 'completed'){
+                $students[] = [
+                    'id'=> $stdt->id,
+                    'name'=> $stdt->name,
+                    'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
+                    'total'=> $value['amount'],
+                    'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
+                ];
+            }
+            if(($value['amount'] < $value['total'] || $value['total'] == 0) && $type == 'uncompleted'){
+                $students[] = [
+                    'id'=> $stdt->id,
+                    'name'=> $stdt->name,
+                    'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
+                    'total'=> $value['amount'],
+                    'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
+                ];
+            }
+        }
+
+        $students = collect($students)->sortBy('name')->toArray();
+
+        return ['students' => $students, 'title' => $title];
+    }
     public function fee(Request  $request)
     {
         $type = request('type', 'completed');

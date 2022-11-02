@@ -16,7 +16,7 @@ class Payments extends Model
     }
 
     public function class(){
-        return $this->belongsTo(SchoolUnits::class, 'unit_id');
+        return $this->belongsTo(ProgramLevel::class, 'unit_id');
     }
 
     public function student(){

@@ -89,7 +89,7 @@ class SchoolUnits extends Model
     }
 
     public function parent(){
-        return $this->hasMany(BoardingFee::class, 'parent_id');
+        return $this->belongsTo(SchoolUnits::class, 'parent_id');
     }
 
     public function semesters()
