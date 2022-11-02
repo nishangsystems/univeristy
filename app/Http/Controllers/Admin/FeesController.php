@@ -78,7 +78,7 @@ class FeesController extends Controller
     {
         $type = request('type', 'completed');
         $data['title'] = $type . " Fee ";
-        $data['students'] = HomeController::_fee($request)['students'];
+        $data['students'] = HomeController::_fee($request);
         // return $data;
         return view('admin.fee.fee_listing', $data);
     }
