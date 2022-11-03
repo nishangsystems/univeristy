@@ -343,9 +343,13 @@ Route::name('notifications.')->prefix('notifications')->group(function(){
     Route::get('show/{id}', 'NotificationsController@show')->name('show');
 });
 Route::name('material.')->prefix('material')->group(function(){
-    Route::get('', 'MaterialController@material')->name('index');
+    Route::get('', 'MaterialController@index')->name('index');
     Route::get('create', 'MaterialController@create')->name('create');
     Route::post('create', 'MaterialController@save')->name('save');
+    Route::get('edit/{id}', 'MaterialController@edit')->name('edit');
+    Route::get('download/{id}', 'MaterialController@download')->name('download');
+    Route::post('update/{id}', 'MaterialController@update')->name('update');
+    Route::get('show/{id}', 'MaterialController@show')->name('show');
     Route::get('delete', 'MaterialController@drop')->name('drop');
 });
 

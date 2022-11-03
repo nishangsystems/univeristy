@@ -6,6 +6,9 @@
           <div class="col-lg-12">
                 <form class="cmxform form-horizontal form m-4 py-4 style-form" method="post" action="{{route('notifications.save')}}">
                 {{csrf_field()}}
+                    <input type="hidden" name="type" id="" value="{{request('type') ?? ''}}">
+                    <input type="hidden" name="program_level_id" id="" value="{{request('program_level_id') ?? ''}}">
+                    <input type="hidden" name="campus_id" id="" value="{{request('campus_id') ?? ''}}">
                     <div class="form-group text-capitalize">
                         <label class="col-md-2" > {{__('text.word_title')}}</label>
                         <div class="col-md-9">
@@ -15,8 +18,8 @@
 
                     @if((request('program_level_id') != null))
                         @php($pl = \App\Models\ProgramLevel::find(request('program_level_id')))
-                        <input type="hidden" name="school_unit_id" value="{{$pl->program()->first()->id}}">
-                        <input type="hidden" name="level_id" value="{{$pl->level()->first()->level}}">
+                        <input type="hidden" name="school_unit_id" value="{{$pl->program_id}}">
+                        <input type="hidden" name="level_id" value="{{$pl->level_id}}">
                     @else 
                         @if(request('type') == 'departmental')
                             <input type="hidden" name="school_unit_id" value="{{auth()->user()->classes()->first()->id}}">

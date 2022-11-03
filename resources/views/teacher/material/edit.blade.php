@@ -4,7 +4,7 @@
 
 <div class="row m-4">
           <div class="col-lg-12">
-                <form class="cmxform form-horizontal form m-4 py-4 style-form" method="post" action="{{route('material.save')}}" enctype="multipart/form-data">
+                <form class="cmxform form-horizontal form m-4 py-4 style-form" method="post" action="{{route('material.save')}}">
                 {{csrf_field()}}
                     <input type="hidden" name="type" id="" value="{{request('type') ?? ''}}">
                     <input type="hidden" name="program_level_id" id="" value="{{request('program_level_id') ?? ''}}">
