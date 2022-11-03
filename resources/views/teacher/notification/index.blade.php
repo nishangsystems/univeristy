@@ -2,7 +2,6 @@
 
 
 @section('section')
-
 <div class="row flex" style="padding:20px;">
     <div>
         <a href="{{route('notifications.create').'?'.('type='.request('type')??'').('&program_level_id='.request('program_level_id')??'').('&campus_id='.request('campus_id')??'')}}" style="padding:5px; margin:10px; float:bottom;" class="btn-primary">Create New Notification</a>
@@ -19,8 +18,8 @@
                 </a>
             </h4>
         </div>
-
-	<div class="panel-body">
+        
+        <div class="panel-body">
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -34,23 +33,43 @@
                 </thead>
                 <tbody>
                     @forelse(\App\Models\Notification::orderBy('created_at', 'DESC')->get(); as $notification)
-
-                        <tr>  
-                            <td>{{$notification->title}}</td>
-                            <td>{{$notification->audience()}}</td>
-                            <td>  <h6 class="mb-0">{{ $notification->created_at }}</h6>
-                            {{ $notification->created_at->diffForHumans() }}</td>
-                            <td><span class="btn btn-xs {{(time() > strtotime($notification->date))?'btn-danger':'btn-success'}} m-2">{{(time() >= strtotime($notification->date))?"Passed":"Pending"}}</span></td>
-                            <td>
-                                <a href="{{route('notifications.edit',$notification->id)}}" class=" btn btn-primary btn-xs m-2">Edit</a>
-                                <a href="{{route('notifications.show',$notification->id)}}" class=" btn btn-success btn-xs m-2">View</a>
-                                <a onclick="event.preventDefault();
-												document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">Delete</a>
-                                <form id="delete" action="{{route('notifications.drop',$notification->id)}}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </td>
-                        </tr>
+                        @if($notification->schoolUnit()->count() > 0 && $notification->level()->count() == 0 && request('type')=='departmental')
+                            <tr>  
+                                <td>{{$notification->title}}</td>
+                                <td>{{$notification->audience()}}</td>
+                                <td>  <h6 class="mb-0">{{ $notification->created_at }}</h6>
+                                {{ $notification->created_at->diffForHumans() }}</td>
+                                <td><span class="btn btn-xs {{(time() > strtotime($notification->date))?'btn-danger':'btn-success'}} m-2">{{(time() >= strtotime($notification->date))?"Passed":"Pending"}}</span></td>
+                                <td>
+                                    <a href="{{route('notifications.edit',$notification->id).'?type='.request('type').'&program_level_id='.request('program_level_id').'&campus_id='.request('campus_id')}}" class=" btn btn-primary btn-xs m-2">Edit it</a>
+                                    <a href="{{route('notifications.show',$notification->id).'?type='.request('type').'&program_level_id='.request('program_level_id').'&campus_id='.request('campus_id')}}" class=" btn btn-success btn-xs m-2">View</a>
+                                    <a onclick="event.preventDefault();
+                                                    document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">Delete</a>
+                                    <form id="delete" action="{{route('notifications.drop',$notification->id).'?type='.request('type').'&program_level_id='.request('program_level_id').'&campus_id='.request('campus_id')}}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
+                                </td>
+                            </tr>
+                            @else
+                                @if($notification->level()->count() > 0 && request('program_level_id') != (''||null) && \App\Models\ProgramLevel::find(request('program_level_id'))->program_id == $notification->school_unit_id)
+                                    <tr>  
+                                        <td>{{$notification->title}}</td>
+                                        <td>{{$notification->audience()}}</td>
+                                        <td>  <h6 class="mb-0">{{ $notification->created_at }}</h6>
+                                        {{ $notification->created_at->diffForHumans() }}</td>
+                                        <td><span class="btn btn-xs {{(time() > strtotime($notification->date))?'btn-danger':'btn-success'}} m-2">{{(time() >= strtotime($notification->date))?"Passed":"Pending"}}</span></td>
+                                        <td>
+                                            <a href="{{route('notifications.edit',$notification->id).'?type='.request('type').'&program_level_id='.request('program_level_id').'&campus_id='.request('campus_id')}}" class=" btn btn-primary btn-xs m-2">Edit</a>
+                                            <a href="{{route('notifications.show',$notification->id).'?type='.request('type').'&program_level_id='.request('program_level_id').'&campus_id='.request('campus_id')}}" class=" btn btn-success btn-xs m-2">View</a>
+                                            <a onclick="event.preventDefault();
+                                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">Delete</a>
+                                            <form id="delete" action="{{route('notifications.drop',$notification->id).'?type='.request('type').'&program_level_id='.request('program_level_id').'&campus_id='.request('campus_id')}}" method="POST" style="display: none;">
+                                                {{ csrf_field() }}
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endif
+                            @endif
                     @empty
                         <tr>  
                             <td colspan="5" class="text-center">No Notifications Found</td>

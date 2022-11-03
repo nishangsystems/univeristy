@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\ProgramLevel;
 use App\Models\Subjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,11 +30,12 @@ class SubjectNotesController extends Controller
      */
     public function show($class_id, $id)
     {
+        $class = ProgramLevel::find($class_id);
 
         $data['subject_info'] = $this->showSubject($class_id, $id);
         $data['notes'] = $this->getSubjectNotes($data['subject_info']->id);
         //   dd($data['notes']);
-        $data['title'] = 'Subject Notes';
+        $data['title'] = 'Course Material For '.Subjects::find($id)->name.' - '. $class->program()->first()->name.' : Level '.$class->level()->first()->level;
         return view('teacher.subject_detail')->with($data);
     }
 

@@ -365,4 +365,5 @@ return [
     'word_general'=>'general',
     'word_teachers'=>'teachers',
     'word_description'=>'description',
+    'word_download'=>'download',
 ];
