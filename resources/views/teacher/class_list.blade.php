@@ -37,7 +37,7 @@
                 <tbody>
                     @php($k = 1)
                     @foreach(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
-                        @if(!in_array($pl['id'], $program_level_ids->toArray()))
+                        @if($pl['department'] != request('department_id'))
                             @continue
                         @endif
                         <tr>
@@ -47,7 +47,7 @@
                                 @if((\Auth::user()->campus_id != null) && in_array($pl['id'], \App\Models\Campus::find(\Auth::user()->campus_id)->campus_programs()->pluck('program_level_id')->toArray()))
                                 <a href="{{Request::url().'?id='.$pl['id']}}" class="btn btn-sm btn-primary">{{__('text.word_students')}}</a>
                                 @endif
-                                <a href="{{route('notifications.index').'?program_level_id='.$pl['id'].'&campus_id='.auth()->user()->campus_id ?? ''}}" class="btn btn-sm btn-success">{{__('text.word_notifications')}}</a>
+                                <a href="{{route('notifications.index', ['C', $pl['id'], request('campus_id') ?? 0])}}" class="btn btn-sm btn-success">{{__('text.word_notifications')}}</a>
                                 <a href="{{route('material.index').'?program_level_id='.$pl['id'].'&campus_id='.auth()->user()->campus_id ?? ''}}" class="btn btn-sm btn-primary">{{__('text.program_material')}}</a>
                                 <a href="{{route('user.programs.courses', $pl['id'])}}" class="btn btn-sm btn-success">{{__('text.word_subjects')}}</a>
                             </td>

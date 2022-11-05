@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id', 'title', 'message', 'date', 'status', 'campus_id', 'visibility', 'school_unit_id', 'level_id'];
+    protected $fillable = ['user_id', 'title', 'message', 'unit_id', 'date', 'status', 'campus_id', 'visibility', 'school_unit_id', 'level_id'];
     protected $table = 'notifications';
 
     public function campus()
@@ -45,7 +45,7 @@ class Notification extends Model
     public function created_by()
     {
         # code...
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
 //     public function created_at()

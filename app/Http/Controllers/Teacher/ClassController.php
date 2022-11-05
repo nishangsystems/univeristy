@@ -24,7 +24,7 @@ class ClassController extends Controller
         // $data['courses'] = 
     }
 
-    public function program_levels_list()
+    public function program_levels_list($department_id)
     {
         # code...
         $data['title'] = "Class List".(request()->has('campus_id') ? \App\Models\Campus::find(request('campus_id'))->first()->name : '').(request()->has('id') ? ' For '.\App\Models\ProgramLevel::find(request('id'))->program()->first()->name.' Level '.\App\Models\ProgramLevel::find(request('id'))->level()->first()->level : null);
@@ -41,6 +41,7 @@ class ClassController extends Controller
         } else {
             $data['units']  = \App\Models\ProgramLevel::join('teachers_subjects', ['teachers_subjects.class_id'=>'program_levels.id'])
                                 ->where(['teachers_subjects.teacher_id'=>auth()->id()])
+                                ->distinct()
                                 ->select(['program_levels.*', 'teachers_subjects.campus_id'])
                                 ->get();
             return view('teacher.class')->with($data);
