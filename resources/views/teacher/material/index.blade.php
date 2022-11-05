@@ -55,11 +55,7 @@
                                         {{ $notification->created_at->diffForHumans() }}</td>
                                         <td class="text-capitalize">
                                             <a href="{{url('/storage/material').'/'.$notification->file}}" class=" btn btn-success btn-xs m-2" target="_new">{{__('text.word_download')}}</a>
-                                            <a onclick="event.preventDefault();
-                                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">{{__('text.word_delete')}}</a>
-                                            <form id="delete" action="{{route('material.drop',$notification->id).'?type='.request('type').'&program_level_id='.request('program_level_id').'&campus_id='.request('campus_id')}}" method="POST" style="display: none;">
-                                                {{ csrf_field() }}
-                                            </form>
+                                            <a href="{{route('material.drop',$notification->id).'?type='.request('type').'&program_level_id='.request('program_level_id').'&campus_id='.request('campus_id')}}" class=" btn btn-danger btn-xs m-2">{{__('text.word_delete')}}</a>
                                         </td>
                                     </tr>
                                 @endif

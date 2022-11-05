@@ -26,6 +26,7 @@
                             <td>{{ $unit->program()->first()->name.' : LEVEL '.$unit->level()->first()->level}}</td>
                             <td>{{\App\Models\Campus::find($unit->campus_id)->name}}</td>
                             <td style="float: right;">
+                                <a class="btn btn-xs btn-success" href="{{route('notifications.index', ['C', $unit->id, $unit->campus_id])}}">{{__('text.word_notifications')}}</a>
                                 <a class="btn btn-xs btn-primary" href="{{route('user.class.student', [$unit->id])}}?campus={{$unit->campus_id}}">Students</a>
                                 <a class="btn btn-xs btn-success" href="{{route('user.subject')}}?class={{$unit->id}}&campus={{$unit->campus_id}}">Subjects</a>
                             </td>

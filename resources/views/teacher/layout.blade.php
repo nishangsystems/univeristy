@@ -192,7 +192,7 @@
             <li>
                 <a href="{{route('user.class')}}?type=master">
                     <i class="menu-icon text-primary fa fa-graduation-cap"></i>
-                    <span class="menu-text">{{__('text.HOD_OF')}}</span>
+                    <span class="menu-text">{{__('text.HOD_center')}}</span>
                 </a>
                 <b class="arrow"></b>
             </li>
@@ -200,13 +200,6 @@
                 <a href="{{route('user.teacher.index')}}?type=teacher" class="text-capitalize">
                     <i class="menu-icon text-primary fa fa-user" aria-hidden="true"></i>
                     {{trans_choice('text.word_teacher', 2)}}
-                </a>
-                <b class="arrow"></b>
-            </li>
-            <li>
-                <a href="{{route('notifications.index')}}?type=departmental">
-                    <i class="menu-icon text-primary fa fa-star"></i>
-                    <span class="menu-text">{{__('text.dep_notifications')}}</span>
                 </a>
                 <b class="arrow"></b>
             </li>

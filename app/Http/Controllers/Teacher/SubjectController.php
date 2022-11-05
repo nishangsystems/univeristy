@@ -9,6 +9,7 @@ use App\Models\ClassSubject;
 use App\Models\TeachersSubject;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\CourseNotification;
 use App\Models\ProgramLevel;
 use App\Models\StudentClass;
 use App\Models\Subjects;
@@ -93,5 +94,87 @@ class SubjectController extends Controller
         $result->remark = "";
         $result->class_subject_id =  $request->class_subject_id;
         $result->save();
+    }
+
+
+    // SECTION IN CHARGE OF COURSE NOTIFICATIONS
+    public function notifications(Request $request, $course_id)
+    {
+        # code...
+        $subject = Subjects::find($course_id);
+        $data['title'] = "Course Notifications For ".$subject->code.' '.$subject->name;
+        return view('teacher.course.notifications.index', $data);
+    }
+    public function create_notification(Request $request, $course_id)
+    {
+        # code...
+        $subject = Subjects::find($course_id);
+        $data['title'] = "Create Course Notification For ".$subject->code.' '.$subject->name;
+        return view('teacher.course.notifications.create', $data);
+    }
+    public function save_notification(Request $request, $course_id)
+    {
+        # code...
+        // return $request->all();
+        $request->validate([
+            'title'=>'required',
+            'date'=>'required',
+            'message'=>'required'
+        ]);
+        try {
+            //code...
+            $not = $request->all();
+            $not['course_id'] = $course_id;
+            $not['user_id'] = auth()->id();
+            CourseNotification::create($not);
+            return redirect(route('course.notification.index', $course_id))->with('success', 'Done');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', 'Operation failed '.$th->getMessage());
+        }
+    }
+    public function edit_notification(Request $request, $course_id, $id)
+    {
+        # code...
+        $subject = Subjects::find($course_id);
+        $data['item'] = CourseNotification::find($id);
+        $data['title'] = "Create Course Notification For ".$subject->code.' '.$subject->name.' - '.$data['item']->title;
+        return view('teacher.course.notifications.edit', $data);
+    }
+    public function update_notification(Request $request, $course_id, $id)
+    {
+        # code...
+        $request->validate([
+            'title'=>'required',
+            'date'=>'required',
+            'message'=>'required',
+        ]);
+        try {
+            //code...
+            $data = $request->all();
+            $data['course_id'] = $course_id;
+            $data['user_id'] = auth()->id();
+            $not = CourseNotification::find($id);
+            $not->fill($request->all());
+            $not->save();
+            return redirect(route('course.notification.index', $course_id))->with('success', 'Done');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', 'Operation failed '.$th->getMessage());
+        }
+    }
+    public function drop_notification(Request $request, $course_id, $id)
+    {
+        # code...
+        CourseNotification::find($id)->delete();
+        return back()->with('success', 'Done');
+    }
+    public function show_notification(Request $request, $course_id, $id)
+    {
+        # code...
+        $subject = Subjects::find($course_id);
+        $data['notification'] = CourseNotification::find($id);
+        $data['title'] = "Create Course Notification For ".$subject->code.' '.$subject->name.' - '.$data['notification']->title;
+        return view('teacher.course.notifications.show', $data);
     }
 }

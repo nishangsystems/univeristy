@@ -90,6 +90,15 @@ class FeesController extends Controller
         return view('admin.fee.drive', compact('students', 'title'));
     }
 
+    public function drive_listing(Request $request)
+    {
+        # code...
+        $type = request('type', 'completed');
+        $data['title'] = $type . " Fee ";
+        $data['students'] = HomeController::_fee($request);
+        return $data;
+    }
+
     public function delete(Request  $request, $id)
     {
         Payments::find($id)->delete();

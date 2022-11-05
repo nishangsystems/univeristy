@@ -6,7 +6,7 @@
         <div id="section">
             <div class="form-group">
                 <div>
-                    <form method="get" action="{{Request::url().'/fee_list'}}" target="_blank">
+                    <form method="get" action="{{Request::url().'/fee_list'}}" target="new">
                         <input type="hidden" name="type" id="" value="{{request('type')}}">
                         <div class="input-group input-group-merge border">
                             <select class="w-100 border-0 section form-control" id="year" name="year" required>

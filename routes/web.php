@@ -73,6 +73,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('print_fee/{student_id}', 'Admin\FeesController@printStudentFee')->name('print_fee.student');
     Route::get('fee/classes', 'Admin\FeesController@classes')->name('fee.classes');
     Route::get('fee/drive', 'Admin\FeesController@drive')->name('fee.drive');
+    Route::get('fee/drive/listing', 'Admin\FeesController@drive_listing')->name('fee.drive_listing');
     Route::get('fee/collect', 'Admin\FeesController@collect')->name('fee.collect');
     Route::get('fee/daily_report', 'Admin\FeesController@daily_report')->name('fee.daily_report');
     Route::get('fee/{id}', 'Admin\FeesController@fee')->name('fee.list');
@@ -268,7 +269,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
     Route::get('',  'Teacher\HomeController@index')->name('home');
-    Route::get('class_list',  'Teacher\ClassController@program_levels_list')->name('class_list');
+    Route::get('class_list/{department_id}/{campus_id?}',  'Teacher\ClassController@program_levels_list')->name('class_list');
     Route::get('course_list',  'Teacher\ClassController@program_courses')->name('course_list');
     Route::get('class', 'Teacher\ClassController@index')->name('class');
     Route::get('students/init_promotion', 'Admin\StudentController@teacherInitPromotion')->name('students.init_promotion');
@@ -333,15 +334,16 @@ Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search
 Route::get('student_rank', 'HomeController@rank')->name('student_rank');
 Route::post('student_rank', 'HomeController@rankPost')->name('student_rank');
 
-Route::name('notifications.')->prefix('notifications')->group(function(){
-    Route::get('', 'NotificationsController@index')->name('index');
-    Route::get('create', 'NotificationsController@create')->name('create');
-    Route::post('create', 'NotificationsController@save')->name('save');
-    Route::post('delete/{id}', 'NotificationsController@drop')->name('drop');
-    Route::get('edit/{id}', 'NotificationsController@edit')->name('edit');
-    Route::post('update/{id}', 'NotificationsController@update')->name('update');
-    Route::get('show/{id}', 'NotificationsController@show')->name('show');
+Route::prefix('course/notification')->name('course.notification.')->group(function(){
+    Route::get('{course_id}', 'Teacher\SubjectController@notifications')->name('index');
+    Route::get('{course_id}/create', 'Teacher\SubjectController@create_notification')->name('create');
+    Route::post('{course_id}/save', 'Teacher\SubjectController@save_notification')->name('save');
+    Route::get('{course_id}/edit/{id}', 'Teacher\SubjectController@edit_notification')->name('edit');
+    Route::post('{course_id}/update/{id}', 'Teacher\SubjectController@update_notification')->name('update');
+    Route::get('{course_id}/delete/{id}', 'Teacher\SubjectController@drop_notification')->name('drop');
+    Route::get('{course_id}/show/{id}', 'Teacher\SubjectController@show_notification')->name('show');
 });
+
 Route::name('material.')->prefix('material')->group(function(){
     Route::get('', 'MaterialController@index')->name('index');
     Route::get('create', 'MaterialController@create')->name('create');
@@ -350,8 +352,30 @@ Route::name('material.')->prefix('material')->group(function(){
     Route::get('download/{id}', 'MaterialController@download')->name('download');
     Route::post('update/{id}', 'MaterialController@update')->name('update');
     Route::get('show/{id}', 'MaterialController@show')->name('show');
-    Route::get('delete', 'MaterialController@drop')->name('drop');
+    Route::get('delete/{id}', 'MaterialController@drop')->name('drop');
 });
+
+// ALTERNATIVE NOTIFICATIONS AND MATERIAL APPRAOCH
+Route::name('notifications.')->prefix('{layer}/{layer_id}/notifications/{campus_id?}')->group(function(){
+    Route::get('', 'NotificationsController@index')->name('index');
+    Route::get('create', 'NotificationsController@create')->name('create');
+    Route::post('create', 'NotificationsController@save')->name('save');
+    Route::get('delete/{id}', 'NotificationsController@drop')->name('drop');
+    Route::get('edit/{id}', 'NotificationsController@edit')->name('edit');
+    Route::post('update/{id}', 'NotificationsController@update')->name('update');
+    Route::get('show/{id}', 'NotificationsController@show')->name('show');
+});
+Route::name('alt_material.')->prefix('{layer}/material')->group(function(){
+    Route::get('', 'AtMaterialController@index')->name('index');
+    Route::get('create', 'AtMaterialController@create')->name('create');
+    Route::post('create', 'AtMaterialController@save')->name('save');
+    Route::get('edit/{id}', 'AtMaterialController@edit')->name('edit');
+    Route::get('download/{id}', 'AtMaterialController@download')->name('download');
+    Route::post('update/{id}', 'AtMaterialController@update')->name('update');
+    Route::get('show/{id}', 'AtMaterialController@show')->name('show');
+    Route::get('delete/{id}', 'AtMaterialController@drop')->name('drop');
+});
+// END ALTERNATIVE NOTIFICATIONS AND MATERIAL APPRAOCH
 
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
 

@@ -366,4 +366,11 @@ return [
     'word_teachers'=>'teachers',
     'word_description'=>'description',
     'word_download'=>'download',
+    'no_notifications_found'=>'no notifications found',
+    'create_new_notification'=>'create new notification',
+    'all_notifications'=>'all notifications',
+    'created_on'=>'craeted on',
+    'due_date'=>'due date',
+    'HOD_center'=>'HOD center',
+    
 ];

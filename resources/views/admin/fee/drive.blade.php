@@ -3,6 +3,7 @@
 @section('section')
     <div class="col-sm-12">
 
+        <form action="{{Request::url().'/listing'}}" method="get" target="_new">
         <div id="section">
 
             <div class="form-group">
@@ -12,20 +13,21 @@
             </div>
 
             <div class="form-group">
-                <div class="col-lg-12 mb-4">
-                    <div class="input-group input-group-merge border">
-                    <select class="w-100   section form-control" id="section0" required>
-                            <option selected class="text-capitalize">{{__('text.select_class')}}</option>
-                            @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
-                                <option value="{{$pl['id']}}">{{$pl['name']}}</option>
-                            @endforeach
-                        </select>
-                        <button type="submit" onclick="getStudent($(this))" class="border-0 text-uppercase" >{{__('text.word_get')}}</button>
+                    <div class="col-lg-12 mb-4">
+                        <div class="input-group input-group-merge border">
+                        <select class="w-100   section form-control" id="section0" name="class" required>
+                                <option selected class="text-capitalize">{{__('text.select_class')}}</option>
+                                @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                                    <option value="{{$pl['id']}}">{{$pl['name']}}</option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="border-0 text-uppercase" >{{__('text.word_get')}}</button>
+                        </div>
+                        <div class="children"></div>
                     </div>
-                    <div class="children"></div>
                 </div>
             </div>
-        </div>
+        </form>
 
 
         <div class="content-panel">
