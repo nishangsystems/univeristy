@@ -84,22 +84,26 @@
                         <div id="letter-head">
                             <img src="{{asset('assets/images/header.jpg')}}" alt="" class="w-100 img">
                         </div>
-                        <div class="text-center h5 fw-bolder py-3 text-capitalize">{{$students['title']}}</div>
+                        <div class="text-center h4 fw-bolder py-3 text-capitalize"><b>{{$title}}</b></div>
                         <tr class="text-capitalize bg-light">
                             <th>#</th>
                             <th>{{__('text.word_matricule')}}</th>
                             <th>{{__('text.word_name')}}</th>
                             <th>{{__('text.word_amount')}}</th>
+                            <!-- <th></th> -->
                         </tr>
                     </thead>
                     @php($k = 1)
                     <tbody id="content">
-                        @foreach($students['students'] ?? [] as $student)
+                        @foreach($students ?? [] as $student)
                             <tr class="border-bottom">
                                 <td class="border-left border-right">{{$k++}}</td>
                                 <td class="border-left border-right">{{$student['matric']}}</td>
                                 <td class="border-left border-right">{{$student['name']}}</td>
                                 <td class="border-left border-right">{{$student['total']}}</td>
+                                <?php // <td class="border-left border-right">
+                                    //<a class="btn btn-xs btn-primary text-capitalize" href="{{$student['link']}}"> {{__("text.fee_collections")}}</a>'
+                                //</td> ?>
                             </tr>
                         @endforeach
                     </tbody>
@@ -108,98 +112,98 @@
         </div>
     </div>
 
-<script src="{{asset('assets/js/jquery-2.1.4.min.js')}}"></script>
-<script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
-<script src="{{ asset('assets/vendor/toastr/toastr.min.js') }}"></script>
-<script src="{{asset('assets/js/ace.min.js')}}"></script>
-<script src="{{ asset('libs')}}/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="{{ asset('libs')}}/datatables.net-bs4/js/dataTables.responsive.min.js"></script>
+    <script src="{{asset('assets/js/jquery-2.1.4.min.js')}}"></script>
+    <script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
+    <script src="{{ asset('assets/vendor/toastr/toastr.min.js') }}"></script>
+    <script src="{{asset('assets/js/ace.min.js')}}"></script>
+    <script src="{{ asset('libs')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('libs')}}/datatables.net-bs4/js/dataTables.responsive.min.js"></script>
 
 
-<script>
-    $(function () {
-        $('.table , .adv-table table').DataTable({
-            responsive: true,
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel',
-                {
-                    text: 'Download PDF',
-                    extend: 'pdfHtml5',
-                    message: '',
-                    orientation: 'portrait',
-                    exportOptions: {
-                        columns: ':visible'
-                    },
-                    customize: function (doc) {
-                        doc.pageMargins = [10,10,10,10];
-                        doc.defaultStyle.fontSize = 7;
-                        doc.styles.tableHeader.fontSize = 7;
-                        doc.styles.title.fontSize = 9;
-                        doc.content[0].text = doc.content[0].text.trim();
+    <script>
+        $(function () {
+            $('.table , .adv-table table').DataTable({
+                responsive: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel',
+                    {
+                        text: 'Download PDF',
+                        extend: 'pdfHtml5',
+                        message: '',
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+                        customize: function (doc) {
+                            doc.pageMargins = [10,10,10,10];
+                            doc.defaultStyle.fontSize = 7;
+                            doc.styles.tableHeader.fontSize = 7;
+                            doc.styles.title.fontSize = 9;
+                            doc.content[0].text = doc.content[0].text.trim();
 
-                        doc['footer']=(function(page, pages) {
-                            return {
-                                columns: [
-                                    "{{ $title ?? '' }}",
-                                    {
-                                        // This is the right column
-                                        alignment: 'right',
-                                        text: ['page ', { text: page.toString() },  ' of ', { text: pages.toString() }]
-                                    }
-                                ],
-                                margin: [10, 0]
-                            }
-                        });
-                        // Styling the table: create style object
-                        var objLayout = {};
-                        // Horizontal line thickness
-                        objLayout['hLineWidth'] = function(i) { return .5; };
-                        // Vertikal line thickness
-                        objLayout['vLineWidth'] = function(i) { return .5; };
-                        // Horizontal line color
-                        objLayout['hLineColor'] = function(i) { return '#aaa'; };
-                        // Vertical line color
-                        objLayout['vLineColor'] = function(i) { return '#aaa'; };
-                        // Left padding of the cell
-                        objLayout['paddingLeft'] = function(i) { return 4; };
-                        // Right padding of the cell
-                        objLayout['paddingRight'] = function(i) { return 4; };
-                        // Inject the object in the document
-                        doc.content[1].layout = objLayout;
+                            doc['footer']=(function(page, pages) {
+                                return {
+                                    columns: [
+                                        "{{ $title ?? '' }}",
+                                        {
+                                            // This is the right column
+                                            alignment: 'right',
+                                            text: ['page ', { text: page.toString() },  ' of ', { text: pages.toString() }]
+                                        }
+                                    ],
+                                    margin: [10, 0]
+                                }
+                            });
+                            // Styling the table: create style object
+                            var objLayout = {};
+                            // Horizontal line thickness
+                            objLayout['hLineWidth'] = function(i) { return .5; };
+                            // Vertikal line thickness
+                            objLayout['vLineWidth'] = function(i) { return .5; };
+                            // Horizontal line color
+                            objLayout['hLineColor'] = function(i) { return '#aaa'; };
+                            // Vertical line color
+                            objLayout['vLineColor'] = function(i) { return '#aaa'; };
+                            // Left padding of the cell
+                            objLayout['paddingLeft'] = function(i) { return 4; };
+                            // Right padding of the cell
+                            objLayout['paddingRight'] = function(i) { return 4; };
+                            // Inject the object in the document
+                            doc.content[1].layout = objLayout;
+                        }
                     }
+
+                ],
+                info:     false,
+                searching: true,
+                // order: [
+                //     [1, 'asc']
+                // ],
+            });
+
+        });
+
+
+    </script>
+
+    <script src="{{ asset('libs')}}/datatables.net/js/dataTables.buttons.min.js"></script>
+    <script src="{{ asset('libs')}}/datatables.net/js/jszip.min.js"></script>
+    <script src="{{ asset('libs')}}/datatables.net/js/pdfmake.min.js"></script>
+    <script src="{{ asset('libs')}}/datatables.net/js/vfs_fonts.js"></script>
+    <script src="{{ asset('libs')}}/datatables.net/js/buttons.html5.min.js"></script>
+
+    <script>
+        (function($){
+            'use strict';
+            $(window).on('load', function () {
+                if ($(".pre-loader").length > 0)
+                {
+                    $(".pre-loader").fadeOut("slow");
                 }
-
-            ],
-            info:     false,
-            searching: true,
-            // order: [
-            //     [1, 'asc']
-            // ],
-        });
-
-    });
-
-
-</script>
-
-<script src="{{ asset('libs')}}/datatables.net/js/dataTables.buttons.min.js"></script>
-<script src="{{ asset('libs')}}/datatables.net/js/jszip.min.js"></script>
-<script src="{{ asset('libs')}}/datatables.net/js/pdfmake.min.js"></script>
-<script src="{{ asset('libs')}}/datatables.net/js/vfs_fonts.js"></script>
-<script src="{{ asset('libs')}}/datatables.net/js/buttons.html5.min.js"></script>
-
-<script>
-    (function($){
-        'use strict';
-        $(window).on('load', function () {
-            if ($(".pre-loader").length > 0)
-            {
-                $(".pre-loader").fadeOut("slow");
-            }
-        });
-    })(jQuery)
-</script>
-@yield('script')
+            });
+        })(jQuery)
+    </script>
+    @yield('script')
 </body>
 </html>

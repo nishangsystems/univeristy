@@ -48,7 +48,7 @@
                     <div class="form-group">
                         <div class="col-lg-offset-2 col-lg-10">
                         <button class="btn btn-success btn-xs m-2" type="submit">{{__('text.word_save')}}</button>
-                        <a href="{{route('notifications.index')}}" class="btn btn-danger btn-xs m-2" type="button">{{__('text.word_cancel')}}</a>
+                        <a href="{{route('course.notification.index', request('course_id'))}}" class="btn btn-danger btn-xs m-2" type="button">{{__('text.word_cancel')}}</a>
                         </div>
                     </div>
                 </form>
