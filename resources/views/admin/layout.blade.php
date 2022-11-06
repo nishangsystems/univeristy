@@ -348,7 +348,7 @@
             </li>
             @endif
 
-            @if (\Auth::user()->hasPermissionTo('view_statistics'))
+            @if (\Auth::user()->hasPermissionTo('manage_statistics'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i class="menu-icon  text-primary fa fa-signal"></i>

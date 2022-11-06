@@ -84,7 +84,7 @@
                         <div id="letter-head">
                             <img src="{{asset('assets/images/header.jpg')}}" alt="" class="w-100 img">
                         </div>
-                        <div class="text-center h5 fw-bolder py-3 text-capitalize">{{$students['title']}}</div>
+                        <div class="text-center h5 fw-bolder py-3 text-capitalize"><b>{{$students['title']}}</b></div>
                         <tr class="text-capitalize bg-light">
                             <th>#</th>
                             <th>{{__('text.word_matricule')}}</th>

@@ -159,15 +159,14 @@ class HomeController extends Controller
         $title = $type . " fee " . ($class != null ? "for " . $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level : '');
         $students = [];
  
-        $studs = \App\Models\StudentClass::where('student_classes.class_id', '=', $request->class)->where('year_id', '=', $year)->join('students', 'students.id', '=', 'student_classes.student_id');
-        if(auth()->user()->campus_id != null) {
-            # code...
-            $studs = $studs->where('students.campus_id', '=', auth()->user()->campus_id);
-        }
-        $studs = $studs->pluck('students.id')->toArray();
+        $studs = \App\Models\StudentClass::where('student_classes.class_id', '=', $request->class)->where('year_id', '=', $year)->join('students', 'students.id', '=', 'student_classes.student_id')
+            ->where(function($q) {
+                # code...
+                auth()->user()->campus_id != null ? $q->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+            })->pluck('students.id')->toArray();
         $results = [];
         
-
+        // return $studs;
         $fees = array_map(function($stud) use ($year){
             return [
                 'amount' => array_sum(
@@ -190,10 +189,11 @@ class HomeController extends Controller
             ];
         }, $studs);
 
+        
         foreach ($fees as $key => $value) {
             # code...
             $stdt = Students::find($value['stud']);
-            if(($value['amount'] == $value['total'] && $value['total'] > 0) && $type == 'completed'){
+            if(($value['total'] > 0 && $value['amount'] == $value['total']) && $type == 'completed'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
@@ -216,7 +216,7 @@ class HomeController extends Controller
 
         $students = collect($students)->sortBy('name')->toArray();
 
-        return ['students' => $students, 'title' => $title];
+        return ['title' => $title, 'students' => $students];
     }
     public function fee(Request  $request)
     {

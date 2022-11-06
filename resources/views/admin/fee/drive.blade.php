@@ -6,6 +6,7 @@
         <form action="{{Request::url().'/listing'}}" method="get" target="_new">
         <div id="section">
 
+            <input type="hidden" name="type" id="" value="uncompleted">
             <div class="form-group">
                 <div class="col-lg-12 mb-4">
                     <input class="form-control" type="number" id="amount" name="amount" placeholder="{{__('text.phrase3')}}"  type="text" required/>
