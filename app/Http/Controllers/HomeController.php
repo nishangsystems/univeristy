@@ -50,6 +50,7 @@ class HomeController extends Controller
             'total' => count($school_unit)
         ]);
     }
+
     public static function x_children($parent)
     {
         $id = trim($parent);
@@ -101,6 +102,7 @@ class HomeController extends Controller
 
         return \response()->json(StudentFee::collection($students));
     }
+
     public function searchStudents($name)
     {
         $name = str_replace('/', '\/', $name);
@@ -120,6 +122,7 @@ class HomeController extends Controller
             return $th->getMessage();
         }
     }
+
     public function searchStudents_get()
     {
         $name = request('key');
@@ -197,6 +200,7 @@ class HomeController extends Controller
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
+                    'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
                     'total'=> $value['amount'],
                     'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
@@ -220,6 +224,7 @@ class HomeController extends Controller
 
         return ['title' => $title, 'students' => $students];
     }
+
     public function fee(Request  $request)
     {
         $type = request('type', 'completed');
