@@ -8,7 +8,7 @@
              <p class="p-4"> Created by : {{$notification->created_by()->first()->name ?? ''}} </p>
              <p class="p-4"> Program    : {{($notification->program == null)?"For all Programs":$notification->program->name}} </p>
              <p class="p-4"> Level      : {{($notification->level == null)?"For all Levels":$notification->level->name}} </p>
-             <p class="p-4"> Date       :  {{ $notification->created_at->diffForHumans() }}</p>
+             <p class="p-4"> Date       : {{ $notification->created_at->diffForHumans() }}</p>
               <div class="m-4 p-4">
                   {!! $notification->content!!}      
             </div>

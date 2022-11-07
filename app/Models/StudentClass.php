@@ -15,7 +15,7 @@ class StudentClass extends Model
 
     public function class()
     {
-        return $this->belongsTo(SchoolUnits::class, 'class_id');
+        return $this->belongsTo(ProgramLevel::class, 'class_id');
     }
 
     public function student()

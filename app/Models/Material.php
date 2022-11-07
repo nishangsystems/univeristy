@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Material extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'school_unit_id', 'file', 'campus_id', 'visibility', 'user_id', 'level_id'];
+    protected $fillable = ['title', 'school_unit_id', 'unit_id', 'file', 'campus_id', 'visibility', 'user_id', 'level_id'];
 
     protected $table = 'material';
     

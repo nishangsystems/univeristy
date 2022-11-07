@@ -372,5 +372,9 @@ return [
     'created_on'=>'craeted on',
     'due_date'=>'due date',
     'HOD_center'=>'HOD center',
+    'create_new_material'=>'create new material',
+    'created_on'=>'created on',
+    'all_material'=>'all material',
+    'word_audience'=>'audience',
     
 ];

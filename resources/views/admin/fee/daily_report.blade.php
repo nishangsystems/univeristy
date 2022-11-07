@@ -28,7 +28,7 @@
                                 <td>{{$k+1}}</td>
                                 <td>{{$fee->student->matric ?? ''}}</td>
                                 <td>{{$fee->student->name ?? ''}}</td>
-                                <td>{{$fee->class->program->name .' : Level '.$fee->class->level->level}}</td>
+                                <td>{{$fee->student->classes()->first()->class->program->name .' : Level '.$fee->student->classes()->first()->class->level->level}}</td>
                                 <td>{{$fee->amount}} XAF</td>
                                 <td>
                                     <a onclick="event.preventDefault();

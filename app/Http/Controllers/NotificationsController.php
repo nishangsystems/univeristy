@@ -120,6 +120,10 @@ class NotificationsController extends Controller
                 # code...
                 break;
         }
+        // $data['notifications'] = $data['notifications']->where(function($c){
+        //     $c->where('user_id', auth()->id())
+        //         ->where('visibility', 'teacher'||'general');
+        // });
         $data['title'] = ($request->has('type') ? "Departmental Notifications For ".SchoolUnits::find($request->_d)->name ?? '' : '')
                         .($request->has('program_level_id') ? "Notifications For ".ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
                         .($request->has('campus_id') ? ' : '.Campus::find(request('campus_id'))->name.' Campus' :'');
@@ -196,7 +200,7 @@ class NotificationsController extends Controller
         }
     }
     
-    public function edit($id)
+    public function edit($layer, $layer_id, $campus_id, $id)
     {
         # code...
         $data['item'] = Notification::find($id);
@@ -204,7 +208,7 @@ class NotificationsController extends Controller
         return view('teacher.notification.edit', $data);
     }
     
-    public function update(Request $request, $id)
+    public function update(Request $request, $layer, $layer_id, $campus_id, $id)
     {
         # code...
         $request->validate([
@@ -225,7 +229,7 @@ class NotificationsController extends Controller
         }
     }
     
-    public function show($id)
+    public function show($layer, $layer_id, $campus_id, $id)
     {
         # code...
         $data['notification'] = Notification::find($id);
@@ -233,7 +237,7 @@ class NotificationsController extends Controller
         return view('teacher.notification.show', $data);
     }
 
-    public function drop(Request $request, $id)
+    public function drop(Request $request, $layer, $layer_id, $campus_id, $id)
     {
         # code...
         Notification::find($id)->delete();

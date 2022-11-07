@@ -18,9 +18,22 @@
                     </div>
 
                     
-                    @if(request('layer') == 'S'||'F'||'D'||P)
+                    @if(request('layer') == 'S'||'F'||'D'||'P')
                         <input type="hidden" name="school_unit_id" value="{{request('layer_id')}}">
-                    @endif 
+                    @endif
+                    @if(request('layer') == 'S'||'F'||'D')
+                        <div class="form-group text-capitalize">
+                            <label class="col-md-2">{{__('text.word_level')}}</label>
+                            <div class="col-md-9 text-capitalize">
+                                <select class="form-control" name="level_id" data-placeholder="Select Level...">
+                                    <option value="0"> {{__('text.for_all_levels')}}</option>
+                                    @foreach(\App\Models\Level::all() as $program)
+                                        <option value="{{$program->id}}"> {{$program->level}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endif
                     @if(request('layer') == 'L')
                         <input type="hidden" name="level_id" value="{{request('layer_id')}}">
                     @endif 
