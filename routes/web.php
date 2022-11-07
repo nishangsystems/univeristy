@@ -344,7 +344,7 @@ Route::prefix('course/notification')->name('course.notification.')->group(functi
     Route::get('{course_id}/show/{id}', 'Teacher\SubjectController@show_notification')->name('show');
 });
 
-Route::name('material.')->prefix('material')->group(function(){
+Route::name('material.')->prefix('{layer}/{layer_id}/material/{campus_id?}')->group(function(){
     Route::get('', 'MaterialController@index')->name('index');
     Route::get('create', 'MaterialController@create')->name('create');
     Route::post('create', 'MaterialController@save')->name('save');
@@ -357,24 +357,24 @@ Route::name('material.')->prefix('material')->group(function(){
 
 // ALTERNATIVE NOTIFICATIONS AND MATERIAL APPRAOCH
 Route::name('notifications.')->prefix('{layer}/{layer_id}/notifications/{campus_id?}')->group(function(){
-    Route::get('', 'NotificationsController@index')->name('index');
-    Route::get('create', 'NotificationsController@create')->name('create');
-    Route::post('create', 'NotificationsController@save')->name('save');
-    Route::get('delete/{id}', 'NotificationsController@drop')->name('drop');
-    Route::get('edit/{id}', 'NotificationsController@edit')->name('edit');
-    Route::post('update/{id}', 'NotificationsController@update')->name('update');
-    Route::get('show/{id}', 'NotificationsController@show')->name('show');
+    Route::get('/', 'NotificationsController@index')->name('index');
+    Route::get('/create', 'NotificationsController@create')->name('create');
+    Route::post('/create', 'NotificationsController@save')->name('save');
+    Route::get('/delete/{id}', 'NotificationsController@drop')->name('drop');
+    Route::get('/edit/{id}', 'NotificationsController@edit')->name('edit');
+    Route::post('/update/{id}', 'NotificationsController@update')->name('update');
+    Route::get('/show/{id}', 'NotificationsController@show')->name('show');
 });
-Route::name('alt_material.')->prefix('{layer}/material')->group(function(){
-    Route::get('', 'AtMaterialController@index')->name('index');
-    Route::get('create', 'AtMaterialController@create')->name('create');
-    Route::post('create', 'AtMaterialController@save')->name('save');
-    Route::get('edit/{id}', 'AtMaterialController@edit')->name('edit');
-    Route::get('download/{id}', 'AtMaterialController@download')->name('download');
-    Route::post('update/{id}', 'AtMaterialController@update')->name('update');
-    Route::get('show/{id}', 'AtMaterialController@show')->name('show');
-    Route::get('delete/{id}', 'AtMaterialController@drop')->name('drop');
-});
+// Route::name('material.')->prefix('{layer}/{layer_id}/material/{campus_id?}')->group(function(){
+//     Route::get('', 'AtMaterialController@index')->name('index');
+//     Route::get('create', 'AtMaterialController@create')->name('create');
+//     Route::post('create', 'AtMaterialController@save')->name('save');
+//     Route::get('edit/{id}', 'AtMaterialController@edit')->name('edit');
+//     Route::get('download/{id}', 'AtMaterialController@download')->name('download');
+//     Route::post('update/{id}', 'AtMaterialController@update')->name('update');
+//     Route::get('show/{id}', 'AtMaterialController@show')->name('show');
+//     Route::get('delete/{id}', 'AtMaterialController@drop')->name('drop');
+// });
 // END ALTERNATIVE NOTIFICATIONS AND MATERIAL APPRAOCH
 
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');

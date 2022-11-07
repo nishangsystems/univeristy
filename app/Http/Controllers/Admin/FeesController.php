@@ -58,12 +58,14 @@ class FeesController extends Controller
     public function daily_report(Request  $request)
     {
         $title = "Fee Daily Report for " . ($request->date ? $request->date : Carbon::now()->format('d/m/Y'));
-        $fees = Payments::whereDate('payments.created_at', $request->date ? $request->date : Carbon::now());
-        if (auth()->user()->campus_id != null) {
+        $fees = Payments::whereDate('payments.created_at', $request->date ?? date('Y-m-d', time()))
+        ->join('students', 'students.id', '=', 'payments.student_id')
+        ->where(function($q) {
             # code...
-            $fees = $fees->join('students', 'students.id', '=', 'payments.student_id')->where('students.campus_id', '=', auth()->user()->campus_id);
-        }
-        $fees = $fees->get();
+            auth()->user()->campus_id == null ? null : $q->where('students.campus_id', '=', auth()->user()->campus_id);
+        })
+        ->get(['payments.*', 'students.id as student_id', 'students.matric', 'students.name', 'students.campus_id', 'students.program_id']);
+        // return $fees;
         return view('admin.fee.daily_report', compact('fees', 'title'));
     }
 
@@ -95,6 +97,7 @@ class FeesController extends Controller
         // return $request->all();
         # code...
         $data = HomeController::_fee($request);
+        $data['title'] = $data['title'].' Who Have Not Paid Upto '.$request->amount;
         return view('admin.fee.drive_listing', $data);
     }
 
@@ -157,13 +160,16 @@ class FeesController extends Controller
                             $campus_access .= $student->matric .', ';
                             continue;
                         }
-                        if ($student !== null) {
+                        if ($student != null) {
                             # code...
+
+                            // GET TUTION FEE FOR PROGRAM IN CAMPUS
                             $p_i = \App\Models\CampusProgram::where('campus_id', '=', $student->campus_id)
                             ->where('program_level_id', '=', $student->program_id)
                             ->join('payment_items', 'campus_program_id', '=', 'campus_programs.id')
                             ->where('name', '=', 'TUTION')->whereNotNull('amount');
                             // check if fee is set
+                            // CHECK FEE SETTINGS FOR THE GIVEN PROGRAM IN THE GIVEN CAMPUS
                             if ($p_i->count() == 0) {
                                 # code...
                                 $prog = \App\Models\ProgramLevel::find($student->program_id);

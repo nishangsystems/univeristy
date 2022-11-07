@@ -9,6 +9,7 @@ use App\Models\Term;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Campus;
+use App\Models\Level;
 use App\Models\Material;
 use App\Models\ProgramLevel;
 use App\Models\StudentClass;
@@ -20,10 +21,116 @@ use \Session;
 class MaterialController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(Request $request, $layer, $layer_id, $campus_id=0 )
     {
-        // base64_encode() && base64_decode() will be used to handle query strings
-        $data['title'] = ($request->has('type') ? "Departmental Material" : '')
+        // get the layer type and id from the request
+        // layer types: ['S=>SCHOOL', 'F=>FACULTY', 'D=>DEPARTMENT', 'P=>PROGRAM', 'L=>LEVEL', 'C=>CLASS']
+        
+        $material = Material::where(function($q) use($campus_id){
+            $campus_id == 0 ? null : $q->where('campus_id', $campus_id);
+        })->get();
+        
+        switch ($layer) {
+            case 'S':
+                # code...
+                $data['material'] = $material->where('unit_id',1);
+                break;
+            
+            case 'F':
+                # code...
+                break;
+            
+            case 'D':
+                # code...
+                // if the user is a class master
+                $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
+                
+                if (in_array($layer_id, $department_ids)) {
+                    # code...
+                    $data['material'] = $material->where('unit_id', 3)->where('school_unit_id', request('layer_id'));
+
+                }else {
+                    $data['material'] = $material->empty();
+                }
+                
+                break;
+            
+            case 'P':
+                # code...
+                // if the user is a class master
+                $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
+                $program_ids = SchoolUnits::where(['unit_id'=>4])->whereIn('parent_id', $department_ids)->pluck('id');
+                if (in_array($layer_id, $program_ids)) {
+                    # code...
+                    $data['material'] = $material->where('unit_id',4)->where('school_unit_it',$layer_id);
+                } else {
+                    # code...
+                    $data['material'] = $material->empty();
+                }
+                
+                break;
+            
+            case 'L':
+                # code...
+                // if user is class master
+                $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
+                $program_ids = SchoolUnits::where(['unit_id'=>4])->whereIn('parent_id', $department_ids)->pluck('id');
+                $level_ids = Level::join('program_levels', ['program_levels.level_id'=>'levels.id'])
+                            ->join('school_units', ['school_units.id'=>'program_levels.program_id'])
+                            ->where(['school_units.uint_id'=>4])
+                            ->whereIn('school_units.id', $program_ids)
+                            ->distinct()->pluck('levels.id')->toArray();
+
+                if (in_array($layer_id, $level_ids)) {
+                    # code...
+                    $data['material'] = $material->where('level_id', $layer_id);
+                }else {
+                    # code...
+                    $data['material'] = $material->empty();
+                }
+                break;
+            
+            case 'C':
+                # code...
+                // for a class master
+                $class = ProgramLevel::find(request('layer_id'));
+                if(ClassMaster::where(['user_id'=>auth()->id()])->count() > 0){
+                    // return 777;
+                    $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
+                    $class_ids = SchoolUnits::where(['unit_id'=>4])->whereIn('parent_id', $department_ids)
+                                ->join('program_levels', ['program_levels.program_id'=>'school_units.id'])
+                                ->pluck('program_levels.id')->toArray();
+    
+                    if(in_array($layer_id, $class_ids)){
+                        $data['material'] = $material->where('school_unit_id',$class->program_id)->where('level_id',$class->level_id);
+                    }else {
+                        $data['material'] = $material->empty();
+                    }
+                }
+                else {
+                    // For a normal teacher to view class material
+                    $classes  = \App\Models\TeachersSubject::where(['teacher_id'=>auth()->id()])
+                                ->pluck('class_id')->toArray();
+                    if (in_array($layer_id, $classes)) {
+                        # code...
+                        $data['material'] = $material->where('school_unit_id',$class->program_id)->where('level_id', $class->level_id);
+                    } else {
+                        # code...
+                        $data['material'] = $material->empty();
+                    }
+                    
+                }
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+        // $data['material'] = $data['material']->where(function($c){
+        //     $c->where('user_id', auth()->id())
+        //         ->where('visibility', 'teacher'||'general');
+        // });
+        $data['title'] = ($request->has('type') ? "Departmental Material For ".SchoolUnits::find($request->_d)->name ?? '' : '')
                         .($request->has('program_level_id') ? "Material For ".ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
                         .($request->has('campus_id') ? ' : '.Campus::find(request('campus_id'))->name.' Campus' :'');
         return view('teacher.material.index', $data);
@@ -32,64 +139,90 @@ class MaterialController extends Controller
     public function create()
     {
         # code...
-        $data['title'] = 'Create Material For '.(request('type') != null ? auth()->user()->classes()->first()->name : '')
+        $data['title'] = (request('type') != null ? auth()->user()->classes()->first()->name : '')
                         .(request('program_level_id') != null ? ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
-                        .(request('campus_id') != null ? Campus::find(request('campus_id'))->name : '');;
+                        .(request('campus_id') != null ? Campus::find(request('campus_id'))->name : '');
         return view('teacher.material.create', $data);
     }
 
-    public function save(Request $request)
+    public function save(Request $request, $layer, $layer_id, $campus_id = null)
     {
-        // return $request->file('file')->getClientOriginalExtension();
-        $validate = Validator::make($request->all(), [
+        # code...
+        $request->validate([
             'title'=>'required',
-            'visibility'=>'required',
-            'file'=>'required|mimes:pdf,docx,odt,xls,xlsx,txt,ppt,jpg,jpeg,gif,png|max:2048',
+            'visibility'=>'required|in:general,students,teachers,admins',
+            'file'=>'required|max:2048|mimes:pdf,docx,odt,xls,xlsx,txt,ppt,jpg,jpeg,gif,png'
         ]);
 
-        if ($validate->fails()) {
-            # code...
-            return back()->with('error', $validate->errors()->first());
-        }
         try {
-            //code...
-            // $path = '';
-            // $extensions = ['pdf', 'docx', 'doc', 'txt', 'xls', 'xlsx', 'jpeg', 'jpg', 'png', 'gif', 'odt', 'ppt'];
-            // if ($request->hasFile('file')) {
-                # code...
-                
-                $extension = $request->file("file")->getClientOriginalExtension();
-                $name = $request->file('file')->getClientOriginalName();
-                $fname = time() . '.' . $extension;
-                $request->file('file')->move('storage/material/', $fname);
-                // $path = storage_path('material').'/'.$fname;
-                // $request->file('file')->move('storage/SubjectNotes/', $path);
 
-                    Material::create([
-                        'title'=>$request->title,
-                        'school_unit_id'=>$request->school_unit_id ?? null,
-                        'file'=>$fname,
-                        'visibility'=>$request->visibility,
-                        'user_id'=>auth()->id(),
-                        'level_id'=>$request->level_id ?? null,
-                        'message'=>$request->message ?? ''
-                    ]);
-                    return redirect(route('material.index').'?'.(request('type') ? 'type='.request('type') : '').(request('program_level_id') ? 'program_level_id='.request('program_level_id') : '').(request('campus_id') ? 'campus_id='.request('campus_id') : ''))->with('success', 'Done');
-                // }
-                // else{
-                //     return back()->with('error', 'Operation failed. Wrong file type.');
-                // }
-            // }
+            // store file and get name
+            $extension = $request->file("file")->getClientOriginalExtension();
+            $name = $request->file('file')->getClientOriginalName();
+            $fname = time() . '.' . $extension;
+            $request->file('file')->move('storage/material/', $fname);
+            // basic request data
+            $data = [
+                'title'=>$request->title,
+                'file'=>$fname,
+                'visibility'=>$request->visibility,
+                'user_id'=>auth()->id(),
+                'level_id'=>$request->level_id ?? null,
+                'message'=>$request->message ?? ''
+            ];
+            
+
+            // additional request data
+            $data['campus_id'] = $campus_id;
+            $data['user_id'] = auth()->id();
+            switch ($layer) {
+                case 'S':
+                    # code...
+                    $data['unit_id'] = 1;
+                    $data['school_unit_id'] = $layer_id;
+                    break;
+                case 'F':
+                    # code...
+                    $data['unit_id'] = 2;
+                    $data['school_unit_id'] = $layer_id;
+                    break;
+                case 'D':
+                    # code...
+                    $data['unit_id'] = 3;
+                    $data['school_unit_id'] = $layer_id;
+                    break;
+                case 'P':
+                    # code...
+                    $data['unit_id'] = 4;
+                    $data['school_unit_id'] = $layer_id;
+                    break;
+                case 'C':
+                    # code...
+                    $class = ProgramLevel::find($layer_id);
+                    $data['unit_id'] = 4;
+                    $data['school_unit_id'] = $class->program_id;
+                    $data['level_id'] = $class->level_id;
+                    break;
+                case 'L':
+                    # code...
+                    $data['unit_id'] = 4;
+                    $data['level_id'] = $layer_id;
+                    break;
+                
+                default:
+                    # code...
+                    return back()->with('error', 'Unknown material type.');
+                    break;
+            }
+            Material::create($data);
+            return redirect(route('material.index', [$layer, $layer_id, $campus_id]))->with('success', 'Done');
         } catch (\Throwable $th) {
             //throw $th;
-            return back()->with('error', 'Operation failed. '.$th->getMessage());
+            return back()->with('error', 'Operation failed '.$th->getMessage());
         }
-
-
-        # code...
     }
-
-    public function edit($id)
+    
+    public function edit($layer, $layer_id, $campus_id, $id)
     {
         # code...
         $data['item'] = Material::find($id);
@@ -97,7 +230,7 @@ class MaterialController extends Controller
         return view('teacher.material.edit', $data);
     }
     
-    public function update(Request $request, $id)
+    public function update(Request $request, $layer, $layer_id, $campus_id, $id)
     {
         # code...
         $request->validate([
@@ -152,7 +285,7 @@ class MaterialController extends Controller
         }
     }
     
-    public function show($id)
+    public function show($layer, $layer_id, $campus_id, $id)
     {
         # code...
         $data['item'] = Material::find($id);
@@ -160,8 +293,7 @@ class MaterialController extends Controller
         return view('teacher.material.edit', $data);
     }
 
-
-    public function drop(Request $request, $id)
+    public function drop(Request $request, $layer, $layer_id, $campus_id, $id)
     {
         # code...
         $material = Material::find($id);

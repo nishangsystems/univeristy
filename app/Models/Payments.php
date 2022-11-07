@@ -24,6 +24,6 @@ class Payments extends Model
     }
 
     public function user(){
-        return $this->belongsTo(Students::class, 'student_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
