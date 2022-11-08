@@ -68,6 +68,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('programs/index', 'Admin\ProgramController@program_index')->name('programs.index');
     
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
+    Route::get('fee/situation', 'Admin\FeesController@fee_situation')->name('fee.situation');
+    Route::get('fee/situation/list', 'Admin\FeesController@fee_situation_list')->name('fee.situation.list');
     Route::get('fee/fee_list', 'Admin\FeesController@fee_list');
     Route::get('print_fee', 'Admin\FeesController@printFee')->name('print_fee');
     Route::get('print_fee/{student_id}', 'Admin\FeesController@printStudentFee')->name('print_fee.student');
@@ -146,6 +148,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('result/import', 'Admin\ResultController@importPost')->name('result.import');
     Route::get('result/export', 'Admin\ResultController@export')->name('result.export');
     Route::post('result/export', 'Admin\ResultController@exportPost')->name('result.export');
+    Route::get('result/report', 'Admin\ResultController@report')->name('result.report');
+    Route::post('result/report', 'Admin\ResultController@report_show')->name('result.report.show');
 
     Route::get('users/{user_id}/subjects', 'Admin\UserController@createSubject')->name('users.subjects.add');
     Route::delete('users/{user_id}/subjects', 'Admin\UserController@dropSubject')->name('users.subjects.drop');
