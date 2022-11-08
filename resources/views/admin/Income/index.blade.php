@@ -8,9 +8,7 @@
             <form class="form-horizontal" role="form" method="POST" action="{{route('admin.income.store')}}">
 
                 @csrf
-                @if(auth()->user()->campus_id == null)
-                    @include('admin.Income.form')
-                @endif
+                @include('admin.Income.form')
             </form>
         </div>
     </div>

@@ -376,5 +376,7 @@ return [
     'created_on'=>'created on',
     'all_material'=>'all material',
     'word_audience'=>'audience',
-    
+    'fee_situation'=>'fee situation',
+    'select_reference'=>'select reference',
+    'student_results'=>'student results',
 ];

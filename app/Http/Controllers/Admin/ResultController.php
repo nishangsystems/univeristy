@@ -199,4 +199,17 @@ class ResultController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
+    public function report(Request $request)
+    {
+        # code...
+        $data['title'] = "Student Results";
+        return view('admin.result.report', $data);
+    }
+
+    public function report_show(Request $request)
+    {
+        return $request->all();
+        # code...
+    }
 }

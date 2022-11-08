@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
+use App\Models\Batch;
 use App\Models\Payments;
+use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
 use App\Models\Students;
 use App\Models\TeachersSubject;
@@ -76,6 +78,26 @@ class FeesController extends Controller
         // dd($data);
         return view('admin.fee.fee', $data);
     }
+
+    public function fee_situation(Request $request)
+    {
+        # code...
+
+        $class = ProgramLevel::find($request->class);
+        $data['title'] = 'Fee Situation';
+        return view('admin.fee.fee_situation', $data);
+    }
+
+    public function fee_situation_list(Request $request)
+    {
+        # code...
+        $class = ProgramLevel::find($request->class);
+        $data['title'] = 'Fee Situation For '.$class->program->name.' : Level '.$class->level->level.' - '.Batch::find($request->year)->name;
+        $data['data'] = HomeController::fee_situation($request);
+        // return $data;
+        return view('admin.fee.fee_situation_list', $data);
+    }
+
     public function fee_list(Request  $request)
     {
         $type = request('type', 'completed');

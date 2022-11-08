@@ -35,6 +35,11 @@ class Students extends Authenticatable
         return CampusProgram::where('campus_id', $this->campus_id)->where('program_level_id', $this->program_id)->first();
     }
 
+    public function _class($year)
+    {
+        return $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id')->where('year_id', '=', $year)->first();
+    }
+
     public function classes()
     {
         return $this->hasMany(StudentClass::class, 'student_id');

@@ -563,6 +563,14 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    
+                    <li>
+                        <a href="{{route('admin.fee.situation')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.fee_situation')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
                 </ul>
             </li>
@@ -592,6 +600,14 @@
                         <a href="{{route('admin.result.export')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                            {{__('text.export_results')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    
+                    <li>
+                        <a href="{{route('admin.result.report')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           {{__('text.student_results')}}
                         </a>
                         <b class="arrow"></b>
                     </li>
@@ -827,6 +843,12 @@
                 @if(Session::has('error'))
                     <div class="alert alert-danger fade in">
                         <strong>Error!</strong> {{Session::get('error')}}
+                    </div>
+                @endif
+
+                @if(Session::has('message'))
+                    <div class="alert alert-primary fade in">
+                        <strong>Message!</strong> {!! Session::get('message') !!}
                     </div>
                 @endif
 
