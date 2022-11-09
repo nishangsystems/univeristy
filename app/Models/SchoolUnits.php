@@ -16,8 +16,14 @@ class SchoolUnits extends Model
         'name',
         'unit_id',
         'parent_id',
-
+        'grading_type_id',
     ];
+
+    public function gradingType()
+    {
+        # code...
+        return $this->belongsTo(GradingType::class, 'grading_type_id');
+    }
 
     public function getParentKeyName()
     {

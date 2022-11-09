@@ -1,7 +1,7 @@
 @extends('admin.layout')
 @section('section')
 <div class="py-4">
-    <form action="{{route('admin.semesters.set_type', request('program_id'))}}" method="post">
+    <form action="{{route('admin.grading.post_type', request('program_id'))}}" method="post">
         @csrf
         <div class="row py-3 text-capitalize">
             <input type="hidden" name="program_id" id="" value="{{request('program_id')}}">
@@ -11,12 +11,12 @@
             </div>
         </div>
         <div class="row py-3 text-capitalize">
-            <label for="" class="col-md-3">{{__('text.word_background')}}</label>
+            <label for="" class="col-md-3">{{__('text.grading_type')}}</label>
             <div class="col-md-9 col-lg-9">
-                <select name="background_id" id="" class="form-control">
-                    <option value="">{{__('text.word_background')}}</option>
-                    @foreach($semester_types as $type)
-                        <option value="{{$type->id}}">{{$type->background_name}}</option>
+                <select name="grading_type" id="" class="form-control">
+                    <option value="">{{__('text.grading_type')}}</option>
+                    @foreach(\App\Models\GradingType::all() as $type)
+                        <option value="{{$type->id}}">{{$type->name}}</option>
                     @endforeach
                 </select>
             </div>
@@ -31,7 +31,7 @@
             <thead>
                 <th>###</th>
                 <th>{{__('text.word_program')}}</th>
-                <th>{{__('text.semester_type')}}</th>
+                <th>{{__('text.grading_type')}}</th>
                 <th></th>
             </thead>
             <tbody>
@@ -40,8 +40,8 @@
                     <tr>
                         <th>{{$k++}}</th>
                         <td>{{$program->name}} : <span class="text-primary">{{\App\Models\SchoolUnits::find($program->parent_id)->name}}</span></td>
-                        <td>{{$program->background->background_name ?? null}}</td>
-                        <td><a href="{{route('admin.semesters.set_type', [$program->id])}}" class="btn btn-primary btn-sm">{{__('text.word_change')}}</a></td>
+                        <td>{{$program->gradingType->name ?? null}}</td>
+                        <td><a href="{{route('admin.grading.set_type', [$program->id])}}" class="btn btn-primary btn-sm">{{__('text.word_change')}}</a></td>
                     </tr>
                 @endforeach
             </tbody>

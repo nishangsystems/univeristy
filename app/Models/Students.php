@@ -62,7 +62,6 @@ class Students extends Authenticatable
 
     public function total()
     {
-
         return $this->campus()->first()->campus_programs()->where('program_level_id', $this->program_id)->first()->payment_items()->first()->amount ?? -1;
     }
 
