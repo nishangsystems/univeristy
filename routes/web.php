@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers;
+use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Controller;
@@ -245,6 +246,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('/update/{id}', 'Admin\SchoolsController@update')->name('update');
         Route::get('/update/{id}', 'Admin\SchoolsController@delete')->name('delete');
     });
+    
+    Route::get('grading/set_type/{program_id}', 'Admin\ProgramController@set_program_grading_type')->name('grading.set_type');
+    Route::post('grading/set_type/{program_id}', 'Admin\ProgramController@save_program_grading_type')->name('grading.post_type');
 
     Route::prefix('semesters')->name('semesters.')->group(function(){
         Route::get('{program_id}', 'Admin\ProgramController@semesters')->name('index');

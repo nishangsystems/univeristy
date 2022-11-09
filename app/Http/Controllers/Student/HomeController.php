@@ -58,6 +58,10 @@ class HomeController extends Controller
     {
         $data['title'] = "My Result";
         $data['seqs'] = Sequence::orderBy('name')->get();
+        $data['user'] = auth()->user();
+        $data['semester'] = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id);
+        $data['grading'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType()->grading() ?? [];
+        dd($data['grading']);
         $data['subjects'] = Auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->subjects()->get()->toArray();
         // return $data['subjects'];
         return view('student.result')->with($data);

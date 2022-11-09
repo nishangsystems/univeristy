@@ -482,4 +482,26 @@ class ProgramController extends Controller
         $data['title'] = "Class List".(request()->has('campus_id') ? \App\Models\Campus::find(request('campus_id'))->first()->name : '').(request()->has('id') ? ' For '.\App\Models\ProgramLevel::find(request('id'))->program()->first()->name.' Level '.\App\Models\ProgramLevel::find(request('id'))->level()->first()->level : null);
         return view('admin.student.class_list', $data);
     }
+    
+    public function set_program_grading_type(Request $request, $program_id)
+    {
+        # code...
+        $data['title'] = "Set Program Grading Type For ".SchoolUnits::find($program_id)->name;
+        return view('admin.grading.set_grading_type', $data);
+    }
+
+    public function save_program_grading_type(Request $request, $program_id)
+    {
+        # code...
+        $valid = Validator::make($request->all(), ['grading_type'=>'required', 'program_id'=>'required']);
+        if ($valid->fails()) {
+            # code...
+            return $valid->errors()->first();
+        }
+
+        $program  = SchoolUnits::find($program_id);
+        $program->grading_type_id = $request->grading_type;
+        $program->save();
+        return back()->with('success', '!Done');
+    }
 }

@@ -379,4 +379,9 @@ return [
     'fee_situation'=>'fee situation',
     'select_reference'=>'select reference',
     'student_results'=>'student results',
+    'individual_results_slip'=>'individual results slip',
+    'grading_type'=>'grading type',
+    'word_background'=>'background',
+    'amount_owing'=>'amount owing',
+    'word_scholarship'=>'scholarship',
 ];
