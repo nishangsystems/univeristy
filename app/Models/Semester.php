@@ -16,4 +16,10 @@ class Semester extends Model
         # code...
         return $this->belongsTo(Background::class, 'background_id');
     }
+
+    public function sequences()
+    {
+        # code...
+        return $this->hasMany(Sequence::class, 'term_id');
+    }
 }

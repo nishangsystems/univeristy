@@ -28,4 +28,9 @@ class ClassSubject extends Model
     {
         return $this->hasMany(SubjectNotes::class);
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(CourseNotification::class, 'course_id');
+    }
 }

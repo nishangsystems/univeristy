@@ -29,4 +29,16 @@ class CourseNotification extends Model
         # code...
         return $this->belongsTo(Subjects::class, 'course_id');
     }
+
+    public function classSubject()
+    {
+        # code...
+        return $this->belongsTo(ClassSubject::class, 'course_id')->first();
+    }
+
+    public function audience()
+    {
+        # code...
+        return Campus::find($this->campus_id)->name ?? ''.' '.$this->classSubject()->class()->first()->program->name ?? ''. ' - '.$this->classSubject()->class()->first()->level->level ?? ''.' '.$this->classSubject()->subject->name ?? '' .' Students.';
+    }
 }

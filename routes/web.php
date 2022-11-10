@@ -314,22 +314,32 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
 Route::prefix('student')->name('student.')->group(function () {
     Route::get('', 'Student\HomeController@index')->name('home');
     Route::get('subject', 'Student\HomeController@subject')->name('subject');
-    Route::get('result', 'Student\HomeController@result')->name('result');
-    Route::get('fee', 'Student\HomeController@fee')->name('fee');
+    Route::get('result/ca', 'Student\HomeController@result')->name('result.ca');
+    Route::post('result/ca', 'Student\HomeController@ca_result');
+    Route::get('result/ca/download', 'Student\HomeController@ca_result_download');
+    Route::get('result/exam', 'Student\HomeController@result')->name('result.exam');
+    Route::post('result/exam', 'Student\HomeController@exam_result');
+    Route::get('result/exam/download', 'Student\HomeController@exam_result_download');
+    Route::get('fee/tution', 'Student\HomeController@fee')->name('fee.tution');
+    Route::get('fee/others', 'Student\HomeController@other_incomes')->name('fee.other_incomes');
     Route::get('subjects/{id}/notes', 'Student\HomeController@subjectNotes')->name('subject.notes');
     Route::get('boarding_fees/details', 'Student\HomeController@boarding')->name('boarding');
     Route::post('boarding_fees/details/', 'Student\HomeController@getBoardingFeesYear')->name('boarding_fees_details');
     Route::prefix('courses')->name('courses.')->group(function(){
         Route::get('registration', 'Student\HomeController@course_registration')->name('registration');
         Route::post('registration', 'Student\HomeController@register_courses');
+        Route::get('registered', 'Student\HomeController@registered_courses')->name('registered');
         Route::get('form_b', 'Student\HomeController@form_b')->name('form_b');
         Route::get('drop', 'Student\HomeController@drop_course')->name('drop');
         Route::get('add', 'Student\HomeController@add_course')->name('add');
     });
+    Route::get('note/index/{course_id}', 'Student\HomeController@course_notes')->name('note.index');
+    Route::get('assignment/index/{course_id}', 'Student\HomeController@assignment')->name('assignment.index');
+    Route::get('notification/index/{course_id}', 'Student\HomeController@notification')->name('notification.index');
+    Route::get('notification/show/{course_id}', 'Student\HomeController@show_notification')->name('notification.show');
     Route::get('registered_courses/{year?}/{semester?}/{student?}', 'Student\HomeController@registerd_courses')->name('registered_courses');
     Route::get('class-subjects/{level}', 'Student\HomeController@class_subjects')->name('class-subjects');
     Route::get('courses/download/{year}/{semester}', 'Student\HomeController@download_courses')->name('courses.download');
-
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');

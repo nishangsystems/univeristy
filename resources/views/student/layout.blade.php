@@ -180,29 +180,41 @@
         </div><!-- /.sidebar-shortcuts -->
         <ul class="nav nav-list">
             <li>
-                <a href="">
+                <a href="{{route('student.home')}}">
                     <i class="menu-icon fa fa-dashboard"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>
                 <b class="arrow"></b>
             </li>
 
-            <li>
-                <a href="{{route('student.fee')}}">
-                    <i class="menu-icon fa fa-money"></i>
-                    <span class="menu-text">Fee Status</span>
+           <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i class="menu-icon fa fa-book"></i>
+                    <span class="menu-text">{{__('text.finance_report')}}</span>
+                    <b class="arrow fa fa-angle-down"></b>
                 </a>
-                <b class="arrow"></b>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('student.fee.tution')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_tution')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('student.fee.other_incomes')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.other_incomes')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                </ul>
             </li>
-           @if(Auth::user()->type == "boarding")
-            <li>
-                <a href="{{route('student.boarding')}}">
-                    <i class="menu-icon fa fa-money"></i>
-                    <span class="menu-text">Boarding Fee</span>
-                </a>
-                <b class="arrow"></b>
-            </li>
-           @endif
 
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
@@ -213,6 +225,15 @@
 
 
                 <ul class="submenu">
+                    <li>
+                        <a href="{{route('student.courses.registered')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.my_courses')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
                     <li>
                         <a href="{{route('student.courses.registration')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -234,13 +255,75 @@
                 </ul>
             </li>
 
-            <li>
-                <a href="{{route('student.result')}}">
-                    <i class="menu-icon fa fa-graduation-cap"></i>
-                    <span class="menu-text">Result</span>
+           <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i class="menu-icon fa fa-book"></i>
+                    <span class="menu-text">{{__('text.word_results')}}</span>
+                    <b class="arrow fa fa-angle-down"></b>
                 </a>
-                <b class="arrow"></b>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('student.result.ca')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.CA')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+
+                    <li>
+                        <a href="{{route('student.result.exam')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_exams')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                </ul>
             </li>
+
+           <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i class="menu-icon fa fa-book"></i>
+                    <span class="menu-text">{{__('text.word_notifications')}}</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('student.result.ca')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_campus')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+
+                    <li>
+                        <a href="{{route('student.result.exam')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_department')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('student.result.exam')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_class')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                </ul>
+            </li>
+
 
             <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
