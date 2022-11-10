@@ -79,9 +79,9 @@ class PaymentController extends Controller
             'date' => 'required|date',
             'reference_number' => 'required'
         ]);
-        if ($request->amount > $total_fee  || $request->amount >  $balance) {
-            return back()->with('error', 'The amount deposited has exceeded the total fee amount');
-        }
+        // if ($request->amount > $total_fee  || $request->amount >  $balance) {
+        //     return back()->with('error', 'The amount deposited has exceeded the total fee amount');
+        // }
         if (Payments::where(['reference_number' => $request->reference_number])->count() == 0) {
             # code...
             Payments::create([

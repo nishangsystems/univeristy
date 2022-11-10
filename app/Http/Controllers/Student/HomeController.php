@@ -5,11 +5,18 @@ namespace App\Http\Controllers\Student;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\ClassSubject;
+use App\Models\CourseNotification;
+use App\Models\Notification;
 use App\Models\ProgramLevel;
+use App\Models\Result;
 use App\Models\SchoolUnits;
+use App\Models\Semester;
 use App\Models\Sequence;
 use App\Models\Students;
 use App\Models\StudentSubject;
+use App\Models\SubjectNotes;
+use App\Models\Subjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -54,17 +61,161 @@ class HomeController extends Controller
         return view('student.fee')->with($data);
     }
 
-    public function result()
+    public function other_incomes()
     {
+        $data['title'] = "Tution Report";
+        return view('student.other_incomes', $data);
+    }
+
+    public function result(Request $request)
+    {
+        # code...
         $data['title'] = "My Result";
-        $data['seqs'] = Sequence::orderBy('name')->get();
+        return view('student.result')->with($data);
+    }
+
+    public function ca_result(Request $request)
+    {
+        $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
+        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester(auth()->user()->program_id);
+        // dd($semester);
+        $ca_seq = $semester->sequences->first()->id;
+        $data['title'] = "My CA Result";
+        $data['user'] = auth()->user();
+        $data['ca_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->ca_total;
+        $data['semester'] = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id);
+        $data['grading'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType->grading()->get() ?? [];
+        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.sequence', '=', $ca_seq)->pluck('subject_id')->toArray();
+        $data['subjects'] = Auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
+        $data['results'] = array_map(function($subject_id)use($data, $year, $ca_seq){
+            return [
+                'id'=>$subject_id,
+                'code'=>$data['subjects']->where('id', '=', $subject_id)->first()->code ?? '',
+                'name'=>$data['subjects']->where('id', '=', $subject_id)->first()->name ?? '',
+                'status'=>$data['subjects']->where('id', '=', $subject_id)->first()->status ?? '',
+                'coef'=>$data['subjects']->where('id', '=', $subject_id)->first()->coef ?? '',
+                'ca_mark'=>auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.sequence', '=', $ca_seq)->first()->score ?? '',
+            ];
+        }, $res);
+        // dd($data['results']);
+        return view('student.ca-result')->with($data);
+    }
+
+    public function ca_result_download(Request $request)
+    {
+        $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
+        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester(auth()->user()->program_id);
+        // dd($semester);
+        $ca_seq = $semester->sequences->first()->id;
+        $data['title'] = "My CA Result";
+        $data['user'] = auth()->user();
+        $data['ca_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->ca_total;
+        $data['semester'] = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id);
+        $data['grading'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType->grading()->get() ?? [];
+        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.sequence', '=', $ca_seq)->pluck('subject_id')->toArray();
+        $data['subjects'] = Auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
+        $data['results'] = array_map(function($subject_id)use($data, $year, $ca_seq){
+            return [
+                'id'=>$subject_id,
+                'code'=>$data['subjects']->where('id', '=', $subject_id)->first()->code ?? '',
+                'name'=>$data['subjects']->where('id', '=', $subject_id)->first()->name ?? '',
+                'status'=>$data['subjects']->where('id', '=', $subject_id)->first()->status ?? '',
+                'coef'=>$data['subjects']->where('id', '=', $subject_id)->first()->coef ?? '',
+                'ca_mark'=>auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.sequence', '=', $ca_seq)->first()->score ?? '',
+            ];
+        }, $res);
+        // dd($data['results']);
+        $pdf = PDF::loadView('student.templates.ca-result-template',$data);
+        return $pdf->download(auth()->user()->matric.'_'.$semester->name.'_CA_RESULTS.pdf');
+        // return view('student.templates.ca-result-template')->with($data);
+    }
+
+    public function exam_result(Request $request)
+    {
+        $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
+        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester(auth()->user()->program_id);
+        $seqs = $semester->sequences()->get('id')->toArray();
+        $data['title'] = "My Exam Result";
         $data['user'] = auth()->user();
         $data['semester'] = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id);
-        $data['grading'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType()->grading() ?? [];
-        dd($data['grading']);
-        $data['subjects'] = Auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->subjects()->get()->toArray();
-        // return $data['subjects'];
-        return view('student.result')->with($data);
+        $data['ca_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->ca_total;
+        $data['exam_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->exam_total;
+        $data['grading'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType->grading()->get() ?? [];
+        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->whereIn('results.sequence', $seqs)->distinct()->pluck('subject_id')->toArray();
+        $data['subjects'] = Auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
+        $data['results'] = array_map(function($subject_id)use($data, $year, $seqs){
+            $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.sequence', '=', $seqs[0])->first()->score ?? 0;
+            $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.sequence', '=', $seqs[1])->first()->score ?? 0;
+            $total = $ca_mark + $exam_mark;
+            $grade = function()use($data, $total){
+                foreach ($data['grading'] as $key => $value) {
+                    # code...
+                    if ($total >= $value->lower && $total <= $value->upper) {
+                        # code...
+                        return $value;
+                    }
+                }
+            };
+            // dd($grade());
+            return [
+                'id'=>$subject_id,
+                'code'=>$data['subjects']->where('id', '=', $subject_id)->first()->code ?? '',
+                'name'=>$data['subjects']->where('id', '=', $subject_id)->first()->name ?? '',
+                'status'=>$data['subjects']->where('id', '=', $subject_id)->first()->status ?? '',
+                'coef'=>$data['subjects']->where('id', '=', $subject_id)->first()->coef ?? '',
+                'ca_mark'=>$ca_mark,
+                'exam_mark'=>$exam_mark,
+                'total'=>$total,
+                'grade'=>$grade()->grade,
+                'remark'=>$grade()->remark
+            ];
+        }, $res);
+        return view('student.exam-result')->with($data);
+    }
+
+    public function exam_result_download(Request $request)
+    {
+        $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
+        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester(auth()->user()->program_id);
+        $seqs = $semester->sequences()->get('id')->toArray();
+        $data['title'] = "My Exam Result";
+        $data['user'] = auth()->user();
+        $data['semester'] = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id);
+        $data['ca_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->ca_total;
+        $data['exam_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->exam_total;
+        $data['grading'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType->grading()->get() ?? [];
+        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->whereIn('results.sequence', $seqs)->distinct()->pluck('subject_id')->toArray();
+        $data['subjects'] = Auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
+        $data['results'] = array_map(function($subject_id)use($data, $year, $seqs){
+            $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.sequence', '=', $seqs[0])->first()->score ?? 0;
+            $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.sequence', '=', $seqs[1])->first()->score ?? 0;
+            $total = $ca_mark + $exam_mark;
+            $grade = function()use($data, $total){
+                foreach ($data['grading'] as $key => $value) {
+                    # code...
+                    if ($total >= $value->lower && $total <= $value->upper) {
+                        # code...
+                        return $value;
+                    }
+                }
+            };
+            // dd($grade());
+            return [
+                'id'=>$subject_id,
+                'code'=>$data['subjects']->where('id', '=', $subject_id)->first()->code ?? '',
+                'name'=>$data['subjects']->where('id', '=', $subject_id)->first()->name ?? '',
+                'status'=>$data['subjects']->where('id', '=', $subject_id)->first()->status ?? '',
+                'coef'=>$data['subjects']->where('id', '=', $subject_id)->first()->coef ?? '',
+                'ca_mark'=>$ca_mark,
+                'exam_mark'=>$exam_mark,
+                'total'=>$total,
+                'grade'=>$grade()->grade,
+                'remark'=>$grade()->remark
+            ];
+        }, $res);
+        $pdf = PDF::loadView('student.templates.exam-result-template',$data);
+        return $pdf->download(auth()->user()->matric.'_'.$semester->name.'_EXAM_RESULTS.pdf');
+        // return view('student.templates.exam-result-template')->with($data);
     }
 
     public function subject()
@@ -277,6 +428,37 @@ class HomeController extends Controller
         return view('student.courses.form_b', $data);
     }
 
+    public function registered_courses(Request $request)
+    {
+        # code...
+        $data['title'] = "Registered Courses ".Helpers::instance()->getSemester(Students::find(auth()->id())->program_id)->name." ".\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
+        $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>\App\Helpers\Helpers::instance()->getYear()])->first()->class_id);
+        $data['cv_total'] = ProgramLevel::find(auth()->user()->program_id)->program()->first()->max_credit;        
+        
+        $student = auth()->id();
+        $year = Helpers::instance()->getYear();
+        $fee = [
+            'amount' => array_sum(
+                \App\Models\Payments::where('payments.student_id', '=', $student)
+                ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
+                ->where('payment_items.name', '=', 'TUTION')
+                ->where('payments.batch_id', '=', $year)
+                ->pluck('payments.amount')
+                ->toArray()
+            ),
+            'total' => 
+                    \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                    ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+                    ->where('payment_items.name', '=', 'TUTION')
+                    ->whereNotNull('payment_items.amount')
+                    ->join('students', 'students.program_id', '=', 'program_levels.id')
+                    ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
+            'fraction' => Helpers::instance()->getSemester(auth()->user()->program_id)->courses_min_fee
+        ];
+        $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
+        $data['access'] = $fee['amount'] >= $data['min_fee'];
+        return view('student.courses.index', $data);
+    }
     public static function registerd_courses($year = null, $semester = null, $student = null )
     {
         try {
@@ -364,4 +546,48 @@ class HomeController extends Controller
         // drop course for current auth user for current academic year
         # code...
     }
+
+    public function course_notes(Request $request, $id)
+    {
+        // get student class
+        $class = auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear());
+        $class_subject_id = ClassSubject::where('class_id', '=', $class->id)->where('subject_id', '=', $id)->first()->id ?? 0;
+        // $data['subject_info'] = $this->showSubject($class->id, $id);
+        // dd($data);
+        $data['notes'] = SubjectNotes::where('class_subject_id', $class_subject_id)->where('type', 'note')->where('status', 1)->get();
+        $data['title'] = 'Notes For '.Subjects::find($id)->name.' - '. $class->program()->first()->name.' : Level '.$class->level()->first()->level;
+        // dd($data);
+        return view('student.subject_material')->with($data);
+    }
+
+    public function assignment(Request $request, $id)
+    {
+        // get student class
+        $class = auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear());
+        $class_subject_id = ClassSubject::where('class_id', '=', $class->id)->where('subject_id', '=', $id)->first()->id ?? 0;
+        // $data['subject_info'] = $this->showSubject($class->id, $id);
+        // dd($data);
+        $data['notes'] = SubjectNotes::where('class_subject_id', $class_subject_id)->where('type', 'assignment')->where('status', 1)->get();
+        $data['title'] = 'Assignments For '.Subjects::find($id)->name.' - '. $class->program()->first()->name.' : Level '.$class->level()->first()->level;
+        // dd($data);
+        return view('student.subject_material')->with($data);
+    }
+
+    public function notification(Request $request, $id)
+    {
+        # code...
+        $data['title'] = "Course Notifications For ".Subjects::find($request->course_id)->code.' - '.Subjects::find($request->course_id)->name;
+        $data['notifications'] = CourseNotification::where('course_id', '=', $request->course_id)->where('status', '=', 1)->get();
+        return view('student.notification.index', $data);
+    }
+
+    public function show_notification($id)
+    {
+        # code...
+        $data['notification'] = CourseNotification::find($id);
+        $data['title'] = $data['notification']->title;
+        return view('student.notification.show', $data);
+    }
+
+
 }
