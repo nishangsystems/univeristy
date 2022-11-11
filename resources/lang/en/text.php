@@ -329,7 +329,7 @@ return [
     'word_action'=>'action',
     'sign_course'=>'sign course',
     'view_courses'=>'view courses',
-    'fee_access_phrase'=>'You must pay a minimum fee of :amount to :action. If you have already paid, contact the office',
+    'fee_access_phrase'=>'You must pay a minimum fee of :amount to :action. If you have already paid, contact the finance office',
     'attempted_credit_value'=>'attempted credit value',
     'formb_title'=>'registered courses for :semester :year',
     'download_formb'=>'download form-b',
@@ -397,4 +397,6 @@ return [
     'finance_report'=>'finance report',
     'paid_on'=>'paid on',
     'word_ref'=>'ref',
+    'word_departmental'=>'departmental',
+    'the_dean'=>'the dean',
 ];

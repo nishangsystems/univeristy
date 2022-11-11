@@ -55,6 +55,12 @@ class Students extends Authenticatable
         return $this->hasMany(Payments::class, 'student_id');
     }
 
+    public function payIncomes($year)
+    {
+        # code...
+        return $this->hasMany(PayIncome::class, 'student_id')->where('batch_id', '=', $year);
+    }
+
     public function campus()
     {
         return $this->belongsTo(Campus::class);

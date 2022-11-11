@@ -50,7 +50,7 @@
                                 <option value="{{$semester->id}}" {{$semester->id == $current_semester ? 'selected': ''}}>{{$semester->name}}</option>
                             @endforeach
                         </select>
-                        <button class="btn btn-sm btn-info text-capitalize border-0" onclick="loadCourses('#modal-year', '#modal-semester')">{{__('text.view_courses')}}</button>
+                        <button class="btn btn-sm btn-info text-capitalize border-0" onclick="load('#modal-year', '#modal-semester')">{{__('text.view_courses')}}</button>
                     </div>
                     <table class="table">
                         <thead>
@@ -83,10 +83,15 @@
     let cv_sum = 0;
 
     $(document).ready(function(){
-        if ("{{$access}}") {
-            loadCourses();
-        }
+        load('#modal-year', '#modal-semester')
     })
+    
+    function load(x = null, y = null) {
+        if ("{{$access}}" == true) {
+            loadCourses(x,y);
+        }
+        else{alert('Minimum Fee requirement not met.');}
+    }
 
     function loadCourses(year_id = null, semester_id = null) {
         year = year_id == null ? "{{$current_year}}" : $(year_id).val();

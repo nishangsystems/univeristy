@@ -1,16 +1,12 @@
 <?php
 
-use App\Http\Controllers;
-use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\WelcomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use phpDocumentor\Reflection\Element;
 
 Route::get('/clear', function () {
     $clearcache = Artisan::call('cache:clear');
@@ -25,7 +21,7 @@ Route::get('/clear', function () {
 
 Route::post('login', [CustomLoginController::class, 'login'])->name('login.submit');
 Route::get('login', [CustomLoginController::class, 'showLoginForm'])->name('login');
-Route::get('registration', [CustomLoginController::class, 'registration'])->name('registration');
+Route::get('registration', [CustomLoginController::class, 'showRegistrationForm'])->name('registration');
 Route::post('check_matricule', [CustomLoginController::class, 'check_matricule'])->name('check_matricule');
 Route::post('createAccount', [CustomLoginController::class, 'createAccount'])->name('createAccount');
 Route::post('logout', [CustomLoginController::class, 'logout'])->name('logout');
@@ -337,6 +333,19 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('assignment/index/{course_id}', 'Student\HomeController@assignment')->name('assignment.index');
     Route::get('notification/index/{course_id}', 'Student\HomeController@notification')->name('notification.index');
     Route::get('notification/show/{course_id}', 'Student\HomeController@show_notification')->name('notification.show');
+    Route::prefix('notification')->name('notification.')->group(function(){
+        Route::get('/', 'Student\HomeController@_notifications_index')->name('home');
+        Route::get('/class/{class_id}/{campus_id}', 'Student\HomeController@_class_notifications')->name('class');
+        Route::get('/department/{department_id}/{campus_id}', 'Student\HomeController@_department_notifications')->name('department');
+        Route::get('/program/{program_id}/{campus_id}', 'Student\HomeController@_program_notifications')->name('program');
+        Route::get('/view/{id}', 'Student\HomeController@_program_notifications_show')->name('view');
+    });
+    Route::prefix('material')->name('material.')->group(function(){
+        Route::get('/', 'Student\HomeController@_notifications_index')->name('home');
+        Route::get('/class/{class_id}/{campus_id}', 'Student\HomeController@_class_material')->name('class');
+        Route::get('/department/{department_id}/{campus_id}', 'Student\HomeController@_department_material')->name('department');
+        Route::get('/program/{program_id}/{campus_id}', 'Student\HomeController@_program_material')->name('program');
+    });
     Route::get('registered_courses/{year?}/{semester?}/{student?}', 'Student\HomeController@registerd_courses')->name('registered_courses');
     Route::get('class-subjects/{level}', 'Student\HomeController@class_subjects')->name('class-subjects');
     Route::get('courses/download/{year}/{semester}', 'Student\HomeController@download_courses')->name('courses.download');

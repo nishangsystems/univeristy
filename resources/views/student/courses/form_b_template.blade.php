@@ -64,6 +64,16 @@
         .dropdown-toggle:after {
             display: none;
         }
+        #table_____{
+            font-weight: 700;
+            background-image: url("{{url('/assets/images/logo.jpeg')}}");
+            background-color: rgba(255, 255, 255, 0.95);
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-attachment: local;
+            background-blend-mode: overlay;
+        }
     </STYLE>
 </head>
 <body>
@@ -74,11 +84,11 @@
             $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id)->name;
             $flag = true;
         @endphp
-            <div class="">
+            <div class=""id="table_____">
                 
                 
-                <div class="py-3 bg-white">
-                    <div class=" bg-white">
+                <div class=""  style="background-color: rgba(255, 255, 255, 0.9);">
+                    <div class="" >
                         <img src="{{asset('assets/images/header.jpg')}}" class="w-100 h-auto" alt="">
                         <div class="py-3 border-top border-dashed my-3">
                             <div class="py-1 h4 row">
@@ -93,18 +103,10 @@
                                 <span class="col-md-3 text-capitalize">{{__('text.word_program')}}:</span>
                                 <span class="col-md-9 pl-2 text-uppercase">{{$program_name}}</span>
                             </div>
-                            <div class="py-1 h4 row">
-                                <span class="col-md-3 text-capitalize">{{__('text.academic_year')}}:</span>
-                                <span class="col-md-9 pl-2 text-uppercase">{{$current_year_name}}</span>
-                            </div>
-                            <div class="py-1 h4 row">
-                                <span class="col-md-3 text-capitalize">{{__('text.word_semester')}}:</span>
-                                <span class="col-md-9 pl-2 text-uppercase">{{$current_semester_name}}</span>
-                            </div>
                         </div>
                         <div class="text-center h4 text-uppercase" style="font-weight: 700;">{{trans('text.formb_title2', ['year'=>$current_year_name, 'semester'=>$current_semester_name])}}</div>
                     </div>
-                    <table class="table-stripped bg-white">
+                    <table class="table-stripped">
                         <thead class="text-capitalize">
                             <th class="border-left border-right">{{__('text.course_code')}}</th>
                             <th class="border-left border-right">{{__('text.course_title')}}</th>
@@ -126,6 +128,9 @@
                     </table>
                     <div class="d-flex py-3 justify-content-center">
                         <div class="border-top px-6 py-2 fw-bolder h5 text-capitalize">{{__('text.total_credit_attempted')}} : <span id="cv-sum">{{$cv_sum}}</span></div>
+                    </div>
+                    <div class="d-flex py-3 justify-content-end">
+                        <div class="border-top px-6 py-2 fw-bolder h5 text-capitalize" style="float: right;">{{__('text.the_dean')}} <br> <span id="cv-sum">__________________________</span></div>
                     </div>
                 </div>
             </div>
