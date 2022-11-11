@@ -6,7 +6,7 @@
         <div class="row py-2">
             <label for="" class="col-md-3 text-capitalize">{{__('text.word_phone')}}</label>
             <div class="col-md-9">
-                <input type="text" name="phone" id="" class="form-control" value="{{auth()->user()->phone ?? ''}}">
+                <input type="number" name="phone" id="" class="form-control" value="{{auth()->user()->phone ?? ''}}">
             </div>
         </div>
         <div class="row py-2">
@@ -18,7 +18,7 @@
         <div class="row py-2">
             <label for="" class="col-md-3 text-capitalize">{{__('text.word_email')}}</label>
             <div class="col-md-9">
-                <input type="text" name="email" id="" class="form-control" value="{{auth()->user()->email}}">
+                <input type="email" name="email" id="" class="form-control" value="{{auth()->user()->email}}">
             </div>
         </div>
         <div class="row py-2">
