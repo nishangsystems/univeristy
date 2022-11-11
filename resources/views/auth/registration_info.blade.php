@@ -108,7 +108,7 @@
 													</label>
 													<label class="block clearfix"> Phone Number
 														<span class="block input-icon input-icon-right">
-															<input type="text" required class="form-control" value="" name="phone" placeholder="Phone Number" />
+															<input type="number" required class="form-control" value="" name="phone" placeholder="Phone Number" />
 															<!--<i class="ace-icon fa fa-user"></i>-->
 														</span>
 														@error('phone')
@@ -119,7 +119,7 @@
 													</label>
 														<label class="block clearfix"> E-Mail Address
 														<span class="block input-icon input-icon-right">
-															<input type="text" required class="form-control" value="" name="email" placeholder="E-Mail Address" />
+															<input type="email" required class="form-control" value="" name="email" placeholder="E-Mail Address" />
 															<!--<i class="ace-icon fa fa-user"></i>-->
 														</span>
 														@error('email')
