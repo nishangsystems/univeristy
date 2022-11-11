@@ -75,6 +75,7 @@
 <body>
         @php
             $program_name = \App\Models\ProgramLevel::find(auth()->user()->program_id)->program()->first()->name;
+            $faculty = \App\Models\ProgramLevel::find(auth()->user()->program_id)->program()->first()->parent->parent;
             $current_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
             $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id)->id;
             $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id)->name;
@@ -96,6 +97,10 @@
                             <div class="row py-2 border-top border-bottom border-1">
                                 <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_name')}} :</label>
                                 <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{$user->name}}</div>
+                            </div>
+                            <div class="row py-2 border-top border-bottom border-1">
+                                <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_faculty')}} :</label>
+                                <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{$faculty->name}}</div>
                             </div>
                             <div class="row py-2 border-top border-bottom border-1">
                                 <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_program')}} :</label>

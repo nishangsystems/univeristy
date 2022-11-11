@@ -78,7 +78,7 @@ $user = \Auth::user()
                     <div class="profile-info-name">Parent Contact</div>
 
                     <div class="profile-info-value">
-                        <span class="editable" id="username"> {{$user->phone}}</span>
+                        <span class="editable" id="username"> {{$user->parent_phone_number}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">

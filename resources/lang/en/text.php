@@ -399,4 +399,10 @@ return [
     'word_ref'=>'ref',
     'word_departmental'=>'departmental',
     'the_dean'=>'the dean',
+    'word_faculty'=>'faculty',
+    'back_to_login'=>'back to login',
+    'validation_phrase1'=>'Email or Phone number already exist.',
+    'word_Done'=>'Done',
+    'edit_profile'=>'edit profile',
+    'parents_phone_number'=>'parent\'s phone number',
 ];

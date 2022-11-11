@@ -21,9 +21,9 @@ Route::get('/clear', function () {
 
 Route::post('login', [CustomLoginController::class, 'login'])->name('login.submit');
 Route::get('login', [CustomLoginController::class, 'showLoginForm'])->name('login');
-Route::get('registration', [CustomLoginController::class, 'showRegistrationForm'])->name('registration');
-Route::post('check_matricule', [CustomLoginController::class, 'check_matricule'])->name('check_matricule');
-Route::post('createAccount', [CustomLoginController::class, 'createAccount'])->name('createAccount');
+Route::get('registration', [Controller::class, 'registration'])->name('registration');
+Route::post('check_matricule', [Controller::class, 'check_matricule'])->name('check_matricule');
+Route::post('createAccount', [Controller::class, 'createAccount'])->name('createAccount');
 Route::post('logout', [CustomLoginController::class, 'logout'])->name('logout');
 
 Route::post('reset_password_with_token/password/reset', [CustomForgotPasswordController::class, 'validatePasswordRequest'])->name('reset_password_without_token');
@@ -309,6 +309,8 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
 
 Route::prefix('student')->name('student.')->group(function () {
     Route::get('', 'Student\HomeController@index')->name('home');
+    Route::get('edit_profile', 'Student\HomeController@edit_profile')->name('edit_profile');
+    Route::post('update_profile', 'Student\HomeController@update_profile')->name('update_profile');
     Route::get('subject', 'Student\HomeController@subject')->name('subject');
     Route::get('result/ca', 'Student\HomeController@result')->name('result.ca');
     Route::post('result/ca', 'Student\HomeController@ca_result');

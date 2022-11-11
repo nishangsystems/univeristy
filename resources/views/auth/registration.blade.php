@@ -40,7 +40,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">{{__('text.app_name')}} </a>
+      <a class="navbar-brand" href="#">{{config('app.name')}} </a>
     </div>
 
   </div>
@@ -93,7 +93,7 @@
 											<form method="post" action="{{ route('check_matricule') }}">
 											@csrf
 												<fieldset>
-													<label class="block clearfix"> Registration Number
+													<label class="block clearfix text-capitalize"> {{__('text.word_matricule')}}
 														<span class="block input-icon input-icon-right">
 															<input type="text" required class="form-control" value="{{old("reg_no")}}" name="reg_no" placeholder="Registration Number" />
 															<i class="ace-icon fa fa-user"></i>
@@ -129,10 +129,7 @@
 
 											<div>
 												<a href="{{route('login')}}" >
-
-												Already Have an Account
-													
-													</a>
+												{{__('text.back_to_login')}}
 												</a>
 											</div>
 										</div>

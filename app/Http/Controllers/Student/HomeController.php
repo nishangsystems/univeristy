@@ -555,7 +555,7 @@ class HomeController extends Controller
         
         $pdf = PDF::loadView('student.courses.form_b_template',$data);
         return $pdf->download(auth()->user()->matric.'_FORM-B.pdf');
-        return view('student.courses.form_b_template', $data);
+        // return view('student.courses.form_b_template', $data);
     }
     public function add_course()//takes class course id
     {
@@ -683,6 +683,29 @@ class HomeController extends Controller
             $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
         })->get();
         return view('student.notification.material_index', $data);
+    }
+
+    public function edit_profile()
+    {
+        # code...
+        $data['title'] = "Edit Profile";
+        return view('student.edit_profile', $data);
+    }
+
+    public function update_profile(Request $request)
+    {
+        # code...
+        if(
+            Students::where([
+                'email' => $request->email, 'phone' => $request->phone
+            ])->count() > 0 && (auth()->user()->phone != $request->phone || auth()->user()->email != $request->email)
+        ){
+            return back()->with('error', __('text.validation_phrase1'));
+        }
+        
+        $data = $request->all();
+        Students::find(auth()->id())->update($data);
+        return redirect(route('student.home'))->with('success', __('text.word_Done'));
     }
 
 }
