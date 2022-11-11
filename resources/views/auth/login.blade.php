@@ -40,7 +40,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">{{__('text.app_name')}} </a>
+      <a class="navbar-brand" href="{{route('login')}}">{{config('app.name')}} </a>
     </div>
 
   </div>

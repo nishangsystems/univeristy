@@ -79,6 +79,7 @@
 <body>
         @php
             $program_name = \App\Models\ProgramLevel::find(auth()->user()->program_id)->program()->first()->name;
+            $faculty = \App\Models\ProgramLevel::find(auth()->user()->program_id)->program()->first()->parent->parent;
             $current_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
             $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id)->id;
             $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id)->name;
@@ -102,6 +103,10 @@
                             <div class="py-1 h4 row">
                                 <span class="col-md-3 text-capitalize">{{__('text.word_program')}}:</span>
                                 <span class="col-md-9 pl-2 text-uppercase">{{$program_name}}</span>
+                            </div>
+                            <div class="py-1 h4 row">
+                                <span class="col-md-3 text-capitalize">{{__('text.word_faculty')}}:</span>
+                                <span class="col-md-9 pl-2 text-uppercase">{{$faculty->name}}</span>
                             </div>
                         </div>
                         <div class="text-center h4 text-uppercase" style="font-weight: 700;">{{trans('text.formb_title2', ['year'=>$current_year_name, 'semester'=>$current_semester_name])}}</div>

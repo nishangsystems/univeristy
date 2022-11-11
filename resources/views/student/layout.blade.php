@@ -301,6 +301,14 @@
             </li>
 
             <li>
+                <a href="{{route('student.edit_profile')}}" class="text-capitalize">
+                    <i class="menu-icon fa fa-caret-right"></i>
+                    {{__('text.edit_profile')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
+
+            <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                    href="{{route('logout')}}">
                     <i class="menu-icon fa fa-lock"></i>
