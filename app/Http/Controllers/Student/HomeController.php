@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\ClassSubject;
 use App\Models\CourseNotification;
+use App\Models\Material;
 use App\Models\Notification;
 use App\Models\ProgramLevel;
 use App\Models\Result;
@@ -57,13 +58,13 @@ class HomeController extends Controller
 
     public function fee()
     {
-        $data['title'] = "My fee Report";
+        $data['title'] = "Tution Report";
         return view('student.fee')->with($data);
     }
 
     public function other_incomes()
     {
-        $data['title'] = "Tution Report";
+        $data['title'] = "Other Payments Report";
         return view('student.other_incomes', $data);
     }
 
@@ -170,6 +171,27 @@ class HomeController extends Controller
                 'remark'=>$grade()->remark
             ];
         }, $res);
+        $student = auth('student')->id();
+        $fee = [
+            'amount' => array_sum(
+                \App\Models\Payments::where('payments.student_id', '=', $student)
+                ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
+                ->where('payment_items.name', '=', 'TUTION')
+                ->where('payments.batch_id', '=', $year)
+                ->pluck('payments.amount')
+                ->toArray()
+            ),
+            'total' => 
+                    \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                    ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+                    ->where('payment_items.name', '=', 'TUTION')
+                    ->whereNotNull('payment_items.amount')
+                    ->join('students', 'students.program_id', '=', 'program_levels.id')
+                    ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
+            'fraction' => Helpers::instance()->getSemester(auth()->user()->program_id)->semester_min_fee
+        ];
+        $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
+        $data['access'] = $fee['amount'] >= $data['min_fee'];
         return view('student.exam-result')->with($data);
     }
 
@@ -588,6 +610,79 @@ class HomeController extends Controller
         $data['title'] = $data['notification']->title;
         return view('student.notification.show', $data);
     }
+    public function _program_notifications_show($id)
+    {
+        # code...
+        $data['notification'] = Notification::find($id);
+        $data['title'] = $data['notification']->title;
+        return view('student.notification.show', $data);
+    }
 
+    public function _notifications_index(Request $request)
+    {
+        # code...
+        $data['title'] = "Material";
+        $data['class'] = auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear());
+        $data['program'] = $data['class']->program;
+        $data['department'] = $data['program']->parent;
+
+        return view('student.notification.home', $data);
+    }
+    public function _class_notifications(Request $request, $class_id, $campus_id)
+    {
+        # code...
+        $class = ProgramLevel::find($class_id);
+        $data['title'] = "Class Notifications";
+        $data['notifications'] = Notification::where('school_unit_id', '=', $class->program_id)->where('level_id', '=', $class->level_id)->where('campus_id', '=', $campus_id)->where(function($q){
+            $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
+        })->get();
+        return view('student.notification.index', $data);
+    }
+    public function _class_material(Request $request, $class_id, $campus_id)
+    {
+        # code...
+        $class = ProgramLevel::find($class_id);
+        $data['title'] = "Class Material";
+        $data['notifications'] = Material::where('school_unit_id', '=', $class->program_id)->where('level_id', '=', $class->level_id)->where('campus_id', '=', $campus_id)->where(function($q){
+            $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
+        })->get();
+        return view('student.notification.material_index', $data);
+    }
+    public function _department_notifications(Request $request, $department_id, $campus_id)
+    {
+        # code...
+        $data['title'] = "Department Notifications";
+        $data['notifications'] = Notification::where('school_unit_id', '=', $department_id)->where('campus_id', '=', $campus_id)->where(function($q){
+            $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
+        })->get();
+        return view('student.notification.index', $data);
+    }
+    public function _department_material(Request $request, $department_id, $campus_id)
+    {
+        # code...
+        $data['title'] = "Department Material";
+        $data['notifications'] = Material::where('school_unit_id', '=', $department_id)->where('campus_id', '=', $campus_id)->where(function($q){
+            $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
+        })->get();
+        return view('student.notification.material_index', $data);
+    }
+    public function _program_notifications(Request $request, $program_id, $campus_id)
+    {
+        # code...
+        $data['title'] = "Program Notifications";
+        $data['notifications'] = Notification::where('school_unit_id', '=', $program_id)->where('campus_id', '=', $campus_id)->where(function($q){
+            $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
+        })->get();
+        return view('student.notification.index', $data);
+    }
+    public function _program_material(Request $request, $program_id, $campus_id)
+    {
+        # code...
+        $data['title'] = "Program Material";
+        $data['notifications'] = Material::where('school_unit_id', '=', $program_id)->where('campus_id', '=', $campus_id)->where(function($q){
+            $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
+        })->get();
+        return view('student.notification.material_index', $data);
+    }
 
 }

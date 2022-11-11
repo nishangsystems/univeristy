@@ -27,20 +27,16 @@
                 </thead>
                 <tbody>
                     @forelse($notifications as $notification)
-                        
-                        <!-- @if(request('type') != 'departmental' && $notification->visibility != 'general'||'teachers')
-                        @endif -->
-                                <tr>  
-                                    <td>{{$notification->title}}</td>
-                                    <td>{{$notification->audience()}}</td>
-                                    <td>  <h6 class="mb-0">{{ $notification->created_at }}</h6>
-                                    {{ $notification->created_at->diffForHumans() }}</td>
-                                    <td><span class="btn btn-xs {{(time() > strtotime($notification->date))?'btn-danger':'btn-success'}} m-2">{{(time() >= strtotime($notification->date))?"Passed":"Pending"}}</span></td>
-                                    <td class="text-capitalize">
-                                        <a href="{{route('student.notification.show',[$notification->id])}}" class=" btn btn-success btn-xs m-2">{{__('text.word_view')}}</a>
-                                    </td>
-                                </tr>
-                          
+                        <tr>  
+                            <td>{{$notification->title}}</td>
+                            <td>{{$notification->audience()}}</td>
+                            <td>  <h6 class="mb-0">{{ $notification->created_at }}</h6>
+                            {{ $notification->created_at->diffForHumans() }}</td>
+                            <td><span class="m-2">{{date('l d/m/Y', strtotime($notification->date))}}</span></td>
+                            <td class="text-capitalize">
+                                <a href="{{route('student.notification.view',[$notification->id])}}" class=" btn btn-success btn-xs m-2">{{__('text.word_view')}}</a>
+                            </td>
+                        </tr>
                     @empty
                         <tr>  
                             <td colspan="5" class="text-center">{{__('text.no_notifications_found')}}</td>

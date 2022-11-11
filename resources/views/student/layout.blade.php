@@ -225,14 +225,6 @@
 
 
                 <ul class="submenu">
-                    <li>
-                        <a href="{{route('student.courses.registered')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.my_courses')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
 
                     <li>
                         <a href="{{route('student.courses.registration')}}" class="text-capitalize">
@@ -242,6 +234,13 @@
                         <b class="arrow"></b>
                     </li>
 
+                    <li>
+                        <a href="{{route('student.courses.registered')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.my_courses')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
 
                     <li>
@@ -285,45 +284,21 @@
                 </ul>
             </li>
 
-           <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i class="menu-icon fa fa-book"></i>
-                    <span class="menu-text">{{__('text.word_notifications')}}</span>
-                    <b class="arrow fa fa-angle-down"></b>
+            <li>
+                <a href="{{route('student.notification.home')}}" class="text-capitalize">
+                    <i class="menu-icon fa fa-caret-right"></i>
+                    {{__('text.word_notifications')}}
                 </a>
-
-
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('student.result.ca')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_campus')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-
-                    <li>
-                        <a href="{{route('student.result.exam')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_department')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('student.result.exam')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_class')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                </ul>
+                <b class="arrow"></b>
             </li>
 
+            <li>
+                <a href="{{route('student.material.home')}}" class="text-capitalize">
+                    <i class="menu-icon fa fa-caret-right"></i>
+                    {{__('text.word_material')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
 
             <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -356,6 +331,7 @@
                     </li>
                     <li class="active">Dashboard</li>
                     <li class="active"> Full Name: <b style="color: #e30000">{{\Auth::user()->name}}</b></li>
+                    <li class="active text-capitalize"> {{__('text.word_matricule')}}: <b style="color: #e30000">{{\Auth::user()->matric}}</b></li>
 
                 </ul><!-- /.breadcrumb -->
             </div>

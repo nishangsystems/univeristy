@@ -263,7 +263,7 @@ class MaterialController extends Controller
                         'level_id'=>$request->level_id ?? null,
                         'message'=>$request->message ?? ''
                     ]);
-                    return redirect(route('material.index').'?'.(request('type') ? 'type='.request('type') : '').(request('program_level_id') ? 'program_level_id='.request('program_level_id') : '').(request('campus_id') ? 'campus_id='.request('campus_id') : ''))->with('success', 'Done');
+                    return redirect(route('material.index', [$layer, $layer_id, $campus_id]))->with('success', 'Done');
                 }
                 else{
                     return back()->with('error', 'Operation failed. Wrong file type.');

@@ -41,13 +41,13 @@ $user = \Auth::user()
             </h3>
 
 
-            <div class="profile-user-info profile-user-info-striped">
+            <div class="profile-user-info profile-user-info-striped text-capitalize">
 
                 <div class="profile-info-row">
                     <div class="profile-info-name"> Class</div>
-
+                    @php($class = auth()->user()->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear()))
                     <div class="profile-info-value">
-                        <span class="editable" id="username"> {{$user->class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name}}</span>
+                        <span class="editable" id="username"> {{$class->program->name.' : '.__('text.word_level').' '.$class->level->level}}</span>
                     </div>
                 </div>
 
@@ -82,14 +82,10 @@ $user = \Auth::user()
                     </div>
                 </div>
                 <div class="profile-info-row">
-                    <div class="profile-info-name"> Section</div>
+                    <div class="profile-info-name"> {{__('text.word_campus')}}</div>
 
                     <div class="profile-info-value">
-                        @if($user->type == 'day')
-                        <span class="editable" id="username"> Day Section</span>
-                        @else
-                        <span class="editable" id="username"> Boarding Section</span>
-                        @endif
+                        <span class="editable" id="username"> {{\App\Models\Campus::find(auth('student')->user()->campus_id)->name}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">

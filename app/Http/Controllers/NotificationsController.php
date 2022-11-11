@@ -222,7 +222,7 @@ class NotificationsController extends Controller
             $not = Notification::find($id);
             $not->fill($request->all());
             $not->save();
-            return redirect(route('notifications.index').'?'.(request('type') ? 'type='.request('type') : '').(request('program_level_id') ? 'program_level_id='.request('program_level_id') : '').(request('campus_id') ? 'campus_id='.request('campus_id') : ''))->with('success', 'Done');
+            return redirect(route('notifications.index', [$layer, $layer_id, $campus_id]))->with('success', 'Done');
         } catch (\Throwable $th) {
             //throw $th;
             return back()->with('error', 'Operation failed '.$th->getMessage());

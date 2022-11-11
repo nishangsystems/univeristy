@@ -24,6 +24,12 @@ class CustomLoginController extends Controller
      public function registration(){
         return view('auth.registration');
     } 
+
+    public function showRegistrationForm()
+    {
+        # code...
+        return view('auth.registration');
+    }
     
     
     public function check_matricule(Request $request){
