@@ -296,6 +296,14 @@
 
                         <b class="arrow"></b>
                     </li>
+                    <li>
+                        <a href="{{route('admin.setsemester')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.set_semester')}}
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
                     @endif
 
 
@@ -482,6 +490,7 @@
                         <b class="arrow"></b>
                     </li>
 
+                    @if(auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.roles.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -489,6 +498,7 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    @endif
                 </ul>
             </li>
             @endif
@@ -576,46 +586,7 @@
             </li>
             @endif
 
-            @if (\Auth::user()->hasPermissionTo('manage_result'))
-            <li>
-                <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon  text-primary fa fa-rocket"></i>
-                    <span class="menu-text text-capitalize">
-						{{__('text.results')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.result.import')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.import_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.result.export')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.export_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.result.report')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.student_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_result'))
+            @if (\Auth::user()->hasPermissionTo('manage_importation'))
             <li>
                 <a href="#" class="dropdown-toggle">
                     <i class="menu-icon  text-primary fa fa-rocket"></i>
@@ -796,6 +767,64 @@
                     </li>
                 </ul>
             </li>
+            @endif
+
+            @if (\Auth::user()->hasPermissionTo('manage_notifications'))
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                <i class="menu-icon fa fa-money"></i>
+                    <span class="menu-text">
+						{{__('text.manage_notifications')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('notifications.index', ['S', 0, auth()->user()->campus_id ?? 0])}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_notifications')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('notifications.create', ['S', 0, auth()->user()->campus_id ?? 0])}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_create')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            @endif
+
+            @if(auth()->user()->campus_id != null)
+                @if (\Auth::user()->hasPermissionTo('manage_faqs'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                    <i class="menu-icon fa fa-money"></i>
+                        <span class="menu-text">
+                            {{__('text.manage_faqs')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('faqs.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_faqs')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('faqs.create')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_create')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+                @endif
             @endif
 
             <li>

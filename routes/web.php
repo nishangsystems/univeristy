@@ -38,6 +38,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('', 'Admin\HomeController@index')->name('home');
     Route::get('setayear', 'Admin\HomeController@setayear')->name('setayear');
     Route::post('setayear/{id}', 'Admin\HomeController@setAcademicYear')->name('createacademicyear');
+    Route::get('setsemester', 'Admin\HomeController@setsemester')->name('setsemester');
+    Route::post('setsemester/{id}', 'Admin\HomeController@postsemester')->name('postsemester');
     Route::get('deletebatch/{id}', 'Admin\HomeController@deletebatch')->name('deletebatch');
     Route::get('sections', 'Admin\ProgramController@sections')->name('sections');
     Route ::get('sub_units_of/{id}', 'Admin\ProgramController@subunitsOf')->name('subunits');
@@ -48,6 +50,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::resource('units', 'Admin\ProgramController')->except(['index', 'create', 'edit']);
     Route::get('units/{program_level_id}/subjects', 'Admin\ProgramController@subjects')->name('units.subjects');
     Route::get('sections/{section_id}/subjects/{id}', 'Admin\ClassSubjectController@edit')->name('edit.class_subjects');
+    Route::get('sections/{section_id}/subjects/{id}/delete', 'Admin\ClassSubjectController@delete')->name('delete.class_subjects');
     Route::put('sections/{section_id}/subjects/{id}', 'Admin\ClassSubjectController@update')->name('units.class_subjects.update');
 
 
@@ -371,6 +374,18 @@ Route::prefix('course/notification')->name('course.notification.')->group(functi
     Route::post('{course_id}/update/{id}', 'Teacher\SubjectController@update_notification')->name('update');
     Route::get('{course_id}/delete/{id}', 'Teacher\SubjectController@drop_notification')->name('drop');
     Route::get('{course_id}/show/{id}', 'Teacher\SubjectController@show_notification')->name('show');
+});
+
+Route::name('faqs.')->prefix('faqs')->group(function(){
+    Route::get('', 'FAQsController@index')->name('index');
+    Route::get('create', 'FAQsController@create')->name('create');
+    Route::post('create', 'FAQsController@save')->name('save');
+    Route::get('edit/{id}', 'FAQsController@edit')->name('edit');
+    Route::get('publish/{id}', 'FAQsController@publish')->name('publish');
+    Route::get('download/{id}', 'FAQsController@download')->name('download');
+    Route::post('update/{id}', 'FAQsController@update')->name('update');
+    Route::get('show/{id}', 'FAQsController@show')->name('show');
+    Route::get('delete/{id}', 'FAQsController@drop')->name('drop');
 });
 
 Route::name('material.')->prefix('{layer}/{layer_id}/material/{campus_id?}')->group(function(){

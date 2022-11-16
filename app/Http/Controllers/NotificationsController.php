@@ -10,6 +10,7 @@ use App\Models\Level;
 use App\Models\Notification;
 use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
+use Illuminate\Support\Facades\DB;
 
 class NotificationsController extends Controller
 {
@@ -27,7 +28,7 @@ class NotificationsController extends Controller
         switch ($layer) {
             case 'S':
                 # code...
-                $data['notifications'] = $notifications->where('unit_id',1);
+                $data['notifications'] = $notifications->whereNull('school_unit_id');
                 break;
             
             case 'F':
@@ -126,8 +127,11 @@ class NotificationsController extends Controller
         // });
         $data['title'] = ($request->has('type') ? "Departmental Notifications For ".SchoolUnits::find($request->_d)->name ?? '' : '')
                         .($request->has('program_level_id') ? "Notifications For ".ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
-                        .($request->has('campus_id') ? ' : '.Campus::find(request('campus_id'))->name.' Campus' :'');
-        return view('teacher.notification.index', $data);
+                        .((!$request->has('campus_id') || $request('campus_id') == 0) ? '' : ' : '.(Campus::find(request('campus_id'))->name ?? 'All').' Campus');
+        
+        return auth()->user()->roles()->first()->slug == 'admin' ?
+        view('admin.notification.index', $data) :
+        view('teacher.notification.index', $data) ;
     }
 
     public function create()
@@ -135,8 +139,11 @@ class NotificationsController extends Controller
         # code...
         $data['title'] = (request('type') != null ? auth()->user()->classes()->first()->name : '')
                         .(request('program_level_id') != null ? ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
-                        .(request('campus_id') != null ? Campus::find(request('campus_id'))->name : '');
-        return view('teacher.notification.create', $data);
+                        .(request('campus_id') != null ? Campus::find(request('campus_id'))->name ?? '' : '');
+        // return auth()->user()->roles()->first()->slug;
+        return auth()->user()->roles()->first()->slug == 'admin' ?
+        view('admin.notification.create', $data):
+        view('teacher.notification.create', $data) ;
     }
 
     public function save(Request $request, $layer, $layer_id, $campus_id = null)
@@ -153,11 +160,12 @@ class NotificationsController extends Controller
             $data = $request->all();
             $data['campus_id'] = $campus_id;
             $data['user_id'] = auth()->id();
+            $data['school_unit_id'] = $request->school_unit_id == 0 ? null : $request->school_unit_id;
             switch ($layer) {
                 case 'S':
                     # code...
-                    $data['unit_id'] = 1;
-                    $data['school_unit_id'] = $layer_id;
+                    // $data['unit_id'] = 1;
+                    // $data['school_unit_id'] = $layer_id;
                     break;
                 case 'F':
                     # code...
@@ -193,6 +201,7 @@ class NotificationsController extends Controller
                     break;
             }
             Notification::create($data);
+            
             return redirect(route('notifications.index', [$layer, $layer_id, $campus_id]))->with('success', 'Done');
         } catch (\Throwable $th) {
             //throw $th;
@@ -205,7 +214,10 @@ class NotificationsController extends Controller
         # code...
         $data['item'] = Notification::find($id);
         $data['title'] = 'Edit '.$data['item']->title;
-        return view('teacher.notification.edit', $data);
+        
+        return auth()->user()->roles()->first()->slug == 'admin' ?
+             view('admin.notification.edit', $data) :
+             view('teacher.notification.edit', $data);
     }
     
     public function update(Request $request, $layer, $layer_id, $campus_id, $id)
@@ -234,7 +246,10 @@ class NotificationsController extends Controller
         # code...
         $data['notification'] = Notification::find($id);
         $data['title'] = $data['notification']->title;
-        return view('teacher.notification.show', $data);
+
+        return auth()->user()->roles()->first()->slug == 'admin' ?
+             view('admin.notification.show', $data) :
+             view('teacher.notification.show', $data);
     }
 
     public function drop(Request $request, $layer, $layer_id, $campus_id, $id)

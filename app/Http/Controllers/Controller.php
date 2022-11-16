@@ -58,18 +58,18 @@ class Controller extends BaseController
     }
 
     public function check_matricule(Request $request){
-        if (Students::where('matric', $request->reg_no)->exists()) { 
-               if (User::where('username', $request->reg_no)->exists()) {   
-                  return redirect()->route('registration')->with('error','Matricule Number has being used already. Contact the System Administrator.');   
-               }else{
-                 $student_d = Students::where('matric', $request->reg_no)->first();   
-                 return view('auth.registration_info',compact('student_d'));
-               }
+        // if (Students::where('matric', $request->reg_no)->exists()) { 
+        //        if (User::where('username', $request->reg_no)->exists()) {   
+        //           return redirect()->route('registration')->with('error','Matricule Number has being used already. Contact the System Administrator.');   
+        //        }else{
+        //          $student_d = Students::where('matric', $request->reg_no)->first();   
+        //          return view('auth.registration_info',compact('student_d'));
+        //        }
              
-           }
-           else{
-             return redirect()->route('registration')->with('error','Invalid Registration Number.');   
-           }
+        //    }
+        //    else{
+        //      return redirect()->route('registration')->with('error','Invalid Registration Number.');   
+        //    }
 
            if (Students::where('matric', $request->reg_no)->exists()) { 
                 if (Students::where('matric', $request->reg_no)->whereNotNull('email')->exists()){
@@ -87,7 +87,7 @@ class Controller extends BaseController
 
      public function createAccount(Request $request){
         
-         if(User::where('phone', $request->phone)->count() > 0){
+        if(User::where('phone', $request->phone)->count() > 0){
             return redirect()->route('registration')->with('error', __('text.validation_phrase1'));
             //  return back()->with('error', 'text.validattion_phrase1');
             }
@@ -98,24 +98,24 @@ class Controller extends BaseController
             $update['password'] = Hash::make($request->password);
             
             $up = Students::where('matric', $request->username)->update($update);
-             if (User::where('username', $request->username)->exists()) {  
-            $update1['name'] = $request->name;
-            $update1['email'] = $request->email;
-            $update1['username'] = $request->username;
-            $update1['type'] = 'student';
-            $update1['password'] = Hash::make($request->password);
+            //  if (User::where('username', $request->username)->exists()) {  
+            // $update1['name'] = $request->name;
+            // $update1['email'] = $request->email;
+            // $update1['username'] = $request->username;
+            // $update1['type'] = 'student';
+            // $update1['password'] = Hash::make($request->password);
             
-            $up1 = User::where('username', $request->username)->update($update1);
-             }else{
-                 $insert['name'] = $request->name;
-                $insert['email'] = $request->email;
-                $insert['username'] = $request->username;
-                $insert['type'] = 'student';
-                $insert['gender'] = '';
-                $insert['password'] = Hash::make($request->password);
+            // $up1 = User::where('username', $request->username)->update($update1);
+            //  }else{
+            //      $insert['name'] = $request->name;
+            //     $insert['email'] = $request->email;
+            //     $insert['username'] = $request->username;
+            //     $insert['type'] = 'student';
+            //     $insert['gender'] = '';
+            //     $insert['password'] = Hash::make($request->password);
             
-            $up2 = User::create($insert);
-             }
+            // $up2 = User::create($insert);
+            //  }
         //      if( Auth::guard('student')->attempt(['matric'=>$request->username,'password'=>$request->password], $request->remember)){
         //     // return "Spot 1";
         //     return redirect()->intended(route('student.home'));
@@ -126,6 +126,6 @@ class Controller extends BaseController
             //return redirect()->route('student.home')->with('s','Account created successfully.');   
             
           }
-          
+
     }
 }
