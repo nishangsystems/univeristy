@@ -405,4 +405,12 @@ return [
     'word_Done'=>'Done',
     'edit_profile'=>'edit profile',
     'parents_phone_number'=>'parent\'s phone number',
+    'manage_notifications'=>'manage notifications',
+    'manage_faqs'=>'manage FAQs',
+    'word_create'=>'create',
+    'word_faqs'=>'FAQs',
+    'word_question'=>'question',
+    'word_answer'=>'answer',
+    'set_semester'=>'set semester',
+    'set_semester'=>'set semester',
 ];

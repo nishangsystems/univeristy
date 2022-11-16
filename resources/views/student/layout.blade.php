@@ -126,7 +126,7 @@
                              alt="Jason's Photo"/>
                         <span>
 						<small>Welcome</small>
-                         {{\Auth::user()->name}}
+                         {{auth('student')->user()->name}}
 						</span>
 
                         <i class="ace-icon fa fa-caret-down"></i>
@@ -301,6 +301,14 @@
             </li>
 
             <li>
+                <a href="{{route('faqs.index')}}" class="text-capitalize">
+                    <i class="menu-icon fa fa-caret-right"></i>
+                    {{__('text.word_faqs')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
+
+            <li>
                 <a href="{{route('student.edit_profile')}}" class="text-capitalize">
                     <i class="menu-icon fa fa-caret-right"></i>
                     {{__('text.edit_profile')}}
@@ -338,8 +346,8 @@
                         <a href="#">Home</a>
                     </li>
                     <li class="active">Dashboard</li>
-                    <li class="active"> Full Name: <b style="color: #e30000">{{\Auth::user()->name}}</b></li>
-                    <li class="active text-capitalize"> {{__('text.word_matricule')}}: <b style="color: #e30000">{{\Auth::user()->matric}}</b></li>
+                    <li class="active"> Full Name: <b style="color: #e30000">{{auth('student')->user()->name}}</b></li>
+                    <li class="active text-capitalize"> {{__('text.word_matricule')}}: <b style="color: #e30000">{{auth('student')->user()->matric}}</b></li>
 
                 </ul><!-- /.breadcrumb -->
             </div>
