@@ -34,8 +34,12 @@ Route::get('', 'WelcomeController@home');
 Route::get('home', 'WelcomeController@home');
 
 Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function () {
-    Route::get('home', 'Admin\HomeController@index')->name('home');
     Route::get('', 'Admin\HomeController@index')->name('home');
+    Route::get('home', 'Admin\HomeController@index')->name('home');
+    Route::get('background_image', 'Admin\HomeController@set_background_image')->name('set_background_image');
+    Route::post('background_image', 'Admin\HomeController@save_background_image');
+    Route::get('course/date_line', 'Admin\HomeController@courses_date_line')->name('course.date_line');
+    Route::post('course/date_line', 'Admin\HomeController@save_courses_date_line');
     Route::get('setayear', 'Admin\HomeController@setayear')->name('setayear');
     Route::post('setayear/{id}', 'Admin\HomeController@setAcademicYear')->name('createacademicyear');
     Route::get('setsemester', 'Admin\HomeController@setsemester')->name('setsemester');
@@ -334,6 +338,8 @@ Route::prefix('student')->name('student.')->group(function () {
         Route::get('drop', 'Student\HomeController@drop_course')->name('drop');
         Route::get('add', 'Student\HomeController@add_course')->name('add');
     });
+    Route::get('resit/registration', 'Student\HomeController@resit_registration')->name('resit.registration');
+    Route::get('resit/registration', 'Student\HomeController@resit_registration')->name('resit.registration');
     Route::get('note/index/{course_id}', 'Student\HomeController@course_notes')->name('note.index');
     Route::get('assignment/index/{course_id}', 'Student\HomeController@assignment')->name('assignment.index');
     Route::get('notification/index/{course_id}', 'Student\HomeController@notification')->name('notification.index');

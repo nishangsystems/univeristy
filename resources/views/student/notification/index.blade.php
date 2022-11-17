@@ -19,7 +19,6 @@
                     <tr>
                         <th>Title</th>
                         <th>Audience</th>
-                        <th>Created on</th>
                         <th>Due date</th>
                         <th>Status</th>
                         <th></th>
@@ -30,7 +29,6 @@
                         <tr>  
                             <td>{{$notification->title}}</td>
                             <td>{{$notification->audience()}}</td>
-                            <td>  <h6 class="mb-0">{{ $notification->created_at }}</h6>
                             {{ $notification->created_at->diffForHumans() }}</td>
                             <td><span class="m-2">{{date('l d/m/Y', strtotime($notification->date))}}</span></td>
                             <td class="text-capitalize">

@@ -29,6 +29,16 @@
 		        font-size:16px;
 		        color:#fff;
 		    }
+			#frame{
+				background-image: url("{{url('bg_image/background_image.'.file_get_contents(base_path('bg_img.text')))}}");
+				/* background-color: rgba(250, 250, 250, 0.7); */
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-attachment: fixed;
+				/* background-blend-mode: overlay; */
+
+			}
 		</style>
 	</head>
 
@@ -47,7 +57,7 @@
 </nav>
 
 
-	<body class="login-layout">
+	<body class="login-layout" id="frame">
 		<div class="main-container">
 			<div class="main-content">
 

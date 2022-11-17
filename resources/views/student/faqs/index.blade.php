@@ -16,7 +16,6 @@
                 <thead>
                     <tr class="text-capitalize">
                         <th>{{__('text.word_question')}}</th>
-                        <th>{{__('text.created_on')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -24,7 +23,6 @@
                     @forelse($faqs as $notification)
                         <tr>  
                             <td>{{$notification->question}}</td>
-                            <td>  <h6 class="mb-0">{{ $notification->created_at }}</h6></td>
                             <td class="text-capitalize">
                                 <a href="{{route('faqs.show',[$notification->id])}}" class=" btn btn-success btn-xs m-2">{{__('text.word_view')}}</a>
                             </td>

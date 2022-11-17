@@ -14,7 +14,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header bg-primary d-flex justify-content-around">
-                            <h5 class="modal-title" id="modal-title">Modal title</h5>
+                            <h5 class="modal-title text-uppercase" id="modal-title">{{__('text.course_bank')}}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="false">&times;</span>
                             </button>
