@@ -23,6 +23,7 @@
                     </thead>
                     <tbody>
                         @foreach($users as $k=>$user)
+                            @if((auth()->user()->campus_id == null) || ($user->campus_id == auth()->user()->campus_id))
                             <tr>
                                 <td>{{$k+1}}</td>
                                 <td>{{$user->name}}</td>
@@ -42,6 +43,7 @@
                                     </form>
                                 </td>
                             </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>

@@ -306,6 +306,21 @@
                     </li>
                     @endif
 
+                    
+                    <li>
+                        <a href="{{route('admin.course.date_line')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           {{__('text.course_registration_date_line')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           {{__('text.set_background_image')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
                     @if(auth()->user()->campus_id == null)
                     <li>

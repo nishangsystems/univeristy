@@ -129,7 +129,7 @@ class NotificationsController extends Controller
                         .($request->has('program_level_id') ? "Notifications For ".ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
                         .((!$request->has('campus_id') || $request('campus_id') == 0) ? '' : ' : '.(Campus::find(request('campus_id'))->name ?? 'All').' Campus');
         
-        return auth()->user()->roles()->first()->slug == 'admin' ?
+        return auth()->user()->type == 'admin' ?
         view('admin.notification.index', $data) :
         view('teacher.notification.index', $data) ;
     }
@@ -141,7 +141,7 @@ class NotificationsController extends Controller
                         .(request('program_level_id') != null ? ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
                         .(request('campus_id') != null ? Campus::find(request('campus_id'))->name ?? '' : '');
         // return auth()->user()->roles()->first()->slug;
-        return auth()->user()->roles()->first()->slug == 'admin' ?
+        return auth()->user()->type == 'admin' ?
         view('admin.notification.create', $data):
         view('teacher.notification.create', $data) ;
     }
@@ -215,7 +215,7 @@ class NotificationsController extends Controller
         $data['item'] = Notification::find($id);
         $data['title'] = 'Edit '.$data['item']->title;
         
-        return auth()->user()->roles()->first()->slug == 'admin' ?
+        return auth()->user()->type == 'admin' ?
              view('admin.notification.edit', $data) :
              view('teacher.notification.edit', $data);
     }
@@ -247,7 +247,7 @@ class NotificationsController extends Controller
         $data['notification'] = Notification::find($id);
         $data['title'] = $data['notification']->title;
 
-        return auth()->user()->roles()->first()->slug == 'admin' ?
+        return auth()->user()->type == 'admin' ?
              view('admin.notification.show', $data) :
              view('teacher.notification.show', $data);
     }

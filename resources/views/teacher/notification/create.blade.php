@@ -26,7 +26,7 @@
                             <label class="col-md-2">{{__('text.word_level')}}</label>
                             <div class="col-md-9 text-capitalize">
                                 <select class="form-control" name="level_id" data-placeholder="Select Level...">
-                                    <option value="0"> {{__('text.for_all_levels')}}</option>
+                                    <option value="0"> {{__('text.word_all')}}</option>
                                     @foreach(\App\Models\Level::all() as $program)
                                         <option value="{{$program->id}}"> {{$program->level}}</option>
                                     @endforeach

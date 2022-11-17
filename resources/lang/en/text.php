@@ -413,4 +413,10 @@ return [
     'word_answer'=>'answer',
     'set_semester'=>'set semester',
     'set_semester'=>'set semester',
+    'course_registration_date_line'=>'course registration date line',
+    'word_semesters'=>'semesters',
+    'set_background_image'=>'set background image',
+    'resit_registration'=>'resit registration',
+    'course_bank'=>'course bank',
+    
 ];

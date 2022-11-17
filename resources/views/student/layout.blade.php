@@ -189,7 +189,7 @@
 
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i class="menu-icon fa fa-book"></i>
+                    <i class="menu-icon fa fa-money"></i>
                     <span class="menu-text">{{__('text.finance_report')}}</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
@@ -235,6 +235,14 @@
                     </li>
 
                     <li>
+                        <a href="{{route('student.resit.registration')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.resit_registration')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
                         <a href="{{route('student.courses.registered')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.my_courses')}}
@@ -256,7 +264,7 @@
 
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i class="menu-icon fa fa-book"></i>
+                    <i class="fa fa-gift menu-icon   "></i>
                     <span class="menu-text">{{__('text.word_results')}}</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
@@ -286,7 +294,7 @@
 
             <li>
                 <a href="{{route('student.notification.home')}}" class="text-capitalize">
-                    <i class="menu-icon fa fa-caret-right"></i>
+                    <i class="fa fa-bell menu-icon   "></i>
                     {{__('text.word_notifications')}}
                 </a>
                 <b class="arrow"></b>
@@ -294,7 +302,7 @@
 
             <li>
                 <a href="{{route('student.material.home')}}" class="text-capitalize">
-                    <i class="menu-icon fa fa-caret-right"></i>
+                    <i class="menu-icon fa fa-file"></i>
                     {{__('text.word_material')}}
                 </a>
                 <b class="arrow"></b>
@@ -302,7 +310,7 @@
 
             <li>
                 <a href="{{route('faqs.index')}}" class="text-capitalize">
-                    <i class="menu-icon fa fa-caret-right"></i>
+                    <i class="fa fa-question menu-icon   "></i>
                     {{__('text.word_faqs')}}
                 </a>
                 <b class="arrow"></b>
@@ -310,7 +318,7 @@
 
             <li>
                 <a href="{{route('student.edit_profile')}}" class="text-capitalize">
-                    <i class="menu-icon fa fa-caret-right"></i>
+                    <i class="fa fa-user menu-icon   "></i>
                     {{__('text.edit_profile')}}
                 </a>
                 <b class="arrow"></b>
