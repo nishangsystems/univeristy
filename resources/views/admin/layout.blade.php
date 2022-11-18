@@ -252,29 +252,29 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
-
+                        @if (\Auth::user()->hasPermissionTo('promote_students'))
+                            <li>
+                                <a href="{{route('admin.students.init_promotion')}}"  class="text-capitalize">
+                                    <strong class=" menu-icon text-primary ">&leftrightharpoons;</strong>
+                                    {{__('text.promote_students')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
+                        @if (\Auth::user()->hasPermissionTo('approve_promotion'))
+                            <li>
+                                <a href="{{route('admin.students.trigger_approval')}}" class="text-capitalize">
+                                    <strong class="menu-icon text-primary">&Rrightarrow;</strong>
+                                    {{__('text.validate_promotion')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
                     </ul>
                 </li>
             @endif
             
-            @if (\Auth::user()->hasPermissionTo('promote_students'))
-                <li>
-                    <a href="{{route('admin.students.init_promotion')}}"  class="text-capitalize">
-                        <strong class=" menu-icon text-primary ">&leftrightharpoons;</strong>
-                        {{__('text.promote_students')}}
-                    </a>
-                    <b class="arrow"></b>
-                </li>
-            @endif
-            @if (\Auth::user()->hasPermissionTo('approve_promotion'))
-                <li>
-                    <a href="{{route('admin.students.trigger_approval')}}" class="text-capitalize">
-                        <strong class="menu-icon text-primary">&Rrightarrow;</strong>
-                        {{__('text.validate_promotion')}}
-                    </a>
-                    <b class="arrow"></b>
-                </li>
-            @endif
+           
             @if (\Auth::user()->hasPermissionTo('manage_setting'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">

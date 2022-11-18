@@ -418,6 +418,8 @@ class HomeController extends Controller
         if ($conf != null) {
             # code...
             $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y'));
+        }else{
+            return redirect(route('student.home'))->with('error', 'Can not sign courses for this program at the moment. Date limit not set. Contact registry.');
         }
         // return __DIR__;
         // dd($data);
@@ -457,6 +459,8 @@ class HomeController extends Controller
         if ($conf != null) {
             # code...
             $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y'));
+        }else{
+            return redirect(route('student.home'))->with('error', 'Can not sign courses for this program at the moment. Date limit not set. Contact registry.');
         }
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
         $data['access'] = $fee['amount'] >= $data['min_fee'];

@@ -458,6 +458,10 @@ class StatisticsController extends Controller
                         ->whereYear('pay_incomes.created_at', '=', date('Y', strtotime($request->value)))
                         ->whereMonth('pay_incomes.created_at', '=', date('m', strtotime($request->value)))
                         ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
+                        ->join('students', ['students.id'=>'pay_incomes.student_id'])
+                        ->where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                        })
                         ->get();
                         $names = array_unique($expenditureItems->pluck('name')->toArray());
                     $data['data'] = array_map(function($val) use ($expenditureItems){
@@ -479,6 +483,10 @@ class StatisticsController extends Controller
                     $expenditureItems = DB::table('pay_incomes')
                         ->where('pay_incomes.batch_id', '=', $request->value)
                         ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
+                        ->join('students', ['students.id'=>'pay_incomes.student_id'])
+                        ->where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                        })
                         ->get();
                     $names = array_unique($expenditureItems->pluck('name')->toArray());
                     $data['data'] = array_map(function($val) use ($expenditureItems){
@@ -501,6 +509,10 @@ class StatisticsController extends Controller
                     ->whereDate('pay_incomes.created_at', '>=', date('Y-m-d', strtotime($request->start_date)))
                     ->whereDate('pay_incomes.created_at', '<=', date('Y-m-d', strtotime($request->end_date)))
                     ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
+                    ->join('students', ['students.id'=>'pay_incomes.student_id'])
+                    ->where(function($q){
+                        auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                    })
                     ->get();
                     $names = array_unique($expenditureItems->pluck('name')->toArray());
                     $data['data'] = array_map(function($val) use ($expenditureItems){
@@ -560,6 +572,10 @@ class StatisticsController extends Controller
                     $expenditureItems = DB::table('expenses')
                         ->whereYear('date', '=', date('Y', strtotime($request->value)))
                         ->whereMonth('date', '=', date('m', strtotime($request->value)))
+                        ->join('users', ['users.id'=>'expenses.user_id'])
+                        ->where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
+                        })
                         ->get();
                         $names = array_unique($expenditureItems->pluck('name')->toArray());
                     $data['data'] = array_map(function($val) use ($expenditureItems){
@@ -580,6 +596,10 @@ class StatisticsController extends Controller
                     # code...
                     $expenditureItems = DB::table('expenses')
                         ->whereYear('date', '=', date('Y',strtotime($request->value)))
+                        ->join('users', ['users.id'=>'expenses.user_id'])
+                        ->where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
+                        })
                         ->get();
                     $names = array_unique($expenditureItems->pluck('name')->toArray());
                     $data['data'] = array_map(function($val) use ($expenditureItems){
@@ -601,6 +621,10 @@ class StatisticsController extends Controller
                     $expenditureItems = DB::table('expenses')
                     ->whereDate('date', '>=', date('Y-m-d', strtotime($request->start_date)))
                     ->whereDate('date', '<=', date('Y-m-d', strtotime($request->end_date)))
+                    ->join('users', ['users.id'=>'expenses.user_id'])
+                    ->where(function($q){
+                        auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
+                    })
                     ->get();
                     $names = array_unique($expenditureItems->pluck('name')->toArray());
                     $data['data'] = array_map(function($val) use ($expenditureItems){
@@ -648,9 +672,17 @@ class StatisticsController extends Controller
             
             $income = DB::table('pay_incomes')
                         ->whereDate('pay_incomes.created_at', '=', date('Y-m-d', strtotime($month.'-'.$i)))
+                        ->join('students', ['students.id'=>'pay_incomes.student_id'])
+                        ->where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                        })
                         ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')->sum('incomes.amount');
             $expenditure = DB::table('expenses')
                         ->whereDate('date', '=', date('Y-m-d', strtotime($month.'-'.$i)))
+                        ->join('users', ['users.id'=>'expenses.user_id'])
+                        ->where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
+                        })
                         ->sum('amount_spend');
 
             $data['report'][] = [

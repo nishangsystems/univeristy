@@ -420,7 +420,7 @@ return [
     'course_bank'=>'course bank',
     'current_semester'=>'current semester',
     'date_line'=>'date line',
-    'course_registration_over'=>'course registration is over for this semester',
+    'course_registration_closed'=>'course registration is closed for this semester',
     'program_settings'=>'program settings',
     'maximum_credits'=>'maximum credits',
     'ca_totals'=>'CA totals',

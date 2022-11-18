@@ -65,7 +65,7 @@
                 console.log(data);
                 $('#current_semester').text(data.semester);
                 $('#date_line').text(data.date_line);
-                $('#date').val(data.date_line);
+                $('#date').val(data.date);
                 $('#semester').val(sem);
                 $('#alert').removeClass('hidden');
             }
