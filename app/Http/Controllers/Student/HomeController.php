@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\CampusSemesterConfig;
 use App\Models\ClassSubject;
 use App\Models\CourseNotification;
 use App\Models\Material;
@@ -389,38 +390,6 @@ class HomeController extends Controller
     public function course_registration()
     {
         # code...
-        $data['title'] = "Resit Registration For " .Helpers::instance()->getSemester(Students::find(auth()->id())->program_id)->name." ".\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
-        $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>\App\Helpers\Helpers::instance()->getYear()])->first()->class_id);
-        $data['cv_total'] = ProgramLevel::find(auth()->user()->program_id)->program()->first()->max_credit;        
-        
-        $student = auth()->id();
-        $year = Helpers::instance()->getYear();
-        $fee = [
-            'amount' => array_sum(
-                \App\Models\Payments::where('payments.student_id', '=', $student)
-                ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
-                ->where('payment_items.name', '=', 'TUTION')
-                ->where('payments.batch_id', '=', $year)
-                ->pluck('payments.amount')
-                ->toArray()
-            ),
-            'total' => 
-                    \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-                    ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
-                    ->where('payment_items.name', '=', 'TUTION')
-                    ->whereNotNull('payment_items.amount')
-                    ->join('students', 'students.program_id', '=', 'program_levels.id')
-                    ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
-            'fraction' => Helpers::instance()->getSemester(auth()->user()->program_id)->courses_min_fee
-        ];
-        $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] = $fee['amount'] >= $data['min_fee'];
-        return view('student.courses.register', $data);
-    }
-
-    public function resit_registration()
-    {
-        # code...
         $data['title'] = "Course Registration For " .Helpers::instance()->getSemester(Students::find(auth()->id())->program_id)->name." ".\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
         $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>\App\Helpers\Helpers::instance()->getYear()])->first()->class_id);
         $data['cv_total'] = ProgramLevel::find(auth()->user()->program_id)->program()->first()->max_credit;        
@@ -445,9 +414,53 @@ class HomeController extends Controller
                     ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
             'fraction' => Helpers::instance()->getSemester(auth()->user()->program_id)->courses_min_fee
         ];
+        $conf = CampusSemesterConfig::where(['campus_id'=>auth('student')->user()->campus_id])->where(['semester_id'=>Helpers::instance()->getSemester(auth('student')->user()->program_id)->id])->first();
+        if ($conf != null) {
+            # code...
+            $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y'));
+        }
+        // return __DIR__;
+        // dd($data);
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
         $data['access'] = $fee['amount'] >= $data['min_fee'];
-        // return view('student.courses.register', $data);
+        return view('student.courses.register', $data);
+    }
+
+    public function resit_registration()
+    {
+        # code...
+        $data['title'] = "Resit Registration For " .Helpers::instance()->getSemester(Students::find(auth()->id())->program_id)->name." ".\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
+        $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>\App\Helpers\Helpers::instance()->getYear()])->first()->class_id);
+        $data['cv_total'] = ProgramLevel::find(auth()->user()->program_id)->program()->first()->max_credit;        
+        
+        $student = auth()->id();
+        $year = Helpers::instance()->getYear();
+        $fee = [
+            'amount' => array_sum(
+                \App\Models\Payments::where('payments.student_id', '=', $student)
+                ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
+                ->where('payment_items.name', '=', 'TUTION')
+                ->where('payments.batch_id', '=', $year)
+                ->pluck('payments.amount')
+                ->toArray()
+            ),
+            'total' => 
+                    \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                    ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+                    ->where('payment_items.name', '=', 'TUTION')
+                    ->whereNotNull('payment_items.amount')
+                    ->join('students', 'students.program_id', '=', 'program_levels.id')
+                    ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
+            'fraction' => Helpers::instance()->getSemester(auth()->user()->program_id)->courses_min_fee
+        ];
+        $conf = CampusSemesterConfig::where(['campus_id'=>auth('student')->user()->campus_id])->where(['semester_id'=>Helpers::instance()->getSemester(auth('student')->user()->program_id)->id])->first();
+        if ($conf != null) {
+            # code...
+            $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y'));
+        }
+        $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
+        $data['access'] = $fee['amount'] >= $data['min_fee'];
+        return view('student.resit.register', $data);
     }
 
     public function form_b()

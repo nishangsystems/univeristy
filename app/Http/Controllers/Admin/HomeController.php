@@ -10,12 +10,15 @@ use App\Models\Background;
 use App\Models\Batch;
 use App\Models\CampusSemesterConfig;
 use App\Models\Config;
+use App\Models\SchoolUnits;
 use App\Models\Semester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config as FacadesConfig;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use MongoDB\Driver\Session;
+
+use function PHPUnit\Framework\returnSelf;
 
 class HomeController  extends Controller
 {
@@ -38,6 +41,9 @@ class HomeController  extends Controller
     public function courses_date_line(Request $request)
     {
         $data['title'] = "Set Course Registration Date Line".($request->has('semester') ? ' For '.Semester::find($request->semester)->name : '');
+        if(request()->has('background')){
+            $data['current_semester'] = Semester::where(['background_id'=>$request->background, 'status'=>1])->first()->id ?? null;
+        }
         return view('admin.setting.set_course_date', $data);
     }
 
@@ -71,6 +77,43 @@ class HomeController  extends Controller
 
     }
 
+    public function course_date_line(Request $request, $campus, $semester)
+    {
+        # code...
+        $conf = CampusSemesterConfig::where([
+            'campus_id'=>$campus, 'semester_id'=>$semester
+            ])->count();
+            if ($conf == 0) {
+                # code...
+                return ['semester'=>Semester::find($semester)->name, 'date_line'=>"DATE LINE NOT SET"];
+            }
+            // return __DIR__;
+            return ['semester'=>Semester::find($semester)->name, 'date_line'=>CampusSemesterConfig::where(['campus_id'=>$campus, 'semester_id'=>$semester])->first()->courses_date_line];
+    }
+
+    public function program_settings(Request $request)
+    {
+        # code...
+        $data['title'] = "Program Settings";
+        return view('admin.setting.program_settings', $data);
+    }
+
+    public function post_program_settings(Request $request)
+    {
+        # code...
+        $program = SchoolUnits::find($request->program);
+        // return $program;
+        if ($program != null) {
+            # code...
+            $program->max_credit=$request->max_credit;
+            $program->ca_total=$request->ca_total;
+            $program->exam_total=$request->exam_total;
+            $program->save();
+            return back()->with('success', 'Done');
+        }
+        return back()->with('error', 'Program Not Found.');
+    }
+
     public function set_background_image()
     {
         # code...
@@ -100,11 +143,9 @@ class HomeController  extends Controller
     {
         # code...
         $data['title'] = "Set Current Semester";
-        $data['backgrounds'] = Background::all();
-        if ($request->has('background')) {
-            # code...
-            $data['semesters'] = Semester::where(['background_id'=>$request->background])->get();
-        }
+        $data['semesters'] = Semester::join('backgrounds', ['backgrounds.id'=>'semesters.background_id'])
+                    ->distinct()->select(['semesters.*', 'backgrounds.background_name'])->orderBy('background_name', 'DESC')->orderBy('name', 'ASC')->get();
+        // return $data;
         return view('admin.setting.setsemester', $data);
     }
 

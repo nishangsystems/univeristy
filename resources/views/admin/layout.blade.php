@@ -308,6 +308,15 @@
 
                     
                     <li>
+                        <a href="{{route('admin.program_settings')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           {{__('text.program_settings')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    
+                    <li>
                         <a href="{{route('admin.course.date_line')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                            {{__('text.course_registration_date_line')}}

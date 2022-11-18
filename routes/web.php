@@ -217,6 +217,11 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('school/debts', 'Admin\SchoolDebtsController@getStudentsWithDebts')->name('debts.getStudentWithDebts');
     Route::get('school/debts/{id}', 'Admin\SchoolDebtsController@getStudentDebts')->name('debts.showDebts');
     Route::post('school/debts/{id}', 'Admin\SchoolDebtsController@collectStudentDebts')->name('debts.collectDebts');
+    
+    Route::get('course_registration/date_line/{campus}/{semester}', 'Admin\HomeController@course_date_line')->name('courses.registration.date_line');
+    Route::get('programs/settings', 'Admin\HomeController@program_settings')->name('program_settings');
+    Route::post('programs/settings', 'Admin\HomeController@post_program_settings');
+    
     Route::prefix('statistics')->name('stats.')->group(function(){
         Route::get('sudents', 'Admin\StatisticsController@students')->name('students');
         Route::get('fees', 'Admin\StatisticsController@fees')->name('fees');

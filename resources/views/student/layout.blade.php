@@ -234,13 +234,6 @@
                         <b class="arrow"></b>
                     </li>
 
-                    <li>
-                        <a href="{{route('student.resit.registration')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.resit_registration')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
 
                     <li>
                         <a href="{{route('student.courses.registered')}}" class="text-capitalize">
@@ -260,6 +253,14 @@
                     </li>
 
                 </ul>
+            </li>
+            
+            <li>
+                <a href="{{route('student.resit.registration')}}" class="text-capitalize">
+                    <i class="fa fa-recycle menu-icon"></i>
+                    {{__('text.resit_registration')}}
+                </a>
+                <b class="arrow"></b>
             </li>
 
            <li>
