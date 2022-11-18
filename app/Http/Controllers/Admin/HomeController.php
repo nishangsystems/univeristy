@@ -88,7 +88,7 @@ class HomeController  extends Controller
                 return ['semester'=>Semester::find($semester)->name, 'date_line'=>"DATE LINE NOT SET"];
             }
             // return __DIR__;
-            return ['semester'=>Semester::find($semester)->name, 'date_line'=>CampusSemesterConfig::where(['campus_id'=>$campus, 'semester_id'=>$semester])->first()->courses_date_line];
+            return ['semester'=>Semester::find($semester)->name, 'date_line'=>date('l d-m-Y', strtotime(CampusSemesterConfig::where(['campus_id'=>$campus, 'semester_id'=>$semester])->first()->courses_date_line)), 'date'=>CampusSemesterConfig::where(['campus_id'=>$campus, 'semester_id'=>$semester])->first()->courses_date_line];
     }
 
     public function program_settings(Request $request)

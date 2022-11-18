@@ -65,11 +65,11 @@
         </div>
     @else
         @if(isset($on_time) && !$on_time)
-        <div class="py-4 text-center h4 text-danger bg-light my-4">
-            {{__('text.course_registration_over')}}
+        <div class="py-4 text-center h4 text-danger bg-light my-4 text-capitalize">
+            {{__('text.course_registration_closed')}}
         </div>
         @else
-        <div class="py-4 text-center h4 text-danger bg-light my-4">
+        <div class="py-4 text-center h4 text-danger bg-light my-4 text-capitalize">
             {{trans('text.fee_access_phrase', ['amount'=>$min_fee, 'action'=>'sign up courses'])}}
         </div>
         @endif
