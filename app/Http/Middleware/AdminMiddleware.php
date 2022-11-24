@@ -16,9 +16,11 @@ class AdminMiddleware
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {  if(Auth::user() == null){
+    {  
+        // dd(auth()->user());
+        if(Auth::user() == null){
         return redirect(route('login'));
-      }elseif(!Auth::user()->type == 'admin') //If user does //not have this permission
+      }elseif(Auth::user()->type != 'admin') //If user does //not have this permission
             {
                 return redirect(route('login'));
             }

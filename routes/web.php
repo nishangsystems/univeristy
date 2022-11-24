@@ -343,8 +343,6 @@ Route::prefix('student')->name('student.')->group(function () {
         Route::get('drop', 'Student\HomeController@drop_course')->name('drop');
         Route::get('add', 'Student\HomeController@add_course')->name('add');
     });
-    Route::get('resit/registration', 'Student\HomeController@resit_registration')->name('resit.registration');
-    Route::get('resit/registration', 'Student\HomeController@resit_registration')->name('resit.registration');
     Route::get('note/index/{course_id}', 'Student\HomeController@course_notes')->name('note.index');
     Route::get('assignment/index/{course_id}', 'Student\HomeController@assignment')->name('assignment.index');
     Route::get('notification/index/{course_id}', 'Student\HomeController@notification')->name('notification.index');
@@ -354,6 +352,7 @@ Route::prefix('student')->name('student.')->group(function () {
         Route::get('/class/{class_id}/{campus_id}', 'Student\HomeController@_class_notifications')->name('class');
         Route::get('/department/{department_id}/{campus_id}', 'Student\HomeController@_department_notifications')->name('department');
         Route::get('/program/{program_id}/{campus_id}', 'Student\HomeController@_program_notifications')->name('program');
+        Route::get('/school/{campus_id?}', 'Student\HomeController@_school_notifications')->name('school');
         Route::get('/view/{id}', 'Student\HomeController@_program_notifications_show')->name('view');
     });
     Route::prefix('material')->name('material.')->group(function(){
@@ -361,9 +360,14 @@ Route::prefix('student')->name('student.')->group(function () {
         Route::get('/class/{class_id}/{campus_id}', 'Student\HomeController@_class_material')->name('class');
         Route::get('/department/{department_id}/{campus_id}', 'Student\HomeController@_department_material')->name('department');
         Route::get('/program/{program_id}/{campus_id}', 'Student\HomeController@_program_material')->name('program');
+        Route::get('/school/{campus_id?}', 'Student\HomeController@_school_material')->name('school');
     });
+    Route::get('resit/registration', 'Student\HomeController@resit_registration')->name('resit.registration');
+    Route::post('resit/registration', 'Student\HomeController@register_resit');
+    Route::get('resit/registered_courses', 'Student\HomeController@registered_resit_courses')->name('resit.registered_courses');
     Route::get('registered_courses/{year?}/{semester?}/{student?}', 'Student\HomeController@registerd_courses')->name('registered_courses');
     Route::get('class-subjects/{level}', 'Student\HomeController@class_subjects')->name('class-subjects');
+    Route::get('search_course', 'Student\HomeController@search_course')->name('search_course');
     Route::get('courses/download/{year}/{semester}', 'Student\HomeController@download_courses')->name('courses.download');
 });
 
@@ -420,17 +424,6 @@ Route::name('notifications.')->prefix('{layer}/{layer_id}/notifications/{campus_
     Route::post('/update/{id}', 'NotificationsController@update')->name('update');
     Route::get('/show/{id}', 'NotificationsController@show')->name('show');
 });
-// Route::name('material.')->prefix('{layer}/{layer_id}/material/{campus_id?}')->group(function(){
-//     Route::get('', 'AtMaterialController@index')->name('index');
-//     Route::get('create', 'AtMaterialController@create')->name('create');
-//     Route::post('create', 'AtMaterialController@save')->name('save');
-//     Route::get('edit/{id}', 'AtMaterialController@edit')->name('edit');
-//     Route::get('download/{id}', 'AtMaterialController@download')->name('download');
-//     Route::post('update/{id}', 'AtMaterialController@update')->name('update');
-//     Route::get('show/{id}', 'AtMaterialController@show')->name('show');
-//     Route::get('delete/{id}', 'AtMaterialController@drop')->name('drop');
-// });
-// END ALTERNATIVE NOTIFICATIONS AND MATERIAL APPRAOCH
 
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
 
@@ -459,5 +452,6 @@ Route::get('semesters/{background}', function(Request $request){
 Route::get('campus/{campus}/program_levels', [Controller::class, 'sorted_campus_program_levels'])->name('campus.program_levels');
 Route::get('mode/{locale}', function ($batch) {
     session()->put('mode', $batch);
+
     return redirect()->back();
 })->name('mode');

@@ -16,7 +16,7 @@
                         <th>{{__('text.amount_spent')}}({{__('text.currency_cfa')}})</th>
                         <th>{{__('text.word_date')}}</th>
                         <th></th>
-                        <th></th>
+                        <!-- <th></th> -->
                     </tr>
                 </thead>
                 <tbody>

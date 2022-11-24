@@ -569,75 +569,72 @@ class StatisticsController extends Controller
             switch ($request->filter) {
                 case 'month': #having $value
                     # code...
-                    $expenditureItems = DB::table('expenses')
+                    $data['data'] = DB::table('expenses')
                         ->whereYear('date', '=', date('Y', strtotime($request->value)))
                         ->whereMonth('date', '=', date('m', strtotime($request->value)))
                         ->join('users', ['users.id'=>'expenses.user_id'])
                         ->where(function($q){
                             auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
                         })
-                        ->get();
-                        $names = array_unique($expenditureItems->pluck('name')->toArray());
-                    $data['data'] = array_map(function($val) use ($expenditureItems){
-                        return [
-                            'name'=>$val,
-                            'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
-                            'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
-                        ];
-                    }, $names);
+                        ->get(['expenses.*']);
+                        // $names = array_unique($expenditureItems->pluck('name')->toArray());
+                    // $data['data'] = array_map(function($val) use ($expenditureItems){
+                    //     return [
+                    //         'name'=>$val,
+                    //         'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
+                    //         'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
+                    //     ];
+                    // }, $names);
                     $data['totals'] = [
                         'name'=>"Total",
-                        'count'=>count($expenditureItems->toArray()),
-                        'cost'=>array_sum($expenditureItems->pluck('amount_spend')->toArray())
+                        'cost'=>array_sum($data['data']->pluck('amount_spend')->toArray())
                     ];
                     return view('admin.statistics.expenditure')->with($data);
                     break;
                 case 'year':
                     # code...
-                    $expenditureItems = DB::table('expenses')
+                    $data['data'] = DB::table('expenses')
                         ->whereYear('date', '=', date('Y',strtotime($request->value)))
                         ->join('users', ['users.id'=>'expenses.user_id'])
                         ->where(function($q){
                             auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
                         })
-                        ->get();
-                    $names = array_unique($expenditureItems->pluck('name')->toArray());
-                    $data['data'] = array_map(function($val) use ($expenditureItems){
-                        return [
-                            'name'=>$val,
-                            'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
-                            'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
-                        ];
-                    }, $names);
+                        ->get(['expenses.*']);
+                    // $names = array_unique($expenditureItems->pluck('name')->toArray());
+                    // $data['data'] = array_map(function($val) use ($expenditureItems){
+                    //     return [
+                    //         'name'=>$val,
+                    //         'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
+                    //         'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
+                    //     ];
+                    // }, $names);
                     $data['totals'] = [
                         'name'=>"Total",
-                        'count'=>count($expenditureItems->toArray()),
-                        'cost'=>array_sum($expenditureItems->pluck('amount_spend')->toArray())
+                        'cost'=>array_sum($data['data']->pluck('amount_spend')->toArray())
                     ];
                     return view('admin.statistics.expenditure')->with($data);
                     break;
                 case 'range':
                     # has $from&$to or $start_date & $end_date
-                    $expenditureItems = DB::table('expenses')
+                    $data['data'] = DB::table('expenses')
                     ->whereDate('date', '>=', date('Y-m-d', strtotime($request->start_date)))
                     ->whereDate('date', '<=', date('Y-m-d', strtotime($request->end_date)))
                     ->join('users', ['users.id'=>'expenses.user_id'])
                     ->where(function($q){
                         auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
                     })
-                    ->get();
-                    $names = array_unique($expenditureItems->pluck('name')->toArray());
-                    $data['data'] = array_map(function($val) use ($expenditureItems){
-                        return [
-                            'name'=>$val,
-                            'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
-                            'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
-                        ];
-                    }, $names);
+                    ->get(['expenses.*']);
+                    // $names = array_unique($expenditureItems->pluck('name')->toArray());
+                    // $data['data'] = array_map(function($val) use ($expenditureItems){
+                    //     return [
+                    //         'name'=>$val,
+                    //         'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
+                    //         'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
+                    //     ];
+                    // }, $names);
                     $data['totals'] = [
                         'name'=>"Total",
-                        'count'=>count($expenditureItems->toArray()),
-                        'cost'=>array_sum($expenditureItems->pluck('amount_spend')->toArray())
+                        'cost'=>array_sum($data['data']->pluck('amount_spend')->toArray())
                     ];
                     return view('admin.statistics.expenditure')->with($data);
                     break;

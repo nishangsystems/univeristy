@@ -7,6 +7,14 @@
     <table class="table table-bordered">
         <tbody>
             <tr>
+                <td class="text-capitalize">{{__('text.word_school')}}</td>
+                <td class="hidden">{{$department->name}}</td>
+                <td class="text-capitalize">
+                    <a href="{{route('student.notification.school', [auth('student')->user()->campus_id])}}" class=" btn btn-primary btn-xs m-2">{{__('text.word_notifications')}}</a>
+                    <a href="{{route('student.material.school', [auth('student')->user()->campus_id])}}" class=" btn btn-success btn-xs m-2">{{__('text.word_material')}}</a>
+                </td>
+            </tr>
+            <tr>
                 <td class="text-capitalize">{{__('text.word_departmental')}}</td>
                 <td class="hidden">{{$department->name}}</td>
                 <td class="text-capitalize">

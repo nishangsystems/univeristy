@@ -30,8 +30,7 @@ class CustomLoginController extends Controller
         # code...
         return view('auth.registration');
     }
-    
-    
+
     public function check_matricule(Request $request){
        if (Students::where('matric', $request->reg_no)->exists()) { 
               if (User::where('username', $request->reg_no)->exists()) {   
@@ -113,6 +112,7 @@ class CustomLoginController extends Controller
         //return $request->all();
         //Attempt to log the user in
 
+        // return $request->all();
         if( Auth::guard('student')->attempt(['matric'=>$request->username,'password'=>$request->password], $request->remember)){
             // return "Spot 1";
             return redirect()->intended(route('student.home'));
@@ -128,7 +128,7 @@ class CustomLoginController extends Controller
         }
         // return "Spot 3";
         $request->session()->flash('error', 'Invalid Username or Password');
-        return redirect()->back()->withInput($request->only('username','remember'));
+        return redirect()->route('login')->withInput($request->only('username','remember'));
     }
 
     public function logout(Request $request){

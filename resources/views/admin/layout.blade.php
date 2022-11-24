@@ -72,6 +72,7 @@
         .dropdown-toggle:after {
             display: none;
         }
+        
     </STYLE>
 </head>
 
@@ -306,7 +307,7 @@
                     </li>
                     @endif
 
-                    
+                    @if(!auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.program_settings')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -330,6 +331,7 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    @endif
 
                     @if(auth()->user()->campus_id == null)
                     <li>
@@ -392,28 +394,30 @@
                 <b class="arrow"></b>
 
                 <ul class="submenu">
+                    @if (\Auth::user()->hasPermissionTo('manage_student_statistics'))
                     <li>
                         <a href="{{route('admin.stats.students')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.student_statistics')}}
                         </a>
-
                         <b class="arrow"></b>
                     </li>
-
-                     <li>
-                        <a href="{{route('admin.stats.fees')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.fee_statistics')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-
+                    @endif
+                    @if (\Auth::user()->hasPermissionTo('manage_result_statistics'))
                     <li>
                         <a href="{{route('admin.stats.results')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.results_statistics')}}
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+                    @endif
+                    @if (\Auth::user()->hasPermissionTo('manage_finance_statistics'))
+                     <li>
+                        <a href="{{route('admin.stats.fees')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.fee_statistics')}}
                         </a>
 
                         <b class="arrow"></b>
@@ -442,6 +446,7 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    @endif
                 </ul>
             </li>
             @endif

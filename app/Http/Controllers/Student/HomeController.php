@@ -396,6 +396,14 @@ class HomeController extends Controller
         
         $student = auth()->id();
         $year = Helpers::instance()->getYear();
+        $semester = Helpers::instance()->getSemester(auth()->user()->program_id)->id;
+        $_semester = Helpers::instance()->getSemester(auth()->user()->program_id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
+        if ($semester == $_semester) {
+            # code...
+            return redirect(route('student.home'))->with('error', 'Resit registration can not be done here. Do that under "Resit Registration"');
+        }
+
+
         $fee = [
             'amount' => array_sum(
                 \App\Models\Payments::where('payments.student_id', '=', $student)
@@ -433,7 +441,10 @@ class HomeController extends Controller
         # code...
         $data['title'] = "Resit Registration For " .Helpers::instance()->getSemester(Students::find(auth()->id())->program_id)->name." ".\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
         $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>\App\Helpers\Helpers::instance()->getYear()])->first()->class_id);
-        $data['cv_total'] = ProgramLevel::find(auth()->user()->program_id)->program()->first()->max_credit;        
+        $data['cv_total'] = ProgramLevel::find(auth()->user()->program_id)->program()->first()->max_credit;
+        // resit course price is set in campus_programs table //
+        // campus_class = $data['student_class']->campus_programs()->where('campus_id', '=', auth('student')->user()->campus_id)
+        $data['unit_cost'] = 3000;
         
         $student = auth()->id();
         $year = Helpers::instance()->getYear();
@@ -530,6 +541,39 @@ class HomeController extends Controller
         $data['access'] = $fee['amount'] >= $data['min_fee'];
         return view('student.courses.index', $data);
     }
+
+    // public function registered_resit_courses(Request $request)
+    // {
+    //     # code...
+    //     $data['title'] = "Registered Courses ".Helpers::instance()->getSemester(Students::find(auth()->id())->program_id)->name." ".\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
+    //     $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>\App\Helpers\Helpers::instance()->getYear()])->first()->class_id);
+    //     $data['cv_total'] = ProgramLevel::find(auth()->user()->program_id)->program()->first()->max_credit;        
+        
+    //     $student = auth()->id();
+    //     $year = Helpers::instance()->getYear();
+    //     $fee = [
+    //         'amount' => array_sum(
+    //             \App\Models\Payments::where('payments.student_id', '=', $student)
+    //             ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
+    //             ->where('payment_items.name', '=', 'TUTION')
+    //             ->where('payments.batch_id', '=', $year)
+    //             ->pluck('payments.amount')
+    //             ->toArray()
+    //         ),
+    //         'total' => 
+    //                 \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+    //                 ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+    //                 ->where('payment_items.name', '=', 'TUTION')
+    //                 ->whereNotNull('payment_items.amount')
+    //                 ->join('students', 'students.program_id', '=', 'program_levels.id')
+    //                 ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
+    //         'fraction' => Helpers::instance()->getSemester(auth()->user()->program_id)->courses_min_fee
+    //     ];
+    //     $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
+    //     $data['access'] = $fee['amount'] >= $data['min_fee'];
+    //     return view('student.courses.index', $data);
+    // }
+
     public static function registerd_courses($year = null, $semester = null, $student = null )
     {
         try {
@@ -548,6 +592,49 @@ class HomeController extends Controller
         }
     }
 
+    public static function registered_resit_courses()
+    {
+        try {
+            //code...
+            $_student = $student ?? auth()->id();
+            $_year = $year ?? Helpers::instance()->getYear();
+            // get resit semester for the student's background
+            $_semester = Helpers::instance()->getSemester(auth()->user()->program_id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
+            // return $_semester;
+            # code...
+            $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year])->where(['student_courses.semester_id'=>$_semester])
+                    ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
+                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
+                    return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+            
+        }
+    }
+
+    // Search course by name or course code as req
+    public function search_course(Request $request)
+    {
+        # code...
+        $validate = Validator::make($request->all(), ['value'=>'required']);
+        // return $request->value;
+
+        try{
+            $pl = DB::table('students')->find(auth()->id())->program_id;
+            $program = \App\Models\ProgramLevel::find($pl);
+            $subjects = \App\Models\ProgramLevel::where(['program_levels.program_id'=>$program->program_id])->where('program_levels.level_id', '<=', $program->level_id)
+                        ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])
+                        ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
+                        ->where(function($q)use($request){
+                            $q->where('subjects.code', 'like', '%'.$request->value.'%')
+                            ->orWhere('subjects.name', 'like', '%'.$request->value.'%');
+                        })
+                        ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->toArray();
+            return $subjects;
+        }
+        catch(Throwable $th){return $th->getLine() . '  '.$th->getMessage();}
+    }
+
     public function class_subjects($level)
     {
         # code...
@@ -564,6 +651,42 @@ class HomeController extends Controller
         catch(Throwable $th){return $th->getLine() . '  '.$th->getMessage();}
     }
 
+    public function register_resit(Request $request)//takes class course id
+    {
+
+        // TO MAKE THE PAYMENT, MAKE A REQUEST TO ANOTHER URL WHERE THE PAYMENT 
+        // IS DONE AND RESPONSE RETURNED BACK HERE, THEN THE COURSES ARE REGISTERED 
+
+        
+
+        // return $request->all();
+        # code...
+        // first clear all registered courses for the year, semester, student then rewrite
+        $year = Helpers::instance()->getYear();
+        $semester = Helpers::instance()->getSemester(auth()->user()->program_id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
+        $user = auth()->id();
+        try {
+            if ($request->has('courses')) {
+                // DB::beginTransaction();
+                $ids = \App\Models\StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->pluck('id');
+                foreach ($ids as $key => $value) {
+                    # code...
+                    StudentSubject::find($value)->delete();
+                }
+                # code...
+                foreach (array_unique($request->courses) as $key => $value) {
+                    # code...
+                    StudentSubject::create(['year_id'=>$year, 'semester_id'=>$semester, 'student_id'=>$user, 'course_id'=>$value]);
+                }
+            }
+            // DB::commit();
+            return back()->with('success', "!Done");
+        } catch (\Throwable $th) {
+            // DB::rollBack();
+            return back()->with('error', $th->getFile().' : '.$th->getLine().' :: '.$th->getMessage());
+        }
+    }
+
     public function register_courses(Request $request)//takes class course id
     {
         // return $request->all();
@@ -571,16 +694,20 @@ class HomeController extends Controller
         // first clear all registered courses for the year, semester, student then rewrite
         $year = Helpers::instance()->getYear();
         $semester = Helpers::instance()->getSemester(auth()->user()->program_id)->id;
+        $_semester = Helpers::instance()->getSemester(auth()->user()->program_id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
         $user = auth()->id();
         try {
-
-            // DB::beginTransaction();
-            $ids = \App\Models\StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->pluck('id');
-            foreach ($ids as $key => $value) {
+            if ($semester == $_semester) {
                 # code...
-                StudentSubject::find($value)->delete();
+                return back()->with('error', 'Resit registration can not be done here. Do that under \"Resit Registration\"');
             }
             if ($request->has('courses')) {
+                // DB::beginTransaction();
+                $ids = \App\Models\StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->pluck('id');
+                foreach ($ids as $key => $value) {
+                    # code...
+                    StudentSubject::find($value)->delete();
+                }
                 # code...
                 foreach (array_unique($request->courses) as $key => $value) {
                     # code...
@@ -724,6 +851,24 @@ class HomeController extends Controller
         })->get();
         return view('student.notification.index', $data);
     }
+    public function _school_notifications(Request $request, $campus_id = null)
+    {
+        // dd(auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->level_id);
+        # code...
+        $data['title'] = "School Notifications";
+        $data['notifications'] = Notification::whereNull('school_unit_id')
+        ->where(function($q){
+            $q->WhereNull('level_id')->orWhere('level_id', '=', auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->level_id ?? null);
+        })
+        ->where(function($q)use($campus_id){
+             $q->where('campus_id', '=', $campus_id)->orWhere('campus_id', '=', 0);
+        })
+        ->where(function($q){
+            $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
+        })
+        ->get();
+        return view('student.notification.index', $data);
+    }
     public function _program_material(Request $request, $program_id, $campus_id)
     {
         # code...
@@ -731,6 +876,23 @@ class HomeController extends Controller
         $data['notifications'] = Material::where('school_unit_id', '=', $program_id)->where('campus_id', '=', $campus_id)->where(function($q){
             $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
         })->get();
+        return view('student.notification.material_index', $data);
+    }
+    public function _school_material(Request $request, $campus_id = null)
+    {
+        # code...
+        $data['title'] = "Program Material";
+        $data['notifications'] = Material::whereNull('school_unit_id')->whereNull('level_id')
+        ->where(function($q){
+            $q->where('level_id', '=', auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->level_id ?? null)->orWhereNull('level_id');
+        })
+        ->where(function($q)use($campus_id){
+            $campus_id==null ? null : $q->where('campus_id', '=', $campus_id)->orWhereNull('campus_id');
+        })
+        ->where(function($q){
+            $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
+        })
+        ->get();
         return view('student.notification.material_index', $data);
     }
 

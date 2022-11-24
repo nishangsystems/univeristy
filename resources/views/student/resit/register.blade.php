@@ -4,45 +4,28 @@
 
     @if($access && ((isset($on_time) && $on_time) || !isset($on_time)))
         <div class="form-group">
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modelId">
-                <i class="fa fa-plus mx-1"></i>{{__('text.sign_course')}}
-            </button>
-            
-            <!-- Modal -->
-            <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header bg-primary d-flex justify-content-around">
-                            <h5 class="modal-title text-uppercase" id="modal-title">{{__('text.course_bank')}}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="false">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group form-group-merged d-flex border">
-                                <select name="level" class="form-control border-0" id="modal-level" required>
-                                    <option value="">{{__('text.select_level')}}</option>
-                                    @foreach(\App\Models\Level::all() as $level)
-                                        <option value="{{$level->id}}">{{$level->level}}</option>
-                                    @endforeach
-                                </select>
-                                <button class="btn btn-sm btn-light text-capitalize border-0" onclick="getCourses('#modal-level')">{{__('text.view_courses')}}</button>
-                            </div>
-                            <table>
-                                <thead class="text-capitalize bg-light text-primary">
-                                    <th class="border-left border-right">{{__('text.course_code')}}</th>
-                                    <th class="border-left border-right">{{__('text.course_title')}}</th>
-                                    <th class="border-left border-right">{{__('text.credit_value')}}</th>
-                                    <th class="border-left border-right">{{__('text.word_status')}}</th>
-                                    <th class="border-left border-right">{{__('text.word_action')}}</th>
-                                </thead>
-                                <tbody id="modal_table"></tbody>
-                            </table>
-                        </div>
+
+            <div class="rounded py-3 px-1 bg-light">
+                <div class="py-2">
+                    <button type="button" class="form-control btn btn-md btn-primary fw-bolder text-sm" onclick="$('#course_bank').toggleClass('hidden')">{{__('text.sign_resit_course')}}</button>
+                </div>
+                <div class="py-3 hidden" id="course_bank">
+                    <div class="form-group form-group-merged d-flex border">
+                        <input type="text" name="level" class="form-control border-0" id="modal-level" placeholder="{{__('text.prase_course_search')}}" oninput="getCourses('#modal-level')">
                     </div>
+                    <table>
+                        <thead class="text-capitalize bg-light text-primary">
+                            <th class="border-left border-right">{{__('text.course_code')}}</th>
+                            <th class="border-left border-right">{{__('text.course_title')}}</th>
+                            <th class="border-left border-right d-none d-md-block">{{__('text.credit_value')}}</th>
+                            <th class="border-left border-right d-none d-md-block">{{__('text.word_status')}}</th>
+                            <th class="border-left border-right">{{__('text.word_action')}}</th>
+                        </thead>
+                        <tbody id="modal_table"></tbody>
+                    </table>
                 </div>
             </div>
+            
             <div class="py-3">
                 <form method="post">
                     @csrf
@@ -50,15 +33,16 @@
                         <thead class="text-capitalize bg-secondary text-white">
                             <th class="border-left border-right">{{__('text.course_code')}}</th>
                             <th class="border-left border-right">{{__('text.course_title')}}</th>
-                            <th class="border-left border-right">{{__('text.credit_value')}}</th>
-                            <th class="border-left border-right">{{__('text.word_status')}}</th>
+                            <th class="border-left border-right d-none d-md-block">{{__('text.credit_value')}}</th>
+                            <th class="border-left border-right d-none d-md-block">{{__('text.word_status')}}</th>
                             <th class="border-left border-right">{{__('text.word_action')}}</th>
                         </thead>
                         <tbody id="course_table"></tbody>
                     </table>
                     <div class="d-flex py-3">
                         <button type="submit" class="btn btn-success btn-sm mr-4 text-capitalize"><i class="fa fa-save mx-1"></i>{{__('text.word_save')}}</button>
-                        <div class="btn btn-primary btn-sm mr-4 text-capitalize">{{__('text.credit_value')}} : <span id="cv-sum"></span>/<span id="cv-total">{{$cv_total}}</span></button>
+                        <div class="btn btn-primary btn-sm mr-4 text-capitalize">{{__('text.credit_value')}} : <span id="cv-sum"></span>/<span id="cv-total">{{$cv_total}}</span></div>
+                        <div class="btn btn-primary btn-sm mr-4 text-capitalize">{{__('text.word_amount')}} : <span id="amount-sum"></span></div>
                     </div>
                 </form>
             </div>
@@ -81,17 +65,17 @@
     let registered_courses = [];
     let class_courses = [];
     let cv_sum = 0;
+    let course_cost = 0;
     let cv_total = parseInt("{{$cv_total}}");
 
     $(document).ready(function(){
         if ("{{$access}}") {
             loadCourses();
-            getCourses();
         }
     })
 
     function loadCourses() {
-        url = "{{route('student.registered_courses')}}";
+        url = "{{route('student.resit.registered_courses')}}";
         $.ajax({
             method: 'GET',
             url: url,
@@ -106,8 +90,8 @@
                                 <input type="hidden" name="courses[]" value="`+registered_courses[key]['id']+`">
                                 <td class="border-left border-right">`+registered_courses[key]['code']+`</td>
                                 <td class="border-left border-right">`+registered_courses[key]['name']+`</td>
-                                <td class="border-left border-right">`+registered_courses[key]['cv']+`</td>
-                                <td class="border-left border-right">`+registered_courses[key]['status']+`</td>
+                                <td class="border-left border-right d-none d-md-block">`+registered_courses[key]['cv']+`</td>
+                                <td class="border-left border-right d-none d-md-block">`+registered_courses[key]['status']+`</td>
                                 <td class="border-left border-right"><span class="btn btn-sm btn-danger" onclick='drop(`+JSON.stringify(registered_courses[key])+`)'>{{__('text.word_drop')}}</span></td>
                             </tr>`
                     }
@@ -124,12 +108,14 @@
         else{
             value = $(div).val();
         }
-        url = "{{route('student.class-subjects', '__C__')}}";
-        url = url.replace('__C__', value);
+        // console.log('____');
+        url = "{{route('student.search_course')}}";
         $.ajax({
             method:"GET",
             url: url,
+            data: {'value' : value},
             success: function(data){
+                // console.log(data);
                 class_courses = data;
                 let html = ``;
                 for (const key in data) {
@@ -137,9 +123,9 @@
                     html += `<tr class="border-bottom" id="modal-`+data[key]['id']+`">
                             <td class="border-left border-right">`+data[key]['code']+`</td>
                             <td class="border-left border-right">`+data[key]['name']+`</td>
-                            <td class="border-left border-right">`+data[key]['cv']+`</td>
-                            <td class="border-left border-right">`+data[key]['status']+`</td>
-                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(data[key])+`)'>{{__('text.word_add')}}</span></td>
+                            <td class="border-left border-right d-none d-md-block">`+data[key]['cv']+`</td>
+                            <td class="border-left border-right d-none d-md-block">`+data[key]['status']+`</td>
+                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(data[key])+`)'>{{__('text.word_sign')}}</span></td>
                         </tr>`
                 }
                 $('#modal_table').html(html);
@@ -154,9 +140,9 @@
                     html += `<tr class="border-bottom" id="modal-`+class_courses[key]['id']+`">
                             <td class="border-left border-right">`+class_courses[key]['code']+`</td>
                             <td class="border-left border-right">`+class_courses[key]['name']+`</td>
-                            <td class="border-left border-right">`+class_courses[key]['cv']+`</td>
-                            <td class="border-left border-right">`+class_courses[key]['status']+`</td>
-                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(class_courses[key])+`)'>{{__('text.word_add')}}</span></td>
+                            <td class="border-left border-right d-none d-md-block">`+class_courses[key]['cv']+`</td>
+                            <td class="border-left border-right d-none d-md-block">`+class_courses[key]['status']+`</td>
+                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(class_courses[key])+`)'>{{__('text.word_sign')}}</span></td>
                         </tr>`
                 }
                 $('#modal_table').html(html);
@@ -167,11 +153,12 @@
                             <input type="hidden" name="courses[]" value="`+registered_courses[key]['id']+`">
                             <td class="border-left border-right">`+registered_courses[key]['code']+`</td>
                             <td class="border-left border-right">`+registered_courses[key]['name']+`</td>
-                            <td class="border-left border-right">`+registered_courses[key]['cv']+`</td>
-                            <td class="border-left border-right">`+registered_courses[key]['status']+`</td>
+                            <td class="border-left border-right d-none d-md-block">`+registered_courses[key]['cv']+`</td>
+                            <td class="border-left border-right d-none d-md-block">`+registered_courses[key]['status']+`</td>
                             <td class="border-left border-right"><span class="btn btn-sm btn-danger" onclick='drop(`+JSON.stringify(registered_courses[key])+`)'>{{__('text.word_drop')}}</span></td>
                         </tr>`
                 }
+                $('#amount-sum').html(course_cost)
                 $('#course_table').html(html2);
                 $('#cv-sum').text(cv_sum);
 
@@ -182,12 +169,14 @@
             alert("Can't add this course. Maximum credits can not be exceeded");
             return;
         }
+        course_cost += parseInt("{{$unit_cost}}");
         cv_sum += parseInt(course['cv']);
         registered_courses.push(course);
         refresh();
     }
 
     function drop(course) {
+        course_cost -= parseInt("{{$unit_cost}}");
         cv_sum -= parseInt(course['cv']);
         if(cv_sum <= 0){cv_sum = 0;}
         registered_courses = registered_courses.filter(e => e['id'] !== course['id']);
