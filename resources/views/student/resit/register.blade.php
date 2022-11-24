@@ -17,8 +17,8 @@
                         <thead class="text-capitalize bg-light text-primary">
                             <th class="border-left border-right">{{__('text.course_code')}}</th>
                             <th class="border-left border-right">{{__('text.course_title')}}</th>
-                            <th class="border-left border-right d-none d-md-block">{{__('text.credit_value')}}</th>
-                            <th class="border-left border-right d-none d-md-block">{{__('text.word_status')}}</th>
+                            <th class="border-left border-right d-none d-md-table-cell">{{__('text.credit_value')}}</th>
+                            <th class="border-left border-right d-none d-md-table-cell">{{__('text.word_status')}}</th>
                             <th class="border-left border-right">{{__('text.word_action')}}</th>
                         </thead>
                         <tbody id="modal_table"></tbody>
@@ -33,8 +33,8 @@
                         <thead class="text-capitalize bg-secondary text-white">
                             <th class="border-left border-right">{{__('text.course_code')}}</th>
                             <th class="border-left border-right">{{__('text.course_title')}}</th>
-                            <th class="border-left border-right d-none d-md-block">{{__('text.credit_value')}}</th>
-                            <th class="border-left border-right d-none d-md-block">{{__('text.word_status')}}</th>
+                            <th class="border-left border-right d-none d-md-table-cell">{{__('text.credit_value')}}</th>
+                            <th class="border-left border-right d-none d-md-table-cell">{{__('text.word_status')}}</th>
                             <th class="border-left border-right">{{__('text.word_action')}}</th>
                         </thead>
                         <tbody id="course_table"></tbody>
@@ -90,8 +90,8 @@
                                 <input type="hidden" name="courses[]" value="`+registered_courses[key]['id']+`">
                                 <td class="border-left border-right">`+registered_courses[key]['code']+`</td>
                                 <td class="border-left border-right">`+registered_courses[key]['name']+`</td>
-                                <td class="border-left border-right d-none d-md-block">`+registered_courses[key]['cv']+`</td>
-                                <td class="border-left border-right d-none d-md-block">`+registered_courses[key]['status']+`</td>
+                                <td class="border-left border-right d-none d-md-table-cell">`+registered_courses[key]['cv']+`</td>
+                                <td class="border-left border-right d-none d-md-table-cell">`+registered_courses[key]['status']+`</td>
                                 <td class="border-left border-right"><span class="btn btn-sm btn-danger" onclick='drop(`+JSON.stringify(registered_courses[key])+`)'>{{__('text.word_drop')}}</span></td>
                             </tr>`
                     }
@@ -123,8 +123,8 @@
                     html += `<tr class="border-bottom" id="modal-`+data[key]['id']+`">
                             <td class="border-left border-right">`+data[key]['code']+`</td>
                             <td class="border-left border-right">`+data[key]['name']+`</td>
-                            <td class="border-left border-right d-none d-md-block">`+data[key]['cv']+`</td>
-                            <td class="border-left border-right d-none d-md-block">`+data[key]['status']+`</td>
+                            <td class="border-left border-right d-none d-md-table-cell">`+data[key]['cv']+`</td>
+                            <td class="border-left border-right d-none d-md-table-cell">`+data[key]['status']+`</td>
                             <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(data[key])+`)'>{{__('text.word_sign')}}</span></td>
                         </tr>`
                 }
@@ -140,23 +140,23 @@
                     html += `<tr class="border-bottom" id="modal-`+class_courses[key]['id']+`">
                             <td class="border-left border-right">`+class_courses[key]['code']+`</td>
                             <td class="border-left border-right">`+class_courses[key]['name']+`</td>
-                            <td class="border-left border-right d-none d-md-block">`+class_courses[key]['cv']+`</td>
-                            <td class="border-left border-right d-none d-md-block">`+class_courses[key]['status']+`</td>
+                            <td class="border-left border-right d-none d-md-table-cell">`+class_courses[key]['cv']+`</td>
+                            <td class="border-left border-right d-none d-md-table-cell">`+class_courses[key]['status']+`</td>
                             <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(class_courses[key])+`)'>{{__('text.word_sign')}}</span></td>
-                        </tr>`
+                        </tr>`;
                 }
                 $('#modal_table').html(html);
 
                 let html2 = ``;
-                for (const key in registered_courses) {
+                for ( key = registered_courses.length-1; key >= 0; key--) {
                     html2 += `<tr class="border-bottom" id="modal-`+registered_courses[key]['id']+`">
                             <input type="hidden" name="courses[]" value="`+registered_courses[key]['id']+`">
                             <td class="border-left border-right">`+registered_courses[key]['code']+`</td>
                             <td class="border-left border-right">`+registered_courses[key]['name']+`</td>
-                            <td class="border-left border-right d-none d-md-block">`+registered_courses[key]['cv']+`</td>
-                            <td class="border-left border-right d-none d-md-block">`+registered_courses[key]['status']+`</td>
+                            <td class="border-left border-right d-none d-md-table-cell">`+registered_courses[key]['cv']+`</td>
+                            <td class="border-left border-right d-none d-md-table-cell">`+registered_courses[key]['status']+`</td>
                             <td class="border-left border-right"><span class="btn btn-sm btn-danger" onclick='drop(`+JSON.stringify(registered_courses[key])+`)'>{{__('text.word_drop')}}</span></td>
-                        </tr>`
+                        </tr>`;
                 }
                 $('#amount-sum').html(course_cost)
                 $('#course_table').html(html2);
