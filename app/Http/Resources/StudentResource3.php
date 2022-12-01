@@ -18,6 +18,7 @@ class StudentResource3 extends JsonResource
     {
         $stud = Students::find($this->id);
         return [
+            'id'=> $this->id,
             'name' => $this->name,
             'matric' => $this->matric,
             'campus' => \App\Models\Campus::find($this->campus_id)->name,

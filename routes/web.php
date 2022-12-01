@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\StockController;
 use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Controller;
@@ -34,6 +35,8 @@ Route::get('', 'WelcomeController@home');
 Route::get('home', 'WelcomeController@home');
 
 Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function () {
+
+
     Route::get('', 'Admin\HomeController@index')->name('home');
     Route::get('home', 'Admin\HomeController@index')->name('home');
     Route::get('background_image', 'Admin\HomeController@set_background_image')->name('set_background_image');
@@ -134,7 +137,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::prefix('fee/{class_id}')->name('fee.')->group(function () {
         Route::resource('list', 'Admin\ListController');
     });
-    Route::prefix('fee/{student_id}')->name('fee.student.')->group(function () {
+    Route::prefix("fee/{student_id}")->name('fee.student.')->group(function () {
         Route::resource('payments', 'Admin\PaymentController');
     });
 
@@ -281,6 +284,35 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('clear_fee', 'Admin\ImportCenter@clear_fee')->name('clear_fee');
         Route::post('clear_fee', 'Admin\ImportCenter@clear_fee_save');
     });
+
+    
+    
+    Route::prefix('stock')->name('stock.')->group(function(){
+        Route::get('/', 'Admin\StockController@index')->name('index');
+        Route::get('/create', 'Admin\StockController@create')->name('create');
+        Route::get('/save', 'Admin\StockController@save')->name('save');
+        Route::get('/edit/{id}', 'Admin\StockController@edit')->name('edit');
+        Route::get('/update/{id}', 'Admin\StockController@update')->name('update');
+        Route::get('/receive/{id}', 'Admin\StockController@receive')->name('receive');
+        Route::get('/receive/{id}/cancel', 'Admin\StockController@cancel_receive')->name('cancel_receive');
+        Route::get('/accept/{id}', 'Admin\StockController@accept')->name('accept');
+        Route::get('/share/{id}', 'Admin\StockController@send')->name('share');
+        Route::get('/share/{id}/cancel', 'Admin\StockController@cancel_send')->name('cancel_share');
+        Route::get('/send/{id}', 'Admin\StockController@__send')->name('send');
+        Route::get('/delete/{id}', 'Admin\StockController@delete')->name('delete');
+        Route::prefix('/campus/{campus_id}')->name('campus.')->group(function(){
+            Route::get('/index', 'Admin\StockController@campus_index')->name('index');
+            Route::get('/receive/{id}', 'Admin\StockController@campus_receive')->name('receive');
+            Route::get('/accept/{id}', 'Admin\StockController@campus_accept')->name('accept');
+            Route::get('/giveout/{id}', 'Admin\StockController@campus_giveout')->name('giveout');
+            Route::get('/give/{id}', 'Admin\StockController@post_campus_giveout')->name('give');
+            Route::get('/restore/{id}', 'Admin\StockController@restore')->name('restore');
+            Route::get('/return/{id}', 'Admin\StockController@__restore')->name('return');
+        });
+    });
+
+
+
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {

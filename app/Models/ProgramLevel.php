@@ -43,4 +43,11 @@ class ProgramLevel extends Model
     {
         return $this->belongsToMany( Subjects::class, ClassSubject::class, 'class_id', 'subject_id');
     }
+
+    public function name()
+    {
+        # code...
+        // dd ($this->program->name.' : Level '.$this->level->level);
+        return $this->program()->first()->name.' : Level '.$this->level()->first()->level;
+    }
 }

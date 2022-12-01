@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
 use App\Models\StudentClass;
 use App\Models\Students;
@@ -587,41 +589,31 @@ class StudentController extends Controller
         $validator = Validator::make($request->all(), [
             'class_from'=>'required',
             'class_to'=>'required',
-            'year_from'=>'required',
-            'year_to'=>'required'
         ]);
         
         if ($validator->fails()) {
             # code...
-            return back()->with('error', json_encode($validator->getMessageBag()->getMessages()));
+            return back()->with('error', $validator->errors()->first());
         }
-        // if ($request->class_from >= $request->class_to) {
-        //     # code...
-        //     return back()->with('error', 'next class must be higher than the current');
-        // }
-        // if ($request->year_from >= $request->year_to) {
-        //     # code...
-        //     return back()->with('error', 'next academic year must be higher than the current');
-        // }
-        
+
+        $current_year = Helpers::instance()->getCurrentAccademicYear();
+        $data['current_year'] = $current_year;
         $mainClasses = $this->getMainClasses();
 
         $classes = [
             'cf'=>[
-                'id' => $request->class_from, 'name' => $mainClasses[$request->class_from]
+                'id' => $request->class_from, 'name' => ProgramLevel::find($request->class_from)->program->name.' : Level '.ProgramLevel::find($request->class_from)->level->level
             ],
             'ct' => [
-                'id' => $request->class_to, 'name' => $mainClasses[$request->class_to]
+                'id' => $request->class_to, 'name' => ProgramLevel::find($request->class_to)->program->name.' : Level '.ProgramLevel::find($request->class_to)->level->level
                 ]];
 
+        // return $classes;
         $data['title'] = "Student Promotion";
         $data['request'] = $request;
         $data['classes'] = $classes;
-        $data['students'] =  DB::table('student_classes')
-                                ->whereIn('class_id', \App\Http\Controllers\Admin\ProgramController::subunitsOf($request->class_from))
-                                ->where('year_id', '=', $request->year_from)
-                                ->leftJoin('students', 'student_classes.student_id', '=', 'students.id')
-                                ->get(['students.id as id', 'students.matric as matric', 'students.name as name', 'students.email as email']);
+        $data['students'] =  StudentClass::where(['year_id'=>$current_year, 'class_id'=>$request->class_from])
+                                ->join('students', ['students.id'=>'student_classes.student_id'])->distinct()->get(['students.*']);
         // return $data['students'];
 
         return view('admin.student.promotion', $data);
@@ -640,7 +632,7 @@ class StudentController extends Controller
             'students' => 'required|array'
         ]);
         if($valid->fails()){
-            return back()->with('error', json_encode($valid->getMessageBag()->getMessages()));
+            return back()->with('error', $valid->errors()->first());
         }
         try {
             // create pending promotion and delete it upon confirmation
