@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Batch;
 use App\Models\ProgramLevel;
 use App\Models\Result;
 use App\Models\SchoolUnits;
@@ -185,5 +186,16 @@ class Helpers
         $subunits = SchoolUnits::where('parent_id', $parent_id)->get();
 
         return $subunits;
+    }
+
+    public function nextAccademicYear($current_year = null)
+    {
+        # code...
+        $year = $current_year == null ? $this->getCurrentAccademicYear() : $current_year;
+        $years = Batch::all()->sortBy('name')->toArray();
+        // $collection = collect($years)->where('id', '=', $year);
+        $index = array_search(Batch::find($year), $years);
+        $next_year = $index == false ? $year+1 : $index+1;
+        return $next_year;
     }
 }

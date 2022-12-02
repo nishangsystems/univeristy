@@ -96,6 +96,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('classes/{id}', 'Admin\PayIncomeController@getClasses')->name('getClasses');
     Route::get('search/students/{name}', 'Admin\PayIncomeController@searchStudent')->name('searchStudent');
     Route::get('search/students/', 'Admin\PayIncomeController@get_searchStudent')->name('get_searchStudent');
+    Route::get('search/users/', 'Admin\PayIncomeController@get_searchUser')->name('get_searchUser');
 
     Route::get('scholarships', 'Scholarship\ScholarshipController@index')->name('scholarship.index');
     Route::get('scholarship/create', 'Scholarship\ScholarshipController@create')->name('scholarship.create');
@@ -117,6 +118,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::put('incomes/{id}/', 'Admin\IncomeController@update')->name('income.update');
     Route::delete('incomes/{id}/delete', 'Admin\IncomeController@destroy')->name('income.destroy');
     Route::get('incomes/pay_income/create', 'Admin\PayIncomeController@create')->name('income.pay_income.create');
+    Route::get('incomes/pay_income/create_cash', 'Admin\PayIncomeController@create_cash')->name('income.pay_income.create_cash');
+    Route::get('incomes/pay_income/create_cash/save', 'Admin\PayIncomeController@save_create_cash')->name('income.pay_income.save_cash');
     Route::get('incomes/pay_income/collect/{class_id}/{student_id}', 'Admin\PayIncomeController@collect')->name('income.pay_income.collect');
     Route::get('incomes/{id}', 'Admin\IncomeController@show')->name('income.show');
     Route::post('incomes/collect_income/{class_id}/{student_id}', 'Admin\PayIncomeController@store')->name('pay_income.store');
@@ -165,13 +168,14 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::resource('users', 'Admin\UserController');
     Route::get('students/init_promotion', 'Admin\StudentController@initialisePromotion')->name('students.init_promotion');
     Route::get('students/promotion', 'Admin\StudentController@promotion')->name('students.promotion');
-    Route::post('students/promote', 'Admin\StudentController@pend_promotion')->name('students.promote');
+    // Route::post('students/promote', 'Admin\StudentController@pend_promotion')->name('students.promote');
+    Route::post('students/promote', 'Admin\StudentController@promote')->name('students.promote');
     Route::get('students/promotion/approve/{promotion_id?}', 'Admin\StudentController@trigger_approval')->name('students.trigger_approval');
     Route::post('students/promotion/approve', 'Admin\StudentController@approvePromotion')->name('students.approve_promotion');
     Route::get('students/promotion/cancelPromotion/{promotion_id}', 'Admin\StudentController@cencelPromotion')->name('students.cancel_promotion');
     Route::get('students/init_demotion', 'Admin\StudentController@initialiseDemotion')->name('students.init_demotion');
     Route::get('students/demotion', 'Admin\StudentController@demotion')->name('students.demotion');
-    Route::post('students/demote', 'Admin\StudentController@demote')->name('students.demote');
+    Route::get('students/demote/{promotion_id}', 'Admin\StudentController@demote')->name('students.demote');
     Route::get('demotion_target/{id}', 'Admin\StudentController@unitDemoteTarget')->name('demotion_target');
     Route::get('promotion_target/{id}', 'Admin\StudentController@unitTarget')->name('promotion_target');
     Route::get('promotion_batch/{id}', 'Admin\StudentController@promotionBatch')->name('promotion_batch');

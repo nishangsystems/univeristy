@@ -262,6 +262,22 @@
                                 <b class="arrow"></b>
                             </li>
                         @endif
+                        @if (\Auth::user()->hasPermissionTo('demote_students'))
+                            <li>
+                                <a href="{{route('admin.students.init_demotion')}}?type=promotion" class="text-capitalize">
+                                    <strong class="menu-icon text-primary">&Rrightarrow;</strong>
+                                    {{__('text.demote_students')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.students.init_demotion')}}?type=demotion" class="text-capitalize">
+                                    <strong class="menu-icon text-primary">&Rrightarrow;</strong>
+                                    {{__('text.word_demotions')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
                         @if (\Auth::user()->hasPermissionTo('approve_promotion'))
                             <li>
                                 <a href="{{route('admin.students.trigger_approval')}}" class="text-capitalize">
@@ -785,6 +801,13 @@
                         <a href="{{route('admin.income.pay_income.create')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.collect_income')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                     <li>
+                        <a href="{{route('admin.income.pay_income.create_cash')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.collect_cash')}}
                         </a>
                         <b class="arrow"></b>
                     </li>

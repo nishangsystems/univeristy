@@ -48,6 +48,7 @@ class ProgramLevel extends Model
     {
         # code...
         // dd ($this->program->name.' : Level '.$this->level->level);
-        return $this->program()->first()->name.' : Level '.$this->level()->first()->level;
+
+        return SchoolUnits::find($this->program_id)->name.' : Level '.Level::find($this->level_id)->level;
     }
 }

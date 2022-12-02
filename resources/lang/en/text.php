@@ -441,4 +441,9 @@ return [
     'give_out'=>'give out',
     'word_available'=>"available",
     'word_promotion'=>'promotion',
+    'word_demote'=>'demote',
+    'demote_students'=>'demote students',
+    'word_demotions'=>'demotions',
+    'collect_cash'=>'collect cash',
+    'word_user'=>'user'
 ];

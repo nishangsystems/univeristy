@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\ProgramLevel;
+use App\Models\Promotion;
 use App\Models\SchoolUnits;
 use App\Models\StudentClass;
 use App\Models\Students;
@@ -642,7 +643,8 @@ class StudentController extends Controller
                 'from_class'=>$request->class_from,
                 'to_class'=>$request->class_to,
                 'type'=>$request->type,
-                'students'=>json_encode($request->students)
+                'students'=>json_encode($request->students),
+                'user_id'=>auth()->id()
             ];
             $promotion_id = DB::table('pending_promotions')->insertGetId($ppromotion);
             $pending_promotion_students = [];
@@ -778,36 +780,100 @@ class StudentController extends Controller
                 'to_year'=>$request->year_to,
                 'from_class'=>$request->class_from,
                 'to_class'=>$request->class_to,
-                'type'=>$request->type,
-                'students'=>json_encode($request->students)
+                'type'=>'promotion',
+                'students'=>json_encode($request->students), 
+                'user_id'=>auth()->id()
             ];
             $promotion_id = DB::table('promotions')->insertGetId($promotion);
             if ($promotion_id != null) {
                 # code...
                 // create student promotions
                 $students_promotion = [];
-                foreach ($request->students as $value) {
-                    # code...
-                    $students_promotion[] = ['student_id'=>$value, 'promotion_id'=>$promotion_id];
+                if(!$request-> students == null){
+                    foreach ($request->students as $value) {
+                        # code...
+                        $students_promotion[] = ['student_id'=>$value, 'promotion_id'=>$promotion_id];
+                    }
+                    DB::table('student_promotions')->insert($students_promotion);
+    
+                    // update students' class and academic year
+                    DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_from)->update(['class_id'=>$request->class_to, 'year_id'=>$request->year_to]);
+    
+                    // update student program_id
+                    DB::table('students')->whereIn('id', $request->students)->update(['program_id'=>$request->class_to]);
+                    
+                    // delete pending_promotion_students
+                    // DB::table('pending_promotion_students')
+                    //     ->where('pending_promotions_id', '=', $request->pp)
+                    //     ->whereIn('students_id', $request->students)
+                    //     ->delete();
+                    return back()->with('success', 'Students promoted successfully!');
                 }
-                DB::table('student_promotions')->insert($students_promotion);
-
-                // update students' class and academic year
-                DB::table('student_classes')->whereIn('student_id', $request->students)->update(['class_id'=>$request->class_to, 'year_id'=>$request->year_to]);
-                
-                // delete pending_promotion_students
-                DB::table('pending_promotion_students')
-                    ->where('pending_promotions_id', '=', $request->pp)
-                    ->whereIn('students_id', $request->students)
-                    ->delete();
-                return back()->with('success', 'Students promoted successfully!');
+                return back()->with('error', 'No students selected.');
             }
 
            
         } catch (\Throwable $th) {
             //throw $th;
-            FacadesSession::flash('error', 'Error occured. Promotion failed. Please try again later.');
-            return back()->with('error', 'Error occured. Promotion failed. Please try again later.');
+            // FacadesSession::flash('error', 'Error occured. Promotion failed. Please try again later.');
+            return back()->with('error', 'Error occured. Promotion failed. Please try again later. '.$th->getMessage());
+        }
+        
+
+    }
+    public function demote(Request $request, $promotion_id)
+    {
+        # code...
+        try {
+            //code...
+            // create promotion > create student promotions > update students class and academic year
+            $promotion = Promotion::find($promotion_id);
+            $demotion = [
+                'from_year'=>$promotion->to_year,
+                'to_year'=>$promotion->to_year,
+                'from_class'=>$promotion->to_class,
+                'to_class'=>$promotion->from_class,
+                'type'=>'demotion',
+                'students'=>$promotion->students, 
+                'user_id'=>auth()->id()
+            ];
+            $demotion_id = DB::table('promotions')->insertGetId($demotion);
+            if (!$demotion_id == null) {
+                # code...
+                // create student promotions
+                $students_promotion = [];
+                if(!json_decode($promotion->students) == null){
+                    foreach (json_decode($promotion->students) as $value) {
+                        # code...
+                        $students_promotion[] = ['student_id'=>$value, 'promotion_id'=>$demotion_id];
+                    }
+                    DB::table('student_promotions')->insert($students_promotion);
+                    
+                    // update students' class and academic year
+                    DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students))->where('year_id', '=', $promotion->year_to)->update(['class_id'=>$promotion->class_from, 'year_id'=>$promotion->year_to]);
+                    
+                    // update student program_id
+                    DB::table('students')->whereIn('id', json_decode($promotion->students))->update(['program_id'=>$promotion->class_from]);
+                    foreach ($promotion->students()->get() as $key => $value) {
+                        $value->delete();
+                    }
+                    $promotion->delete();
+                    // return '____________';
+                    // delete pending_promotion_students
+                    // DB::table('pending_promotion_students')
+                    //     ->where('pending_promotions_id', '=', $request->pp)
+                    //     ->whereIn('students_id', $request->students)
+                    //     ->delete();
+                    return back()->with('success', 'Students demoted successfully!');
+                }
+                return back()->with('error', 'No students available.');
+            }
+
+           
+        } catch (\Throwable $th) {
+            throw $th;
+            // FacadesSession::flash('error', 'Error occured. Promotion failed. Please try again later.');
+            return back()->with('error', 'Error occured. Demotion failed. Please try again later. '.$th->getMessage());
         }
         
 
@@ -830,15 +896,14 @@ class StudentController extends Controller
     public function initialiseDemotion(Request $request){
         // get promotions for batch demote and target classes for custom demotion
         // get promotions
-        $classes = DB::table('school_units')->distinct()->get(['id', 'base_class', 'target_class']);
-        $class_names = DB::table('school_units')->distinct()->get(['id', 'name', 'parent_id']);
+        // $classes = DB::table('school_units')->distinct()->get(['id', 'base_class', 'target_class']);
+        // $class_names = DB::table('school_units')->distinct()->get(['id', 'name', 'parent_id']);
 
-        $data['base_classes'] = $this->_getBaseClasses();
-        $data['class_pairs'] = $classes;
-        $data['class_names'] = $class_names;
-        $data['classes'] = $this->getMainClasses();
+        $data['title'] = "Student Demotion";
+
         return view('admin.student.initialise-demotion', $data);
     }
+
     public function demotion(Request $request){
         $validator = Validator::make($request->all(), [
             'class_from'=>'required',

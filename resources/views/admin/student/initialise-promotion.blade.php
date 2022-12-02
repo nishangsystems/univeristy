@@ -11,7 +11,7 @@ $next_year = $year+1;
         <form action="{{route('admin.students.promotion')}}" method="get" class="w-100 p-2 ">
             @csrf
             <h2 class="my-3 text-dark fw-bolder text-center w-100 text-capitalize">{{__('text.word_promotion')}}</h2>
-            <i><h4 class="text-uppercase text-center">_______{{__('text.word_from')}}: <span class="text-primary">{{\App\Models\Batch::find($year)->name}}</span> _______ {{__('text.word_to')}}: <span class="text-primary">{{\App\Models\Batch::find($next_year)->name ?? '______'}}</span>_______</h4></i>
+            <i><h4 class="text-uppercase text-center">_______{{__('text.word_from')}}: <span class="text-primary">{{\App\Models\Batch::find($year)->name}}</span> _______ {{__('text.word_to')}}: <span class="text-primary">{{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->nextAccademicYear())->name ?? '______'}}</span>_______</h4></i>
 
             <div class="w-100 py-2 text-capitalize">
 
@@ -34,7 +34,7 @@ $next_year = $year+1;
                             <select name="year_to" class="form-control text-dark rounded section" id="section" onchange="set_target()">
                                 <option selected disabled>{{__('text.academic_year')}}</option>
                                 @forelse(\App\Models\Batch::all() as $year)
-                                <option value="{{$year->id}}">{{$year->name}}</option>
+                                <option value="{{$year->id}}" {{\App\Helpers\Helpers::instance()->nextAccademicYear() == $year->id ? 'selected' : ''}}>{{$year->name}}</option>
                                 @empty
                                 <option>{{__('text.no_sections_created')}}</option>
                                 @endforelse
