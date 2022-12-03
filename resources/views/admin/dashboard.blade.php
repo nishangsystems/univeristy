@@ -13,9 +13,9 @@ $user = \Auth()->user()
 
                 <div class="space-4"></div>
 
-                <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
-                    <div class="inline position-relative">
-                        <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
+                <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right"  style="background-color: #e30000;">
+                    <div class="inline position-relative" style="background-color: #e30000;">
+                        <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown" >
                             <i class="ace-icon fa fa-circle light-green"></i>
                             &nbsp
                             <span class="white">{{$user->name}}</span>

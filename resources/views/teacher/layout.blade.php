@@ -66,6 +66,11 @@
             display: none;
         }
     </STYLE>
+    @php
+			$bg1 = \App\Http\Controllers\HomeController::getColor('background_color_1');
+			$bg2 = \App\Http\Controllers\HomeController::getColor('background_color_2');
+			$bg3 = \App\Http\Controllers\HomeController::getColor('background_color_3');
+		@endphp
 </head>
 
 <body class="no-skin">
@@ -86,7 +91,7 @@
     </div>
 </div>
 
-<div id="navbar" class="navbar navbar-default  ace-save-state">
+<div id="navbar" class="navbar navbar-default  ace-save-state" style="background-color: {{$bg1}};">
     <div class="navbar-container w-100 ace-save-state" id="navbar-container">
         <button type="button" class="navbar-toggle menu-toggler pull-left display" id="menu-toggler"
                 data-target="#sidebar">
@@ -98,7 +103,7 @@
 
         <div class="navbar-header pull-left">
             <a class="navbar-brand">
-                <small>
+                <small style="color: white;">
                     <i class="fa fa-leaf"></i>
                     {{config('app.name')}}
                 </small>
@@ -108,7 +113,7 @@
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav d-flex flex-nowrap" style="">
                 <li class="grenn dropdown-modal">
-                    <a data-toggle="dropdown" class="-toggledropdown text-white font-weight-bold">
+                    <a data-toggle="dropdown" class="-toggledropdown text-white font-weight-bold" id="bg_primary_1" style="background-color: {{$bg2}};">
                         Batch : {{ \App\Models\Batch::find(Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->name}}
                         <i class="ace-icon fa fa-caret-down"></i>
                     </a>
@@ -122,7 +127,7 @@
                     </ul>
                 </li>
                 <li class="light-blue dropdown-modal">
-                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                    <a data-toggle="dropdown" href="#" class="dropdown-toggle" id="bg_primary_2"  style="background-color: {{$bg2}};">
                         <img class="nav-user-photo" src="{{url('assets/images/avatars/user.jpg')}}"
                              alt="Jason's Photo"/>
                         <span>
@@ -174,7 +179,7 @@
             }
         </script>
 
-        <div class="sidebar-shortcuts" id="sidebar-shortcuts" style="background-color: #dbfce1; color: #007139;">
+        <div class="sidebar-shortcuts" id="sidebar-shortcuts" style="background-color: {{$bg3}}; color: #007139;">
             <div>
                 <h5>{{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name}}</h5>
             </div>
@@ -182,7 +187,7 @@
         <ul class="nav nav-list text-capitalize">
             <li>
                 <a href="{{route('user.home')}}">
-                    <i class="menu-icon text-primary fa fa-dashboard"></i>
+                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-dashboard"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>
                 <b class="arrow"></b>
@@ -191,14 +196,14 @@
             @if(auth()->user()->classes()->count() > 0)
             <li>
                 <a href="{{route('user.class')}}?type=master">
-                    <i class="menu-icon text-primary fa fa-graduation-cap"></i>
+                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-graduation-cap"></i>
                     <span class="menu-text">{{__('text.HOD_center')}}</span>
                 </a>
                 <b class="arrow"></b>
             </li>
             <li>
                 <a href="{{route('user.teacher.index')}}?type=teacher" class="text-capitalize">
-                    <i class="menu-icon text-primary fa fa-user" aria-hidden="true"></i>
+                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-user" aria-hidden="true"></i>
                     {{trans_choice('text.word_teacher', 2)}}
                 </a>
                 <b class="arrow"></b>
@@ -206,7 +211,7 @@
             @endif
             <li>
                 <a href="{{route('user.class')}}">
-                    <i class="menu-icon text-primary fa fa-group"></i>
+                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-group"></i>
                     <span class="menu-text">{{__('text.word_classes')}}</span>
                 </a>
                 <b class="arrow"></b>
@@ -215,7 +220,7 @@
             @if (\Auth::user()->hasPermissionTo('promote_students'))
                 <li>
                     <a href="{{route('user.students.init_promotion')}}?type=master"  class="text-capitalize">
-                        <i class="menu-icon text-primary fa fa-bullhorn"></i>
+                        <i  style="color: {{$bg1}};" class="menu-icon fa fa-bullhorn"></i>
                         {{__('text.promote_students')}}
                     </a>
                     <b class="arrow"></b>
@@ -223,7 +228,7 @@
             @endif
             <li>
                 <a href="{{route('user.subject')}}">
-                    <i class="menu-icon text-primary fa fa-book"></i>
+                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-book"></i>
                     <span class="menu-text text-capitalize">{{__('text.word_courses')}}</span>
                 </a>
                 <b class="arrow"></b>
@@ -232,7 +237,7 @@
             <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                    href="{{route('logout')}}">
-                    <i class="menu-icon text-primary fa fa-lock"></i>
+                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-lock"></i>
                     <span class="menu-text">	Logout</span>
                 </a>
                 <b class="arrow"></b>
@@ -291,22 +296,10 @@
     <div class="footer-inner">
         <div class="footer-content" style="background:#fff">
             <span class="bigger-120">
-               &copy; 2019. All Rights Reserved by Nishang System
+               &copy; {{__('text.copyright')}}
             </span>
             &nbsp; &nbsp;
-            <span class="action-buttons">
-                <a href="#">
-                    <i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-                </a>
-
-                <a href="#">
-                    <i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-                </a>
-
-                <a href="#">
-                    <i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-                </a>
-            </span>
+            
         </div>
     </div>
 </div>
@@ -384,8 +377,6 @@
         });
 
     });
-
-
 
 </script>
 

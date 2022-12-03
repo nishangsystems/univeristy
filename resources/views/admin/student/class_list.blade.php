@@ -12,12 +12,13 @@
             </thead>
             <tbody>
                 @php($k = 1)
-                @foreach(\App\Models\Students::where('program_id', request('id'))->where('campus_id', request('campus_id'))->where('admission_batch_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->get() as $stud)
+                @foreach(\App\Models\StudentClass::where('student_classes.class_id', request('id'))->where('student_classes.year_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
+                ->join('students', ['students.id'=>'student_classes.student_id'])->where('students.campus_id', request('campus_id'))->get(['students.*', 'student_classes.year_id as year']) as $stud)
                     <tr>
                         <td>{{$k++}}</td>
                         <td>{{$stud->name}}</td>
                         <td>{{$stud->matric}}</td>
-                        <td>{{\App\Models\Batch::find($stud->admission_batch_id)->name ?? '----'}}</td>
+                        <td>{{\App\Models\Batch::find($stud->year)->name ?? '----'}}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -64,13 +65,13 @@
                 </thead>
                 <tbody>
                     @php($k = 1)
-                    @foreach(\App\Models\Students::where('program_id', request('id'))->where('admission_batch_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->get() as $stud)
+                    @foreach(\App\Models\StudentClass::where('class_id', request('id'))->where('year_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->join('students', ['students.id'=>'student_classes.student_id'])->distinct()->get(['students.*', 'student_classes.year_id as year']) as $stud)
                         @if((\Auth::user()->campus_id != null) && ($stud->campus_id == \Auth::user()->campus_id))
                         <tr>
                             <td>{{$k++}}</td>
                             <td>{{$stud->name}}</td>
                             <td>{{$stud->matric}}</td>
-                            <td>{{\App\Models\Batch::find($stud->admission_batch_id)->name ?? '----'}}</td>
+                            <td>{{\App\Models\Batch::find($stud->year)->name ?? '----'}}</td>
                         </tr>
                         @endif
                         @if(\Auth::user()->campus_id == null)
@@ -78,7 +79,7 @@
                             <td>{{$k++}}</td>
                             <td>{{$stud->name}}</td>
                             <td>{{$stud->matric}}</td>
-                            <td>{{\App\Models\Batch::find($stud->admission_batch_id)->name ?? '----'}}</td>
+                            <td>{{\App\Models\Batch::find($stud->year)->name ?? '----'}}</td>
                         </tr>
                         @endif
                     @endforeach

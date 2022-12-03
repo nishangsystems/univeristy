@@ -144,7 +144,7 @@ class PayIncomeController extends Controller
             'income_id'=>$income_id,
             'batch_id'=>Helpers::instance()->getCurrentAccademicYear(),
             'user_id'=>auth()->id(),
-            'payed_by'=>$request->user_id,
+            // 'payed_by'=>$request->user_id,
             'cash'=>1
         ];
         DB::table('pay_incomes')->insert($payment);

@@ -40,9 +40,14 @@
 
 			}
 		</style>
+		@php
+			$bg1 = \App\Http\Controllers\HomeController::getColor('background_color_1');
+			$bg2 = \App\Http\Controllers\HomeController::getColor('background_color_2');
+			$bg3 = \App\Http\Controllers\HomeController::getColor('background_color_3');
+		@endphp
 	</head>
 
-	<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-inverse"  style="background-color: {{$bg1}};">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -140,7 +145,7 @@
 											</form>
 										</div><!-- /.widget-main -->
 
-										<div class="toolbar clearfix">
+										<div class="toolbar clearfix"  style="background-color: {{$bg1}};">
 										<div>
 										<a  href="#" data-target="#forgot-box" class="forgot-password-link">
 													<i class="ace-icon fa fa-arrow-left"></i>
