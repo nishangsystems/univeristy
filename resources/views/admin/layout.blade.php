@@ -74,8 +74,12 @@
         }
         
     </STYLE>
+@php
+    $bg1 = \App\Http\Controllers\HomeController::getColor('background_color_1');
+    $bg2 = \App\Http\Controllers\HomeController::getColor('background_color_2');
+    $bg3 = \App\Http\Controllers\HomeController::getColor('background_color_3');
+@endphp
 </head>
-
 <body class="no-skin">
 <div class="pre-loader">
     <div class="sk-fading-circle">
@@ -94,7 +98,7 @@
     </div>
 </div>
 
-<div id="navbar" class="navbar navbar-default  ace-save-state">
+<div id="navbar" class="navbar navbar-default  ace-save-state" style="background-color: {{$bg1}};">
     <div class="navbar-container w-100 ace-save-state" id="navbar-container">
         <button type="button" class="navbar-toggle menu-toggler pull-left display" id="menu-toggler"
                 data-target="#sidebar">
@@ -106,9 +110,9 @@
 
         <div class="navbar-header pull-left">
             <a class="navbar-brand">
-                <small>
+                <small style="color: white;">
                     <i class="fa fa-leaf"></i>
-                    {{config('app-name') ?? __('text.app_name')}}
+                    {{config('app.name')}}
                 </small>
             </a>
         </div>
@@ -128,7 +132,7 @@
                 </li>
 
                 <li class="grenn dropdown-modal">
-                    <a data-toggle="dropdown" class="dropdown-toggle text-white font-weight-bold text-capitalize">
+                    <a data-toggle="dropdown" class="dropdown-toggle text-white font-weight-bold text-capitalize" id="bg_primary_1"  style="background-color: {{$bg2}};">
                       {{__('text.word_batch')}} : {{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name}}
                         <i class="ace-icon fa fa-caret-down"></i>
                     </a>
@@ -143,7 +147,7 @@
                     </ul>
                 </li>
                 <li class="light-blue dropdown-modal">
-                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                    <a data-toggle="dropdown" href="#" class="dropdown-toggle" id="bg_primary_2"  style="background-color: {{$bg2}};">
                         <img class="nav-user-photo" src="{{asset('assets/images/avatars/user.jpg')}}"
                              alt="Jason's Photo"/>
                         <span>
@@ -197,7 +201,7 @@
             }
         </script>
 
-        <div class="sidebar-shortcuts" id="sidebar-shortcuts" style="background-color: #dbfce1; color: #007139;">
+        <div class="sidebar-shortcuts" id="sidebar-shortcuts" style="background-color: {{$bg3}};">
             <div>
                 <h5>{{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name}}</h5>
             </div>
@@ -206,7 +210,7 @@
             <li>
                 <a
                     href="{{route('admin.home')}}">
-                    <i class="menu-icon text-primary fa fa-dashboard"></i>
+                    <i style="color: {{$bg1}}" class="menu-icon fa fa-dashboard"></i>
                     <span class="menu-text text-capitalize">{{__('text.word_dashboard')}}</span>
                 </a>
                 <b class="arrow"></b>
@@ -214,7 +218,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_student'))
                 <li>
                     <a href="#" class="dropdown-toggle">
-                        <i class="menu-icon  text-primary fa fa-graduation-cap"></i>
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-graduation-cap"></i>
                         <span class="menu-text text-capitalize"> {{__('text.student_management')}}t</span>
 
                         <b class="arrow fa fa-angle-down"></b>
@@ -256,7 +260,7 @@
                         @if (\Auth::user()->hasPermissionTo('promote_students'))
                             <li>
                                 <a href="{{route('admin.students.init_promotion')}}"  class="text-capitalize">
-                                    <strong class=" menu-icon text-primary ">&leftrightharpoons;</strong>
+                                    <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
                                     {{__('text.promote_students')}}
                                 </a>
                                 <b class="arrow"></b>
@@ -265,14 +269,14 @@
                         @if (\Auth::user()->hasPermissionTo('demote_students'))
                             <li>
                                 <a href="{{route('admin.students.init_demotion')}}?type=promotion" class="text-capitalize">
-                                    <strong class="menu-icon text-primary">&Rrightarrow;</strong>
+                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
                                     {{__('text.demote_students')}}
                                 </a>
                                 <b class="arrow"></b>
                             </li>
                             <li>
                                 <a href="{{route('admin.students.init_demotion')}}?type=demotion" class="text-capitalize">
-                                    <strong class="menu-icon text-primary">&Rrightarrow;</strong>
+                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
                                     {{__('text.word_demotions')}}
                                 </a>
                                 <b class="arrow"></b>
@@ -281,7 +285,7 @@
                         @if (\Auth::user()->hasPermissionTo('approve_promotion'))
                             <li>
                                 <a href="{{route('admin.students.trigger_approval')}}" class="text-capitalize">
-                                    <strong class="menu-icon text-primary">&Rrightarrow;</strong>
+                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
                                     {{__('text.validate_promotion')}}
                                 </a>
                                 <b class="arrow"></b>
@@ -295,7 +299,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_setting'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i class="menu-icon  text-primary fa fa-cog"></i>
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-cog"></i>
                     <span class="menu-text"> {{__('text.settings_zone')}}</span>
 
                     <b class="arrow fa fa-angle-down"></b>
@@ -401,7 +405,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_statistics'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i class="menu-icon  text-primary fa fa-signal"></i>
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-signal"></i>
                     <span class="menu-text"> {{__('text.statistics_zone')}}</span>
 
                     <b class="arrow fa fa-angle-down"></b>
@@ -470,7 +474,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_subject'))
             <li>
                 <a href="" class="dropdown-toggle text-capitalize">
-                    <i class="menu-icon  text-primary fa fa-book"></i>
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
                     <span class="menu-text">
 							{{__('text.course_zone')}}
 					</span>
@@ -501,7 +505,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_user'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i class="menu-icon  text-primary fa fa-users"></i>
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
                     <span class="menu-text">
 						{{__('text.user_accounts')}}
 						</span>
@@ -551,7 +555,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_fee'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i class="menu-icon  text-primary fa fa-eur"></i>
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-eur"></i>
                     <span class="menu-text">
 						{{__('text.fee_managenent')}}
 						</span>
@@ -634,7 +638,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_stock'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i class="menu-icon  text-primary fa fa-eur"></i>
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
                     <span class="menu-text">
 						{{__('text.stock_management')}}
 						</span>
@@ -680,7 +684,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_importation'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon  text-primary fa fa-rocket"></i>
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-rocket"></i>
                     <span class="menu-text text-capitalize">
 						{{__('text.importation_center')}}
 						</span>
@@ -741,7 +745,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_scholarship'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                <i class="menu-icon text-primary fa fa-graduation-cap"></i>
+                <i style="color: {{$bg1}}" class="menu-icon fa fa-graduation-cap"></i>
                     <span class="menu-text text-capitalize">
 						{{trans_choice('text.scholarship', 2)}}
 						</span>
@@ -781,7 +785,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_incomes'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                <i class="menu-icon text-primary fa fa-money"></i>
+                <i style="color: {{$bg1}}" class="menu-icon fa fa-money"></i>
                     <span class="menu-text">
 						{{__('text.other_incomes')}}
 						</span>
@@ -826,7 +830,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_expenses'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                <i class="menu-icon text-primary fa fa-spinner"></i>
+                <i style="color: {{$bg1}}" class="menu-icon fa fa-spinner"></i>
                     <span class="menu-text">
 						{{__('text.school_expenses')}}
 						</span>
@@ -870,7 +874,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_notifications'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                <i class="menu-icon fa fa-money"></i>
+                <i style="color: {{$bg1}}" class="menu-icon fa fa-bell"></i>
                     <span class="menu-text">
 						{{__('text.manage_notifications')}}
 						</span>
@@ -928,7 +932,7 @@
             <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                    href="{{route('logout')}}" class="text-capitalize">
-                    <i class="menu-icon text-primary fa fa-lock"></i>
+                    <i style="color: {{$bg1}}" class="menu-icon fa fa-lock"></i>
                     <span class="menu-text">	{{__('text.word_logout')}}</span>
                 </a>
                 <b class="arrow"></b>
@@ -996,19 +1000,7 @@
                &copy; {{__('text.copyright')}}
             </span>
             &nbsp; &nbsp;
-            <span class="action-buttons">
-                <a href="#">
-                    <i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-                </a>
-
-                <a href="#">
-                    <i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-                </a>
-
-                <a href="#">
-                    <i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-                </a>
-            </span>
+            
         </div>
     </div>
 </div>
@@ -1088,7 +1080,6 @@
         });
 
     });
-
 
 </script>
 

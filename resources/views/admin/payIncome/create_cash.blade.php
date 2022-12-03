@@ -3,18 +3,10 @@
 @section('section')
 <div class="col-sm-12">
 
-    @if(request()->has('us') && !(request('us') == null))
     <div class="py-3">
         <form action="{{Request::url()}}/save" method="get">
             <div class="row my-2">
-                <label for="" class="col-md-3 col-lg-3 text-capitalize">{{__('text.word_user')}}</label>
-                <div class="col-md-9 col-lg-9">
-                    <input type="hidden" name="user_id" value="{{request('us')}}">
-                    <span class="form-control text-capitalize">{{\App\Models\User::find(request('us'))->name.' - '.\App\Models\User::find(request('us'))->email.' - '.\App\Models\User::find(request('us'))->type}}</span>
-                </div>
-            </div>
-            <div class="row my-2">
-                <label for="" class="col-md-3 col-lg-3 text-capitalize">{{__('text.word_name')}}</label>
+                <label for="" class="col-md-3 col-lg-3 text-capitalize">{{__('text.word_title')}}</label>
                 <div class="col-md-9 col-lg-9">
                     <input type="text" name="name" class="form-control" required>
                 </div>
@@ -37,69 +29,79 @@
             </div>
         </form>
     </div>
-    @else
-    <div class="my-3">
-        <input class="form-control" id="search" placeholder="Search user by Name, Username or Email" required name="student_id" />
-    </div>
-
-
     <div class="content-panel">
-        <div class="table-responsive">
-            <table class="table-bordered">
+        <div class="adv-table table-responsive">
+            <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                 <thead>
                     <tr class="text-capitalize">
                         <th>#</th>
                         <th>{{__('text.word_name')}}</th>
-                        <th>{{__('text.word_email')}}</th>
-                        <th>{{__('text.word_gender')}}</th>
-                        <th>{{__('text.word_type')}}</th>
+                        <th>{{__('text.word_amount')}} ({{__('text.currency_cfa')}})</th>
+                        <th>{{__('text.word_description')}}</th>
+
                         <th></th>
                     </tr>
                 </thead>
-                <tbody id="content">
-
+                <tbody>
+                    @foreach(\App\Models\Income::where('cash', true)->orderBy('id', 'DESC')->get() as $k=>$income)
+                    <tr>
+                        <td>{{$k+1}}</td>
+                        <td>{{$income->name}}</td>
+                        <td>{{number_format($income->amount)}}</td>
+                        <td>{{$income->description}}</td>
+                        <td class="d-flex justify-content-end  align-items-center">
+                            <a class="btn btn-sm btn-primary m-3" href="{{route('admin.income.show',[$income->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
+                            <a class="btn btn-sm btn-success m-3" href="{{route('admin.income.edit',[$income->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a> |
+                            <a onclick="event.preventDefault();
+                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-3"><i class="fa fa-trash"> {{__('text.word_delete')}}</i></a>
+                            <form id="delete" action="{{route('admin.income.destroy',$income->id)}}" method="POST" style="display: none;">
+                                @method('DELETE')
+                                {{ csrf_field() }}
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
-
         </div>
     </div>
-    @endif
+
 </div>
 @endsection
 @section('script')
 <script>
-    $('#search').on('keyup', function() {
-        val = $(this).val();
-        url = "{{route('admin.get_searchUser')}}";
-        // search_url = url.replace(':id', val);
-        $.ajax({
-            type: 'GET',
-            data: {'name': val},
-            url: url,
-            success: function(response) {
-                let html = new String();
-                // console.log(response);
-                let size = response.data.length;
-                let data = response.data;
-                for (i = 0; i < size; i++) {
-                    html += '<tr>' +
-                        '    <td>' + (i + 1) + '</td>' +
-                        '    <td>' + data[i].name + '</td>' +
-                        '    <td>' + data[i].email + '</td>' +
-                        '    <td>' + data[i].gender + '</td>' +
-                        '    <td>' + data[i].type + '</td>' +
-                        '    <td class="d-flex justify-content-between align-items-center">' +
-                        '        <a class="btn btn-xs btn-primary text-capitalize" href="' + data[i].link + '"> {{__("text.collect_income")}}</a>' +
-                        '    </td>' +
-                        '</tr>';
-                }
-                $('#content').html(html);
+    // $('#search').on('keyup', function() {
+    //     val = $(this).val();
+    //     url = "{{route('admin.get_searchUser')}}";
+    //     // search_url = url.replace(':id', val);
+    //     $.ajax({
+    //         type: 'GET',
+    //         data: {'name': val},
+    //         url: url,
+    //         success: function(response) {
+    //             let html = new String();
+    //             // console.log(response);
+    //             let size = response.data.length;
+    //             let data = response.data;
+    //             for (i = 0; i < size; i++) {
+    //                 html += '<tr>' +
+    //                     '    <td>' + (i + 1) + '</td>' +
+    //                     '    <td>' + data[i].name + '</td>' +
+    //                     '    <td>' + data[i].email + '</td>' +
+    //                     '    <td>' + data[i].gender + '</td>' +
+    //                     '    <td>' + data[i].type + '</td>' +
+    //                     '    <td class="d-flex justify-content-between align-items-center">' +
+    //                     '        <a class="btn btn-xs btn-primary text-capitalize" href="' + data[i].link + '"> {{__("text.collect_income")}}</a>' +
+    //                     '    </td>' +
+    //                     '</tr>';
+    //             }
+    //             $('#content').html(html);
 
-            },
-            error: function(e) {
-                console.log(e)
-            }
-        })
-    })
+    //         },
+    //         error: function(e) {
+    //             console.log(e)
+    //         }
+    //     })
+    // })
 </script>
 @endsection

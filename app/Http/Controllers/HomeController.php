@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\SchoolUnitResource;
 use App\Http\Resources\StudentFee;
 use App\Models\Campus;
+use App\Models\Color;
 use App\Models\ProgramLevel;
 use App\Models\StudentScholarship;
 use Illuminate\Support\Facades\Auth;
@@ -424,6 +425,13 @@ class HomeController extends Controller
                     ->sortBy('name')->toArray();
 
         return ['students' => $_students];
+    }
+
+    public static function getColor($label)
+    {
+        # code...
+        $color = Color::where(['name'=>$label])->first();
+        return $color == null ? null : $color->value;
     }
     
 }
