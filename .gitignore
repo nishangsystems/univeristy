@@ -3,7 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
-/bg_image/*
+/bg_image
 .env
 .env.backup
 .phpunit.result.cache

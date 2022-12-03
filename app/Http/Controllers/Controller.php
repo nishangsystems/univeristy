@@ -31,7 +31,7 @@ class Controller extends BaseController
                 'department'=> $value->program()->first()->parent()->first()->id
             ];
         }
-        $pls = collect($pls)->sortBy('name');
+        $pls = collect($pls)->sortBy(['name', 'level_id']);
         // $pls->where('id')
         return $pls;
     }

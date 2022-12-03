@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\StockController;
 use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Controller;
@@ -34,6 +35,8 @@ Route::get('', 'WelcomeController@home');
 Route::get('home', 'WelcomeController@home');
 
 Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function () {
+
+
     Route::get('', 'Admin\HomeController@index')->name('home');
     Route::get('home', 'Admin\HomeController@index')->name('home');
     Route::get('background_image', 'Admin\HomeController@set_background_image')->name('set_background_image');
@@ -93,6 +96,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('classes/{id}', 'Admin\PayIncomeController@getClasses')->name('getClasses');
     Route::get('search/students/{name}', 'Admin\PayIncomeController@searchStudent')->name('searchStudent');
     Route::get('search/students/', 'Admin\PayIncomeController@get_searchStudent')->name('get_searchStudent');
+    Route::get('search/users/', 'Admin\PayIncomeController@get_searchUser')->name('get_searchUser');
 
     Route::get('scholarships', 'Scholarship\ScholarshipController@index')->name('scholarship.index');
     Route::get('scholarship/create', 'Scholarship\ScholarshipController@create')->name('scholarship.create');
@@ -114,6 +118,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::put('incomes/{id}/', 'Admin\IncomeController@update')->name('income.update');
     Route::delete('incomes/{id}/delete', 'Admin\IncomeController@destroy')->name('income.destroy');
     Route::get('incomes/pay_income/create', 'Admin\PayIncomeController@create')->name('income.pay_income.create');
+    Route::get('incomes/pay_income/create_cash', 'Admin\PayIncomeController@create_cash')->name('income.pay_income.create_cash');
+    Route::get('incomes/pay_income/create_cash/save', 'Admin\PayIncomeController@save_create_cash')->name('income.pay_income.save_cash');
     Route::get('incomes/pay_income/collect/{class_id}/{student_id}', 'Admin\PayIncomeController@collect')->name('income.pay_income.collect');
     Route::get('incomes/{id}', 'Admin\IncomeController@show')->name('income.show');
     Route::post('incomes/collect_income/{class_id}/{student_id}', 'Admin\PayIncomeController@store')->name('pay_income.store');
@@ -134,7 +140,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::prefix('fee/{class_id}')->name('fee.')->group(function () {
         Route::resource('list', 'Admin\ListController');
     });
-    Route::prefix('fee/{student_id}')->name('fee.student.')->group(function () {
+    Route::prefix("fee/{student_id}")->name('fee.student.')->group(function () {
         Route::resource('payments', 'Admin\PaymentController');
     });
 
@@ -162,13 +168,14 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::resource('users', 'Admin\UserController');
     Route::get('students/init_promotion', 'Admin\StudentController@initialisePromotion')->name('students.init_promotion');
     Route::get('students/promotion', 'Admin\StudentController@promotion')->name('students.promotion');
-    Route::post('students/promote', 'Admin\StudentController@pend_promotion')->name('students.promote');
+    // Route::post('students/promote', 'Admin\StudentController@pend_promotion')->name('students.promote');
+    Route::post('students/promote', 'Admin\StudentController@promote')->name('students.promote');
     Route::get('students/promotion/approve/{promotion_id?}', 'Admin\StudentController@trigger_approval')->name('students.trigger_approval');
     Route::post('students/promotion/approve', 'Admin\StudentController@approvePromotion')->name('students.approve_promotion');
     Route::get('students/promotion/cancelPromotion/{promotion_id}', 'Admin\StudentController@cencelPromotion')->name('students.cancel_promotion');
     Route::get('students/init_demotion', 'Admin\StudentController@initialiseDemotion')->name('students.init_demotion');
     Route::get('students/demotion', 'Admin\StudentController@demotion')->name('students.demotion');
-    Route::post('students/demote', 'Admin\StudentController@demote')->name('students.demote');
+    Route::get('students/demote/{promotion_id}', 'Admin\StudentController@demote')->name('students.demote');
     Route::get('demotion_target/{id}', 'Admin\StudentController@unitDemoteTarget')->name('demotion_target');
     Route::get('promotion_target/{id}', 'Admin\StudentController@unitTarget')->name('promotion_target');
     Route::get('promotion_batch/{id}', 'Admin\StudentController@promotionBatch')->name('promotion_batch');
@@ -281,6 +288,35 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('clear_fee', 'Admin\ImportCenter@clear_fee')->name('clear_fee');
         Route::post('clear_fee', 'Admin\ImportCenter@clear_fee_save');
     });
+
+    
+    
+    Route::prefix('stock')->name('stock.')->group(function(){
+        Route::get('/', 'Admin\StockController@index')->name('index');
+        Route::get('/create', 'Admin\StockController@create')->name('create');
+        Route::get('/save', 'Admin\StockController@save')->name('save');
+        Route::get('/edit/{id}', 'Admin\StockController@edit')->name('edit');
+        Route::get('/update/{id}', 'Admin\StockController@update')->name('update');
+        Route::get('/receive/{id}', 'Admin\StockController@receive')->name('receive');
+        Route::get('/receive/{id}/cancel', 'Admin\StockController@cancel_receive')->name('cancel_receive');
+        Route::get('/accept/{id}', 'Admin\StockController@accept')->name('accept');
+        Route::get('/share/{id}', 'Admin\StockController@send')->name('share');
+        Route::get('/share/{id}/cancel', 'Admin\StockController@cancel_send')->name('cancel_share');
+        Route::get('/send/{id}', 'Admin\StockController@__send')->name('send');
+        Route::get('/delete/{id}', 'Admin\StockController@delete')->name('delete');
+        Route::prefix('/campus/{campus_id}')->name('campus.')->group(function(){
+            Route::get('/index', 'Admin\StockController@campus_index')->name('index');
+            Route::get('/receive/{id}', 'Admin\StockController@campus_receive')->name('receive');
+            Route::get('/accept/{id}', 'Admin\StockController@campus_accept')->name('accept');
+            Route::get('/giveout/{id}', 'Admin\StockController@campus_giveout')->name('giveout');
+            Route::get('/give/{id}', 'Admin\StockController@post_campus_giveout')->name('give');
+            Route::get('/restore/{id}', 'Admin\StockController@restore')->name('restore');
+            Route::get('/return/{id}', 'Admin\StockController@__restore')->name('return');
+        });
+    });
+
+
+
 });
 
 Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {

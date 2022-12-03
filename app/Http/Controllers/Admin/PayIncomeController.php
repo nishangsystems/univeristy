@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PayCashIncomeResource;
 use App\Http\Resources\PayIncomeResource;
 use App\Models\Batch;
 use App\Models\Income;
@@ -116,6 +118,64 @@ class PayIncomeController extends Controller
     }
 
 
+    /**
+     * show view form to find a student to collect income
+     */
+    public function create_cash()
+    {
+        $data['title'] = 'Collect Income';
+        return view('admin.payIncome.create_cash')->with($data);
+    }
+
+    public function save_create_cash(Request $request)
+    {
+        # code...
+        // CREATE INCOME FIRST, THEN THE PAYMENT
+        $income = [
+            'name'=>$request->name,
+            'amount'=>$request->amount,
+            'user_id'=>auth()->id(),
+            'cash'=>1,
+            'description'=>$request->description
+        ];
+        $income_id = DB::table('incomes')->insertGetId($income);
+
+        $payment = [
+            'income_id'=>$income_id,
+            'batch_id'=>Helpers::instance()->getCurrentAccademicYear(),
+            'user_id'=>auth()->id(),
+            'payed_by'=>$request->user_id,
+            'cash'=>1
+        ];
+        DB::table('pay_incomes')->insert($payment);
+        return back()->with('success', 'Done!');
+    }
+
+
+    /**
+     * get student by name or matricule
+     */
+    public function get_searchUser()
+    {
+        $name = request('name');
+        $students = DB::table('users')
+        ->where(function($query)use($name){
+            $query->where('name', 'like', "%{$name}%")
+            ->orWhere('email', 'like', "%{$name}%")
+            ->orWhere('username', 'like', "%{$name}%");
+        })
+        ->distinct()
+        // ->where(function($query){
+        //         auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+        //     })
+        // ->where(function($query){
+        //     auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id): null;
+        // })
+        ->select('users.*')->get();
+
+        // return ['data'=>collect($students)];
+        return response()->json(['data' => PayCashIncomeResource::collection($students)]);
+    }
 
 
     /**
@@ -173,7 +233,7 @@ class PayIncomeController extends Controller
         $student = Students::where('id', $student_id)->first();
         $data['title'] = 'Collect Income for ' . $student->name;
         $data['class_id'] = $class_id;
-        $data['incomes'] = Income::all();
+        $data['incomes'] = Income::where('cash', '=', false)->get();
         $data['years'] = Batch::all();
         $data['student_id'] = $student_id;
         return view('admin.payIncome.collect')->with($data);

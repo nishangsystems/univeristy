@@ -17,19 +17,19 @@ class Promotion extends Model
     function class()
     {
         # code...
-        return $this->hasOne(StudentsClass::class, 'from_class');
+        return $this->belongsTo(ProgramLevel::class, 'from_class');
     }
 
     function nextClass(){
-        return $this->hasOne(StudentClass::class, 'to_class');
+        return $this->belongsTo(ProgramLevel::class, 'to_class');
     }
 
     function year(){
-        return $this->hasOne(Batch::class, 'from_class');
+        return $this->belongsTo(Batch::class, 'from_year');
     }
 
     function nextYear(){
-        return $this->hasOne(Batch::class. 'to_year');
+        return $this->belongsTo(Batch::class, 'to_year');
     }
 
     function students()

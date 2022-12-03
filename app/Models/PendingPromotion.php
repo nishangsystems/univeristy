@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use PendingPromotionStudents;
 
 class PendingPromotion extends Model
 {
@@ -12,27 +13,31 @@ class PendingPromotion extends Model
 
     protected $table = 'pending_promotions';
     protected $fillable = [
-        'from_year', 'to_year', 'from_class', 'to_class', 'type', 'students'
+        'from_year', 'to_year', 'from_class', 'to_class', 'type', 'students', 'user_id'
     ];
+
+    function user(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     function fromYear()
     {
         # code...
-        return $this->hasOne(Batch::class, 'from_year');
+        return $this->belongsTo(Batch::class, 'from_year');
     }
     function toYear()
     {
         # code...
-        return $this->hasOne(Batch::class, 'to_year');
+        return $this->belongsTo(Batch::class, 'to_year');
     }
     function fromClass(){
-        return $this->hasOne(StudentClass::class, 'from_class');
+        return $this->belongsTo(ProgramLevel::class, 'from_class');
     }
     function toClass(){
-        return $this->hasOne(StudentClass::class, 'to_class');
+        return $this->belongsTo(ProgramLevel::class, 'to_class');
     }
 
-    // function students(){
-    //     return $this->has;
-    // }
+    function students(){
+        return $this->hasMany(PendingPromotionStudents::class, 'pending_promotion_id');
+    }
 }

@@ -16,9 +16,8 @@
                 @foreach(\App\Models\PendingPromotion::all() as $pp)
                     <tr class="border-bottom">
                         <td class="border-eft border-right">{{$count++}}</td>
-                        <td class="border-eft border-right">{{$classes[$pp->from_class]}} <span class="px-3 mx-3 text-info">{{\App\Models\Batch::find($pp->from_year)->name}}</span></td>
-                        <!-- <td class="border-eft border-right">{{$classes[$pp->from_class]}}</td> -->
-                        <td class="border-eft border-right">{{$classes[$pp->to_class]}} <span class="px-3 mx-3 text-info">{{\App\Models\Batch::find($pp->to_year)->name}}</span></td>
+                        <td class="border-eft border-right">{{$pp->fromClass->program->name.' : Level '.$pp->fromClass->level->level}} <span class="px-3 mx-3 text-info">{{$pp->fromYear->name}}</span></td>
+                        <td class="border-eft border-right">{{$pp->toClass->program->name.' : Level '.$pp->toClass->level->level}} <span class="px-3 mx-3 text-info">{{$pp->toYear->name}}</span></td>
                         <td class="border-eft border-right">{{$pp->created_at}}</td>
                         <td class="border-eft border-right"><a href="{{route('admin.students.trigger_approval', [$pp->id])}}" class="btn btn-primary">&hookrightarrow;</a></td>
                     </tr>

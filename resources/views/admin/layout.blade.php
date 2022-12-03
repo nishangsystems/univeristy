@@ -262,6 +262,22 @@
                                 <b class="arrow"></b>
                             </li>
                         @endif
+                        @if (\Auth::user()->hasPermissionTo('demote_students'))
+                            <li>
+                                <a href="{{route('admin.students.init_demotion')}}?type=promotion" class="text-capitalize">
+                                    <strong class="menu-icon text-primary">&Rrightarrow;</strong>
+                                    {{__('text.demote_students')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.students.init_demotion')}}?type=demotion" class="text-capitalize">
+                                    <strong class="menu-icon text-primary">&Rrightarrow;</strong>
+                                    {{__('text.word_demotions')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
                         @if (\Auth::user()->hasPermissionTo('approve_promotion'))
                             <li>
                                 <a href="{{route('admin.students.trigger_approval')}}" class="text-capitalize">
@@ -615,6 +631,52 @@
             </li>
             @endif
 
+            @if (\Auth::user()->hasPermissionTo('manage_stock'))
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i class="menu-icon  text-primary fa fa-eur"></i>
+                    <span class="menu-text">
+						{{__('text.stock_management')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    @if(auth()->user()->campus_id == null)
+                    <li>
+                        <a href="{{route('admin.stock.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_items')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('admin.stock.create')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.create_item')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    @endif
+
+
+
+                    @if(!auth()->user()->campus_id == null)
+                    <li>
+                        <a href="{{route('admin.stock.campus.index', auth()->user()->campus_id)}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_items')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    @endif
+                </ul>
+            </li>
+            @endif
+
             @if (\Auth::user()->hasPermissionTo('manage_importation'))
             <li>
                 <a href="#" class="dropdown-toggle">
@@ -739,6 +801,13 @@
                         <a href="{{route('admin.income.pay_income.create')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.collect_income')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                     <li>
+                        <a href="{{route('admin.income.pay_income.create_cash')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.collect_cash')}}
                         </a>
                         <b class="arrow"></b>
                     </li>

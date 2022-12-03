@@ -8,11 +8,11 @@
                     <h3 class="py-1 fw-bold text-dark">{{__('text.academic_year')}}</h3>
                     <div class="form-group w-100 py-1">
                         <label for="year_from" class="text-secondary">{{__('text.word_from')}}:</label>
-                        <span id="" class="form-control text-dark rounded">{{\App\Models\Batch::find($request->year_from)->name}}</span>
+                        <span id="" class="form-control text-dark rounded">{{\App\Models\Batch::find($current_year)->name ?? '----' }}</span>
                     </div>
                     <div class="form-group w-100 py-1">
                         <label for="year_to" class="text-secondary">{{__('text.word_to')}}:</label>
-                        <span id="" class="form-control text-dark rounded">{{\App\Models\Batch::find($request->year_to)->name}}</span>
+                        <span id="" class="form-control text-dark rounded">{{\App\Models\Batch::find($current_year+1)->name  ?? '----'}}</span>
                     </div>
                 </div>
                 <div class="w-50 px-4">
@@ -32,8 +32,8 @@
         @csrf
         <input type="hidden" name="class_from" value="{{request('class_from')}}">
         <input type="hidden" name="class_to" value="{{request('class_to')}}">
-        <input type="hidden" name="year_from" value="{{request('year_from')}}">
-        <input type="hidden" name="year_to" value="{{request('year_to')}}">
+        <input type="hidden" name="year_from" value="{{$current_year}}">
+        <input type="hidden" name="year_to" value="{{$current_year+1}}">
         @if(request('promotion_batch') != '') <input type="hidden" name="type" value="demotion" id="">
         @else <input type="hidden" name="type" value="promotion" id="">
         @endif
