@@ -19,7 +19,7 @@
                         <a href="{{route('admin.stock.receive', $item->id)}}" class="btn btn-sm btn-primary">{{__('text.word_receive')}}</a>|
                         <a href="{{route('admin.stock.share', $item->id)}}" class="btn btn-sm btn-warning">{{__('text.word_send')}}</a>
                         <a href="{{route('admin.stock.edit', $item->id)}}" class="btn btn-sm btn-success">{{__('text.word_edit')}}</a>
-                        <a href="{{route('admin.stock.delete', $item->id)}}" class="btn btn-sm btn-danger">{{__('text.word_delete')}}</a>
+                        <a href="{{route('admin.stock.delete', $item->id)}}" class="btn btn-sm btn-danger" onclick="event.preventDefault(); delete_alert(event, {{$item->name}})">{{__('text.word_delete')}}</a>
                     </td>
                 </tr>
                 @endforeach

@@ -1081,6 +1081,14 @@
 
     });
 
+    function delete_alert(event, data) {
+        event.preventDefault();
+        let yes = confirm('You are about to delete an item:'+data+'. This operation can not be reversed. Delete item?');
+        if(yes){
+            window.location = event.target.href;
+        }
+    }
+
 </script>
 
 <script src="{{ asset('libs')}}/datatables.net/js/dataTables.buttons.min.js"></script>

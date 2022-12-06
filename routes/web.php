@@ -313,6 +313,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::get('/give/{id}', 'Admin\StockController@post_campus_giveout')->name('give');
             Route::get('/restore/{id}', 'Admin\StockController@restore')->name('restore');
             Route::get('/return/{id}', 'Admin\StockController@__restore')->name('return');
+            Route::get('/student_stock/delete/{id}', 'Admin\StockController@delete_student_stock')->name('student_stock.delete');
         });
     });
 

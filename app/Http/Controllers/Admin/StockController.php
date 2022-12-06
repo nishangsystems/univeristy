@@ -88,7 +88,7 @@ class StockController extends Controller
         if (!$item == null) {
             # code...
             $item->delete();
-            return back()->with('success', '!Done');
+            return redirect(route('admin.stock.index'))->with('success', '!Done');
         }
         return back()->with('error', 'Stock item/entry not found.');
     }
@@ -156,7 +156,15 @@ class StockController extends Controller
             $item = Stock::find($request->id);
             if (!$item == null) {
                 // update student_stock
-                StudentStock::create(['stock_id'=>$id, 'student_id'=>$request->student_id, 'qualtity'=>$request->quantity, 'type'=>$item->type]);
+
+                // check if student already has a record for this stock item
+                $stk_count = $item->studentStock(request('campus_id'))->where(['type'=>'receivable'])->where(['student_id'=>$request->student_id])->count();
+                if ($stk_count > 0) {
+                    # code...
+                    return back()->with('error', 'Can\'t receive item more than once. Record already exist for '.Students::find($request->student_id)->name);
+                }
+
+                StudentStock::create(['stock_id'=>$id, 'student_id'=>$request->student_id, 'quantity'=>$request->quantity, 'type'=>$item->type, 'campus_id'=>Students::find($request->student_id)->campus_id ?? auth()->user()->campus_id]);
     
                 // Update campus_stock
                 # code...
@@ -195,8 +203,7 @@ class StockController extends Controller
         $item->save();
         
         $campusStock = $item->campusStock($record->receiver_campus);
-        if($campusStock==null){return back()->with('error', 'Campus does not have item.');}
-        $campusStock->delete();
+        if(!$campusStock==null){$campusStock->delete();}
         $record->delete();
         return back()->with('success', '!Done');
     }
@@ -229,7 +236,7 @@ class StockController extends Controller
     public function campus_giveout(Request $request, $campus_id, $id)
     {
         # code...
-        $data['title'] = "Send ".Stock::find($id)->name ?? 'Item';
+        $data['title'] = "Give Out ".Stock::find($id)->name ?? 'Item';
         return view('admin.stock.campus.giveout', $data);
     }
 
@@ -243,9 +250,18 @@ class StockController extends Controller
         }
         $campus_stock = Stock::find($id)->campusStock($request->campus_id) ?? null;
         if (!$campus_stock == null) {
-            StudentStock::create(['student_id'=>$request->student_id, 'stock_id'=>$id, 'quantity'=>$request->quantity, 'type'=>Stock::find($id)->type ?? 'receivable']);
+
+            
+                // check if student already has a record for this stock item
+                $stk_count = Stock::find($request->id)->studentStock(request('campus_id'))->where(['type'=>'givable'])->where(['student_id'=>$request->student_id])->count();
+                if ($stk_count > 0) {
+                    # code...
+                    return back()->with('error', 'Can\'t give out item more than once per student. Record already exist for '.Students::find($request->student_id)->name);
+                }
+
+            StudentStock::create(['student_id'=>$request->student_id, 'stock_id'=>$id, 'quantity'=>$request->quantity, 'type'=>Stock::find($id)->type ?? 'receivable',  'campus_id'=>Students::find($request->student_id)->campus_id ?? auth()->user()->campus_id]);
             # code...
-            $campus_stock->quantity += $request->quantity;
+            $campus_stock->quantity -= $request->quantity;
             $campus_stock->save();
 
             return back()->with('success', '!Done');
@@ -276,6 +292,7 @@ class StockController extends Controller
         if ($item == null) {return back()->with('error', 'Item could not be resolved');}
         $campusStock = $item->campusStock($campus_id);
         if($campusStock == null){return back()->with('error', 'Nothing to restore.');}
+        if($campusStock->quantity < $request->quantity ){return back()->with('error', 'Can\'t restore. Not enough items in stock.');}
         
         $campusStock->quantity -= $request->quantity;
         $campusStock->save();
@@ -285,6 +302,14 @@ class StockController extends Controller
 
         StockTransfers::create(['sender_campus'=>$campus_id, 'receiver_campus'=>null, 'user_id'=>auth()->id(), 'stock_id'=>$id, 'quantity'=>$request->quantity, 'type'=>'restore']);
 
-        return back()->with('success', '!Done');
+        return redirect(route('admin.stock.campus.index', $request->campus_id))->with('success', '!Done');
+    }
+
+    public function delete_student_stock(Request $request)
+    {
+        # code...
+        $ss = StudentStock::find($request->id);
+        $ss ? $ss->delete() : null;
+        return back()->with('success', 'Done');
     }
 }

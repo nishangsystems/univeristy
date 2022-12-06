@@ -9,6 +9,6 @@ class StudentStock extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['student_id', 'stock_id', 'quantity', 'type'];
+    protected $fillable = ['student_id', 'stock_id', 'quantity', 'type', 'campus_id'];
     protected $table = 'student_stock';
 }
