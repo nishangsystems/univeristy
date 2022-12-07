@@ -17,6 +17,7 @@
             <input type="submit" class="btn btn-sm btn-primary" value="{{__('text.word_save')}}" name="" id="">
         </div>
     </form>
+
     @else
     <div class="my-3">
         <input class="form-control" id="search" placeholder="Type student name to search" required />
@@ -43,6 +44,35 @@
         </div>
     </div>
     @endif
+    <div class="py-3">
+        @php
+            $stks = \App\Models\Stock::find(request('id'))->studentStock(request('campus_id'))->where(['type'=>'givable'])->get();
+            // dd($stks);
+            $k = 1;
+        @endphp
+        <table class="table">
+            <thead class="text-capitalize">
+                <th>###</th>
+                <th>{{__('text.word_name')}}</th>
+                <th>{{__('text.word_quantity')}}</th>
+                <th>{{__('text.word_date')}}</th>
+                <th></th>
+            </thead>
+            <tbody>
+                @foreach($stks as $stk)
+                    <tr class="border-bottom">
+                        <td class="border-right border-light">{{$k++}}</td>
+                        <td class="border-right border-light">{{\App\Models\Students::find($stk->student_id)->name}}</td>
+                        <td class="border-right border-light">{{$stk->quantity}}</td>
+                        <td class="border-right border-light">{{date('l d-m-Y', strtotime($stk->created_at))}}</td>
+                        <td>
+                            <a href="{{route('admin.stock.campus.student_stock.delete', [request('campus_id'), $stk->id])}}" class="btn btn-sm btn-danger" onclick="event.preventDefault(); delete_alert(event, '{{"Record for ".\App\Models\Students::find($stk->student_id)->name}}')">{{__('text.word_delete')}}</a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection
 @section('script')
@@ -67,7 +97,7 @@
                         '    <td>' + data[i].name + '</td>' +
                         '    <td>' + data[i].campus + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
-                        '        <a class="btn btn-xs btn-primary" href="{{Request::url()}}?student_id=' + data[i].id + '"> {{__("text.word_receive")}}</a>' +
+                        '        <a class="btn btn-xs btn-primary" href="{{Request::url()}}?student_id=' + data[i].id + '"> {{__("text.give_out")}}</a>' +
                         '    </td>' +
                         '</tr>';
                 }

@@ -36,16 +36,22 @@
                 <th>{{__('text.word_name')}}</th>
                 <th>{{__('text.word_quantity')}}</th>
                 <th>{{__('text.word_type')}}</th>
+                <th>{{__('text.word_campus')}}</th>
                 <th></th>
             </thead>
             <tbody>
-                @foreach(\App\Models\Stock::find(request('id'))->transfers()->where(['type'=>'send'])->orderBy('created_at', 'DESC')->get() as $transfer)
+                @foreach(\App\Models\Stock::find(request('id'))->transfers()->where(['type'=>'send'])->distinct()->orderBy('created_at', 'DESC')->get() as $transfer)
                 <tr class="border-bottom border-light">
                     <td class="border-right border-light">{{$transfer->stock->name}}</td>
                     <td class="border-right border-light">{{$transfer->quantity}}</td>
                     <td class="border-right border-light">{{$transfer->stock->type}}</td>
+                    <td class="border-right border-light">{{\App\Models\Campus::find($transfer->receiver_campus)->name ?? ''}}</td>
                     <td class="border-right border-light">
+                        @if((!$transfer->stock->campusStock($transfer->receiver_campus) == null) && ($transfer->stock->campusStock($transfer->receiver_campus)->quantity >= $transfer->quantity))
                         <a href="{{Request::url()}}/cancel?record={{$transfer->id}}" class="btn btn-danger btn-sm">{{__('text.word_cancel')}}</a>
+                        @else
+                        <span class="btn btn-secondary btn-sm">{{__('text.word_cancel')}}</span>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

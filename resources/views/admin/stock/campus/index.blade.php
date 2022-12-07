@@ -15,11 +15,16 @@
                     <td>{{$item->campusStock(auth()->user()->campus_id)->quantity ?? 0}}</td>
                     <td>{{$item->type}}</td>
                     <td>
-                        <a href="{{route('admin.stock.campus.restore', [auth()->user()->campus_id, $item->id])}}" class="btn btn-sm btn-warning">{{__('text.word_restore')}}</a>|
+                        <!-- if the quantity of a stock item is zero, it can neither be restored nor be given out -->
+                        @if($item->campusStock(auth()->user()->campus_id)  && !($item->campusStock(auth()->user()->campus_id)->quantity < 1))
+                        <a href="{{route('admin.stock.campus.restore', [auth()->user()->campus_id, $item->id])}}" class="btn btn-sm btn-warning">{{__('text.word_return')}}</a>|
+                        @endif
                         @if($item->type == 'receivable')
                         <a href="{{route('admin.stock.campus.receive', [auth()->user()->campus_id, $item->id])}}" class="btn btn-sm btn-primary">{{__('text.word_receive')}}</a>
                         @else
-                        <a href="{{route('admin.stock.campus.giveout', [auth()->user()->campus_id, $item->id])}}" class="btn btn-sm btn-success">{{__('text.give_out')}}</a>
+                            @if($item->campusStock(auth()->user()->campus_id)  && !($item->campusStock(auth()->user()->campus_id)->quantity < 1))
+                            <a href="{{route('admin.stock.campus.giveout', [auth()->user()->campus_id, $item->id])}}" class="btn btn-sm btn-success">{{__('text.give_out')}}</a>
+                            @endif
                         @endif
                     </td>
                 </tr>

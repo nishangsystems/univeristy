@@ -664,6 +664,15 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+
+
+                    <li>
+                        <a href="{{route('admin.stock.report')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_reports')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                     @endif
 
 
@@ -1080,6 +1089,14 @@
         });
 
     });
+
+    function delete_alert(event, data) {
+        event.preventDefault();
+        let yes = confirm('You are about to delete an item:'+data+'. This operation can not be reversed. Delete item?');
+        if(yes){
+            window.location = event.target.href;
+        }
+    }
 
 </script>
 

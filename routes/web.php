@@ -296,6 +296,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('/', 'Admin\StockController@index')->name('index');
         Route::get('/create', 'Admin\StockController@create')->name('create');
         Route::get('/save', 'Admin\StockController@save')->name('save');
+        Route::get('/report/{type?}', 'Admin\StockController@report')->name('report');
+        Route::get('/report/{type}/print', 'Admin\StockController@print_report')->name('report.print');
         Route::get('/edit/{id}', 'Admin\StockController@edit')->name('edit');
         Route::get('/update/{id}', 'Admin\StockController@update')->name('update');
         Route::get('/receive/{id}', 'Admin\StockController@receive')->name('receive');
@@ -313,6 +315,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::get('/give/{id}', 'Admin\StockController@post_campus_giveout')->name('give');
             Route::get('/restore/{id}', 'Admin\StockController@restore')->name('restore');
             Route::get('/return/{id}', 'Admin\StockController@__restore')->name('return');
+            Route::get('/student_stock/delete/{id}', 'Admin\StockController@delete_student_stock')->name('student_stock.delete');
         });
     });
 

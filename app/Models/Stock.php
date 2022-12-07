@@ -62,4 +62,12 @@ class Stock extends Model
         # code...
         return $this->transfers()->first();
     }
+
+    public function studentStock($campus_id = null)
+    {
+        # code...
+        return $this->hasMany(StudentStock::class, 'stock_id')->where(function($q)use($campus_id){
+            !$campus_id == null ? $q->where(['campus_id'=>$campus_id]) : null;
+        })->orderBy('id', 'DESC');
+    }
 }
