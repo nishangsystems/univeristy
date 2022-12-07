@@ -664,6 +664,15 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+
+
+                    <li>
+                        <a href="{{route('admin.stock.report')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_reports')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                     @endif
 
 

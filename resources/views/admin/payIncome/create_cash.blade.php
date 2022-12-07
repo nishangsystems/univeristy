@@ -18,6 +18,12 @@
                 </div>
             </div>
             <div class="row my-2">
+                <label for="" class="col-md-3 col-lg-3 text-capitalize">{{__('text.word_date')}}</label>
+                <div class="col-md-9 col-lg-9">
+                    <input type="date" name="date" class="form-control">
+                </div>
+            </div>
+            <div class="row my-2">
                 <label for="" class="col-md-3 col-lg-3 text-capitalize">{{__('text.word_description')}}</label>
                 <div class="col-md-9 col-lg-9">
                     <textarea rows="3" name="description" class="form-control"></textarea>
@@ -38,6 +44,7 @@
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.word_amount')}} ({{__('text.currency_cfa')}})</th>
                         <th>{{__('text.word_description')}}</th>
+                        <th>{{__('text.word_date')}}</th>
 
                         <th></th>
                     </tr>
@@ -46,9 +53,10 @@
                     @foreach(\App\Models\Income::where('cash', true)->orderBy('id', 'DESC')->get() as $k=>$income)
                     <tr>
                         <td>{{$k+1}}</td>
-                        <td>{{$income->name}}</td>
+                        <td>{{$income->name ?? ''}}</td>
                         <td>{{number_format($income->amount)}}</td>
                         <td>{{$income->description}}</td>
+                        <td>{{date('d-m-Y', strtotime($income->date)) ?? date('d-m-Y', strtotime($income->created_at)) ?? ''}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
                             <a class="btn btn-sm btn-primary m-3" href="{{route('admin.income.show',[$income->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
                             <a class="btn btn-sm btn-success m-3" href="{{route('admin.income.edit',[$income->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a> |

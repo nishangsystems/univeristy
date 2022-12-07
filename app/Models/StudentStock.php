@@ -11,4 +11,10 @@ class StudentStock extends Model
 
     protected $fillable = ['student_id', 'stock_id', 'quantity', 'type', 'campus_id'];
     protected $table = 'student_stock';
+
+    public function student()
+    {
+        # code...
+        return $this->belongsTo(Students::class, 'student_id');
+    }
 }

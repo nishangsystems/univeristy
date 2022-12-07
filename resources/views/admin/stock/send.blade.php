@@ -47,10 +47,10 @@
                     <td class="border-right border-light">{{$transfer->stock->type}}</td>
                     <td class="border-right border-light">{{\App\Models\Campus::find($transfer->receiver_campus)->name ?? ''}}</td>
                     <td class="border-right border-light">
-                        @if(!$transfer->stock->campusStock($transfer->receiver_campus) == null)
+                        @if((!$transfer->stock->campusStock($transfer->receiver_campus) == null) && ($transfer->stock->campusStock($transfer->receiver_campus)->quantity >= $transfer->quantity))
                         <a href="{{Request::url()}}/cancel?record={{$transfer->id}}" class="btn btn-danger btn-sm">{{__('text.word_cancel')}}</a>
                         @else
-                        <span class="btn btn-secondary btn-sm">{{__('text.word_restored')}}</span>
+                        <span class="btn btn-secondary btn-sm">{{__('text.word_cancel')}}</span>
                         @endif
                     </td>
                 </tr>

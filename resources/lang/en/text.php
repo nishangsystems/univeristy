@@ -447,5 +447,8 @@ return [
     'collect_cash'=>'collect cash',
     'word_user'=>'user',
     'word_restored'=>'restored',
-    'word_return'=>'return'
+    'word_return'=>'return',
+    'word_reports'=>'reports',
+    'receivable_report'=>'receivable report',
+    'givable_report'=>'givable report',
 ];

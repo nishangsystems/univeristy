@@ -203,7 +203,10 @@ class StockController extends Controller
         $item->save();
         
         $campusStock = $item->campusStock($record->receiver_campus);
-        if(!$campusStock==null){$campusStock->delete();}
+        if(!$campusStock==null){
+            $campusStock->quantity -= $record->quantity;
+            $campusStock->save();
+        }
         $record->delete();
         return back()->with('success', '!Done');
     }
@@ -236,6 +239,13 @@ class StockController extends Controller
     public function campus_giveout(Request $request, $campus_id, $id)
     {
         # code...
+        $campus_stock = Stock::find($id)->campusStock($request->campus_id) ?? null;
+        if($campus_stock == null){
+            return back()->with('error', 'This Campus does not have selected item.');
+        }elseif ($campus_stock->quantity == 0) {
+            # code...
+            return back()->with('error', 'Not enough items in stock.');
+        }
         $data['title'] = "Give Out ".Stock::find($id)->name ?? 'Item';
         return view('admin.stock.campus.giveout', $data);
     }
@@ -251,13 +261,17 @@ class StockController extends Controller
         $campus_stock = Stock::find($id)->campusStock($request->campus_id) ?? null;
         if (!$campus_stock == null) {
 
-            
-                // check if student already has a record for this stock item
-                $stk_count = Stock::find($request->id)->studentStock(request('campus_id'))->where(['type'=>'givable'])->where(['student_id'=>$request->student_id])->count();
-                if ($stk_count > 0) {
-                    # code...
-                    return back()->with('error', 'Can\'t give out item more than once per student. Record already exist for '.Students::find($request->student_id)->name);
-                }
+            // check if student already has a record for this stock item
+            $stk_count = Stock::find($request->id)->studentStock(request('campus_id'))->where(['type'=>'givable'])->where(['student_id'=>$request->student_id])->count();
+            if ($stk_count > 0) {
+                # code...
+                return back()->with('error', 'Can\'t give out item more than once per student. Record already exist for '.Students::find($request->student_id)->name);
+            }
+
+            // Check if there is enough to give out
+            if($campus_stock->quantity < $request->quantity){
+                return back()->with('error', 'Not enough stock to give out.');
+            }
 
             StudentStock::create(['student_id'=>$request->student_id, 'stock_id'=>$id, 'quantity'=>$request->quantity, 'type'=>Stock::find($id)->type ?? 'receivable',  'campus_id'=>Students::find($request->student_id)->campus_id ?? auth()->user()->campus_id]);
             # code...
@@ -311,5 +325,19 @@ class StockController extends Controller
         $ss = StudentStock::find($request->id);
         $ss ? $ss->delete() : null;
         return back()->with('success', 'Done');
+    }
+
+    public function report(Request $request)
+    {
+        # code...
+        $data['title'] = "Stock Report";
+        return view('admin.stock.report', $data);
+    }
+    
+    public function print_report(Request $request)
+    {
+        # code...
+        $data['title'] = $request->type." Stock Report";
+        return view('admin.stock.print', $data);
     }
 }

@@ -136,7 +136,8 @@ class PayIncomeController extends Controller
             'amount'=>$request->amount,
             'user_id'=>auth()->id(),
             'cash'=>1,
-            'description'=>$request->description
+            'description'=>$request->description,
+            'date'=>$request->date
         ];
         $income_id = DB::table('incomes')->insertGetId($income);
 
