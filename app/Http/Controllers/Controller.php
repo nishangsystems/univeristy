@@ -81,7 +81,7 @@ class Controller extends BaseController
                 }
            }
            else{
-             return redirect()->route('registration')->with('error','Matricule Not Found ');   
+             return redirect()->route('registration')->with('error','Matricule '.$request->reg_no.' Not Found in the system. Contact the registry for rectification.');   
            }
      }
 
