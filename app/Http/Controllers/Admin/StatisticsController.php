@@ -661,40 +661,46 @@ class StatisticsController extends Controller
 
     public function ie_monthly_report()
     {
-        $month = request('month');
-        $data['title'] = "Income-Expenditure Report for ".date('F Y', strtotime($month));
-        $data['report'] = [];
-        $days = cal_days_in_month(CAL_GREGORIAN, (int)date('m', strtotime($month)), (int)date('Y', strtotime($month)));
-        for($i=01; $i <= $days; $i++){
-            
-            $income = DB::table('pay_incomes')
-                        ->whereDate('pay_incomes.created_at', '=', date('Y-m-d', strtotime($month.'-'.$i)))
-                        ->join('students', ['students.id'=>'pay_incomes.student_id'])
-                        ->where(function($q){
-                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
-                        })
-                        ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')->sum('incomes.amount');
-            $expenditure = DB::table('expenses')
-                        ->whereDate('date', '=', date('Y-m-d', strtotime($month.'-'.$i)))
-                        ->join('users', ['users.id'=>'expenses.user_id'])
-                        ->where(function($q){
-                            auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
-                        })
-                        ->sum('amount_spend');
-
-            $data['report'][] = [
-                'date' => date('d-m-Y', strtotime($month.'-'.$i)),
-                'income' => (int)$income,
-                'expenditure' => (int)$expenditure,
-                'balance' => (int)($income - $expenditure)
-            ];
-            $data['report'] = collect($data['report']);
-            $data['totals'] = [
-                'income' => (int)$data['report']->sum('income'),
-                'expenditure' => (int)$data['report']->sum('expenditure'),
-                'balance' => (int)$data['report']->sum('balance')
-            ];
+        try {
+            //code...
+            $month = request('month');
+            $data['title'] = "Income-Expenditure Report for ".date('F Y', strtotime($month));
+            $data['report'] = [];
+            $days = cal_days_in_month(CAL_GREGORIAN, (int)date('m', strtotime($month)), (int)date('Y', strtotime($month)));
+            for($i=01; $i <= $days; $i++){
+                $income = DB::table('pay_incomes')
+                ->whereDate('pay_incomes.created_at', '=', date('Y-m-d', strtotime($month.'-'.$i)))
+                ->join('users', ['users.id'=>'pay_incomes.user_id'])
+                // ->where(function($q){
+                //     auth()->user()->campus_id == null ? null : $q->where(['users.campus_id'=>auth()->user()->campus_id]);
+                // })
+                ->join('incomes', ['incomes.id'=>'pay_incomes.income_id'])->sum('incomes.amount');
+                $expenditure = DB::table('expenses')
+                ->whereDate('date', '=', date('Y-m-d', strtotime($month.'-'.$i)))
+                ->join('users', ['users.id'=>'expenses.user_id'])
+                ->where(function($q){
+                    auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
+                })
+                ->sum('amount_spend');
+                // return $month;
+                
+                $data['report'][] = [
+                    'date' => date('d-m-Y', strtotime($month.'-'.$i)),
+                    'income' => (int)$income,
+                    'expenditure' => (int)$expenditure,
+                    'balance' => (int)($income - $expenditure)
+                ];
+                $data['report'] = collect($data['report']);
+                $data['totals'] = [
+                    'income' => (int)$data['report']->sum('income'),
+                    'expenditure' => (int)$data['report']->sum('expenditure'),
+                    'balance' => (int)$data['report']->sum('balance')
+                ];
+            }
+            return $data;
+        } catch (\Throwable $th) {
+            // throw $th;
+        return $th;
         }
-        return $data;
     }
 }

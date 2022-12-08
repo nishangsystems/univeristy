@@ -41,6 +41,10 @@ class Handler extends ExceptionHandler
             if ($e->getPrevious() instanceof \Illuminate\Session\TokenMismatchException) {
                 return redirect()->route('login');
             };
+            if ($e instanceof \GuzzleHttp\Exception\ServerException) {
+                # code...
+                return redirect(route('admin.home'));
+            }
         });
         
     }
