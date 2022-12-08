@@ -184,6 +184,8 @@ class PayIncomeController extends Controller
      */
     public function get_searchStudent()
     {
+
+        // return 4;
         $name = request('name');
         $students = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
@@ -201,6 +203,7 @@ class PayIncomeController extends Controller
             // })
             ->select('students.*')->get();
 
+            // return $students;
         return response()->json(['data' => PayIncomeResource::collection($students)]);
     }
     // public function searchStudent($name)

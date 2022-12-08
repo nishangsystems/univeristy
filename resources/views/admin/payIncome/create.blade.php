@@ -42,7 +42,7 @@
             url: url,
             success: function(response) {
                 let html = new String();
-                // console.log(response);
+                console.log(response);
                 let size = response.data.length;
                 let data = response.data;
                 for (i = 0; i < size; i++) {
