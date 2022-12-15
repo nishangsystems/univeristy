@@ -187,6 +187,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('student/matricule', 'Admin\StudentController@matricPost')->name('students.matricule');
     Route::resource('student', 'Admin\StudentController');
     Route::post('students', 'Admin\StudentController@getStudentsPerClass')->name('getStudent.perClassYear');
+    Route::get('result/bypass/{student_id?}', 'Admin\StudentController@studentResultBypass')->name('result.bypass');
+    Route::get('result/bypass/{student_id}/set', 'Admin\StudentController@setStudentResultBypass')->name('result.bypass.set');
     Route::resource('result_release', 'Admin\ResultController');
 
 
@@ -296,8 +298,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('/', 'Admin\StockController@index')->name('index');
         Route::get('/create', 'Admin\StockController@create')->name('create');
         Route::get('/save', 'Admin\StockController@save')->name('save');
-        Route::get('/report/{type?}', 'Admin\StockController@report')->name('report');
-        Route::get('/report/{type}/print', 'Admin\StockController@print_report')->name('report.print');
+        Route::get('/report/{id}/{year?}', 'Admin\StockController@report')->name('report');
+        Route::get('/report/{id}/{year}/print', 'Admin\StockController@print_report')->name('report.print');
         Route::get('/edit/{id}', 'Admin\StockController@edit')->name('edit');
         Route::get('/update/{id}', 'Admin\StockController@update')->name('update');
         Route::get('/receive/{id}', 'Admin\StockController@receive')->name('receive');
@@ -409,6 +411,7 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('class-subjects/{level}', 'Student\HomeController@class_subjects')->name('class-subjects');
     Route::get('search_course', 'Student\HomeController@search_course')->name('search_course');
     Route::get('courses/download/{year}/{semester}', 'Student\HomeController@download_courses')->name('courses.download');
+    Route::get('stock/report/{year}', 'Student\HomeController@stock_report')->name('stock.report');
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');

@@ -130,6 +130,7 @@
             method:"GET",
             url: url,
             success: function(data){
+                console.log(data);
                 class_courses = data;
                 let html = ``;
                 for (const key in data) {

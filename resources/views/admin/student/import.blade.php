@@ -9,10 +9,13 @@
                         <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_batch')}}</label>
                         <div class="col-lg-10">
                             <div>
-                                <select class="form-control" required name="batch">
+                                @if(!auth()->user()->campus_id == null)
+                                    <input type="hidden" name="batch" value="{{\App\Helpers\Helpers::instance()->getCurrentAccademicYear()}}">
+                                @endif
+                                <select class="form-control" required name="batch" {{!(auth()->user()->campus_id == null) ? 'disabled' : ''}}>
                                     <option selected></option>
                                     @forelse(\App\Models\Batch::orderBy('name')->get() as $section)
-                                        <option {{old('batch') == $section->id?'selected':''}} value="{{$section->id}}">{{$section->name}}</option>
+                                        <option {{ $section->id == \App\Helpers\Helpers::instance()->getCurrentAccademicYear() ? 'selected' : '' }} value="{{$section->id}}">{{$section->name}}</option>
                                     @empty
                                         <option>{{__('text.no_batch_created')}}</option>
                                     @endforelse

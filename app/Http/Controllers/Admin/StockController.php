@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\CampusStock;
 use App\Models\Stock;
@@ -262,7 +263,7 @@ class StockController extends Controller
         if (!$campus_stock == null) {
 
             // check if student already has a record for this stock item
-            $stk_count = Stock::find($request->id)->studentStock(request('campus_id'))->where(['type'=>'givable'])->where(['student_id'=>$request->student_id])->count();
+            $stk_count = Stock::find($request->id)->studentStock(request('campus_id'))->where(['type'=>'givable'])->where(['student_id'=>$request->student_id])->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->count();
             if ($stk_count > 0) {
                 # code...
                 return back()->with('error', 'Can\'t give out item more than once per student. Record already exist for '.Students::find($request->student_id)->name);
@@ -273,7 +274,7 @@ class StockController extends Controller
                 return back()->with('error', 'Not enough stock to give out.');
             }
 
-            StudentStock::create(['student_id'=>$request->student_id, 'stock_id'=>$id, 'quantity'=>$request->quantity, 'type'=>Stock::find($id)->type ?? 'receivable',  'campus_id'=>Students::find($request->student_id)->campus_id ?? auth()->user()->campus_id]);
+            StudentStock::create(['student_id'=>$request->student_id, 'stock_id'=>$id, 'quantity'=>$request->quantity, 'type'=>Stock::find($id)->type ?? 'receivable',  'campus_id'=>Students::find($request->student_id)->campus_id ?? auth()->user()->campus_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear()]);
             # code...
             $campus_stock->quantity -= $request->quantity;
             $campus_stock->save();
@@ -330,14 +331,14 @@ class StockController extends Controller
     public function report(Request $request)
     {
         # code...
-        $data['title'] = "Stock Report";
+        $data['title'] = Stock::find($request->id)->name." Stock Report";
         return view('admin.stock.report', $data);
     }
     
     public function print_report(Request $request)
     {
         # code...
-        $data['title'] = $request->type." Stock Report";
+        $data['title'] = Stock::find($request->id)->name." Stock Report";
         return view('admin.stock.print', $data);
     }
 }

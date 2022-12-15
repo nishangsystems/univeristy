@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\CampusProgram;
+use App\Models\PaymentItem;
+use App\Models\Payments;
 use App\Models\ProgramLevel;
 use App\Models\Promotion;
 use App\Models\SchoolUnits;
 use App\Models\StudentClass;
 use App\Models\Students;
 use App\Option;
+use Error;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -773,6 +777,7 @@ class StudentController extends Controller
     {
         # code...
         try {
+            DB::beginTransaction();
             //code...
             // create promotion > create student promotions > update students class and academic year
             $promotion = [
@@ -789,18 +794,98 @@ class StudentController extends Controller
                 # code...
                 // create student promotions
                 $students_promotion = [];
-                if(!$request-> students == null){
+                $students_debt = [];
+                if(!$request->students == null){
                     foreach ($request->students as $value) {
                         # code...
                         $students_promotion[] = ['student_id'=>$value, 'promotion_id'=>$promotion_id];
+                        $students_debt[] = function($value){
+                            $student = Students::find($value);
+                            $balance = $student->balance($value);
+                            return ['student_id'=>$value, 'next_debt' => $balance - $student->dept(Helpers::instance()->getCurrentAccademicYear())];
+                        };
                     }
                     DB::table('student_promotions')->insert($students_promotion);
     
                     // update students' class and academic year
-                    DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_from)->update(['class_id'=>$request->class_to, 'year_id'=>$request->year_to]);
+                    // create new record on promotion  instead of updating record for previous year
+                    // DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_from)->update(['class_id'=>$request->class_to, 'year_id'=>$request->year_to]);
+                    DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_from)->get()->each(function($record)use($request){
+                        $class['class_id'] = $request->class_to;
+                        $class['year_id'] = $request->year_to;
+                        $class['student_id'] = $record->student_id;
+                        StudentClass::create($class);
+                    });
     
                     // update student program_id
                     DB::table('students')->whereIn('id', $request->students)->update(['program_id'=>$request->class_to]);
+
+                    // transfer student debts
+                    foreach ($request->students as $value) {
+                        # code...
+                            $student = Students::find($value);
+                            $balance = $student->bal($value);
+                            $next_debt = $balance - $student->dept(Helpers::instance()->getCurrentAccademicYear());
+                            if ($next_debt == 0) {
+                                continue;
+                            }else {
+                                $campus_program = CampusProgram::where('campus_id', $student->campus_id)->where('program_level_id', $student->_class(Helpers::instance()->getCurrentAccademicYear()));
+                                if($campus_program->count() == 0 || PaymentItem::where('campus_program_id', $campus_program->first()->id)->count() == 0){
+                                    throw new Error('Promotion failed. Depts could not be transfered');
+                                }
+                                else {
+                                    # code...
+                                    $payment_items = PaymentItem::where('campus_program_id', $campus_program->first()->id)->get();
+                                    foreach ($payment_items as $item) {
+                                        # code...
+                                        if($next_debt <= 0){
+                                            Payments::create([
+                                                "payment_id" => $item->id,
+                                                "student_id" => $student->id,
+                                                "unit_id" => $student->class(Helpers::instance()->getYear())->id,
+                                                "batch_id" => Helpers::instance()->nextAccademicYear(Helpers::instance()->getCurrentAccademicYear()),
+                                                "amount" => 0,
+                                                "date" => date('Y/m/d'),
+                                                'reference_number' => time().random_int(100000, 999999),
+                                                'user_id' => auth()->user()->id,
+                                                'debt' => $next_debt,
+                                            ]);
+                                            break;
+                                        }
+                                        if ($item->amount <= $next_debt) {
+                                            Payments::create([
+                                                "payment_id" => $item->id,
+                                                "student_id" => $student->id,
+                                                "unit_id" => $student->class(Helpers::instance()->getYear())->id,
+                                                "batch_id" => Helpers::instance()->nextAccademicYear(Helpers::instance()->getCurrentAccademicYear()),
+                                                "amount" => $item->amount,
+                                                "date" => date('Y/m/d'),
+                                                'reference_number' => time().random_int(100000, 999999),
+                                                'user_id' => auth()->user()->id,
+                                                'debt' => 0,
+                                            ]);
+                                            
+                                            $next_debt -= $item->amount;
+                                            # code...
+                                        }
+                                        else {
+                                            Payments::create([
+                                                "payment_id" => $item->id,
+                                                "student_id" => $student->id,
+                                                "unit_id" => $student->class(Helpers::instance()->getYear())->id,
+                                                "batch_id" => Helpers::instance()->nextAccademicYear(Helpers::instance()->getCurrentAccademicYear()),
+                                                "amount" => $next_debt,
+                                                "date" => date('Y/m/d'),
+                                                'reference_number' => time().random_int(100000, 999999),
+                                                'user_id' => auth()->user()->id,
+                                                'debt' => 0,
+                                            ]);
+                                            # code...
+                                        }
+                                    }
+                                }
+                            }
+                    }
                     
                     // delete pending_promotion_students
                     // DB::table('pending_promotion_students')
@@ -811,10 +896,11 @@ class StudentController extends Controller
                 }
                 return back()->with('error', 'No students selected.');
             }
-
+            DB::commit();
            
         } catch (\Throwable $th) {
-            //throw $th;
+            DB::rollBack();
+            throw $th;
             // FacadesSession::flash('error', 'Error occured. Promotion failed. Please try again later.');
             return back()->with('error', 'Error occured. Promotion failed. Please try again later. '.$th->getMessage());
         }
@@ -843,14 +929,21 @@ class StudentController extends Controller
                 // create student promotions
                 $students_promotion = [];
                 if(!json_decode($promotion->students) == null){
-                    foreach (json_decode($promotion->students) as $value) {
-                        # code...
-                        $students_promotion[] = ['student_id'=>$value, 'promotion_id'=>$demotion_id];
-                    }
-                    DB::table('student_promotions')->insert($students_promotion);
+                    // foreach (json_decode($promotion->students) as $value) {
+                    //     # code...
+                    //     $students_promotion[] = ['student_id'=>$value, 'promotion_id'=>$demotion_id];
+                    // }
+                    // DB::table('student_promotions')->insert($students_promotion);
                     
                     // update students' class and academic year
-                    DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students))->where('year_id', '=', $promotion->year_to)->update(['class_id'=>$promotion->class_from, 'year_id'=>$promotion->year_to]);
+                    DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students))->where('year_id', '=', $promotion->year_to)->update(['class_id'=>$promotion->class_from, 'year_id'=>$promotion->year_from]);
+                    DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students))->where('year_id', '=', $promotion->year_to)->distinct()->get()->each(function($rec)use($promotion){
+                        if (DB::table('student_classes')->where(['student_id'=>$rec->student_id, 'class_id'=>$promotion->class_from, 'year_id'=>$promotion->year_from])->count() == 0) {
+                            # code...
+                            DB::table('student_classes')->insert(['student_id'=>$rec->student_id, 'class_id'=>$promotion->class_from, 'year_id'=>$promotion->year_from]);
+                        }
+                        $rec->delete();
+                    });
                     
                     // update student program_id
                     DB::table('students')->whereIn('id', json_decode($promotion->students))->update(['program_id'=>$promotion->class_from]);
@@ -1062,5 +1155,27 @@ class StudentController extends Controller
     public function getClassStudentsAverageList($class_id, $year_id = null)
     {
         # code...
+    }
+
+    public function studentResultBypass(Request $request)
+    {
+        # code...
+        $data['title'] = "Bypass Student Results";
+        return view('admin.student.bypass-result', $data);
+    }
+
+    public function setStudentResultBypass(Request $request)
+    {
+        $check = Validator::make($request->all(), ['bypass_result_reason'=>'required']);
+        if($check->fails()){
+            return back()->with('error', 'A reason must be specified');
+        }
+        # code...
+        $student_class = StudentClass::where(['student_id'=>$request->student_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear()]);
+        if(!$student_class == null){
+            $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason]);
+            return back()->with('success', 'Done');
+        }
+        else{return back()-with('error', 'Student could not be resolved.');}
     }
 }

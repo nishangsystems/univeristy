@@ -73,15 +73,22 @@ class PaymentController extends Controller
         $student = Students::find($student_id);
         $total_fee = $student->total($student_id);
         $balance =  $student->bal($student_id);
+        $debt = $student->debt(Helpers::instance()->getCurrentAccademicYear());
+        // return $balance;
         $this->validate($request, [
             'item' =>  'required',
             'amount' => 'required',
             'date' => 'required|date',
             'reference_number' => 'required'
         ]);
-        // if ($request->amount > $total_fee  || $request->amount >  $balance) {
-        //     return back()->with('error', 'The amount deposited has exceeded the total fee amount');
-        // }
+        if ($request->amount >  $balance) {
+            $debt += -$request->amount + $balance;
+            $amount = $balance;
+        }
+        else{
+            $amount = $request->amount;
+        }
+
         if (Payments::where(['reference_number' => $request->reference_number])->count() == 0) {
             # code...
             Payments::create([
@@ -89,15 +96,16 @@ class PaymentController extends Controller
                 "student_id" => $student->id,
                 "unit_id" => $student->class(Helpers::instance()->getYear())->id,
                 "batch_id" => Helpers::instance()->getYear(),
-                "amount" => $request->amount,
+                "amount" => $amount,
                 "date" => $request->date,
                 'reference_number' => $request->reference_number,
-                'user_id' => auth()->user()->id
+                'user_id' => auth()->user()->id,
+                'debt' => $debt,
             ]);
+            return back()->with('success', "Fee collection recorded successfully!");
         }
-        else{return back()->with('error', 'dublicate referernce error');}
+        else{return back()->with('error', 'Dublicate referernce error');}
 
-        return back()->with('success', "Fee collection recorded successfully !");
     }
 
     public function update(Request $request, $student_id, $id)
