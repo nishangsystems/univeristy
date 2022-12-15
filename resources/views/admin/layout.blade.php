@@ -291,6 +291,15 @@
                                 <b class="arrow"></b>
                             </li>
                         @endif
+                        @if (\Auth::user()->hasPermissionTo('bypass_result'))
+                            <li>
+                                <a href="{{route('admin.result.bypass')}}" class="text-capitalize">
+                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
+                                    {{__('text.bypass_result')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
                     </ul>
                 </li>
             @endif
@@ -661,15 +670,6 @@
                         <a href="{{route('admin.stock.create')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.create_item')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('admin.stock.report')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_reports')}}
                         </a>
                         <b class="arrow"></b>
                     </li>

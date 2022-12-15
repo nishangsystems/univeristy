@@ -448,7 +448,12 @@ return [
     'word_user'=>'user',
     'word_restored'=>'restored',
     'word_return'=>'return',
-    'word_reports'=>'reports',
+    'word_report'=>'report|reports',
     'receivable_report'=>'receivable report',
     'givable_report'=>'givable report',
+    'stock_details'=>'stock details',
+    'bypass_result'=>'bypass result',
+    'word_reason'=>'reason',
+    'word_bypass'=>'bypass',
+
 ];

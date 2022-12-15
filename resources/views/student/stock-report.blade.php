@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('student.layout')
 @section('section')
 @php($year = request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
 <div class="py-3">
@@ -15,36 +15,32 @@
         </div>
     </form>
     <table class="table">
-        <div class="h4 text-uppercase text-center text-dark">{{$title .' FOR '.\App\Models\Batch::find($year)->name}}</div>
         <thead class="text-capitalize">
             <!-- <th>###</th> -->
             <th>###</th>
             <th>{{__('text.word_name')}}</th>
-            <th>{{__('text.word_matricule')}}</th>
-            <th>{{__('text.word_class')}}</th>
+            <th>{{__('text.word_quantity')}}</th>
+            <th></th>
         </thead>
         <tbody>
             @php($k = 1)
-            @foreach(\App\Models\Stock::find(request('id'))->studentStock(auth()->user()->campus_id ?? null)->where(['year_id'=>$year])->get() as $item)
+            @foreach($stock as $item)
             <tr class="border-bottom border-secondary">
                 <td class="border">{{$k++}}</td>
-                <td class="border">{{$item->student->name}}</td>
-                <td class="border">{{$item->student->matric}}</td>
-                <td class="border">{{$item->student->_class($year) != null ? $item->student->_class($year)->name() : '----'}}</td>
+                <td class="border">{{$item->stock->name}}</td>
+                <td class="border">{{$item->quantity}}</td>
+                <td class="border text-capitalize {{$item->stock->type == 'givable' ? 'text-primary' : 'text-success'}}">{{$item->stock->type}}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
-    <div class="d-flex my-3 justify-content-end pr-3">
-        <a href="{{Request::url()}}/print" class="btn btn-sm btn-primary">{{__('text.word_print')}}</a>
-    </div>
 </div>
 @endsection
 @section('script')
 <script>
     function redirect(event) {
         val = event.target.value;
-        url = "{{route('admin.stock.report', [request('id'), '__VAL__'])}}";
+        url = "{{route('student.stock.report', '__VAL__')}}";
         url = url.replace('__VAL__', val);
         window.location = url;
     }

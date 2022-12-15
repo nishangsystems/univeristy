@@ -700,7 +700,7 @@ class StatisticsController extends Controller
             return $data;
         } catch (\Throwable $th) {
             // throw $th;
-        return $th;
+        // return $th;
         }
     }
 }

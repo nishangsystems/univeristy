@@ -32,7 +32,7 @@ class Students extends Authenticatable
 
     public function class($year)
     {
-        return CampusProgram::where('campus_id', $this->campus_id)->where('program_level_id', $this->program_id)->first();
+        return CampusProgram::where('campus_id', $this->campus_id)->where('program_level_id', $this->classes(Helpers::instance()->getCurrentAccademicYear())->first()->class_id)->first();
     }
 
     public function _class($year)
@@ -68,7 +68,7 @@ class Students extends Authenticatable
 
     public function total()
     {
-        return $this->campus()->first()->campus_programs()->where('program_level_id', $this->program_id)->first()->payment_items()->first()->amount ?? -1;
+        return $this->campus()->first()->campus_programs()->where('program_level_id', $this->classes()->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first()->class_id)->first()->payment_items()->first()->amount ?? -1;
     }
 
     public function paid()
@@ -130,5 +130,12 @@ class Students extends Authenticatable
         return $rank ? $rank->position : "NOT SET";
     }
 
+    public function debt($year)
+    {
+        # code...
+        $paymentBuilder = Payments::where(['student_id'=>$this->id, 'batch_id'=>$year]);
+        if($paymentBuilder->count() == 0){return 0;}
+        return $paymentBuilder->first()->dept;
+    }
 
 }

@@ -315,6 +315,14 @@
             </li>
 
             <li>
+                <a href="{{route('student.stock.report', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())}}" class="text-capitalize">
+                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-list"></i>
+                    {{__('text.stock_details')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
+
+            <li>
                 <a href="{{route('faqs.index')}}" class="text-capitalize">
                     <i  style="color: {{$bg1}};" class="fa fa-question menu-icon   "></i>
                     {{__('text.word_faqs')}}

@@ -86,26 +86,24 @@
         <div style="width:100% ; ">
             <img width="100%" src="{{asset('assets/images')}}/header.jpg" class="img"/>
         </div>
-        <div class="h4 text-uppercase text-center text-dark">{{request('type') == 'receivable' ? __('text.receivable_report') : (request('type') == 'givable' ? __('text.givable_report') : '')}}</div>
-        <table>
-            <thead class="text-capitalize bg-danger text-white">
+        <table >
+            <div class="h4 text-uppercase text-center text-dark border-bottom py-4">{{$title .' FOR '.\App\Models\Batch::find($year)->name}}</div>
+            <thead class="text-capitalize bg-light">
                 <!-- <th>###</th> -->
-                <th>{{__('text.word_item')}}</th>
-                <th>{{__('text.word_name')}}</th>
-                <th>{{__('text.word_matricule')}}</th>
-                <th>{{__('text.word_class')}}</th>
+                <th class="border">###</th>
+                <th class="border">{{__('text.word_name')}}</th>
+                <th class="border">{{__('text.word_matricule')}}</th>
+                <th class="border">{{__('text.word_class')}}</th>
             </thead>
             <tbody>
                 @php($k = 1)
-                @foreach(\App\Models\Stock::where(['type'=>request('type')])->get() as $item)
-                    @foreach($item->studentStock()->get() as $st_item)
-                    <tr class="border-bottom border-secondary">
-                        <td class="border-right">{{$item->name}}</td>
-                        <td class="border-right">{{$st_item->student->name}}</td>
-                        <td class="border-right">{{$st_item->student->matric}}</td>
-                        <td class="border-right">{{$st_item->student->_class($year)->name()}}</td>
-                    </tr>
-                    @endforeach
+                @foreach(\App\Models\Stock::find(request('id'))->studentStock(auth()->user()->campus_id ?? null)->get() as $item)
+                <tr class="border-bottom border-secondary">
+                    <td class="border">{{$k++}}</td>
+                    <td class="border">{{$item->student->name}}</td>
+                    <td class="border">{{$item->student->matric}}</td>
+                    <td class="border">{{$item->student->_class($year)->name()}}</td>
+                </tr>
                 @endforeach
             </tbody>
         </table>

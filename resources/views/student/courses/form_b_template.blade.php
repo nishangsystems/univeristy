@@ -51,8 +51,11 @@
             position: relative;
         }
         table{padding: 0px !important}
-        table th, table td{
-            padding: 10px;
+        table th{
+            padding: 6px;
+        }
+        table td{
+            padding: 4px;
         }
         .table td{
             border-bottom: 1px  solid  #f1f1f1 !important;
@@ -78,11 +81,11 @@
 </head>
 <body>
         @php
-            $program_name = \App\Models\ProgramLevel::find(auth()->user()->program_id)->program()->first()->name;
-            $faculty = \App\Models\ProgramLevel::find(auth()->user()->program_id)->program()->first()->parent->parent;
+            $program_name = \App\Models\ProgramLevel::find(auth()->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->name;
+            $faculty = \App\Models\ProgramLevel::find(auth()->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->parent->parent;
             $current_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
-            $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id)->id;
-            $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id)->name;
+            $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->id;
+            $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->name;
             $flag = true;
         @endphp
             <div class=""id="table_____">
@@ -91,28 +94,32 @@
                 <div class=""  style="background-color: rgba(255, 255, 255, 0.9);">
                     <div class="" >
                         <img src="{{asset('assets/images/header.jpg')}}" class="w-100 h-auto" alt="">
-                        <div class="py-3 border-top border-dashed my-3">
-                            <div class="py-1 h4 row">
-                                <span class="col-md-3 text-capitalize">{{__('text.word_name')}}:</span>
-                                <span class="col-md-9 pl-2 text-uppercase">{{$user->name}}</span>
+                        <div class="border-top border-dashed my-2 " style="display: flex;">
+                            <div class="" style="flex: 1;">
+                                <div class="py-1 h4 row">
+                                    <span class="col-md-3 text-capitalize">{{__('text.word_name')}}:</span>
+                                    <span class="col-md-9 pl-2 text-uppercase">{{$user->name}}</span>
+                                </div>
+                                <div class="py-1 h4 row">
+                                    <span class="col-md-3 text-capitalize">{{__('text.word_matricule')}}:</span>
+                                    <span class="col-md-9 pl-2 text-uppercase">{{$user->matric}}</span>
+                                </div>
                             </div>
-                            <div class="py-1 h4 row">
-                                <span class="col-md-3 text-capitalize">{{__('text.word_matricule')}}:</span>
-                                <span class="col-md-9 pl-2 text-uppercase">{{$user->matric}}</span>
-                            </div>
-                            <div class="py-1 h4 row">
-                                <span class="col-md-3 text-capitalize">{{__('text.word_program')}}:</span>
-                                <span class="col-md-9 pl-2 text-uppercase">{{$program_name}}</span>
-                            </div>
-                            <div class="py-1 h4 row">
-                                <span class="col-md-3 text-capitalize">{{__('text.word_faculty')}}:</span>
-                                <span class="col-md-9 pl-2 text-uppercase">{{$faculty->name}}</span>
+                            <div class="" style="flex: 1;">
+                                <div class="py-1 h4 row">
+                                    <span class="col-md-3 text-capitalize">{{__('text.word_program')}}:</span>
+                                    <span class="col-md-9 pl-2 text-uppercase">{{$program_name}}</span>
+                                </div>
+                                <div class="py-1 h4 row">
+                                    <span class="col-md-3 text-capitalize">{{__('text.word_faculty')}}:</span>
+                                    <span class="col-md-9 pl-2 text-uppercase">{{$faculty->name}}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="text-center h4 text-uppercase" style="font-weight: 700;">{{trans('text.formb_title2', ['year'=>$current_year_name, 'semester'=>$current_semester_name])}}</div>
                     </div>
-                    <table class="table-stripped">
-                        <thead class="text-capitalize">
+                    <table class="">
+                        <thead class="text-capitalize bg-light">
                             <th class="border-left border-right">{{__('text.course_code')}}</th>
                             <th class="border-left border-right">{{__('text.course_title')}}</th>
                             <th class="border-left border-right">{{__('text.credit_value')}}</th>
@@ -121,7 +128,7 @@
                         <tbody id="course_table">
     
                             @foreach($courses as $course)
-                                <tr class="border-bottom border-light py-1 {{$flag ? 'bg-light' : ''}}">
+                                <tr class="border-bottom border-light {{$flag ? 'bg-light' : ''}}">
                                     <td class="border-left border-right">{{$course->code}}</td>
                                     <td class="border-left border-right">{{$course->name}}</td>
                                     <td class="border-left border-right">{{$course->cv}}</td>
@@ -131,11 +138,11 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="d-flex py-3 justify-content-center">
-                        <div class="border-top px-6 py-2 fw-bolder h5 text-capitalize">{{__('text.total_credit_attempted')}} : <span id="cv-sum">{{$cv_sum}}</span></div>
+                    <div class="d-flex py-3 py-md-1 justify-content-center">
+                        <div class="border-top px-6 fw-bolder h5 text-capitalize">{{__('text.total_credit_attempted')}} : <span id="cv-sum">{{$cv_sum}}</span></div>
                     </div>
-                    <div class="d-flex py-3 justify-content-end">
-                        <div class="border-top px-6 py-2 fw-bolder h5 text-capitalize" style="float: right;">{{__('text.the_dean')}} <br> <span id="cv-sum">__________________________</span></div>
+                    <div class="d-flex py-3 py-md-1 justify-content-end">
+                        <div class="border-top px-6 fw-bolder h5 text-capitalize" style="float: right;">{{__('text.the_dean')}} <br> <span id="cv-sum">__________________________</span></div>
                     </div>
                 </div>
             </div>

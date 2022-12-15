@@ -7,9 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PayCashIncomeResource;
 use App\Http\Resources\PayIncomeResource;
 use App\Models\Batch;
+use App\Models\Campus;
 use App\Models\Income;
 use App\Models\PayIncome;
+use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
+use App\Models\StudentClass;
 use App\Models\Students;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -186,25 +189,44 @@ class PayIncomeController extends Controller
     {
 
         // return 4;
-        $name = request('name');
-        $students = DB::table('student_classes')
-            ->join('students', 'students.id', '=', 'student_classes.student_id')
-            ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
-            ->distinct()
-            ->where(function($query)use($name){
-                $query->where('students.name', 'like', "%{$name}%")
-                ->orWhere('students.matric', 'like', "%{$name}%");
-            })
-            ->where(function($query){
-                    auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+        try {
+            //code...
+            $name = request('name');
+            $students = StudentClass::join('students', 'students.id', '=', 'student_classes.student_id')
+                ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
+                ->distinct()
+                ->where(function($query)use($name){
+                    $query->where('students.name', 'like', "%{$name}%")
+                    ->orWhere('students.matric', 'like', "%{$name}%");
                 })
-            // ->where(function($query){
-            //     auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id): null;
-            // })
-            ->select('students.*')->get();
-
-            // return $students;
-        return response()->json(['data' => PayIncomeResource::collection($students)]);
+                ->where(function($query){
+                        auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+                    })
+                // ->where(function($query){
+                //     auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id): null;
+                // })
+                ->select('students.*', 'student_classes.class_id')->get()->toArray();
+    
+                // return $students;
+                $_students = array_map(function($el){
+                    // return $el;
+                    return [
+                        'id' => $el['id'],
+                        'name' => $el['name'],
+                        'matric' => $el['matric'],
+                        'class' => ProgramLevel::find($el['class_id'])->program()->first()->name .' : LEVEL '.ProgramLevel::find($el['class_id'])->level()->first()->level,
+                        'campus' => Campus::find($el['campus_id'])->name,
+                        'campus_id' => $el['campus_id'],
+                        'gender' => $el['gender'],
+                        'link' => route('admin.income.pay_income.collect', [$el['class_id'], $el['id']]),
+                        'link2' => route('admin.scholarship.award', $el['id'])
+                    ];
+                }, $students);
+            return  response()->json(['data'=>$_students]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $th;
+        }
     }
     // public function searchStudent($name)
     // {
