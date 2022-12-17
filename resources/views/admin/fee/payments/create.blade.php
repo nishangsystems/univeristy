@@ -46,6 +46,15 @@
                     @enderror
                 </div>
             </div>
+            <div class="form-group @error('added_amount') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.additional_amount')}} </label>
+                <div class="col-lg-10">
+                    <input class=" form-control" name="added_amount" min="0" type="number" required />
+                    @error('added_amount')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_date')}}<span style="color:red">*</span></label>
                 <div class="col-lg-10">

@@ -455,5 +455,6 @@ return [
     'bypass_result'=>'bypass result',
     'word_reason'=>'reason',
     'word_bypass'=>'bypass',
-
+    'additional_amount'=>'additional amount',
+    
 ];
