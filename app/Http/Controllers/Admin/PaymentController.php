@@ -70,6 +70,7 @@ class PaymentController extends Controller
     public function store(Request $request, $student_id)
     {
 
+        // return $request->all();
         $student = Students::find($student_id);
         $total_fee = $student->total($student_id);
         $balance =  $student->bal($student_id);
@@ -96,7 +97,7 @@ class PaymentController extends Controller
                 "student_id" => $student->id,
                 "unit_id" => $student->class(Helpers::instance()->getYear())->id,
                 "batch_id" => Helpers::instance()->getYear(),
-                "amount" => $amount,
+                "amount" => $amount + $request->added_amount ?? 0,
                 "date" => $request->date,
                 'reference_number' => $request->reference_number,
                 'user_id' => auth()->user()->id,

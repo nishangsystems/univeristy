@@ -198,7 +198,7 @@ class HomeController extends Controller
         foreach ($fees as $key => $value) {
             # code...
             $stdt = Students::find($value['stud']);
-            if(($value['total'] > 0 && $value['amount'] == $value['total']) && $type == 'completed'){
+            if(($value['total'] > 0 && $value['amount'] >= $value['total']) && $type == 'completed'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
