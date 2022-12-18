@@ -97,7 +97,7 @@ class PaymentController extends Controller
                 "student_id" => $student->id,
                 "unit_id" => $student->class(Helpers::instance()->getYear())->id,
                 "batch_id" => Helpers::instance()->getYear(),
-                "amount" => $amount + $request->added_amount ?? 0,
+                "amount" => $amount,
                 "date" => $request->date,
                 'reference_number' => $request->reference_number,
                 'user_id' => auth()->user()->id,

@@ -30,6 +30,11 @@ class Students extends Authenticatable
         'imported'
     ];
 
+    public function extraFee($year_id)
+    {
+        return $this->hasMany(ExtraFee::class)->where('year_id', '=', $year_id);
+    }
+
     public function class($year)
     {
         return CampusProgram::where('campus_id', $this->campus_id)->where('program_level_id', $this->classes(Helpers::instance()->getCurrentAccademicYear())->first()->class_id)->first();
@@ -83,7 +88,6 @@ class Students extends Authenticatable
         return $this->total() - $this->paid() - ($scholarship);
     }
 
-
     public function totalScore($sequence, $year)
     {
         $class = $this->class($year);
@@ -112,8 +116,6 @@ class Students extends Authenticatable
         }
     }
 
-
-
     public function collectBoardingFees()
     {
         return $this->hasMany(CollectBoardingFee::class, 'student_id');
@@ -137,5 +139,4 @@ class Students extends Authenticatable
         if($paymentBuilder->count() == 0){return 0;}
         return $paymentBuilder->first()->dept;
     }
-
 }

@@ -12,6 +12,7 @@ use App\Models\CampusSemesterConfig;
 use App\Models\Config;
 use App\Models\SchoolUnits;
 use App\Models\Semester;
+use App\Models\Students;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config as FacadesConfig;
 use Illuminate\Support\Facades\DB;
@@ -200,4 +201,23 @@ class HomeController  extends Controller
         return redirect()->back()->with('success', 'Set Current Academic Year successfully');
     }
 
+    public function extraFee(Request $request)
+    {
+        # code...
+        $data['title'] = "COLLECT ADDITIONAL FEE ".($request->student_id == null ? '' : ' FOR '.Students::find($request->student_id)->name ?? '');
+        return view('admin.fee.extra-fee', $data);
+    }
+
+    public function extraFeeSave(Request $request)
+    {
+        # code...
+        $check = Validator::make($request->all(), ['amount'=>'required', 'year_id'=>'required']);
+        if ($check->fails()) {
+            # code...
+            return back()->with('error', $check->errors()->first());
+        }
+        // return $request->all();
+        \App\Models\ExtraFee::create(['student_id'=>$request->student_id, 'amount'=>$request->amount, 'year_id'=>$request->year_id]);
+        return back()->with('success', 'Done');
+    }
 }

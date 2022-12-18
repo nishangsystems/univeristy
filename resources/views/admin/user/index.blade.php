@@ -30,7 +30,7 @@
                                 <td>{{$user->email}}</td>
                                 <td>{{$user->phone}}</td>
                                 <td>{{$user->address}}</td>
-                                <td>{{$user->campus_id ? \App\Models\Campus::find($user->campus_id)->name : ''}}</td>
+                                <td>{{!($user->campus_id == null) ? \App\Models\Campus::find($user->campus_id)->name : ''}}</td>
                                 <td>{{$user->gender}}</td>
                                 <td  class="d-flex justify-content-end align-items-center" >
                                     <a class="btn btn-xs btn-primary" href="{{route('admin.users.show',[$user->id])}}"><i class="fa fa-eye"> Profile</i></a> |
