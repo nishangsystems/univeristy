@@ -581,6 +581,14 @@
                         <b class="arrow"></b>
                     </li>
 
+                    <li>
+                        <a href="{{route('admin.extra-fee')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.collect_etxra_fee')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
 
 
                     <li>

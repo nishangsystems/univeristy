@@ -456,5 +456,6 @@ return [
     'word_reason'=>'reason',
     'word_bypass'=>'bypass',
     'additional_amount'=>'additional amount',
-    
+    'collect_etxra_fee'=>'collect etxra fee',
+    'word_back'=>'back',
 ];

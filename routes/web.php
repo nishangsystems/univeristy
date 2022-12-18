@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\admin\StockController;
 use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
@@ -321,7 +322,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         });
     });
 
-
+    Route::get('extra-fee/{student_id?}', [AdminHomeController::class, 'extraFee'])->name('extra-fee');
+    Route::get('extra-fee/{student_id}/save', [AdminHomeController::class, 'extraFeeSave'])->name('extra-fee.save');
 
 });
 
