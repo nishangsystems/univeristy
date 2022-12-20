@@ -311,7 +311,7 @@ class ProgramController extends Controller
         }
 
 
-        $data['title'] = "Manage subjects under " . $parent->name;
+        $data['title'] = "Manage subjects under " . $parent->name();
         return redirect()->back()->with('success', "Subjects Saved Successfully");
     }
 

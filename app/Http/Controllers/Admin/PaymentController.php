@@ -47,10 +47,9 @@ class PaymentController extends Controller
         $data['title'] = "Collect Fee for " . $student->name;
         
 
-        if ($data['balance'] == 0) {
-
-            return redirect(route('admin.fee.collect'))->with('success', 'Student has already completed fee');
-        }
+        // if ($data['balance'] == 0) {
+        //     return redirect(route('admin.fee.collect'))->with('success', 'Student has already completed fee');
+        // }
         if ($data['total_fee'] == -1) {
 
             return redirect(route('admin.fee.collect'))->with('error', 'Fee not set');

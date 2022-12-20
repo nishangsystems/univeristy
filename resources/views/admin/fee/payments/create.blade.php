@@ -1,7 +1,11 @@
 @extends('admin.layout')
+@php
+    $c_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+@endphp
 @section('section')
 <div class="mx-3">
     <div class="form-panel">
+        @if($balance > 0)
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.fee.student.payments.store',$student->id)}}">
             <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_fee_details')}}</h5>
             @csrf
@@ -21,6 +25,12 @@
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.balance_fee')}}:</label>
                 <div class="col-lg-10">
                     <input for="cname" class="form-control" name="balance" value="{{number_format($balance)}} CFA" disabled></input>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.extra_fee')}}:</label>
+                <div class="col-lg-10">
+                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->extraFee($c_year) == null ? 0 : $student->extraFee($c_year)->amount}} CFA" disabled></input>
                 </div>
             </div>
             <div class="form-group @error('item') has-error @enderror">
@@ -65,34 +75,52 @@
                 </div>
             </div>
         </form>
+        @else
+        <div class="alert alert-success text-center text-capitalize">{{__('text.phrase_fee_complete')}} <span class="mx-3 fw-bolder">{{$student->debt($c_year) == 0 ? '' : 'DEBT : '.$student->debt($c_year)}}</span></div>
+        @endif
 
         <div class="px-5 py-3">
             <div class="py-3 text-center fw-bold h4">
                 Payment History
             </div>
             <div class="content-panel">
-                @forelse($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->get() as $item)
-                    <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
-                        <div>
-                            <div>{{($item->item)?$item->item->name:$item->created_at->format('d/m/Y')}}</div>
-                            <h4 class="font-weight-bold">{{$item->amount}} {{__('text.currency_cfa')}}</h4>
-                        </div>
-                        <div class="d-inline-flex">
-                            <a href="{{route('admin.fee.student.payments.edit', [ $student->id, $item->id])}}" class="btn m-2 btn-sm btn-primary text-white text-capitalize">{{__('text.word_edit')}}</a>
-    
-                            <a onclick="event.preventDefault();
-                                                document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-2 text-capitalize">{{__('text.word_delete')}}</a>
-                            <form id="delete" action="{{route('admin.fee.student.payments.destroy',[$student->id,$item->id])}}" method="POST" style="display: none;">
-                                @method('DELETE')
-                                {{ csrf_field() }}
-                            </form>
-                        </div>
-                    </div>
-                @empty
-                    <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
-                        <p>{{__('text.phrase_2', ['in_bold'=>__('text.collect_fee')])}}</p>
-                    </div>
-                @endforelse
+                <table class="table">
+                    <thead class="text-capitalize">
+                        <th>###</th>
+                        <th>{{__('text.word_item')}}</th>
+                        <th>{{__('text.word_amount')}}</th>
+                        <th>{{__('text.word_date')}}</th>
+                        <!-- <th></th> -->
+                    </thead>
+                    <tbody>
+                        @php($k=1)
+                        @forelse($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->get() as $item)
+                            <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
+                                <tr>
+                                    <td>{{$k++}}</td>
+                                    <td>{{($item->item)?$item->item->name:$item->created_at->format('d/m/Y')}}</td>
+                                    <td class="font-weight-bold">{{$item->amount}} {{__('text.currency_cfa')}}</td>
+                                    <td>{{$item->created_at->format('l d/m/Y')}}</td>
+                                    <?php /*
+                                    <td class="d-inline-flex">
+                                        <a href="{{route('admin.fee.student.payments.edit', [ $student->id, $item->id])}}" class="btn m-2 btn-sm btn-primary text-white text-capitalize">{{__('text.word_edit')}}</a>
+                
+                                        <a onclick="event.preventDefault();
+                                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-2 text-capitalize">{{__('text.word_delete')}}</a>
+                                        <form id="delete" action="{{route('admin.fee.student.payments.destroy',[$student->id,$item->id])}}" method="POST" style="display: none;">
+                                            @method('DELETE')
+                                            {{ csrf_field() }}
+                                        </form>
+                                    </td>*/ ?>
+                                </tr>
+                        @empty
+                            <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
+                                <p>{{__('text.phrase_2', ['in_bold'=>__('text.collect_fee')])}}</p>
+                            </div>
+                        @endforelse
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

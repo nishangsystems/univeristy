@@ -204,7 +204,7 @@ class HomeController  extends Controller
     public function extraFee(Request $request)
     {
         # code...
-        $data['title'] = "COLLECT ADDITIONAL FEE ".($request->student_id == null ? '' : ' FOR '.Students::find($request->student_id)->name ?? '');
+        $data['title'] = "ADD ADDITIONAL FEE ".($request->student_id == null ? '' : ' FOR '.Students::find($request->student_id)->name ?? '');
         return view('admin.fee.extra-fee', $data);
     }
 
