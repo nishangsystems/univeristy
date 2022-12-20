@@ -83,6 +83,23 @@
                                                 <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> <i>{{__('text.amount_in_words')}}</i></div>
                                                 <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{\App\Helpers\Helpers::instance()->numToWord($fee->amount)}}</i></div>
                                             </div>
+                                            <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.extra_fee')}}</div>
+                                            <div style=" float:left; width:700px; height:25px;font-size:17px;">
+                                                <div style=" float:left; width:400px;border:1px solid #000;margin-top:3px;">
+                                                    {{__('text.currency_cfa')}} {{$student->extraFee($year)->amount}}
+                                                </div>
+                                                <div style=" float:left; width:100px;margin-top:5px; text-transform:uppercase">
+                                                    {{__('text.word_date')}}
+                                                </div>
+                                                <div style=" float:left; border-bottom:1px solid #000;">
+                                                    {{$date('d/m/Y', strtotime($student->extraFee($year)->created_at))}}
+                                                </div>
+                                            </div>
+                                            <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
+                                            <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
+                                                <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> <i>{{__('text.amount_in_words')}}</i></div>
+                                                <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{\App\Helpers\Helpers::instance()->numToWord($student->extraFee($year)->amount)}}</i></div>
+                                            </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
                                             <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
                                                 <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> <i>{{__('text.balance_due')}}</i></div>
@@ -154,6 +171,23 @@
                                             <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
                                                 <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> <i>{{__('text.amount_in_words')}}</i></div>
                                                 <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{\App\Helpers\Helpers::instance()->numToWord($fee->amount)}}</i></div>
+                                            </div>
+                                            <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.extra_fee')}}</div>
+                                            <div style=" float:left; width:700px; height:25px;font-size:17px;">
+                                                <div style=" float:left; width:400px;border:1px solid #000;margin-top:3px;">
+                                                    {{__('text.currency_cfa')}} {{$student->extraFee($year)->amount}}
+                                                </div>
+                                                <div style=" float:left; width:100px;margin-top:5px; text-transform:uppercase">
+                                                    {{__('text.word_date')}}
+                                                </div>
+                                                <div style=" float:left; border-bottom:1px solid #000;">
+                                                    {{$date('d/m/Y', strtotime($student->extraFee($year)->created_at))}}
+                                                </div>
+                                            </div>
+                                            <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
+                                            <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
+                                                <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> <i>{{__('text.amount_in_words')}}</i></div>
+                                                <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{\App\Helpers\Helpers::instance()->numToWord($student->extraFee($year)->amount)}}</i></div>
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
                                             <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
