@@ -101,7 +101,7 @@
                         '    <td>' + data[i].gender + '</td>' +
                         '    <td>' + data[i].campus + '</td>' +
                         '    <td class="d-flex justify-content-between align-items-center">' +
-                        '        <a class="btn btn-xs btn-primary text-capitalize" href="{{Request::url()}}/'+ data[i].id +'">{{__("text.collect_fee")}}</a>' +
+                        '        <a class="btn btn-xs btn-primary text-capitalize" href="{{Request::url()}}/'+ data[i].id +'">{{__("text.add_fee")}}</a>' +
                         '    </td>' +
                         '</tr>';
                 }

@@ -456,6 +456,9 @@ return [
     'word_reason'=>'reason',
     'word_bypass'=>'bypass',
     'additional_amount'=>'additional amount',
-    'collect_etxra_fee'=>'collect etxra fee',
+    'collect_etxra_fee'=>'add etxra fee',
     'word_back'=>'back',
+    'add_fee'=>'add fee',
+    'extra_fee'=>'extra fee',
+    'phrase_fee_complete'=>'student has already completed fee',
 ];

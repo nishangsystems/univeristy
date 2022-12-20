@@ -32,7 +32,8 @@ class Students extends Authenticatable
 
     public function extraFee($year_id)
     {
-        return $this->hasMany(ExtraFee::class)->where('year_id', '=', $year_id);
+        $builder = $this->hasMany(ExtraFee::class, 'student_id')->where('year_id', '=', $year_id);
+        return $builder->count() == 0 ? null : $builder->first();
     }
 
     public function class($year)
@@ -85,7 +86,7 @@ class Students extends Authenticatable
     public function bal($student_id)
     {
         $scholarship = Helpers::instance()->getStudentScholarshipAmount($student_id);
-        return $this->total() - $this->paid() - ($scholarship);
+        return $this->total() + ($this->extraFee(Helpers::instance()->getCurrentAccademicYear()) == null ? 0 : $this->extraFee(Helpers::instance()->getCurrentAccademicYear())->amount) - $this->paid() - ($scholarship);
     }
 
     public function totalScore($sequence, $year)
@@ -137,6 +138,7 @@ class Students extends Authenticatable
         # code...
         $paymentBuilder = Payments::where(['student_id'=>$this->id, 'batch_id'=>$year]);
         if($paymentBuilder->count() == 0){return 0;}
-        return $paymentBuilder->first()->dept;
+        return $paymentBuilder->orderBy('id', 'DESC')->first()->debt;
     }
+
 }
