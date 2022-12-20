@@ -88,20 +88,22 @@ class HomeController extends Controller
     public function student_get()
     {
         $name = request('name');
-        $students = \App\Models\Students::join('student_classes', ['students.id' => 'student_classes.student_id'])
+        $students = \App\Models\Students::join('student_classes', ['student_classes.student_id' => 'students.id'])
             ->join('campuses', ['students.campus_id' => 'campuses.id'])
             ->where('student_classes.year_id', \App\Helpers\Helpers::instance()->getYear())
-            ->join('program_levels', ['students.program_id' => 'program_levels.id'])
+            ->join('program_levels', ['student_classes.class_id' => 'program_levels.id'])
             ->join('school_units', ['program_levels.program_id' => 'school_units.id'])
             ->join('levels', ['program_levels.level_id' => 'levels.id'])
             ->where(function($query)use($name){
                 $query->where('students.name', 'LIKE', "%{$name}%")
                 ->orWhere('students.matric', 'LIKE', "%{$name}%");
-            })->where(function($query){
+            })
+            ->where(function($query){
                 \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
                         })
             ->get(['students.*', 'campuses.name as campus']);
 
+            return $students;
         return \response()->json(StudentFee::collection($students));
     }
 

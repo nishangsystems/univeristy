@@ -58,7 +58,7 @@ return [
     'award_scholarship'=>'award scholarship',
     'our_scholar'=>'our scholar | our scholars',
     'other_incomes'=>'other incomes',
-    'income_list'=>'income report',
+    'income_list'=>'income list',
     'collect_income'=>'collect income',
     'paid_incomes'=>'paid incomes',
     'school_expenses'=>'school expenses',
