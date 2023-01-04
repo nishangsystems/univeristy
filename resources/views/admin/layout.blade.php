@@ -319,6 +319,14 @@
                 <ul class="submenu">
                     @if(auth()->user()->campus_id == null)
                     <li>
+                        <a href="{{route('admin.set_letter_head')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.set_letter_head')}}
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
                         <a href="{{route('admin.setayear')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.set_school_year')}}
@@ -694,6 +702,47 @@
                         <b class="arrow"></b>
                     </li>
                     @endif
+                </ul>
+            </li>
+            @endif
+
+            @if (\Auth::user()->hasPermissionTo('manage_result'))
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
+                    <span class="menu-text">
+						{{__('text.word_results')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.result.ca.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.CA')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('admin.result.exam.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_exams')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('admin.result.imports')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_imports')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                 </ul>
             </li>
             @endif

@@ -74,7 +74,11 @@ class Students extends Authenticatable
 
     public function total()
     {
-        return $this->campus()->first()->campus_programs()->where('program_level_id', $this->classes()->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first()->class_id)->first()->payment_items()->first()->amount ?? -1;
+        if ($this->classes()->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first() != null) {
+            # code...
+            return $this->campus()->first()->campus_programs()->where('program_level_id', $this->classes()->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first()->class_id ?? 0)->first()->payment_items()->first()->amount ?? -1;
+        }
+        return 0;
     }
 
     public function paid()
@@ -139,6 +143,28 @@ class Students extends Authenticatable
         $paymentBuilder = Payments::where(['student_id'=>$this->id, 'batch_id'=>$year]);
         if($paymentBuilder->count() == 0){return 0;}
         return $paymentBuilder->orderBy('id', 'DESC')->first()->debt;
+    }
+
+    public function ca_score($course_id, $class_id, $year_id)
+    {
+        # code...
+        $record = Result::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id])->first() ?? null;
+        if ($record != null) {
+            # code...
+            return $record->ca_score ?? '';
+        }
+        return '';
+    }
+
+    public function exam_score($course_id, $class_id, $year_id)
+    {
+        # code...
+        $record = Result::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id])->first() ?? null;
+        if ($record != null) {
+            # code...
+            return $record->exam_score ?? '';
+        }
+        return '';
     }
 
 }

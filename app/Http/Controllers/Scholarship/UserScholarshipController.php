@@ -25,7 +25,8 @@ class UserScholarshipController extends Controller
         'students.campus_id',
         'students.program_id',
         'students.address',
-        'student_scholarships.amount'
+        'student_scholarships.amount',
+        'student_scholarships.reason',
     ];
     /**
      * @param Illuminate\Http\Request
@@ -46,16 +47,16 @@ class UserScholarshipController extends Controller
     public function getScholarsPerYear(Request $request)
     {
         $data['years'] = Batch::all();
-        $data['students'] = DB::table('student_scholarships')
-            ->join('students', 'students.id', '=', 'student_scholarships.student_id')
+        $data['students'] = Students::join('student_scholarships', 'student_scholarships.student_id', '=', 'students.id')
             ->where(function($query){
                 auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
             })
             ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
             ->where('student_scholarships.batch_id', $request->year)
-            ->select($this->select)->paginate(10);
-        $data['title'] = 'Our Scholars';
-        return view('admin.scholarship.scholars')->with($data);
+            ->select(['students.*', 'student_scholarships.amount', 'student_scholarships.reason']);
+            $data['title'] = 'Our Scholars';
+        return $data;
+        // return view('admin.scholarship.scholars')->with($data);
     }
 
     /**
@@ -79,12 +80,13 @@ class UserScholarshipController extends Controller
      */
     public function store(Request $request, $id)
     {
-        
+        // return $request->all();
         $this->validateRequest($request);
         $user_scholarship = new StudentScholarship();
         $user_scholarship->student_id  = $id;
         $user_scholarship->amount = $request->amount;
         $user_scholarship->batch_id = $request->year;
+        $user_scholarship->reason = $request->reason;
         $user_scholarship->user_id = Auth::id();
         $user_scholarship->save();
         return redirect()->route('admin.scholarship.awarded_students')->with('success', 'Awarded Scholarship successfully !');

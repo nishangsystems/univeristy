@@ -10,6 +10,7 @@ use App\Models\Background;
 use App\Models\Batch;
 use App\Models\CampusSemesterConfig;
 use App\Models\Config;
+use App\Models\File;
 use App\Models\SchoolUnits;
 use App\Models\Semester;
 use App\Models\Students;
@@ -26,6 +27,73 @@ class HomeController  extends Controller
     public function index()
     {
         return view('admin.dashboard');
+    }
+
+    public function set_letter_head()
+    {
+        # code...
+        $data['title'] = "Upload Letter-head";
+        return view('admin.setting.set-letter-head', $data);
+    }
+
+    public function save_letter_head(Request $request)
+    {
+
+        # code...
+        $check = Validator::make($request->all(), ['file'=>'required|file|mimes:png,jpg,jpeg,gif,tif']);
+        if ($check->fails()) {
+            # code...
+            return back()->with('error', $check->errors()->first());
+        }
+        
+        $file = $request->file('file');
+        // return $file->getClientOriginalName();
+        if(!($file == null)){
+            $ext = $file->getClientOriginalExtension();
+            $filename = '_'.random_int(100000, 999999).'_'.time().'.'.$ext;
+            $path = $filename;
+            $file->storeAs('/files', $filename);
+            if(File::where(['name'=>'letter-head'])->count() == 0){
+                File::create(['name'=>'letter-head', 'path'=>$path]);
+            }else {
+                File::where(['name'=>'letter-head'])->update(['path'=>$path]);
+            }
+            return back()->with('success', 'Done');
+        }
+        return back()->with('error', 'Error reading file');
+    }
+
+    public function set_background_image()
+    {
+        # code...
+        $data['title'] = 'Set Background Image';
+        return view('admin.setting.bg_image', $data);
+    }
+    public function save_background_image(Request $request)
+    {
+        # code...
+        # code...
+        $check = Validator::make($request->all(), ['file'=>'required|file|mimes:png,jpg,jpeg,gif,tif']);
+        if ($check->fails()) {
+            # code...
+            return back()->with('error', $check->errors()->first());
+        }
+        
+        $file = $request->file('file');
+        // return $file->getClientOriginalName();
+        if(!($file == null)){
+            $ext = $file->getClientOriginalExtension();
+            $filename = '_'.random_int(100000, 999999).'_'.time().'.'.$ext;
+            $path = $filename;
+            $file->storeAs('/files', $filename);
+            if(File::where(['name'=>'background-image', 'campus_id'=>auth()->user()->campus_id??0])->count() == 0){
+                File::create(['name'=>'background-image', 'campus_id'=>auth()->user()->campus_id??0, 'path'=>$path]);
+            }else {
+                File::where(['name'=>'background-image', 'campus_id'=>auth()->user()->campus_id??0])->update(['path'=>$path]);
+            }
+            return back()->with('success', 'Done');
+        }
+        return back()->with('error', 'Error reading file');
     }
 
     public function setayear()
@@ -115,30 +183,6 @@ class HomeController  extends Controller
         return back()->with('error', 'Program Not Found.');
     }
 
-    public function set_background_image()
-    {
-        # code...
-        $data['title'] = 'Set Background Image';
-        return view('admin.setting.bg_image', $data);
-    }
-    public function save_background_image(Request $request)
-    {
-        # code...
-        $val = Validator::make($request->all(), ['file'=>'required|image|mimes:png,jpg,jpeg,gif,tif']);
-
-        if ($val->fails()) {
-            # code...
-            // return $val->errors();
-            return back()->with('error', $val->errors()->first());
-        }
-
-        $file = $request->file('file');
-        $full_name = storage_path('bg-image').'/background_image.'.$file->getClientOriginalExtension();
-        $file->move(base_path('bg_image'), '/background_image.'.$file->getClientOriginalExtension());
-        // config()->set('custom.app_bg', $full_name);
-        file_put_contents(base_path('bg_img.text'), $file->getClientOriginalExtension());
-        return back()->with('success', 'Done');
-    }
 
     public function setsemester(Request $request)
     {
@@ -220,4 +264,5 @@ class HomeController  extends Controller
         \App\Models\ExtraFee::create(['student_id'=>$request->student_id, 'amount'=>$request->amount, 'year_id'=>$request->year_id]);
         return back()->with('success', 'Done');
     }
+
 }

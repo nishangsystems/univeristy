@@ -143,7 +143,7 @@ class FeesController extends Controller
         # code...
         $validator = Validator::make($request->all(), [
             'file'=>'required|file',
-            // 'unit_id'=>'required',
+            'import_reference'=>'required',
             'batch'=>'reuired',
         ]);
 
@@ -153,6 +153,12 @@ class FeesController extends Controller
         }
         try {
             //code...
+
+            // cancel operation if provided import_reference already exist
+            if(Payments::where('import_reference', $request->import_reference)->count() > 0){
+                return back()->with('error', "Import failed. Import already exists with import reference : ".$request->import_reference);
+            }
+
             $file = $request->file('file');
             if($file->getClientOriginalExtension() == 'csv'){
                 // save file
@@ -242,5 +248,18 @@ class FeesController extends Controller
             // throw $th;
             return back()->with('error', $th->getMessage());
         }
+    }
+
+    public function import_undo(Request $request)
+    {
+        # code...
+        $records = Payments::where('import_reference', $request->import_reference);
+        if($records->count() > 0){
+            foreach ($records->get() as $key => $record) {
+                # code...
+                $record->delete();
+            }
+        }
+        return back()->with('success', 'Done');
     }
 }

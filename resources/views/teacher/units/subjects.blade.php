@@ -34,8 +34,11 @@
                         <td>{{ \App\Models\Level::find($subject->level_id)->level }}</td>
                         <td>{{ $subject->status }}</td>
                         <td class="d-flex justify-content-end">
-                            <a class="btn btn-sm btn-primary" href="{{route('user.edit.class_courses',[request('program_level_id'), $subject->id])}}">
-                                <i class="fa fa-edit"> Edit</i>
+                            <a class="btn btn-sm btn-primary" href="{{route('user.class_course.ca.result',[request('program_level_id'), $subject->id])}}">
+                                <i class="fa fa-tick"> {{__('text.word_results')}}</i>
+                            </a>|
+                            <a class="btn btn-sm btn-info" href="{{route('user.edit.class_courses',[request('program_level_id'), $subject->id])}}">
+                                <i class="fa fa-edit"> {{__('text.word_edit')}}</i>
                             </a>
                         </td>
                     </tr>

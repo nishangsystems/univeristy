@@ -140,10 +140,10 @@ class HomeController extends Controller
         $seqs = $semester->sequences()->get('id')->toArray();
         $data['title'] = "My Exam Result";
         $data['user'] = auth()->user();
-        $data['semester'] = \App\Helpers\Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id);
-        $data['ca_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->ca_total;
-        $data['exam_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->exam_total;
-        $data['grading'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType->grading()->get() ?? [];
+        $data['semester'] = $semester;
+        $data['ca_total'] = auth()->user()->_class($year)->program()->first()->ca_total;
+        $data['exam_total'] = auth()->user()->_class($year)->program()->first()->exam_total;
+        $data['grading'] = auth()->user()->_class($year)->program()->first()->gradingType->grading()->get() ?? [];
         $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->whereIn('results.sequence', $seqs)->distinct()->pluck('subject_id')->toArray();
         $data['subjects'] = Auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
         $data['results'] = array_map(function($subject_id)use($data, $year, $seqs){
@@ -190,10 +190,11 @@ class HomeController extends Controller
                     ->whereNotNull('payment_items.amount')
                     ->join('students', 'students.program_id', '=', 'program_levels.id')
                     ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
-            'fraction' => Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->semester_min_fee
+            'fraction' => Helpers::instance()->getSemester(Students::find(auth()->id())->_class($year)->id)->semester_min_fee
         ];
-        $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] = $fee['amount'] >= $data['min_fee'];
+        $data['min_fee'] = $fee['total']*$fee['fraction'];
+        $data['access'] = $fee['amount'] >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year])->first()->bypass_result;
+        // dd($data);
         return view('student.exam-result')->with($data);
     }
 

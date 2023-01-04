@@ -21,6 +21,12 @@
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js"></script> -->
 
+		@php
+			$bg1 = \App\Http\Controllers\HomeController::getColor('background_color_1');
+			$bg2 = \App\Http\Controllers\HomeController::getColor('background_color_2');
+			$bg3 = \App\Http\Controllers\HomeController::getColor('background_color_3');
+			$bg_path = \App\Helpers\Helpers::instance()->getBackground();
+		@endphp
 
 		<style>
 		    a{
@@ -30,7 +36,7 @@
 		        color:#fff;
 		    }
 			#frame{
-				background-image: url("{{url('bg_image/background_image.'.file_get_contents(base_path('bg_img.text')))}}");
+				background-image: url("{{$bg_path}}");
 				/* background-color: rgba(250, 250, 250, 0.7); */
 				background-position: center;
 				background-repeat: no-repeat;
@@ -40,11 +46,6 @@
 
 			}
 		</style>
-		@php
-			$bg1 = \App\Http\Controllers\HomeController::getColor('background_color_1');
-			$bg2 = \App\Http\Controllers\HomeController::getColor('background_color_2');
-			$bg3 = \App\Http\Controllers\HomeController::getColor('background_color_3');
-		@endphp
 	</head>
 
 <nav class="navbar navbar-inverse"  style="background-color: {{$bg1}};">

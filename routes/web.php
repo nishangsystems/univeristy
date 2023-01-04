@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
+use App\Http\Resources\SubjectsResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -93,6 +94,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('fee/{class_id}/student', 'Admin\FeesController@student')->name('fee.student');
     Route::get('import_fee/', 'Admin\FeesController@import')->name('import_fee');
     Route::post('import_fee/', 'Admin\FeesController@import_save');
+    Route::post('fee/undo_import/{import_reference}', 'Admin\FeesController@import_undo')->name('fee.import.undo');
 
     Route::get('sections/{id}', 'Admin\PayIncomeController@getSections')->name('getSections');
     Route::get('classes/{id}', 'Admin\PayIncomeController@getClasses')->name('getClasses');
@@ -156,16 +158,45 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('classmaster/create', 'Admin\UserController@classmasterCreate')->name('users.classmaster.create');
 
 
-    Route::get('result/import', 'Admin\ResultController@import')->name('result.import');
-    Route::post('result/import', 'Admin\ResultController@importPost')->name('result.import');
-    Route::get('result/export', 'Admin\ResultController@export')->name('result.export');
-    Route::post('result/export', 'Admin\ResultController@exportPost')->name('result.export');
-    Route::get('result/report', 'Admin\ResultController@report')->name('result.report');
-    Route::post('result/report', 'Admin\ResultController@report_show')->name('result.report.show');
+    Route::prefix('result')->name('result.')->group(function(){
+        Route::get('import', 'Admin\ResultController@import')->name('import');
+        Route::post('import', 'Admin\ResultController@importPost')->name('import');
+        Route::get('export', 'Admin\ResultController@export')->name('export');
+        Route::post('export', 'Admin\ResultController@exportPost')->name('export');
+        Route::get('report', 'Admin\ResultController@report')->name('report');
+        Route::post('report', 'Admin\ResultController@report_show')->name('report.show');
+    
+    
+        // ADDED RESULT ROUTES FOR OFFLINE SYSTEM
+        Route::prefix('ca')->name('ca.')->group(function(){
+            Route::get('{class_id?}', 'Admin\ResultController@ca_result')->name('index');
+            Route::get('{class_id}/{course_id}/import', 'Admin\ResultController@ca_import')->name('import');
+            Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@ca_import_save')->name('import.save');
+            Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@ca_fill')->name('fill');
+            Route::post('{class_id}/{course_id}/fill', 'Admin\ResultController@ca_fill_save')->name('fill');
+            Route::get('set_dateline', 'Admin\ResultController@ca_set_dateline')->name('dateline.set');
+            Route::post('set_dateline', 'Admin\ResultController@ca_save_dateline')->name('dateline.set');
+        });
+
+        Route::prefix('exam')->name('exam.')->group(function(){
+            Route::get('{class_id?}', 'Admin\ResultController@exam_result')->name('index');
+            Route::get('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import')->name('import');
+            Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import_save')->name('import');
+            Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill')->name('fill');
+            Route::post('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill_save')->name('fill');
+            Route::get('set_dateline', 'Admin\ResultController@exam_set_dateline')->name('dateline.set');
+            Route::post('set_dateline', 'Admin\ResultController@exam_save_dateline')->name('dateline.set');
+        });
+        Route::get('imports', 'Admin\ResultController@imports_index')->name('imports');
+        // END OF ADDED RESULT ROUTES FOR OFFLINE SYSTEM
+
+    });
+
 
     Route::get('users/{user_id}/subjects', 'Admin\UserController@createSubject')->name('users.subjects.add');
     Route::delete('users/{user_id}/subjects', 'Admin\UserController@dropSubject')->name('users.subjects.drop');
     Route::post('users/{user_id}/subjects', 'Admin\UserController@saveSubject')->name('users.subjects.save');
+
 
     Route::resource('users', 'Admin\UserController');
     Route::get('students/init_promotion', 'Admin\StudentController@initialisePromotion')->name('students.init_promotion');
@@ -229,10 +260,12 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('school/debts/{id}', 'Admin\SchoolDebtsController@getStudentDebts')->name('debts.showDebts');
     Route::post('school/debts/{id}', 'Admin\SchoolDebtsController@collectStudentDebts')->name('debts.collectDebts');
     
+
     Route::get('course_registration/date_line/{campus}/{semester}', 'Admin\HomeController@course_date_line')->name('courses.registration.date_line');
     Route::get('programs/settings', 'Admin\HomeController@program_settings')->name('program_settings');
     Route::post('programs/settings', 'Admin\HomeController@post_program_settings');
     
+
     Route::prefix('statistics')->name('stats.')->group(function(){
         Route::get('sudents', 'Admin\StatisticsController@students')->name('students');
         Route::get('fees', 'Admin\StatisticsController@fees')->name('fees');
@@ -278,6 +311,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('update/{program_id}/{id}', 'Admin\ProgramController@update')->name('update');
         Route::get('set_type/{program_id}', 'Admin\ProgramController@set_program_semester_type')->name('set_type');
         Route::post('set_type/{program_id}', 'Admin\ProgramController@post_program_semester_type');
+        Route::get('result/set_datelines/{semester_id}', 'Admin\ProgramController@set_result_datelines')->name('result.set_datelines');
+        Route::post('result/set_datelines/{semester_id}', 'Admin\ProgramController@set_result_datelines_save');
     });
 
     Route::prefix('imports')->name('imports.')->group(function(){
@@ -324,6 +359,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::get('extra-fee/{student_id?}', [AdminHomeController::class, 'extraFee'])->name('extra-fee');
     Route::get('extra-fee/{student_id}/save', [AdminHomeController::class, 'extraFeeSave'])->name('extra-fee.save');
+    Route::get('set_letter_head', [AdminHomeController::class, 'set_letter_head'])->name('set_letter_head');
+    Route::post('set_letter_head/save', [AdminHomeController::class, 'save_letter_head'])->name('save_letter_head');
 
 });
 
@@ -361,6 +398,15 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
         Route::post('{program_level_id}/manage_courses', 'Teacher\HomeController@save_courses')->name('save_courses');
     });
     Route::get('{program_level_id}/class_courses', 'Teacher\HomeController@manage_courses')->name('edit.class_courses');
+    Route::prefix('{class_id}/course/{course_id}')->name('class_course.')->group(function () {
+        Route::get('ca/fill', 'Teacher\HomeController@course_ca_fill')->name('ca.result');
+        Route::get('ca/import', 'Teacher\HomeController@course_ca_import')->name('ca.import');
+        Route::post('ca/import', 'Teacher\HomeController@course_ca_import_save');
+        Route::get('exam/fill', 'Teacher\HomeController@course_exam_fill')->name('exam.result');
+        Route::get('exam/import', 'Teacher\HomeController@course_exam_import')->name('exam.import');
+        Route::post('exam/import', 'Teacher\HomeController@course_exam_import_save');
+    }
+    );
 });
 
 Route::prefix('student')->name('student.')->group(function () {
@@ -495,6 +541,14 @@ Route::get('semesters/{background}', function(Request $request){
     return \App\Models\Semester::where('background_id', $request->background)->get();
 })->name('semesters');
 Route::get('campus/{campus}/program_levels', [Controller::class, 'sorted_campus_program_levels'])->name('campus.program_levels');
+Route::get('class_subjects/{program_level_id}', function($program_level_id){
+    // return $program_level_id;
+    $courses = \App\Models\ClassSubject::where(['class_subjects.class_id'=>$program_level_id])
+            ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
+            ->get('subjects.*');
+            return $courses;
+            // return response()->json(SubjectsResource::collection($courses));
+})->name('class_subjects');
 Route::get('getColor/{label}', [HomeController::class, 'getColor'])->name('getColor');
 Route::get('mode/{locale}', function ($batch) {
     session()->put('mode', $batch);

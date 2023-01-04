@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Batch;
+use App\Models\File;
 use App\Models\ProgramLevel;
 use App\Models\Result;
 use App\Models\SchoolUnits;
@@ -20,6 +21,16 @@ class Helpers
     {
         $config = \App\Models\Config::all()->last();
         return $config->year_id;
+    }
+
+    public function letterHead()
+    {
+        return File::where('name', 'letter-head')->first()->path ?? '';
+    }
+
+    public function bgImage()
+    {
+        return File::where('name', 'bg-image')->where('campus_id', auth()->user()->campus_id)->first()->path ?? '';
     }
 
     public function getCurrentSemester()
@@ -197,5 +208,27 @@ class Helpers
         $index = array_search(Batch::find($year), $years);
         $next_year = $index == false ? $year+1 : $index+1;
         return $next_year;
+    }
+
+    public function getHeader()
+    {
+        # code...
+        $lt = File::where('name','=', 'letter-head');
+        if ($lt->count() > 0) {
+            # code...
+            return url('/files').'/'.$lt->first()->path;
+        }
+        return '';
+    }
+
+    public function getBackground()
+    {
+        # code...
+        $lt = File::where(['name'=> 'background-image']);
+        if ($lt->count() > 0) {
+            # code...
+            return url('/files').'/'.$lt->first()->path;
+        }
+        return '';
     }
 }

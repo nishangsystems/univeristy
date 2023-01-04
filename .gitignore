@@ -3,7 +3,11 @@
 /public/storage
 /storage/*.key
 /vendor
+/files
 /bg_image
+/public/assets/images/header.jpg
+/assets/images/header.jpg
+/assets/images/letter-head.jpeg
 .env
 .env.backup
 .phpunit.result.cache

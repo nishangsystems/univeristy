@@ -8,6 +8,7 @@ use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
 use App\Models\Students;
 use App\Models\Subjects;
+use App\Models\Semester;
 use App\Session;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -503,5 +504,26 @@ class ProgramController extends Controller
         $program->grading_type_id = $request->grading_type;
         $program->save();
         return back()->with('success', '!Done');
+    }
+    
+    public function set_result_datelines(Request $request){
+        $semester = Semester::find($request->semester_id);
+        $data['title'] = 'Set Result Datelines For '.$semester->background->background_name.' '.$semester->name??'';
+        $data['semester'] = $semester;
+        return view('admin.setting.set-result-datelines', $data);
+    }
+
+    public function set_result_datelines_save(Request $request){
+        if($request->has('ca_dateline') || $request->has('exam_dateline')){
+            $semester = Semester::find($request->semester_id);
+            if($request->has('ca_dateline'))
+                $semester->ca_latest_date = $request->ca_dateline;
+            if($request->has('exam_dateline'))
+                $semester->exam_latest_date = $request->exam_dateline;
+
+            $semester->save();
+            return back()->with('success', 'Done');
+        }
+        return back();
     }
 }
