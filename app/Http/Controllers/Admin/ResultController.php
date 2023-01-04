@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\Config;
@@ -221,21 +222,23 @@ class ResultController extends Controller
     }
 
     public function ca_fill(){
-
         // check if CA total is set forthis program
+        if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
+            # code...
+            return back()->with('error', 'CA total not set for this program.');
+        }
 
+        $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
         $data['title'] = "Fill CA Results";
         return view('admin.result.fill_ca', $data);
     }
 
-    // public function ca_fill_save(){
-    //     $data['title'] = "Fill CA Results";
-    //     return view('admin.result.fill_ca', $data);
-    // }
-
     public function ca_import(){
-
         // check if CA total is set forthis program
+        if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
+            # code...
+            return back()->with('error', 'CA total not set for this program.');
+        }
 
         $data['title'] = "Import CA Results";
         return view('admin.result.import_ca', $data);
@@ -247,6 +250,8 @@ class ResultController extends Controller
             'reference'=>'required',
             'file'=>'required|file'
         ]);
+
+        $ca_total = Helpers::instance()->ca_total(request('class_id'));
         if($check->fails()){
             return back()->with('error', $check->errors()->first());
         }
@@ -269,8 +274,14 @@ class ResultController extends Controller
             if(count($imported_data)==0){
                 return back()->with('error', 'No data or wrong data format.');
             }
-            
+
+            $bad_results = 0;
             foreach($imported_data as $data){
+                if ($data[1] > $ca_total) {
+                    # code...
+                    $bad_results++;
+                    continue;
+                }
                 $student = Students::where(['matric'=>$data[0]])->first() ?? null;
                 if($student != null){
                     $base=[
@@ -282,6 +293,9 @@ class ResultController extends Controller
                     ];
                     Result::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
                 }
+            }
+            if($bad_results > 1){
+                return back()->with('success', 'Done. ' . $bad_results . ' records not imported. Unsupported values supplied.');
             }
             return back()->with('success', 'Done');
         }else{
@@ -296,27 +310,30 @@ class ResultController extends Controller
     }
 
     public function exam_fill(){
-
         // check if exam total is set for this program
+        if (!Helpers::instance()->exam_total_isset(request('class_id')) || !Helpers::instance()->ca_total_isset(request('class_id'))) {
+            # code...
+            return back()->with('error', 'CA or Exam total not set for this program.');
+        }
 
+        $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
+        $data['exam_total'] = Helpers::instance()->exam_total(request('class_id'));
         $data['title'] = "Fill Exam Results";
         return view('admin.result.fill_exam', $data);
     }
 
-    // public function exam_fill_save(){
-    //     $data['title'] = "Fill Exam Results";
-    //     return view('admin.result.fill_exam', $data);
-    // }
-
     public function exam_import(){
-
         // check if exam total is set for this program
+        if (!Helpers::instance()->exam_total_isset(request('class_id'))) {
+            # code...
+            return back()->with('error', 'CA total not set for this program.');
+        }
 
         $data['title'] = "Import Exam Results";
         return view('admin.result.import_exam', $data);
     }
 
-    public function exam_import_save(){
+    public function exam_import_save(Request $request){
         $check = Validator::make($request->all(), [
             'reference'=>'required',
             'file'=>'required|file'
@@ -324,6 +341,10 @@ class ResultController extends Controller
         if($check->fails()){
             return back()->with('error', $check->errors()->first());
         }
+
+        $ca_total = Helpers::instance()->ca_total(request('class_id'));
+        $exam_total = Helpers::instance()->exam_total(request('class_id'));
+
         $file = $request->file('file');
         if($file != null &&$file->getClientOriginalExtension() == 'csv'){
             $filename = 'ca_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
@@ -343,8 +364,14 @@ class ResultController extends Controller
             if(count($imported_data)==0){
                 return back()->with('error', 'No data or wrong data format.');
             }
-            
+
+            $bad_results = 0;
             foreach($imported_data as $data){
+                if ($data[1] > $ca_total || $data[2] > $exam_total) {
+                    # code...
+                    $bad_results++;
+                    continue;
+                }
                 $student = Students::where(['matric'=>$data[0]])->first() ?? null;
                 if($student != null){
                     $base=[
@@ -356,6 +383,9 @@ class ResultController extends Controller
                     ];
                     Result::updateOrCreate($base, ['ca_score'=>$data[1], 'exam_score'=>$data[2], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
                 }
+            }
+            if($bad_results > 1){
+                return back()->with('success', 'Done. ' . $bad_results . ' records not imported. Unsupported values supplied.');
             }
             return back()->with('success', 'Done');
         }else{

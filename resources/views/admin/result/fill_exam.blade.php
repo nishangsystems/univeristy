@@ -84,7 +84,7 @@
 @section('script')
     <script>
         $('.score').on('change', function (){
-            if(event.target.value < 10){
+            if(($(this).attr('data-score-type') == 'ca' && $(this).val() < parseFloat('{{$ca_total/2}}')) || ($(this).attr('data-score-type') == 'exam' && $(this).val() < parseFloat('{{$exam_total/2}}'))){
                 event.target.style.color = 'red';
             }
             else{
@@ -94,7 +94,7 @@
             let subject_url = "{{route('user.store_result',$subject->id)}}";
             // $(".pre-loader").css("display", "block");
 
-            if( $(this).val() > 20){
+            if( ($(this).attr('data-score-type') == 'ca' && $(this).val() > parseFloat('{{$ca_total}}')) || ($(this).attr('data-score-type') == 'exam' && $(this).val() > parseFloat('{{$exam_total}}'))){
 
             }else{
                 $.ajax({

@@ -64,7 +64,7 @@
                                 <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
                                 <td class="pt-3-half">
                                     @if($semester->ca_is_late() == false)
-                                        <input class="score form-control bg-white border-0" data-sequence="" type='number' data-student="{{$student->id}}" value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
+                                        <input class="score form-control bg-white border-0" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->id}}" value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
                                     @else
                                         <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
                                     @endif

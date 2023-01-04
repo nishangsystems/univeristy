@@ -58,9 +58,9 @@
                                 <td>{{$k++}}</td>
                                 <td class="name" style="width: 200px; text-align: left">{{$student->name}}</td>
                                 <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
-                                <td class="pt-3-half">
+                                <td class="pt-3-half {{$ca_total/2 > $student->ca_score($subject->id, request('class_id'), $year) ? 'text-danger' : ''}}">
                                     @if($semester->ca_is_late() == false)
-                                        <input class="score form-control bg-white border-0" data-sequence="" type='number' data-student="{{$student->id}}" value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
+                                        <input class="score form-control bg-white border-0" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->id}}" value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
                                     @else
                                         <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
                                     @endif
@@ -76,7 +76,7 @@
 @section('script')
     <script>
         $('.score').on('change', function (){
-            if(event.target.value < 10){
+            if(event.target.value < parseFloat('{{$ca_total/2}}')){
                 event.target.style.color = 'red';
             }
             else{
@@ -86,7 +86,7 @@
             let subject_url = "{{route('user.store_result',$subject->id)}}";
             // $(".pre-loader").css("display", "block");
 
-            if( $(this).val() > 20){
+            if($(this).val() > parseFloat('{{$ca_total}}')){
 
             }else{
                 $.ajax({

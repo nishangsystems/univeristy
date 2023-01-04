@@ -24,10 +24,6 @@
 
     @csrf
     <div class="card">
-        <div class="d-flex justify-content-between my-3 px-3">
-            <a href="{{route('user.class_course.ca.result', [request('class_id'), request('course_id')])}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.ca_results')}}</a>
-            <a href="{{route('user.class_course.exam.import', [request('class_id'), request('course_id')])}}" class="btn btn-sm btn-primary">{{__('text.word_import')}}</a>
-        </div>
        <div class="d-flex justify-content-between">
            <div class="card-header d-flex justify-content-between align-items-center w-100">
                <h3 class=" font-weight-bold text-uppercase py-4 flex-grow-1">
@@ -88,7 +84,7 @@
 @section('script')
     <script>
         $('.score').on('change', function (){
-            if(event.target.value < 10){
+            if(($(this).attr('data-score-type') == 'ca' && $(this).val() < parseFloat('{{$ca_total/2}}')) || ($(this).attr('data-score-type') == 'exam' && $(this).val() < parseFloat('{{$exam_total/2}}'))){
                 event.target.style.color = 'red';
             }
             else{
@@ -98,7 +94,7 @@
             let subject_url = "{{route('user.store_result',$subject->id)}}";
             // $(".pre-loader").css("display", "block");
 
-            if( $(this).val() > 20){
+            if( ($(this).attr('data-score-type') == 'ca' && $(this).val() > parseFloat('{{$ca_total}}')) || ($(this).attr('data-score-type') == 'exam' && $(this).val() > parseFloat('{{$exam_total}}'))){
 
             }else{
                 $.ajax({

@@ -231,4 +231,34 @@ class Helpers
         }
         return '';
     }
+
+    public function ca_total_isset($class_id)
+    {
+        # code...
+        $class = ProgramLevel::find($class_id);
+        $_isset = $class->program->ca_total != null || $class->program->ca_total != 0;
+        return $_isset;
+    }
+
+    public function exam_total_isset($class_id)
+    {
+        # code...
+        $class = ProgramLevel::find($class_id);
+        $_isset = $class->program->exam_total != null || $class->program->exam_total != 0;
+        return $_isset;
+    }
+
+    public function ca_total($class_id)
+    {
+        # code...
+        $class = ProgramLevel::find($class_id);
+        return $class->program->ca_total;
+    }
+
+    public function exam_total($class_id)
+    {
+        # code...
+        $class = ProgramLevel::find($class_id);
+        return $class->program->exam_total;
+    }
 }

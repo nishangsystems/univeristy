@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\ClassSubject;
 use App\Models\ProgramLevel;
@@ -153,6 +154,8 @@ class HomeController extends Controller
             'reference'=>'required',
             'file'=>'required|file'
         ]);
+
+        $ca_total = Helpers::instance()->ca_total(request('class_id'));
         if($check->fails()){
             return back()->with('error', $check->errors()->first());
         }
@@ -175,8 +178,14 @@ class HomeController extends Controller
             if(count($imported_data)==0){
                 return back()->with('error', 'No data or wrong data format.');
             }
-            
+
+            $bad_results = 0;
             foreach($imported_data as $data){
+                if ($data[1] > $ca_total) {
+                    # code...
+                    $bad_results++;
+                    continue;
+                }
                 $student = Students::where(['matric'=>$data[0]])->first() ?? null;
                 if($student != null){
                     $base=[
@@ -188,6 +197,9 @@ class HomeController extends Controller
                     ];
                     Result::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
                 }
+            }
+            if($bad_results > 1){
+                return back()->with('success', 'Done. ' . $bad_results . ' records not imported. Unsupported values supplied.');
             }
             return back()->with('success', 'Done');
         }else{
@@ -221,6 +233,10 @@ class HomeController extends Controller
         if($check->fails()){
             return back()->with('error', $check->errors()->first());
         }
+
+        $ca_total = Helpers::instance()->ca_total(request('class_id'));
+        $exam_total = Helpers::instance()->exam_total(request('class_id'));
+
         $file = $request->file('file');
         if($file != null &&$file->getClientOriginalExtension() == 'csv'){
             $filename = 'ca_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
@@ -240,8 +256,14 @@ class HomeController extends Controller
             if(count($imported_data)==0){
                 return back()->with('error', 'No data or wrong data format.');
             }
-            
+
+            $bad_results = 0;
             foreach($imported_data as $data){
+                if ($data[1] > $ca_total || $data[2] > $exam_total) {
+                    # code...
+                    $bad_results++;
+                    continue;
+                }
                 $student = Students::where(['matric'=>$data[0]])->first() ?? null;
                 if($student != null){
                     $base=[
@@ -253,6 +275,9 @@ class HomeController extends Controller
                     ];
                     Result::updateOrCreate($base, ['ca_score'=>$data[1], 'exam_score'=>$data[2], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
                 }
+            }
+            if($bad_results > 1){
+                return back()->with('success', 'Done. ' . $bad_results . ' records not imported. Unsupported values supplied.');
             }
             return back()->with('success', 'Done');
         }else{
