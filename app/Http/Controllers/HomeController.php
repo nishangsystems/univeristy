@@ -103,7 +103,7 @@ class HomeController extends Controller
                         })
             ->get(['students.*', 'campuses.name as campus']);
 
-            return $students;
+            // return $students;
         return \response()->json(StudentFee::collection($students));
     }
 

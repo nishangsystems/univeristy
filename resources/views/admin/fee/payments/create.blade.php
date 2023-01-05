@@ -1,6 +1,7 @@
 @extends('admin.layout')
 @php
     $c_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+    $header = \App\Helpers\Helpers::instance()->getHeader();
 @endphp
 @section('section')
 <div class="mx-3">
@@ -90,37 +91,70 @@
                         <th>{{__('text.word_item')}}</th>
                         <th>{{__('text.word_amount')}}</th>
                         <th>{{__('text.word_date')}}</th>
-                        <!-- <th></th> -->
+                        <th></th>
                     </thead>
                     <tbody>
                         @php($k=1)
                         @forelse($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->get() as $item)
-                            <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
-                                <tr>
-                                    <td>{{$k++}}</td>
-                                    <td>{{($item->item)?$item->item->name:$item->created_at->format('d/m/Y')}}</td>
-                                    <td class="font-weight-bold">{{$item->amount}} {{__('text.currency_cfa')}}</td>
-                                    <td>{{$item->created_at->format('l d/m/Y')}}</td>
-                                    <?php /*
-                                    <td class="d-inline-flex">
-                                        <a href="{{route('admin.fee.student.payments.edit', [ $student->id, $item->id])}}" class="btn m-2 btn-sm btn-primary text-white text-capitalize">{{__('text.word_edit')}}</a>
-                
-                                        <a onclick="event.preventDefault();
-                                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-2 text-capitalize">{{__('text.word_delete')}}</a>
-                                        <form id="delete" action="{{route('admin.fee.student.payments.destroy',[$student->id,$item->id])}}" method="POST" style="display: none;">
-                                            @method('DELETE')
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </td>*/ ?>
-                                </tr>
+                        <!-- <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end"> -->
+                        <tr>
+                            <td>{{$k++}}</td>
+                            <td>{{($item->item)?$item->item->name:$item->created_at->format('d/m/Y')}}</td>
+                            <td class="font-weight-bold">{{$item->amount}} {{__('text.currency_cfa')}}</td>
+                            <td>{{$item->created_at->format('l d/m/Y')}}</td>
+                            <td class="d-inline-flex">
+                                <!-- <a href="{{route('admin.fee.student.payments.edit', [ $student->id, $item->id])}}" class="btn m-2 btn-sm btn-primary text-white text-capitalize">{{__('text.word_edit')}}</a> -->
+        
+                                <a onclick="event.preventDefault();
+                                                    document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-2 text-capitalize">{{__('text.word_delete')}}</a>
+                                <form id="delete" action="{{route('admin.fee.student.payments.destroy',[$student->id,$item->id])}}" method="POST" style="display: none;">
+                                    @method('DELETE')
+                                    {{ csrf_field() }}
+                                </form>
+                            </td>
+                        </tr>
                         @empty
-                            <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
-                                <p>{{__('text.phrase_2', ['in_bold'=>__('text.collect_fee')])}}</p>
-                            </div>
+                        <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
+                            <p>{{__('text.phrase_2', ['in_bold'=>__('text.collect_fee')])}}</p>
+                        </div>
                         @endforelse
-
+                        
                     </tbody>
                 </table>
+                    @if($k > 1)
+                        <div class="d-flex justify-content-end my-2">
+                            <!-- <a class="btn btn-sm btn-primary text-capitalize" href="{{route('admin.fee.student.payments.print', [ $student->id, $item->id])}}">{{__('text.word_print')}}</a> -->
+                            <button class="btn btn-sm btn-primary text-capitalize" onclick="_print()">{{__('text.word_print')}}</button>
+                            <div class="hidden" id="payment_history_printable">
+                                <div class="text-center">
+                                    <img src="{{$header}}" alt="" class="w-100">
+                                    <div class="py-2 h4 text-decoration text-decoration-italic  text-decoration-underline text-uppercase">FEE payment history for {{$student->name}}</div>
+                                </div>
+                                <table>
+                                    <thead class="text-capitalize">
+                                        <th>###</th>
+                                        <th>{{__('text.word_item')}}</th>
+                                        <th>{{__('text.word_amount')}}</th>
+                                        <th>{{__('text.word_date')}}</th>
+                                        <!-- <th></th> -->
+                                    </thead>
+                                    <tbody>
+                                        @php($k=1)
+                                        @foreach($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->get() as $item)
+                                        <!-- <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end"> -->
+                                        <tr>
+                                            <td>{{$k++}}</td>
+                                            <td>{{($item->item)?$item->item->name:$item->created_at->format('d/m/Y')}}</td>
+                                            <td class="font-weight-bold">{{$item->amount}} {{__('text.currency_cfa')}}</td>
+                                            <td>{{$item->created_at->format('l d/m/Y')}}</td>
+                                        </tr>
+                                        @endforeach
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endif
             </div>
         </div>
     </div>
@@ -128,3 +162,15 @@
 </div>
 @endsection
 
+@section('script')
+<script>
+    function _print() {
+        var _this_doc, _printable_doc;
+        _this_doc = document.body.innerHTML;
+        _printable_doc = document.querySelector('#payment_history_printable').innerHTML;
+        document.body.innerHTML = _printable_doc;
+        window.print();
+        document.body.innerHTML = _this_doc;
+    }
+</script>
+@endsection

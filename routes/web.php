@@ -93,6 +93,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('fee/{class_id}/student', 'Admin\FeesController@student')->name('fee.student');
     Route::get('import_fee/', 'Admin\FeesController@import')->name('import_fee');
     Route::post('import_fee/', 'Admin\FeesController@import_save');
+    Route::post('fee/undo_import/{import_reference}', 'Admin\FeesController@import_undo')->name('fee.import.undo');
 
     Route::get('sections/{id}', 'Admin\PayIncomeController@getSections')->name('getSections');
     Route::get('classes/{id}', 'Admin\PayIncomeController@getClasses')->name('getClasses');
@@ -144,6 +145,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     });
     Route::prefix("fee/{student_id}")->name('fee.student.')->group(function () {
         Route::resource('payments', 'Admin\PaymentController');
+        Route::get('payments/{item_id}/print', 'Admin\PaymentController@print')->name('payments.print');
     });
 
 
@@ -324,6 +326,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::get('extra-fee/{student_id?}', [AdminHomeController::class, 'extraFee'])->name('extra-fee');
     Route::get('extra-fee/{student_id}/save', [AdminHomeController::class, 'extraFeeSave'])->name('extra-fee.save');
+    Route::get('set_letter_head', [AdminHomeController::class, 'set_letter_head'])->name('set_letter_head');
+    Route::post('set_letter_head/save', [AdminHomeController::class, 'save_letter_head'])->name('save_letter_head');
 
 });
 

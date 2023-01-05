@@ -12,6 +12,7 @@ use App\Models\ProgramLevel;
 use App\Models\Promotion;
 use App\Models\SchoolUnits;
 use App\Models\StudentClass;
+use App\Models\StudentPromotions;
 use App\Models\Students;
 use App\Option;
 use Error;
@@ -617,7 +618,7 @@ class StudentController extends Controller
         $data['title'] = "Student Promotion";
         $data['request'] = $request;
         $data['classes'] = $classes;
-        $data['students'] =  StudentClass::where(['year_id'=>$current_year, 'class_id'=>$request->class_from])
+        $data['students'] =  StudentClass::where(['year_id'=>$current_year, 'class_id'=>$request->class_from, 'current'=>1])
                                 ->join('students', ['students.id'=>'student_classes.student_id'])->distinct()->get(['students.*']);
         // return $data['students'];
 
@@ -780,25 +781,25 @@ class StudentController extends Controller
             DB::beginTransaction();
             //code...
             // create promotion > create student promotions > update students class and academic year
-            $promotion = [
+            $promotion = new Promotion([
                 'from_year'=>$request->year_from,
                 'to_year'=>$request->year_to,
                 'from_class'=>$request->class_from,
                 'to_class'=>$request->class_to,
                 'type'=>'promotion',
-                'students'=>json_encode($request->students), 
                 'user_id'=>auth()->id()
-            ];
-            $promotion_id = DB::table('promotions')->insertGetId($promotion);
+            ]);
+            $promotion->save();
+            $promotion_id = $promotion->id;
             if ($promotion_id != null) {
                 # code...
                 // create student promotions
                 $students_promotion = [];
                 $students_debt = [];
-                if(!$request->students == null){
+                if(count($request->students) > 0){
                     foreach ($request->students as $value) {
                         # code...
-                        $students_promotion[] = ['student_id'=>$value, 'promotion_id'=>$promotion_id];
+                        DB::table('student_promotions')->insert(['student_id'=>$value, 'promotion_id'=>$promotion_id]);
                     }
                     $students_debt[] = array_map(function($value){
                         $student = Students::find($value);
@@ -807,17 +808,20 @@ class StudentController extends Controller
                         return ['student_id'=>$value, 'next_debt' => $balance - $student->debt(Helpers::instance()->getCurrentAccademicYear())];
                     }, $request->students);
                     // return $students_debt;
-                    DB::table('student_promotions')->insert($students_promotion);
+                    // return $students_promotion;
     
                     // update students' class and academic year
                     // create new record on promotion  instead of updating record for previous year
-                    // DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_from)->update(['class_id'=>$request->class_to, 'year_id'=>$request->year_to]);
-                    DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_from)->get()->each(function($record)use($request){
+                    DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_from)->update(['current'=>0]);
+                    foreach (DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_from)->get() as $record){
+                        // return $record;
                         $class['class_id'] = $request->class_to;
                         $class['year_id'] = $request->year_to;
                         $class['student_id'] = $record->student_id;
+                        // $class['current'] = 1;
                         StudentClass::create($class);
-                    });
+                    }
+                    DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_to)->update(['current'=>1]);
     
                     // update student program_id
                     DB::table('students')->whereIn('id', $request->students)->update(['program_id'=>$request->class_to]);
@@ -825,6 +829,7 @@ class StudentController extends Controller
                     // transfer student debts
                     foreach ($request->students as $value) {
                         # code...
+                            // return $request->students;
                             $student = Students::find($value);
                             $balance = $student->bal($value);
                             $next_debt = $balance - $student->debt(Helpers::instance()->getCurrentAccademicYear());
@@ -833,7 +838,7 @@ class StudentController extends Controller
                             }else {
                                 $campus_program = CampusProgram::where('campus_id', $student->campus_id)->where('program_level_id', $student->_class(Helpers::instance()->getCurrentAccademicYear())->id ?? 0);
                                 if($campus_program->count() == 0 || PaymentItem::where('campus_program_id', $campus_program->first()->id)->count() == 0){
-                                    throw new Error('Promotion failed. Debts could not be transfered');
+                                    continue;
                                 }
                                 else {
                                     # code...
@@ -910,11 +915,13 @@ class StudentController extends Controller
                     //     ->where('pending_promotions_id', '=', $request->pp)
                     //     ->whereIn('students_id', $request->students)
                     //     ->delete();
-                    return back()->with('success', 'Students promoted successfully!');
+                }else {
+                    # code...
+                    return back()->with('error', 'No students selected.');
                 }
-                return back()->with('error', 'No students selected.');
             }
             DB::commit();
+            return back()->with('success', 'Students promoted successfully!');
            
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -941,43 +948,32 @@ class StudentController extends Controller
                 'students'=>$promotion->students, 
                 'user_id'=>auth()->id()
             ];
-            $demotion_id = DB::table('promotions')->insertGetId($demotion);
-            if (!$demotion_id == null) {
+            // $demotion_id = DB::table('promotions')->insertGetId($demotion);
+            if (!$promotion == null) {
                 # code...
                 // create student promotions
-                $students_promotion = [];
-                if(!json_decode($promotion->students) == null){
-                    // foreach (json_decode($promotion->students) as $value) {
-                    //     # code...
-                    //     $students_promotion[] = ['student_id'=>$value, 'promotion_id'=>$demotion_id];
-                    // }
-                    // DB::table('student_promotions')->insert($students_promotion);
-                    
-                    // update students' class and academic year
-                    DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students))->where('year_id', '=', $promotion->year_to)->update(['class_id'=>$promotion->class_from, 'year_id'=>$promotion->year_from]);
-                    DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students))->where('year_id', '=', $promotion->year_to)->distinct()->get()->each(function($rec)use($promotion){
-                        if (DB::table('student_classes')->where(['student_id'=>$rec->student_id, 'class_id'=>$promotion->class_from, 'year_id'=>$promotion->year_from])->count() == 0) {
-                            # code...
-                            DB::table('student_classes')->insert(['student_id'=>$rec->student_id, 'class_id'=>$promotion->class_from, 'year_id'=>$promotion->year_from]);
-                        }
-                        $rec->delete();
-                    });
-                    
-                    // update student program_id
-                    DB::table('students')->whereIn('id', json_decode($promotion->students))->update(['program_id'=>$promotion->class_from]);
-                    foreach ($promotion->students()->get() as $key => $value) {
-                        $value->delete();
-                    }
-                    $promotion->delete();
-                    // return '____________';
-                    // delete pending_promotion_students
-                    // DB::table('pending_promotion_students')
-                    //     ->where('pending_promotions_id', '=', $request->pp)
-                    //     ->whereIn('students_id', $request->students)
-                    //     ->delete();
-                    return back()->with('success', 'Students demoted successfully!');
-                }
-                return back()->with('error', 'No students available.');
+                // $students_promotion = [];
+                // if(!json_decode($promotion->students) == null){
+                // }
+                
+                 
+                 // update students' class and academic year
+                 DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students) ?? [])->where('year_id', '=', $promotion->year_to)->delete();
+                 DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students) ?? [])->where('year_id', '=', $promotion->year_from)->updateOrInsert(['current'=>1]);
+                 // DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students))->where('year_id', '=', $promotion->year_to)->distinct()->get()->each(function($rec)use($promotion){
+                
+                 
+                 // update student program_id
+                 DB::table('students')->whereIn('id', json_decode($promotion->students) ?? [])->update(['program_id'=>$promotion->class_from]);
+                 foreach ($promotion->students()->get() as $key => $value) {
+                     $value->delete();
+                 }
+                 DB::table('student_promotions')->where('promotion_id', '=', $promotion_id)->delete();
+                 $promotion->delete();
+                 // return '____________';
+
+                 return back()->with('success', 'Students demoted successfully!');
+                // return back()->with('message', 'No students available.');
             }
 
            

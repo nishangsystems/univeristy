@@ -319,6 +319,14 @@
                 <ul class="submenu">
                     @if(auth()->user()->campus_id == null)
                     <li>
+                        <a href="{{route('admin.set_letter_head')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.set_letter_head')}}
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
                         <a href="{{route('admin.setayear')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.set_school_year')}}

@@ -10,7 +10,7 @@ class Promotion extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['from_year', 'to_year', 'from_class', 'to_class', 'type'];
+    protected $fillable = ['from_year', 'to_year', 'from_class', 'to_class', 'type', 'user_id'];
 
     protected $table = 'promotions';
 
