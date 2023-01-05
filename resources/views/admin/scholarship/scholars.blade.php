@@ -1,5 +1,7 @@
 @extends('admin.layout')
-
+@php
+    $c_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+@endphp
 @section('section')
 <div class="col-sm-12">
 
@@ -35,27 +37,27 @@
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.word_email')}}</th>
                         <th>{{__('text.word_phone')}}</th>
-                        <th>{{__('text.word_address')}}</th>
                         <th>{{__('text.word_gender')}}</th>
                         <th>{{__('text.word_program')}}</th>
                         <th>{{__('text.word_campus')}}</th>
                         <th>{{__('text.scholarship_amount')}} </th>
+                        <th>{{__('text.word_reason')}}</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($students as $k=>$student)
+                    @php($pl = \App\Models\ProgramLevel::find(\App\Models\Students::find($student->id)->_class($c_year)->id) )
                     <tr>
                         <td>{{$k+1}}</td>
                         <td>{{$student->name}}</td>
                         <td>{{$student->email}}</td>
                         <td>{{$student->phone}}</td>
-                        <td>{{$student->address}}</td>
                         <td>{{$student->gender}}</td>
-                        <td>{{\App\Models\ProgramLevel::find($student->program_id)->program()->first()->name.' : Level '.
-                            \App\Models\ProgramLevel::find($student->program_id)->level()->first()->level}}</td>
+                        <td>{{  $pl->program->name.' : Level '.$pl->level->level  }}</td>
                         <td>{{\App\Models\Campus::find($student->campus_id)->name}}</td>
                         <td>{{number_format($student->amount)}}</td>
+                        <td>{{$student->reason}}</td>
                         <td>
                             <a href="{{route('admin.scholarship.edit', $student->id)}}" class="btn btn-sm btn-primary">{{__('text.word_edit')}}</a>
                         </td>

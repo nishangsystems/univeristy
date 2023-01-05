@@ -56,7 +56,7 @@
                             '    <td>'+data[i].bal+'</td>' +
                             '    <td>'+data[i].campus+'</td>' +
                             '    <td class="d-flex justify-content-between align-items-center">' +
-                            '        <a target="_blank" class="btn btn-xs btn-primary" href=`{{route("admin.print_fee.student", ${$this->id})}}`> {{__("text.print_reciept")}}</a>' +
+                            '        <a target="_blank" class="btn btn-xs btn-primary" href="'+data[i].rlink+'"> {{__("text.print_reciept")}}</a>' +
                             '    </td>' +
                             '</tr>';
                     }

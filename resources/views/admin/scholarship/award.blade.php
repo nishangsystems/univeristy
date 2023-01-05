@@ -32,6 +32,16 @@
                     @enderror
                 </div>
             </div>
+             
+            <div class="form-group @error('reason') has-error @enderror mt-4">
+                <label class="control-label col-lg-2 text-capitalize">{{__('text.word_reason')}}  <span style="color: red;">*</span></label>
+                <div class="col-lg-10">
+                    <textarea class="form-control" name="reason" rows="3"></textarea>
+                    @error('year')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
 
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">

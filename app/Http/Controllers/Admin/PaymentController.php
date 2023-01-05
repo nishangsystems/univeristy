@@ -138,7 +138,7 @@ class PaymentController extends Controller
     {
         $p =  Payments::find($id);
         $p->delete();
-        return redirect()->to(route('admin.fee.student.payments.index', $student_id))->with('success', "Fee collection record deleted successfully !");
+        return back()->with('success', "Fee collection record deleted successfully !");
     }
 
     // private function checkScholars($student_id)
@@ -175,4 +175,9 @@ class PaymentController extends Controller
     //         ->select('school_units.id')->first();
     //     return $class_id;
     // }
+
+    public function print(Request $request, $student_id, $item_id)
+    {
+        # code...
+    }
 }

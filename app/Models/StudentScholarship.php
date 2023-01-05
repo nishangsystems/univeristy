@@ -13,6 +13,7 @@ class StudentScholarship extends Model
         // 'scholarship_id',
         'batch_id',
         'amount',
-        'user_id'
+        'user_id',
+        'reason'
     ];
 }
