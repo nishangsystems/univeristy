@@ -95,7 +95,7 @@
                                                     {{__('text.word_date')}}
                                                 </div>
                                                 <div style=" float:left; border-bottom:1px solid #000;">
-                                                    {{date('d/m/Y', strtotime($student->extraFee($year)->created_at ?? null))}}
+                                                    {{$student->extraFee($year) == null ? ':____________-' : date('d/m/Y', strtotime($student->extraFee($year)->created_at))}}
                                                 </div>
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
@@ -184,7 +184,7 @@
                                                     {{__('text.word_date')}}
                                                 </div>
                                                 <div style=" float:left; border-bottom:1px solid #000;">
-                                                    {{date('d/m/Y', strtotime($student->extraFee($year)->created_at ?? null))}}
+                                                    {{$student->extraFee($year) == null ? ':____________-' : date('d/m/Y', strtotime($student->extraFee($year)->created_at))}}
                                                 </div>
                                             </div>
                                             <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>

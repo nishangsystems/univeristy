@@ -193,7 +193,7 @@ class HomeController extends Controller
             'fraction' => Helpers::instance()->getSemester(Students::find(auth()->id())->_class($year)->id)->semester_min_fee
         ];
         $data['min_fee'] = $fee['total']*$fee['fraction'];
-        $data['access'] = $fee['amount'] >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year])->first()->bypass_result;
+        $data['access'] = $fee['amount'] >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year, 'result_bypass_semester'=>Helpers::instance()->getSemester(Students::find($student)->_class($year)->id)])->first()->bypass_result;
         // dd($data);
         return view('student.exam-result')->with($data);
     }
