@@ -38,7 +38,7 @@
 		        color:#fff;
 		    }
 			#frame{
-				background-image: url("{{$bg_path)}}");
+				background-image: url("{{$bg_path}}");
 				/* background-color: rgba(250, 250, 250, 0.7); */
 				background-position: center;
 				background-repeat: no-repeat;
