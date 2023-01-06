@@ -1187,9 +1187,9 @@ class StudentController extends Controller
         # code...
         $student_class = StudentClass::where(['student_id'=>$request->student_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear()]);
         if(!$student_class == null){
-            $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason]);
+            $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason, 'result_bypass_semester'=>Helpers::instance()->getSemester($student_class->first()->class_id)->id]);
             return back()->with('success', 'Done');
         }
-        else{return back()-with('error', 'Student could not be resolved.');}
+        else{return back()-with('error', 'Student has no class.');}
     }
 }

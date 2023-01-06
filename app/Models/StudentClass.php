@@ -11,7 +11,7 @@ class StudentClass extends Model
 
     use \Staudenmeir\LaravelCte\Eloquent\QueriesExpressions;
 
-    protected $fillable = ['student_id', 'class_id', 'year_id'];
+    protected $fillable = ['student_id', 'class_id', 'year_id', 'result_bypass_semester'];
 
     public function class()
     {
