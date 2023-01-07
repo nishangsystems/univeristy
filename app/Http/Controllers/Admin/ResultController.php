@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\ClassSubject;
 use App\Models\Config;
+use App\Models\ProgramLevel;
 use App\Models\Result;
 use App\Models\Sequence;
 use App\Models\StudentClass;
@@ -228,8 +230,9 @@ class ResultController extends Controller
             return back()->with('error', 'CA total not set for this program.');
         }
 
+        $class_subject = ClassSubject::find(request('course_id'));
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
-        $data['title'] = "Fill CA Results";
+        $data['title'] = "Fill CA Results For [ ".$class_subject->subject->code." ] ".$class_subject->subject->name." / ".ProgramLevel::find(request('class_id'))->name();
         return view('admin.result.fill_ca', $data);
     }
 
@@ -240,7 +243,8 @@ class ResultController extends Controller
             return back()->with('error', 'CA total not set for this program.');
         }
 
-        $data['title'] = "Import CA Results";
+        $class_subject = ClassSubject::find(request('course_id'));
+        $data['title'] = "Import CA Results For [ ".$class_subject->subject->code." ] ".$class_subject->subject->name." / ".ProgramLevel::find(request('class_id'))->name();
         return view('admin.result.import_ca', $data);
     }
 
@@ -316,9 +320,10 @@ class ResultController extends Controller
             return back()->with('error', 'CA or Exam total not set for this program.');
         }
 
+        $class_subject = ClassSubject::find(request('course_id'));
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
         $data['exam_total'] = Helpers::instance()->exam_total(request('class_id'));
-        $data['title'] = "Fill Exam Results";
+        $data['title'] = "Fill Exam Results For [ ".$class_subject->subject->code." ] ".$class_subject->subject->name." / ".ProgramLevel::find(request('class_id'))->name();
         return view('admin.result.fill_exam', $data);
     }
 
@@ -329,7 +334,8 @@ class ResultController extends Controller
             return back()->with('error', 'CA total not set for this program.');
         }
 
-        $data['title'] = "Import Exam Results";
+        $class_subject = ClassSubject::find(request('course_id'));
+        $data['title'] = "Import Exam Results For [ ".$class_subject->subject->code." ] ".$class_subject->subject->name." / ".ProgramLevel::find(request('class_id'))->name();
         return view('admin.result.import_exam', $data);
     }
 
