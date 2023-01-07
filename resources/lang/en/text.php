@@ -475,4 +475,17 @@ return [
     'exam_dateline'=>'exam dateline',
     'exam_results'=>'exam results',
     'ca_results'=>'CA results',
+    'results_slash_transcripts'=>'results/transcripts',
+    'frequency_distribution'=>'frequency distribution',
+    'build_frequency_distribution'=>'build frequency distribution',
+    'CV'=>'CV',
+    'ST'=>'ST',
+    'CR'=>'CR',
+    'CE'=>'CE',
+    'course_coverage'=>'course coverage',
+    'word_passed'=>'passed',
+    'word_failed'=>'failed',
+    'percent_pass'=>'%pass',
+    'grade_and_number'=>'grade and number',
+    
 ];

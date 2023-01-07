@@ -14,4 +14,17 @@ class Result extends Model
         'subject_id', 'ca_score', 'exam_score', 'coef', 'remark',
         'class_subject_id', 'reference', 'user_id'
     ];
+
+    public function total()
+    {
+        return $this->ca_score ?? 0 + $this->exam_score ?? 0;
+    }
+
+    public function passed()
+    {
+        $prog = ProgramLevel::find($this->class_id)->program;
+        return ($this->ca_score ?? 0 + $this->exam_score ?? 0) >= ($prog->ca_total + $prog->exam_total)*0.5;
+    }
+
+    
 }

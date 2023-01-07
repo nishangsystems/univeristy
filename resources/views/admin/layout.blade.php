@@ -747,6 +747,30 @@
             </li>
             @endif
 
+            @if (\Auth::user()->hasPermissionTo('manage_transcripts_and_results'))
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
+                    <span class="menu-text">
+						{{__('text.results_slash_transcripts')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a class="text-capitalize" onclick="$('#fre_dis_post_form').submit()">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.frequency_distribution')}}
+                        </a>
+                        <b class="arrow"></b>
+                        <form action="{{route('admin.res_and_trans.fre_dis')}}" method="post" class="hidden" id="fre_dis_post_form">@csrf</form>
+                    </li>
+                </ul>
+            </li>
+            @endif
+
             @if (\Auth::user()->hasPermissionTo('manage_importation'))
             <li>
                 <a href="#" class="dropdown-toggle">

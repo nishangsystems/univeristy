@@ -33,4 +33,9 @@ class ClassSubject extends Model
     {
         return $this->hasMany(CourseNotification::class, 'course_id');
     }
+
+    public function results()
+    {
+        return $this->hasMany(Result::class, 'class_subject_id');
+    }
 }

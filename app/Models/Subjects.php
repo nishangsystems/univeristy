@@ -25,4 +25,9 @@ class Subjects extends Model
     {
         return  $this->hasMany(ClassSubject::class, 'subject_id')->where(['class_id'=>$class_id])->first();
     }
+
+    public function student_subjects()
+    {
+        return $this->hasMany(StudentSubject::class, 'course_id');
+    }
 }

@@ -37,7 +37,7 @@ class ProgramLevel extends Model
 
     public function class_subjects()
     {
-        $this->hasMany(ClassSubject::class, 'class_id');
+        return $this->hasMany(ClassSubject::class, 'class_id');
     }
     public function subjects()
     {
