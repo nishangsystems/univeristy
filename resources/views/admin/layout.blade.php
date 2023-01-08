@@ -767,6 +767,14 @@
                         <b class="arrow"></b>
                         <form action="{{route('admin.res_and_trans.fre_dis')}}" method="post" class="hidden" id="fre_dis_post_form">@csrf</form>
                     </li>
+                    <li>
+                        <a class="text-capitalize" onclick="$('#spr_sheet_post_form').submit()">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.spread_sheet')}}
+                        </a>
+                        <b class="arrow"></b>
+                        <form action="{{route('admin.res_and_trans.spr_sheet')}}" method="post" class="hidden" id="spr_sheet_post_form">@csrf</form>
+                    </li>
                 </ul>
             </li>
             @endif

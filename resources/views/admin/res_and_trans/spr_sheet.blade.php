@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div class="my-2 px-0 mx-0 d-flex justify-content-end"><input type="submit" class="btn btn-sm text-capitalize btn-primary rounded" value="{{__('text.build_frequency_distribution')}}"></div>
+        <div class="my-2 px-0 mx-0 d-flex justify-content-end"><input type="submit" class="btn btn-sm text-capitalize btn-primary rounded" value="{{__('text.build_spread_sheet')}}"></div>
     </form>
 @else
     @php
@@ -49,6 +49,7 @@
         $base_pass = (\App\Models\ProgramLevel::find(request('class_id'))->program->ca_total ?? 0 + \App\Models\ProgramLevel::find(request('class_id'))->program->exam_total ?? 0)*0.5;
         // dd($grades);
         $k = 1;
+        // dd($students);
     @endphp
     <div class="my-2">
         <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100">
@@ -59,48 +60,37 @@
             <table>
                 <thead class="text-capitalize">
                     <tr class="border-top border-bottom border-secondary">
-                        <th class="border-left border-right border-secondary" colspan="6"></th>
-                        <th class="border-left border-right border-secondary" colspan="4">{{__('text.word_number')}}</th>
-                        <th class="border-left border-right border-secondary" colspan="1"></th>
-                        <th class="border-left border-right border-secondary" colspan="8">{{__('text.grade_and_number')}}</th>
-                    </tr>
-                    <tr class="border-top border-bottom border-secondary">
-                        <th class="border-left border-right border-secondary">###</th>
-                        <th class="border-left border-right border-secondary">{{__('text.word_code')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.course_title')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.CV')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.ST')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.course_coverage')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.CR')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.CE')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.word_passed')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.word_failed')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.percent_pass')}}</th>
-                        @foreach($grades as $grade)
-                            <th class="border-left border-right border-secondary">{{$grade->grade}}</th>
+                        <th class="border-left border-right border-secondary" colspan="2"></th>
+                        @foreach ($courses as $course)
+                            <th class="border-left border-right border-secondary" colspan="4">{{$course->subject->code}}</th>
                         @endforeach
                     </tr>
+                    <tr class="border-top border-bottom border-secondary">
+                        <th class="border-left border-right border-secondary">#</th>
+                        <th class="border-left border-right border-secondary">{{__('text.word_matricule')}}</th>
+                        @foreach ($courses as $course)
+                            <th class="border-left border-right border-secondary">{{__('text.CA')}}</th>
+                            <th class="border-left border-right border-secondary">{{__('text.EX')}}</th>
+                            <!-- <th class="border-left border-right border-secondary">{{__('text.word_exams')}}</th> -->
+                            <th class="border-left border-right border-secondary">{{__('text.TT')}}</th>
+                            <!-- <th class="border-left border-right border-secondary">{{__('text.word_total')}}</th> -->
+                            <th class="border-left border-right border-secondary">{{__('text.GR')}}</th>
+                            <!-- <th class="border-left border-right border-secondary">{{__('text.word_grade')}}</th> -->
+                        @endforeach
+
+                    </tr>
                 </thead>
-                <tbody>
-                    @foreach($courses as $course)
+                <tbody class="text-sm">
+                    @foreach($students as $student)
                         <tr class="border-top border-bottom border-secondary">
                             <td class="border-left border-right border-secondary">{{$k++}}</td>
-                            <td class="border-left border-right border-secondary">{{$course->subject->code}}</td>
-                            <td class="border-left border-right border-secondary">{{$course->subject->name}}</td>
-                            <td class="border-left border-right border-secondary">{{$course->coef}}</td>
-                            <td class="border-left border-right border-secondary">{{$course->status}}</td>
-                            <td class="border-left border-right border-secondary">missing</td>
-                            <td class="border-left border-right border-secondary">{{count($students)}}</td>
-                            <td class="border-left border-right border-secondary">{{$course->results()->distinct()->count()}}</td>
-                            <td class="border-left border-right border-secondary">{{$course->passed($year, request('semester_id'))}}</td>
-                            <td class="border-left border-right border-secondary">{{$course->results()->distinct()->count() - $course->passed($year, request('semester_id'))}}</td>
-                            <td class="border-left border-right border-secondary">{{
-                                number_format(
-                                    100*$course->passed($year, request('semester_id'))/
-                                    (($course->results()->distinct()->count() == 0) ?
-                                     1 :($course->results()->distinct()->count())) , 2
-                                )
-                            }}</td>
+                            <td class="border-left border-right border-secondary">{{$student->matric}}</td>
+                            @foreach ($courses as $course)
+                                <td class="border-left border-secondary">{{$student->ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                <td class="border-left border-right border-info">{{$student->exam_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                <td class="border-left border-right border-info">{{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                <th class="border-right border-secondary {{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id')) >= 50 ? 'text-success':'text-danger'}}">{{$student->grade($course->subject->id, request('class_id'), $year, request('semester_id'))}}</th>
+                            @endforeach
                         </tr>
                     @endforeach
                 </tbody>

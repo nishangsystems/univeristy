@@ -22,4 +22,11 @@ class ResultsAndTranscriptsController extends Controller{
         return view('admin.res_and_trans.fre_dis', $data);
     }
 
+    public function spread_sheet(Request $request)
+    {
+        # code...
+        $data['title'] = "Spread Sheet";
+        return view('admin.res_and_trans.spr_sheet', $data);
+    }
+
 }

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Helpers\Helpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ClassSubject extends Model
 {
@@ -38,4 +40,17 @@ class ClassSubject extends Model
     {
         return $this->hasMany(Result::class, 'class_subject_id');
     }
+
+    public function passed($year_id, $semester_id = null)
+    {
+        $semester = $semester_id == null ? Helpers::instance()->getSemester($this->class_id)->id : $semester_id;
+        $results = $this->hasMany(Result::class, 'class_subject_id')->where(['semester_id'=>$semester, 'batch_id'=>$year_id])->get();
+        $count = 0;
+        foreach ($results as $key => $result) {
+            if(($result->ca_score??0) + ($result->exam_score ?? 0) >= 50){++$count;}
+        }
+        return $count;
+    }
+
+
 }

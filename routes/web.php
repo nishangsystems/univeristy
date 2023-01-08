@@ -364,6 +364,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::prefix('res_and_trans')->name('res_and_trans.')->group(function () {
         Route::post('fre_dis', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'frequency_distribution'])->name('fre_dis');
+        Route::post('spr_sheet', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'spread_sheet'])->name('spr_sheet');
     });
 
 });

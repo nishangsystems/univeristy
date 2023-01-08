@@ -487,5 +487,9 @@ return [
     'word_failed'=>'failed',
     'percent_pass'=>'%pass',
     'grade_and_number'=>'grade and number',
-    
+    'spread_sheet'=>'spread sheet',
+    'build_spread_sheet'=>'build spread sheet',
+    'EX'=>'EX',
+    'TT'=>'TT',
+    'GR'=>'GR',
 ];
