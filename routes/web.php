@@ -362,9 +362,11 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('set_letter_head', [AdminHomeController::class, 'set_letter_head'])->name('set_letter_head');
     Route::post('set_letter_head/save', [AdminHomeController::class, 'save_letter_head'])->name('save_letter_head');
 
+    
+    // ROUTES FOR OPERATION RESULT OPERATIONS
     Route::prefix('res_and_trans')->name('res_and_trans.')->group(function () {
-        Route::post('fre_dis', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'frequency_distribution'])->name('fre_dis');
         Route::post('spr_sheet', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'spread_sheet'])->name('spr_sheet');
+        Route::post('fre_dis', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'frequency_distribution'])->name('fre_dis');
     });
 
 });

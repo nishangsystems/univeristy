@@ -98,9 +98,12 @@
                                 number_format(
                                     100*$course->passed($year, request('semester_id'))/
                                     (($course->results()->distinct()->count() == 0) ?
-                                     1 :($course->results()->distinct()->count())) , 2
-                                )
+                                    1 :($course->results()->distinct()->count())) , 2
+                                    )
                             }}</td>
+                            @foreach($grades as $grade)
+                                <td class="border-left border-right border-secondary">{{$course->passed_with_grade($grade->grade, $year, request('semester_id'))}}</td>
+                            @endforeach
                         </tr>
                     @endforeach
                 </tbody>
