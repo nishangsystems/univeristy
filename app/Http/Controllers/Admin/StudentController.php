@@ -618,7 +618,7 @@ class StudentController extends Controller
         $data['title'] = "Student Promotion";
         $data['request'] = $request;
         $data['classes'] = $classes;
-        $data['students'] =  StudentClass::where(['year_id'=>$current_year, 'class_id'=>$request->class_from, 'current'=>1])
+        $data['students'] =  StudentClass::where(['year_id'=>$current_year, 'class_id'=>$request->class_from])
                                 ->join('students', ['students.id'=>'student_classes.student_id'])->distinct()->get(['students.*']);
         // return $data['students'];
 
