@@ -354,7 +354,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     Route::post('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@store')->name('subject.note.store');
     Route::delete('subjects/notes/{id}', 'Teacher\SubjectNotesController@destroy')->name('subject.note.destroy');
     Route::get('{user_id}/subjects', 'Teacher\UserController@createSubject')->name('teacher.subjects.add');
-    Route::post('{user_id}/subjects', 'Teacher\UserController@dropSubject')->name('teacher.subjects.drop');
+    Route::post('{user_id}/teacher_subjects', 'Teacher\UserController@dropSubject')->name('teacher.subjects.drop');
     Route::post('{user_id}/subjects', 'Teacher\UserController@saveSubject')->name('teacher.subjects.save');
     Route::resource('teacher', 'Teacher\UserController');
     Route::prefix('programs')->name('programs.')->group(function(){
