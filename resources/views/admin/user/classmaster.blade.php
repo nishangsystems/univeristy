@@ -23,9 +23,9 @@
                             @if((auth()->user()->campus_id == null) || ($user->campus_id == auth()->user()->campus_id))
                             <tr>
                                 <td>{{$k+1}}</td>
-                                <td>{{$user->user->name}}</td>
-                                <td>{{$user->class->name}}</td>
-                                <td>{{\App\Models\Campus::find($user->campus_id)->name}}</td>
+                                <td>{{$user->user->name ?? ''}}</td>
+                                <td>{{$user->class->name ?? ''}}</td>
+                                <td>{{\App\Models\Campus::find($user->campus_id)->name ?? ''}}</td>
                                 <td  class="d-flex justify-content-end align-items-center" >
                                     <a onclick="event.preventDefault();
                                             document.getElementById('delete{{$user->id}}').submit();" class=" btn btn-danger btn-xs m-2">{{__('text.word_unassign')}}</a>

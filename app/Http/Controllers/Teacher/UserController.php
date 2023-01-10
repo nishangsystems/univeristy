@@ -29,17 +29,17 @@ class UserController extends Controller
                     ->join('users', 'users.id', '=', 'users_roles.user_id')
                     ->get('users.*');
             }else{
-                $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
+                $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->get();
             }
             return view('teacher.user.index')->with($data);
         }else if(\request('permission')){
             $data['type'] = \App\Models\Permission::whereSlug(\request('permission'))->first()->name;
             $data['title'] = "Permission ".($data['type'] ?? "Users");
-            $data['users'] =\App\Models\Permission::whereSlug(\request('permission'))->first()->users()->paginate(15);
+            $data['users'] =\App\Models\Permission::whereSlug(\request('permission'))->first()->users()->get();
             return view('teacher.user.index')->with($data);
         }else{
             $data['type'] = request('teacher', 'user');
-            $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
+            $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->get();
             $data['title'] = "Manage " . $data['type']. 's';
             return view('teacher.user.index')->with($data);
         }
@@ -105,7 +105,7 @@ class UserController extends Controller
             'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear(),
         ])->join('subjects', ['subjects.id'=>'teachers_subjects.subject_id'])
         ->orderBy('teachers_subjects.created_at', 'DESC')
-        ->distinct()->select('subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id')->get();
+        ->distinct()->select('subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id', 'teachers_subjects.id as ts_id')->get();
         // dd($data);
         return view('teacher.user.show')->with($data);
     }

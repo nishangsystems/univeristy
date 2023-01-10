@@ -331,7 +331,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
 });
 
-Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function () {
+Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {
     Route::get('',  'Teacher\HomeController@index')->name('home');
     Route::get('class_list/{department_id}/{campus_id?}',  'Teacher\ClassController@program_levels_list')->name('class_list');
     Route::get('course_list',  'Teacher\ClassController@program_courses')->name('course_list');
@@ -354,7 +354,7 @@ Route::prefix('user')->name('user.')->middleware('isTeacher')->group(function ()
     Route::post('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@store')->name('subject.note.store');
     Route::delete('subjects/notes/{id}', 'Teacher\SubjectNotesController@destroy')->name('subject.note.destroy');
     Route::get('{user_id}/subjects', 'Teacher\UserController@createSubject')->name('teacher.subjects.add');
-    Route::delete('{user_id}/subjects', 'Teacher\UserController@dropSubject')->name('teacher.subjects.drop');
+    Route::post('{user_id}/subjects', 'Teacher\UserController@dropSubject')->name('teacher.subjects.drop');
     Route::post('{user_id}/subjects', 'Teacher\UserController@saveSubject')->name('teacher.subjects.save');
     Route::resource('teacher', 'Teacher\UserController');
     Route::prefix('programs')->name('programs.')->group(function(){
