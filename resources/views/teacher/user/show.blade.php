@@ -122,9 +122,8 @@
                             <td style="float: right;">
                                 <a onclick="event.preventDefault();
                                             document.getElementById('delete{{$subject->id}}').submit();" class=" btn btn-danger btn-xs m-2">DROP</a>
-                                <form id="delete{{$subject->id}}" action="{{route('admin.users.subjects.drop',$subject->id)}}" method="POST" style="display: none;">
-                                    @method('DELETE')
-                                    {{ csrf_field() }}
+                                <form id="delete{{$subject->id}}" action="{{route('user.teacher.subjects.drop',$subject->ts_id)}}" method="POST" style="display: none;">
+                                    @csrf
                                 </form>
                             </td>
                         </tr>
