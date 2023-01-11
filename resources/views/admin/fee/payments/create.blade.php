@@ -34,6 +34,12 @@
                     <input for="cname" class="form-control" name="xtra-fee" value="{{$student->extraFee($c_year) == null ? 0 : $student->extraFee($c_year)->amount}} CFA" disabled></input>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
+                <div class="col-lg-10">
+                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)}} CFA" disabled></input>
+                </div>
+            </div>
             <div class="form-group @error('item') has-error @enderror">
                 <label class="control-label col-lg-2 text-capitalize">{{__('text.word_item')}} <span style="color:red">*</span></label>
                 <div class="col-lg-10">

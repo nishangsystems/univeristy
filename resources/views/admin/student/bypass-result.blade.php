@@ -7,6 +7,15 @@
 
         <form action="{{Request::url()}}/set" method="get">
             <div class="row my-2">
+                <label for="" class="text-capitalize col-md-3">{{__('text.word_semester')}}</label>
+                <div class="col-sm-9">
+                    <select name="semester" class="form-control" id="" rows="3">
+                        <option value=""></option>
+                        @foreach(\A)
+                    </select>
+                </div>
+            </div>
+            <div class="row my-2">
                 <label for="" class="text-capitalize col-md-3">{{__('text.word_reason')}}</label>
                 <div class="col-sm-9">
                     <textarea name="bypass_result_reason" class="form-control" id="" rows="3"></textarea>

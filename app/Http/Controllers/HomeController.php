@@ -160,7 +160,7 @@ class HomeController extends Controller
     public static function _fee(Request  $request)
     {
         $type = request('type', 'completed');
-        $year = request('year', \App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+        $year = request('year', Helpers::instance()->getCurrentAccademicYear());
         $class = ProgramLevel::find(\request('class'));
 
         $title = $type . " fee " . ($class != null ? "for " . $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level : '').(auth()->user()->campus_id != null ? ' - '.Campus::find(auth()->user()->campus_id)->name : '');
@@ -210,8 +210,8 @@ class HomeController extends Controller
                     'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }
-            if($request->has('amount') && $request->amount <= $value['amount']){continue;}
-            if(($value['amount'] < $value['total'] || $value['total'] == 0) && $type == 'uncompleted'){
+            if($request->has('amount') && $request->amount >= $value['amount']){continue;}
+            if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,

@@ -434,7 +434,7 @@ class HomeController extends Controller
         // return __DIR__;
         // dd($data);
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] = $fee['amount'] >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+        $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
         return view('student.courses.register', $data);
     }
 
@@ -476,7 +476,7 @@ class HomeController extends Controller
             return redirect(route('student.home'))->with('error', 'Can not sign courses for this program at the moment. Date limit not set. Contact registry.');
         }
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] = $fee['amount'] >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+        $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
         return view('student.resit.register', $data);
     }
 
@@ -484,7 +484,7 @@ class HomeController extends Controller
     {
         # code...
         $data['title'] = "Registered Courses ".Helpers::instance()->getSemester(Students::find(auth()->id())->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->class_id)->name." ".\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
-        $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>\App\Helpers\Helpers::instance()->getYear()])->first()->class_id);
+        $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>Helpers::instance()->getYear()])->first()->class_id);
         $data['cv_total'] = ProgramLevel::find(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->program()->first()->max_credit;        
         
         $student = auth()->id();
@@ -508,7 +508,7 @@ class HomeController extends Controller
             'fraction' => Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->courses_min_fee
         ];
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] = $fee['amount'] >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+        $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
         return view('student.courses.form_b', $data);
     }
 
@@ -540,7 +540,7 @@ class HomeController extends Controller
             'fraction' => Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->courses_min_fee
         ];
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] = ($fee['amount'] >= $data['min_fee']) || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+        $data['access'] = (($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']) || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
         return view('student.courses.index', $data);
     }
 
