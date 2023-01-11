@@ -6,7 +6,7 @@
     @endphp
 
     <div class="col-sm-12">
-        <div class="d-flex justify-content-between alert alert-info text-center text-uppercase my-3"><span>{{__('text.total_paid').' : '.$student->total_paid( $year).' '.__('text.currency_cfa')}}</span><span>{{__('text.total_debts').' : '.$student->bal($student->id, $year).' '.__('text.currency_cfa')}}</span></div>
+        <div class="d-flex flex-wrap justify-content-between alert alert-info text-center text-uppercase my-3"><span>{{__('text.total_paid').' : '.number_format($student->total_paid( $year)).' '.__('text.currency_cfa')}}</span><span>{{__('text.total_debts').' : '.number_format($student->total_debts($student->id, $year)).' '.__('text.currency_cfa')}}</span></div>
         <div class="content-panel">
             <form method="get">
                 <div class="input-group input-group-merge border">
