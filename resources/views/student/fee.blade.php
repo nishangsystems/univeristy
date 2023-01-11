@@ -6,6 +6,7 @@
     @endphp
 
     <div class="col-sm-12">
+        <div class="d-flex justify-content-between alert alert-info text-center text-uppercase my-3"><span>{{__('text.total_paid').' : '.$student->total_paid( $year).' '.__('text.currency_cfa')}}</span><span>{{__('text.total_debts').' : '.$student->bal($student->id, $year).' '.__('text.currency_cfa')}}</span></div>
         <div class="content-panel">
             <form method="get">
                 <div class="input-group input-group-merge border">
@@ -413,7 +414,7 @@
                 @endif
             @empty
                 <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
-                    <p>No Fee Collection where found, for <b>{{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name}}</b> </p>
+                    <p>No Fee Collection where found, for <b>{{\App\Models\Batch::find($year)->name}}</b> </p>
                 </div>
             @endforelse
         </div>

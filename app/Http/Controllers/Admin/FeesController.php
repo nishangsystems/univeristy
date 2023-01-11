@@ -120,7 +120,7 @@ class FeesController extends Controller
         // return $request->all();
         # code...
         $data = HomeController::_fee($request);
-        $data['title'] = $data['title'].' Who Have Not Paid Upto '.$request->amount;
+        $data['title'] = $data['title'].' Who Have Paid Atleast '.$request->amount;
         return view('admin.fee.drive_listing', $data);
     }
 

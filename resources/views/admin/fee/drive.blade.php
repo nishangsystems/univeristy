@@ -16,7 +16,7 @@
             <div class="form-group">
                     <div class="col-lg-12 mb-4">
                         <div class="input-group input-group-merge border">
-                        <select class="w-100   section form-control" id="section0" name="class" required>
+                            <select class="w-100   section form-control" id="section0" name="class" required>
                                 <option selected class="text-capitalize">{{__('text.select_class')}}</option>
                                 @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
                                     <option value="{{$pl['id']}}">{{$pl['name']}}</option>

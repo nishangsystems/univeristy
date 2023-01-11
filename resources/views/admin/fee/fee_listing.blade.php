@@ -82,7 +82,7 @@
                 <table cellpadding="0" cellspacing="0" border="0" class="" id="hidden-table-info">
                     <thead>
                         <div id="letter-head">
-                            <img src="{{asset('assets/images/header.jpg')}}" alt="" class="w-100 img">
+                            <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100 img">
                         </div>
                         <div class="text-center h5 fw-bolder py-3 text-capitalize"><b>{{$students['title']}}</b></div>
                         <tr class="text-capitalize bg-light">

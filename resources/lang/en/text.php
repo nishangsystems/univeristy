@@ -467,4 +467,6 @@ return [
     'add_campus'=>'add campus',
     'word_debt'=>'debt',
     'set_letter_head'=>'set letter head',
+    'total_paid'=>'total paid',
+    'total_debts'=>'total debts',
 ];
