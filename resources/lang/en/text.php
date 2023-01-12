@@ -469,4 +469,5 @@ return [
     'set_letter_head'=>'set letter head',
     'total_paid'=>'total paid',
     'total_debts'=>'total debts',
+    'course_registration_closed'=>'course registrattion closed',
 ];
