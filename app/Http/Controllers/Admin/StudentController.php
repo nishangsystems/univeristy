@@ -1118,14 +1118,14 @@ class StudentController extends Controller
 
     public function setStudentResultBypass(Request $request)
     {
-        $check = Validator::make($request->all(), ['bypass_result_reason'=>'required']);
+        $check = Validator::make($request->all(), ['bypass_result_reason'=>'required', 'semester'=>'required']);
         if($check->fails()){
-            return back()->with('error', 'A reason must be specified');
+            return back()->with('error', $check->errors()->first());
         }
         # code...
         $student_class = StudentClass::where(['student_id'=>$request->student_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear()]);
         if(!$student_class == null){
-            $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason, 'result_bypass_semester'=>Helpers::instance()->getSemester($student_class->first()->class_id)->id]);
+            $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason, 'result_bypass_semester'=>$request->semester ?? Helpers::instance()->getSemester($student_class->first()->class_id)->id]);
             return back()->with('success', 'Done');
         }
         else{return back()-with('error', 'Student has no class.');}
