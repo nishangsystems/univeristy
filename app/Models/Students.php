@@ -153,7 +153,7 @@ class Students extends Authenticatable
         $student = Students::find($this->id);
 
         $student_class_instances = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)->get();
-        $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)
+        $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)->distinct()
             ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->get();
         // fee amounts
         $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels->pluck('id'))->get();
@@ -171,7 +171,7 @@ class Students extends Authenticatable
     {
         # code...
 
-        $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<=', $year)
+        $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<=', $year)->distinct()
             ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->get();
         // fee amounts
         $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels->pluck('id'))->get();
@@ -181,7 +181,5 @@ class Students extends Authenticatable
         
         return $fee_payments_sum - $debt_payments_sum;
     }
-
-
 
 }
