@@ -272,16 +272,18 @@ class HomeController extends Controller
         foreach ($fees as $key => $value) {
             # code...
             $stdt = Students::find($value['stud']);
-            if(($value['total'] > 0 && $value['amount'] == $value['total']) && $type == 'completed'){
+            if(($value['total'] > 0 && $value['amount'] >= $value['total']) && $type == 'completed'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
+                    'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
                     'total'=> $value['amount'],
                     'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }
-            if(($value['amount'] < $value['total'] || $value['total'] == 0) && $type == 'uncompleted'){
+            if($request->has('amount') && $request->amount >= $value['amount']){continue;}
+            if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
@@ -292,7 +294,6 @@ class HomeController extends Controller
                 ];
             }
         }
-
         $students = collect($students)->sortBy('name')->toArray();
 
         return response()->json(['title' => $title, 'students' => $students]);
