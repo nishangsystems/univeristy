@@ -157,6 +157,7 @@ class Students extends Authenticatable
         $student_class_instances = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)->get();
         $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)->distinct()
             ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->where('campus_programs.campus_id', $this->campus_id)->get();
+
         // fee amounts
         $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels->pluck('id'))->get();
         $fee_items_sum = $fee_items->sum('amount');
