@@ -35,15 +35,16 @@ class Students extends Authenticatable
         $builder = $this->hasMany(ExtraFee::class, 'student_id')->where('year_id', '=', $year_id);
         return $builder->count() == 0 ? null : $builder->first();
     }
-
-    public function class($year)
-    {
-        return CampusProgram::where('campus_id', $this->campus_id)->where('program_level_id', $this->classes(Helpers::instance()->getCurrentAccademicYear())->first()->class_id)->first();
-    }
-
+    
     public function _class($year)
     {
         return $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id')->where('year_id', '=', $year)->first();
+    }
+
+    public function class($year)
+    {
+        // return CampusProgram::where('campus_id', $this->campus_id)->where('program_level_id', $this->_class($year)->id)->first();
+        return $this->_class($year)->campus_programs($this->campus_id)->first() ?? null;
     }
 
     public function classes()
@@ -76,7 +77,8 @@ class Students extends Authenticatable
     {
         if ($this->classes()->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first() != null) {
             # code...
-            return $this->campus()->first()->campus_programs()->where('program_level_id', $this->classes()->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first()->class_id ?? 0)->first()->payment_items()->first()->amount ?? -1;
+            // return $this->campus()->first()->campus_programs()->where(['program_level_id' => $this->_class(Helpers::instance()->getCurrentAccademicYear())->id ?? 0, 'campus_id'=>$this->campus_id])->first()->payment_items()->first()->amount ?? -1;
+            return $this->_class(Helpers::instance()->getCurrentAccademicYear())->campus_programs($this->campus_id)->first()->payment_items->first()->amount;
         }
         return 0;
     }
@@ -154,7 +156,8 @@ class Students extends Authenticatable
 
         $student_class_instances = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)->get();
         $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)->distinct()
-            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->get();
+            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->where('campus_programs.campus_id', $this->campus_id)->get();
+
         // fee amounts
         $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels->pluck('id'))->get();
         $fee_items_sum = $fee_items->sum('amount');
