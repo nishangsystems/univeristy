@@ -1,6 +1,20 @@
 @extends('admin.layout')
 @section('section')
+@php
+    $year = request('year_id') == null ? \App\Helpers\Helpers::instance()->getCurrentAccademicYear() : request('year_id');
+@endphp
 <div class="py-4">
+    <div class="col-lg-12">
+        <div class="input-group-merge d-flex rounded border border-dark my-3">
+            <select class="form-control col-sm-10" name="year" id="year_filter_field">
+                <option></option>
+                @foreach (\App\Models\Batch::all() as $batch)
+                    <option value="{{$batch->id}}" {{$batch->id == $year ? 'selected' : ''}}>{{$batch->name}}</option>
+                @endforeach
+            </select>
+            <button type="submit" class="btn btn-sm btn-dark text-capitalize col-sm-2 text-center" onclick="event.preventDefault(); window.location = '{{url('admin/class_list')}}/'+$('#year_filter_field').val()">{{__('text.word_get')}}</button>
+        </div>
+    </div>
     <table class="table">
         <!-- list program level students per campus -->
         @if(request()->has('campus_id'))
@@ -12,7 +26,7 @@
             </thead>
             <tbody>
                 @php($k = 1)
-                @foreach(\App\Models\StudentClass::where('student_classes.class_id', request('id'))->where('student_classes.year_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
+                @foreach(\App\Models\StudentClass::where('student_classes.class_id', request('id'))->where('student_classes.year_id', $year)
                 ->join('students', ['students.id'=>'student_classes.student_id'])->where('students.campus_id', request('campus_id'))->get(['students.*', 'student_classes.year_id as year']) as $stud)
                     <tr>
                         <td>{{$k++}}</td>
@@ -65,7 +79,7 @@
                 </thead>
                 <tbody>
                     @php($k = 1)
-                    @foreach(\App\Models\StudentClass::where('class_id', request('id'))->where('year_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->join('students', ['students.id'=>'student_classes.student_id'])->distinct()->get(['students.*', 'student_classes.year_id as year']) as $stud)
+                    @foreach(\App\Models\StudentClass::where('class_id', request('id'))->where('year_id', $year)->join('students', ['students.id'=>'student_classes.student_id'])->distinct()->get(['students.*', 'student_classes.year_id as year']) as $stud)
                         @if((\Auth::user()->campus_id != null) && ($stud->campus_id == \Auth::user()->campus_id))
                         <tr>
                             <td>{{$k++}}</td>

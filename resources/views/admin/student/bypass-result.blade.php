@@ -31,6 +31,34 @@
             </div>
         </form>
 
+        <div class="my-3">
+            <table class="table adv-table">
+                <thead class="text-capitalize bg-seconadry text-light">
+                    <th class="border-left border-right border-white">#</th>
+                    <th class="border-left border-right border-white">{{__('text.word_name')}}</th>
+                    <th class="border-left border-right border-white">{{__('text.academic_year')}}</th>
+                    <th class="border-left border-right border-white">{{__('text.word_semester')}}</th>
+                    <th class="border-left border-right border-white">{{__('text.word_reason')}}</th>
+                    <th class="border-left border-right border-white">{{__('text.word_action')}}</th>
+                </thead>
+                <tbody>
+                    @php($k = 1)
+                    @foreach (\App\Models\StudentClass::where('bypass_result', '=', 1)->get() as $instance)
+                        <tr class="bg-light border-bottom border-secondary">
+                            <td class="border-left border-right border-white">{{$k++}}</td>
+                            <td class="border-left border-right border-white">{{$instance->student->name ?? ''}}</td>
+                            <td class="border-left border-right border-white">{{\App\Models\Batch::find($instance->year_id)->name ?? ''}}</td>
+                            <td class="border-left border-right border-white">{{\App\Models\Semester::find($instance->result_bypass_semester)->name ?? ''}}</td>
+                            <td class="border-left border-right border-white">{{$instance->bypass_result_reason ?? ''}}</td>
+                            <td class="border-left border-right border-white">
+                                <a class="btn btn-sm btn-danger" href="{{route('admin.result.bypass.cancel', $instance->id)}}">{{__('text.word_cancel')}}</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
     @else
 
     <div class="my-3">

@@ -37,7 +37,7 @@ class UserScholarshipController extends Controller
         $data['students'] = $this->getScholars();
         $data['years'] = Batch::all();
         $data['title'] = 'Our Scholars';
-        return view('admin.scholarship.scholars')->with($data);
+        return view('admin.scholarship.scholars',$data);
     }
 
     /**
@@ -53,10 +53,10 @@ class UserScholarshipController extends Controller
             })
             ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
             ->where('student_scholarships.batch_id', $request->year)
-            ->select(['students.*', 'student_scholarships.amount', 'student_scholarships.reason']);
+            ->select(['students.*', 'student_scholarships.amount', 'student_scholarships.reason'])->get();
             $data['title'] = 'Our Scholars';
-        return $data;
-        // return view('admin.scholarship.scholars')->with($data);
+        // return $data;
+        return view('admin.scholarship.scholars')->with($data);
     }
 
     /**
@@ -65,13 +65,19 @@ class UserScholarshipController extends Controller
      */
     public function getScholars()
     {
-        return DB::table('student_scholarships')
-            ->join('students', 'students.id', '=', 'student_scholarships.student_id')
-            ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
-            ->where(function($query){
-                auth()->user()->campus_id != null ? $query->where('students.campus_id','=', auth()->user()->campus_id): null;
-            })
-            ->select($this->select)->paginate(10);
+        // return DB::table('student_scholarships')
+        //     ->join('students', 'students.id', '=', 'student_scholarships.student_id')
+        //     ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
+        //     ->where(function($query){
+        //         auth()->user()->campus_id != null ? $query->where('students.campus_id','=', auth()->user()->campus_id): null;
+        //     })
+        //     ->select($this->select)->paginate(10);
+
+        return Students::join('student_scholarships', 'student_scholarships.student_id', '=', 'students.id')
+                ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')->where(function($query){
+                    auth()->user()->campus_id != null ? $query->where('students.campus_id','=', auth()->user()->campus_id): null;
+                })
+                ->select($this->select)->paginate(10);
     }
     /**
      * store scholarship for students
@@ -91,6 +97,24 @@ class UserScholarshipController extends Controller
         $user_scholarship->save();
         return redirect()->route('admin.scholarship.awarded_students')->with('success', 'Awarded Scholarship successfully !');
     }
+    /**
+     * update scholarship for students
+     * @param Illuminate\Http\Request
+     * @param int $id
+     */
+    public function update(Request $request, $id)
+    {
+        // return $request->all();
+        $this->validateRequest($request);
+        $user_scholarship = StudentScholarship::find($id);
+        $user_scholarship->student_id  = $id;
+        $user_scholarship->amount = $request->amount;
+        $user_scholarship->batch_id = $request->year;
+        $user_scholarship->reason = $request->reason;
+        $user_scholarship->user_id = Auth::id();
+        $user_scholarship->save();
+        return redirect()->route('admin.scholarship.awarded_students')->with('success', 'Awarded Scholarship successfully !');
+    }
 
     /**
      * show list of eligible student to award scholarship
@@ -101,7 +125,7 @@ class UserScholarshipController extends Controller
         $data['title'] = 'Eligible Students';
         return view('admin.scholarship.eligible_students')->with($data);
     }
-
+    
     /**
      * show form to add user scholarship
      * @param int $id
@@ -113,6 +137,20 @@ class UserScholarshipController extends Controller
         $data['years'] = Batch::all();
         $data['title'] = 'Award Scholarship to ' . $data['student']->name;
         return view('admin.scholarship.award')->with($data);
+    }
+    
+    /**
+     * show form to edit user scholarship
+     * @param int $id
+     */
+    public function edit($id)
+    {
+        $data['scholarship'] = StudentScholarship::find($id);
+        $data['student'] = $data['scholarship']->student;
+        $data['scholarships'] = DB::table('scholarships')->where('status', 1)->get()->toArray();
+        $data['years'] = Batch::all();
+        $data['title'] = 'Award Scholarship to ' . $data['student']->name;
+        return view('admin.scholarship.edit')->with($data);
     }
 
     /**

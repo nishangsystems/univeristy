@@ -44,18 +44,18 @@ class StudentController extends Controller
 
     public function __construct()
     {
-        $this->year = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
+        $this->year = Batch::find(Helpers::instance()->getCurrentAccademicYear())->name;
         $this->years = Batch::all();
-        // $this->batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
+        // $this->batch_id = Batch::find(Helpers::instance()->getCurrentAccademicYear())->id;
     }
-    public function index()
+    public function index(Request $request)
     {
-        $curent_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+        $curent_year = Helpers::instance()->getCurrentAccademicYear();
         $data['title'] = 'Manage Students';
         $data['school_units'] = DB::table('school_units')->where('parent_id', 0)->get()->toArray();
         $data['years'] = $this->years;
         // $data['students'] = DB::table('students')->whereYear('students.created_at', $curent_year)->get()->toArray();
-        $data['students'] = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')->where('student_classes.year_id', '=', $curent_year)->get(['students.*', 'student_classes.class_id']);
+        $data['students'] = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')->get(['students.*', 'student_classes.class_id']);
         return view('admin.student.index')->with($data);
     }
     public function getStudentsPerClass(Request $request)
@@ -68,9 +68,9 @@ class StudentController extends Controller
         
         $data['title'] = 'Manage Students Under '.$type.' in '.$class_name;
         $success = $request->type != null ? $request->type.' ' : '';
-        $success .= $request->circle != null ? \App\Models\SchoolUnits::find($request->circle)->name .' ' : '';
+        $success .= $request->circle != null ? SchoolUnits::find($request->circle)->name .' ' : '';
         $success .= $request->class_id != null ? Self::baseClasses()[$request->class_id].' ' : '';
-        $success .= $request->batch_id != null ? 'For '.\App\Models\Batch::find($request->batch_id)->name.' ': '';
+        $success .= $request->batch_id != null ? 'For '.Batch::find($request->batch_id)->name.' ': '';
         $success .= $request->class != null ? ' in ' . $class_name : '';
         $data['students'] = DB::table('student_classes')
             ->join('students', 'students.id', '=', 'student_classes.student_id')
@@ -239,13 +239,13 @@ class StudentController extends Controller
                 // create student class (check to be sure student class doesn't already exist for current academic year before creating one)
                 $classes = StudentClass::where(['student_id' => $student->id])
                     ->where(['class_id' => $request->program_id])
-                    ->where(['year_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()]);
+                    ->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()]);
                 
                 $classes->count() == 0 ?
                 StudentClass::create([
                     'student_id' => $student->id,
                     'class_id' => $request->program_id,
-                    'year_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
+                    'year_id' => Helpers::instance()->getCurrentAccademicYear()
                 ]):null;
     
                 DB::commit();
@@ -263,7 +263,7 @@ class StudentController extends Controller
     public function getNextAvailableMatricule($section)
     {
         $unit = \App\Models\SchoolUnits::find($section);
-        $academic_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
+        $academic_year_name = \App\Models\Batch::find(Helpers::instance()->getCurrentAccademicYear())->name;
         $matric_template = $unit->prefix . substr($academic_year_name, 2, 2) . $unit->suffix;
 
         $last_matric = DB::table('students')
@@ -334,7 +334,7 @@ class StudentController extends Controller
             $input = $request->all();
             $student = Students::find($id);
             $student->update($input);
-            $class = StudentClass::where('student_id', $student->id)->where('year_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->first();
+            $class = StudentClass::where('student_id', $student->id)->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first();
             $class->class_id = $request->program_id;
             $class->save();
             DB::commit();
@@ -1048,7 +1048,7 @@ class StudentController extends Controller
         # code...
         if ($year_id == null) {
             # code...
-            $year_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+            $year_id = Helpers::instance()->getCurrentAccademicYear();
         }
         $builder = DB::table('results')
                 ->where('batch_id', '=', $year_id)
@@ -1129,5 +1129,26 @@ class StudentController extends Controller
             return back()->with('success', 'Done');
         }
         else{return back()-with('error', 'Student has no class.');}
+    }
+
+    public function reset_password(Request $request, $id)
+    {
+        $student = Students::find($id);
+        if ($student != null) {
+            # code...
+            Students::where('id', '=', $id)->update('password', Hash::make('12345678'));
+            return back()->with('success', 'Done');
+        }
+        return back()->with('error', 'Operation Failed. Student could not be resolved.');
+    }
+
+    public function cancelResultBypass(Request $request, $id)
+    {
+        $std_class = StudentClass::find($id);
+        if($std_class != null){
+            StudentClass::where('id', '=', $id)->update(['bypass_result'=>0, 'bypass_result_reason'=>null, 'result_bypass_semester'=>null]);
+            return back()->with('success', 'Done');
+        }
+        return back()->with('error', 'Operation failed. Bypass could not be resolved to a class.');
     }
 }

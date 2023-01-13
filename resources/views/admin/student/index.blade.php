@@ -1,10 +1,23 @@
 @extends('admin.layout')
 
 @section('section')
+@php
+    $year = request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+@endphp
 
 <div class="col-sm-12">
     <div class="col-lg-12">
-        
+        <form method="get">
+            <div class="input-group-merge d-flex rounded border border-dark my-3">
+                <select class="form-control col-sm-10" name="year">
+                    <option></option>
+                    @foreach (\App\Models\Batch::all() as $batch)
+                        <option value="{{$batch->id}}" {{$batch->id == $year ? 'selected' : ''}}>{{$batch->name}}</option>
+                    @endforeach
+                </select>
+                <input type="submit" value="{{__('text.word_get')}}" class="btn btn-sm btn-dark text-capitalize col-sm-2 text-center">
+            </div>
+        </form>
     </div>
     <div class="">
         <div class=" ">
@@ -21,7 +34,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($students as $k=>$student)
+                    @foreach($students->where('admission_batch_id', '=', $year) as $k=>$student)
                     @if((\Auth::user()->campus_id != null) && ($student->campus_id == \Auth::user()->campus_id))
                         <tr>
                             <td>{{$k+1}}</td>
@@ -38,6 +51,7 @@
                                     @method('DELETE')
                                     {{ csrf_field() }}
                                 </form>
+                                <a class="btn btn-sm btn-warning m-1" href="{{route('admin.student.password.reset',[$student->id])}}"><i class="fa fa-edit"> {{__('text.reset_password')}}</i></a>|
                             </td>
                         </tr>
                     @endif

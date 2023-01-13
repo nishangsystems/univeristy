@@ -68,7 +68,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
 
-    Route::get('/class_list', 'Admin\ProgramController@program_levels_list')->name('class.list');
+    Route::get('/class_list/{year_id?}', 'Admin\ProgramController@program_levels_list')->name('class.list');
     Route::get('programs/assign_level', 'Admin\ProgramController@assign_program_level')->name('programs.set_levels');
     Route::post('programs/assign_level', 'Admin\ProgramController@store_program_level');
     Route::get('programs/{id}/levels', 'Admin\ProgramController@program_levels')->name('programs.levels');
@@ -188,9 +188,11 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('students/clear', 'Admin\StudentController@clearStudents')->name('students.clear');
     Route::get('student/matricule', 'Admin\StudentController@matric')->name('students.matricule');
     Route::post('student/matricule', 'Admin\StudentController@matricPost')->name('students.matricule');
+    Route::post('student/{id}/password/reset', 'Admin\StudentController@reset_password')->name('student.password.reset');
     Route::resource('student', 'Admin\StudentController');
     Route::post('students', 'Admin\StudentController@getStudentsPerClass')->name('getStudent.perClassYear');
     Route::get('result/bypass/{student_id?}', 'Admin\StudentController@studentResultBypass')->name('result.bypass');
+    Route::get('result/bypass/cancel/{id}', 'Admin\StudentController@cancelResultBypass')->name('result.bypass.cancel');
     Route::get('result/bypass/{student_id}/set', 'Admin\StudentController@setStudentResultBypass')->name('result.bypass.set');
     Route::resource('result_release', 'Admin\ResultController');
 
