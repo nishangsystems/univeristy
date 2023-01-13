@@ -16,4 +16,9 @@ class StudentScholarship extends Model
         'user_id',
         'reason'
     ];
+
+    public function student()
+    {
+        return $this->belongsTo(Students::class, 'student_id');
+    }
 }

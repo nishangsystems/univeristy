@@ -47,15 +47,15 @@
                 </thead>
                 <tbody>
                     @foreach($students as $k=>$student)
-                    @php($pl = \App\Models\ProgramLevel::find(\App\Models\Students::find($student->id)->_class($c_year)->id) )
+                    @php($pl = $student->_class($c_year))
                     <tr>
                         <td>{{$k+1}}</td>
                         <td>{{$student->name}}</td>
                         <td>{{$student->email}}</td>
                         <td>{{$student->phone}}</td>
                         <td>{{$student->gender}}</td>
-                        <td>{{  $pl->program->name.' : Level '.$pl->level->level  }}</td>
-                        <td>{{\App\Models\Campus::find($student->campus_id)->name}}</td>
+                        <td>{{ $pl != null ? $pl->name() : '' }}</td>
+                        <td>{{$student->campus->name}}</td>
                         <td>{{number_format($student->amount)}}</td>
                         <td>{{$student->reason}}</td>
                         <td>
@@ -66,7 +66,7 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-                {{$students->links()}}
+                
             </div>
         </div>
     </div>

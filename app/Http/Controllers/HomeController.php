@@ -184,6 +184,7 @@ class HomeController extends Controller
                     ->pluck('payments.amount')
                     ->toArray()
                 ),
+                'balance' => Students::find($stud)->bal($stud, $year),
                 'total' => 
                         \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
@@ -200,28 +201,53 @@ class HomeController extends Controller
         foreach ($fees as $key => $value) {
             # code...
             $stdt = Students::find($value['stud']);
-            if(($value['total'] > 0 && $value['amount'] >= $value['total']) && $type == 'completed'){
+            if(($value['total'] > 0 && $value['balance'] <= 0) && $type == 'completed'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
                     'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-                    'total'=> $value['amount'],
+                    'total'=> $value['balance'],
                     'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }
-            if($request->has('amount') && $request->amount >= $value['amount']){continue;}
-            if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
+            if($request->has('amount') && $request->amount > ($value['total']-$value['balance'])){continue;}
+            if(($value['balance'] > 0 || $value['total'] == 0 ) && $type == 'uncompleted'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
                     'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-                    'total'=> $value['amount'],
+                    'total'=> $value['balance'],
                     'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }
         }
+        // foreach ($fees as $key => $value) {
+        //     # code...
+        //     $stdt = Students::find($value['stud']);
+        //     if(($value['total'] > 0 && $value['amount'] >= $value['total']) && $type == 'completed'){
+        //         $students[] = [
+        //             'id'=> $stdt->id,
+        //             'name'=> $stdt->name,
+        //             'matric'=>$stdt->matric,
+        //             'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
+        //             'total'=> $value['amount'],
+        //             'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
+        //         ];
+        //     }
+        //     if($request->has('amount') && $request->amount >= $value['amount']){continue;}
+        //     if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
+        //         $students[] = [
+        //             'id'=> $stdt->id,
+        //             'name'=> $stdt->name,
+        //             'matric'=>$stdt->matric,
+        //             'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
+        //             'total'=> $value['amount'],
+        //             'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
+        //         ];
+        //     }
+        // }
 
         $students = collect($students)
                     ->sortBy('name')->toArray();
@@ -256,6 +282,7 @@ class HomeController extends Controller
                     ->pluck('payments.amount')
                     ->toArray()
                 ),
+                'balance' => Students::find($stud)->bal($stud, $year),
                 'total' => 
                         \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
@@ -272,28 +299,53 @@ class HomeController extends Controller
         foreach ($fees as $key => $value) {
             # code...
             $stdt = Students::find($value['stud']);
-            if(($value['total'] > 0 && $value['amount'] >= $value['total']) && $type == 'completed'){
+            if(($value['total'] > 0 && $value['balance'] <= 0) && $type == 'completed'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
                     'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-                    'total'=> $value['amount'],
+                    'total'=> $value['balance'],
                     'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }
-            if($request->has('amount') && $request->amount >= $value['amount']){continue;}
-            if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
+            if($request->has('amount') && $request->amount > ($value['total']-$value['balance'])){continue;}
+            if(($value['balance'] > 0 || $value['total'] == 0 ) && $type == 'uncompleted'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
                     'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-                    'total'=> $value['amount'],
+                    'total'=> $value['balance'],
                     'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }
         }
+        // foreach ($fees as $key => $value) {
+        //     # code...
+        //     $stdt = Students::find($value['stud']);
+        //     if(($value['total'] > 0 && $value['amount'] >= $value['total']) && $type == 'completed'){
+        //         $students[] = [
+        //             'id'=> $stdt->id,
+        //             'name'=> $stdt->name,
+        //             'matric'=>$stdt->matric,
+        //             'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
+        //             'total'=> $value['amount'],
+        //             'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
+        //         ];
+        //     }
+        //     if($request->has('amount') && $request->amount >= $value['amount']){continue;}
+        //     if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
+        //         $students[] = [
+        //             'id'=> $stdt->id,
+        //             'name'=> $stdt->name,
+        //             'matric'=>$stdt->matric,
+        //             'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
+        //             'total'=> $value['amount'],
+        //             'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
+        //         ];
+        //     }
+        // }
         $students = collect($students)->sortBy('name')->toArray();
 
         return response()->json(['title' => $title, 'students' => $students]);
@@ -370,7 +422,7 @@ class HomeController extends Controller
     public static function fee_situation(Request $request)
     {
         # code...
-        $year = request('year', \App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+        $year = request('year', Helpers::instance()->getCurrentAccademicYear());
         $class = ProgramLevel::find(\request('class'));
 
         $students = [];
@@ -393,6 +445,7 @@ class HomeController extends Controller
                     ->pluck('payments.amount')
                     ->toArray()
                 ),
+                'balance'=>Students::find($stud)->bal($stud, $year),
                 // total/expected fee amount
                 'total' => 
                         \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
@@ -417,8 +470,8 @@ class HomeController extends Controller
                     'name'=> $stdt->name,
                     'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-                    'paid'=> $value['amount'],
-                    'owing'=> $value['total'] - $value['amount'],
+                    'paid'=> ($value['total']-$value['balance']) < 0 ? 0 : ($value['total']-$value['balance']),
+                    'owing'=> $value['balance'],
                     'scholarship'=>$value['scholarship'],
                     'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
