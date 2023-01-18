@@ -59,7 +59,7 @@
                         <td>{{number_format($student->amount)}}</td>
                         <td>{{$student->reason}}</td>
                         <td>
-                            <a href="{{route('admin.scholarship.edit', $student->id)}}" class="btn btn-sm btn-primary">{{__('text.word_edit')}}</a>
+                            <a href="{{route('admin.scholarship.edit', $student->sc_id)}}" class="btn btn-sm btn-primary">{{__('text.word_edit')}}</a>
                         </td>
                     </tr>
                     @endforeach

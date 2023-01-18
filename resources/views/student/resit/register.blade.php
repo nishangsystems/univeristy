@@ -6,10 +6,10 @@
         <div class="form-group">
 
             <div class="rounded py-3 px-1 bg-light">
-                <div class="py-2">
+                <!-- <div class="py-2">
                     <button type="button" class="form-control btn btn-md btn-primary fw-bolder text-sm" onclick="$('#course_bank').toggleClass('hidden')">{{__('text.sign_resit_course')}}</button>
-                </div>
-                <div class="py-3 hidden" id="course_bank">
+                </div> -->
+                <div class="py-3 " id="course_bank">
                     <div class="form-group form-group-merged d-flex border">
                         <input type="text" name="level" class="form-control border-0" id="modal-level" placeholder="{{__('text.prase_course_search')}}" oninput="getCourses('#modal-level')">
                     </div>
@@ -27,7 +27,7 @@
             </div>
             
             <div class="py-3">
-                <form method="post">
+                <form method="post" action="{{route('student.resit.registration.payment')}}" class="" id="signed_courses_form">
                     @csrf
                     <table>
                         <thead class="text-capitalize bg-secondary text-white">
@@ -60,6 +60,7 @@
     @endif
 </div>
 @endsection
+
 @section('script')
 <script>
     let registered_courses = [];
@@ -68,6 +69,7 @@
     let course_cost = 0;
     let cv_total = parseInt("{{$cv_total}}");
 
+ 
     $(document).ready(function(){
         if ("{{$access}}") {
             loadCourses();
@@ -101,6 +103,7 @@
             }
         })
     }
+
     function getCourses(div = null){
         if (div == null) {
             value = "{{$student_class->level()->first()->id}}";

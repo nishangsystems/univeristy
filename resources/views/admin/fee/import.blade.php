@@ -45,11 +45,12 @@
                         </thead>
                         <tbody>
                             @php($k = 1)
-                            @foreach(\App\Models\Payments::whereNotNull('import_reference')->distinct()->get(['import_reference']) as $import_ref)
+                            @foreach(array_unique(\App\Models\Payments::whereNotNull('import_reference')->distinct()->pluck('import_reference')->toArray()) as $import_ref)
                                 @php($import = \App\Models\Payments::where('import_reference', $import_ref)->first())
+                                @php(dd($import_ref))
                                 <tr class="border-bottom border-dark">
                                     <td class="border-left border-right border-secondary">{{$k++}}</td>
-                                    <td class="border-left border-right border-secondary">{{$import->import_reference}}</td>
+                                    <td class="border-left border-right border-secondary">{{$import->import_reference ?? ''}}</td>
                                     <td class="border-left border-right border-secondary">{{date('l d-m-Y H:m', strtotime($import->created_at))}}</td>
                                     <td class="border-left border-right border-secondary">
                                         <a href="{{route('admin.fee.import.undo', $import_ref)}}" class="btn btn-sm btn-danger">{{__('text.word_undo')}}</a>

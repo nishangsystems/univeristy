@@ -9,7 +9,8 @@
             <div class="form-group @error('name') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_name')}} <span style="color: red;">*</span></label>
                 <div class="col-lg-10">
-                    <input class=" form-control" name="name" value="{{old('name') ?? $scholarship->name}}" type="text" required />
+                    <input type="hidden" name="student_id">
+                    <input class=" form-control" name="name" value="{{old('name') ?? $scholarship->student->name}}" type="text" required disabled/>
                     @error('name')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror

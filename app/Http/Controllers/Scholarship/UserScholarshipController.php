@@ -27,6 +27,7 @@ class UserScholarshipController extends Controller
         'students.address',
         'student_scholarships.amount',
         'student_scholarships.reason',
+        'student_scholarships.id as sc_id',
     ];
     /**
      * @param Illuminate\Http\Request
@@ -53,7 +54,7 @@ class UserScholarshipController extends Controller
             })
             ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
             ->where('student_scholarships.batch_id', $request->year)
-            ->select(['students.*', 'student_scholarships.amount', 'student_scholarships.reason'])->get();
+            ->select(['students.*', 'student_scholarships.amount', 'student_scholarships.reason', 'student_scholarships.id as sc_id'])->get();
             $data['title'] = 'Our Scholars';
         // return $data;
         return view('admin.scholarship.scholars')->with($data);
@@ -77,7 +78,7 @@ class UserScholarshipController extends Controller
                 ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')->where(function($query){
                     auth()->user()->campus_id != null ? $query->where('students.campus_id','=', auth()->user()->campus_id): null;
                 })
-                ->select($this->select)->paginate(10);
+                ->select($this->select)->get();
     }
     /**
      * store scholarship for students
@@ -113,7 +114,7 @@ class UserScholarshipController extends Controller
         $user_scholarship->reason = $request->reason;
         $user_scholarship->user_id = Auth::id();
         $user_scholarship->save();
-        return redirect()->route('admin.scholarship.awarded_students')->with('success', 'Awarded Scholarship successfully !');
+        return back()->with('success', 'Awarded Scholarship successfully !');
     }
 
     /**

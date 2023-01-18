@@ -158,12 +158,43 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('classmaster/create', 'Admin\UserController@classmasterCreate')->name('users.classmaster.create');
 
 
-    Route::get('result/import', 'Admin\ResultController@import')->name('result.import');
-    Route::post('result/import', 'Admin\ResultController@importPost')->name('result.import');
-    Route::get('result/export', 'Admin\ResultController@export')->name('result.export');
-    Route::post('result/export', 'Admin\ResultController@exportPost')->name('result.export');
-    Route::get('result/report', 'Admin\ResultController@report')->name('result.report');
-    Route::post('result/report', 'Admin\ResultController@report_show')->name('result.report.show');
+
+    Route::prefix('result')->name('result.')->group(function(){
+        Route::get('import', 'Admin\ResultController@import')->name('import');
+        Route::post('import', 'Admin\ResultController@importPost')->name('import');
+        Route::get('export', 'Admin\ResultController@export')->name('export');
+        Route::post('export', 'Admin\ResultController@exportPost')->name('export');
+        Route::get('report', 'Admin\ResultController@report')->name('report');
+        Route::post('report', 'Admin\ResultController@report_show')->name('report.show');
+        Route::get('individual_results', 'Admin\ResultController@individual_results')->name('individual_results');
+        Route::get('class_results', 'Admin\ResultController@class_results')->name('class_results');
+        Route::get('individual_results/instances/{searchValue}', 'Admin\ResultController@individual_instances')->name('individual.instances');
+    
+    
+        // ADDED RESULT ROUTES FOR OFFLINE SYSTEM
+        Route::prefix('ca')->name('ca.')->group(function(){
+            Route::get('{class_id?}', 'Admin\ResultController@ca_result')->name('index');
+            Route::get('{class_id}/{course_id}/import', 'Admin\ResultController@ca_import')->name('import');
+            Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@ca_import_save')->name('import.save');
+            Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@ca_fill')->name('fill');
+            Route::post('{class_id}/{course_id}/fill', 'Admin\ResultController@ca_fill_save')->name('fill');
+            Route::get('set_dateline', 'Admin\ResultController@ca_set_dateline')->name('dateline.set');
+            Route::post('set_dateline', 'Admin\ResultController@ca_save_dateline')->name('dateline.set');
+        });
+
+        Route::prefix('exam')->name('exam.')->group(function(){
+            Route::get('{class_id?}', 'Admin\ResultController@exam_result')->name('index');
+            Route::get('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import')->name('import');
+            Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import_save')->name('import');
+            Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill')->name('fill');
+            Route::post('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill_save')->name('fill');
+            Route::get('set_dateline', 'Admin\ResultController@exam_set_dateline')->name('dateline.set');
+            Route::post('set_dateline', 'Admin\ResultController@exam_save_dateline')->name('dateline.set');
+        });
+        Route::get('imports', 'Admin\ResultController@imports_index')->name('imports');
+        // END OF ADDED RESULT ROUTES FOR OFFLINE SYSTEM
+
+    });
 
     Route::get('users/{user_id}/subjects', 'Admin\UserController@createSubject')->name('users.subjects.add');
     Route::delete('users/{user_id}/subjects', 'Admin\UserController@dropSubject')->name('users.subjects.drop');
@@ -331,6 +362,14 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('set_letter_head', [AdminHomeController::class, 'set_letter_head'])->name('set_letter_head');
     Route::post('set_letter_head/save', [AdminHomeController::class, 'save_letter_head'])->name('save_letter_head');
 
+    
+    
+    // ROUTES FOR RESULT OPERATIONS
+    Route::prefix('res_and_trans')->name('res_and_trans.')->group(function () {
+        Route::post('spr_sheet', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'spread_sheet'])->name('spr_sheet');
+        Route::post('fre_dis', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'frequency_distribution'])->name('fre_dis');
+    });
+
 });
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {
@@ -414,6 +453,7 @@ Route::prefix('student')->name('student.')->group(function () {
     });
     Route::get('resit/registration', 'Student\HomeController@resit_registration')->name('resit.registration');
     Route::post('resit/registration', 'Student\HomeController@register_resit');
+    Route::post('resit/registration/payment', 'Student\HomeController@resit_payment')->name('resit.registration.payment');
     Route::get('resit/registered_courses', 'Student\HomeController@registered_resit_courses')->name('resit.registered_courses');
     Route::get('registered_courses/{year?}/{semester?}/{student?}', 'Student\HomeController@registerd_courses')->name('registered_courses');
     Route::get('class-subjects/{level}', 'Student\HomeController@class_subjects')->name('class-subjects');
@@ -500,6 +540,14 @@ Route::get('/campuses/{id}/programs', function(Request $request){
 Route::get('semesters/{background}', function(Request $request){
     return \App\Models\Semester::where('background_id', $request->background)->get();
 })->name('semesters');
+Route::get('class_subjects/{program_level_id}', function($program_level_id){
+    // return $program_level_id;
+    $courses = \App\Models\ClassSubject::where(['class_subjects.class_id'=>$program_level_id])
+            ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
+            ->get('subjects.*');
+            return $courses;
+            // return response()->json(SubjectsResource::collection($courses));
+})->name('class_subjects');
 Route::get('campus/{campus}/program_levels', [Controller::class, 'sorted_campus_program_levels'])->name('campus.program_levels');
 Route::get('getColor/{label}', [HomeController::class, 'getColor'])->name('getColor');
 Route::get('mode/{locale}', function ($batch) {
