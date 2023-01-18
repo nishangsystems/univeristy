@@ -149,6 +149,61 @@ class Students extends Authenticatable
         return $paymentBuilder->orderBy('id', 'DESC')->first()->debt;
     }
 
+    
+    public function ca_score($course_id, $class_id, $year_id, $semester_id = null)
+    {
+        # code...
+        $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
+        $record = Result::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
+        if ($record != null) {
+            # code...
+            return $record->ca_score ?? '';
+        }
+        return '';
+    }
+
+    public function exam_score($course_id, $class_id, $year_id, $semester_id = null)
+    {
+        # code...
+        $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
+        $record = Result::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
+        if ($record != null) {
+            # code...
+            return $record->exam_score ?? '';
+        }
+        return '';
+    }
+
+    public function total_score($course_id, $class_id, $year_id, $semester_id = null)
+    {
+        # code...
+        $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
+        $record = Result::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
+        if ($record != null) {
+            # code...
+            return ($record->ca_score ?? 0) + ($record->exam_score ?? 0);
+        }
+        return '';
+    }
+
+    public function grade($course_id, $class_id, $year_id, $semester_id = null)
+    {
+        # code...
+        $grades = \App\Models\ProgramLevel::find($class_id)->program->gradingType->grading->sortBy('grade') ?? [];
+
+        if(count($grades) == 0){return '-';}
+
+        $score = $this->total_score($course_id, $class_id, $year_id, $semester_id);
+        if ($score != '') {
+            # code...
+            foreach ($grades as $key => $grade) {
+                if ($score >= $grade->lower && $score <= $grade->upper) {return $grade->grade;}
+            }
+        }
+        return '';
+    } 
+
+
     public function total_debts($year)
     {
         # code...

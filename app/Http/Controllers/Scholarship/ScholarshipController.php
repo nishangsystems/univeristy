@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Scholarship;
 
 use App\Http\Controllers\Controller;
 use App\Models\Scholarship;
+use App\Models\StudentScholarship;
 use Illuminate\Http\Request;
 
 class ScholarshipController extends Controller
@@ -99,8 +100,9 @@ class ScholarshipController extends Controller
      */
     public function edit($id)
     {
-        $data['scholarship'] = Scholarship::findOrFail($id);
+        $data['scholarship'] = StudentScholarship::find($id);
         $data['title'] = 'Edit Scholarship';
+        // return $data;
         return view('admin.scholarship.edit')->with($data);
     }
 
@@ -112,6 +114,7 @@ class ScholarshipController extends Controller
      */
     public function update(Request $request, $id)
     {
+        return $request->all();
         $request->validate([
             'name' => 'required|string|max:255',
             'amount' => 'required|numeric',
