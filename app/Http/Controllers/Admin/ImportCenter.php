@@ -7,6 +7,8 @@ use App\Models\Batch;
 use App\Models\ClassSubject;
 use App\Models\ProgramLevel;
 use App\Models\Result;
+use App\Models\Students;
+use App\Models\Subjects;
 // use App\Models\Income;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -64,8 +66,8 @@ class ImportCenter extends Controller
                     # code...
                     if($row == null)break;
                     if($row != false){
-                        $student = \App\Models\Students::where('matric', '=', $row[0])->first() ?? null;
-                        $subject = \App\Models\Subjects::where('code', '=', $row[1])->first() ?? null;
+                        $student = Students::where('matric', '=', $row[0])->first() ?? null;
+                        $subject = Subjects::where('code', '=', $row[1])->first() ?? null;
                         if ($student == null) {
                             # code...
                             $errors .= 'student with matricule <strong>'.$row[0].'</strong> not found. </br>';                        
@@ -76,12 +78,23 @@ class ImportCenter extends Controller
                         }
                         else{
                             // return $row;
-                            $class = \App\Models\Students::find($student->id)->_class($request->year);
+                            $class = Students::find($student->id)->_class($request->year);
                             if ($class == null) {
                                 # code...
                                 $errors .= 'No class registered for student <strong>'.$row[0].'</strong> year '.Batch::find($request->year)->name.' </br>';
                                 continue;
                                 
+                            }
+                            $ca_total = $student->_class($request->year)->program->ca_total;
+                            if ($ca_total == null || $ca_total == 0) {
+                                # code...
+                                $errors .= "CA TOTAL not set for " . $student->_class($request->year)->program->name ?? '';
+                                continue;
+                            }else{
+                                if($row[2] > $ca_total){
+                                    $errors .= "CA mark for [ ".$subject->code.' ] '.$subject->name.' exceeds CA TOTALS';
+                                    continue;
+                                }
                             }
                             $data = [
                                 'batch_id' => $request->year,
@@ -178,8 +191,8 @@ class ImportCenter extends Controller
                     # code...
                     if($row == null)break;
                     if($row != false){
-                        $student = \App\Models\Students::where('matric', '=', $row[0])->first() ?? null;
-                        $subject = \App\Models\Subjects::where('code', '=', $row[1])->first() ?? null;
+                        $student = Students::where('matric', '=', $row[0])->first() ?? null;
+                        $subject = Subjects::where('code', '=', $row[1])->first() ?? null;
                         if ($student == null) {
                             # code...
                             $errors .= 'student with matricule <strong>'.$row[0].'</strong> not found. </br>';                        
@@ -190,12 +203,35 @@ class ImportCenter extends Controller
                         }
                         else{
                             // return $row;
-                            $class = \App\Models\Students::find($student->id)->_class($request->year);
+                            $class = Students::find($student->id)->_class($request->year);
                             if ($class == null) {
                                 # code...
                                 $errors .= 'No class registered for student <strong>'.$row[0].'</strong> year '.Batch::find($request->year)->name.' </br>';
                                 continue;
                                 
+                            }
+
+                            $ca_total = $student->_class($request->year)->program->ca_total;
+                            $exam_total = $student->_class($request->year)->program->exam_total;
+                            if ($ca_total == null || $ca_total == 0) {
+                                # code...
+                                $errors .= "CA TOTAL not set for " . $student->_class($request->year)->program->name . '</br>';
+                                continue;
+                            }else{
+                                if($row[2] > $ca_total){
+                                    $errors .= "CA mark for [ ".$subject->code.' ] '.$subject->name.' exceeds CA TOTALS </br>';
+                                    continue;
+                                }
+                            }
+                            if ($exam_total == null || $exam_total == 0) {
+                                # code...
+                                $errors .= "EXAM TOTAL not set for " . $student->_class($request->year)->program->name. '</br>';
+                                continue;
+                            }else{
+                                if($row[3] > $exam_total){
+                                    $errors .= "EXAM mark for [ ".$subject->code.' ] '.$subject->name.' exceeds EXAM TOTALS </br>';
+                                    continue;
+                                }
                             }
 
                             // SAVE CA RESULT
