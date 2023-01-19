@@ -270,5 +270,6 @@ class Helpers
     {
         # code...
         $resits = Resit::whereDate('start_date', '<=', date('m/d/Y'))->whereDate('end_date', '>=', date('m/d/Y'))->get();
+        return $resits;
     }
 }
