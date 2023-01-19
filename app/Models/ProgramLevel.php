@@ -10,7 +10,7 @@ class ProgramLevel extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['program_id', 'level_id'];
+    protected $fillable = ['program_id', 'level_id', 'resit_cost'];
     
     public function students()
     {
@@ -60,5 +60,10 @@ class ProgramLevel extends Model
             ->where(function ($qr) use ($campus_id) {
                 $campus_id == null ? null : $qr->where(['campus_id' => $campus_id]);
                 });
+    }
+
+    public function resit_cost_isset()
+    {
+        return $this->resit_cost == null;
     }
 }

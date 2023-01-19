@@ -48,6 +48,7 @@
                             </div>
                         </div>
                         <tr class="text-capitalize">
+                            <th class="text-center" >#</th>
                             <th class="text-center" >{{__('text.word_code')}}</th>
                             <th class="text-center" >{{__('text.word_course')}}</th>
                             <th class="text-center" >ST</th>
@@ -60,8 +61,13 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $k = 1;
+                        @endphp
                         @foreach($results as $subject)
+                            @if (!$subject == null)
                             <tr class="border-top border-bottom border-secondary border-dashed">
+                                <td class="border-left border-right border-light">{{$k++}}</td>
                                 <td class="border-left border-right border-light">{{$subject['code']}}</td>
                                 <td class="border-left border-right border-light">{{$subject['name']}}</td>
                                 <td class="border-left border-right border-light">{{$subject['status']}}</td>
@@ -72,6 +78,7 @@
                                 <td class="border-left border-right border-light">{{$subject['grade']}}</td>
                                 <td class="border-left border-right border-light">{{$subject['remark']}}</td>
                             </tr>
+                            @endif
                         @endforeach
                         <tr class="border border-secondary text-capitalize h4 fw-bolder">
                             <td colspan="2" class="text-center">{{__('text.total_courses_attempted')}} : <span class="px-3">{{count($results)}}</span></td>

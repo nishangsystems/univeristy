@@ -5,9 +5,11 @@ namespace App\Helpers;
 use App\Models\Batch;
 use App\Models\File;
 use App\Models\ProgramLevel;
+use App\Models\Resit;
 use App\Models\Result;
 use App\Models\SchoolUnits;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Helpers
@@ -262,5 +264,11 @@ class Helpers
         # code...
         $class = ProgramLevel::find($class_id);
         return $class->program->exam_total;
+    }
+
+    public function open_resits()
+    {
+        # code...
+        $resits = Resit::whereDate('start_date', '<=', date('m/d/Y'))->whereDate('end_date', '>=', date('m/d/Y'))->get();
     }
 }

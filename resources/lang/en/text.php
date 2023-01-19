@@ -498,4 +498,5 @@ return [
     'EX'=>'EX',
     'TT'=>'TT',
     'GR'=>'GR',
+    'clear_results'=>'clear results',
 ];
