@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
+use App\Models\ClassSubject;
+use App\Models\ProgramLevel;
 use App\Models\Result;
 // use App\Models\Income;
 use Illuminate\Http\Request;
@@ -39,7 +41,7 @@ class ImportCenter extends Controller
         try {
             //code...
             // make sure reference doesn't exist
-            if (\App\Models\Result::where('reference', '=', $request->reference)->count() > 0) {
+            if (Result::where('reference', '=', $request->reference)->count() > 0) {
                 # code...
                 return back()->with('error', 'Could not import. Reference already exist.');
             }
@@ -74,7 +76,7 @@ class ImportCenter extends Controller
                         }
                         else{
                             // return $row;
-                            $class = \App\Models\StudentClass::where('student_id', '=', $student->id)->where('year_id', '=', $request->year)->first();
+                            $class = \App\Models\Students::find($student->id)->_class($request->year);
                             if ($class == null) {
                                 # code...
                                 $errors .= 'No class registered for student <strong>'.$row[0].'</strong> year '.Batch::find($request->year)->name.' </br>';
@@ -84,21 +86,22 @@ class ImportCenter extends Controller
                             $data = [
                                 'batch_id' => $request->year,
                                 'student_id' => $student->id,
-                                'class_id' => $class->class_id,
-                                'sequence' => \App\Models\Sequence::where('term_id', '=', $request->semester)
-                                                // ->whereIn('name', ['1st Sequence', '3rd Sequence', '5th Sequence'])
-                                                ->first()->id,
+                                'class_id' => $class->id,
+                                'semester_id' => $request->semester,
                                 'subject_id' => $subject->id,
-                                'score' => $row[2],
-                                'coef' => \App\Models\ClassSubject::where('subject_id', '=', $subject->id)->where('class_id', '=', $class->class_id)->first()->coef ?? $subject->coef,
-                                'class_subject_id' => \App\Models\ClassSubject::where('subject_id', '=', $subject->id)->where('class_id', '=', $class->class_id)->first()->id,
-                                'reference' => $request->reference
+                                'ca_score' => $row[2],
+                                'coef' => ClassSubject::where('subject_id', '=', $subject->id)->where('class_id', '=', $class->id)->first()->coef ?? $subject->coef,
+                                'class_subject_id' => ClassSubject::where(['subject_id'=>$subject->id, 'class_id'=> $class->id])->count() > 0 ?
+                                     ClassSubject::where(['subject_id'=>$subject->id, 'class_id'=> $class->id])->first()->id :
+                                      0,
+                                'reference' => $request->reference,
+                                'user_id'=>auth()->id()
                             ];
-                            if (\App\Models\Result::where([
+                            if (Result::where([
                                 'batch_id'=>$data['batch_id'],
                                 'student_id'=>$data['student_id'],
                                 'class_id'=>$data['class_id'],
-                                'sequence'=>$data['sequence'],
+                                'semester_id'=>$data['semester_id'],
                                 'subject_id'=>$data['subject_id'],
                                 'coef'=>$data['coef'],
                                 'class_subject_id'=>$data['class_subject_id']
@@ -106,7 +109,10 @@ class ImportCenter extends Controller
                                 # code...
                                 $errors .= $row[0]." already has a CA mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";
                             }else{
-                                \App\Models\Result::create($data);
+                                Result::create($data);
+                            }
+                            if($data['class_subject_id'] == 0){
+                                $errors .= "Course [ ".$subject->code." ] ".$subject->name." not available for class ".$class->name()."</br>"; 
                             }
                         }
 
@@ -138,7 +144,8 @@ class ImportCenter extends Controller
         $validate = Validator::make($request->all(), [
             'year'=>'required',
             'semester'=>'required',
-            'file'=>'required|max:2048',
+            // 'file'=>'required|max:4096',
+            'file'=>'required',
             'reference'=>'required'
         ]);
         if ($validate->fails()) {
@@ -148,7 +155,7 @@ class ImportCenter extends Controller
         try {
             //code...
             // make sure reference doesn't exist
-            if (\App\Models\Result::where('reference', '=', $request->reference)->count() > 0) {
+            if (Result::where('reference', '=', $request->reference)->count() > 0) {
                 # code...
                 return back()->with('error', 'Could not import. Reference already exist.');
             }
@@ -183,7 +190,7 @@ class ImportCenter extends Controller
                         }
                         else{
                             // return $row;
-                            $class = \App\Models\StudentClass::where('student_id', '=', $student->id)->where('year_id', '=', $request->year)->first();
+                            $class = \App\Models\Students::find($student->id)->_class($request->year);
                             if ($class == null) {
                                 # code...
                                 $errors .= 'No class registered for student <strong>'.$row[0].'</strong> year '.Batch::find($request->year)->name.' </br>';
@@ -195,58 +202,39 @@ class ImportCenter extends Controller
                             $ca = [
                                 'batch_id' => $request->year,
                                 'student_id' => $student->id,
-                                'class_id' => $class->class_id,
-                                'sequence' => \App\Models\Sequence::where('term_id', '=', $request->semester)
-                                                // ->whereIn('name', ['1st Sequence', '3rd Sequence', '5th Sequence'])
-                                                ->orderBy('name', 'ASC')->first()->id,
+                                'class_id' => $class->id,
+                                'semester_id' => $request->semester,
                                 'subject_id' => $subject->id,
-                                'score' => $row[2],
-                                'coef' => \App\Models\ClassSubject::where('subject_id', '=', $subject->id)->where('class_id', '=', $class->class_id)->first()->coef,
-                                'class_subject_id' => \App\Models\ClassSubject::where('subject_id', '=', $subject->id)->where('class_id', '=', $class->class_id)->first()->id,
+                                $row[2] == null ? null :'ca_score' => $row[2],
+                                'exam_score' => $row[3],
+                                'coef' => ClassSubject::where('subject_id', '=', $subject->id)->where('class_id', '=', $class->id)->first()->coef ?? $subject->coef,
+                                'class_subject_id' => ClassSubject::where(['subject_id'=>$subject->id, 'class_id'=> $class->id])->count() > 0 ?
+                                     ClassSubject::where(['subject_id'=>$subject->id, 'class_id'=> $class->id])->first()->id :
+                                      0,
                                 'reference' => $request->reference
                             ];
-                            if (\App\Models\Result::where([
-                                'batch_id'=>$ca['batch_id'],
-                                'student_id'=>$ca['student_id'],
-                                'class_id'=>$ca['class_id'],
-                                'sequence'=>$ca['sequence'],
-                                'subject_id'=>$ca['subject_id'],
-                                'coef'=>$ca['coef'],
-                                'class_subject_id'=>$ca['class_subject_id']
-                            ])->count()>0) {
+                            $base = [
+                                'batch_id' => $ca['batch_id'],
+                                'student_id' => $ca['student_id'],
+                                'class_id' => $ca['class_id'],
+                                'semester_id' => $ca['semester_id'],
+                                'subject_id' => $ca['subject_id'],
+                                'coef' => $ca['coef'],
+                                'class_subject_id' => $ca['class_subject_id']
+                            ];
+                            $update = [
+                                $row[2] == null ? null : 'ca_score' => $row[2],
+                                'exam_score' => $row[3],
+                                'reference' => $request->reference
+                            ];
+                            if (Result::where($base)->whereNotNull('exam_score')->count()>0) {
                                 # code...
-                                $errors .= $row[0]." already has a CA mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";
+                                $errors .= $row[0]." already has Exam mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";
                             }else{
-                                \App\Models\Result::create($ca);
+                                Result::updateOrCreate($base, $update);
                             }
-
-                            // SAVE EXAM RESULT
-                            $exam = [
-                                'batch_id' => $request->year,
-                                'student_id' => $student->id,
-                                'class_id' => $class->class_id,
-                                'sequence' => \App\Models\Sequence::where('term_id', '=', $request->semester)
-                                                // ->whereIn('name', ['1st Sequence', '3rd Sequence', '5th Sequence'])
-                                                ->orderBy('name', 'DESC')->first()->id,
-                                'subject_id' => $subject->id,
-                                'score' => $row[3],
-                                'coef' => \App\Models\ClassSubject::where('subject_id', '=', $subject->id)->where('class_id', '=', $class->class_id)->first()->coef,
-                                'class_subject_id' => \App\Models\ClassSubject::where('subject_id', '=', $subject->id)->where('class_id', '=', $class->class_id)->first()->id,
-                                'reference' => $request->reference
-                            ];
-                            if (\App\Models\Result::where([
-                                'batch_id'=>$exam['batch_id'],
-                                'student_id'=>$exam['student_id'],
-                                'class_id'=>$exam['class_id'],
-                                'sequence'=>$exam['sequence'],
-                                'subject_id'=>$exam['subject_id'],
-                                'coef'=>$exam['coef'],
-                                'class_subject_id'=>$exam['class_subject_id']
-                            ])->count()>0) {
-                                # code...
-                                $errors .= $row[0]." already has exam mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";
-                            }else{
-                                \App\Models\Result::create($exam);
+                            if($ca['class_subject_id'] == 0){
+                                $errors .= "Course [ ".$subject->code." ] ".$subject->name." not available for class ".$class->name()."</br>"; 
                             }
                         }
 
@@ -266,19 +254,19 @@ class ImportCenter extends Controller
     public function clear_ca()
     {
         # code...
-        $data['title'] = 'Clear CA';
+        $data['title'] = 'Clear Results';
         return view('admin.imports.clear_ca', $data);
     }
 
     public function clear_ca_save(Request $request)
     {
         # code...
-        $validate = Validator::make($request->all(), ['reference'=>'required', 'year'=>'required']);
+        $validate = Validator::make($request->all(), ['reference'=>'required', 'year'=>'required', 'semester'=>'required']);
         if ($validate->fails()) {
             # code...
             return $validate->errors()->first();
         }
-        $results = Result::where('reference', '=', $request->reference)->whereIn('sequence', [1,3,5])->where('batch_id', '=', $request->year)->get();
+        $results = Result::where(['reference'=> $request->reference, 'semester_id'=> $request->semester, 'batch_id'=>$request->year])->get();
         foreach ($results as $key => $value) {
             # code...
             $value->delete();

@@ -73,12 +73,13 @@ class Students extends Authenticatable
         return $this->belongsTo(Campus::class);
     }
 
-    public function total()
+    public function total($year_id = null)
     {
-        if ($this->classes()->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first() != null) {
+        $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
+        if ($this->classes()->where('year_id', $year)->first() != null) {
             # code...
             // return $this->campus()->first()->campus_programs()->where(['program_level_id' => $this->_class(Helpers::instance()->getCurrentAccademicYear())->id ?? 0, 'campus_id'=>$this->campus_id])->first()->payment_items()->first()->amount ?? -1;
-            return $this->_class(Helpers::instance()->getCurrentAccademicYear())->campus_programs($this->campus_id)->first()->payment_items->first()->amount;
+            return $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items->first()->amount;
         }
         return 0;
     }
