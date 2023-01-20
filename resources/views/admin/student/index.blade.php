@@ -72,6 +72,8 @@
                                     @method('DELETE')
                                     {{ csrf_field() }}
                                 </form>
+                                <a class="btn btn-sm btn-warning m-1" onclick="event.preventDefault(); $('#$student->id').submit()"><i class="fa fa-edit"> {{__('text.reset_password')}}</i></a>|
+                                <form action="{{route('admin.student.password.reset',[$student->id])}}" method="post" id="$student->id" class="hidden"></form>
                             </td>
                         </tr>
                     @endif

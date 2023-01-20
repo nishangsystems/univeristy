@@ -1077,23 +1077,25 @@
             </div>
 
             <div class="m-5">
-                @if(Session::has('success'))
-                    <div class="alert alert-success fade in">
-                        <strong>Success!</strong> {{Session::get('success')}}
-                    </div>
-                @endif
-
-                @if(Session::has('error'))
-                    <div class="alert alert-danger fade in">
-                        <strong>Error!</strong> {{Session::get('error')}}
-                    </div>
-                @endif
-
-                @if(Session::has('message'))
-                    <div class="alert alert-primary fade in">
-                        <strong>Message!</strong> {!! Session::get('message') !!}
-                    </div>
-                @endif
+                <div style="max-height: 65vh; overflow:auto">
+                    @if(Session::has('success'))
+                        <div class="alert alert-success fade in">
+                            <strong>Success!</strong> {{Session::get('success')}}
+                        </div>
+                    @endif
+    
+                    @if(Session::has('error'))
+                        <div class="alert alert-danger fade in">
+                            <strong>Error!</strong> {{Session::get('error')}}
+                        </div>
+                    @endif
+    
+                    @if(Session::has('message'))
+                        <div class="alert alert-primary fade in">
+                            <strong>Message!</strong> {!! Session::get('message') !!}
+                        </div>
+                    @endif
+                </div>
 
 
                 <div class="mb-4 mx-3">
