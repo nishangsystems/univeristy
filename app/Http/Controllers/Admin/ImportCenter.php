@@ -88,11 +88,11 @@ class ImportCenter extends Controller
                             $ca_total = $student->_class($request->year)->program->ca_total;
                             if ($ca_total == null || $ca_total == 0) {
                                 # code...
-                                $errors .= "CA TOTAL not set for " . $student->_class($request->year)->program->name ?? '';
+                                $errors .= "CA TOTAL not set for " . $student->_class($request->year)->program->name .' for student [ '.$student->matric.' ]</br>';
                                 continue;
                             }else{
                                 if($row[2] > $ca_total){
-                                    $errors .= "CA mark for [ ".$subject->code.' ] '.$subject->name.' exceeds CA TOTALS';
+                                    $errors .= "CA mark for [ ".$subject->code.' ] '.$subject->name.' exceeds CA TOTALS for student [ '.$student->matric.' ]</br>';
                                     continue;
                                 }
                             }
@@ -106,7 +106,7 @@ class ImportCenter extends Controller
                                 'coef' => ClassSubject::where('subject_id', '=', $subject->id)->where('class_id', '=', $class->id)->first()->coef ?? $subject->coef,
                                 'class_subject_id' => ClassSubject::where(['subject_id'=>$subject->id, 'class_id'=> $class->id])->count() > 0 ?
                                      ClassSubject::where(['subject_id'=>$subject->id, 'class_id'=> $class->id])->first()->id :
-                                      0,
+                                      null,
                                 'reference' => $request->reference,
                                 'user_id'=>auth()->id()
                             ];
@@ -123,9 +123,6 @@ class ImportCenter extends Controller
                                 $errors .= $row[0]." already has a CA mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";
                             }else{
                                 Result::create($data);
-                            }
-                            if($data['class_subject_id'] == 0){
-                                $errors .= "Course [ ".$subject->code." ] ".$subject->name." not available for class ".$class->name()."</br>"; 
                             }
                         }
 
@@ -215,21 +212,21 @@ class ImportCenter extends Controller
                             $exam_total = $student->_class($request->year)->program->exam_total;
                             if ($ca_total == null || $ca_total == 0) {
                                 # code...
-                                $errors .= "CA TOTAL not set for " . $student->_class($request->year)->program->name . '</br>';
+                                $errors .= "CA TOTAL not set for " . $student->_class($request->year)->program->name . ' for student [ '.$student->matric.' ]</br>';
                                 continue;
                             }else{
                                 if($row[2] > $ca_total){
-                                    $errors .= "CA mark for [ ".$subject->code.' ] '.$subject->name.' exceeds CA TOTALS </br>';
+                                    $errors .= "CA mark for [ ".$subject->code.' ] '.$subject->name.' exceeds CA TOTALS for student [ '.$student->matric.' ]</br>';
                                     continue;
                                 }
                             }
                             if ($exam_total == null || $exam_total == 0) {
                                 # code...
-                                $errors .= "EXAM TOTAL not set for " . $student->_class($request->year)->program->name. '</br>';
+                                $errors .= "EXAM TOTAL not set for " . $student->_class($request->year)->program->name. ' for student [ '.$student->matric.' ]</br>';
                                 continue;
                             }else{
                                 if($row[3] > $exam_total){
-                                    $errors .= "EXAM mark for [ ".$subject->code.' ] '.$subject->name.' exceeds EXAM TOTALS </br>';
+                                    $errors .= "EXAM mark for [ ".$subject->code.' ] '.$subject->name.' exceeds EXAM TOTALS for student [ '.$student->matric.' ]</br>';
                                     continue;
                                 }
                             }
@@ -246,7 +243,7 @@ class ImportCenter extends Controller
                                 'coef' => ClassSubject::where('subject_id', '=', $subject->id)->where('class_id', '=', $class->id)->first()->coef ?? $subject->coef,
                                 'class_subject_id' => ClassSubject::where(['subject_id'=>$subject->id, 'class_id'=> $class->id])->count() > 0 ?
                                      ClassSubject::where(['subject_id'=>$subject->id, 'class_id'=> $class->id])->first()->id :
-                                      0,
+                                      null,
                                 'reference' => $request->reference
                             ];
                             $base = [
@@ -268,9 +265,6 @@ class ImportCenter extends Controller
                                 $errors .= $row[0]." already has Exam mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";
                             }else{
                                 Result::updateOrCreate($base, $update);
-                            }
-                            if($ca['class_subject_id'] == 0){
-                                $errors .= "Course [ ".$subject->code." ] ".$subject->name." not available for class ".$class->name()."</br>"; 
                             }
                         }
 
