@@ -19,7 +19,7 @@
                             <td class="border-left border-right border-white text-left">{{$k++}}</td>
                             <td class="border-left border-right border-white text-left"><span class="text-primary">[ {{$course->code}} ]</span> {{$course->name}}</td>
                             <td class="border-left border-right border-white text-left">
-                                <button class="btn btn-sm fa fa-trash btn-danger" onclick="drop_course('{{$course->id}}')">{{__('text.word_drop')}}</button>
+                                <button class="btn btn-sm fa fa-trash btn-danger drop_course" id="{{$course->id}}">{{__('text.word_drop')}}</button>
                             </td>
                         </tr>
                     @endforeach
@@ -41,12 +41,26 @@
 
 @section('script')
 <script>
-    var courses;
+    var courses = [];
     $(document).ready(function(){
-        courses = `{{$courses}}`;
+        courses = JSON.parse(`<?php echo json_encode($courses); ?>`);
     });
+    $('.drop_course').each((index, element)=>{
+        $(element).on('click', function(){
+            drop_course(element.id);
+            console.log(courses);
+        })
+    })
     function drop_course(course_id){
-        courses = courses
+        courses = courses.filter(e=>e.id != course_id);
+        refresh();
+    }
+    function refresh(){
+        html = '';
+        for (let index = 0; index < courses.length; index++) {
+            const element = courses[index];
+            html .= `<tr>`
+        }
     }
 </script>
 @endsection
