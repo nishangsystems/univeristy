@@ -1136,7 +1136,7 @@ class StudentController extends Controller
         $student = Students::find($id);
         if ($student != null) {
             # code...
-            Students::where('id', '=', $id)->update('password', Hash::make('12345678'));
+            Students::where('id', '=', $id)->update(['password'=> Hash::make('12345678')]);
             return back()->with('success', 'Done');
         }
         return back()->with('error', 'Operation Failed. Student could not be resolved.');
