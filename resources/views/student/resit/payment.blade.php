@@ -41,8 +41,12 @@
 
 @section('script')
 <script>
+    var courses;
+    $(document).ready(function(){
+        courses = `{{$courses}}`;
+    });
     function drop_course(course_id){
-
+        courses = courses
     }
 </script>
 @endsection
