@@ -417,10 +417,20 @@ class ResultController extends Controller
         return view('admin.result.individual_result', $data);
     }
 
-    public function class_results()
+    public function class_results(Request $request)
     {
         $data['title'] = "Class Results";
-        return view('admin.result.class_result', $data);
+        if ($request->has('class_id')) {
+            # code...
+            $data['results'] = OfflineResult::where(['batch_id' => $request->year_id, 'class_id' => $request->class_id, 'semester_id' => $request->semester_id]);
+            $data['students'] = Students::whereIn('id', $data['results']->distinct()->pluck('student_id')->toArray())->orderBy('matric', 'ASC');
+            dd($data);
+            return view('admin.result.class_result', $data);
+        } else {
+            # code...
+            return view('admin.res_and_trans.index', $data);
+        }
+        
     }
 
     public function individual_instances(Request $request)
