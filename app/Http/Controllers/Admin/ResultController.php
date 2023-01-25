@@ -267,14 +267,14 @@ class ResultController extends Controller
         $file = $request->file('file');
         if($file != null &&$file->getClientOriginalExtension() == 'csv'){
             $filename = 'ca_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
-            $file->storeAs('/files', $filename);
+            $file->move(storage_path('app/files'), $filename);
 
             $file_pointer = fopen(storage_path('app/files').'/'.$filename, 'r');
 
             $imported_data = [];
             $course = Subjects::find($request->course_id);
-            $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-            $semester = \App\Helpers\Helpers::instance()->getSemester($request->class_id);
+            $year = Helpers::instance()->getCurrentAccademicYear();
+            $semester = Helpers::instance()->getSemester($request->class_id);
             
             while(($row = fgetcsv($file_pointer, 100, ',')) != null){
                 if(is_numeric($row[1]))
@@ -359,7 +359,7 @@ class ResultController extends Controller
         $file = $request->file('file');
         if($file != null &&$file->getClientOriginalExtension() == 'csv'){
             $filename = 'ca_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
-            $file->storeAs('/files', $filename);
+            $file->move(storage_path('app/files'), $filename);
 
             $file_pointer = fopen(storage_path('app/files').'/'.$filename, 'r');
 
