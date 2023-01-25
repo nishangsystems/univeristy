@@ -9,9 +9,6 @@
 
                 <table class="table table-bordered table-responsive-md table-striped text-center">
                     <thead>
-                        <div class="container-fluid px-0">
-                            <img src="{{url('/assets/images/header.jpg')}}" alt="" srcset="" class="img w-100">
-                        </div>
                         <div class="container-fluid py-3 h4 my-0 text-center text-uppercase border-top border-bottom border-3 border-dark"><b>
                             {{\App\Helpers\Helpers::instance()->getSemester($user->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id)->name .' '.\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name. ' '.__('text.individual_results_slip') }}
                         </b></div>
