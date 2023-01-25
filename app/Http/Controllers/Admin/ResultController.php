@@ -4,22 +4,25 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ResultResource;
 use App\Models\Batch;
 use App\Models\ClassSubject;
 use App\Models\Config;
+use App\Models\OfflineResult;
 use App\Models\ProgramLevel;
 use App\Models\Result;
+use App\Models\Semester;
 use App\Models\Sequence;
 use App\Models\StudentClass;
 use App\Models\Students;
 use App\Models\Subjects;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Redirect;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 class ResultController extends Controller
 {
@@ -119,7 +122,7 @@ class ResultController extends Controller
             }
             fclose($file);
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
             try {
                 foreach ($importData_arr as $k => $importData) {
                     if ($k > 0) {
@@ -148,9 +151,9 @@ class ResultController extends Controller
                     }
                 }
 
-                \DB::commit();
+                DB::commit();
             } catch (\Exception $e) {
-                \DB::rollback();
+                DB::rollback();
                 echo ($e->getMessage());
             }
             Session::flash('message', 'Import Successful.');
@@ -218,10 +221,7 @@ class ResultController extends Controller
         # code...
     }
 
-
-    
-    
-    // ADDITIONAL RESULT METHODS FROM OFFLINE APP
+    // ADDITIONAL RESULT METHODS FOR OFFLINE APP
     
     public function ca_result(){
         $data['title'] = "Student CA Results";
@@ -300,7 +300,7 @@ class ResultController extends Controller
                         'class_id' => $request->class_id,
                         'semester_id' => $semester->id
                     ];
-                    Result::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
+                    OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
                 }
             }
             if($bad_results > 1){
@@ -392,7 +392,7 @@ class ResultController extends Controller
                         'class_id' => $request->class_id,
                         'semester_id' => $semester->id
                     ];
-                    Result::updateOrCreate($base, ['ca_score'=>$data[1], 'exam_score'=>$data[2], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
+                    OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'exam_score'=>$data[2], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
                 }
             }
             if($bad_results > 1){
@@ -434,12 +434,67 @@ class ResultController extends Controller
                 $blda->where('name', 'like', "%{$request->searchValue}%")
                     ->orWhere('matric', 'like', "%{$request->searchValue}%");
             })->join('student_classes', ['student_classes.student_id' => 'students.id'])
-                ->get(['student_classes.id', 'student_classes.year_id', 'student_classes.class_id', 'students.name', 'students.matric']);
+                ->get(['student_classes.id', 'student_classes.year_id', 'student_classes.class_id', 'students.name', 'students.id as student_id', 'students.matric']);
     
-            return $instances;
+            return \response()->json(ResultResource::collection($instances));
             
         } catch (\Throwable $th) {
             return $th;
         }
+    }
+
+    public function print_individual_results(Request $request)
+    {
+        # code...
+        $student = Students::find($request->student_id);
+        $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
+        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id);
+        $seqs = $semester->sequences()->get('id')->toArray();
+        $data['title'] = "My Exam Result";
+        $data['user'] = $student;
+        $data['semester'] = $semester;
+        $data['ca_total'] = $student->_class($year)->program()->first()->ca_total;
+        $data['exam_total'] = $student->_class($year)->program()->first()->exam_total;
+        $data['grading'] = $student->_class($year)->program()->first()->gradingType->grading()->get() ?? [];
+        $res = $student->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
+        $data['subjects'] = $student->_class(Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
+        $data['results'] = array_map(function($subject_id)use($data, $year, $semester, $student){
+            $ca_mark = $student->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
+            $exam_mark = $student->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
+            $total = $ca_mark + $exam_mark;
+            foreach ($data['grading'] as $key => $value) {
+                # code...
+                if ($total >= $value->lower && $total <= $value->upper) {
+                    # code...
+                    $grade = $value;
+                    return [
+                        'id'=>$subject_id,
+                        'code'=>Subjects::find($subject_id)->code ?? '',
+                        'name'=>Subjects::find($subject_id)->name ?? '',
+                        'status'=>Subjects::find($subject_id)->status ?? '',
+                        'coef'=>Subjects::find($subject_id)->coef ?? '',
+                        'ca_mark'=>$ca_mark,
+                        'exam_mark'=>$exam_mark,
+                        'total'=>$total,
+                        'grade'=>$grade->grade,
+                        'remark'=>$grade->remark
+                    ];
+                }
+            }
+            
+            // dd($grade);
+        }, $res);
+
+        $fee = [
+            'total_debt'=>$student->total_debts($year),
+            'total_paid'=>$student->total_paid($year),
+            'total' => $student->total($year),
+            'fraction' => $semester->semester_min_fee
+        ];
+        // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
+        $data['min_fee'] = $fee['total']*$fee['fraction'];
+        $data['access'] = $fee['total_paid']-$fee['total_debt'] >= $data['min_fee'] || $student->classes()->where(['year_id'=>$year, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        // dd($fee);
+        return view('admin.result.individual_result_print')->with($data);
     }
 }

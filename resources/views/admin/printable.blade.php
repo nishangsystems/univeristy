@@ -72,42 +72,19 @@
         .dropdown-toggle:after {
             display: none;
         }
+        
     </STYLE>
+@php
+    $bg1 = \App\Http\Controllers\HomeController::getColor('background_color_1');
+    $bg2 = \App\Http\Controllers\HomeController::getColor('background_color_2');
+    $bg3 = \App\Http\Controllers\HomeController::getColor('background_color_3');
+@endphp
 </head>
-
 <body class="no-skin">
-    <div class="col-sm-12">
-        <div class="bg-white" id="printable">
-            <div class="">
-                <table cellpadding="0" cellspacing="0" border="0" class="" id="hidden-table-info">
-                    <thead>
-                        <div id="letter-head">
-                            <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100 img">
-                        </div>
-                        <div class="text-center h5 fw-bolder py-3 text-capitalize"><b>{{$students['title']}}</b></div>
-                        <tr class="text-capitalize bg-light">
-                            <th>#</th>
-                            <th>{{__('text.word_matricule')}}</th>
-                            <th>{{__('text.word_name')}}</th>
-                            <th>{{request()->has('amount') ? __('text.word_paid') : __('text.word_amount')}}</th>
-                        </tr>
-                    </thead>
-                    @php($k = 1)
-                    <tbody id="content">
-                        @foreach($students['students'] ?? [] as $student)
-                            <tr class="border-bottom">
-                                <td class="border-left border-right">{{$k++}}</td>
-                                <td class="border-left border-right">{{$student['matric']}}</td>
-                                <td class="border-left border-right">{{$student['name']}}</td>
-                                <td class="border-left border-right">{{request()->has('amount') ? $student['paid'] : $student['total']}}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="" style="background-color: white;">
+        <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" class="w-100 h-auto">
+        @yield('section')
     </div>
-
 <script src="{{asset('assets/js/jquery-2.1.4.min.js')}}"></script>
 <script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
 <script src="{{ asset('assets/vendor/toastr/toastr.min.js') }}"></script>
@@ -180,6 +157,13 @@
 
     });
 
+    function delete_alert(event, data) {
+        event.preventDefault();
+        let yes = confirm('You are about to delete an item:'+data+'. This operation can not be reversed. Delete item?');
+        if(yes){
+            window.location = event.target.href;
+        }
+    }
 
 </script>
 

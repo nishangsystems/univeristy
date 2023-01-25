@@ -10,6 +10,7 @@ use App\Models\TeachersSubject;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\CourseNotification;
+use App\Models\OfflineResult;
 use App\Models\ProgramLevel;
 use App\Models\StudentClass;
 use App\Models\Subjects;
@@ -72,7 +73,7 @@ class SubjectController extends Controller
 
     public function store(Request $request)
     {
-        $result = Result::where([
+        $result = OfflineResult::where([
             'student_id' => $request->student,
             'class_id' => $request->class_id,
             'sequence' => $request->sequence,
@@ -81,7 +82,7 @@ class SubjectController extends Controller
         ])->first();
 
         if ($result == null) {
-            $result = new Result();
+            $result = new OfflineResult();
         }
 
         $result->batch_id = $request->year;

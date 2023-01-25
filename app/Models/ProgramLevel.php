@@ -18,7 +18,7 @@ class ProgramLevel extends Model
     }
     public function _students($year)
     {
-        return $this->belongsToMany(Students::class, 'student_classes', 'class_id', 'program_id')->where('year_id', '=', $year);
+        return $this->belongsToMany(Students::class, 'student_classes', 'class_id', 'student_id')->where('year_id', '=', $year);
     }
     public function program()
     {
@@ -37,8 +37,15 @@ class ProgramLevel extends Model
 
     public function class_subjects()
     {
-        $this->hasMany(ClassSubject::class, 'class_id');
+        return $this->hasMany(ClassSubject::class, 'class_id');
     }
+    
+
+    public function class_subjects_by_semester($semester_id)
+    {
+        return $this->hasMany(ClassSubject::class, 'class_id')->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])->where('subjects.semester_id', '=', $semester_id)->get(['class_subjects.*']);
+    }
+
     public function subjects()
     {
         return $this->belongsToMany( Subjects::class, ClassSubject::class, 'class_id', 'subject_id');

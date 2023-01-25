@@ -342,9 +342,6 @@
 
                         <b class="arrow"></b>
                     </li>
-                    @endif
-
-                    @if(!auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.program_settings')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -354,6 +351,9 @@
                     </li>
 
                     
+                    @endif
+
+                    @if(!auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.course.date_line')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -745,23 +745,6 @@
                         <b class="arrow"></b>
                     </li>
 
-
-                    <li>
-                        <a href="{{route('admin.result.individual_results')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.individual_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('admin.result.class_results')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.class_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
                 </ul>
             </li>
             @endif
@@ -793,6 +776,56 @@
                         </a>
                         <b class="arrow"></b>
                         <form action="{{route('admin.res_and_trans.spr_sheet')}}" method="post" class="hidden" id="spr_sheet_post_form">@csrf</form>
+                    </li>
+                    <li>
+                        <a class="text-capitalize" onclick="$('#passfail_post_form').submit()">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.passfail_report')}}
+                        </a>
+                        <b class="arrow"></b>
+                        <form action="{{route('admin.res_and_trans.passfail_report')}}" method="post" class="hidden" id="passfail_post_form">@csrf</form>
+                    </li>
+                    <li>
+                        <a class="text-capitalize" onclick="$('#sem_res_post_form').submit()">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.semester_results_report')}}
+                        </a>
+                        <b class="arrow"></b>
+                        <form action="{{route('admin.res_and_trans.sem_res_report')}}" method="post" class="hidden" id="sem_res_post_form">@csrf</form>
+                    </li>
+                    <li>
+                        <a class="text-capitalize" onclick="$('#ca_only_post_form').submit()">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.CA_only')}}
+                        </a>
+                        <b class="arrow"></b>
+                        <form action="{{route('admin.res_and_trans.ca_only')}}" method="post" class="hidden" id="ca_only_post_form">@csrf</form>
+                    </li>
+                    <li>
+                        <a class="text-capitalize" onclick="$('#grd_post_form').submit()">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.grades_sheet')}}
+                        </a>
+                        <b class="arrow"></b>
+                        <form action="{{route('admin.res_and_trans.grd_sheet')}}" method="post" class="hidden" id="grd_post_form">@csrf</form>
+                    </li>
+                    
+
+                    <li>
+                        <a href="{{route('admin.result.individual_results')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.individual_results')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('admin.result.class_results')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.class_results')}}
+                        </a>
+                        <b class="arrow"></b>
                     </li>
                 </ul>
             </li>

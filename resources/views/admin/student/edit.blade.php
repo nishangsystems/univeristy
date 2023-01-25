@@ -84,7 +84,7 @@
                         @enderror
                     </div>
                 </div>
-                <h5 class="mt-5 mb-4 font-weight-bold text-capitalize">{{'text.admission_class_information'}}</h5>
+                <h5 class="mt-5 mb-4 font-weight-bold text-capitalize">{{__('text.admission_class_information')}}</h5>
                 
                 <div class="form-group @error('admission_batch_id') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.academic_year')}}</label>

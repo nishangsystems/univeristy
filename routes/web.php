@@ -167,6 +167,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('report', 'Admin\ResultController@report')->name('report');
         Route::post('report', 'Admin\ResultController@report_show')->name('report.show');
         Route::get('individual_results', 'Admin\ResultController@individual_results')->name('individual_results');
+        Route::get('individual_results/{student_id}/print', 'Admin\ResultController@print_individual_results')->name('individual_results.print');
         Route::get('class_results', 'Admin\ResultController@class_results')->name('class_results');
         Route::get('individual_results/instances/{searchValue}', 'Admin\ResultController@individual_instances')->name('individual.instances');
     
@@ -368,6 +369,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::prefix('res_and_trans')->name('res_and_trans.')->group(function () {
         Route::post('spr_sheet', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'spread_sheet'])->name('spr_sheet');
         Route::post('fre_dis', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'frequency_distribution'])->name('fre_dis');
+        Route::post('ca_only', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'ca_only'])->name('ca_only');
+        Route::post('passfail_report', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'passfail_report'])->name('passfail_report');
+        Route::post('sem_res_report', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'semester_results_report'])->name('sem_res_report');
+        Route::post('grd_sheet', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'grades_sheet'])->name('grd_sheet');
     });
 
 });
@@ -468,6 +473,7 @@ Route::get('student-search/{name}', 'HomeController@student')->name('student-sea
 Route::get('student-search', 'HomeController@student_get')->name('student-search-get');
 Route::get('search-all-students/{name}', 'HomeController@searchStudents')->name('search-all-students');
 Route::get('search-all-students', 'HomeController@searchStudents_get')->name('get-search-all-students');
+Route::get('search-students', 'HomeController@search_students')->name('search_students');
 Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search');
 Route::get('student_rank', 'HomeController@rank')->name('student_rank');
 Route::post('student_rank', 'HomeController@rankPost')->name('student_rank');

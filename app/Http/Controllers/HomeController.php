@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\SchoolUnitResource;
 use App\Http\Resources\StudentFee;
+use App\Http\Resources\StudentResource;
+use App\Http\Resources\StudentResourceMain;
 use App\Models\Campus;
 use App\Models\Color;
 use App\Models\ProgramLevel;
@@ -157,6 +159,36 @@ class HomeController extends Controller
         }
     }
 
+    public function search_students()
+    {
+        $name = request('key');
+        // return $name;
+        $name = str_replace('/', '\/', $name);
+        try {
+            //code...
+            // $sql = "SELECT students.*, student_classes.student_id, student_classes.class_id, campuses.name as campus from students, student_classes, campuses where students.id = student_classes.student_id and students.campus_id = campuses.id and students.name like '%{$name}%' or students.matric like '%{$name}%'";
+
+            // return DB::select($sql);
+            $students  = DB::table('students')
+                ->join('student_classes', ['students.id' => 'student_classes.student_id'])
+                ->join('campuses', ['students.campus_id'=>'campuses.id'])
+                ->where(function($query)use($name){
+                    $query->where('students.name', 'LIKE', "%$name%")
+                    ->orWhere('students.matric', 'LIKE', "%$name%");
+                })
+                ->where(function($query){
+                    \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
+                })
+                ->distinct()
+                ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])
+                ->toArray();
+            
+            return \response()->json(StudentResourceMain::collection($students));
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+    }
+
     public static function _fee(Request  $request)
     {
         $type = request('type', 'completed');
@@ -223,31 +255,6 @@ class HomeController extends Controller
                 ];
             }
         }
-        // foreach ($fees as $key => $value) {
-        //     # code...
-        //     $stdt = Students::find($value['stud']);
-        //     if(($value['total'] > 0 && $value['amount'] >= $value['total']) && $type == 'completed'){
-        //         $students[] = [
-        //             'id'=> $stdt->id,
-        //             'name'=> $stdt->name,
-        //             'matric'=>$stdt->matric,
-        //             'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-        //             'total'=> $value['amount'],
-        //             'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
-        //         ];
-        //     }
-        //     if($request->has('amount') && $request->amount >= $value['amount']){continue;}
-        //     if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
-        //         $students[] = [
-        //             'id'=> $stdt->id,
-        //             'name'=> $stdt->name,
-        //             'matric'=>$stdt->matric,
-        //             'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-        //             'total'=> $value['amount'],
-        //             'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
-        //         ];
-        //     }
-        // }
 
         $students = collect($students)
                     ->sortBy('name')->toArray();
@@ -321,31 +328,74 @@ class HomeController extends Controller
                 ];
             }
         }
-        // foreach ($fees as $key => $value) {
-        //     # code...
-        //     $stdt = Students::find($value['stud']);
-        //     if(($value['total'] > 0 && $value['amount'] >= $value['total']) && $type == 'completed'){
-        //         $students[] = [
-        //             'id'=> $stdt->id,
-        //             'name'=> $stdt->name,
-        //             'matric'=>$stdt->matric,
-        //             'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-        //             'total'=> $value['amount'],
-        //             'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
-        //         ];
-        //     }
-        //     if($request->has('amount') && $request->amount >= $value['amount']){continue;}
-        //     if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
-        //         $students[] = [
-        //             'id'=> $stdt->id,
-        //             'name'=> $stdt->name,
-        //             'matric'=>$stdt->matric,
-        //             'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-        //             'total'=> $value['amount'],
-        //             'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
-        //         ];
-        //     }
-        // }
+        $students = collect($students)->sortBy('name')->toArray();
+
+        return response()->json(['title' => $title, 'students' => $students]);
+    }
+
+    public function fee(Request  $request)
+    {
+        $type = request('type', 'completed');
+        $year = request('year', Helpers::instance()->getCurrentAccademicYear());
+        $class = ProgramLevel::find(\request('class'));
+
+        $title = $request->has('amount') ? 'Fee drive' : $type . " fee " . ($class != null ? "for " . $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level : '').(auth()->user()->campus_id != null ? ' - '.Campus::find(auth()->user()->campus_id)->name : '');
+        $students = [];
+ 
+        $studs = \App\Models\StudentClass::where('student_classes.class_id', '=', $request->class)->where('year_id', '=', $year)->join('students', 'students.id', '=', 'student_classes.student_id')
+            ->where(function($q) {
+                # code...
+                auth()->user()->campus_id != null ? $q->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+            })->pluck('students.id')->toArray();
+        $results = [];
+        
+        // return $studs;
+        $fees = array_map(function($stud) use ($year){
+            return [
+                
+                'balance' => Students::find($stud)->bal($stud, $year),
+                'paid'=> Students::find($stud)->total_paid($year) - Students::find($stud)->total_debts($year),
+                'total' => 
+                        \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                        ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+                        ->where('payment_items.name', '=', 'TUTION')
+                        ->whereNotNull('payment_items.amount')
+                        ->join('students', 'students.program_id', '=', 'program_levels.id')
+                        ->where('students.id', '=', $stud)->pluck('payment_items.amount')[0] ?? 0
+                    ,
+                'stud' => $stud
+            ];
+        }, $studs);
+
+        
+        foreach ($fees as $key => $value) {
+            # code...
+            $stdt = Students::find($value['stud']);
+            if(($value['total'] > 0 && $value['balance'] <= 0) && $type == 'completed'){
+                $students[] = [
+                    'id'=> $stdt->id,
+                    'name'=> $stdt->name,
+                    'matric'=>$stdt->matric,
+                    'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
+                    'total'=> $value['balance'],
+                    'paid'=> $value['paid'],
+                    'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
+                ];
+            }
+            if($request->has('amount') && $request->amount > $value['paid']){continue;}
+            if(($value['balance'] > 0 || $value['total'] == 0 ) && $type == 'uncompleted'){
+                $students[] = [
+                    'id'=> $stdt->id,
+                    'name'=> $stdt->name,
+                    'matric'=>$stdt->matric,
+                    'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
+                    'total'=> $value['balance'],
+                    'paid' => $value['paid'],
+                    'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
+                ];
+            }
+        }
+        
         $students = collect($students)->sortBy('name')->toArray();
 
         return response()->json(['title' => $title, 'students' => $students]);

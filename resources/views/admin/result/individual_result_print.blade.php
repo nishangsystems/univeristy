@@ -1,7 +1,6 @@
-@extends('student.layout')
+@extends('admin.printable')
 @section('section')
-
-    @if($access == true)
+@if($access == true)
         <div class="d-flex justify-content-end py-3">
             <a href="{{Request::url()}}/download" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_download')}}</a>
         </div>
@@ -14,7 +13,7 @@
                             <img src="{{url('/assets/images/header.jpg')}}" alt="" srcset="" class="img w-100">
                         </div>
                         <div class="container-fluid py-3 h4 my-0 text-center text-uppercase border-top border-bottom border-3 border-dark"><b>
-                            {{\App\Helpers\Helpers::instance()->getSemester(auth()->user()->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id)->name .' '.\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name. ' '.__('text.individual_results_slip') }}
+                            {{\App\Helpers\Helpers::instance()->getSemester($user->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id)->name .' '.\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name. ' '.__('text.individual_results_slip') }}
                         </b></div>
                         <div class="container-fluid p-0 my-0 row mx-auto">
                             <div class="col-sm-7 col-md-8 border-right border-left">
@@ -93,4 +92,7 @@
             {{trans('text.fee_access_phrase', ['amount'=>$min_fee, 'action'=>'access your results'])}}
         </div>
     @endif
+@endsection
+@section('script')
+    
 @endsection

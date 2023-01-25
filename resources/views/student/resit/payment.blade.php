@@ -10,17 +10,17 @@
                 <thead class="text-capitalize h4 text-light bg-secondary">
                     <th class="border-left border-right border-white">#</th>
                     <th class="border-left border-right border-white">{{__('text.word_course')}}</th>
-                    <th class="border-left border-right border-white">{{__('text.word_action')}}</th>
+                    <!-- <th class="border-left border-right border-white">{{__('text.word_action')}}</th> -->
                 </thead>
-                <tbody class="bg-light">
+                <tbody class="bg-light" id="table-body">
                     @php($k = 1)
                     @foreach($courses as $course)
                         <tr class="border-bottom border-secondary">
                             <td class="border-left border-right border-white text-left">{{$k++}}</td>
                             <td class="border-left border-right border-white text-left"><span class="text-primary">[ {{$course->code}} ]</span> {{$course->name}}</td>
-                            <td class="border-left border-right border-white text-left">
+                            <!-- <td class="border-left border-right border-white text-left">
                                 <button class="btn btn-sm fa fa-trash btn-danger drop_course" id="{{$course->id}}">{{__('text.word_drop')}}</button>
-                            </td>
+                            </td> -->
                         </tr>
                     @endforeach
                 </tbody>
@@ -41,26 +41,37 @@
 
 @section('script')
 <script>
-    var courses = [];
-    $(document).ready(function(){
-        courses = JSON.parse(`<?php echo json_encode($courses); ?>`);
-    });
-    $('.drop_course').each((index, element)=>{
-        $(element).on('click', function(){
-            drop_course(element.id);
-            console.log(courses);
-        })
-    })
-    function drop_course(course_id){
-        courses = courses.filter(e=>e.id != course_id);
-        refresh();
-    }
-    function refresh(){
-        html = '';
-        for (let index = 0; index < courses.length; index++) {
-            const element = courses[index];
-            html .= `<tr>`
-        }
-    }
+    // var courses = [];
+    // $(document).ready(function(){
+    //     courses = JSON.parse(`<?php echo json_encode($courses); ?>`);
+    //     clickListeners();
+    // });
+    // function clickListeners() {
+    //     $('.drop_course').each((index, element)=>{
+    //         $(element).on('click', function(){
+    //             drop_course(element.id);
+    //             console.log(courses);
+    //         })
+    //     });
+    // }
+    // function drop_course(course_id){
+    //     courses = courses.filter(e=>e.id != course_id);
+    //     // refresh();
+    // }
+    // function refresh(){
+    //     html = '';
+    //     for (let index = 0; index < courses.length; index++) {
+    //         const element = courses[index];
+    //         html += `<tr class="border-bottom border-secondary">
+    //                     <td class="border-left border-right border-white text-left">${++index}</td>
+    //                     <td class="border-left border-right border-white text-left"><span class="text-primary">[ ${element.code} ]</span> ${element.name}</td>
+    //                     <td class="border-left border-right border-white text-left">
+    //                         <button class="btn btn-sm fa fa-trash btn-danger drop_course" onclick="drop_course(${element.id})" id="${element.id}">{{__('text.word_drop')}}</button>
+    //                     </td>
+    //                 </tr>`;
+    //     }
+    //     $('#table-body').html(html);
+    //     clickListeners();
+    // }
 </script>
 @endsection

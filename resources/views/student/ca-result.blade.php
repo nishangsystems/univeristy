@@ -45,7 +45,7 @@
                             @endforeach
                         </div>
                     </div>
-                    <tr class="text-capitalize">
+                    <tr class="text-uppercase">
                         <th class="text-center" >{{__('text.word_code')}}</th>
                         <th class="text-center" >{{__('text.word_course')}}</th>
                         <th class="text-center" >ST</th>
@@ -53,7 +53,7 @@
                         <th class="text-center" >{{__('text.CA').'/'.$ca_total}}</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-uppercase text-left">
                     @foreach($results as $subject)
                         <tr class="border-top border-bottom border-secondary border-dashed">
                             <td class="border-left border-right border-light">{{$subject['code']}}</td>

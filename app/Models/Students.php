@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 
 class Students extends Authenticatable
 {
@@ -55,6 +56,11 @@ class Students extends Authenticatable
     public function result()
     {
         return $this->hasMany(Result::class, 'student_id');
+    }
+
+    public function offline_result()
+    {
+        return $this->hasMany(OfflineResult::class, 'student_id');
     }
 
     public function payments()
@@ -224,6 +230,23 @@ class Students extends Authenticatable
         return '';
     }
 
+    public function offline_grade($course_id, $class_id, $year_id, $semester_id = null)
+    {
+        # code...
+        $grades = \App\Models\ProgramLevel::find($class_id)->program->gradingType->grading->sortBy('grade') ?? [];
+
+        if(count($grades) == 0){return '-';}
+
+        $score = $this->offline_total_score($course_id, $class_id, $year_id, $semester_id);
+        if ($score != '') {
+            # code...
+            foreach ($grades as $key => $grade) {
+                if ($score >= $grade->lower && $score <= $grade->upper) {return $grade->grade;}
+            }
+        }
+        return '';
+    } 
+
     public function grade($course_id, $class_id, $year_id, $semester_id = null)
     {
         # code...
@@ -245,18 +268,17 @@ class Students extends Authenticatable
     public function total_debts($year)
     {
         # code...
-        $student = Students::find($this->id);
 
-        $student_class_instances = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)->get();
         $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)->distinct()
-            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->where('campus_programs.campus_id', $this->campus_id)->get();
+            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->where('campus_programs.campus_id', $this->campus_id)->pluck('campus_programs.id')->toArray();
 
         // fee amounts
-        $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels->pluck('id'))->get();
+        $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels)->get();
         $fee_items_sum = $fee_items->sum('amount');
         
-        $fee_payments_sum = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $this->id])->where('batch_id', '<', $year)->sum('amount');
-        $fee_debts_sum = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $this->id])->where('batch_id', '<', $year)->sum('debt');
+        $payments_builder = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $this->id])->where('batch_id', '<', $year)->get();
+        $fee_payments_sum = $payments_builder->sum('amount');
+        $fee_debts_sum = $payments_builder->sum('debt');
         $next_debt = $fee_items_sum + $fee_debts_sum - $fee_payments_sum;
 
         return $next_debt;
@@ -268,14 +290,22 @@ class Students extends Authenticatable
         # code...
 
         $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<=', $year)->distinct()
-            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->get();
+            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->pluck('campus_programs.id')->toArray();
         // fee amounts
-        $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels->pluck('id'))->get();
+        $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels)->pluck('id')->toArray();
         
-        $fee_payments_sum = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $this->id])->where('batch_id', '<=', $year)->sum('amount');
-        $debt_payments_sum = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $this->id])->where('batch_id', '<=', $year)->sum('debt');
+        $payments = Payments::whereIn('payment_id', $fee_items)->where(['student_id' => $this->id])->where('batch_id', '<=', $year)->get();
+        $fee_payments_sum = $payments->sum('amount');
+        $debt_payments_sum = $payments->sum('debt');
         
         return $fee_payments_sum - $debt_payments_sum;
+    }
+
+    public function registered_courses($year_id = null)
+    {
+        # code...
+        $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
+        return $this->hasMany(StudentSubject::class, 'student_id')->WHERE('year_id', '=', $year);
     }
 
 }

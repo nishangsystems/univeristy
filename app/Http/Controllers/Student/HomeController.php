@@ -112,7 +112,7 @@ class HomeController extends Controller
         $data['title'] = "My CA Result";
         $data['user'] = auth()->user();
         $data['ca_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->ca_total;
-        $data['semester'] = Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id);
+        $data['semester'] = $semester;
         $data['grading'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType->grading()->get() ?? [];
         $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->toArray();
         $data['subjects'] = Auth('student')->user()->_class(Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
@@ -177,12 +177,12 @@ class HomeController extends Controller
             'total_debt'=>auth()->user()->total_debts($year),
             'total_paid'=>auth()->user()->total_paid($year),
             'total' => auth()->user()->total($year),
-            'fraction' => Helpers::instance()->getSemester(Students::find(auth()->id())->_class($year)->id)->semester_min_fee
+            'fraction' => $semester->semester_min_fee
         ];
         // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
         $data['min_fee'] = $fee['total']*$fee['fraction'];
         $data['access'] = $fee['total_paid']-$fee['total_debt'] >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
-        // dd($data);
+        // dd($fee);
         return view('student.exam-result')->with($data);
     }
 
@@ -193,38 +193,37 @@ class HomeController extends Controller
         $seqs = $semester->sequences()->get('id')->toArray();
         $data['title'] = "My Exam Result";
         $data['user'] = auth()->user();
-        $data['semester'] = Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id);
-        $data['ca_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->ca_total;
-        $data['exam_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->exam_total;
-        $data['grading'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType->grading()->get() ?? [];
-        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->whereIn('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
+        $data['semester'] = $semester;
+        $data['ca_total'] = auth()->user()->_class($year)->program()->first()->ca_total;
+        $data['exam_total'] = auth()->user()->_class($year)->program()->first()->exam_total;
+        $data['grading'] = auth()->user()->_class($year)->program()->first()->gradingType->grading()->get() ?? [];
+        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
         $data['subjects'] = Auth('student')->user()->_class(Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
         $data['results'] = array_map(function($subject_id)use($data, $year, $semester){
             $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
             $total = $ca_mark + $exam_mark;
-            $grade = function()use($data, $total){
-                foreach ($data['grading'] as $key => $value) {
+            foreach ($data['grading'] as $key => $value) {
+                # code...
+                if ($total >= $value->lower && $total <= $value->upper) {
                     # code...
-                    if ($total >= $value->lower && $total <= $value->upper) {
-                        # code...
-                        return $value;
-                    }
+                    $grade = $value;
+                    return [
+                        'id'=>$subject_id,
+                        'code'=>Subjects::find($subject_id)->code ?? '',
+                        'name'=>Subjects::find($subject_id)->name ?? '',
+                        'status'=>Subjects::find($subject_id)->status ?? '',
+                        'coef'=>Subjects::find($subject_id)->coef ?? '',
+                        'ca_mark'=>$ca_mark,
+                        'exam_mark'=>$exam_mark,
+                        'total'=>$total,
+                        'grade'=>$grade->grade,
+                        'remark'=>$grade->remark
+                    ];
                 }
-            };
-            // dd($grade());
-            return [
-                'id'=>$subject_id,
-                'code'=>$data['subjects']->where('id', '=', $subject_id)->first()->code ?? '',
-                'name'=>$data['subjects']->where('id', '=', $subject_id)->first()->name ?? '',
-                'status'=>$data['subjects']->where('id', '=', $subject_id)->first()->status ?? '',
-                'coef'=>$data['subjects']->where('id', '=', $subject_id)->first()->coef ?? '',
-                'ca_mark'=>$ca_mark,
-                'exam_mark'=>$exam_mark,
-                'total'=>$total,
-                'grade'=>$grade()->grade,
-                'remark'=>$grade()->remark
-            ];
+            }
+            
+            // dd($grade);
         }, $res);
         $pdf = PDF::loadView('student.templates.exam-result-template',$data);
         return $pdf->download(auth()->user()->matric.'_'.$semester->name.'_EXAM_RESULTS.pdf');
@@ -380,15 +379,15 @@ class HomeController extends Controller
     public function course_registration()
     {
         # code...
-        $data['title'] = "Course Registration For " .Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->name ?? ''." ".\App\Models\Batch::find(Helpers::instance()->getYear())->name;
+        $data['title'] = "Course Registration For " .Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->name ?? ''." ".Batch::find(Helpers::instance()->getYear())->name;
         $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth()->id()])->where(['year_id'=>Helpers::instance()->getYear()])->first()->class_id);
         $data['cv_total'] = ProgramLevel::find(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->program()->first()->max_credit;        
         
         $student = auth()->id();
         $year = Helpers::instance()->getYear();
-        $semester = Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
+        $semester = Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id);
         $_semester = Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
-        if ($semester == $_semester) {
+        if ($semester->id == $_semester) {
             # code...
             return redirect(route('student.home'))->with('error', 'Resit registration can not be done here. Do that under "Resit Registration"');
         }
@@ -410,9 +409,9 @@ class HomeController extends Controller
                     ->whereNotNull('payment_items.amount')
                     ->join('students', 'students.program_id', '=', 'program_levels.id')
                     ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
-            'fraction' => Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->courses_min_fee
+            'fraction' => $semester->courses_min_fee
         ];
-        $conf = CampusSemesterConfig::where(['campus_id'=>auth('student')->user()->campus_id])->where(['semester_id'=>Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id])->first();
+        $conf = CampusSemesterConfig::where(['campus_id'=>auth('student')->user()->campus_id])->where(['semester_id'=>$semester->id])->first();
         if ($conf != null) {
             # code...
             $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y'));
@@ -434,10 +433,13 @@ class HomeController extends Controller
         $data['cv_total'] = ProgramLevel::find(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->program()->first()->max_credit;
         // resit course price is set in campus_programs table //
         // campus_class = $data['student_class']->campus_programs()->where('campus_id', '=', auth('student')->user()->campus_id)
-        $data['unit_cost'] = 3000;
         
         $student = auth()->id();
         $year = Helpers::instance()->getYear();
+        $data['unit_cost'] = Students::find(auth()->id())->_class($year)->program->resit_cost ?? null;
+        if($data['unit_cost'] == null){
+            return back()->with('error', "Resit price for resit not set. Contact administration");
+        }
         $fee = [
             'amount' => array_sum(
                 \App\Models\Payments::where('payments.student_id', '=', $student)
@@ -689,7 +691,11 @@ class HomeController extends Controller
                 $courses = collect(array_unique($request->courses))->filter(function ($course) use ($registered_course_ids) {
                     return !in_array($course, $registered_course_ids);
                 })->toArray();
-                $unit_cost = 2500;
+                $unit_cost = auth()->user()->_class($year)->program->resit_cost;
+                if($unit_cost == null){
+                    return back()->with('error', "Resit price for resit not set. Contact administration");
+                }
+                $data['unit_cost'] = auth()->user()->_class($year)->program->resit_cost;
                 $data['quantity'] = count($request->courses) - $already_registered_courses;
                 $data['amount'] = $data['quantity'] * $unit_cost;
                 $data['courses'] = array_map(function ($val) {

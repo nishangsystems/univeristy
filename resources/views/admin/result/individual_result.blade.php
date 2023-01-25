@@ -1,8 +1,8 @@
 @extends('admin.layout')
 @section('section')
     <div class="my-2">
-        <div class="input-group-merge d-flex border rounded border-dark col-sm-8 my-2">
-            <input type="text" class="form-control border-0" id="search_field" placeholder="search by name or matricule" oninput="loadInstances(event)">
+        <div class="my-2">
+            <input type="text" class="form-control" id="search_field" placeholder="search by name or matricule" oninput="loadInstances(event)">
         </div>
         <div class="pt-4">
             <table>
@@ -14,7 +14,7 @@
                     <th>{{__('text.word_class')}}</th>
                     <th>{{__('text.word_action')}}</th>
                 </thead>
-                <tbody class="result_instances"></tbody>
+                <tbody id="result_instances"></tbody>
             </table>
         </div>
     </div>
@@ -32,16 +32,20 @@
                 success : function(data) {
                     console.log(data);
                     tbody_content ='';
+                    let k = 1;
                     data.forEach(element => {
                         tbody_content += `<tr class="border-top border-bottom border-secondary">
-                            <td class="border-left boder-right border-secondary">`+element.name+`</td>
-                            <td class="border-left boder-right border-secondary">`+element.matric+`</td>;
-                            <td class="border-left boder-right border-secondary">`+element.year+`</td>
-                            <td class="border-left boder-right border-secondary">`+element.class+`</td>
+                            <td class="border-left boder-right border-secondary">${k++}</td>
+                            <td class="border-left boder-right border-secondary">${element.name}</td>
+                            <td class="border-left boder-right border-secondary">${element.matric}</td>;
+                            <td class="border-left boder-right border-secondary">${element.year}</td>
+                            <td class="border-left boder-right border-secondary">${element.class}</td>
                             <td class="border-left boder-right border-secondary">
+                                <a class="btn btn-sm btn-primary" target="_new" href="${element.rlink}">{{__('text.word_print')}}</a>
                             </td>
                         </tr>`;
                     });
+                    $('#result_instances').html(tbody_content);
                 }
             })
          }
