@@ -177,6 +177,7 @@ class HomeController  extends Controller
             $program->max_credit=$request->max_credit;
             $program->ca_total=$request->ca_total;
             $program->exam_total=$request->exam_total;
+            $program->resit_cost=$request->resit_cost;
             $program->save();
             return back()->with('success', 'Done');
         }

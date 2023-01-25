@@ -30,6 +30,10 @@
                 <span class="input-group-text col-sm-2" style="font-size: small;">{{__('text.exam_totals')}}</span>
                 <input type="number" name="exam_total" id="" class="form-control" required value="{{$p->exam_total}}">
             </div>
+            <div class="input-group-merge border border-dark rounded d-flex text-capitalize my-2">
+                <span class="input-group-text col-sm-2" style="font-size: small;">{{__('text.resit_cost')}}</span>
+                <input type="number" name="resit_cost" id="" class="form-control" required value="{{$p->resit_cost}}">
+            </div>
             <div class="d-flex justify-content-end my-3">
                 <input type="submit" value="{{__('text.word_save')}}" class="btn btn-primary btn-sm">
             </div>

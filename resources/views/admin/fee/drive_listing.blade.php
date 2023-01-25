@@ -89,7 +89,7 @@
                             <th>#</th>
                             <th>{{__('text.word_matricule')}}</th>
                             <th>{{__('text.word_name')}}</th>
-                            <th>{{__('text.word_amount')}}</th>
+                            <th>{{__('text.word_paid')}}</th>
                             <!-- <th></th> -->
                         </tr>
                     </thead>
@@ -100,7 +100,7 @@
                                 <td class="border-left border-right">{{$k++}}</td>
                                 <td class="border-left border-right">{{$student['matric']}}</td>
                                 <td class="border-left border-right">{{$student['name']}}</td>
-                                <td class="border-left border-right">{{$student['total']}}</td>
+                                <td class="border-left border-right">{{$student['paid']}}</td>
                                 <?php // <td class="border-left border-right">
                                     //<a class="btn btn-xs btn-primary text-capitalize" href="{{$student['link']}}"> {{__("text.fee_collections")}}</a>'
                                 //</td> ?>

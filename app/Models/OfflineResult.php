@@ -15,6 +15,8 @@ class OfflineResult extends Model
         'class_subject_id', 'reference', 'user_id'
     ];
 
+    protected $table = 'offline_results';
+    
     public function total()
     {
         return $this->ca_score ?? 0 + $this->exam_score ?? 0;

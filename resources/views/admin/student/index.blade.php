@@ -19,6 +19,9 @@
             </div>
         </form>
     </div>
+    <div class=" my-3">
+        <input class="form-control" id="search_field" placeholder="search by name or matricule">
+    </div>
     <div class="">
         <div class=" ">
             <table cellpadding="0" cellspacing="0" border="0" class="table table-stripped" id="hidden-table-info">
@@ -33,51 +36,8 @@
 
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach($students->where('admission_batch_id', '=', $year) as $k=>$student)
-                    @if((\Auth::user()->campus_id != null) && ($student->campus_id == \Auth::user()->campus_id))
-                        <tr>
-                            <td>{{$k+1}}</td>
-                            <td>{{$student->name}}</td>
-                            <td>{{$student->matric}}</td>
-                            <td>{{\App\Models\Campus::find($student->campus_id)->name}}</td>
-                            <td>{{\App\Models\ProgramLevel::find($student->class_id)->program()->first()->name.' : LEVEL '.\App\Models\ProgramLevel::find($student->class_id)->level()->first()->level}}</td>
-                            <td class="d-flex justify-content-end  align-items-start text-capitalize">
-                                <a class="btn btn-sm btn-primary m-1" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
-                                <a class="btn btn-sm btn-success m-1" href="{{route('admin.student.edit',[$student->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>|
-                                <a onclick="event.preventDefault();
-                                                document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-1"><i class="fa fa-trash"> {{__('text.word_delete')}}</i></a>
-                                <form id="delete" action="{{route('admin.student.destroy',[$student->id])}}" method="POST" style="display: none;">
-                                    @method('DELETE')
-                                    {{ csrf_field() }}
-                                </form>
-                                <a class="btn btn-sm btn-warning m-1" onclick="event.preventDefault(); $('#id_{{$student->id}}').submit()"><i class="fa fa-edit"> {{__('text.reset_password')}}</i></a>|
-                                <form action="{{route('admin.student.password.reset',[$student->id])}}" method="post" id="id_{{$student->id}}" class="hidden">@csrf</form>
-                            </td> 
-                        </tr>
-                    @endif
-                    @if((\Auth::user()->campus_id == null))
-                        <tr>
-                            <td>{{$k+1}}</td>
-                            <td>{{$student->name}}</td>
-                            <td>{{$student->matric}}</td>
-                            <td>{{\App\Models\Campus::find($student->campus_id)->name}}</td>
-                            <td>{{\App\Models\ProgramLevel::find($student->class_id)->program()->first()->name.' : LEVEL '.\App\Models\ProgramLevel::find($student->class_id)->level()->first()->level}}</td>
-                            <td class="d-flex justify-content-end  align-items-start text-capitalize">
-                                <a class="btn btn-sm btn-primary m-1" href="{{route('admin.student.show',[$student->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
-                                <a class="btn btn-sm btn-success m-1" href="{{route('admin.student.edit',[$student->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>|
-                                <a onclick="event.preventDefault();
-                                                document.getElementById('delete').submit();" class=" btn btn-danger btn-sm m-1"><i class="fa fa-trash"> {{__('text.word_delete')}}</i></a>
-                                <form id="delete" action="{{route('admin.student.destroy',[$student->id])}}" method="POST" style="display: none;">
-                                    @method('DELETE')
-                                    {{ csrf_field() }}
-                                </form>
-                                <a class="btn btn-sm btn-warning m-1" onclick="event.preventDefault(); $('#id_{{$student->id}}').submit()"><i class="fa fa-edit"> {{__('text.reset_password')}}</i></a>|
-                                <form action="{{route('admin.student.password.reset',[$student->id])}}" method="post" id="id_{{$student->id}}" class="hidden">@csrf</form>
-                            </td>
-                        </tr>
-                    @endif
-                    @endforeach
+                <tbody id="table_body">
+                    
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
@@ -90,72 +50,51 @@
 
 @section('script')
 <script>
-    $('.section').on('change', function() {
+    $('#search_field').on('keyup', function() {
         let value = $(this).val();
-        url = '{{ route("admin.getSections", ":id") }}';
-        search_url = url.replace(':id', value);
-        console.log(search_url);
+        url = '{{ route("search_students") }}';
+        // console.log(url);
         $.ajax({
             type: 'GET',
-            url: search_url,
+            url: url,
             data: {
-                'parent_id': value
+                'key': value
             },
             success: function(response) {
-                console.log(response);
-                let size = response.data.length;
-                let data = response.data;
-                let html = "";
-                if (size > 0) {
-                    html += '<div><select class="form-control text-capitalize"  name="' + data[0].id + '" >';
-                    html += '<option disabled> {{__("text.select_circle")}}</option>'
-                    for (i = 0; i < size; i++) {
-                        html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
-                    }
-                    html += '</select></div>';
-                } else {
-                    html += '<div><select class="form-control"  >';
-                    html += '<option disabled> {{__("text.no_data_available")}}</option>'
-                    html += '</select></div>';
-                }
-                $('#circle').html(html);
+                let html = '';
+                let k = 1;
+                // console.log(response);
+                response.forEach(element => {
+                    // console.log(element);
+                    html = `
+                    <tr>
+                        <td>${k++}</td>
+                        <td>${element.name}</td>
+                        <td>${element.matric}</td>
+                        <td>${element.campus_name}</td>
+                        <td>${element.class_name}</td>
+                        <td class="d-flex justify-content-end  align-items-start text-capitalize">
+                            <a class="btn btn-sm btn-primary m-1" href="${element.show_link}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
+                            <a class="btn btn-sm btn-success m-1" href="${element.edit_link}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>|
+                            <a onclick="event.preventDefault();
+                                            document.getElementById('${element.id}-delete').submit();" class=" btn btn-danger btn-sm m-1"><i class="fa fa-trash"> {{__('text.word_delete')}}</i></a>
+                            <form id="${element.id}-delete" action="${element.delete_link}" method="POST" style="display: none;">
+                                @method('DELETE')
+                                {{ csrf_field() }}
+                            </form>
+                            <a class="btn btn-sm btn-warning m-1" onclick="event.preventDefault(); $('#id_${element.id}').submit()"><i class="fa fa-edit"> {{__('text.reset_password')}}</i></a>|
+                            <form action="${element.password_reset}" method="post" id="id_${element.id}" class="hidden">@csrf</form>
+                        </td>
+                    </tr>
+                    `;
+                });
+                $('#table_body').html(html);
             },
             error: function(e) {
                 console.log(e)
             }
         })
     })
-    $('#circle').on('change', function() {
-
-        let value = $(this).val();
-        url = "{{route('admin.getClasses', "
-        VALUE ")}}";
-        search_url = url.replace('VALUE', value);
-        $.ajax({
-            type: 'GET',
-            url: search_url,
-            success: function(response) {
-                let size = response.data.length;
-                let data = response.data;
-                let html = "";
-                if (size > 0) {
-                    html += '<div><select class="form-control text-capitalize"  name="' + data[0].id + '" >';
-                    html += '<option disabled> {{__("text.select_class")}}</option>'
-                    for (i = 0; i < size; i++) {
-                        html += '<option value=" ' + data[i].id + '">' + data[i].name + '</option>';
-                    }
-                    html += '</select></div>';
-                } else {
-                    html += '<div><select class="form-control text-capitalize"  >';
-                    html += '<option disabled> {{__("text.no_data_available")}}</option>'
-                    html += '</select></div>';
-                }
-                $('.class').html(html);
-            },
-            error: function(e) {
-                console.log(e)
-            }
-        })
-    })
+    
 </script>
 @endsection

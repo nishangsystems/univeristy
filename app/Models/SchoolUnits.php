@@ -17,6 +17,7 @@ class SchoolUnits extends Model
         'unit_id',
         'parent_id',
         'grading_type_id',
+        'resit_cost',
     ];
 
     public function gradingType()
@@ -111,5 +112,10 @@ class SchoolUnits extends Model
     public function background()
     {
         return $this->belongsTo(Background::class);
+    }
+
+    public function resit_cost_isset()
+    {
+        return $this->resit_cost == null;
     }
 }
