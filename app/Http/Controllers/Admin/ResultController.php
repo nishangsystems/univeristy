@@ -422,9 +422,17 @@ class ResultController extends Controller
         $data['title'] = "Class Results";
         if ($request->has('class_id')) {
             # code...
-            $data['results'] = OfflineResult::where(['batch_id' => $request->year_id, 'class_id' => $request->class_id, 'semester_id' => $request->semester_id]);
-            $data['students'] = Students::whereIn('id', $data['results']->distinct()->pluck('student_id')->toArray())->orderBy('matric', 'ASC');
-            dd($data);
+            $results = OfflineResult::where(['batch_id' => $request->year_id, 'class_id' => $request->class_id, 'semester_id' => $request->semester_id]);
+            $data['results'] = $results->get();
+            $data['students'] = Students::whereIn('id', $results->distinct()->pluck('student_id')->toArray())->orderBy('matric', 'ASC')->get();
+            $data['class'] = ProgramLevel::find($request->class_id);
+            $data['year'] = Batch::find($request->year_id);
+            $data['semester'] = Semester::find($request->semester);
+            $data['ca_total'] = $data['class']->program()->first()->ca_total;
+            $data['exam_total'] = $data['class']->program()->first()->exam_total;
+            $data['grading'] = $data['class']->program()->first()->gradingType->grading()->get() ?? [];
+            
+            // dd($data);
             return view('admin.result.class_result', $data);
         } else {
             # code...
@@ -459,13 +467,13 @@ class ResultController extends Controller
         $student = Students::find($request->student_id);
         $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id);
-        $seqs = $semester->sequences()->get('id')->toArray();
+        $class = $student->_class($year);
         $data['title'] = "My Exam Result";
         $data['user'] = $student;
         $data['semester'] = $semester;
-        $data['ca_total'] = $student->_class($year)->program()->first()->ca_total;
-        $data['exam_total'] = $student->_class($year)->program()->first()->exam_total;
-        $data['grading'] = $student->_class($year)->program()->first()->gradingType->grading()->get() ?? [];
+        $data['ca_total'] = $class->program()->first()->ca_total;
+        $data['exam_total'] = $class->program()->first()->exam_total;
+        $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
         $res = $student->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
         $data['subjects'] = $student->_class(Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
         $data['results'] = array_map(function($subject_id)use($data, $year, $semester, $student){

@@ -169,6 +169,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('individual_results', 'Admin\ResultController@individual_results')->name('individual_results');
         Route::get('individual_results/{student_id}/print', 'Admin\ResultController@print_individual_results')->name('individual_results.print');
         Route::get('class_results', 'Admin\ResultController@class_results')->name('class_results');
+        Route::post('class_results', 'Admin\ResultController@class_results');
         Route::get('individual_results/instances/{searchValue}', 'Admin\ResultController@individual_instances')->name('individual.instances');
     
     

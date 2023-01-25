@@ -17,6 +17,16 @@ class OfflineResult extends Model
 
     protected $table = 'offline_results';
     
+    public function subject()
+    {
+        return $this->belongsTo(Subjects::class, 'subject_id');
+    }
+
+    public function class_subject()
+    {
+        return $this->belongsTo(ClassSubject::class, 'class_subject_id');
+    }
+
     public function total()
     {
         return $this->ca_score ?? 0 + $this->exam_score ?? 0;
@@ -27,5 +37,22 @@ class OfflineResult extends Model
         $prog = ProgramLevel::find($this->class_id)->program;
         return ($this->ca_score ?? 0 + $this->exam_score ?? 0) >= ($prog->ca_total + $prog->exam_total)*0.5;
     }
+
+    public function grade()
+    {
+        # code...
+        $grades = \App\Models\ProgramLevel::find($this->class_id)->program->gradingType->grading->sortBy('grade') ?? [];
+
+        if(count($grades) == 0){return '-';}
+
+        $score = $this->ca_score ?? 0 + $this->exam_score ?? 0;
+        if (!$score == 0) {
+            # code...
+            foreach ($grades as $key => $grade) {
+                if ($grade->lower <= $score && $grade->upper >= $score) {return $grade;}
+            }
+        }
+        return '';
+    } 
 
 }
