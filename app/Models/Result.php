@@ -15,6 +15,12 @@ class Result extends Model
         'class_subject_id', 'reference', 'user_id'
     ];
 
+    public function student()
+    {
+        # code...
+        return $this->belongsTo(Students::class, 'student_id');
+    }
+
     public function subject()
     {
         return $this->belongsTo(Subjects::class, 'subject_id');

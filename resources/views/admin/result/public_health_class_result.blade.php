@@ -136,10 +136,9 @@
                             <th class="text-center" >{{__('text.word_code')}}</th>
                             <th class="text-center" >{{__('text.word_course')}}</th>
                             <th class="text-center" >ST</th>
-                            <th class="text-center" >CV</th>
-                            <th class="text-center" >{{__('text.CA').' / '.$ca_total}}</th>
-                            <th class="text-center" >{{__('text.word_exams').' / '.$exam_total}}</th>
-                            <th class="text-center" >{{__('text.word_total') .' / '.($ca_total + $exam_total)}}</th>
+                            <th class="text-center" >MV</th>
+                            <th class="text-center" >{{__('text.word_module').' / '.$ca_total}}</th>
+                            <th class="text-center" >{{__('text.word_module').' / 100'}}</th>
                             <th class="text-center" >{{__('text.word_grade')}}</th>
                             <th class="text-center" >{{__('text.word_remarks')}}</th>
                         </tr>
@@ -151,7 +150,7 @@
                         @foreach($results->where('student_id', '=', $student->id) as $res)
                             @if (!$res == null)
                             @php
-                                $total = $res->ca_score + $res->exam_score;
+                                $total = $res->ca_score;
                                 $grade = $grading->filter(function($ent)use($total){
                                     return $total >= $ent->lower && $total <= $ent->upper;
                                 })->first();
@@ -161,10 +160,9 @@
                                 <td class="border-left border-right border-light">{{$res->subject->code}}</td>
                                 <td class="border-left border-right border-light">{{$res->subject->name}}</td>
                                 <td class="border-left border-right border-light">{{$res->class_subject->status ?? $res->subject->status}}</td>
-                                <td class="border-left border-right border-light">{{$res->class_subject->coef ?? $res->subject->coef}}</td>
+                                <td class="border-left border-right border-light">{{$ca_total}}</td>
                                 <td class="border-left border-right border-light">{{$res->ca_score}}</td>
-                                <td class="border-left border-right border-light">{{$res->exam_score}}</td>
-                                <td class="border-left border-right border-light">{{$total}}</td>
+                                <td class="border-left border-right border-light">{{$res->ca_score * 5}}</td>
                                 <td class="border-left border-right border-light">{{$grade->grade ?? '----'}}</td>
                                 <td class="border-left border-right border-light">{{$rgrade->remark ?? '----'}}</td>
                             </tr>
@@ -172,7 +170,7 @@
                         @endforeach
                         <tr class="border border-secondary text-capitalize h4 fw-bolder">
                             <td colspan="2" class="text-center">{{__('text.total_courses_attempted')}} : <span class="px-3">{{$results->where('student_id', '=', $student->id)->count()}}</span></td>
-                            <td colspan="7" class="text-center">{{__('text.total_courses_passed')}} : <span class="px-3">{{$results->where('student_id', '=', $student->id)->filter(function($elt){return $elt->ca_score + $elt->exam_score >= 50;})->count()}}</span></td>
+                            <td colspan="7" class="text-center">{{__('text.total_courses_passed')}} : <span class="px-3">{{$results->where('student_id', '=', $student->id)->where('ca_score', '>=', $ca_total/2)->count()}}</span></td>
                         </tr>
                     </tbody>
                 </table>

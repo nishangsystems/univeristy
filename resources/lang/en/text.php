@@ -506,4 +506,6 @@ return [
     'grades_sheet'=>'grades sheet',
     'individual_results'=>'individual results',
     'class_results'=>'class results',
+    'ca_score'=>'ca score',
+    'exam_score'=>'exam score',
 ];

@@ -17,6 +17,12 @@ class OfflineResult extends Model
 
     protected $table = 'offline_results';
     
+    public function student()
+    {
+        # code...
+        return $this->belongsTo(Students::class, 'student_id');
+    }
+
     public function subject()
     {
         return $this->belongsTo(Subjects::class, 'subject_id');
