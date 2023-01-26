@@ -9,8 +9,8 @@
                 <div>
                     <select name="class_id" id="" class="form-control rounded" required>
                         <option value=""></option>
-                        @foreach(\App\Models\ProgramLevel::all() as $class)
-                            <option value="{{$class->id}}">{{$class->name()}}</option>
+                        @foreach(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                            <option value="{{$pl['id']}}">{{$pl['name']}}</option>
                         @endforeach
                     </select>
                 </div>

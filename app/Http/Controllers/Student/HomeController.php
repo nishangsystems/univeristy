@@ -182,7 +182,7 @@ class HomeController extends Controller
         // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
         $data['min_fee'] = $fee['total']*$fee['fraction'];
         $data['access'] = $fee['total_paid']-$fee['total_debt'] >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
-        // dd($fee);
+        // dd($data);
         return view('student.exam-result')->with($data);
     }
 

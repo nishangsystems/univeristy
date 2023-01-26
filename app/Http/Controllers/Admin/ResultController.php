@@ -274,7 +274,7 @@ class ResultController extends Controller
             $imported_data = [];
             $course = Subjects::find($request->course_id);
             $year = Helpers::instance()->getCurrentAccademicYear();
-            $semester = Helpers::instance()->getSemester($request->class_id);
+            $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester($request->class_id);
             
             while(($row = fgetcsv($file_pointer, 100, ',')) != null){
                 if(is_numeric($row[1]))
@@ -366,7 +366,7 @@ class ResultController extends Controller
             $imported_data = [];
             $course = Subjects::find($request->course_id);
             $year = Helpers::instance()->getCurrentAccademicYear();
-            $semester = Helpers::instance()->getSemester($request->class_id);
+            $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester($request->class_id);
             
             while(($row = fgetcsv($file_pointer, 100, ',')) != null){
                 if(is_numeric($row[1]))
@@ -433,6 +433,11 @@ class ResultController extends Controller
             $data['grading'] = $data['class']->program()->first()->gradingType->grading()->get() ?? [];
             
             // dd($data);
+            // show public health template to a public health
+            if ($data['class']->program->background->background_name == 'PUBLIC HEALTH') {
+                # code...
+                return view('admin.result.public_health_class_result', $data);
+            }
             return view('admin.result.class_result', $data);
         } else {
             # code...
@@ -513,6 +518,12 @@ class ResultController extends Controller
         $data['min_fee'] = $fee['total']*$fee['fraction'];
         $data['access'] = $fee['total_paid']-$fee['total_debt'] >= $data['min_fee'] || $student->classes()->where(['year_id'=>$year, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
         // dd($fee);
+
+        // show public health template to a public health
+        if ($class->program->background->background_name == 'PUBLIC HEALTH') {
+            # code...
+            return view('admin.result.public_health_individual_result_print', $data);
+        }
         return view('admin.result.individual_result_print')->with($data);
     }
 }

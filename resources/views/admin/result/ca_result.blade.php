@@ -6,8 +6,8 @@
             <label for="" class="input-group-text px-3 text-center bg-dark text-light ">{{__('text.word_class')}}</label>
             <select name="class" class="form-control" required id="_class_" onchange="subjects()">
                 <option value=""></option>
-                @foreach(\App\Models\ProgramLevel::all() as $pl)
-                    <option value="{{$pl->id}}">{{$pl->name()}}</option>
+                @foreach(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                    <option value="{{$pl['id']}}">{{$pl['name']}}</option>
                 @endforeach
             </select>
             <button class="btn btn-sm btn-dark" onclick="subjects()">{{__('text.word_courses')}}</button>

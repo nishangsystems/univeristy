@@ -3,6 +3,7 @@
     @php
         $student = \Auth::user();
         $year = request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+        $header = \App\Helpers\Helpers::instance()->getHeader();
     @endphp
 
     <div class="col-sm-12">
@@ -37,7 +38,7 @@
                             
                            <div class="mb-5">
                            <div style="height:120px; width:95% ; ">
-                                <img width="100%" src="{{asset('assets/images')}}/header.jpg" />
+                                <img width="100%" src="{{$header}}" />
                             </div>
                             <div style=" float:left; width:100%; margin-top:100px;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; margin-bottom:10px; text-transform: uppercase;">
                                 {{__('text.cash_reciept')}} N<SUP>0</SUP> 00{{$item->id}}
@@ -124,7 +125,7 @@
                            </div>
                            <div>
                                 <div style="height:120px; width:95% ; margin-top:550px;">
-                                    <img width="100%" src="{{asset('assets/images')}}/header.jpg" />
+                                    <img width="100%" src="{{$header}}" />
                                 </div>
                                 <div style=" float:left; width:100%; margin-top:100px;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; margin-bottom:10px; text-transform:capitalize">
                                     {{__('text.cash_reciept')}} N<SUP>0</SUP> 00{{$item->id}}
@@ -231,7 +232,7 @@
                                 
                                <div class="mb-5">
                                <div style="height:120px; width:95% ; ">
-                                    <img width="100%" src="{{asset('assets/images')}}/header.jpg" />
+                                    <img width="100%" src="{{$header}}" />
                                 </div>
                                 <div style=" float:left; width:100%; margin-top:100px;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; margin-bottom:10px; text-transform: uppercase;">
                                     {{__('text.cash_reciept')}} N<SUP>0</SUP> 00{{$item->id}}
@@ -320,7 +321,7 @@
                                <div>
                                   
                                     <div style="height:120px; width:95% ; margin-top:550px;">
-                                        <img width="100%" src="{{asset('assets/images')}}/header.jpg" />
+                                        <img width="100%" src="{{$header}}" />
                                     </div>
                                     <div style=" float:left; width:100%; margin-top:100px;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; margin-bottom:10px; text-transform:capitalize">
                                     {{__('text.cash_reciept')}} N<SUP>0</SUP> 00{{$item->id}}
