@@ -332,7 +332,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     
     
-    Route::prefix('stock')->name('stock.')->group(function(){
+    Route::name('stock.')->prefix('stock')->group(function(){
         Route::get('/', 'Admin\StockController@index')->name('index');
         Route::get('/create', 'Admin\StockController@create')->name('create');
         Route::get('/save', 'Admin\StockController@save')->name('save');
@@ -347,13 +347,14 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('/share/{id}/cancel', 'Admin\StockController@cancel_send')->name('cancel_share');
         Route::get('/send/{id}', 'Admin\StockController@__send')->name('send');
         Route::get('/delete/{id}', 'Admin\StockController@delete')->name('delete');
-        Route::prefix('/campus/{campus_id}')->name('campus.')->group(function(){
+        Route::name('campus.')->prefix('/campus/{campus_id}')->group(function(){
             Route::get('/index', 'Admin\StockController@campus_index')->name('index');
             Route::get('/receive/{id}', 'Admin\StockController@campus_receive')->name('receive');
             Route::get('/accept/{id}', 'Admin\StockController@campus_accept')->name('accept');
             Route::get('/giveout/{id}', 'Admin\StockController@campus_giveout')->name('giveout');
             Route::get('/give/{id}', 'Admin\StockController@post_campus_giveout')->name('give');
             Route::get('/restore/{id}', 'Admin\StockController@restore')->name('restore');
+            Route::get('/report/{id}', 'Admin\StockController@campus_report')->name('report');
             Route::get('/return/{id}', 'Admin\StockController@__restore')->name('return');
             Route::get('/student_stock/delete/{id}', 'Admin\StockController@delete_student_stock')->name('student_stock.delete');
         });

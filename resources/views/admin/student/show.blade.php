@@ -100,21 +100,10 @@
                     <div class="profile-info-name text-capitalize"> {{__('text.word_class')}}</div>
 
                     <div class="profile-info-value">
-                        <span class="editable" id="username"> {{$user->class(Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->name}}</span>
+                        <span class="editable" id="username"> {{$user->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name()}}</span>
                     </div>
                 </div>
 
-                <div class="profile-info-row">
-                    <div class="profile-info-name text-capitalize"> {{__('text.word_section')}}</div>
-
-                    <div class="profile-info-value text-capitalize">
-                        @if($user->type == 'day')
-                        <span class="editable" id="username"> {{__('text.day_section')}}</span>
-                        @else
-                        <span class="editable" id="username"> {{__('text.boarding_section')}}</span>
-                        @endif
-                    </div>
-                </div>
                 <div class="profile-info-row">
                     <div class="profile-info-name"></div>
                 </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Models\Campus;
 use App\Models\CampusStock;
 use App\Models\Stock;
 use App\Models\StockTransfers;
@@ -340,5 +341,21 @@ class StockController extends Controller
         # code...
         $data['title'] = Stock::find($request->id)->name." Stock Report";
         return view('admin.stock.print', $data);
+    }
+
+    public function campus_report(Request $request, $campus_id, $id)
+    {
+        # code...
+        $stock = Stock::find($id);
+        $campus = Campus::find($campus_id);
+        $data['title'] = $stock->name . ' Report For ' . $campus->name;
+
+        $data['external_transfers'] = $stock->studentStock($campus_id)->get();
+        $data['internal_transfers'] = $stock->transfers($campus_id)->where(function ($bldr) use ($campus_id) {
+            $bldr->where('sender_campus', '=', $campus_id)
+                ->orWhere('receiver_campus', '=', $campus_id);
+        })->get();
+        // dd($data);
+        return view('admin.stock.campus.report', $data);
     }
 }

@@ -17,4 +17,11 @@ class StockTransfers extends Model
         # code...
         return $this->belongsTo(Stock::class, 'stock_id');
     }
+
+    public function campus()
+    {
+        # code...
+        $campus_id = $this->sender_campus == null ? $this->receiver_campus : $this->sender_campus;
+        return Campus::find($campus_id);
+    }
 }

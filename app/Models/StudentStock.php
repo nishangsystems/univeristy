@@ -22,4 +22,16 @@ class StudentStock extends Model
         # code...
         return $this->belongsTo(Stock::class, 'stock_id');
     }
+
+    public function campus()
+    {
+        # code...
+        return $this->belongsTo(Campus::class, 'campus_id');
+    }
+
+    public function year()
+    {
+        # code...
+        return $this->belongsTo(Batch::class, 'year_id');
+    }
 }

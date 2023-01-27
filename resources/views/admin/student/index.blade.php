@@ -82,7 +82,7 @@
                                 @method('DELETE')
                                 {{ csrf_field() }}
                             </form>
-                            <a class="btn btn-sm btn-warning m-1" onclick="event.preventDefault(); $('#id_${element.id}').submit()"><i class="fa fa-edit"> {{__('text.reset_password')}}</i></a>|
+                            <a class="btn btn-sm btn-warning m-1" onclick="confirm('Are you sure you want to reset pasword for ${element.name}?') ? $('#id_${element.id}').submit() : null"><i class="fa fa-edit"> {{__('text.reset_password')}}</i></a>|
                             <form action="${element.password_reset}" method="post" id="id_${element.id}" class="hidden">@csrf</form>
                         </td>
                     </tr>
@@ -95,6 +95,6 @@
             }
         })
     })
-    
+
 </script>
 @endsection

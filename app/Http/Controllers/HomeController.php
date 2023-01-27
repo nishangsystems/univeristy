@@ -180,7 +180,7 @@ class HomeController extends Controller
                     \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
                 })
                 ->distinct()
-                ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])
+                ->get(['students.*', 'student_classes.class_id', 'campuses.name as campus'])
                 ->toArray();
             
             return \response()->json(StudentResourceMain::collection($students));
@@ -198,7 +198,7 @@ class HomeController extends Controller
         $title = $type . " fee " . ($class != null ? "for " . $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level : '').(auth()->user()->campus_id != null ? ' - '.Campus::find(auth()->user()->campus_id)->name : '');
         $students = [];
  
-        $studs = \App\Models\StudentClass::where('student_classes.class_id', '=', $request->class)->where('year_id', '=', $year)->join('students', 'students.id', '=', 'student_classes.student_id')
+        $studs = $class->_students($year)
             ->where(function($q) {
                 # code...
                 auth()->user()->campus_id != null ? $q->where('students.campus_id', '=', auth()->user()->campus_id) : null;
@@ -206,7 +206,8 @@ class HomeController extends Controller
         $results = [];
         
         // return $studs;
-        $fees = array_map(function($stud) use ($year){
+        $fees = array_map(function ($stud) use ($year, $class) {
+            $p_amount = $class->campus_programs(auth()->user()->campus_id)->payment_items()->where(['name' => 'TUTION', 'year_id' => $year])->first()->amount;
             return [
                 'amount' => array_sum(
                     \App\Models\Payments::where('payments.student_id', '=', $stud)

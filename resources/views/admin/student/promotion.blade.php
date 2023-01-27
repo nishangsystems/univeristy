@@ -91,6 +91,8 @@
     function updateSelection(){
         if ($('#checkall')[0].checked) {
             $(".checker").each((key, value)=>{$(value).prop('checked', true);});
+        }else{
+            $(".checker").each((key, value)=>{$(value).prop('checked', false);});
         }
         updateSelected();
     }
