@@ -3,7 +3,6 @@
 @php
     $header = \App\Helpers\Helpers::instance()->getHeader();
 @endphp
-
     @if($access == true)
         <div class="d-flex justify-content-end py-3">
             <a href="{{Request::url()}}/download" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_download')}}</a>
@@ -27,7 +26,7 @@
                                 </div>
                                 <div class="row py-2 border-top border-bottom border-1">
                                     <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_program')}} :</label>
-                                    <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{\App\Models\ProgramLevel::find($user->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id)->program->name}}</div>
+                                    <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{$class->program->name}}</div>
                                 </div>
                                 <div class="row py-2 border-top border-bottom border-1">
                                     <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_matricule')}} :</label>
@@ -35,7 +34,7 @@
                                 </div>
                                 <div class="row py-2 border-top border-bottom border-1">
                                     <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_level')}} :</label>
-                                    <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{ \App\Models\ProgramLevel::find($user->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id)->level->level}}</div>
+                                    <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{ $class->level->level}}</div>
                                 </div>
                             </div>
                             <div class="col-sm-5 col-md-4 border">
@@ -55,10 +54,9 @@
                             <th class="text-center" >{{__('text.word_code')}}</th>
                             <th class="text-center" >{{__('text.word_course')}}</th>
                             <th class="text-center" >ST</th>
-                            <th class="text-center" >CV</th>
-                            <th class="text-center" >{{__('text.CA').' / '.$ca_total}}</th>
-                            <th class="text-center" >{{__('text.word_exams').' / '.$exam_total}}</th>
-                            <th class="text-center" >{{__('text.word_total') .' / '.($ca_total + $exam_total)}}</th>
+                            <th class="text-center" >MV</th>
+                            <th class="text-center" >{{__('text.word_module').' / '.$ca_total}}</th>
+                            <th class="text-center" >{{__('text.word_module') .' / 100'}}</th>
                             <th class="text-center" >{{__('text.word_grade')}}</th>
                             <th class="text-center" >{{__('text.word_remarks')}}</th>
                         </tr>
@@ -69,23 +67,28 @@
                         @endphp
                         @foreach($results as $subject)
                             @if (!$subject == null)
+                            @php
+                                $grade = $grading->filter(function($elt)use($subject){ 
+                                    $total = $subject['ca_mark']*5; 
+                                    return ($total >= $elt->lower) && ($total <= $elt->upper);
+                                })->first();
+                            @endphp
                             <tr class="border-top border-bottom border-secondary border-dashed">
                                 <td class="border-left border-right border-light">{{$k++}}</td>
                                 <td class="border-left border-right border-light">{{$subject['code']}}</td>
                                 <td class="border-left border-right border-light">{{$subject['name']}}</td>
                                 <td class="border-left border-right border-light">{{$subject['status']}}</td>
-                                <td class="border-left border-right border-light">{{$subject['coef']}}</td>
+                                <td class="border-left border-right border-light">{{$ca_total}}</td>
                                 <td class="border-left border-right border-light">{{$subject['ca_mark']}}</td>
-                                <td class="border-left border-right border-light">{{$subject['exam_mark']}}</td>
-                                <td class="border-left border-right border-light">{{$subject['total']}}</td>
-                                <td class="border-left border-right border-light">{{$subject['grade']}}</td>
-                                <td class="border-left border-right border-light">{{$subject['remark']}}</td>
+                                <td class="border-left border-right border-light">{{$subject['ca_mark']*5}}</td>
+                                <td class="border-left border-right border-light">{{$grade->grade}}</td>
+                                <td class="border-left border-right border-light">{{$grade->remark}}</td>
                             </tr>
                             @endif
                         @endforeach
                         <tr class="border border-secondary text-capitalize h4 fw-bolder">
                             <td colspan="2" class="text-center">{{__('text.total_courses_attempted')}} : <span class="px-3">{{count($results)}}</span></td>
-                            <td colspan="7" class="text-center">{{__('text.total_courses_passed')}} : <span class="px-3">{{collect($results)->where('total', '>=', 50)->count()}}</span></td>
+                            <td colspan="7" class="text-center">{{__('text.total_courses_passed')}} : <span class="px-3">{{collect($results)->where('ca_mark', '>=', 10)->count()}}</span></td>
                         </tr>
                     </tbody>
                 </table>

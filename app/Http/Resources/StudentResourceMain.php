@@ -21,6 +21,7 @@ class StudentResourceMain extends JsonResource
         $class_name = ProgramLevel::find($this->class_id)->name();
         $campus_name = $stud->campus->name;
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'matric' => $this->matric,
             'show_link' => route('admin.student.show',[$this->id]),

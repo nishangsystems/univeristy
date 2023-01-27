@@ -1,5 +1,8 @@
 @extends('student.layout')
 @section('section')
+@php
+    $header = \App\Helpers\Helpers::instance()->getHeader();
+@endphp
     <div class="d-flex justify-content-end py-3">
         <a href="{{Request::url()}}/download" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_download')}}</a>
     </div>
@@ -9,10 +12,10 @@
             <table class="table table-bordered table-responsive-md table-striped text-center">
                 <thead>
                     <div class="container-fluid px-0">
-                        <img src="{{url('/assets/images/header.jpg')}}" alt="" srcset="" class="img w-100">
+                        <img src="{{$header}}" alt="" srcset="" class="img w-100">
                     </div>
                     <div class="container-fluid py-3 h4 my-0 text-center text-uppercase border-top border-bottom border-3 border-dark"><b>
-                        {{\App\Helpers\Helpers::instance()->getSemester(auth()->user()->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id)->name .' '.\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name. ' '.__('text.CA') }}
+                        {{$semester->name .' '.$year->name. ' '.__('text.CA') }}
                     </b></div>
                     <div class="container-fluid p-0 my-0 row mx-auto">
                         <div class="col-sm-7 col-md-8 border-right border-left">
@@ -22,7 +25,7 @@
                             </div>
                             <div class="row py-2 border-top border-bottom border-1">
                                 <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_program')}} :</label>
-                                <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{\App\Models\ProgramLevel::find($user->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id)->program->name}}</div>
+                                <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{$class->program->name}}</div>
                             </div>
                             <div class="row py-2 border-top border-bottom border-1">
                                 <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_matricule')}} :</label>
@@ -30,7 +33,7 @@
                             </div>
                             <div class="row py-2 border-top border-bottom border-1">
                                 <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_level')}} :</label>
-                                <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{ \App\Models\ProgramLevel::find($user->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id)->level->level}}</div>
+                                <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{ $class->level->level}}</div>
                             </div>
                         </div>
                         <div class="col-sm-5 col-md-4 border">

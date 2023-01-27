@@ -79,17 +79,20 @@ class HomeController extends Controller
 
     public function ca_result(Request $request)
     {
-        $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
-        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id);
+        $year = Batch::find($request->year ?? Helpers::instance()->getCurrentAccademicYear());
+        $class = auth()->user()->_class($year->id);
+        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
         // dd($semester);
         
         $data['title'] = "My CA Result";
         $data['user'] = auth()->user();
-        $data['ca_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->ca_total;
-        $data['semester'] = Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id);
-        $data['grading'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType->grading()->get() ?? [];
-        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->toArray();
-        $data['subjects'] = Auth('student')->user()->_class(Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
+        $data['year'] = $year;
+        $data['class'] = $class;
+        $data['ca_total'] = $class->program()->first()->ca_total;
+        $data['semester'] = $semester;
+        $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
+        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->toArray();
+        $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
         $data['results'] = array_map(function($subject_id)use($data, $year, $semester){
             return [
                 'id'=>$subject_id,
@@ -97,7 +100,7 @@ class HomeController extends Controller
                 'name'=>Subjects::find($subject_id)->name ?? '',
                 'status'=>Subjects::find($subject_id)->status ?? '',
                 'coef'=>Subjects::find($subject_id)->coef ?? '',
-                'ca_mark'=>auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? '',
+                'ca_mark'=>auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? '',
             ];
         }, $res);
         // dd($data['results']);
@@ -134,20 +137,22 @@ class HomeController extends Controller
 
     public function exam_result(Request $request)
     {
-        $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
-        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id);
-        $seqs = $semester->sequences()->get('id')->toArray();
+        $year = Batch::find($request->year ?? Helpers::instance()->getCurrentAccademicYear());
+        $class = auth()->user()->_class($year->id);
+        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
         $data['title'] = "My Exam Result";
         $data['user'] = auth()->user();
         $data['semester'] = $semester;
-        $data['ca_total'] = auth()->user()->_class($year)->program()->first()->ca_total;
-        $data['exam_total'] = auth()->user()->_class($year)->program()->first()->exam_total;
-        $data['grading'] = auth()->user()->_class($year)->program()->first()->gradingType->grading()->get() ?? [];
-        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
-        $data['subjects'] = Auth('student')->user()->_class(Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
+        $data['class'] = $class;
+        $data['year'] = $year;
+        $data['ca_total'] = $class->program()->first()->ca_total;
+        $data['exam_total'] = $class->program()->first()->exam_total;
+        $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
+        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
+        $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
         $data['results'] = array_map(function($subject_id)use($data, $year, $semester){
-            $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
-            $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
+            $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
+            $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
             $total = $ca_mark + $exam_mark;
             foreach ($data['grading'] as $key => $value) {
                 # code...
@@ -174,15 +179,19 @@ class HomeController extends Controller
 
         $student = auth('student')->id();
         $fee = [
-            'total_debt'=>auth()->user()->total_debts($year),
-            'total_paid'=>auth()->user()->total_paid($year),
-            'total' => auth()->user()->total($year),
+            'total_debt'=>auth()->user()->total_debts($year->id),
+            'total_paid'=>auth()->user()->total_paid($year->id),
+            'total' => auth()->user()->total($year->id),
             'fraction' => $semester->semester_min_fee
         ];
         // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
         $data['min_fee'] = $fee['total']*$fee['fraction'];
-        $data['access'] = $fee['total_paid']-$fee['total_debt'] >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        $data['access'] = $fee['total_paid']-$fee['total_debt'] >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
         // dd($data);
+        if ($class->program->background->background_name == "PUBLIC HEALTH") {
+            # code...
+            return view('student.public_health_exam_result')->with($data);
+        }
         return view('student.exam-result')->with($data);
     }
 

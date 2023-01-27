@@ -8,7 +8,6 @@
             <th>{{__('text.sn')}}</th>
             <th>{{__('text.word_year')}}</th>
             <th></th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -21,18 +20,14 @@
             <td>{{$row->name}}</td>
 
             <td>
-                <form method="POST" action="{{ route('admin.createacademicyear', $row->id)}}" role="form">
+                <form method="POST" action="{{ route('admin.createacademicyear', $row->id)}}" role="form" class="{{$row->id == \App\Helpers\Helpers::instance()->getCurrentAccademicYear() ? 'hidden' : ''}}">
                     <button type="submit" class="btn btn-primary btn-xs text-capitalize">
                         {{__('text.set_academic_year')}}
                     </button>
                     @csrf
                 </form>
             </td>
-            <td>
-                <a href="{{ route('admin.deletebatch', $row->id)}}" class="btn btn-danger btn-xs">
-                    Delete
-                </a>
-            </td>
+
             @endforeach
         </tr>
 
