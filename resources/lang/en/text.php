@@ -508,4 +508,5 @@ return [
     'class_results'=>'class results',
     'ca_score'=>'ca score',
     'exam_score'=>'exam score',
+    'import_marks'=>'import marks',
 ];

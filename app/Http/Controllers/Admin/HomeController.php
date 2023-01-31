@@ -52,7 +52,7 @@ class HomeController  extends Controller
             $ext = $file->getClientOriginalExtension();
             $filename = '_'.random_int(100000, 999999).'_'.time().'.'.$ext;
             $path = $filename;
-            $file->storeAs('public/files', $filename);
+            $file->storeAs('files', $filename);
             if(File::where(['name'=>'letter-head'])->count() == 0){
                 File::create(['name'=>'letter-head', 'path'=>$path]);
             }else {
