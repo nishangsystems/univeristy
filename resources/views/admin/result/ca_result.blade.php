@@ -15,7 +15,9 @@
         <table class="table adv-table">
             <thead class="text-capitalize bg-dark">
                 <th>{{__('text.sn')}}</th>
+                <th>{{__('text.word_code')}}</th>
                 <th>{{__('text.word_course')}}</th>
+                <th>{{__('text.word_semester')}}</th>
                 <th>{{__('text.word_action')}}</th>
             </thead>
             <tbody id="courses"></tbody>
@@ -61,14 +63,16 @@
                     const element = data[index];
                     html += `<tr class="border-bottom border-dark">
                                 <td class="border-right border-light">`+ (1+index) +`</td>
-                                <td class="border-right border-light">[ `+element.code+` ] ` +element.name+`</td>
+                                <td class="border-right border-light">`+element.code+`</td>
+                                <td class="border-right border-light">`+element.name+`</td>
+                                <td class="border-right border-light">`+element.semester+`</td>
                                 <td class="border-right border-light">
                                     <button onclick="_fill(`+_class+`, `+element.id+`)" class="btn btn-sm btn-success"">{{__('text.word_fill')}}</button>|
                                     <button onclick="_import(`+_class+`, `+element.id+`)" class="btn btn-sm btn-primary">{{__('text.word_import')}}</button>
                                 </td>
                             </tr>`;
                 }
-                console.log(html);
+                // console.log(html);
                 $('#courses').html(html);
 
             }

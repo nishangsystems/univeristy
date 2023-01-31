@@ -31,4 +31,10 @@ class Subjects extends Model
     {
         return $this->hasMany(StudentSubject::class, 'course_id');
     }
+
+    public function semester()
+    {
+        # code...
+        return $this->belongsTo(Semester::class, 'semester_id');
+    }
 }

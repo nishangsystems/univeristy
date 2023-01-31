@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
+use App\Http\Resources\SubjectResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -109,6 +110,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('scholarships/students/{id}/award', 'Scholarship\UserScholarshipController@create')->name('scholarship.award.create');
     Route::get('scholarships/scholars', 'Scholarship\UserScholarshipController@index')->name('scholarship.awarded_students');
     Route::post('scholarships/scholars', 'Scholarship\UserScholarshipController@getScholarsPerYear')->name('scholarship.scholars');
+    Route::post('scholarships/delete/{id}', 'Scholarship\UserScholarshipController@delete_scholarship')->name('scholarship.delete');
     Route::get('scholarships/{id}', 'Scholarship\ScholarshipController@show')->name('scholarship.show');
     Route::get('scholarships/{id}/edit', 'Scholarship\ScholarshipController@edit')->name('scholarship.edit');
 
@@ -357,6 +359,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::get('/report/{id}', 'Admin\StockController@campus_report')->name('report');
             Route::get('/return/{id}', 'Admin\StockController@__restore')->name('return');
             Route::get('/student_stock/delete/{id}', 'Admin\StockController@delete_student_stock')->name('student_stock.delete');
+            Route::get('/givable/report', 'Admin\StockController@campus_givable_report')->name('givable.report');
+            Route::get('/receivable/report', 'Admin\StockController@campus_receivable_report')->name('receivable.report');
         });
     });
 
@@ -553,8 +557,8 @@ Route::get('class_subjects/{program_level_id}', function($program_level_id){
     $courses = \App\Models\ClassSubject::where(['class_subjects.class_id'=>$program_level_id])
             ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
             ->get('subjects.*');
-            return $courses;
-            // return response()->json(SubjectsResource::collection($courses));
+            // return $courses;
+            return response()->json(SubjectResource::collection($courses));
 })->name('class_subjects');
 Route::get('campus/{campus}/program_levels', [Controller::class, 'sorted_campus_program_levels'])->name('campus.program_levels');
 Route::get('getColor/{label}', [HomeController::class, 'getColor'])->name('getColor');

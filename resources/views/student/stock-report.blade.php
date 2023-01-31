@@ -20,7 +20,7 @@
             <th>###</th>
             <th>{{__('text.word_name')}}</th>
             <th>{{__('text.word_quantity')}}</th>
-            <th></th>
+            <th>{{__('text.word_date')}}</th>
         </thead>
         <tbody>
             @php($k = 1)
@@ -29,7 +29,7 @@
                 <td class="border">{{$k++}}</td>
                 <td class="border">{{$item->stock->name}}</td>
                 <td class="border">{{$item->quantity}}</td>
-                <td class="border text-capitalize {{$item->stock->type == 'givable' ? 'text-primary' : 'text-success'}}">{{$item->stock->type}}</td>
+                <td class="border text-capitalize {{$item->stock->type == 'givable' ? 'text-primary' : 'text-success'}}">{{date('l d-m-Y', strtotime($item->created_at))}}</td>
             </tr>
             @endforeach
         </tbody>
