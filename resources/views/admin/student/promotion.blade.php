@@ -28,7 +28,7 @@
                 </div>
             </div>
     </div>
-    <form action="{{route('admin.students.promote')}}" method="post" class="w-100">
+    <form action="{{route('admin.students.promote')}}" method="post" class="w-100" id="promote_form">
         @csrf
         <input type="hidden" name="class_from" value="{{request('class_from')}}">
         <input type="hidden" name="class_to" value="{{request('class_to')}}">
@@ -56,27 +56,29 @@
                         <th class="border-left border-right">{{__('text.sn')}}</th>
                         <!-- <th class="border-left border-right">Matric</th> -->
                         <th class="border-left border-right">{{__('text.word_name')}}</th>
-                        <th class="border-left border-right">{{__('text.word_email')}}</th>
+                        <th class="border-left border-right">{{__('text.word_matricule')}}</th>
                         <th class="border-left border-right">{{__('text.word_average')}}</th>
                         @php $sn = 0; @endphp
                     </thead>
                     <tbody>
-                        @foreach($students as $student)
+                        @forelse($students as $student)
                         <tr class="fw-bolder fs-3 text-dark border-bottom">
                             <td class="border-left border-right"><input type="checkbox" class="checker" name="students[]" value="{{$student->id}}" id="" onchange="updateSelected()"></td>
                             <td class="border-left border-right">{{++$sn}}</td>
                             <!-- <td class="border-left border-right"><span>{{$student->matric}}</span></td> -->
                             <td class="border-left border-right"><span>{{$student->name}}</span></td>
-                            <td class="border-left border-right"><span>{{$student->email}}</span></td>
+                            <td class="border-left border-right"><span>{{$student->matric}}</span></td>
                             <td class="border-left border-right"><span onload="getAverage(this, '{{$student->id}}')">--</span></td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <p class="text-center h5">No students available for promotion in this class.</p>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary mx-4 my-2">{{__('text.word_promote')}}</button>
+            <button onclick="confirm(`You are about to promote ${$('.checker:checked').length} students from {{$classes['cf']['name']}} : {{\App\Models\Batch::find($current_year)->name ?? '----' }} to {{$classes['ct']['name']}} : {{\App\Models\Batch::find($current_year+1)->name  ?? '----'}}`) ? $('#promote_form').submit() : ''" class="btn btn-primary mx-4 my-2">{{__('text.word_promote')}}</button>
         </div>
     </form>
 </div>

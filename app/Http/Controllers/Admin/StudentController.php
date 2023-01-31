@@ -618,7 +618,7 @@ class StudentController extends Controller
         $data['title'] = "Student Promotion";
         $data['request'] = $request;
         $data['classes'] = $classes;
-        $data['students'] =  StudentClass::where(['year_id'=>$current_year, 'class_id'=>$request->class_from])
+        $data['students'] =  StudentClass::where(['year_id'=>$current_year, 'class_id'=>$request->class_from, 'student_classes.current'=>true])
                                 ->join('students', ['students.id'=>'student_classes.student_id'])
                                 ->where(function($q){
                                     auth()->user()->campus_id != null ? $q->where('students.campus_id', '=', auth()->user()->campus_id) : null;
@@ -816,14 +816,16 @@ class StudentController extends Controller
                     // update students' class and academic year
                     // create new record on promotion  instead of updating record for previous year
                     // DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_from)->update(['current'=>0]);
-                    foreach (DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_from)->get() as $record){
-                        // return $record;
-                        $class['class_id'] = $request->class_to;
-                        $class['year_id'] = $request->year_to;
-                        $class['student_id'] = $record->student_id;
-                        // $class['current'] = 1;
-                        StudentClass::create($class);
-                    }
+                    // foreach (DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_from)->get() as $record){
+                    //     // return $record;
+                    //     // $class['class_id'] = $request->class_to;
+                    //     // $class['year_id'] = $request->year_to;
+                    //     // $class['student_id'] = $record->student_id;
+                    //     // $class['current'] = 1;
+                    //     // StudentClass::create($class);
+                    // }
+                    DB::table('student_classes')->whereIn('student_id', $request->students)->updateOrInsert(['class_id' => $request->class_to, 'year_id' => $request->year_to], ['current' => true]);
+                    DB::table('student_classes')->whereIn('student_id', $request->students)->where(['class_id' => $request->class_from, 'year_id' => $request->year_from])->update(['current' => false]);
                     // DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_to)->update(['current'=>1]);
     
                     // update student program_id
