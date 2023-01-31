@@ -4,16 +4,16 @@
     <div class="col-sm-12">
 
         <form action="{{Request::url().'/listing'}}" method="get" target="_new">
-        <div id="section">
+            <div id="section">
 
-            <input type="hidden" name="type" id="" value="uncompleted">
-            <div class="form-group">
-                <div class="col-lg-12 mb-4">
-                    <input class="form-control" type="number" id="amount" name="amount" placeholder="{{__('text.phrase3')}}"  type="text" required/>
+                <input type="hidden" name="type" id="" value="uncompleted">
+                <div class="form-group">
+                    <div class="col-lg-12 mb-4">
+                        <input class="form-control" type="number" id="amount" name="amount" placeholder="{{__('text.phrase3')}}"  type="text" required/>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
+                <div class="form-group">
                     <div class="col-lg-12 mb-4">
                         <div class="input-group input-group-merge border">
                             <select class="w-100   section form-control" id="section0" name="class" required>

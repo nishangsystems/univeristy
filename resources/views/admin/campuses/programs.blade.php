@@ -1,5 +1,8 @@
 @extends('admin.layout')
 @section('section')
+@php
+    $year = request('year_id') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+@endphp
 <div class="py-4">
     <table class="table">
         <thead class="text-capitalize">
@@ -15,7 +18,7 @@
                 <td>{{$k++}}</td>
                 <td>{{ \App\Models\SchoolUnits::find($program_level->program_id)->name.' : Level '. \App\Models\Level::find($program_level->level_id)->level }}</td>
                 <td>{{ \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', $program_level->id)->count() > 0 ?
-                    \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', $program_level->id)->first()->payment_items()->where('name', 'TUTION')->first()->amount ?? '----':
+                    \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', $program_level->id)->first()->payment_items()->where('year_id', $year)->where('name', 'TUTION')->first()->amount ?? '----':
                      '----'}}</td>
                 <td>
                     @if(in_array($program_level->id, $programs))

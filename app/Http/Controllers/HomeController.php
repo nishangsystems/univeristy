@@ -207,7 +207,7 @@ class HomeController extends Controller
         
         // return $studs;
         $fees = array_map(function ($stud) use ($year, $class) {
-            $p_amount = $class->campus_programs(auth()->user()->campus_id)->payment_items()->where(['name' => 'TUTION', 'year_id' => $year])->first()->amount;
+            // $p_amount = $class->campus_programs(auth()->user()->campus_id)->payment_items()->where(['name' => 'TUTION', 'year_id' => $year])->first()->amount;
             return [
                 'amount' => array_sum(
                     \App\Models\Payments::where('payments.student_id', '=', $stud)
@@ -333,6 +333,7 @@ class HomeController extends Controller
 
         return response()->json(['title' => $title, 'students' => $students]);
     }
+
 
 
     public function rank(Request  $request)

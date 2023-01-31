@@ -4,8 +4,10 @@ namespace App\Http\Controllers\admin;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Models\Batch;
 use App\Models\Campus;
 use App\Models\CampusStock;
+use App\Models\ProgramLevel;
 use App\Models\Stock;
 use App\Models\StockTransfers;
 use App\Models\Students;
@@ -144,6 +146,7 @@ class StockController extends Controller
         }
     }
 
+    // Receive receivables from student
     public function campus_accept(Request $request, $campus_id, $id)
     {
         // update both student_stock and campus_stock
@@ -166,7 +169,7 @@ class StockController extends Controller
                     return back()->with('error', 'Can\'t receive item more than once. Record already exist for '.Students::find($request->student_id)->name);
                 }
 
-                StudentStock::create(['stock_id'=>$id, 'student_id'=>$request->student_id, 'quantity'=>$request->quantity, 'type'=>$item->type, 'campus_id'=>Students::find($request->student_id)->campus_id ?? auth()->user()->campus_id]);
+                StudentStock::create(['stock_id'=>$id, 'student_id'=>$request->student_id, 'quantity'=>$request->quantity, 'type'=>$item->type, 'campus_id'=>Students::find($request->student_id)->campus_id ?? auth()->user()->campus_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear()]);
     
                 // Update campus_stock
                 # code...
@@ -252,6 +255,7 @@ class StockController extends Controller
         return view('admin.stock.campus.giveout', $data);
     }
 
+    // give out stock to sstudents
     public function post_campus_giveout(Request $request, $campus_id, $id)
     {
         # code...
@@ -357,5 +361,46 @@ class StockController extends Controller
         })->get();
         // dd($data);
         return view('admin.stock.campus.report', $data);
+    }
+
+    public function campus_givable_report(Request $request)
+    {
+        # code...
+        if ($request->has('class_id') && $request->has('year_id') && $request->has('item_id')) {
+            # code...
+            $data['class'] = ProgramLevel::find($request->class_id);
+            $data['item'] = Stock::find($request->item_id);
+            $data['year'] = Batch::find($request->year_id);
+            $data['title'] = "Report For " . $data['item']->name . " -- " . $data['class']->name() . " -- " . $data['year']->name;
+            $data['report'] = StudentStock::where(['student_stock.year_id' => $request->year_id, 'student_stock.campus_id' => auth()->user()->campus_id, 'student_stock.type' => 'givable', 'student_stock.stock_id' => $request->item_id])
+                ->join('student_classes', ['student_classes.student_id' => 'student_stock.student_id', 'student_classes.year_id' => 'student_stock.year_id'])
+                ->where(['student_classes.class_id' => $request->class_id])
+                ->join('students', ['students.id'=>'student_classes.student_id'])
+                ->get(['student_stock.*', 'students.name as student_name', 'students.matric as student_matric', ]);
+            return view('admin.stock.campus.givable_report', $data);
+        }
+        $data['title'] = "Stock Report";
+        return view('admin.stock.campus.report_index', $data);
+
+    }
+
+    public function campus_receivable_report(Request $request)
+    {
+        # code...
+        if ($request->has('class_id') && $request->has('year_id') && $request->has('item_id')) {
+            # code...
+            $data['class'] = ProgramLevel::find($request->class_id);
+            $data['item'] = Stock::find($request->item_id);
+            $data['year'] = Batch::find($request->year_id);
+            $data['title'] = "Report For " . $data['item']->name . " -- " . $data['class']->name() . " -- " . $data['year']->name;
+            $data['report'] = StudentStock::where(['student_stock.year_id' => $request->year_id, 'student_stock.campus_id' => auth()->user()->campus_id, 'student_stock.type' => 'receivable', 'student_stock.stock_id' => $request->item_id])
+                ->join('student_classes', ['student_classes.student_id' => 'student_stock.student_id', 'student_classes.year_id' => 'student_stock.year_id'])
+                ->where(['student_classes.class_id' => $request->class_id])
+                ->join('students', ['students.id'=>'student_classes.student_id'])
+                ->get(['student_stock.*', 'students.name as student_name', 'students.matric as student_matric', ]);
+            return view('admin.stock.campus.receivable_report', $data);
+        }
+        $data['title'] = "Stock Report";
+        return view('admin.stock.campus.report_index', $data);
     }
 }

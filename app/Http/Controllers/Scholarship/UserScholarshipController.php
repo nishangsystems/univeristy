@@ -19,15 +19,14 @@ class UserScholarshipController extends Controller
     private $select = [
         'students.id',
         'students.name',
-        'students.email',
-        'students.gender',
-        'students.phone',
+        'students.matric',
         'students.campus_id',
         'students.program_id',
         'students.address',
         'student_scholarships.amount',
         'student_scholarships.reason',
         'student_scholarships.id as sc_id',
+        'student_scholarships.batch_id as sc_year'
     ];
     /**
      * @param Illuminate\Http\Request
@@ -54,7 +53,7 @@ class UserScholarshipController extends Controller
             })
             ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
             ->where('student_scholarships.batch_id', $request->year)
-            ->select(['students.*', 'student_scholarships.amount', 'student_scholarships.reason', 'student_scholarships.id as sc_id'])->get();
+            ->select(['students.*', 'student_scholarships.amount', 'student_scholarships.reason', 'student_scholarships.id as sc_id', 'student_scholarships.batch_id as sc_year'])->get();
             $data['title'] = 'Our Scholars';
         // return $data;
         return view('admin.scholarship.scholars')->with($data);
@@ -66,13 +65,6 @@ class UserScholarshipController extends Controller
      */
     public function getScholars()
     {
-        // return DB::table('student_scholarships')
-        //     ->join('students', 'students.id', '=', 'student_scholarships.student_id')
-        //     ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')
-        //     ->where(function($query){
-        //         auth()->user()->campus_id != null ? $query->where('students.campus_id','=', auth()->user()->campus_id): null;
-        //     })
-        //     ->select($this->select)->paginate(10);
 
         return Students::join('student_scholarships', 'student_scholarships.student_id', '=', 'students.id')
                 ->join('batches', 'batches.id', '=', 'student_scholarships.batch_id')->where(function($query){
@@ -165,5 +157,13 @@ class UserScholarshipController extends Controller
             'amount' => 'required|numeric',
             'year' => 'required'
         ]);
+    }
+
+
+    public function delete_scholarship(Request $request, $id)
+    {
+        # code...
+        StudentScholarship::find($id)->delete();
+        return back()->with('success', 'Done');
     }
 }

@@ -46,7 +46,8 @@
     @endif
     <div class="py-3">
         @php
-            $stks = \App\Models\Stock::find(request('id'))->studentStock(request('campus_id'))->where(['type'=>'receivable'])->get();
+            $c_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+            $stks = \App\Models\Stock::find(request('id'))->studentStock(request('campus_id'))->where(['type'=>'receivable', 'year_id'=>$c_year])->get();
             // dd($stks);
             $k = 1;
         @endphp
@@ -54,6 +55,7 @@
             <thead class="text-capitalize">
                 <th>###</th>
                 <th>{{__('text.word_name')}}</th>
+                <th>{{__('text.word_matricule')}}</th>
                 <th>{{__('text.word_quantity')}}</th>
                 <th>{{__('text.word_date')}}</th>
                 <th></th>
@@ -63,6 +65,7 @@
                     <tr class="border-bottom">
                         <td class="border-right border-light">{{$k++}}</td>
                         <td class="border-right border-light">{{\App\Models\Students::find($stk->student_id)->name}}</td>
+                        <td class="border-right border-light">{{\App\Models\Students::find($stk->student_id)->matric}}</td>
                         <td class="border-right border-light">{{$stk->quantity}}</td>
                         <td class="border-right border-light">{{date('l d-m-Y', strtotime($stk->created_at))}}</td>
                         <td>

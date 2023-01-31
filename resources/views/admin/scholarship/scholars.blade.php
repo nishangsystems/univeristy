@@ -1,6 +1,7 @@
 @extends('admin.layout')
 @php
-    $c_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+    $this_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+    $c_year = request('year') ?? $this_year;
 @endphp
 @section('section')
 <div class="col-sm-12">
@@ -35,9 +36,7 @@
                     <tr class="text-capitalize">
                         <th>#</th>
                         <th>{{__('text.word_name')}}</th>
-                        <th>{{__('text.word_email')}}</th>
-                        <th>{{__('text.word_phone')}}</th>
-                        <th>{{__('text.word_gender')}}</th>
+                        <th>{{__('text.word_matricule')}}</th>
                         <th>{{__('text.word_program')}}</th>
                         <th>{{__('text.word_campus')}}</th>
                         <th>{{__('text.scholarship_amount')}} </th>
@@ -46,20 +45,25 @@
                     </tr>
                 </thead>
                 <tbody>
+                    
                     @foreach($students as $k=>$student)
-                    @php($pl = $student->_class($c_year))
+                    @php
+                        $pl = $student->_class($c_year);
+                        // dd($students);
+                    @endphp
                     <tr>
                         <td>{{$k+1}}</td>
                         <td>{{$student->name}}</td>
-                        <td>{{$student->email}}</td>
-                        <td>{{$student->phone}}</td>
-                        <td>{{$student->gender}}</td>
-                        <td>{{ $pl != null ? $pl->name() : '' }}</td>
+                        <td>{{$student->matric}}</td>
+                        <td>{{$pl == null ? '': $pl->name()}}</td>
                         <td>{{$student->campus->name}}</td>
                         <td>{{number_format($student->amount)}}</td>
                         <td>{{$student->reason}}</td>
                         <td>
-                            <a href="{{route('admin.scholarship.edit', $student->sc_id)}}" class="btn btn-sm btn-primary">{{__('text.word_edit')}}</a>
+                            <a href="{{route('admin.scholarship.edit', $student->sc_id)}}" class="btn btn-sm btn-primary">{{__('text.word_edit')}}</a>|
+                            @if ($student->sc_year == $this_year)
+                                <form method="post" action="{{route('admin.scholarship.delete', $student->sc_id)}}">@csrf <button type="submit" class="btn btn-sm btn-danger my-1">{{__('text.word_cancel')}}</button></form>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

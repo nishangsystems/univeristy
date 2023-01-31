@@ -69,6 +69,13 @@ class ProgramLevel extends Model
                 });
     }
 
+
+    public function _campus_programs()
+    {
+        # code...
+        return $this->hasMany(CampusProgram::class, 'program_level_id');
+    }
+
     public function resit_cost_isset()
     {
         return $this->resit_cost == null;
