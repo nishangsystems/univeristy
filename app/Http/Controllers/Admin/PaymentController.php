@@ -38,6 +38,7 @@ class PaymentController extends Controller
 
     public function create(Request $request, $student_id)
     {
+        return 1000000;
         $student = Students::find($student_id);
         $data['student'] = $student;
         $data['scholarship'] = Helpers::instance()->getStudentScholarshipAmount($student_id);
