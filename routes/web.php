@@ -11,8 +11,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 Route::get('/clear', function () {
+    echo Session::get('applocale');
     $clearcache = Artisan::call('cache:clear');
     echo "Cache cleared<br>";
 
@@ -21,7 +23,10 @@ Route::get('/clear', function () {
 
     $clearconfig = Artisan::call('config:cache');
     echo "Config cleared<br>";
+
 });
+
+Route::get('set_local/{lang}', [Controller::class, 'set_local'])->name('lang.switch');
 
 Route::post('login', [CustomLoginController::class, 'login'])->name('login.submit');
 Route::get('login', [CustomLoginController::class, 'showLoginForm'])->name('login');

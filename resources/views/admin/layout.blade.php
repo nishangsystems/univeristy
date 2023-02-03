@@ -131,10 +131,21 @@
 						</span>
                     </span>
                 </li>
-
+                <li class="grenn dropdown-modal">
+                    <a data-toggle="dropdown" class="dropdown-toggle text-white font-weight-bold text-capitalize" href="#" id="navbarDropdownMenuLink" style="background-color: {{$bg2}};">
+                        {{ Config::get('languages')[App::getLocale()] }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    @foreach (Config::get('languages') as $lang => $language)
+                        @if ($lang != App::getLocale())
+                                <a class="dropdown-item" href="{{ route('lang.switch', $lang) }}"> {{$language}}</a>
+                        @endif
+                    @endforeach
+                    </div>
+                </li>
                 <li class="grenn dropdown-modal">
                     <a data-toggle="dropdown" class="dropdown-toggle text-white font-weight-bold text-capitalize" id="bg_primary_1"  style="background-color: {{$bg2}};">
-                      {{__('text.word_batch')}} : {{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name}}
+                      {{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name}}
                         <i class="ace-icon fa fa-caret-down"></i>
                     </a>
 
