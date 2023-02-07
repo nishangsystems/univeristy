@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\ResultsAndTranscriptsController;
 use App\Http\Controllers\admin\StockController;
 use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
@@ -378,12 +379,22 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     
     // ROUTES FOR RESULT OPERATIONS
     Route::prefix('res_and_trans')->name('res_and_trans.')->group(function () {
-        Route::post('spr_sheet', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'spread_sheet'])->name('spr_sheet');
-        Route::post('fre_dis', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'frequency_distribution'])->name('fre_dis');
-        Route::post('ca_only', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'ca_only'])->name('ca_only');
-        Route::post('passfail_report', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'passfail_report'])->name('passfail_report');
-        Route::post('sem_res_report', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'semester_results_report'])->name('sem_res_report');
-        Route::post('grd_sheet', [\App\Http\Controllers\Admin\ResultsAndTranscriptsController::class, 'grades_sheet'])->name('grd_sheet');
+        Route::post('spr_sheet', [ResultsAndTranscriptsController::class, 'spread_sheet'])->name('spr_sheet');
+        Route::post('fre_dis', [ResultsAndTranscriptsController::class, 'frequency_distribution'])->name('fre_dis');
+        Route::post('ca_only', [ResultsAndTranscriptsController::class, 'ca_only'])->name('ca_only');
+        Route::post('passfail_report', [ResultsAndTranscriptsController::class, 'passfail_report'])->name('passfail_report');
+        Route::post('sem_res_report', [ResultsAndTranscriptsController::class, 'semester_results_report'])->name('sem_res_report');
+        Route::post('grd_sheet', [ResultsAndTranscriptsController::class, 'grades_sheet'])->name('grd_sheet');
+        Route::name('transcripts.')->prefix('transcripts')->group(function () {
+            Route::get('config', [ResultsAndTranscriptsController::class, 'configure_transcript'])->name('config');
+            Route::post('config', [ResultsAndTranscriptsController::class, 'configure_save_transcript']);
+            Route::get('edit_config/{id}', [ResultsAndTranscriptsController::class, 'configure_edit_transcript'])->name('config.edit');
+            Route::post('update_config/{id}', [ResultsAndTranscriptsController::class, 'configure_update_transcript']);
+            Route::get('delete_config/{id}', [ResultsAndTranscriptsController::class, 'configure_delete_transcript'])->name('config.delete');
+            Route::get('completed', [ResultsAndTranscriptsController::class, 'completed_transcripts'])->name('completed');
+            Route::get('pending', [ResultsAndTranscriptsController::class, 'pending_transcripts'])->name('pending');
+            Route::get('undone', [ResultsAndTranscriptsController::class, 'undone_transcripts'])->name('undone');
+        });
     });
 
 });
