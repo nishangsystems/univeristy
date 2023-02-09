@@ -504,4 +504,8 @@ return [
     'ca_score'=>'ca score',
     'exam_score'=>'exam score',
     'import_marks'=>'import marks',
+    'word_transcript'=>'transcript|transcripts',
+    'word_pending'=>'pending',
+    'word_undone'=>'undone',
+    'word_configure'=>'configure',
 ];

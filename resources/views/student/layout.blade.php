@@ -223,6 +223,35 @@
 
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-money"></i>
+                    <span class="menu-text">{{trans_choice('text.word_transcript', 2)}}</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('student.transcript.apply')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_apply')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('student.transcript.history')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_history')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                </ul>
+            </li>
+
+           <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-book"></i>
                     <span class="menu-text">{{__('text.word_courses')}}</span>
                     <b class="arrow fa fa-angle-down"></b>
