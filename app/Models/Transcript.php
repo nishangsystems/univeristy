@@ -13,12 +13,13 @@ class Transcript extends Model
      * @var array $fillable 
      * ['config_id':ratings id
      * 'studebt_id':student who applied for the trancript
-     * 'done': boolean, if transcript is already done or not
+     * 'status': current or former student
+     * 'done': date of printing, if transcript is already done or not
      * 'collected': date, if student has already collected the transcript, when?
      * 'giver_id': which user gave/signed out the transcript
      * 'user_id': who validates the transcript as 'done'
      */
-    protected $fillable = ['config_id', 'student_id', 'delivery_format', 'tel', 'description', 'done', 'collected', 'giver_id', 'user_id'];
+    protected $fillable = ['config_id', 'student_id', 'status', 'delivery_format', 'tel', 'description', 'done', 'collected', 'giver_id', 'user_id'];
 
     public function done_by()
     {

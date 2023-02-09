@@ -394,6 +394,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::get('completed', [ResultsAndTranscriptsController::class, 'completed_transcripts'])->name('completed');
             Route::get('pending', [ResultsAndTranscriptsController::class, 'pending_transcripts'])->name('pending');
             Route::get('undone', [ResultsAndTranscriptsController::class, 'undone_transcripts'])->name('undone');
+            Route::get('set_done/{id}', [ResultsAndTranscriptsController::class, 'set_done_transcripts'])->name('set_done');
         });
     });
 
@@ -487,6 +488,11 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('search_course', 'Student\HomeController@search_course')->name('search_course');
     Route::get('courses/download/{year}/{semester}', 'Student\HomeController@download_courses')->name('courses.download');
     Route::get('stock/report/{year}', 'Student\HomeController@stock_report')->name('stock.report');
+    Route::name('transcript.')->prefix('transcripts')->group(function () {
+        Route::get('apply/{config_id?}', 'Student\HomeController@apply_transcript')->name('apply');
+        Route::post('apply/{config_id?}', 'Student\HomeController@apply_save_transcript');
+        Route::get('hostory', 'Student\HomeController@transcript_history')->name('history');
+    });
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');

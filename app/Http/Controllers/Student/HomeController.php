@@ -20,6 +20,7 @@ use App\Models\StudentStock;
 use App\Models\StudentSubject;
 use App\Models\SubjectNotes;
 use App\Models\Subjects;
+use App\Models\Transcript;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -957,4 +958,42 @@ class HomeController extends Controller
         return view('student.stock-report', $data);
     }
 
+    public function apply_transcript()
+    {
+        # code...
+        $data['title'] = "Apply For Transcript";
+        return view('student.transcript.apply', $data);
+    }
+
+    public function apply_save_transcript(Request $request)
+    {
+        # code...
+        $validator = Validator::make($request->all(), [
+            'config_id'=>'required',
+            'delivery_format'=>'required',
+            'tel'=>'required'
+        ]);
+        if($validator->fails()){
+            return back()->with('error', $validator->errors()->first());
+        }
+        $data = [
+            'config_id'=>$request->config_id,
+            'student_id'=>auth()->id(),
+            'status'=>auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear()) == null ? 'FORMER' : 'CURRENT',
+            'delivery_format'=>$request->delivery_format,
+            'tel'=>$request->tel,
+            'description'=>$request->description ?? null,
+        ];
+        $trans = new Transcript($data);
+        $trans->save();
+        return back()->with('success', 'Done');
+    }
+
+    public function transcript_history()
+    {
+        # code...
+        $data['title'] = "Transcript History";
+        $data['data'] = Transcript::where(['student_id' => auth()->id()])->get();
+        return view('student.transcript.history', $data);
+    }
 }
