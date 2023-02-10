@@ -11,6 +11,7 @@ use App\Models\Batch;
 use App\Models\CampusSemesterConfig;
 use App\Models\Config;
 use App\Models\File;
+use App\Models\Resit;
 use App\Models\SchoolUnits;
 use App\Models\Semester;
 use App\Models\Students;
@@ -264,5 +265,63 @@ class HomeController  extends Controller
         // return $request->all();
         \App\Models\ExtraFee::create(['student_id'=>$request->student_id, 'amount'=>$request->amount, 'year_id'=>$request->year_id]);
         return back()->with('success', 'Done');
+    }
+
+    public function custom_resit_create()
+    {
+        # code...
+        $data['title'] = "Open Resit";
+        return view('admin.setting.custom_resit.create', $data);
+    }
+
+    public function custom_resit_edit(Request $request, $id)
+    {
+        # code...
+        $data['title'] = "Open Resit";
+        $data['resit'] = Resit::find($id);
+        return view('admin.setting.custom_resit.edit', $data);
+    }
+
+    public function custom_resit_save(Request $request)
+    {
+        # code...
+        $validator = Validator::make($request->all(), ['year_id'=>'required', 'background_id'=>"required", 'start_date'=>'required|date', 'end_date'=>'required|date']);
+        if($validator->fails()){
+            return back()->with('error', $validator->errors()->first());
+        }
+
+        $resit = new Resit($request->all());
+        $resit->save();
+        return back()->with('success', 'Done');
+    }
+
+    public function custom_resit_update(Request $request, $id)
+    {
+        # code...
+        $validator = Validator::make($request->all(), ['year_id'=>'required', 'background_id'=>"required", 'start_date'=>'required|date', 'end_date'=>'required|date']);
+        if($validator->fails()){
+            return back()->with('error', $validator->errors()->first());
+        }
+
+        $resit = Resit::find($id);
+        if($resit != null){
+            $resit->fill($request->all());
+            $resit->save();
+            return back()->with('success', 'Done');
+        }
+
+        return back()->with('error', 'Update failed. Resit record not found.');
+    }
+
+    public function custom_resit_delete(Request $request, $id)
+    {
+
+        $resit = Resit::find($id);
+        if($resit != null){
+            $resit->delete();
+            return back()->with('success', 'Done');
+        }
+
+        return back()->with('error', 'Operation failed. Resit record not found.');
     }
 }

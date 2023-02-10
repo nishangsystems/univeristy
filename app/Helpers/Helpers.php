@@ -10,6 +10,7 @@ use App\Models\Result;
 use App\Models\SchoolUnits;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class Helpers
@@ -271,6 +272,18 @@ class Helpers
         # code...
         $resits = Resit::whereDate('start_date', '<=', date('m/d/Y'))->whereDate('end_date', '>=', date('m/d/Y'))->get();
         return $resits;
+    }
+
+    public function resit_available($class_id)
+    {
+        # code...
+        $class = ProgramLevel::find($class_id);
+        $resits = $class->program->background->resit()->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()])->get();
+        foreach ($resits as $key => $resit) {
+            # code...
+            if(now()->between(Carbon::createFromDate($resit->start_date), Carbon::createFromDate($resit->end_date)));
+            return true;
+        }
     }
 
 }

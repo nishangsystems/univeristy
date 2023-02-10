@@ -524,4 +524,9 @@ return [
     'delivery_format'=>'delvery format',
     'date_applied'=>'date applied',
     'date_completed'=>'date completed',
+    'momo_number'=>'momo number',
+    'word_processing'=>'processing',
+    'manage_custom_resits'=>'manage custom resits',
+    'word_open'=>'open',
+    'word_closed'=>'closed',
 ];

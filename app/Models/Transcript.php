@@ -19,7 +19,7 @@ class Transcript extends Model
      * 'giver_id': which user gave/signed out the transcript
      * 'user_id': who validates the transcript as 'done'
      */
-    protected $fillable = ['config_id', 'student_id', 'status', 'delivery_format', 'tel', 'description', 'done', 'collected', 'giver_id', 'user_id'];
+    protected $fillable = ['config_id', 'student_id', 'status', 'delivery_format', 'tel', 'year_id', 'description', 'done', 'collected', 'giver_id', 'user_id'];
 
     public function done_by()
     {

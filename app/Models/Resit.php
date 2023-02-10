@@ -23,6 +23,12 @@ class Resit extends Model
         return $this->belongsTo(Background::class, 'background_id');
     }
 
+    public function year()
+    {
+        # code...
+        return $this->belongsTo(Batch::class, 'year_id');
+    }
+
     public function to_string()
     {
         # code...

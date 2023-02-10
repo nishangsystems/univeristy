@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use function Ramsey\Uuid\v1;
@@ -116,9 +117,8 @@ class SubjectController extends Controller
 
     public function index(Request $request)
     {
-
         $data['title'] = "List of all Subjects";
-        $data['subjects'] = \App\Models\Subjects::orderBy('name')->paginate(15);
+        $data['subjects'] = \App\Models\Subjects::orderBy('name')->paginate(100);
         return view('admin.subject.index')->with($data);
     }
 }

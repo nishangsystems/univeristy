@@ -18,11 +18,13 @@
                     $k = 1;
                 @endphp
                 @foreach ($data as $row)
-                    <td class="border-left border-right border-white">{{$k++}}</td>
-                    <td class="border-left border-right border-white">{{date('l d/m/Y', strtotime($row->created_at))}}</td>
-                    <td class="border-left border-right border-white">{{$row->config->mode}}</td>
-                    <td class="border-left border-right border-white">{{date('l d/m/Y', strtotime($row->done))}}</td>
-                    <td class="border-left border-right border-white">{{$row->status}}</td>
+                    <tr class="border-bottom border-white">
+                        <td class="border-left border-right border-white">{{$k++}}</td>
+                        <td class="border-left border-right border-white">{{date('l d/m/Y', strtotime($row->created_at))}}</td>
+                        <td class="border-left border-right border-white">{{$row->config->mode}}</td>
+                        <td class="border-left border-right border-white">@if($row->done != null) {{date('l d/m/Y', strtotime($row->done))}} @endif</td>
+                        <td class="border-left border-right border-white">@if($row->done==null) &hellip; {{__('text.word_processing')}} @else &#x2714; {{__('text.word_completed')}} @endif</td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
