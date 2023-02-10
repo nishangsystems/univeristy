@@ -141,7 +141,7 @@ class ResultsAndTranscriptsController extends Controller{
         // filter completed transcripts if the duration has not yet expired, then the rest of the done transcripts follow; order by Mode, created_at(date of application)
         $transcripts = Transcript::whereNotNull('transcripts.done')
                     ->join('transcript_ratings', ['transcript_ratings.id'=>'transcripts.config_id'])
-                    ->orderBy('created_at', 'DESC')->orderBy('config_id')->get(['transcripts.*', 'transcript_ratings.duration', 'transcript_ratings.mode',]);
+                    ->orderBy('id', 'DESC')->orderBy('config_id')->get(['transcripts.*', 'transcript_ratings.duration', 'transcript_ratings.mode',]);
 
         $data['data'] = $transcripts->filter(function ($row) {
             return Carbon::now()->subDays((int) $row->duration) <= $row->created_at;
@@ -161,7 +161,7 @@ class ResultsAndTranscriptsController extends Controller{
         // filter completed transcripts if the duration has not yet expired, then the rest of the done transcripts follow; order by Mode, created_at(date of application)
         $transcripts = Transcript::whereNull('transcripts.done')
                     ->join('transcript_ratings', ['transcript_ratings.id'=>'transcripts.config_id'])
-                    ->orderBy('created_at', 'DESC')->orderBy('config_id')->get(['transcripts.*', 'transcript_ratings.duration', 'transcript_ratings.mode',]);
+                    ->orderBy('id', 'DESC')->orderBy('config_id')->get(['transcripts.*', 'transcript_ratings.duration', 'transcript_ratings.mode',]);
 
         $data['data'] = $transcripts->filter(function ($row) {
             return Carbon::now()->subDays((int) $row->duration) <= $row->created_at;
@@ -177,7 +177,7 @@ class ResultsAndTranscriptsController extends Controller{
                 // filter completed transcripts if the duration has not yet expired, then the rest of the done transcripts follow; order by Mode, created_at(date of application)
                 $transcripts = Transcript::whereNull('transcripts.done')
                 ->join('transcript_ratings', ['transcript_ratings.id'=>'transcripts.config_id'])
-                ->orderBy('created_at', 'DESC')->orderBy('config_id')->get(['transcripts.*', 'transcript_ratings.duration', 'transcript_ratings.mode',]);
+                ->orderBy('id', 'DESC')->orderBy('config_id')->get(['transcripts.*', 'transcript_ratings.duration', 'transcript_ratings.mode',]);
 
         $data['data'] = $transcripts->filter(function ($row) {
             return Carbon::now()->subDays((int) $row->duration) > $row->created_at;

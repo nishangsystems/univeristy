@@ -33,6 +33,7 @@
                         <td>{{ $subject->coef }}</td>
                         <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
                         <td>{{ \App\Models\Level::find($subject->level_id)->level }}</td>
+                        <td>{{ $subject->status }}</td>
                         <td class="d-flex justify-content-end align-items-center text-capitalize">
                             <a class="btn btn-xs btn-success" href="{{route('admin.subjects.edit',[$subject->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a> |
                             <a onclick="event.preventDefault();
@@ -47,7 +48,7 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-                {{$subjects->links()}}
+                {{$subjects->links() ?? ''}}
             </div>
         </div>
     </div>

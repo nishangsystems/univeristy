@@ -308,6 +308,15 @@
                     
                     @endif
 
+                    <li>
+                        <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           {{__('text.manage_custom_resits')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
                     @if(!auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.course.date_line')}}" class="text-capitalize">
@@ -970,6 +979,7 @@
             </li>
             @endif
 
+
             @if (\Auth::user()->hasPermissionTo('manage_transcripts_and_results'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
@@ -982,50 +992,6 @@
 
 
                 <ul class="submenu">
-                    @if (\Auth::user()->hasPermissionTo('manage_transcripts'))
-                        <li>
-                            <a href="#" class="dropdown-toggle text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                <span class="menu-text">
-                                    {{trans_choice('text.word_transcript', 2)}}
-                                    </span>
-                                <b class="arrow fa fa-angle-down"></b>
-                            </a>
-
-                            <ul class="submenu">
-                                @if (\Auth::user()->hasPermissionTo('configure_transcripts'))
-                                    <li>
-                                        <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.config')}}">
-                                            <i class="menu-icon fa fa-caret-right"></i>
-                                            {{__('text.word_configure')}}
-                                        </a>
-                                        <b class="arrow"></b>
-                                    </li>
-                                @endif
-                                <li>
-                                    <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.completed')}}">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        {{__('text.word_completed')}}
-                                    </a>
-                                    <b class="arrow"></b>
-                                </li>
-                                <li>
-                                    <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.pending')}}">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        {{__('text.word_pending')}}
-                                    </a>
-                                    <b class="arrow"></b>
-                                </li>
-                                <li>
-                                    <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.undone')}}">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        {{__('text.word_undone')}}
-                                    </a>
-                                    <b class="arrow"></b>
-                                </li>
-                            </ul>
-                        </li>
-                    @endif
                     <li>
                         <a class="text-capitalize" onclick="$('#fre_dis_post_form').submit()">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -1098,6 +1064,50 @@
 
 
             
+            @if (\Auth::user()->hasPermissionTo('manage_transcripts'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
+                        <span class="menu-text">
+                            {{trans_choice('text.word_transcript', 2)}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+                    <ul class="submenu">
+                        @if (\Auth::user()->hasPermissionTo('configure_transcripts'))
+                            <li>
+                                <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.config')}}">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_configure')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
+                        <li>
+                            <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.completed')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_completed')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.pending')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_pending')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.undone')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_undone')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+            @endif
             
 
             

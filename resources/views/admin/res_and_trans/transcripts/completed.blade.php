@@ -17,24 +17,28 @@
                     $k = 1;
                 @endphp
                 @foreach ($data as $row)
-                    <td class="border-left border-right border-white">{{$k++}}</td>
-                    <td class="border-left border-right border-white">{{$row->student->matric}}</td>
-                    <td class="border-left border-right border-white">{{$row->student->name}}</td>
-                    <td class="border-left border-right border-white">{{$row->tel}}</td>
-                    <td class="border-left border-right border-white">{{$row->status}}</td>
-                    <td class="border-left border-right border-white">{{$row->mode}}</td>
-                    <td class="border-left border-right border-white">{{$row->done}}</td>
-                    <td class="border-left border-right border-white {{$row->collected == null ? 'text-primary' : 'text-success' }}">{{$row->collected == null ? __('text.word_available') : __('text.word_collected')}}</td>
+                    <tr class="border-bottom border-white">
+                        <td class="border-left border-right border-white">{{$k++}}</td>
+                        <td class="border-left border-right border-white">{{$row->student->matric}}</td>
+                        <td class="border-left border-right border-white">{{$row->student->name}}</td>
+                        <td class="border-left border-right border-white">{{$row->tel}}</td>
+                        <td class="border-left border-right border-white">{{$row->status}}</td>
+                        <td class="border-left border-right border-white">{{$row->mode}}</td>
+                        <td class="border-left border-right border-white">{{$row->done}}</td>
+                        <td class="border-left border-right border-white {{$row->collected == null ? 'text-primary' : 'text-success' }}">{{$row->collected == null ? __('text.word_available') : __('text.word_collected')}}</td>
+                    </tr>
                 @endforeach
                 @foreach ($_data as $row)
-                    <td class="border-left border-right border-white">{{$k++}}</td>
-                    <td class="border-left border-right border-white">{{$row->student->matric}}</td>
-                    <td class="border-left border-right border-white">{{$row->student->name}}</td>
-                    <td class="border-left border-right border-white">{{$row->tel}}</td>
-                    <td class="border-left border-right border-white">{{$row->status}}</td>
-                    <td class="border-left border-right border-white">{{$row->mode}}</td>
-                    <td class="border-left border-right border-white">{{$row->done}}</td>
-                    <td class="border-left border-right border-white {{$row->collected == null ? 'text-primary' : 'text-success' }}">{{$row->collected == null ? __('text.word_available') : __('text.word_collected')}}</td>
+                    <tr class="border-bottom border-white">
+                        <td class="border-left border-right border-white">{{$k++}}</td>
+                        <td class="border-left border-right border-white">{{$row->student->matric}}</td>
+                        <td class="border-left border-right border-white">{{$row->student->name}}</td>
+                        <td class="border-left border-right border-white">{{$row->tel}}</td>
+                        <td class="border-left border-right border-white">{{$row->status}}</td>
+                        <td class="border-left border-right border-white">{{$row->mode}}</td>
+                        <td class="border-left border-right border-white">{{$row->done}}</td>
+                        <td class="border-left border-right border-white {{$row->collected == null ? 'text-primary' : 'text-success' }}">{{$row->collected == null ? __('text.word_available') : __('text.word_collected')}}</td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>

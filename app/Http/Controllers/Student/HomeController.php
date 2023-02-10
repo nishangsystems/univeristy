@@ -476,7 +476,7 @@ class HomeController extends Controller
             return redirect(route('student.home'))->with('error', 'Can not sign courses for this program at the moment. Date limit not set. Contact registry.');
         }
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+        $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Helpers::instance()->resit_available(auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear()));
         return view('student.resit.register', $data);
     }
 
@@ -986,14 +986,14 @@ class HomeController extends Controller
         ];
         $trans = new Transcript($data);
         $trans->save();
-        return back()->with('success', 'Done');
+        return redirect(route('student.transcript.history'))->with('success', 'Done');
     }
 
     public function transcript_history()
     {
         # code...
         $data['title'] = "Transcript History";
-        $data['data'] = Transcript::where(['student_id' => auth()->id()])->get();
+        $data['data'] = Transcript::where(['student_id' => auth()->id()])->orderBy('id', 'DESC')->get();
         return view('student.transcript.history', $data);
     }
 }

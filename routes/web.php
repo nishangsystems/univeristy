@@ -277,6 +277,11 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('course_registration/date_line/{campus}/{semester}', 'Admin\HomeController@course_date_line')->name('courses.registration.date_line');
     Route::get('programs/settings', 'Admin\HomeController@program_settings')->name('program_settings');
     Route::post('programs/settings', 'Admin\HomeController@post_program_settings');
+    Route::get('custom_resit/create/{background_id?}', 'Admin\HomeController@custom_resit_create')->name('custom_resit.create');
+    Route::post('custom_resit/create/{background_id?}', 'Admin\HomeController@custom_resit_save');
+    Route::get('custom_resit/edit/{id}', 'Admin\HomeController@custom_resit_edit')->name('custom_resit.edit');
+    Route::post('custom_resit/edit/{id}', 'Admin\HomeController@custom_resit_update');
+    Route::get('custom_resit/delete/{id}', 'Admin\HomeController@custom_resit_delete')->name('custom_resit.delete');
     
     Route::prefix('statistics')->name('stats.')->group(function(){
         Route::get('sudents', 'Admin\StatisticsController@students')->name('students');
