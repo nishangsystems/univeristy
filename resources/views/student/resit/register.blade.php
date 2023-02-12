@@ -27,7 +27,7 @@
             </div>
             
             <div class="py-3">
-                <form method="post" action="{{route('student.resit.registration.payment')}}" class="" id="signed_courses_form">
+                <form method="post" action="{{route('student.resit.registration')}}" class="" id="signed_courses_form">
                     @csrf
                     <table>
                         <thead class="text-capitalize bg-secondary text-white">
@@ -40,7 +40,7 @@
                         <tbody id="course_table"></tbody>
                     </table>
                     <div class="d-flex py-3">
-                        <button type="submit" class="btn btn-success btn-sm mr-4 text-capitalize"><i class="fa fa-save mx-1"></i>{{__('text.word_proceed')}}</button>
+                        <button type="submit" class="btn btn-success btn-sm mr-4 text-capitalize"><i class="fa fa-save mx-1"></i>{{__('text.word_save')}}</button>
                         <div class="btn btn-primary btn-sm mr-4 text-capitalize">{{__('text.credit_value')}} : <span id="cv-sum"></span>/<span id="cv-total">{{$cv_total}}</span></div>
                         <div class="btn btn-primary btn-sm mr-4 text-capitalize">{{__('text.word_amount')}} : <span id="amount-sum"></span></div>
                     </div>

@@ -11,6 +11,7 @@ use App\Models\CourseNotification;
 use App\Models\Material;
 use App\Models\Notification;
 use App\Models\ProgramLevel;
+use App\Models\Resit;
 use App\Models\Result;
 use App\Models\SchoolUnits;
 use App\Models\Semester;
@@ -27,6 +28,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 use PDF;
+// use Barryvdh\DomPDF\Facade as PDF;
 
 class HomeController extends Controller
 {
@@ -476,7 +478,8 @@ class HomeController extends Controller
             return redirect(route('student.home'))->with('error', 'Can not sign courses for this program at the moment. Date limit not set. Contact registry.');
         }
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Helpers::instance()->resit_available(auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear()));
+        $data['access'] =  Helpers::instance()->resit_available(auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id);
+        // dd($data['access']);
         return view('student.resit.register', $data);
     }
 
@@ -601,10 +604,10 @@ class HomeController extends Controller
             $_student = $student ?? auth()->id();
             $_year = $year ?? Helpers::instance()->getYear();
             // get resit semester for the student's background
-            $_semester = Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
+            $resit_id = Helpers::instance()->available_resit(auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
             // return $_semester;
             # code...
-            $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year])->where(['student_courses.semester_id'=>$_semester])
+            $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year])->where(['student_courses.resit_id'=>$resit_id])
                     ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
                     ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
                     return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
@@ -631,7 +634,7 @@ class HomeController extends Controller
                             $q->where('subjects.code', 'like', '%'.$request->value.'%')
                             ->orWhere('subjects.name', 'like', '%'.$request->value.'%');
                         })
-                        ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->toArray();
+                        ->select(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->paginate(10);
             return $subjects;
         }
         catch(Throwable $th){return $th->getLine() . '  '.$th->getMessage();}
@@ -662,12 +665,16 @@ class HomeController extends Controller
         # code...
         // first clear all registered courses for the year, semester, student then rewrite
         $year = Helpers::instance()->getYear();
-        $semester = Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
+        $resits = Helpers::instance()->available_resit(auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id);
+        if($resits != null){
+            // dd($resits);
+            $resit_id = $resits->first()->id;
+        }else{$resit_id = 0;}
         $user = auth()->id();
         try {
             if ($request->has('courses')) {
                 // DB::beginTransaction();
-                $ids = \App\Models\StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->pluck('id');
+                $ids = \App\Models\StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['resit_id'=>$resit_id])->pluck('id');
                 foreach ($ids as $key => $value) {
                     # code...
                     StudentSubject::find($value)->delete();
@@ -675,7 +682,7 @@ class HomeController extends Controller
                 # code...
                 foreach (array_unique($request->courses) as $key => $value) {
                     # code...
-                    StudentSubject::create(['year_id'=>$year, 'semester_id'=>$semester, 'student_id'=>$user, 'course_id'=>$value]);
+                    StudentSubject::create(['year_id'=>$year, 'resit_id'=>$resit_id, 'student_id'=>$user, 'course_id'=>$value]);
                 }
             }
             // DB::commit();
@@ -995,5 +1002,32 @@ class HomeController extends Controller
         $data['title'] = "Transcript History";
         $data['data'] = Transcript::where(['student_id' => auth()->id()])->orderBy('id', 'DESC')->get();
         return view('student.transcript.history', $data);
+    }
+
+    public function resit_index()
+    {
+        # code...
+        $data['title'] = "My Resits";
+        return view('student.resit.forms', $data);
+    }
+
+    public function resit_download(Request $request, $id)
+    {
+        # code...
+        $resit = Resit::find($id);
+        $unit_cost = auth()->user()->_class($resit->year_id)->program->resit_cost;
+        $data['title'] = $resit->year->name.' - '.'RESIT FOR '.$resit->background->background_name.' [ FROM '.date('d-m-Y', strtotime($resit->start_date)).' TO '.date('d-m-Y', strtotime($resit->end_date)).' ]';
+        $data['courses'] = $resit->courses(auth()->id())->get();
+        $data['unit_cost'] = number_format($unit_cost ?? 0).' '.__('text.currency_cfa');
+        if($data['unit_cost'] == null){
+            $data['total_cost'] = '----';
+        }else{
+            $data['total_cost'] = number_format((float)$unit_cost * $data['courses']->count()).' '.__('text.currency_cfa');
+        }
+        // dd($data);
+        // return view('student.resit.courses', $data); // <--- load your view into theDOM wrapper;
+        $pdf = PDF::loadView('student.resit.courses', $data); // <--- load your view into theDOM wrapper;
+        $fileName =  $data['title'].'_'.time().'.'. 'pdf' ; // <--giving the random filename,
+        return $pdf->download($fileName);
     }
 }

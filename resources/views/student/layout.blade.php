@@ -289,12 +289,33 @@
                 </ul>
             </li>
             
+            
             <li>
-                <a href="{{route('student.resit.registration')}}" class="text-capitalize">
-                    <i  style="color: {{$bg1}};" class="fa fa-recycle menu-icon"></i>
-                    {{__('text.resit_registration')}}
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-gift menu-icon   "></i>
+                    <span class="menu-text">{{__('text.resit_registration')}}</span>
+                    <b class="arrow fa fa-angle-down"></b>
                 </a>
-                <b class="arrow"></b>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('student.resit.registration')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="fa fa-recycle menu-icon"></i>
+                            {{__('text.word_register')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('student.resit.index')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_history')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                </ul>
             </li>
 
            <li>

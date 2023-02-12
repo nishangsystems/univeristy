@@ -34,5 +34,19 @@ class Resit extends Model
         # code...
         return Batch::find($this->year_id)->name." Resit Registrattion For " . $this->background->background_name . " Open From ".$this->asDate($this->start_date)." To ".$this->asDate($this->end_date); 
     }
+
+    public function name()
+    {
+        # code...
+        return Batch::find($this->year_id)->name." Resit For " . $this->background->background_name . " ( FROM ".$this->asDate($this->start_date)." TO ".$this->asDate($this->end_date) .' ) '; 
+    }
+
+    public function courses($student_id = null)
+    {
+        # code...
+        return $this->hasMany(StudentSubject::class, 'resit_id')->where(function ($qr) use ($student_id) {
+            $student_id == null ? null : $qr->where(['student_id' => $student_id]);
+        });
+    }
     
 }
