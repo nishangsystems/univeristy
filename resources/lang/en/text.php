@@ -529,4 +529,12 @@ return [
     'manage_custom_resits'=>'manage custom resits',
     'word_open'=>'open',
     'word_closed'=>'closed',
+    'download_courses'=>'download courses',
+    'word_register'=>'register',
+    'word_resits'=>'resits',
+    'manage_resits'=>"manage resits",
+    'word_index'=>'index',
+    'unit_cost'=>'unit cost',
+    'total_cost'=>"total cost",
+    'resit_form'=>'resit form'
 ];

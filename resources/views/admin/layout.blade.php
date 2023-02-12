@@ -473,6 +473,29 @@
                 </li>
             @endif
 
+            @if (\Auth::user()->hasPermissionTo('manage_resits'))
+            <li>
+                <a href="#" class="dropdown-toggle">
+                <i style="color: {{$bg1}}" class="menu-icon fa fa-graduation-cap"></i>
+                    <span class="menu-text text-capitalize">
+						{{__('text.manage_resits')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.resits.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_resits')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            @endif
+
             @if (\Auth::user()->hasPermissionTo('manage_scholarship'))
             <li>
                 <a href="#" class="dropdown-toggle">

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use \App\Models\Subjects;
 
 Route::get('/clear', function () {
     echo Session::get('applocale');
@@ -403,6 +404,12 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         });
     });
 
+    Route::prefix('resits')->name('resits.')->group(function(){
+        Route::get('index', [AdminHomeController::class, 'resits_index'])->name('index');
+        Route::get('course_list/{resit_id}', [AdminHomeController::class, 'resit_course_list'])->name('course_list');
+        Route::get('course_list/{resit_id}/{subject_id}/download', [AdminHomeController::class, 'resit_course_list_download'])->name('course_list.download');
+    });
+
 });
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {
@@ -488,6 +495,8 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::post('resit/registration', 'Student\HomeController@register_resit');
     Route::post('resit/registration/payment', 'Student\HomeController@resit_payment')->name('resit.registration.payment');
     Route::get('resit/registered_courses', 'Student\HomeController@registered_resit_courses')->name('resit.registered_courses');
+    Route::get('resit/index', 'Student\HomeController@resit_index')->name('resit.index');
+    Route::get('resit/download/{resit_id}', 'Student\HomeController@resit_download')->name('resit.download_courses');
     Route::get('registered_courses/{year?}/{semester?}/{student?}', 'Student\HomeController@registerd_courses')->name('registered_courses');
     Route::get('class-subjects/{level}', 'Student\HomeController@class_subjects')->name('class-subjects');
     Route::get('search_course', 'Student\HomeController@search_course')->name('search_course');
@@ -589,6 +598,14 @@ Route::get('class_subjects/{program_level_id}', function($program_level_id){
 })->name('class_subjects');
 Route::get('campus/{campus}/program_levels', [Controller::class, 'sorted_campus_program_levels'])->name('campus.program_levels');
 Route::get('getColor/{label}', [HomeController::class, 'getColor'])->name('getColor');
+
+Route::get('search_subjects', function (Request $request) {
+    $data = $request->name;
+    $subjects = Subjects::where('code', 'LIKE', '%' . $data . '%')
+        ->orWhere('name', 'LIKE', '%' . $data . '%')->orderBy('name')->paginate(20);
+    return $subjects;
+})->name('search_subjects');
+
 Route::get('mode/{locale}', function ($batch) {
     session()->put('mode', $batch);
 

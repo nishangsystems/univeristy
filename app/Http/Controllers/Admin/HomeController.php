@@ -15,11 +15,13 @@ use App\Models\Resit;
 use App\Models\SchoolUnits;
 use App\Models\Semester;
 use App\Models\Students;
+use App\Models\Subjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config as FacadesConfig;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use MongoDB\Driver\Session;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -53,7 +55,7 @@ class HomeController  extends Controller
             $ext = $file->getClientOriginalExtension();
             $filename = '_'.random_int(100000, 999999).'_'.time().'.'.$ext;
             $path = $filename;
-            $file->storeAs('files', $filename);
+            $file->move(url('storage/app/').'/files', $filename);
             if(File::where(['name'=>'letter-head'])->count() == 0){
                 File::create(['name'=>'letter-head', 'path'=>$path]);
             }else {
@@ -323,5 +325,35 @@ class HomeController  extends Controller
         }
 
         return back()->with('error', 'Operation failed. Resit record not found.');
+    }
+
+    public function resits_index()
+    {
+        # code...
+        $data['title'] = "Resits";
+        return view('admin.resit.index', $data);
+    }
+
+    public function resit_course_list(Request $request, $resit_id)
+    {
+        # code...
+        $resit =  Resit::find($resit_id);
+        $data['title'] = "Course List For " . $resit->name();
+        $data['resit'] = $resit;
+        return view('admin.resit.course_list', $data);
+    }
+
+    public function resit_course_list_download(Request $request)
+    {
+        # code...
+        $subject = Subjects::find($request->subject_id);
+        $data['title'] = "Resit Course List For [ ".$subject->code .' ] '. $subject->name.' - '.Resit::find($request->resit_id)->year->name;
+        $data['subjects'] = Subjects::find($request->subject_id)->student_subjects()->where(['resit_id' => $request->resit_id])->get();
+        if($request->print == 1){
+
+            $pdf = Pdf::loadView('admin.resit._course_list_print', $data);
+            return $pdf->download($data['title'] . '.pdf');
+        }
+        return view('admin.resit.course_list_print', $data);
     }
 }

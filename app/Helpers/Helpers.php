@@ -219,7 +219,7 @@ class Helpers
         $lt = File::where('name','=', 'letter-head');
         if ($lt->count() > 0) {
             # code...
-            return url('storage/app/public/files').'/'.$lt->first()->path;
+            return url('storage/app/files').'/'.$lt->first()->path;
         }
         return '';
     }
@@ -270,7 +270,7 @@ class Helpers
     public function open_resits()
     {
         # code...
-        $resits = Resit::whereDate('start_date', '<=', date('m/d/Y'))->whereDate('end_date', '>=', date('m/d/Y'))->get();
+        $resits = Resit::whereDate('start_date', '<=', date('m/d/Y', time()))->whereDate('end_date', '>=', date('m/d/Y', time()))->get();
         return $resits;
     }
 
@@ -278,12 +278,28 @@ class Helpers
     {
         # code...
         $class = ProgramLevel::find($class_id);
-        $resits = $class->program->background->resit()->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()])->get();
+        // dd($class);
+        $resits = $class->program->background->resits()->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()])->get();
         foreach ($resits as $key => $resit) {
             # code...
-            if(now()->between(Carbon::createFromDate($resit->start_date), Carbon::createFromDate($resit->end_date)));
+            if(now()->between(Carbon::createFromDate($resit->start_date), Carbon::createFromDate($resit->end_date)))
             return true;
         }
+        return false;
+    }
+
+    public function available_resit($class_id)
+    {
+        # code...
+        $class = ProgramLevel::find($class_id);
+        // dd($class);
+        $resits = $class->program->background->resits()->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()])->get();
+        foreach ($resits as $key => $resit) {
+            # code...
+            if(now()->between(Carbon::createFromDate($resit->start_date), Carbon::createFromDate($resit->end_date)))
+            return $resit;
+        }
+        return null;
     }
 
 }
