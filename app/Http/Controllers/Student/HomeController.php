@@ -634,7 +634,7 @@ class HomeController extends Controller
                             $q->where('subjects.code', 'like', '%'.$request->value.'%')
                             ->orWhere('subjects.name', 'like', '%'.$request->value.'%');
                         })
-                        ->select(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->paginate(10);
+                        ->select(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->orderBy('name')->distinct()->paginate(15);
             return $subjects;
         }
         catch(Throwable $th){return $th->getLine() . '  '.$th->getMessage();}
