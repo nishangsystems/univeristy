@@ -12,12 +12,14 @@
         <tbody id="table_body">
             @php($k = 1)
             @foreach ($subjects as $subject)
-                <tr class="border-bottom border-white">
-                    <td class="border-left border-right border-white">{{$k++}}</td>
-                    <td class="border-left border-right border-white">{{$subject->student->name}}</td>
-                    <td class="border-left border-right border-white">{{$subject->student->matric}}</td>
-                    <td class="border-left border-right border-white">{{$subject->student->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name() ?? ''}}</td>
-                </tr>
+                @if ((auth()->user()->campus_id == null) || ($subject->student->campus_id == auth()->user()->campus_id))
+                    <tr class="border-bottom border-white">
+                        <td class="border-left border-right border-white">{{$k++}}</td>
+                        <td class="border-left border-right border-white">{{$subject->student->name}}</td>
+                        <td class="border-left border-right border-white">{{$subject->student->matric}}</td>
+                        <td class="border-left border-right border-white">{{$subject->student->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name() ?? ''}}</td>
+                    </tr>
+                @endif
             @endforeach
         </tbody>
     </table>

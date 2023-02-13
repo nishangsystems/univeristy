@@ -119,16 +119,16 @@
             data: {'value' : value},
             success: function(data){
                 // console.log(data);
-                class_courses = data;
+                class_courses = data.data;
                 let html = ``;
-                for (const key in data) {
+                for (const key in data.data) {
                     if(registered_courses.filter(e => e['id'] == class_courses[key]['id']).length > 0){continue;}
-                    html += `<tr class="border-bottom" id="modal-`+data[key]['id']+`">
-                            <td class="border-left border-right">`+data[key]['code']+`</td>
-                            <td class="border-left border-right">`+data[key]['name']+`</td>
-                            <td class="border-left border-right d-none d-md-table-cell">`+data[key]['cv']+`</td>
-                            <td class="border-left border-right d-none d-md-table-cell">`+data[key]['status']+`</td>
-                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(data[key])+`)'>{{__('text.word_sign')}}</span></td>
+                    html += `<tr class="border-bottom" id="modal-`+data.data[key]['id']+`">
+                            <td class="border-left border-right">`+data.data[key]['code']+`</td>
+                            <td class="border-left border-right">`+data.data[key]['name']+`</td>
+                            <td class="border-left border-right d-none d-md-table-cell">`+data.data[key]['cv']+`</td>
+                            <td class="border-left border-right d-none d-md-table-cell">`+data.data[key]['status']+`</td>
+                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(data.data[key])+`)'>{{__('text.word_sign')}}</span></td>
                         </tr>`
                 }
                 $('#modal_table').html(html);
