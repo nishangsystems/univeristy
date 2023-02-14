@@ -85,7 +85,7 @@ class HomeController extends Controller
         $year = Batch::find($request->year ?? Helpers::instance()->getCurrentAccademicYear());
         $class = auth()->user()->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
-        // dd($semester);
+        // dd($request->all());
         
         $data['title'] = "My CA Result";
         $data['user'] = auth()->user();
@@ -112,11 +112,46 @@ class HomeController extends Controller
 
     public function ca_result_download(Request $request)
     {
+        $year = Batch::find($request->year ?? Helpers::instance()->getCurrentAccademicYear());
+        $class = auth()->user()->_class($year->id);
+        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
+        // dd($semester);
+        
+        $data['title'] = "My CA Result";
+        $data['user'] = auth()->user();
+        $data['year'] = $year;
+        $data['class'] = $class;
+        $data['ca_total'] = $class->program()->first()->ca_total;
+        $data['semester'] = $semester;
+        $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
+        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->toArray();
+        $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
+        $data['results'] = array_map(function($subject_id)use($data, $year, $semester){
+            return [
+                'id'=>$subject_id,
+                'code'=>Subjects::find($subject_id)->code ?? '',
+                'name'=>Subjects::find($subject_id)->name ?? '',
+                'status'=>Subjects::find($subject_id)->status ?? '',
+                'coef'=>Subjects::find($subject_id)->coef ?? '',
+                'ca_mark'=>auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? '',
+            ];
+        }, $res);
+        // dd($data);
+        // return view('student.templates.ca-result-template',$data);
+        $pdf = PDF::loadView('student.templates.ca-result-template',$data);
+        return $pdf->download(auth()->user()->matric.'_'.$semester->name.'_CA_RESULTS.pdf');
+    }
+
+    public function _ca_result_download(Request $request)
+    {
+        dd($request->all());
         $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id);
         // dd($semester);
+        $data['year'] = Batch::find($year);
         $data['title'] = "My CA Result";
         $data['user'] = auth()->user();
+        $data['class'] = $data['user']->_class($year);
         $data['ca_total'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->ca_total;
         $data['semester'] = $semester;
         $data['grading'] = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType->grading()->get() ?? [];
@@ -132,9 +167,9 @@ class HomeController extends Controller
                 'ca_mark'=>auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? '',
             ];
         }, $res);
-        // dd($data['results']);
+        dd($data['results']);
         $pdf = PDF::loadView('student.templates.ca-result-template',$data);
-        return $pdf->download(auth()->user()->matric.'_'.$semester->name.'_CA_RESULTS.pdf');
+        // return $pdf->render(auth()->user()->matric.'_'.$semester->name.'_CA_RESULTS.pdf');
         // return view('student.templates.ca-result-template')->with($data);
     }
 
@@ -602,7 +637,7 @@ class HomeController extends Controller
         try {
             //code...
             $_student = $student ?? auth()->id();
-            $_year = $year ?? Helpers::instance()->getYear();
+            $_year = $year ?? Helpers::instance()->getCurrentAccademicYear();
             // get resit semester for the student's background
             $resit_id = Helpers::instance()->available_resit(auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
             // return $_semester;
@@ -610,7 +645,7 @@ class HomeController extends Controller
             $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year])->where(['student_courses.resit_id'=>$resit_id])
                     ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
                     ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
-                    return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
+            return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
         } catch (\Throwable $th) {
             return $th->getMessage();
             
