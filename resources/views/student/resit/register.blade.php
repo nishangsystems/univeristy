@@ -48,15 +48,9 @@
             </div>
         </div>
     @else
-        @if(isset($on_time) && !$on_time)
-        <div class="py-4 text-center h4 text-danger bg-light my-4">
-            {{__('text.course_registration_over')}}
-        </div>
-        @else
-        <div class="py-4 text-center h4 text-danger bg-light my-4">
-            {{trans('text.fee_access_phrase', ['amount'=>$min_fee, 'action'=>'sign up courses'])}}
-        </div>
-        @endif
+    <div class="py-4 text-center h4 text-danger bg-light my-4">
+        {{__('text.course_registration_over')}}
+    </div>
     @endif
 </div>
 @endsection
@@ -84,6 +78,7 @@
             success: function(data){
                 if (data != null) {
                     registered_courses = data.courses;
+                    console.log(data);
                     cv_sum = data.cv_sum;
                     if(cv_sum > cv_total){alert("Problem encountered. Maximum credits excceded");}
                     let html2 = ``;
@@ -122,7 +117,7 @@
                 class_courses = data.data;
                 let html = ``;
                 for (const key in data.data) {
-                    if(registered_courses.filter(e => e['id'] == class_courses[key]['id']).length > 0){continue;}
+                    if(registered_courses.filter(e => e['id'] == data.data[key]['id']).length > 0){continue;}
                     html += `<tr class="border-bottom" id="modal-`+data.data[key]['id']+`">
                             <td class="border-left border-right">`+data.data[key]['code']+`</td>
                             <td class="border-left border-right">`+data.data[key]['name']+`</td>
