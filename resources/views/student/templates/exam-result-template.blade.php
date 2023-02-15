@@ -90,8 +90,8 @@
                 </tr>
             @endforeach
             <tr class="border border-secondary text-capitalize h4 fw-bolder">
-                <td colspan="2" class="text-center">{{__('text.total_courses_attempted')}} : <span class="px-3">{{count($results)}}</span></td>
-                <td colspan="7" class="text-center">{{__('text.total_courses_passed')}} : <span class="px-3">{{collect($results)->where('total', '>=', 50)->count()}}</span></td>
+                <td colspan="4" class="text-center">{{__('text.total_courses_attempted')}} : <span class="px-3">{{count($results)}}</span></td>
+                <td colspan="5" class="text-center">{{__('text.total_courses_passed')}} : <span class="px-3">{{collect($results)->where('total', '>=', 50)->count()}}</span></td>
             </tr>
         </tbody>
     </table>
