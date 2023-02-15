@@ -27,8 +27,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
-use PDF;
-// use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class HomeController extends Controller
 {
@@ -175,6 +174,7 @@ class HomeController extends Controller
 
     public function exam_result(Request $request)
     {
+        // return $request->all();
         $year = Batch::find($request->year ?? Helpers::instance()->getCurrentAccademicYear());
         $class = auth()->user()->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
@@ -235,11 +235,13 @@ class HomeController extends Controller
 
     public function exam_result_download(Request $request)
     {
+        // return $request->all();
         $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id);
         $seqs = $semester->sequences()->get('id')->toArray();
         $data['title'] = "My Exam Result";
         $data['user'] = auth()->user();
+        $data['class'] = $data['user']->_class($year);
         $data['semester'] = $semester;
         $data['ca_total'] = auth()->user()->_class($year)->program()->first()->ca_total;
         $data['exam_total'] = auth()->user()->_class($year)->program()->first()->exam_total;
@@ -272,6 +274,7 @@ class HomeController extends Controller
             
             // dd($grade);
         }, $res);
+        // dd($data);
         $pdf = PDF::loadView('student.templates.exam-result-template',$data);
         return $pdf->download(auth()->user()->matric.'_'.$semester->name.'_EXAM_RESULTS.pdf');
         // return view('student.templates.exam-result-template')->with($data);

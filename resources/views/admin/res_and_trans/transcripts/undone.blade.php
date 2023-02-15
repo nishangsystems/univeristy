@@ -26,7 +26,7 @@
                         <td class="border-left border-right border-white">{{$row->mode}}</td>
                         <td class="border-left border-right border-white text-danger">-{{\Illuminate\Support\Carbon::createFromDate(date('Y-m-d', strtotime($row->created_at)))->addDays($row->duration)->diffInDays(now())}}</td>
                         <td class="border-left border-right border-white ">
-                            <a class="btn btn-primary btn-sm" href="{{route('admin.res_and_trans.transcripts.set_done', $row->id)}}">{{__('text.word_Done')}}</a>
+                            <a class="btn btn-sm btn-primary" onclick="window.location=confirm(`You are about changing the status of a transcript for {{$row->student->name .' [ '. $row->student->matric.' ]'}}`) ? `{{route('admin.res_and_trans.transcripts.set_done', $row->id)}}` : ''">{{__('text.word_Done')}}</a>
                         </td>
                     </tr>
                 @endforeach
