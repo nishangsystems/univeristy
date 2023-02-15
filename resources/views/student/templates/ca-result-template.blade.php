@@ -2,46 +2,66 @@
 @section('section')
     <table>
         <thead>
-            <div class="py-3 h4 my-0" style="border-block: 1px solid black; text-transform:uppercase; text-align:center; padding-block:4px;"><b>
-                {{$semester->name .' '.$year->name. ' '.__('text.CA') }}
-            </b></div>
-            <div class="container-fluid p-0 my-0 row mx-auto">
-                <div class="col-sm-7 col-md-8 border-right border-left">
-                    <div class="row py-2 border-top border-bottom border-1">
-                        <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_name')}} :</label>
-                        <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{$user->name}}</div>
-                    </div>
-                    <div class="row py-2 border-top border-bottom border-1">
-                        <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_program')}} :</label>
-                        <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{$class->program->name}}</div>
-                    </div>
-                    <div class="row py-2 border-top border-bottom border-1">
-                        <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_matricule')}} :</label>
-                        <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{$user->matric}}</div>
-                    </div>
-                    <div class="row py-2 border-top border-bottom border-1">
-                        <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_level')}} :</label>
-                        <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{ $class->level->level}}</div>
-                    </div>
-                </div>
-                <div class="col-sm-5 col-md-4 border">
-                    @foreach($grading as $grd)
-                        <span class="d-flex flex-wrap py-2 fs-3">
-                            <span class="col-2">{{($grd->grade ?? '')}}</span>
-                            <span class="col-2">{{':'.($grd->lower ?? '')}}</span>
-                            <span class="col-3">{{'-'.($grd->upper ?? '').'%  '}}</span>
-                            <span class="col-2">{{($grd->weight ?? '')}}</span>
-                            <span class="col-3">{{'  '.($grd->remark ?? '')}}</span>
-                        </span>
-                    @endforeach
-                </div>
-            </div>
+            <tr class="py-3 h4 my-0">
+                <th colspan="5" class="text-center">
+                    {{$semester->name .' '.$year->name. ' '.__('text.CA') }}
+                </th>
+            </tr>
+            <tr>
+                <th colspan="5" class="px-0 py-0">
+                    <table>
+                        <tr class="border-top border-bottom">
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td class="text-capitalize fw-bold h5 col-sm-4">{{__('text.word_name')}} :</td>
+                                        <td class="col-sm-8 h5 text-uppercase fw-bolder">{{$user->name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-capitalize fw-bold h5 col-sm-4">{{__('text.word_program')}} :</td>
+                                        <td class="col-sm-8 h5 text-uppercase fw-bolder">{{$class->program->name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-capitalize fw-bold h5 col-sm-4">{{__('text.word_matricule')}} :</td>
+                                        <td class="col-sm-8 h5 text-uppercase fw-bolder">{{$user->matric}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-capitalize fw-bold h5 col-sm-4">{{__('text.word_level')}} :</td>
+                                        <td class="col-sm-8 h5 text-uppercase fw-bolder">{{ $class->level->level}}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <div class=" px-0 py-0">
+                                    <table class="h6">
+                                        <thead class="text-primary">
+                                            <th>Grd</th>
+                                            <th colspan="2">Range</th>
+                                            <th>Wt</th>
+                                            <th>Rmk</th>
+                                        </thead>
+                                        @foreach($grading as $grd)
+                                            <tr class="pb-1 pt-0" style="text-decoration: none;">
+                                                <td class="py-0">{{($grd->grade ?? '')}}</td>
+                                                <td class="py-0">{{($grd->lower ?? '')}}</td>
+                                                <td class="py-0">{{($grd->upper ?? '')}}</td>
+                                                <td class="py-0">{{($grd->weight ?? '')}}</td>
+                                                <td class="py-0">{{($grd->remark ?? '')}}</td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </th>
+            </tr>
             <tr class="text-uppercase">
-                <th class="text-center" >{{__('text.word_code')}}</th>
-                <th class="text-center" >{{__('text.word_course')}}</th>
-                <th class="text-center" >ST</th>
-                <th class="text-center" >CV</th>
-                <th class="text-center" >{{__('text.CA').'/'.$ca_total}}</th>
+                <th class="text-center py-0" >{{__('text.course_code')}}</th>
+                <th class="text-center py-0" >{{__('text.course_title')}}</th>
+                <th class="text-center py-0" >ST</th>
+                <th class="text-center py-0" >CV</th>
+                <th class="text-center py-0" >{{__('text.CA').'/'.$ca_total}}</th>
             </tr>
         </thead>
         <tbody class="text-uppercase text-left">

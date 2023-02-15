@@ -26,7 +26,7 @@
                     <td class="border-left border-right border-white">{{$row->mode}}</td>
                     <td class="border-left border-right border-white">{{now()->addDays($row->duration)->diffInDays($row->created_at)}}</td>
                     <td class="border-left border-right border-white">
-                        <a class="btn btn-sm btn-primary" onclick="window.location=confirm(`You are about changing the status of a transcript for {{$row->student->name .' [ '. $row->student->matric.' ]'}}`) ? `{{route('admin.res_and_trans.transcripts.set_done', $row->id)}}` : null">{{__('text.word_Done')}}</a>
+                        <a class="btn btn-sm btn-primary" onclick="window.location=confirm(`You are about changing the status of a transcript for {{$row->student->name .' [ '. $row->student->matric.' ]'}}`) ? `{{route('admin.res_and_trans.transcripts.set_done', $row->id)}}` : ''">{{__('text.word_Done')}}</a>
                     </td>
                 </tr>
                 @endforeach
