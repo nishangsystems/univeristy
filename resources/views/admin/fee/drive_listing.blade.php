@@ -89,7 +89,7 @@
                             <th>#</th>
                             <th>{{__('text.word_matricule')}}</th>
                             <th>{{__('text.word_name')}}</th>
-                            <th>{{__('text.word_paid')}}</th>
+                            <th>{{__('text.amount_paid')}}</th>
                             <!-- <th></th> -->
                         </tr>
                     </thead>

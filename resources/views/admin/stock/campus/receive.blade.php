@@ -47,7 +47,7 @@
     <div class="py-3">
         @php
             $c_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-            $stks = \App\Models\Stock::find(request('id'))->studentStock(request('campus_id'))->where(['type'=>'receivable', 'year_id'=>$c_year])->get();
+            $stks = \App\Models\Stock::find(request('id'))->studentStock(request('campus_id'))->where(['type'=>'receivable'])->get();
             // dd($stks);
             $k = 1;
         @endphp

@@ -118,7 +118,7 @@ class ImportCenter extends Controller
                                 'subject_id'=>$data['subject_id'],
                                 'coef'=>$data['coef'],
                                 'class_subject_id'=>$data['class_subject_id']
-                            ])->count()>0) {
+                            ])->whereNotNull('ca_score')->count()>0) {
                                 # code...
                                 $errors .= $row[0]." already has a CA mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";
                             }else{
@@ -260,6 +260,12 @@ class ImportCenter extends Controller
                                 'exam_score' => $row[3],
                                 'reference' => $request->reference
                             ];
+                            if (Result::where($base)->whereNotNull('ca_score')->count()>0) {
+                                # code...
+                                $errors .= $row[0]." already has CA mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";
+                            }elseif(array_key_exists('ca_score', $ca)){
+                                Result::updateOrCreate($base, ['ca_score'=>$ca['ca_score'], 'reference'=>$request->reference]);
+                            }
                             if (Result::where($base)->whereNotNull('exam_score')->count()>0) {
                                 # code...
                                 $errors .= $row[0]." already has Exam mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";

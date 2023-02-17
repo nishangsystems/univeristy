@@ -292,7 +292,7 @@ return [
     'no_of_students'=>'No of students',
     'number_completed'=>'number completed',
     'number_uncompleted'=>'number uncompleted',
-    'amount_expected'=>'amount extected',
+    'amount_expected'=>'amount expected',
     'amount_recieved'=>'amount recieved',
     'percentage_students_completed'=>'% students completed',
     'percentage_students_uncompleted'=>'% students uncompleted',

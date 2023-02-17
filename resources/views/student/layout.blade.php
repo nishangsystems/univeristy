@@ -348,26 +348,28 @@
                 </ul>
             </li>
 
-            <li>
-                <a href="{{route('student.notification.home')}}" class="text-capitalize">
-                    <i  style="color: {{$bg1}};" class="fa fa-bell menu-icon   "></i>
-                    {{__('text.word_notifications')}}
-                </a>
-                <b class="arrow"></b>
-            </li>
+            @if (auth()->user()->can('access_student_notifications'))
+                <li>
+                    <a href="{{route('student.notification.home')}}" class="text-capitalize">
+                        <i  style="color: {{$bg1}};" class="fa fa-bell menu-icon   "></i>
+                        {{__('text.word_notifications')}}
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+                
+                            <li>
+                                <a href="{{route('student.stock.report', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())}}" class="text-capitalize">
+                                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-list"></i>
+                                    {{__('text.stock_details')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+            @endif
 
             <li>
                 <a href="{{route('student.material.home')}}" class="text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-file"></i>
                     {{__('text.word_material')}}
-                </a>
-                <b class="arrow"></b>
-            </li>
-
-            <li>
-                <a href="{{route('student.stock.report', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())}}" class="text-capitalize">
-                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-list"></i>
-                    {{__('text.stock_details')}}
                 </a>
                 <b class="arrow"></b>
             </li>

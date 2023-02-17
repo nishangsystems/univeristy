@@ -133,11 +133,11 @@
                 </li>
                 <li class="grenn dropdown-modal">
                     <a data-toggle="dropdown" class="dropdown-toggle text-white font-weight-bold text-capitalize" href="#" id="navbarDropdownMenuLink" style="background-color: {{$bg2}};">
-                        {{ Config::get('languages')[App::getLocale()] }}
+                        {{ Config::get('languages')[Session::has('appLocale') ? Session::get('appLocale') : App::getLocale()] }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     @foreach (Config::get('languages') as $lang => $language)
-                        @if ($lang != App::getLocale())
+                        @if ($lang != Session::get('appLocale'))
                                 <a class="dropdown-item" href="{{ route('lang.switch', $lang) }}"> {{$language}}</a>
                         @endif
                     @endforeach

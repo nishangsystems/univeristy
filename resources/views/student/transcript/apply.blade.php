@@ -2,7 +2,7 @@
 @section('section')
     @php
         $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-        $current = auth()->user()->_class($year) != null;
+        $current = auth()->user()->_class() != null;
     @endphp
     @if (request('config_id') == null)
         <div class="my-2">

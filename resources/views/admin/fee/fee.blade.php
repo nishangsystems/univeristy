@@ -32,12 +32,12 @@
         <div class="content-panel">
             <div class="adv-table table-responsive">
                 <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
-                    <thead>
+                    <thead class="text-capitalize">
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Class</th>
-                        <th>Amount</th>
+                        <th>{{__('text.word_name')}}</th>
+                        <th>{{__('text.word_class')}}</th>
+                        <th>{{__('text.amount_paid')}}</th>
                         @if(request('type','completed') != 'completed') <th></th> @endif
                     </tr>
                     </thead>

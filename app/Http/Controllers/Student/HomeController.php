@@ -999,7 +999,7 @@ class HomeController extends Controller
     {
         # code...
         $data['title'] = "Stock Report For ".Batch::find($request->year)->name;
-        $data['stock'] = StudentStock::where(['student_id'=>auth()->id()])->where(['year_id'=>$request->year])->get();
+        $data['stock'] = StudentStock::where(['student_id'=>auth()->id()])->get();
         return view('student.stock-report', $data);
     }
 
