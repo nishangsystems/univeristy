@@ -80,15 +80,7 @@
                 <tbody>
                     @php($k = 1)
                     @foreach(\App\Models\StudentClass::where('class_id', request('id'))->where('year_id', $year)->join('students', ['students.id'=>'student_classes.student_id'])->distinct()->get(['students.*', 'student_classes.year_id as year']) as $stud)
-                        @if((\Auth::user()->campus_id != null) && ($stud->campus_id == \Auth::user()->campus_id))
-                        <tr>
-                            <td>{{$k++}}</td>
-                            <td>{{$stud->name}}</td>
-                            <td>{{$stud->matric}}</td>
-                            <td>{{\App\Models\Batch::find($stud->year)->name ?? '----'}}</td>
-                        </tr>
-                        @endif
-                        @if(\Auth::user()->campus_id == null)
+                        @if((\Auth::user()->campus_id == null) || ($stud->campus_id == \Auth::user()->campus_id))
                         <tr>
                             <td>{{$k++}}</td>
                             <td>{{$stud->name}}</td>

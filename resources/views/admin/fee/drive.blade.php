@@ -39,7 +39,7 @@
                         <th>#</th>
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.word_class')}}</th>
-                        <th>{{__('text.word_amount')}}</th>
+                        <th>{{__('text.amount_paid')}}</th>
                         @if(request('type','completed') != 'completed') <th></th> @endif
                     </tr>
                     </thead>

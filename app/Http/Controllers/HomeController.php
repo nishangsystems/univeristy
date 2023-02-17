@@ -222,6 +222,7 @@ class HomeController extends Controller
                         \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                         ->where('payment_items.name', '=', 'TUTION')
+                        ->where('payment_items.name', '=', 'TUTION')
                         ->whereNotNull('payment_items.amount')
                         ->join('students', 'students.program_id', '=', 'program_levels.id')
                         ->where('students.id', '=', $stud)->pluck('payment_items.amount')[0] ?? 0
@@ -234,24 +235,24 @@ class HomeController extends Controller
         foreach ($fees as $key => $value) {
             # code...
             $stdt = Students::find($value['stud']);
-            if(($value['total'] > 0 && $value['balance'] <= 0) && $type == 'completed'){
+            if(($value['total'] > 0 && $value['amount'] >= $value['total']) && $type == 'completed'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
                     'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-                    'total'=> $value['balance'],
+                    'total'=> $value['total'],
                     'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }
             if($request->has('amount') && $request->amount > ($value['total']-$value['balance'])){continue;}
-            if(($value['balance'] > 0 || $value['total'] == 0 ) && $type == 'uncompleted'){
+            if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
                     'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-                    'total'=> $value['balance'],
+                    'total'=> $value['amount'],
                     'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }

@@ -89,7 +89,7 @@
                             <th>#</th>
                             <th>{{__('text.word_matricule')}}</th>
                             <th>{{__('text.word_name')}}</th>
-                            <th>{{request()->has('amount') ? __('text.word_paid') : __('text.word_amount')}}</th>
+                            <th>{{request()->has('amount') ? __('text.word_paid') : __('text.amount')}}</th>
                         </tr>
                     </thead>
                     @php($k = 1)

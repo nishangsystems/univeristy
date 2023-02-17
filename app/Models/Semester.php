@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,8 +30,8 @@ class Semester extends Model
         // return false;
         # code...
         if ($this->ca_latest_date != null)
-            return strtotime($this->ca_latest_date) <= strtotime(date('Y-m-d'));
-        return true;
+            return now()->isAfter(Carbon::createFromDate($this->ca_latest_date));
+        return false;
     }
 
     public function exam_is_late()
@@ -38,7 +39,7 @@ class Semester extends Model
         // return false;
         # code...
         if ($this->exam_latest_date != null)
-            return strtotime($this->exam_latest_date) <= strtotime(date('Y-m-d'));
-        return true;
+            return now()->isAfter(Carbon::createFromDate($this->exam_latest_date));
+        return false;
     }
 }

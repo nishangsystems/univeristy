@@ -824,7 +824,10 @@ class StudentController extends Controller
                     //     // $class['current'] = 1;
                     //     // StudentClass::create($class);
                     // }
-                    DB::table('student_classes')->whereIn('student_id', $request->students)->updateOrInsert(['class_id' => $request->class_to, 'year_id' => $request->year_to], ['current' => true]);
+                    foreach ($request->students as  $value) {
+                        # code...
+                        DB::table('student_classes')->updateOrInsert(['student_id'=>$value, 'class_id' => $request->class_to, 'year_id' => $request->year_to], ['current' => true]);
+                    }
                     DB::table('student_classes')->whereIn('student_id', $request->students)->where(['class_id' => $request->class_from, 'year_id' => $request->year_from])->update(['current' => false]);
                     // DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_to)->update(['current'=>1]);
     

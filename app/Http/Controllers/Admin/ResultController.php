@@ -285,6 +285,7 @@ class ResultController extends Controller
             }
 
             $bad_results = 0;
+            $null_students = '';
             foreach($imported_data as $data){
                 if ($data[1] > $ca_total) {
                     # code...
@@ -298,13 +299,19 @@ class ResultController extends Controller
                         'subject_id' => $request->course_id,
                         'student_id' => $student->id,
                         'class_id' => $request->class_id,
-                        'semester_id' => $semester->id
+                        'semester_id' => $semester->id,
+                        'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef,
+                        'class_subject_id'=>$course->_class_subject($request->class_id)->id??0
                     ];
-                    OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
+                    if(OfflineResult::where($base)->whereNotNull('ca_score')->count() == 0){
+                        OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id()]);
+                    }
+                }else{
+                    $null_students .= "Student with matricule ".$data[0].' not found <br>';
                 }
             }
             if($bad_results > 1){
-                return back()->with('success', 'Done. ' . $bad_results . ' records not imported. Unsupported values supplied.');
+                return back()->with('message', 'Done. ' .( $bad_results == 0 ? '' : $bad_results. ' records not imported. Unsupported values supplied. <br>').$null_students);
             }
             return back()->with('success', 'Done');
         }else{
@@ -325,7 +332,7 @@ class ResultController extends Controller
             return back()->with('error', 'CA or Exam total not set for this program.');
         }
 
-        $subject = ClassSubject::find(request('course_id'));
+        $subject = Subjects::find(request('course_id'));
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
         $data['exam_total'] = Helpers::instance()->exam_total(request('class_id'));
         $data['title'] = "Fill Exam Results For [ ".$subject->code." ] ".$subject->name." / ".ProgramLevel::find(request('class_id'))->name();
@@ -339,7 +346,7 @@ class ResultController extends Controller
             return back()->with('error', 'CA total not set for this program.');
         }
 
-        $subject = ClassSubject::find(request('course_id'));
+        $subject = Subjects::find(request('course_id'));
         $data['title'] = "Import Exam Results For [ ".$subject->code." ] ".$subject->name." / ".ProgramLevel::find(request('class_id'))->name();
         return view('admin.result.import_exam', $data);
     }
@@ -377,6 +384,8 @@ class ResultController extends Controller
             }
 
             $bad_results = 0;
+            $null_students = '';
+            $existing_results = '';
             foreach($imported_data as $data){
                 if ($data[1] > $ca_total || $data[2] > $exam_total) {
                     # code...
@@ -390,13 +399,29 @@ class ResultController extends Controller
                         'subject_id' => $request->course_id,
                         'student_id' => $student->id,
                         'class_id' => $request->class_id,
-                        'semester_id' => $semester->id
+                        'semester_id' => $semester->id,
+                        'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef,
+                        'class_subject_id'=>$course->_class_subject($request->class_id)->id??0
                     ];
-                    OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'exam_score'=>$data[2], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
+                    if(OfflineResult::where($base)->whereNotNull('ca_score')->count()>0){
+                        $existing_results .= "<br> CA results already exist for ".$data[0];
+                    }elseif (!$data[1] == null) {
+                        # code...
+                        OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id()]);
+                    }
+                    if(OfflineResult::where($base)->whereNotNull('exam_score')->count()>0){
+                        $existing_results .= "<br> Exam results already exist for ".$data[0];
+                    }elseif (!$data[2] == null) {
+                        # code...
+                        OfflineResult::updateOrCreate($base, ['exam_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id()]);
+                    }
+                }
+                else{
+                    $null_students .= "Student with matricule ".$data[0]." not found <br>";
                 }
             }
             if($bad_results > 1){
-                return back()->with('success', 'Done. ' . $bad_results . ' records not imported. Unsupported values supplied.');
+                return back()->with('message', 'Done. ' . ($bad_results == 0 ? '' : $bad_results . ' records not imported. Unsupported values supplied. <br>') . $null_students . $existing_results);
             }
             return back()->with('success', 'Done');
         }else{
