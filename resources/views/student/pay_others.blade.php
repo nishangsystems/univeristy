@@ -10,7 +10,7 @@
 
     <!-- FOR PAYMENT OF OTHER ITEMS -->
     <div class="form-panel" id="OTHERS-PANEL">
-        <form class="form-horizontal" role="form" method="POST">
+        <form class="form-horizontal" role="form" method="POST" action="#">
             <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_payment_details')}}</h5>
             @csrf
             <input type="hidden" name="type" value="others">
