@@ -1068,4 +1068,39 @@ class HomeController extends Controller
         $fileName =  $data['title'].'_'.time().'.'. 'pdf' ; // <--giving the random filename,
         return $pdf->download($fileName);
     }
+
+    public function pay_fee()
+    {
+        # code...
+        $data['title'] = "Pay Fee";
+        $data['student'] = auth()->user();
+        $data['balance'] = auth()->user()->bal(auth()->id());
+        $data['scholarship'] = Helpers::instance()->getStudentScholarshipAmount(auth()->id());
+        $data['total_fee'] = auth()->user()->total();
+
+        if ($data['total_fee'] <= 0) {
+
+            return redirect(route('student.home'))->with('error', 'Fee not set');
+        }
+        return view('student.pay_fee', $data);
+    }
+
+    public function pay_fee_momo(Request $request)
+    {
+        # code...
+        return $request->all();
+    }
+
+    public function pay_other_incomes(Request $request)
+    {
+        # code...
+        $data['title'] = "Pay Other Incomes";
+        return view('student.pay_others', $data);
+    }
+
+    public function pay_other_incomes_momo(Request $request)
+    {
+        # code...
+        return $request->all();
+    }
 }

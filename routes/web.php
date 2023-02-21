@@ -461,6 +461,10 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('result/exam/download', 'Student\HomeController@exam_result_download');
     Route::get('fee/tution', 'Student\HomeController@fee')->name('fee.tution');
     Route::get('fee/others', 'Student\HomeController@other_incomes')->name('fee.other_incomes');
+    Route::get('fee/pay', 'Student\HomeController@pay_fee')->name('pay_fee');
+    Route::post('fee/pay', 'Student\HomeController@pay_fee_momo')->name('pay_fee');
+    Route::get('others/pay/{id?}', 'Student\HomeController@pay_other_incomes')->name('pay_others');
+    Route::post('others/pay/{id?}', 'Student\HomeController@pay_other_incomes_momo')->name('pay_others');
     Route::get('subjects/{id}/notes', 'Student\HomeController@subjectNotes')->name('subject.notes');
     Route::get('boarding_fees/details', 'Student\HomeController@boarding')->name('boarding');
     Route::post('boarding_fees/details/', 'Student\HomeController@getBoardingFeesYear')->name('boarding_fees_details');
