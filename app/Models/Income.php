@@ -14,6 +14,8 @@ class Income extends Model
 
         'amount',
 
+        'pay_online'
+
     ];
 
     /**

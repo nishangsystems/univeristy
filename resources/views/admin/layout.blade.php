@@ -476,7 +476,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_resits'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                <i style="color: {{$bg1}}" class="menu-icon fa fa-graduation-cap"></i>
+                <i style="color: {{$bg1}}" class="menu-icon fa fa-recycle"></i>
                     <span class="menu-text text-capitalize">
 						{{__('text.manage_resits')}}
 						</span>
@@ -499,7 +499,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_scholarship'))
             <li>
                 <a href="#" class="dropdown-toggle">
-                <i style="color: {{$bg1}}" class="menu-icon fa fa-graduation-cap"></i>
+                <i style="color: {{$bg1}}" class="menu-icon fa fa-globe"></i>
                     <span class="menu-text text-capitalize">
 						{{trans_choice('text.scholarship', 2)}}
 						</span>
@@ -963,7 +963,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_result'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
+                    <i  style="color: {{$bg1}}"class="menu-icon fa fa-question-circle"></i>
                     <span class="menu-text">
 						{{__('text.import_marks')}}
 						</span>
@@ -1006,7 +1006,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_transcripts_and_results'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-circle"></i>
                     <span class="menu-text">
 						{{__('text.results_slash_transcripts')}}
 						</span>
@@ -1090,7 +1090,7 @@
             @if (\Auth::user()->hasPermissionTo('manage_transcripts'))
                 <li>
                     <a href="#" class="dropdown-toggle text-capitalize">
-                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-flag"></i>
                         <span class="menu-text">
                             {{trans_choice('text.word_transcript', 2)}}
                             </span>

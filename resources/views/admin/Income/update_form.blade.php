@@ -16,6 +16,19 @@
         @enderror
     </div>
 </div>
+<div class="form-group @error('pay_online') has-error @enderror">
+    <label for="cname" class="control-label col-lg-2">{{__('text.pay_online')}} <span style="color:red">*</span></label>
+    <div class="col-lg-10">
+        <select class=" form-control" name="pay_online" required >
+            <option></option>
+            <option value="1" {{old('pay_online') == 1 ? 'selected' : ''}}>{{__('text.word_yes')}}</option>
+            <option value="0" {{old('pay_online') == 0 ? 'selected' : ''}}>{{__('text.word_no')}}</option>
+        </select>
+        @error('pay_online')
+        <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
 <div class="form-group">
     <div class="d-flex justify-content-end col-lg-12">
         <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">{{__('text.word_save')}}</button>
