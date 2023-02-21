@@ -10,6 +10,7 @@
 /assets/images/letter-head.jpeg
 .env
 .env.backup
+env
 .phpunit.result.cache
 docker-compose.override.yml
 Homestead.json
