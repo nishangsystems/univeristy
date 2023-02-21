@@ -193,7 +193,7 @@ class PayIncomeController extends Controller
             //code...
             $name = request('name');
             $students = StudentClass::join('students', 'students.id', '=', 'student_classes.student_id')
-                ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
+                // ->join('school_units', 'school_units.id', '=', 'student_classes.class_id')
                 ->distinct()
                 ->where(function($query)use($name){
                     $query->where('students.name', 'like', "%{$name}%")

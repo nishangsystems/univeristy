@@ -536,5 +536,14 @@ return [
     'word_index'=>'index',
     'unit_cost'=>'unit cost',
     'total_cost'=>"total cost",
-    'resit_form'=>'resit form'
+    'resit_form'=>'resit form',
+    'pay_fee'=>'pay fee',
+    'enter_payment_details'=>'enter payment details',
+    'word_yes'=>'yes',
+    'word_no'=>'no',
+    'payment_number'=>'payment number',
+    'pay_online'=>'pay online',
+    'payable_online'=>'payable online',
+    'online_payments'=>'online payments',
+    'other_payments'=>'other payments',
 ];

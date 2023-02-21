@@ -23,8 +23,9 @@ class Controller extends BaseController
     public function set_local(Request $request, $lang)
     {
         # code...
+        // return $lang;
         if (array_key_exists($lang, Config::get('languages'))) {
-            Session::put('applocale', $lang);
+            Session::put('appLocale', $lang);
             App::setLocale($lang);
         }
         return back();

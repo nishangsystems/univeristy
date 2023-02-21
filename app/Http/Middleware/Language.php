@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Lang;
 
 class Language
 {
@@ -20,20 +21,22 @@ class Language
     public function handle($request, Closure $next)
     {
         $availableLangs = Config::get('languages');
-        $userLangs = substr($request->server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
+        $userLang = substr($request->server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
 
         if (Session::has('appLocale'))
         {
             App::setlocale(Session::get('appLocale'));
+            Lang::setLocale(Session::get('appLocale'));
         }
-        else if (in_array($userLangs, $availableLangs))
+        else if (in_array($userLang, $availableLangs))
         {
-            App::setLocale($userLangs);
-            Session::put('appLocale', $userLangs);
+            App::setLocale($userLang);
+            Session::put('appLocale', $userLang);
+            Lang::setLocale($userLang);
         }
         else {
             App::setLocale('en');
-            Session::put('appLocale', 'en');
+            Lang::setLocale('en');
         }
         return $next($request);
     }

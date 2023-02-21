@@ -20,6 +20,7 @@
                         <th>#</th>
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.word_amount')}} ({{__('text.currency_cfa')}})</th>
+                        <th>{{__('text.payable_online')}}</th>
 
                         <th></th>
                     </tr>
@@ -30,6 +31,7 @@
                         <td>{{$k+1}}</td>
                         <td>{{$income->name}}</td>
                         <td>{{number_format($income->amount)}}</td>
+                        <td class="text-uppercase">{{$income->pay_online == 1 ? __('text.word_yes') : __('text.word_no')}}</td>
                         <td class="d-flex justify-content-end  align-items-center">
                             <a class="btn btn-sm btn-primary m-3" href="{{route('admin.income.show',[$income->id])}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
                             <a class="btn btn-sm btn-success m-3" href="{{route('admin.income.edit',[$income->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a> |

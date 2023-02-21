@@ -183,7 +183,7 @@
                 <h5>{{\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name}}</h5>
             </div>
         </div><!-- /.sidebar-shortcuts -->
-        <ul class="nav nav-list">
+        <ul class="nav nav-list text-capitalize">
             <li>
                 <a href="{{route('student.home')}}">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-dashboard"></i>
@@ -192,6 +192,34 @@
                 <b class="arrow"></b>
             </li>
 
+           <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-key"></i>
+                    <span class="menu-text">{{__('text.online_payments')}}</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('student.pay_fee')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.pay_fee')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('student.pay_others')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.other_payments')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                </ul>
+            </li>
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-money"></i>
@@ -223,7 +251,7 @@
 
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-money"></i>
+                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-flag"></i>
                     <span class="menu-text">{{trans_choice('text.word_transcript', 2)}}</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
@@ -320,7 +348,7 @@
 
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}};" class="fa fa-gift menu-icon   "></i>
+                    <i  style="color: {{$bg1}};" class="fa fa-circle menu-icon   "></i>
                     <span class="menu-text">{{__('text.word_results')}}</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
