@@ -23,7 +23,10 @@
                 <td>
                     @if(in_array($program_level->id, $programs))
                     <a href="{{route('admin.campuses.set_fee', [request('id'), $program_level->id])}}" class="btn btn-sm btn-primary">{{__('text.word_fees')}}</a>
-                    <!-- <a href="{{route('admin.campuses.drop_program', [request('id'), $program_level->id])}}" class="btn btn-sm btn-danger">{{__('text.word_drop')}}</a> -->
+                    <!-- if class already has courses assigned to it, it can be dropped again -->
+                        @if ($program_level->class_subjects()->count() == 0)
+                        <a href="{{route('admin.campuses.drop_program', [request('id'), $program_level->id])}}" class="btn btn-sm btn-danger">{{__('text.word_drop')}}</a>
+                        @endif
                     @else
                     <a href="{{route('admin.campuses.add_program', [request('id'), $program_level->id])}}" class="btn btn-sm btn-success">{{__('text.word_add')}}</a>
                     @endif

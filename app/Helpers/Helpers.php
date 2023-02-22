@@ -231,7 +231,7 @@ class Helpers
         // if ($lt->count() > 0) {
         //     # code...
         // }
-        return url('/bg_image/_bg1.*');
+        return url('/bg_image/background_image.jpeg');
 
     }
 
