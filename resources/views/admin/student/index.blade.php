@@ -77,7 +77,7 @@
                             <a class="btn btn-sm btn-primary m-1" href="${element.show_link}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
                             <a class="btn btn-sm btn-success m-1" href="${element.edit_link}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>|
                             <a onclick="event.preventDefault();
-                                            document.getElementById('${element.id}-delete').submit();" class=" btn btn-danger btn-sm m-1"><i class="fa fa-trash"> {{__('text.word_delete')}}</i></a>
+                                confirm('Are you sure you want to delete student: ${element.name}?') ? document.getElementById('${element.id}-delete').submit() : null" class=" btn btn-danger btn-sm m-1"><i class="fa fa-trash"> {{__('text.word_delete')}}</i></a>
                             <form id="${element.id}-delete" action="${element.delete_link}" method="POST" style="display: none;">
                                 @method('DELETE')
                                 {{ csrf_field() }}

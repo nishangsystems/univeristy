@@ -85,7 +85,9 @@ class HomeController extends Controller
         $class = auth()->user()->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
         // dd($request->all());
-        
+        if($class == null){
+            return back()->with('error', "No result found. Make sure you were admitted to this institution by or before the selected academic year");
+        }
         $data['title'] = "My CA Result";
         $data['user'] = auth()->user();
         $data['year'] = $year;

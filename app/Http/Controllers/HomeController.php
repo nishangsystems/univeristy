@@ -209,7 +209,7 @@ class HomeController extends Controller
         $fees = array_map(function ($stud) use ($year, $class) {
             // $p_amount = $class->campus_programs(auth()->user()->campus_id)->payment_items()->where(['name' => 'TUTION', 'year_id' => $year])->first()->amount;
             return [
-                'amount' => array_sum(
+                'amount' => Helpers::instance()->getStudentScholarshipAmount($stud) + array_sum(
                     \App\Models\Payments::where('payments.student_id', '=', $stud)
                     ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
                     ->where('payment_items.name', '=', 'TUTION')
@@ -283,7 +283,7 @@ class HomeController extends Controller
         // return $studs;
         $fees = array_map(function($stud) use ($year){
             return [
-                'amount' => array_sum(
+                'amount' => Helpers::instance()->getStudentScholarshipAmount($stud) + array_sum(
                     \App\Models\Payments::where('payments.student_id', '=', $stud)
                     ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
                     ->where('payment_items.name', '=', 'TUTION')

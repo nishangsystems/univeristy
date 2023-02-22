@@ -325,13 +325,15 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-                    <li>
-                        <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.set_background_image')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    @if (auth()->user()->can('access_hidden_features'))
+                        <li>
+                            <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.set_background_image')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li> 
+                    @endif
                     @endif
 
                     @if(auth()->user()->campus_id == null)
@@ -764,7 +766,7 @@
                 @if (\Auth::user()->hasPermissionTo('manage_faqs'))
                 <li>
                     <a href="#" class="dropdown-toggle text-capitalize">
-                    <i class="menu-icon fa fa-money"></i>
+                    <i class="menu-icon fa fa-question"></i>
                         <span class="menu-text">
                             {{__('text.manage_faqs')}}
                             </span>
