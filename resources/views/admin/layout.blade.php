@@ -1348,7 +1348,6 @@
             window.location = event.target.href;
         }
     }
-
 </script>
 
 <script src="{{ asset('libs')}}/datatables.net/js/dataTables.buttons.min.js"></script>

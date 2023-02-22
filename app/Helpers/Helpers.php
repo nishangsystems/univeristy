@@ -226,13 +226,7 @@ class Helpers
 
     public function getBackground()
     {
-        # code...
-        // $lt = File::where(['name'=> 'background-image']);
-        // if ($lt->count() > 0) {
-        //     # code...
-        // }
         return url('/bg_image/background_image.jpeg');
-
     }
 
 
