@@ -21,8 +21,8 @@
     <div class="col-lg-10">
         <select class=" form-control" name="pay_online" required >
             <option></option>
-            <option value="1" {{old('pay_online') == 1 ? 'selected' : ''}}>{{__('text.word_yes')}}</option>
-            <option value="0" {{old('pay_online') == 0 ? 'selected' : ''}}>{{__('text.word_no')}}</option>
+            <option value="1" {{$income->pay_online == 1 ? 'selected' : ''}}>{{__('text.word_yes')}}</option>
+            <option value="0" {{$income->pay_online == 0 ? 'selected' : ''}}>{{__('text.word_no')}}</option>
         </select>
         @error('pay_online')
         <span class="invalid-feedback">{{ $message }}</span>
