@@ -76,7 +76,7 @@ class HomeController  extends Controller
     {
         # code...
         # code...
-        $check = Validator::make($request->all(), ['file'=>'required|file|mimes:png,jpg,jpeg,gif,tif']);
+        $check = Validator::make($request->all(), ['file'=>'required|file|mimes:jpeg']);
         if ($check->fails()) {
             # code...
             return back()->with('error', $check->errors()->first());
@@ -86,14 +86,9 @@ class HomeController  extends Controller
         // return $file->getClientOriginalName();
         if(!($file == null)){
             $ext = $file->getClientOriginalExtension();
-            $filename = '_bg1.'.$ext;
+            $filename = 'background_image.jpeg';
             // $path = $filename;
             $file->storeAs('/bg_image', $filename);
-            // if(File::where(['name'=>'background-image', 'campus_id'=>auth()->user()->campus_id??0])->count() == 0){
-            //     File::create(['name'=>'background-image', 'campus_id'=>auth()->user()->campus_id??0, 'path'=>$path]);
-            // }else {
-            //     File::where(['name'=>'background-image', 'campus_id'=>auth()->user()->campus_id??0])->update(['path'=>$path]);
-            // }
             return back()->with('success', 'Done');
         }
         return back()->with('error', 'Error reading file');
