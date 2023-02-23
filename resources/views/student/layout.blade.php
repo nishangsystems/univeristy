@@ -199,7 +199,7 @@
             <li>
                 <a href="{{route('student.home')}}">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-dashboard"></i>
-                    <span class="menu-text">Dashboard</span>
+                    <span class="menu-text text-capitalize">{{__('text.word_dashboard')}}</span>
                 </a>
                 <b class="arrow"></b>
             </li>
