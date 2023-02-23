@@ -171,21 +171,21 @@ class Controller extends BaseController
         if($validator->fails()){
             return back()->with('error', $validator->errors()->first());
         }
-        if (auth()->guard('user')->check() ) {
-            if(Hash::check($request->current_password, auth('student')->user()->getAuthPassword())){
-                $user = User::find(auth()->id());
-                $user->password = Hash::make($request->new_password);
-                $user->save();
-                return back()->with('success', 'Done');
-            }else{
-                return back()->with('error', 'Operation failed. Make sure you entered the correct password');
-            }
-        }
         if (auth()->guard('student')->check()) {
             if(Hash::check($request->current_password, auth('student')->user()->getAuthPassword())){
                 $stud = Students::find(auth('student')->id());
                 $stud->password = Hash::make($request->new_password);
                 $stud->save();
+                return back()->with('success', 'Done');
+            }else{
+                return back()->with('error', 'Operation failed. Make sure you entered the correct password');
+            }
+        }
+        else{
+            if(Hash::check($request->current_password, auth()->user()->getAuthPassword())){
+                $user = User::find(auth()->id());
+                $user->password = Hash::make($request->new_password);
+                $user->save();
                 return back()->with('success', 'Done');
             }else{
                 return back()->with('error', 'Operation failed. Make sure you entered the correct password');
