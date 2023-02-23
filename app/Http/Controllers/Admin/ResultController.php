@@ -551,4 +551,18 @@ class ResultController extends Controller
         }
         return view('admin.result.individual_result_print')->with($data);
     }
+
+    public function date_line(Request $request)
+    {
+        # code...
+        $data['title'] = "Set Result Submission Date Line".($request->has('semester') ? ' For '.Semester::find($request->semester)->name : '');
+        if(request()->has('background')){
+            $data['current_semester'] = Semester::where(['background_id'=>$request->background, 'status'=>1])->first()->id ?? null;
+        }
+        return view('admin.setting.results_date_line', $data);
+    }
+    public function date_line_save(Request $request)
+    {
+        # code...
+    }
 }

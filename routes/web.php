@@ -165,9 +165,11 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('classmaster', 'Admin\UserController@saveClassmaster')->name('users.classmaster');
     Route::delete('classmaster', 'Admin\UserController@deleteMaster')->name('users.classmaster');
     Route::get('classmaster/create', 'Admin\UserController@classmasterCreate')->name('users.classmaster.create');
-
-
-
+    
+    
+    
+    Route::get('results/date_line', 'Admin\ResultController@date_line')->name('results.date_line');
+    Route::post('results/date_line', 'Admin\ResultController@date_line_save')->name('results.date_line');
     Route::prefix('result')->name('result.')->group(function(){
         Route::get('import', 'Admin\ResultController@import')->name('import');
         Route::post('import', 'Admin\ResultController@importPost')->name('import');
