@@ -7,15 +7,7 @@
             <label class="col-sm-3">{{__('text.word_username')}}</label>
             <div class="col-sm-9">
                 <label class="form-control">
-                    @auth('user')
-                        {{auth()->user()->email}}
-                    @endauth
-                    @auth('admin')
-                        {{auth()->user()->email}}
-                    @endauth
-                    @auth('student')
-                        {{auth('student')->user()->matric}}
-                    @endauth
+                    {{auth()->user()->email ?? auth()->user()->name}}
                 </label>
             </div>
         </div>
