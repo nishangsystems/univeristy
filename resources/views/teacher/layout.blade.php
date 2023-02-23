@@ -245,6 +245,14 @@
                 </a>
                 <b class="arrow"></b>
             </li>
+         
+            <li>
+                <a href="{{route('teacher.reset_password')}}" class="text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
+                    {{__('text.reset_password')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
 
             <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"

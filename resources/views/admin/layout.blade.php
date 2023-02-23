@@ -1185,8 +1185,15 @@
                 </ul>
             </li>
             @endif
+        
+            <li>
+                <a href="{{route('admin.reset_password')}}" class="text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
+                    {{__('text.reset_password')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
 
-            
             <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                    href="{{route('logout')}}" class="text-capitalize">

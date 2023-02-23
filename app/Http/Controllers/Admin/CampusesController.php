@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Campus;
 use App\Models\CampusProgram;
@@ -179,7 +180,7 @@ class CampusesController extends Controller
         $cp_id = \App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->first()->id;
 
 
-        $inst = \App\Models\PaymentItem::where('campus_program_id', $cp_id)->where('name', 'TUTION')->first() ?? 
+        $inst = \App\Models\PaymentItem::where('campus_program_id', $cp_id)->where('name', 'TUTION')->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()])->first() ?? 
                 new \App\Models\PaymentItem();
         $inst->campus_program_id = $cp_id;
         $inst->name = 'TUTION';

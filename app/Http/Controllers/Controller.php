@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class Controller extends BaseController
 {
@@ -140,6 +141,56 @@ class Controller extends BaseController
             //return redirect()->route('student.home')->with('s','Account created successfully.');   
             
           }
+
+    }
+
+    public function reset_password(Request $request)
+    {
+        # code...
+        $data['title'] = "Reset Password";
+        if (auth()->guard('student')->check()) {
+            return view('student.reset_password', $data);
+        }
+        else {
+            if (auth()->user()->type == 'admin') {
+                return view('admin.reset_password', $data);
+            }else{
+                return view('teacher.reset_password', $data);
+            }
+        }
+    }
+
+    public function reset_password_save(Request $request)
+    {
+        # code...
+        $validator = Validator::make($request->all(), [
+            'current_password'=>'required',
+            'new_password_confirmation'=>'required_with:new_password|same:new_password|min:6',
+            'new_password'=>'required|min:6',
+        ]);
+        if($validator->fails()){
+            return back()->with('error', $validator->errors()->first());
+        }
+        if (auth()->guard('user')->check() ) {
+            if(Hash::check($request->current_password, auth('student')->user()->getAuthPassword())){
+                $user = User::find(auth()->id());
+                $user->password = Hash::make($request->new_password);
+                $user->save();
+                return back()->with('success', 'Done');
+            }else{
+                return back()->with('error', 'Operation failed. Make sure you entered the correct password');
+            }
+        }
+        if (auth()->guard('student')->check()) {
+            if(Hash::check($request->current_password, auth('student')->user()->getAuthPassword())){
+                $stud = Students::find(auth('student')->id());
+                $stud->password = Hash::make($request->new_password);
+                $stud->save();
+                return back()->with('success', 'Done');
+            }else{
+                return back()->with('error', 'Operation failed. Make sure you entered the correct password');
+            }
+        }
 
     }
 }
