@@ -27,7 +27,7 @@
         <div class="row text-capitalize my-2">
             <label class="col-sm-3">{{__('text.confirm_new_password')}}</label>
             <div class="col-sm-9">
-                <input type="password" class="form-control" name="confirm_new_password" required id="confirm_password" onkeyup="check_match()">
+                <input type="password" class="form-control" name="new_password_confirmation" required id="confirm_password" onkeyup="check_match()">
             </div>
         </div>
         <div class="d-flex justify-content-end my-2">

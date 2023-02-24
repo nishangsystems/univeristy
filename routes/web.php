@@ -44,6 +44,9 @@ Route::post('reset_password_with_token', [CustomForgotPasswordController::class,
 Route::get('', 'WelcomeController@home');
 Route::get('home', 'WelcomeController@home');
 
+// Route::middleware('password_reset')->group(function(){
+// });
+
 Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function () {
 
 
