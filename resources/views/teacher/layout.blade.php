@@ -306,7 +306,15 @@
                 <div class="mb-4 mx-3">
                     <h4 class="font-weight-bold">{{ $title ?? '' }}</h4>
                 </div>
-                @yield('section')
+                <!-- check if the user is more than 2 weeks old and hasn't reset his/her password since creation -->
+                @if ((auth()->user()->password_reset != 1) && (now()->diffInDays(\Illuminate\Support\Carbon::createFromTimestamp(auth()->user()->created_at)) >= 14)  && (url()->current() != route('user.reset_password')))
+                    <div class="py-5 h3 text-center text-danger mt-5 text-capitalize">{{__('text.password_reset_request')}}</div>
+                    <div class="py-3 d-flex justify-content-center mt-2">
+                        <a class="btn btn-lg col-sm-4 rounded btn-primary text-center" href="{{route('user.reset_password')}}">{{__('text.word_proceed')}}</a>
+                    </div>
+                @else
+                    @yield('section')
+                @endif
             </div>
         </div>
     </div>

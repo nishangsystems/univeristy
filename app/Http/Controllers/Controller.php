@@ -137,6 +137,7 @@ class Controller extends BaseController
         // }else{
         //     return redirect()->route('login')->with('s','Account created successfully.');   
         // }
+            if(auth('student')->attempt(['matric'=>$request->username, 'password'=>$request->password])){return redirect(route('login'))};
             return redirect()->route('login')->with('s','Account created successfully.');   
             //return redirect()->route('student.home')->with('s','Account created successfully.');   
             
@@ -175,6 +176,7 @@ class Controller extends BaseController
             if(Hash::check($request->current_password, auth('student')->user()->getAuthPassword())){
                 $stud = Students::find(auth('student')->id());
                 $stud->password = Hash::make($request->new_password);
+                $stud->password_reset = true;
                 $stud->save();
                 return back()->with('success', 'Done');
             }else{
@@ -185,6 +187,7 @@ class Controller extends BaseController
             if(Hash::check($request->current_password, auth()->user()->getAuthPassword())){
                 $user = User::find(auth()->id());
                 $user->password = Hash::make($request->new_password);
+                $user->password_reset = true;
                 $user->save();
                 return back()->with('success', 'Done');
             }else{
