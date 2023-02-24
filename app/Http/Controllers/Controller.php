@@ -137,7 +137,7 @@ class Controller extends BaseController
         // }else{
         //     return redirect()->route('login')->with('s','Account created successfully.');   
         // }
-            if(auth('student')->attempt(['matric'=>$request->username, 'password'=>$request->password])){return redirect(route('login'))};
+            if(auth('student')->attempt(['matric'=>$request->username, 'password'=>$request->password])){return redirect(route('login'));}
             return redirect()->route('login')->with('s','Account created successfully.');   
             //return redirect()->route('student.home')->with('s','Account created successfully.');   
             
@@ -145,7 +145,7 @@ class Controller extends BaseController
 
     }
 
-    public function reset_password(Request $request)
+    public function reset_password(Request $request, $id= null)
     {
         # code...
         $data['title'] = "Reset Password";

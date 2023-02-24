@@ -1139,7 +1139,7 @@ class StudentController extends Controller
         else{return back()-with('error', 'Student has no class.');}
     }
 
-    public function reset_password(Request $request, $id)
+    public function reset_password(Request $request, $id=null)
     {
         $student = Students::find($id);
         if ($student != null) {
