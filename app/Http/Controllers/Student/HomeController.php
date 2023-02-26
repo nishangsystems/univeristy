@@ -230,7 +230,7 @@ class HomeController extends Controller
         ];
         // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
         $data['min_fee'] = $fee['total']*$fee['fraction'];
-        $data['access'] = $fee['balance'] >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        $data['access'] = ($fee['total'] - $fee['balance']) >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
         // dd($data);
         if ($class->program->background->background_name == "PUBLIC HEALTH") {
             # code...
