@@ -34,6 +34,7 @@ Route::get('set_local/{lang}', [Controller::class, 'set_local'])->name('lang.swi
 
 Route::get('payment-form',[TransactionController::class,'paymentForm'])->name('payment_form');
 Route::post('make-payments',[TransactionController::class,'makePayments'])->name('make_payments');
+Route::get('get-transaction-status/{transaction_is}',[TransactionController::class,'getTransactionStatus'])->name('get_transaction_status');
 Route::post('mtn-momo',[TransactionController::class,'mtnCallBack'])->name('mtn_callback');
 
 Route::post('login', [CustomLoginController::class, 'login'])->name('login.submit');
