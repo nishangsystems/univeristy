@@ -146,6 +146,7 @@ class FeesController extends Controller
             'import_reference'=>'required',
             'batch'=>'reuired',
         ]);
+        // import_reference is a text string that identifoes a particular importation so that it can be cancelled if an error occurs.
 
         if ($validator->fails()) {
             # code...
@@ -234,7 +235,7 @@ class FeesController extends Controller
                     if(strlen($matric_probs) > 0) {throw new Error($matric_probs);}
                     if(strlen($ref_probs) > 0){throw new Error($ref_probs);}
                     return back()->with('success', 'Done');
-                    return $request->all();
+                    // return $request->all();
                 }
                 else {
                     return back()->with('error', 'No data could be read from file');

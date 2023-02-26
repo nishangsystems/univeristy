@@ -550,4 +550,5 @@ return [
     'new_password'=>'new password',
     'confirm_new_password'=>'confirm new password',
     'password_reset_request'=>'default password expired. you must reset your password to continue',
+    'word_optional'=>'optional'
 ];
