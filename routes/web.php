@@ -49,6 +49,9 @@ Route::post('reset_password_with_token', [CustomForgotPasswordController::class,
 Route::get('', 'WelcomeController@home');
 Route::get('home', 'WelcomeController@home');
 
+// Route::middleware('password_reset')->group(function(){
+// });
+
 Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function () {
 
 
@@ -170,9 +173,11 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('classmaster', 'Admin\UserController@saveClassmaster')->name('users.classmaster');
     Route::delete('classmaster', 'Admin\UserController@deleteMaster')->name('users.classmaster');
     Route::get('classmaster/create', 'Admin\UserController@classmasterCreate')->name('users.classmaster.create');
-
-
-
+    
+    
+    
+    Route::get('results/date_line', 'Admin\ResultController@date_line')->name('results.date_line');
+    Route::post('results/date_line', 'Admin\ResultController@date_line_save')->name('results.date_line');
     Route::prefix('result')->name('result.')->group(function(){
         Route::get('import', 'Admin\ResultController@import')->name('import');
         Route::post('import', 'Admin\ResultController@importPost')->name('import');
@@ -415,6 +420,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('course_list/{resit_id}/{subject_id}/download', [AdminHomeController::class, 'resit_course_list_download'])->name('course_list.download');
     });
 
+    Route::get('reset_password', 'Controller@reset_password')->name('reset_password');
+    Route::post('reset_password', 'Controller@reset_password_save')->name('reset_password');
+
 });
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {
@@ -451,6 +459,8 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::post('{program_level_id}/manage_courses', 'Teacher\HomeController@save_courses')->name('save_courses');
     });
     Route::get('{program_level_id}/class_courses', 'Teacher\HomeController@manage_courses')->name('edit.class_courses');
+    Route::get('reset_password', 'Controller@reset_password')->name('reset_password');
+    Route::post('reset_password', 'Controller@reset_password_save')->name('reset_password');
 });
 
 Route::prefix('student')->name('student.')->group(function () {
@@ -516,6 +526,8 @@ Route::prefix('student')->name('student.')->group(function () {
         Route::post('apply/{config_id?}', 'Student\HomeController@apply_save_transcript');
         Route::get('hostory', 'Student\HomeController@transcript_history')->name('history');
     });
+    Route::get('reset_password', 'Controller@reset_password')->name('reset_password');
+    Route::post('reset_password', 'Controller@reset_password_save')->name('reset_password');
 });
 
 Route::get('section-children/{parent}', 'HomeController@children')->name('section-children');

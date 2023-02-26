@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class RolesController extends Controller{
@@ -52,10 +53,17 @@ class RolesController extends Controller{
 
     public function destroy(Request $request, $id)
     {
+        return $id;
         if ($request->user()->can('manage_roles')) {
-            //Code goes here
+            $role = Role::find($id);
+            if($role != null){
+                foreach ($role->permissionsR as $key => $value) {
+                    $value->delete();
+                }
+                $role->delete();
+            }
         }
-        return redirect()->to(route('admin.roles.index'));
+        // return redirect()->to(route('admin.roles.index'));
     }
 
     public function edit(Request $request, $slug){

@@ -112,6 +112,18 @@
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav d-flex flex-nowrap" style="">
                 <li class="grenn dropdown-modal">
+                    <a data-toggle="dropdown" class="dropdown-toggle text-white font-weight-bold text-capitalize" href="#" id="navbarDropdownMenuLink" style="background-color: {{$bg2}};">
+                        {{ Config::get('languages')[Session::has('appLocale') ? Session::get('appLocale') : App::getLocale()] }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    @foreach (Config::get('languages') as $lang => $language)
+                        @if ($lang != Session::get('appLocale'))
+                                <a class="dropdown-item" href="{{ route('lang.switch', $lang) }}"> {{$language}}</a>
+                        @endif
+                    @endforeach
+                    </div>
+                </li>
+                <li class="grenn dropdown-modal">
                     <a data-toggle="dropdown" class="dropdown-toggle text-white font-weight-bold" id="bg_primary_1" style="background-color: {{$bg2}};">
                         Batch : {{ \App\Models\Batch::find(Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->name}}
                         <i class="ace-icon fa fa-caret-down"></i>
@@ -187,7 +199,7 @@
             <li>
                 <a href="{{route('student.home')}}">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-dashboard"></i>
-                    <span class="menu-text">Dashboard</span>
+                    <span class="menu-text text-capitalize">{{__('text.word_dashboard')}}</span>
                 </a>
                 <b class="arrow"></b>
             </li>
@@ -376,7 +388,7 @@
                 </ul>
             </li>
 
-            @if (auth()->user()->can('access_student_notifications'))
+            @if ('XYZ'==='123')
                 <li>
                     <a href="{{route('student.notification.home')}}" class="text-capitalize">
                         <i  style="color: {{$bg1}};" class="fa fa-bell menu-icon   "></i>
@@ -385,13 +397,13 @@
                     <b class="arrow"></b>
                 </li>
                 
-                            <li>
-                                <a href="{{route('student.stock.report', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())}}" class="text-capitalize">
-                                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-list"></i>
-                                    {{__('text.stock_details')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
+                <li>
+                    <a href="{{route('student.stock.report', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())}}" class="text-capitalize">
+                        <i  style="color: {{$bg1}};" class="menu-icon fa fa-list"></i>
+                        {{__('text.stock_details')}}
+                    </a>
+                    <b class="arrow"></b>
+                </li>
             @endif
 
             <li>
@@ -414,6 +426,14 @@
                 <a href="{{route('student.edit_profile')}}" class="text-capitalize">
                     <i  style="color: {{$bg1}};" class="fa fa-user menu-icon   "></i>
                     {{__('text.edit_profile')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
+
+            <li>
+                <a href="{{route('student.reset_password')}}" class="text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
+                    {{__('text.reset_password')}}
                 </a>
                 <b class="arrow"></b>
             </li>

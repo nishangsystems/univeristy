@@ -23,7 +23,7 @@ return [
     'settings_zone'=>'settings zone',
     'set_school_year'=>'set school year',
     'set_boarding_fee'=>'set boarding fee',
-    'manage_sections'=>'manage sections',
+    'manage_sections'=>'school config',
     'add_result_release'=>'add result release',
     'statistics_zone'=>'statistics zone',
     'student_statistics'=>'student statistics',
@@ -546,4 +546,10 @@ return [
     'payable_online'=>'payable online',
     'online_payments'=>'online payments',
     'other_payments'=>'other payments',
+    'current_password'=>'current password',
+    'new_password'=>'new password',
+    'confirm_new_password'=>'confirm new password',
+    'password_reset_request'=>'default password expired. you must reset your password to continue',
+    'word_optional'=>'optional',
+    'results_date_line'=>'results dateline'
 ];

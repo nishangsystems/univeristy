@@ -37,7 +37,7 @@
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)}} CFA" disabled></input>
+                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->debt($c_year)}} CFA" disabled></input>
                 </div>
             </div>
             <div class="form-group @error('item') has-error @enderror">
@@ -45,7 +45,7 @@
                 <div class="col-lg-10">
                     <select class="form-control" name="item">
                         <option value="" disabled class="text-capitalize">{{__('text.select_item')}}</option>
-                        @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->payment_items()->get() ?? [] as $item)
+                        @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->payment_items()->where(['year_id'=>$c_year])->get() ?? [] as $item)
                         <option value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
                         @endforeach
                     </select>
@@ -70,9 +70,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.reference_number')}}<span style="color:red">*</span></label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.reference_number')}}</label>
                 <div class="col-lg-10">
-                    <input class=" form-control" name="reference_number" value="{{old('reference_number')}}" type="text" required />
+                    <input class=" form-control" name="reference_number" value="{{old('reference_number')}}" type="text" placeholder="{{__('text.word_optional')}}" />
                 </div>
             </div>
             <div class="form-group">

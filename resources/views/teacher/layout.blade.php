@@ -113,6 +113,18 @@
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav d-flex flex-nowrap" style="">
                 <li class="grenn dropdown-modal">
+                    <a data-toggle="dropdown" class="dropdown-toggle text-white font-weight-bold text-capitalize" href="#" id="navbarDropdownMenuLink" style="background-color: {{$bg2}};">
+                        {{ Config::get('languages')[Session::has('appLocale') ? Session::get('appLocale') : App::getLocale()] }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    @foreach (Config::get('languages') as $lang => $language)
+                        @if ($lang != Session::get('appLocale'))
+                                <a class="dropdown-item" href="{{ route('lang.switch', $lang) }}"> {{$language}}</a>
+                        @endif
+                    @endforeach
+                    </div>
+                </li>
+                <li class="grenn dropdown-modal">
                     <a data-toggle="dropdown" class="-toggledropdown text-white font-weight-bold" id="bg_primary_1" style="background-color: {{$bg2}};">
                         Batch : {{ \App\Models\Batch::find(Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->name}}
                         <i class="ace-icon fa fa-caret-down"></i>
@@ -233,6 +245,14 @@
                 </a>
                 <b class="arrow"></b>
             </li>
+         
+            <li>
+                <a href="{{route('teacher.reset_password')}}" class="text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
+                    {{__('text.reset_password')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
 
             <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -286,7 +306,15 @@
                 <div class="mb-4 mx-3">
                     <h4 class="font-weight-bold">{{ $title ?? '' }}</h4>
                 </div>
-                @yield('section')
+                <!-- check if the user is more than 2 weeks old and hasn't reset his/her password since creation -->
+                @if ((auth()->user()->password_reset != 1) && (now()->diffInDays(\Illuminate\Support\Carbon::createFromTimestamp(auth()->user()->created_at)) >= 14)  && (url()->current() != route('user.reset_password')))
+                    <div class="py-5 h3 text-center text-danger mt-5 text-capitalize">{{__('text.password_reset_request')}}</div>
+                    <div class="py-3 d-flex justify-content-center mt-2">
+                        <a class="btn btn-lg col-sm-4 rounded btn-primary text-center" href="{{route('user.reset_password')}}">{{__('text.word_proceed')}}</a>
+                    </div>
+                @else
+                    @yield('section')
+                @endif
             </div>
         </div>
     </div>

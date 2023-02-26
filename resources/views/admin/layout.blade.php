@@ -317,6 +317,13 @@
                     </li>
 
 
+                    <li>
+                        <a href="{{route('admin.results.date_line')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           {{__('text.results_date_line')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                     @if(!auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.course.date_line')}}" class="text-capitalize">
@@ -325,13 +332,15 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-                    <li>
-                        <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.set_background_image')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    @if (auth()->user()->can('access_hidden_features'))
+                        <li>
+                            <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.set_background_image')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li> 
+                    @endif
                     @endif
 
                     @if(auth()->user()->campus_id == null)
@@ -764,7 +773,7 @@
                 @if (\Auth::user()->hasPermissionTo('manage_faqs'))
                 <li>
                     <a href="#" class="dropdown-toggle text-capitalize">
-                    <i class="menu-icon fa fa-money"></i>
+                    <i class="menu-icon fa fa-question"></i>
                         <span class="menu-text">
                             {{__('text.manage_faqs')}}
                             </span>
@@ -1183,8 +1192,15 @@
                 </ul>
             </li>
             @endif
+        
+            <li>
+                <a href="{{route('admin.reset_password')}}" class="text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
+                    {{__('text.reset_password')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
 
-            
             <li>
                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                    href="{{route('logout')}}" class="text-capitalize">
@@ -1245,7 +1261,14 @@
                 <div class="mb-4 mx-3">
                     <h4 id="title" class="font-weight-bold text-capitalize">{{ $title ?? '' }}</h4>
                 </div>
-                @yield('section')
+                @if ((auth()->user()->password_reset != 1) && (now()->diffInDays(\Illuminate\Support\Carbon::createFromTimestamp(auth()->user()->created_at)) >= 14) && (url()->current() != route('admin.reset_password')))
+                    <div class="py-5 h3 text-center text-danger mt-5 text-capitalize">{{__('text.password_reset_request')}}</div>
+                    <div class="py-3 d-flex justify-content-center mt-2">
+                        <a class="btn btn-lg col-sm-4 rounded btn-primary text-center" href="{{route('admin.reset_password')}}">{{__('text.word_proceed')}}</a>
+                    </div>
+                @else
+                    @yield('section')
+                @endif
             </div>
         </div>
     </div>
@@ -1346,7 +1369,6 @@
             window.location = event.target.href;
         }
     }
-
 </script>
 
 <script src="{{ asset('libs')}}/datatables.net/js/dataTables.buttons.min.js"></script>

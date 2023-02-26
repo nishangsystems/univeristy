@@ -85,7 +85,9 @@ class HomeController extends Controller
         $class = auth()->user()->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
         // dd($request->all());
-        
+        if($class == null){
+            return back()->with('error', "No result found. Make sure you were admitted to this institution by or before the selected academic year");
+        }
         $data['title'] = "My CA Result";
         $data['user'] = auth()->user();
         $data['year'] = $year;
@@ -178,6 +180,9 @@ class HomeController extends Controller
         $year = Batch::find($request->year ?? Helpers::instance()->getCurrentAccademicYear());
         $class = auth()->user()->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
+        if($class == null){
+            return back()->with('error', "No result found. Make sure you were admitted to this institution by or before the selected academic year");
+        }
         $data['title'] = "My Exam Result";
         $data['user'] = auth()->user();
         $data['semester'] = $semester;
@@ -220,11 +225,12 @@ class HomeController extends Controller
             'total_debt'=>auth()->user()->total_debts($year->id),
             'total_paid'=>auth()->user()->total_paid($year->id),
             'total' => auth()->user()->total($year->id),
+            'balance' => auth()->user()->bal($year->id),
             'fraction' => $semester->semester_min_fee
         ];
         // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
         $data['min_fee'] = $fee['total']*$fee['fraction'];
-        $data['access'] = $fee['total_paid']-$fee['total_debt'] >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        $data['access'] = $fee['balance'] >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
         // dd($data);
         if ($class->program->background->background_name == "PUBLIC HEALTH") {
             # code...

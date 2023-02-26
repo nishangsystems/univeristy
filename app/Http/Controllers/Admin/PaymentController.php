@@ -81,7 +81,6 @@ class PaymentController extends Controller
             'item' =>  'required',
             'amount' => 'required',
             'date' => 'required|date',
-            'reference_number' => 'required'
         ]);
         if ($request->amount >  $balance) {
             $debt += -$request->amount + $balance;
@@ -91,7 +90,7 @@ class PaymentController extends Controller
             $amount = $request->amount;
         }
 
-        if (Payments::where(['reference_number' => $request->reference_number])->count() == 0) {
+        if ($request->reference_number == null || (Payments::where(['reference_number' => $request->reference_number])->count() == 0)) {
             # code...
             Payments::create([
                 "payment_id" => $request->item,
