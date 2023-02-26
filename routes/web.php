@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Transactions;
 use App\Http\Resources\SubjectResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -29,6 +30,10 @@ Route::get('/clear', function () {
 });
 
 Route::get('set_local/{lang}', [Controller::class, 'set_local'])->name('lang.switch');
+
+Route::get('payment-form',[Transactions::class,'paymentForm'])->name('payment_form');
+Route::post('make-payments',[Transactions::class,'makePayments'])->name('make_payments');
+Route::post('mtn-momo',[Transactions::class,'mtnCallBack'])->name('mtn_callback');
 
 Route::post('login', [CustomLoginController::class, 'login'])->name('login.submit');
 Route::get('login', [CustomLoginController::class, 'showLoginForm'])->name('login');
