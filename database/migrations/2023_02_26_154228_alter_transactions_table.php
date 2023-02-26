@@ -15,6 +15,12 @@ class AlterTransactionsTable extends Migration
     {
         Schema::table('transactions', function (Blueprint $table) {
             //
+            $table->enum('status',[
+                    'failed','completed','pending']
+            );
+            $table->text('payment_method')->nullable();
+            $table->text('payment_purpose')->nullable();
+            $table->text('transaction_id')->nullable();
         });
     }
 
@@ -27,6 +33,7 @@ class AlterTransactionsTable extends Migration
     {
         Schema::table('transactions', function (Blueprint $table) {
             //
+            $table->dropColumn(['status','payment_method','transaction_id','payment_purpose']);
         });
     }
 }
