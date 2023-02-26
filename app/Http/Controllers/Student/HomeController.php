@@ -180,6 +180,9 @@ class HomeController extends Controller
         $year = Batch::find($request->year ?? Helpers::instance()->getCurrentAccademicYear());
         $class = auth()->user()->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
+        if($class == null){
+            return back()->with('error', "No result found. Make sure you were admitted to this institution by or before the selected academic year");
+        }
         $data['title'] = "My Exam Result";
         $data['user'] = auth()->user();
         $data['semester'] = $semester;
