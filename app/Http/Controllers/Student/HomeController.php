@@ -281,7 +281,12 @@ class HomeController extends Controller
             // dd($grade);
         }, $res);
         // dd($data);
-        $pdf = PDF::loadView('student.templates.exam-result-template',$data);
+        if ($data['class']->program->background->background_name == "PUBLIC HEALTH") {
+            # code...
+            $pdf = PDF::loadView('student.templates.public_health_exam_result',$data);
+        }else{
+            $pdf = PDF::loadView('student.templates.exam-result-template',$data);
+        }
         return $pdf->download(auth()->user()->matric.'_'.$semester->name.'_EXAM_RESULTS.pdf');
         // return view('student.templates.exam-result-template')->with($data);
     }
