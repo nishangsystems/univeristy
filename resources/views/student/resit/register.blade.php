@@ -113,7 +113,6 @@
             url: url,
             data: {'value' : value},
             success: function(data){
-                // console.log(data);
                 class_courses = data.data;
                 let html = ``;
                 for (const key in data.data) {
