@@ -29,21 +29,21 @@
 	</head>
 
 	<body class="no-skin">
-	
+
 		<div class="main-container ace-save-state" id="main-container">
-        
+
 			<div class="main-content">
                 <div class="main-content-inner">
-			
+
                 @yield('section')
             </div>
 		</div>
 		</div>
 
-			
-	
+
+
         </div>
-        
+
 		<script src="{{url('public')}}/assets/js/jquery-2.1.4.min.js"></script>
 		<script type="text/javascript">
 			if('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
