@@ -11,6 +11,9 @@
         <form class="form-horizontal" role="form" method="POST" action="#">
             <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_fee_details')}}</h5>
             @csrf
+            <input type="hidden" name="student_id" value="{{auth('student')->id()}}">
+            <input type="hidden" name="year_id" value="{{$c_year}}">
+            <input type="hidden" name="payment_purpose" value="TUTION">
             <div class="form-group row">
                 <label for="cname" class="control-label col-sm-2 text-capitalize">{{__('text.total_fee')}}: </label>
                 <div class="col-sm-10">
@@ -44,7 +47,7 @@
             <div class="form-group @error('item') has-error @enderror">
                 <label class="control-label col-lg-2 text-capitalize">{{__('text.word_item')}} <span style="color:red">*</span></label>
                 <div class="col-lg-10">
-                    <select class="form-control" name="item">
+                    <select class="form-control" name="payment_id">
                         <option value="" disabled class="text-capitalize">{{__('text.select_item')}}</option>
                         @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->payment_items()->get() ?? [] as $item)
                         <option value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
@@ -67,12 +70,12 @@
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.payment_number')}}<span style="color:red">*</span></label>
                 <div class="col-lg-10">
-                    <input class=" form-control" name="payment_number" value="{{old('payment_number')}}" type="number" required />
+                    <input class=" form-control" name="tel" value="{{old('tel')}}" type="number" required />
                 </div>
             </div>
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
-                    <button id="save" class="btn btn-xs btn-primary mx-3 text-capitalize" type="submit">{{__('text.word_proceed')}}</button>
+                    <button id="save" class="btn btn-xs btn-primary mx-3 text-capitalize" type="submit">{{__('text.make_payment')}}</button>
                 </div>
             </div>
         </form>

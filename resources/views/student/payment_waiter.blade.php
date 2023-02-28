@@ -1,0 +1,58 @@
+@extends('student.layout')
+@php
+    $c_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+    $header = \App\Helpers\Helpers::instance()->getHeader();
+@endphp
+@section('section')
+<div class="mx-3">
+
+    <div class="mt-5 py-3 text-center">
+        <h2 class="text-primary text-uppercase py-3">{{__('text.transaction_initialized')}}</h3>
+        <div class="h3 mt-4 py-5 text-danger bg-light border-top border-bottom border-2 border-primary rounded">{{__('text.pending_transaction_prase')}}</div>
+        <div id="loader" class="pt-5 d-flex justify-content-center">
+            <div id="outer_wall" style="width: 20rem; height: 20rem; border: 1px solid white; border-radius: 50%;"></div>
+        </div>
+    </div>
+    
+</div>
+@endsection
+@section('script')
+<script>
+
+    // Create a spinner animation
+    let colors = ['#fff', '#ea8', '#2f7', '#a7d', '#d9e', '#fa2'];
+    let percentages = [17, 32, 58, 70, 88, 99];
+    setInterval(function(){
+        let bg = `conic-gradient(${colors[0]} ${(percentages[0]+10)%100}%, ${colors[1]} ${(percentages[1]+10)%100}%, 
+             ${colors[2]} ${(percentages[2]+10)%100}%, ${colors[3]} ${(percentages[3]+10)%100}%,
+             ${colors[4]} ${(percentages[4]+10)%100}%, ${colors[5]} ${(percentages[5]+10)%100}%, )`;
+        document.getElementById('outer_wall').style.backgroundImage = bg;
+        console.log(bg);
+    }, 500);
+
+    // check for the transaction status every 3s
+    $set_interval = setInterval(() => {
+        ts_id = '{{$momoTransactionId}}';
+        _url = "{{route('get_transaction_status', '__T_ID__')}}";
+        _url = _url.replace('__T_ID__', ts_id);
+        $.ajax({
+            method: 'get',
+            url: _url,
+            success: function(data){
+                // check if status is completed or failed
+                console.log(data);
+                if(data.status == "COMPLETED"){
+                    action = `{{route('complete_transaction', '__TID__')}}`;
+                    action = action.replace('__TID__', ts_id);
+                    window.location = action;
+                }
+                if(data.status == "FAILED"){
+                    action = `{{route('failed_transaction', '__TID__')}}`;
+                    action = action.replace('__TID__', ts_id);
+                    window.location = action;
+                }
+            }
+        });
+    }, 3000);
+</script>
+@endsection
