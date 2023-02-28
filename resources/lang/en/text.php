@@ -551,5 +551,9 @@ return [
     'confirm_new_password'=>'confirm new password',
     'password_reset_request'=>'default password expired. you must reset your password to continue',
     'word_optional'=>'optional',
-    'results_date_line'=>'results dateline'
+    'results_date_line'=>'results dateline',
+    'no_results_phrase'=>'No results are available yet for this student',
+    'make_payment'=>'make payment',
+    'transaction_initialized'=>"transaction initialized",
+    'pending_transaction_prase'=>'transaction pending confirmation. Dial *126# to confirm payment.'
 ];

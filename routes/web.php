@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Student\HomeController as StudentHomeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Transactions;
 use App\Http\Resources\SubjectResource;
@@ -34,6 +35,8 @@ Route::get('set_local/{lang}', [Controller::class, 'set_local'])->name('lang.swi
 
 Route::get('payment-form',[TransactionController::class,'paymentForm'])->name('payment_form');
 Route::post('make-payments',[TransactionController::class,'makePayments'])->name('make_payments');
+Route::get('complete-transaction/{transaction_id}',[StudentHomeController::class,'complete_transaction'])->name('complete_transaction');
+Route::get('failed-transaction/{transaction_id}',[StudentHomeController::class,'failed_transaction'])->name('failed_transaction');
 Route::get('get-transaction-status/{transaction_is}',[TransactionController::class,'getTransactionStatus'])->name('get_transaction_status');
 Route::post('mtn-momo',[TransactionController::class,'mtnCallBack'])->name('mtn_callback');
 

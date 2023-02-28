@@ -29,16 +29,7 @@
                                 </select>
                                 <button class="btn btn-sm btn-light text-capitalize border-0" onclick="getCourses('#modal-level')">{{__('text.view_courses')}}</button>
                             </div>
-                            <table>
-                                <thead class="text-capitalize bg-light text-primary">
-                                    <th class="border-left border-right">{{__('text.course_code')}}</th>
-                                    <th class="border-left border-right">{{__('text.course_title')}}</th>
-                                    <th class="border-left border-right">{{__('text.credit_value')}}</th>
-                                    <th class="border-left border-right">{{__('text.word_status')}}</th>
-                                    <th class="border-left border-right">{{__('text.word_action')}}</th>
-                                </thead>
-                                <tbody id="modal_table"></tbody>
-                            </table>
+                            <div id="modal_table"></div>
                         </div>
                     </div>
                 </div>
@@ -135,13 +126,13 @@
                 let html = ``;
                 for (const key in data) {
                     if(registered_courses.filter(e => e['id'] == class_courses[key]['id']).length > 0){continue;}
-                    html += `<tr class="border-bottom" id="modal-`+data[key]['id']+`">
-                            <td class="border-left border-right">`+data[key]['code']+`</td>
-                            <td class="border-left border-right">`+data[key]['name']+`</td>
-                            <td class="border-left border-right">`+data[key]['cv']+`</td>
-                            <td class="border-left border-right">`+data[key]['status']+`</td>
-                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(data[key])+`)'>{{__('text.word_add')}}</span></td>
-                        </tr>`
+                    html += `<div class="border rounded bg-light py-3 px-2" id="modal-`+data[key]['id']+`">
+                            <div class="row"><span class="col-4">{{__('text.course_code')}}</span>`+data[key]['code']+`</div>
+                            <div class="row"><span class="col-4">{{__('text.course_title')}}</span>`+data[key]['name']+`</div>
+                            <div class="row"><span class="col-4">{{__('text.credit_value')}}</span>`+data[key]['cv']+`</div>
+                            <div class="row"><span class="col-4">{{__('text.word_status')}}</span>`+data[key]['status']+`</div>
+                            <div class="d-flex justify-content-end"><span class="btn btn-sm btn-primary rounded" onclick='add(`+JSON.stringify(data[key])+`)'>{{__('text.word_sign')}}</span></div>
+                        </div>`
                 }
                 $('#modal_table').html(html);
             }
@@ -152,13 +143,13 @@
         let html = ``;
         for (const key in class_courses) {
                     if(registered_courses.filter(e => e['id'] == class_courses[key]['id']).length > 0){continue;}
-                    html += `<tr class="border-bottom" id="modal-`+class_courses[key]['id']+`">
-                            <td class="border-left border-right">`+class_courses[key]['code']+`</td>
-                            <td class="border-left border-right">`+class_courses[key]['name']+`</td>
-                            <td class="border-left border-right">`+class_courses[key]['cv']+`</td>
-                            <td class="border-left border-right">`+class_courses[key]['status']+`</td>
-                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(class_courses[key])+`)'>{{__('text.word_add')}}</span></td>
-                        </tr>`
+                    html += `<div class="border rounded bg-light py-3 px-2" id="modal-`+class_courses[key]['id']+`">
+                            <div class="row"><span class="col-4">{{__('text.course_code')}}</span>`+class_courses[key]['code']+`</div>
+                            <div class="row"><span class="col-4">{{__('text.course_title')}}</span>`+class_courses[key]['name']+`</div>
+                            <div class="row"><span class="col-4">{{__('text.credit_value')}}</span>`+class_courses[key]['cv']+`</div>
+                            <div class="row"><span class="col-4">{{__('text.word_status')}}</span>`+class_courses[key]['status']+`</div>
+                            <div class="d-flex justify-content-end"><span class="btn btn-sm btn-primary rounded" onclick='add(`+JSON.stringify(class_courses[key])+`)'>{{__('text.word_sign')}}</span></div>
+                        </div>`
                 }
                 $('#modal_table').html(html);
 

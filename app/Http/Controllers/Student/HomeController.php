@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Student;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\TransactionController;
 use App\Models\Batch;
 use App\Models\CampusSemesterConfig;
 use App\Models\ClassSubject;
 use App\Models\CourseNotification;
+use App\Models\Income;
 use App\Models\Material;
 use App\Models\Notification;
+use App\Models\PayIncome;
+use App\Models\Payments;
 use App\Models\ProgramLevel;
 use App\Models\Resit;
 use App\Models\Result;
@@ -21,6 +25,7 @@ use App\Models\StudentStock;
 use App\Models\StudentSubject;
 use App\Models\SubjectNotes;
 use App\Models\Subjects;
+use App\Models\Transaction;
 use App\Models\Transcript;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -1098,8 +1103,15 @@ class HomeController extends Controller
 
     public function pay_fee_momo(Request $request)
     {
+        // return $request->all();
         # code...
-        return $request->all();
+        if(($tsId = TransactionController::makePayments($request)) != false){
+            $data['momoTransactionId'] = $tsId;
+            return view('student.payment_waiter', $data);
+        }
+        else{
+            return back()->with('error', 'Operation failed. Verify your data and try again later');
+        }
     }
 
     public function pay_other_incomes(Request $request)
@@ -1112,6 +1124,66 @@ class HomeController extends Controller
     public function pay_other_incomes_momo(Request $request)
     {
         # code...
+        $income = Income::find($request->payment_id);
+        array_merge($request->all(), ['amount'=>$income->amount]);
+        // $req = 
         return $request->all();
+    }
+
+    public function complete_transaction(Request $request, $ts_id)
+    {
+        # code...
+        $transaction = Transaction::where(['transaction_id'=>$ts_id])->first();
+        if($transaction != null){
+            // update transaction
+            $transaction->status = "COMPLETED";
+            $transaction->save();
+
+            // update payment record
+            // CHECK PAYMENT PURPOSE, EITHER 
+            switch($transaction->payment_purpose){
+                case 'FEE':
+                    $paymentInstance = new Payments();
+                    $data = [
+                        "payment_id"=>$transaction->payment_id,
+                        "student_id"=>$transaction->student_id,
+                        "batch_id"=>$transaction->year_id,
+                        'unit_id'=>auth('student')->user()->_class($transaction->year_id)->id,
+                        "amount"=>$transaction->amount,
+                        "reference_number"=>$transaction->transaction_id,
+                        'user_id'=>0
+                    ];
+                    $paymentInstance->fill($data);
+                    $paymentInstance->save();
+                    return redirect(route('student.pay_fee'))->with('success', 'Payment complete');
+                    break;
+                case 'OTHERS':
+                    $incomeInstance = new PayIncome();
+                    $data = [
+                        'income_id'=>$transaction->payment_id,
+                        'batch_id'=>$transaction->year_id,
+                        'class_id'=>auth('student')->user()->_class($transaction->year_id)->id,
+                        'student_id'=>$transaction->student_id,
+                        'user_id'=>0
+                    ];
+                    $incomeInstance->fill($data);
+                    return redirect(route('student.pay_others'))->with('success', 'Payment complete');
+                    break;
+            }
+        }
+    }
+
+    public function failed_transaction(Request $request, $ts_id)
+    {
+        # code...
+        $transaction = Transaction::where(['transaction_id'=>$ts_id])->first();
+        if($transaction != null){
+            // update transaction
+            $transaction->status = "FAILED";
+            $transaction->save();
+
+            // redirect user
+            return redirect(route('student.home'))->with('error', 'Operation failed.');
+        }
     }
 }

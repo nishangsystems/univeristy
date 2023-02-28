@@ -8,7 +8,7 @@
                 <form action="{{route('make_payments')}}"  method="POST" id="payment-form" >
                     @csrf
                     <div class="d-flex flex-column align-items-center justify-content-center mb-4 form-group">
-                        <img src="{{asset('icons/mtn-mm-logo-generic-mtn-mobile-money-logo.svg"')}}"
+                        <img src="{{asset('icons/mtn-mm-logo-generic-mtn-mobile-money-logo.svg')}}"
                              alt="mtn momo logo">
                         <span>MTN Momo</span>
                     </div>
