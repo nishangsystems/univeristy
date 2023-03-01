@@ -16,11 +16,18 @@
             <input type="hidden" name="payment_purpose" value="OTHERS">
             <input type="hidden" name="student_id" value="{{auth()->id()}}">
             <input type="hidden" name="year_id" value="{{$c_year}}">
+            <input type="hidden" name="amount" value="" id="amount_field">
+            <div class="form-group">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_amount')}}<span style="color:red">*</span></label>
+                <div class="col-lg-10">
+                    <label class=" form-control bg-light" id="amount"></label>
+                </div>
+            </div>
             <div class="form-group @error('item') has-error @enderror">
                 <label class="control-label col-lg-2 text-capitalize">{{__('text.word_item')}} <span style="color:red">*</span></label>
                 <div class="col-lg-10">
-                    <select class="form-control" name="payment_id">
-                        <option value="" disabled class="text-capitalize">{{__('text.select_item')}}</option>
+                    <select class="form-control" name="payment_id" id="payment_id">
+                        <option value="" class="text-capitalize">{{__('text.select_item')}}</option>
                         @foreach(\App\Models\Income::where(['cash'=>0, 'pay_online'=>true])->get() ?? [] as $item)
                         <option value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
                         @endforeach
@@ -46,4 +53,25 @@
     </div>
     
 </div>
+@endsection
+@section('script')
+    <script>
+        $('#payment_id').on('change', function(){
+            value = $('#payment_id').val();
+            if(value != '' && value != null){
+                url = "{{route('get-income-item', '__ID__')}}";
+                url = url.replace('__ID__', value);
+                $.ajax({
+                    method: 'get',
+                    url: url,
+                    success: function(data){
+                        console.log(data);
+                        $('#amount').html(data.amount+' CFA');
+                        $('#amount_field').val(data.amount);
+                    }
+                })
+            }
+        });
+
+    </script>
 @endsection

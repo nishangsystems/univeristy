@@ -2,7 +2,7 @@
 @section('section')
     @php
         $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-        $current = auth()->user()->_class() != null;
+        $current = auth()->user()->_class($year) != null;
     @endphp
     @if (request('config_id') == null)
         <div class="my-2">
@@ -36,6 +36,10 @@
         <div class="py-3">
             <form method="post">
                 @csrf
+                <input type="hidden" name="student_id" value="{{auth()->id()}}">
+                <input type="hidden" name="payment_purpose" value="TRANSCRIPT">
+                <input type="hidden" name="payment_id" value="{{request('config_id')}}">
+                <input type="hidden" name="amount" value="{{ $current ? $rtx->current_price : $rtx->former_price}}">
                 <div class="row my-2">
                     <label class="col-sm-3 col-md-2 text-capitalize">{{__('text.word_mode')}}</label>
                     <div class="col-sm-9 col-md-10">
@@ -50,7 +54,7 @@
                         <select name="year_id" class="form-control">
                             <option></option>
                             @foreach (\App\Models\Batch::all() as $btch)
-                                <option value="{{$btch->id}}">{{$btch->name}}</option>
+                                <option value="{{$btch->id}}" {{$btch->id == $year ? 'selected' : ''}}>{{$btch->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -62,7 +66,7 @@
                     <div class="col-sm-9 col-md-10">
                         <select class="form-control text-uppercase" name="delivery_format" required>
                             <option>---</option>
-                            <option value="HARD COPY">{{__('text.hard_copy')}}</option>
+                            <option value="HARD COPY" selected>{{__('text.hard_copy')}}</option>
                             <option value="SOFT COPY">{{__('text.soft_copy')}}</option>
                         </select>
                     </div>
@@ -71,14 +75,14 @@
                 <div class="row my-2">
                     <label class="col-sm-3 col-md-2 text-capitalize">{{__('text.word_phone')}}</label>
                     <div class="col-sm-9 col-md-10">
-                        <input type="tel" class="form-control" name="tel" required value="{{auth()->user()->phone ?? ''}}">
+                        <input type="tel" class="form-control" name="contact" required value="{{auth()->user()->phone ?? ''}}">
                     </div>
                 </div>
                 
                 <div class="row my-2">
                     <label class="col-sm-3 col-md-2 text-capitalize">{{__('text.momo_number')}}</label>
                     <div class="col-sm-9 col-md-10">
-                        <input type="tel" class="form-control" name="momo_number" required value="{{auth()->user()->phone ?? ''}}">
+                        <input type="tel" class="form-control" name="tel" required value="{{auth()->user()->phone ?? ''}}">
                     </div>
                 </div>
 

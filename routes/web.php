@@ -632,6 +632,10 @@ Route::get('search_subjects', function (Request $request) {
     return $subjects;
 })->name('search_subjects');
 
+Route::get('get-income-item/{income_id}', function(Request $request, $income_id){
+    return \App\Models\Income::find($income_id);
+})->name('get-income-item');
+
 Route::get('mode/{locale}', function ($batch) {
     session()->put('mode', $batch);
 
