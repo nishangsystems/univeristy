@@ -16,7 +16,7 @@ class AlterTransactionsTable extends Migration
         Schema::table('transactions', function (Blueprint $table) {
             //
             $table->enum('status',[
-                    'failed','completed','pending']
+                    'failed','successful','pending']
             );
             $table->text('payment_method')->nullable();
             $table->text('payment_purpose')->nullable();

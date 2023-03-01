@@ -1037,12 +1037,22 @@ class HomeController extends Controller
             'student_id'=>auth()->id(),
             'status'=>auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear()) == null ? 'FORMER' : 'CURRENT',
             'delivery_format'=>$request->delivery_format,
-            'tel'=>$request->tel,
+            'tel'=>$request->contact,
             'description'=>$request->description ?? null,
+            'paid'=>false
         ];
+        // create transcript application and save id for updates after payment is made
         $trans = new Transcript($data);
         $trans->save();
-        return redirect(route('student.transcript.history'))->with('success', 'Done');
+        // save the id of the transcript application to session
+        session()->put('pending_transcript_id', $trans->id);
+        if(($tsId = TransactionController::makePayments($request)) != false){
+            $data['momoTransactionId'] = $tsId;
+            return view('student.payment_waiter', $data);
+        }
+        else{
+            return back()->with('error', 'Operation failed. Verify your data and try again later');
+        }
     }
 
     public function transcript_history()
@@ -1119,10 +1129,13 @@ class HomeController extends Controller
     public function pay_other_incomes_momo(Request $request)
     {
         # code...
-        $income = Income::find($request->payment_id);
-        array_merge($request->all(), ['amount'=>$income->amount]);
-        // $req = 
-        return $request->all();
+        if(($tsId = TransactionController::makePayments($request)) != false){
+            $data['momoTransactionId'] = $tsId;
+            return view('student.payment_waiter', $data);
+        }
+        else{
+            return back()->with('error', 'Operation failed. Verify your data and try again later');
+        }
     }
 
     public function complete_transaction(Request $request, $ts_id)
@@ -1131,7 +1144,8 @@ class HomeController extends Controller
         $transaction = Transaction::where(['transaction_id'=>$ts_id])->first();
         if($transaction != null){
             // update transaction
-            $transaction->status = "COMPLETED";
+            $transaction->status = "SUCCESSFUL";
+            $transaction->financialTransactionId = $request->financialTransactionId;
             $transaction->save();
 
             // update payment record
@@ -1164,6 +1178,16 @@ class HomeController extends Controller
                     $incomeInstance->fill($data);
                     return redirect(route('student.pay_others'))->with('success', 'Payment complete');
                     break;
+                case 'TRANSCRIPT':
+                    $transcript_id = session()->get('pending_transcript_id');
+                    if($transcript_id != null){
+                        $transcript = Transcript::find($transcript_id);
+                        $transcript->paid = true;
+                        $transcript->save();
+                        return redirect(route('student.transcript.history'))->with('success', 'Done');
+                    }
+                    return redirect(route('student.transcript.history'))->with('error', 'Operation Failed');
+                    break;
             }
         }
     }
@@ -1175,7 +1199,14 @@ class HomeController extends Controller
         if($transaction != null){
             // update transaction
             $transaction->status = "FAILED";
+            $transaction->financialTransactionId = $request->financialTransactionId;
             $transaction->save();
+            switch($transaction->payment_purpose){
+                case 'TRANSCRIPT':
+                    DB::table('transcripts')->where(['student_id'=>auth()->id(), 'paid'=>0])->delete();
+                    return redirect(route('student.transcript.history'))->with('error', 'Operation Failed');
+                    break;
+            }
 
             // redirect user
             return redirect(route('student.home'))->with('error', 'Operation failed.');

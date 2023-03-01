@@ -14,7 +14,7 @@ class PayIncome extends Model
         'batch_id',
         'class_id',
         'student_id',
-        'user_id'
+        'user_id',
     ];
 
     /**
