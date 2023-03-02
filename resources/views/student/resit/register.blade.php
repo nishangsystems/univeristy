@@ -39,10 +39,11 @@
                         </thead>
                         <tbody id="course_table"></tbody>
                     </table>
-                    <div class="d-flex py-3">
+                    <div class="d-flex justify-content-between py-3">
                         <button type="submit" class="btn btn-success btn-sm mr-4 text-capitalize"><i class="fa fa-save mx-1"></i>{{__('text.word_save')}}</button>
                         <div class="btn btn-primary btn-sm mr-4 text-capitalize">{{__('text.credit_value')}} : <span id="cv-sum"></span>/<span id="cv-total">{{$cv_total}}</span></div>
                         <div class="btn btn-primary btn-sm mr-4 text-capitalize">{{__('text.word_amount')}} : <span id="amount-sum"></span></div>
+                        <a href="{{route('student.resit.download_courses', [$resit_id])}}" class="btn btn-sm btn-primary">{{__('text.download_courses')}}</a>
                     </div>
                 </form>
             </div>
@@ -94,6 +95,7 @@
                     }
                     $('#course_table').html(html2);
                     $('#cv-sum').text(cv_sum);
+                    $('#amount-sum').text(data.length * parseInt());
                 }
             }
         })

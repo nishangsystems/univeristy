@@ -136,6 +136,7 @@ return [
     'select_item'=>'select item',
     'other_items'=>'other items',
     'word_parent'=>'parent',
+    'word_parents'=>'parents',
     'sub_classes'=>'sub classes',
     'fee_listing'=>'fee listing',
     'word_student'=>'student | students',
@@ -555,5 +556,9 @@ return [
     'no_results_phrase'=>'No results are available yet for this student',
     'make_payment'=>'make payment',
     'transaction_initialized'=>"transaction initialized",
-    'pending_transaction_prase'=>'transaction pending confirmation. Dial *126# to confirm payment.'
+    'pending_transaction_prase'=>'transaction pending confirmation. Dial *126# to confirm payment.',
+    'manage_messages'=>'manage messages',
+    'word_sent'=>'sent',
+    'word_recipients'=>'recipients',
+    'select_recipients'=>'select recipients',
 ];

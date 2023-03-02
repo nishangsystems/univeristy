@@ -204,7 +204,7 @@
                 <b class="arrow"></b>
             </li>
 
-           <li>
+           <!-- <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-key"></i>
                     <span class="menu-text">{{__('text.online_payments')}}</span>
@@ -231,7 +231,7 @@
                     </li>
 
                 </ul>
-            </li>
+            </li> -->
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-money"></i>
@@ -261,7 +261,7 @@
                 </ul>
             </li>
 
-           <li>
+           <!-- <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-flag"></i>
                     <span class="menu-text">{{trans_choice('text.word_transcript', 2)}}</span>
@@ -288,7 +288,7 @@
                     </li>
 
                 </ul>
-            </li>
+            </li> -->
 
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">

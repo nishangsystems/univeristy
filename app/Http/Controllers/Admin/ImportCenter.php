@@ -302,7 +302,12 @@ class ImportCenter extends Controller
             # code...
             return $validate->errors()->first();
         }
-        $results = Result::where(['reference'=> $request->reference, 'semester_id'=> $request->semester, 'batch_id'=>$request->year])->get();
+        $results = Result::where(['reference'=> $request->reference, 'semester_id'=> $request->semester, 'batch_id'=>$request->year])
+                    ->join('students', ['students.id'=>'results.student_id'])
+                    ->where(function($q){
+                        auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                    })
+                    ->get('results.*');
         foreach ($results as $key => $value) {
             # code...
             $value->delete();
@@ -325,7 +330,12 @@ class ImportCenter extends Controller
             # code...
             return $validate->errors()->first();
         }
-        $results = Result::where('reference', '=', $request->reference)->whereIn('sequence', [2,4,6])->where('batch_id', '=', $request->year)->get();
+        $results = Result::where(['reference'=> $request->reference, 'semester_id'=> $request->semester, 'batch_id'=>$request->year])
+                    ->join('students', ['students.id'=>'results.student_id'])
+                    ->where(function($q){
+                        auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                    })
+                    ->get('results.*');
         foreach ($results as $key => $value) {
             # code...
             $value->delete();
