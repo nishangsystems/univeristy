@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\Student\HomeController as StudentHomeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Transactions;
@@ -588,6 +589,13 @@ Route::name('notifications.')->prefix('{layer}/{layer_id}/notifications/{campus_
     Route::get('/edit/{id}', 'NotificationsController@edit')->name('edit');
     Route::post('/update/{id}', 'NotificationsController@update')->name('update');
     Route::get('/show/{id}', 'NotificationsController@show')->name('show');
+});
+
+// Messages
+Route::name('messages.')->prefix('messages')->group(function(){
+    Route::get('create', [NotificationsController::class, 'create_message'])->name('create');
+    Route::post('create', [NotificationsController::class, 'create_message_save']);
+    Route::get('sent', [NotificationsController::class, 'sent_messages'])->name('sent');
 });
 
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');

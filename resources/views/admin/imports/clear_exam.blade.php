@@ -19,7 +19,9 @@
             <div class="col-md-9">
                 <select name="reference" id="" class="form-control" required>
                     <option value="">{{__('text.select_reference')}}</option>
-                    @foreach(\App\Models\Result::distinct()->get('reference') as $ref)
+                    @foreach(\App\Models\Result::join('students', ['students.id'=>'results.student_id'])->where(function($q){
+                        auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                    })->distinct()->get('reference') as $ref)
                         <option value="{{$ref->reference}}">{{$ref->reference}}</option>
                     @endforeach
                 </select>

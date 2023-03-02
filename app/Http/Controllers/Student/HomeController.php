@@ -522,12 +522,13 @@ class HomeController extends Controller
         $conf = CampusSemesterConfig::where(['campus_id'=>auth('student')->user()->campus_id])->where(['semester_id'=>Helpers::instance()->getSemester(Students::find(auth()->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id])->first();
         if ($conf != null) {
             # code...
-            $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y'));
+            $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y', time()));
         }else{
             return redirect(route('student.home'))->with('error', 'Can not sign courses for this program at the moment. Date limit not set. Contact registry.');
         }
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
         $data['access'] =  Helpers::instance()->resit_available(auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id);
+        $data['resit_id'] =  Helpers::instance()->available_resit(auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
         // dd($data['access']);
         return view('student.resit.register', $data);
     }
@@ -1147,11 +1148,11 @@ class HomeController extends Controller
             $transaction->status = "SUCCESSFUL";
             $transaction->financialTransactionId = $request->financialTransactionId;
             $transaction->save();
-
+            // return $transaction;
             // update payment record
             // CHECK PAYMENT PURPOSE, EITHER 
             switch($transaction->payment_purpose){
-                case 'FEE':
+                case 'TUTION':
                     $paymentInstance = new Payments();
                     $data = [
                         "payment_id"=>$transaction->payment_id,

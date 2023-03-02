@@ -10,7 +10,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "barryvdh/laravel-dompdf": "^2.0",
-        "bmatovu/laravel-mtn-momo": "^4.3",
+        "bmatovu/laravel-mtn-momo": "^3.0",
         "bmatovu/oauth-negotiator": "^2.1",
         "doctrine/dbal": "^2.12.1",
         "fideloper/proxy": "^4.4",

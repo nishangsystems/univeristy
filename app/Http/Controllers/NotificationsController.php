@@ -11,6 +11,7 @@ use App\Models\Notification;
 use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class NotificationsController extends Controller
 {
@@ -257,5 +258,48 @@ class NotificationsController extends Controller
         # code...
         Notification::find($id)->delete();
         return back()->with('success', 'Done');
+    }
+
+    public function create_message()
+    {
+        # code...
+        $data['title'] = "Send Message";
+        return view('admin.messages.create', $data);
+    }
+
+    public function create_message_save(Request $request)
+    {
+        # code...
+        $validator = Validator::make($request->all(), [
+            'year_id'=>'required|numeric',
+            'class_id'=>'required|numeric',
+            'message'=>'required', 
+            'recipients'=>'required|in:students,teachers,parents'
+        ]);
+        if($validator->fails()){
+            return back()->with('error', $validator->errors()->first());
+        }
+        // SEND MESSAGE, 
+        // SAVE MESSAGE TO DATABASE WITH STATUS PENDING, 
+        // GET RESPONSE AND UPDATE STATUS TO SENT OR FAILED 
+
+        // send message here and wait for response
+        $message_id = rand(10000000000001, 98990998075609).'_'.time();
+
+        // save pending message message 
+        $message_instance = new \App\Models\Message($request->all());
+        $message_instance->status = 'PENDING';
+        $message_instance->message_id = $message_id;
+        $message_instance->save();
+
+        // update message status on response
+        return $request->all();
+    }
+
+    public function sent_messages()
+    {
+        # code...
+        $data['title'] = "Sent Messages";
+        return view('admin.messages.sent', $data);
     }
 }

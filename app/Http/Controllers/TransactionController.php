@@ -55,10 +55,10 @@ class TransactionController extends Controller
             'tel'=>'required|numeric|min:9',
             'amount'=>'required|numeric',
             // 'redirect_route'=>'required|url',
-            'student_id'=>'required',
-            'year_id'=>'required',
+            'student_id'=>'required|numeric',
+            'year_id'=>'required|numeric',
             'payment_purpose'=>'required',
-            'payment_id'=>'required'
+            'payment_id'=>'required|numeric'
         ]);
 
         if ($validator->fails()) {
@@ -84,6 +84,7 @@ class TransactionController extends Controller
            $transaction->reference = $request->reference ?? time().random_int(100000, 999999);
            $transaction->transaction_id = $momoTransactionId;
            $transaction->payment_id = $request->payment_id;
+           $transaction->student_id = $request->student_id;
            $transaction->save();
            return $momoTransactionId;
         } catch (CollectionRequestException $e) {
