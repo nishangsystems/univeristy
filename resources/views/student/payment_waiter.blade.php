@@ -15,7 +15,11 @@
             </div>
         </div>
     </div>
-    
+    <form class="hidden" id="response_form" method="post" action="{{request('callback_url')}}">
+        <input type="hidden" name="transaction_id" value="{{$momoTransactionId}}">
+        <input type="hidden" name="status" id="status_field">
+        <input type="hidden" name="financialTransactionId" id="fti_field">
+    </form>
 </div>
 @endsection
 @section('script')
@@ -42,19 +46,10 @@
             url: _url,
             success: function(data){
                 // check if status is completed or failed
-                console.log(data);
-                if(data.status == "SUCCESSFUL"){
-                    action = `{{route('complete_transaction', '__TID__')}}`;
-                    action = action.replace('__TID__', ts_id);
-                    action = action+'?financialTransactionId='+data.financialTransactionId;
-                    window.location = action;
-                }
-                if(data.status == "FAILED"){
-                    action = `{{route('failed_transaction', '__TID__')}}`;
-                    action = action.replace('__TID__', ts_id);
-                    action = action+'?financialTransactionId='+data.financialTransactionId;
-                    window.location = action;
-                }
+                $('#status_field').val(data.status);
+                $('#fti_field').val(data.financialTransactionId);
+                $('#response_form').submit();                                
+                
             }
         });
     }, 3000);
