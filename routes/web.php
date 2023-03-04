@@ -38,7 +38,7 @@ Route::get('payment-form',[TransactionController::class,'paymentForm'])->name('p
 Route::post('make-payments',[TransactionController::class,'makePayments'])->name('make_payments');
 Route::get('complete-transaction/{transaction_id}',[StudentHomeController::class,'complete_transaction'])->name('complete_transaction');
 Route::get('failed-transaction/{transaction_id}',[StudentHomeController::class,'failed_transaction'])->name('failed_transaction');
-Route::get('get-transaction-status/{transaction_is}',[TransactionController::class,'getTransactionStatus'])->name('get_transaction_status');
+// Route::get('get-transaction-status/{transaction_id}',[TransactionController::class,'getTransactionStatus'])->name('get_transaction_status');
 Route::post('mtn-momo',[TransactionController::class,'mtnCallBack'])->name('mtn_callback');
 
 Route::post('login', [CustomLoginController::class, 'login'])->name('login.submit');
