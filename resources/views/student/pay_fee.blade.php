@@ -8,7 +8,7 @@
 
     <div class="form-panel" id="TUTION-PANEL">
         @if($balance > 0)
-        <form class="form-horizontal" role="form" method="POST" action="#">
+        <form class="form-horizontal" role="form" method="POST">
             <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_fee_details')}}</h5>
             @csrf
             <input type="hidden" name="student_id" value="{{auth()->id()}}">

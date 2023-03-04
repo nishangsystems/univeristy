@@ -34,23 +34,23 @@
 
     // check for the transaction status every 3s
     $set_interval = setInterval(() => {
-        ts_id = '{{$momoTransactionId}}';
-        _url = "{{route('get_transaction_status', '__T_ID__')}}";
-        _url = _url.replace('__T_ID__', ts_id);
+        ts_id = '{{$transaction_id}}';
+        _url = "{{env('TRANSACTION_STATUS_URL')}}";
         $.ajax({
-            method: 'get',
+            method: 'post',
+            data: {transaction_id: ts_id},
             url: _url,
             success: function(data){
                 // check if status is completed or failed
                 console.log(data);
                 if(data.status == "SUCCESSFUL"){
-                    action = `{{route('complete_transaction', '__TID__')}}`;
+                    action = "{{route('complete_transaction', '__TID__')}}";
                     action = action.replace('__TID__', ts_id);
                     action = action+'?financialTransactionId='+data.financialTransactionId;
                     window.location = action;
                 }
                 if(data.status == "FAILED"){
-                    action = `{{route('failed_transaction', '__TID__')}}`;
+                    action = "{{route('failed_transaction', '__TID__')}}";
                     action = action.replace('__TID__', ts_id);
                     action = action+'?financialTransactionId='+data.financialTransactionId;
                     window.location = action;

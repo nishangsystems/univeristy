@@ -33,6 +33,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Http;
 
 class HomeController extends Controller
 {
@@ -1116,12 +1118,33 @@ class HomeController extends Controller
     {
         // return $request->all();
         # code...
-        if(($tsId = TransactionController::makePayments($request)) != false){
-            $data['momoTransactionId'] = $tsId;
-            return view('student.payment_waiter', $data);
+        $validator = Validator::make($request->all(),
+        [
+            'tel'=>'required|numeric|min:9',
+            'amount'=>'required|numeric',
+            // 'callback_url'=>'required|url',
+            'student_id'=>'required|numeric',
+            'year_id'=>'required|numeric',
+            'payment_purpose'=>'required',
+            'payment_id'=>'required|numeric'
+        ]);
+
+
+        if ($validator->fails()) {
+            # code...
+            return back()->with('error', $validator->errors()->first());
         }
-        else{
-            return back()->with('error', 'Operation failed. Verify your data and try again later');
+
+        $data = $request->all();
+        $response = Http::post(env('PAYMENT_URL'), $data);
+        // dd($response->collect()->first());
+        if($response->failed()){
+            return back()->with('error', $response);
+        }
+        if($response->successful()){
+            $_data['transaction_id'] = $response->collect()->first();
+            $_data['title'] = "Pending Confirmation";
+            return view('student.payment_waiter', $_data);
         }
     }
 
@@ -1135,18 +1158,14 @@ class HomeController extends Controller
     public function pay_other_incomes_momo(Request $request)
     {
         # code...
-        if(($tsId = TransactionController::makePayments($request)) != false){
-            $data['momoTransactionId'] = $tsId;
-            return view('student.payment_waiter', $data);
-        }
-        else{
-            return back()->with('error', 'Operation failed. Verify your data and try again later');
-        }
+        
+        $this->pay_fee_momo($request);
     }
 
     public function complete_transaction(Request $request, $ts_id)
     {
         # code...
+
         $transaction = Transaction::where(['transaction_id'=>$ts_id])->first();
         if($transaction != null){
             // update transaction
