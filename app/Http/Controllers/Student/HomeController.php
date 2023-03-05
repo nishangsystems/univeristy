@@ -1137,13 +1137,14 @@ class HomeController extends Controller
 
         $data = $request->all();
         $response = Http::post(env('PAYMENT_URL'), $data);
-        // dd($response->collect()->first());
         if($response->failed()){
-            return back()->with('error', $response);
+            return back()->with('error', 'Operation failed. Make sure you are connected to internet and try again.');
+            // dd($response->__toString());
         }
         if($response->successful()){
-            $_data['transaction_id'] = $response->collect()->first();
             $_data['title'] = "Pending Confirmation";
+            $_data['transaction_id'] = $response->collect()->first();
+            // return $_data;
             return view('student.payment_waiter', $_data);
         }
     }
@@ -1166,7 +1167,7 @@ class HomeController extends Controller
     {
         # code...
 
-        $transaction = Transaction::where(['transaction_id'=>$ts_id])->first();
+        $transaction = Transaction::where(['transaction_id'=>($ts_id)])->first();
         if($transaction != null){
             // update transaction
             $transaction->status = "SUCCESSFUL";
