@@ -43,7 +43,7 @@ class TransactionController extends Controller
 
         if ($validator->fails()) {
             # code...
-            return response($validator->errors()->first(), 400);
+            return new \Exception($validator->errors()->first(), 400);
         }
 
         //todo: remove try catch before pushing to life
@@ -73,14 +73,14 @@ class TransactionController extends Controller
                 return response()->json($data);
             }
             else{
-                return response('Operation failed. Verify your data and try again later', 400);
+                return new \Exception('Operation failed. Verify your data and try again later');
             }
-        } catch (CollectionRequestException $e) {
+        } catch (\Exception $e) {
             // do {
             //     printf("\n\r%s:%d %s (%d) [%s]\n\r",
             //         $e->getFile(), $e->getLine(), $e->getMessage(), $e->getCode(), get_class($e));
             // } while ($e = $e->getPrevious());
-            return response($e->getMessage(), 400);
+            return $e;
         }
 
     }
