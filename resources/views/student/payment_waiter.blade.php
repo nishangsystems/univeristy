@@ -40,6 +40,7 @@
             method: 'post',
             data: {transaction_id: ts_id},
             url: _url,
+            headers: { 'Access-Control-Allow-Origin': '*' },
             success: function(data){
                 // check if status is completed or failed
                 console.log(data);
