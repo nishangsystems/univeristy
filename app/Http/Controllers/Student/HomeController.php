@@ -1141,12 +1141,12 @@ class HomeController extends Controller
             $data = $request->all();
             $response = Http::post(env('PAYMENT_URL'), $data);
             // dd($response->__toString());
-            if($response->failed()){
+            if(!$response->ok()){
                 return back()->with('error', 'Operation failed. Make sure you are connected to internet and try again.');
                 // dd($response->__toString());
             }
             
-            if($response->successful()){
+            if($response->ok()){
                 $_data['title'] = "Pending Confirmation";
                 $_data['transaction_id'] = $response->collect()->first();
                 // return $_data;
