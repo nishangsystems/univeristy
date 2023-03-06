@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
 
@@ -1135,17 +1136,29 @@ class HomeController extends Controller
             return back()->with('error', $validator->errors()->first());
         }
 
-        $data = $request->all();
-        $response = Http::post(env('PAYMENT_URL'), $data);
-        if($response->failed()){
-            return back()->with('error', 'Operation failed. Make sure you are connected to internet and try again.');
+        try {
+            //code...
+            $data = $request->all();
+            $response = Http::post(env('PAYMENT_URL'), $data);
             // dd($response->__toString());
+            if($response->failed()){
+                return back()->with('error', 'Operation failed. Make sure you are connected to internet and try again.');
+                // dd($response->__toString());
+            }
+            
+            if($response->successful()){
+                $_data['title'] = "Pending Confirmation";
+                $_data['transaction_id'] = $response->collect()->first();
+                // return $_data;
+                return view('student.payment_waiter', $_data);
+            }
+        } 
+        catch(ConnectException $e){
+            return back()->with('error', $e->getMessage());
         }
-        if($response->successful()){
-            $_data['title'] = "Pending Confirmation";
-            $_data['transaction_id'] = $response->collect()->first();
-            // return $_data;
-            return view('student.payment_waiter', $_data);
+        catch (Throwable $th) {
+            return back()->with('error', $th->getMessage());
+            // throw $th;
         }
     }
 
