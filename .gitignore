@@ -2,7 +2,7 @@
 /public/hot
 /public/storage
 /storage/*.key
-/vendor
+# /vendor
 /files
 /bg_image
 /public/assets/images/header.jpg
