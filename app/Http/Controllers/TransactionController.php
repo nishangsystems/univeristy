@@ -80,7 +80,7 @@ class TransactionController extends Controller
             //     printf("\n\r%s:%d %s (%d) [%s]\n\r",
             //         $e->getFile(), $e->getLine(), $e->getMessage(), $e->getCode(), get_class($e));
             // } while ($e = $e->getPrevious());
-            return $e;
+            throw $e;
         }
 
     }
