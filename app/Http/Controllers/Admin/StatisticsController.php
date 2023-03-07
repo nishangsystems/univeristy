@@ -172,7 +172,7 @@ class StatisticsController extends Controller
                     ->toArray()
                 ),
                 'total' => 
-                        \App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                        \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                         ->where('program_levels.id', '=', $student_class)
                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                         ->where('payment_items.name', '=', 'TUTION')
@@ -192,7 +192,7 @@ class StatisticsController extends Controller
             else{$return['incomplete'] += 1;}
             
         }
-        // $return['expected'] = (int)\App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+        // $return['expected'] = (int)\App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
         //                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
         //                         ->where('payment_items.name', '=', 'TUTION')
         //                         ->whereNotNull('payment_items.amount')
@@ -232,7 +232,7 @@ class StatisticsController extends Controller
                     ->toArray()
                 ),
                 'total' => 
-                        \App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                        \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                         ->where('program_levels.id', '=', $student_class)
                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                         ->where('payment_items.name', '=', 'TUTION')
@@ -252,7 +252,7 @@ class StatisticsController extends Controller
             else{$return['incomplete'] += 1;}
             
         }
-        // $return['expected'] = (int)\App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+        // $return['expected'] = (int)\App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
         //                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
         //                         ->where('payment_items.name', '=', 'TUTION')
         //                         ->whereNotNull('payment_items.amount')
@@ -296,7 +296,7 @@ class StatisticsController extends Controller
                 ),
                 // school fee amount expected from student
                 'total' => 
-                        \App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                        \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                         ->where('program_levels.id', '=', $class_id)
                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                         ->where('payment_items.name', '=', 'TUTION')
@@ -317,7 +317,7 @@ class StatisticsController extends Controller
             else{$return['incomplete'] += 1;}
             
         }
-        // $return['expected'] = (int)\App\Models\CampusProgram::join('Program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+        // $return['expected'] = (int)\App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
         //                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
         //                         ->where('payment_items.name', '=', 'TUTION')
         //                         ->whereNotNull('payment_items.amount')
