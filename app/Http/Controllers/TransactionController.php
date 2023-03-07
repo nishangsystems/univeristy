@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\CollectionRequestException;
 use App\Helpers\Helpers;
 use App\Models\Transaction;
-use Bmatovu\MtnMomo\Exceptions\CollectionRequestException;
-use Bmatovu\MtnMomo\Products\Collection;
+use App\MomoapiProducts\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid;
@@ -51,29 +51,30 @@ class TransactionController extends Controller
         // if (!$request->year_id) {
         //     throw new \Error("Year Id is required", 400);
         // }
-        $validator = Validator::make($request->all(), [
-            'tel'=>'required|numeric|min:9',
-            'amount'=>'required|numeric',
-            // 'redirect_route'=>'required|url',
-            'student_id'=>'required|numeric',
-            'year_id'=>'required|numeric',
-            'payment_purpose'=>'required',
-            'payment_id'=>'required|numeric'
-        ]);
+//        $validator = Validator::make($request->all(), [
+//            'tel'=>'required|numeric|min:9',
+//            'amount'=>'required|numeric',
+//            // 'redirect_route'=>'required|url',
+//            'student_id'=>'required|numeric',
+//            'year_id'=>'required|numeric',
+//            'payment_purpose'=>'required',
+//            'payment_id'=>'required|numeric'
+//        ]);
+//
+//        if ($validator->fails()) {
+//            # code...
+//            return redirect(url()->previous())->with('error', $validator->errors()->first());
+//        }
 
-        if ($validator->fails()) {
-            # code...
-            return redirect(url()->previous())->with('error', $validator->errors()->first());
-        }
+//        dd($request);
 
         //todo: remove try catch before pushing to life
         try {
 
-            // return random_int(111111011010, 999999999999);
             $collection = new Collection();
 
             $momoTransactionId = $collection->requestToPay(Uuid::uuid4()->toString(), '237' . $request->tel, $request->amount);
-            // dd($momoTransactionId);
+             dd($momoTransactionId);
             //save transaction
            $transaction = new Transaction();
            $transaction->payment_method = 'Mtn Mobile Money';
@@ -88,11 +89,11 @@ class TransactionController extends Controller
            $transaction->save();
            return $momoTransactionId;
         } catch (CollectionRequestException $e) {
-            // do {
-            //     printf("\n\r%s:%d %s (%d) [%s]\n\r",
-            //         $e->getFile(), $e->getLine(), $e->getMessage(), $e->getCode(), get_class($e));
-            // } while ($e = $e->getPrevious());
-            return redirect(url()->previous())->with('error', $e->getMessage());;
+             do {
+                 printf("\n\r%s:%d %s (%d) [%s]\n\r",
+                     $e->getFile(), $e->getLine(), $e->getMessage(), $e->getCode(), get_class($e));
+             } while ($e = $e->getPrevious());
+//            return redirect(url()->previous())->with('error', $e->getMessage());;
         }
 
         /**

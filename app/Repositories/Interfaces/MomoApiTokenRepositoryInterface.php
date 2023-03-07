@@ -3,7 +3,7 @@
 namespace App\Repositories\Interfaces;
 
 
-interface TokenRepositoryInterface
+interface MomoApiTokenRepositoryInterface
 {
     public function create(array $token_token_attributes);
 

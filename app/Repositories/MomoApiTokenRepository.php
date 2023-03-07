@@ -4,13 +4,14 @@
  */
 
 namespace App\Repositories;
-use App\Repositories\Interfaces\TokenRepositoryInterface;
+use App\Models\MomoApiToken;
+use App\Repositories\Interfaces\MomoApiTokenRepositoryInterface;
 use Carbon\Carbon;
 
 /**
  * Token repository.
  */
-class TokenRepository implements TokenRepositoryInterface
+class MomoApiTokenRepository implements MomoApiTokenRepositoryInterface
 {
     /**
      * Product.
@@ -41,7 +42,7 @@ class TokenRepository implements TokenRepositoryInterface
             $token_attributes['expires_at'] = Carbon::now()->addSeconds($token_attributes['expires_in']);
         }
 
-        return Token::create($token_attributes);
+        return MomoApiToken::create($token_attributes);
     }
 
     /**
@@ -49,7 +50,7 @@ class TokenRepository implements TokenRepositoryInterface
      */
     public function retrieveAll()
     {
-        return Token::where('product', $this->product)->get();
+        return MomoApiToken::where('product', $this->product)->get();
     }
 
     /**
@@ -58,13 +59,13 @@ class TokenRepository implements TokenRepositoryInterface
     public function retrieve($access_token = null)
     {
         if ($access_token) {
-            return Token::query()
+            return MomoApiToken::query()
                 ->where('access_token', $access_token)
                 ->where('product', $this->product)
                 ->first();
         }
 
-        return Token::query()
+        return MomoApiToken::query()
             ->where('product', $this->product)
             ->latest('created_at')
             ->first();
@@ -75,7 +76,7 @@ class TokenRepository implements TokenRepositoryInterface
      */
     public function update($access_token, array $attributes)
     {
-        $token = Token::query()
+        $token = MomoApiToken::query()
             ->where('access_token', $access_token)
             ->where('product', $this->product)
             ->first();
@@ -90,7 +91,7 @@ class TokenRepository implements TokenRepositoryInterface
      */
     public function delete($access_token)
     {
-        Token::query()
+        MomoApiToken::query()
             ->where('access_token', $access_token)
             ->where('product', $this->product)
             ->delete();
