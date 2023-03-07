@@ -30,6 +30,7 @@ class TransactionController extends Controller
          * 4- use the transaction id to check transaction status
          */
 
+         return response($request->all(), 400);
 
        $validator = Validator::make($request->all(), [
             'tel'=>'required|numeric|min:9',
@@ -43,7 +44,7 @@ class TransactionController extends Controller
 
         if ($validator->fails()) {
             # code...
-            return new \Exception($validator->errors()->first(), 400);
+            return response($validator->errors()->first(), 400);
         }
 
         //todo: remove try catch before pushing to life
@@ -68,19 +69,19 @@ class TransactionController extends Controller
         //    $transaction->callback_url = $request->callback_url;
            $transaction->save();
         //    return $momoTransactionId;
-           if($momoTransactionId != false || $momoTransactionId != null){
-                $data['transaction_Id'] = $momoTransactionId;
-                return response()->json($data);
+           if($momoTransactionId == false || $momoTransactionId == null){
+               return response('Operation failed. Unable to trigger payment. Make sure you are connected and try again', 500);
             }
             else{
-                return new \Exception('Operation failed. Verify your data and try again later');
+                $data['transaction_Id'] = $momoTransactionId;
+                return response()->json($data);
             }
         } catch (\Exception $e) {
             // do {
             //     printf("\n\r%s:%d %s (%d) [%s]\n\r",
             //         $e->getFile(), $e->getLine(), $e->getMessage(), $e->getCode(), get_class($e));
             // } while ($e = $e->getPrevious());
-            throw $e;
+            return response($e->getCode().' : '.$e->getMessage(), 500);
         }
 
     }
