@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use App\Models\Transaction;
 use Bmatovu\MtnMomo\Exceptions\CollectionRequestException;
+use Bmatovu\MtnMomo\Exceptions\MtnMomoRequestException;
 use Bmatovu\MtnMomo\Products\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -30,9 +31,8 @@ class TransactionController extends Controller
          * 4- use the transaction id to check transaction status
          */
 
-         return response($request->all(), 400);
-
-       $validator = Validator::make($request->all(), [
+        
+        $validator = Validator::make($request->all(), [
             'tel'=>'required|numeric|min:9',
             'amount'=>'required|numeric',
             // 'callback_url'=>'required|url',
@@ -46,13 +46,14 @@ class TransactionController extends Controller
             # code...
             return response($validator->errors()->first(), 400);
         }
-
+        
         //todo: remove try catch before pushing to life
         try {
 
             // return random_int(111111011010, 999999999999);
             $collection = new Collection();
-
+            
+            // return response($request->all(), 400);
             $momoTransactionId = $collection->requestToPay(Uuid::uuid4()->toString(), '237' . $request->tel, $request->amount);
             // dd($momoTransactionId);
             //save transaction
@@ -76,7 +77,13 @@ class TransactionController extends Controller
                 $data['transaction_Id'] = $momoTransactionId;
                 return response()->json($data);
             }
-        } catch (\Exception $e) {
+        } catch (MtnMomoRequestException $e) {
+            // do {
+            //     printf("\n\r%s:%d %s (%d) [%s]\n\r",
+            //         $e->getFile(), $e->getLine(), $e->getMessage(), $e->getCode(), get_class($e));
+            // } while ($e = $e->getPrevious());
+            return response($e->getCode().' : '.$e->getMessage(), 500);
+        } catch (CollectionRequestException $e) {
             // do {
             //     printf("\n\r%s:%d %s (%d) [%s]\n\r",
             //         $e->getFile(), $e->getLine(), $e->getMessage(), $e->getCode(), get_class($e));
