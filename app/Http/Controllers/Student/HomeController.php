@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Exception;
 use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
@@ -1140,10 +1141,11 @@ class HomeController extends Controller
             //code...
             $data = $request->all();
             $response = Http::post(env('PAYMENT_URL'), $data);
-            // dd($response->__toString());
+            dd($response->body());
             if(!$response->ok()){
-                return back()->with('error', 'Operation failed. Make sure you are connected to internet and try again.');
-                // dd($response->__toString());
+                // throw $response;
+                return back()->with('error', 'Operation failed. '.$response->__toString());
+                // dd($response->body());
             }
             
             if($response->ok()){
