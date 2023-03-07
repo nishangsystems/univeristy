@@ -1141,7 +1141,7 @@ class HomeController extends Controller
             //code...
             $data = $request->all();
             $response = Http::post(env('PAYMENT_URL'), $data);
-            dd($response->body());
+            // dd($response->body());
             if(!$response->ok()){
                 // throw $response;
                 return back()->with('error', 'Operation failed. '.$response->__toString());
