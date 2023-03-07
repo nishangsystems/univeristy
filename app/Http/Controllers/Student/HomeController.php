@@ -1149,6 +1149,7 @@ class HomeController extends Controller
             }
             
             if($response->ok()){
+            
                 $_data['title'] = "Pending Confirmation";
                 $_data['transaction_id'] = $response->collect()->first();
                 // return $_data;
@@ -1182,7 +1183,7 @@ class HomeController extends Controller
     {
         # code...
 
-        $transaction = Transaction::where(['transaction_id'=>($ts_id)])->first();
+        $transaction = Transaction::where(['transaction_id'=>$ts_id])->first();
         if($transaction != null){
             // update transaction
             $transaction->status = "SUCCESSFUL";
@@ -1247,6 +1248,10 @@ class HomeController extends Controller
                     DB::table('transcripts')->where(['student_id'=>auth()->id(), 'paid'=>0])->delete();
                     return redirect(route('student.transcript.history'))->with('error', 'Operation Failed');
                     break;
+                case 'TUTION':
+                    return redirect(route('student.pay_fee'))->with('error', 'Transaction failed');
+                case 'OTHERS':
+                    return redirect(route('student.pay_others'))->with('error', 'Transaction failed');
             }
 
             // redirect user
