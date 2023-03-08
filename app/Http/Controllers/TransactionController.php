@@ -66,15 +66,14 @@ class TransactionController extends Controller
 //            return redirect(url()->previous())->with('error', $validator->errors()->first());
 //        }
 
-//        dd($request);
 
-        //todo: remove try catch before pushing to life
+        //todo: remove try catch before pushing to live
         try {
 
             $collection = new Collection();
 
+
             $momoTransactionId = $collection->requestToPay(Uuid::uuid4()->toString(), '237' . $request->tel, $request->amount);
-             dd($momoTransactionId);
             //save transaction
            $transaction = new Transaction();
            $transaction->payment_method = 'Mtn Mobile Money';

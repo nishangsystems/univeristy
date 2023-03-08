@@ -3,6 +3,7 @@
 namespace App\GrantTypes;
 
 use App\Exceptions\TokenRequestException;
+use App\Models\MomoApiToken;
 use App\Models\MomoApiTokenInterface;
 use App\Repositories\Interfaces\MomoApiTokenRepositoryInterface;
 use App\Repositories\MomoApiTokenRepository;
@@ -35,7 +36,7 @@ class OAuth2Middleware
     /**
      * Token model.
      *
-     * @var MomoApiTokenInterface
+     * @var MomoApiToken
      */
     protected $token;
 

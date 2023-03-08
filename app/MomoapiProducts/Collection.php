@@ -190,25 +190,28 @@ class Collection extends Product
         ];
 
 
-        try {
-            $this->client->request('POST', $this->transactionUri, [
-                'headers' => $headers,
-                'json' => [
-                    'amount' => $amount,
-                    'currency' => $this->currency,
-                    'externalId' => $transactionId,
-                    'payer' => [
-                        'partyIdType' => $this->partyIdType,
-                        'partyId' => $partyId,
-                    ],
-//                    'payerMessage' => $this->alphanumeric($payerMessage),
-//                    'payeeNote' => $this->alphanumeric($payeeNote),
+        $options =  [
+            'headers' => $headers,
+            'json' =>  [
+                'amount' => $amount,
+                'currency' => $this->currency,
+                'externalId' => $transactionId,
+                'payer' => [
+                    'partyIdType' => $this->partyIdType,
+                    'partyId' => $partyId,
                 ],
-            ]);
+                'payerMessage' => $this->alphanumeric($payerMessage),
+                'payeeNote' => $this->alphanumeric($payeeNote),
+            ],
+        ];
+
+        try {
+
+            $this->client->request('POST', $this->transactionUri,$options);
 
             return $momoTransactionId;
         } catch (RequestException $ex) {
-            dd($ex);
+
             throw new CollectionRequestException('Request to pay transaction - unsuccessful.', 0, $ex);
         }
     }

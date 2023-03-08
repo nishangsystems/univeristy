@@ -4,14 +4,16 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMtnMomoTokensTable extends Migration
+class CreateMomoapiTokenTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
     public function up()
     {
-        Schema::create('mtn_momo_tokens', function (Blueprint $table) {
+        Schema::create('momoapi_token', function (Blueprint $table) {
             $table->increments('id');
             $table->text('access_token');
             $table->text('refresh_token')->nullable();
@@ -29,9 +31,11 @@ class CreateMtnMomoTokensTable extends Migration
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
     public function down()
     {
-        Schema::drop('mtn_momo_tokens');
+        Schema::dropIfExists('momoapi_token');
     }
 }
