@@ -67,6 +67,7 @@ class TransactionController extends Controller
            $transaction->transaction_id = $momoTransactionId;
            $transaction->payment_id = $request->payment_id;
            $transaction->student_id = $request->student_id;
+           $transaction->semester_id = $request->semester_id ?? null;
         //    $transaction->callback_url = $request->callback_url;
            $transaction->save();
         //    return $momoTransactionId;
