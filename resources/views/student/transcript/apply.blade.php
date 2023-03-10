@@ -24,7 +24,7 @@
                             <th class="border-left border-right border-light">{{$rtx->current_price.' '.__('text.currency_cfa')}}</th>
                             <th class="border-left border-right border-light">{{$rtx->former_price.' '.__('text.currency_cfa')}}</th>
                             <th class="border-left border-right border-light">
-                                <a class="btn btn-sm btn-primary" href="{{route('student.transcript.apply', $rtx->id)}}">{{__('text.word_apply')}}</a>
+                                <a class="btn btn-sm btn-primary" href="{{route('student.transcript.apply', $rtx->id)}}?pid={{$charge_id??null}}">{{__('text.word_apply')}}</a>
                             </th>
                         </tr>
                     @endforeach
@@ -38,12 +38,18 @@
                 @csrf
                 <input type="hidden" name="student_id" value="{{auth()->id()}}">
                 <input type="hidden" name="payment_purpose" value="TRANSCRIPT">
+                <input type="hidden" name="purpose" value="TRANSCRIPT">
+                <input type="hidden" name="charge_id" value="{{request('pid') ?? null}}">
                 <input type="hidden" name="payment_id" value="{{request('config_id')}}">
-                <input type="hidden" name="amount" value="{{ $current ? $rtx->current_price : $rtx->former_price}}">
+                @if ($current)
+                <input type="hidden" name="amount" value="{{$rtx->current_price}}">
+                @else
+                <input type="hidden" name="amount" value="{{$rtx->former_price}}">
+                @endif
+                <input name="config_id" value="{{request('config_id')}}" type="hidden">
                 <div class="row my-2">
                     <label class="col-sm-3 col-md-2 text-capitalize">{{__('text.word_mode')}}</label>
                     <div class="col-sm-9 col-md-10">
-                        <input name="config_id" value="{{request('config_id')}}" type="hidden">
                         <label class="form-control text-capitalize">{{$rtx->mode.' ( '.$rtx->duration.trans_choice('text.word_day', 2).' ) - '}} @if($current) {{ $rtx->current_price }} @else {{ $rtx->former_price}} @endif {{__('text.currency_cfa')}}</label>
                     </div>
                 </div>
@@ -51,7 +57,7 @@
                 <div class="row my-2">
                     <label class="col-sm-3 col-md-2 text-capitalize">{{__('text.academic_year')}}</label>
                     <div class="col-sm-9 col-md-10">
-                        <select name="year_id" class="form-control">
+                        <select name="year_id" class="form-control" required>
                             <option></option>
                             @foreach (\App\Models\Batch::all() as $btch)
                                 <option value="{{$btch->id}}" {{$btch->id == $year ? 'selected' : ''}}>{{$btch->name}}</option>
