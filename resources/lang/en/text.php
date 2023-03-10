@@ -561,4 +561,9 @@ return [
     'word_sent'=>'sent',
     'word_recipients'=>'recipients',
     'select_recipients'=>'select recipients',
+    'platform_payments_template_text'=>'You are about to make a payment of :amount CFA being payment for :purpose for :semester :year',
+    'PLATFORM_CHARGES'=>'PLATFORM CHARGES',
+    'SEMESTER_RESULT_CHARGES'=>'SEMESTER RESULT CHARGES',
+    'TRANSCRIPT_APPLICATION_CHARGES'=>'TRANSCRIPT APPLICATION CHARGES',
+    'dublicate_charges_attempt'=>'Your are paying the same charges more than once. Attempt blocked'
 ];

@@ -45,7 +45,7 @@ $user = \Auth::user()
 
                 <div class="profile-info-row">
                     <div class="profile-info-name"> Class</div>
-                    @php($class = auth()->user()->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear()))
+                    @php($class = auth()->user()->_class())
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$class->program->name.' : '.__('text.word_level').' '.$class->level->level}}</span>
                     </div>

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\TransactionController;
 use App\Models\Batch;
 use App\Models\CampusSemesterConfig;
+use App\Models\Charge;
 use App\Models\ClassSubject;
 use App\Models\CourseNotification;
 use App\Models\Income;
@@ -14,6 +15,7 @@ use App\Models\Material;
 use App\Models\Notification;
 use App\Models\PayIncome;
 use App\Models\Payments;
+use App\Models\PlatformCharge;
 use App\Models\ProgramLevel;
 use App\Models\Resit;
 use App\Models\Result;
@@ -185,13 +187,32 @@ class HomeController extends Controller
 
     public function exam_result(Request $request)
     {
+        
         // return $request->all();
         $year = Batch::find($request->year ?? Helpers::instance()->getCurrentAccademicYear());
         $class = auth()->user()->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
+        
+        // check if semester result fee is set && that student has payed 
+        $amount = $semester->result_charges;
+        if($amount != null && $amount > 0){
+            $charge = Charge::where(['year_id'=>$year, 'semester_id'=>$semester->id, 'student_id'=>auth()->id(), 'type'=>'RESULTS'])->first();
+            if($charge == null){
+                return redirect(route('student.result.pay'));
+            }
+        }
+
         if($class == null){
             return back()->with('error', "No result found. Make sure you were admitted to this institution by or before the selected academic year");
         }
+
+        // CODE TO CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS; WILL BE COMMENTED OUT TILL IT SHOULD TAKE EFFECT
+        if(!(Helpers::instance()->has_paid_platform_charges(auth()->id(), $year) && Helpers::instance()->has_paid_result_charges(auth()->id(), $semester, $year))){
+            return back()->with('error', "You have not paid plaftorm or semester result charges for the selected semester");
+        }
+
+        // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
+        
         $data['title'] = "My Exam Result";
         $data['user'] = auth()->user();
         $data['semester'] = $semester;
@@ -1027,8 +1048,33 @@ class HomeController extends Controller
     public function apply_transcript()
     {
         # code...
-        $data['title'] = "Apply For Transcript";
-        return view('student.transcript.apply', $data);
+        // check if student is former, platform charges set and payed,
+        $class = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear());
+        if($class == null){
+            $_charges = Charge::where(['type'=>'TRANSCRIPT', 'student_id'=>auth()->id(), 'used'=>0])->orderBy('id', 'DESC')->get();
+            if($_charges->count() > 0){
+                $data['charge_id'] = $_charges->first()->id;
+                $data['title'] = "Apply For Transcript";
+                return view('student.transcript.apply', $data);                
+            }
+            return redirect(route('student.transcript.pay'));
+        } 
+        else{
+            $charge = PlatformCharge::first();
+            if($charge == null || $charge->yearly_amount == 0 || $charge->yearly_amount == null){
+                $data['title'] = "Apply For Transcript";
+                return view('student.transcript.apply', $data);
+            }else{
+                $charges = Charge::where(['type'=>'PLATFORM', 'student_id'=>auth()->id(), 'used'=>0])->orderBy('id', 'DESC')->get();
+                if($charges->count() > 0){
+                    $data['charge_id'] = $charges->first()->id;
+                    $data['title'] = "Apply For Transcript";
+                    return view('student.transcript.apply', $data);
+                }
+                else{return redirect(route('student.platform_charge.pay'));}
+            }
+        }
+
     }
 
     public function apply_save_transcript(Request $request)
@@ -1037,7 +1083,8 @@ class HomeController extends Controller
         $validator = Validator::make($request->all(), [
             'config_id'=>'required',
             'delivery_format'=>'required',
-            'tel'=>'required'
+            'tel'=>'required',
+            'amount'=>'required|numeric',
         ]);
         if($validator->fails()){
             return back()->with('error', $validator->errors()->first());
@@ -1054,15 +1101,20 @@ class HomeController extends Controller
         // create transcript application and save id for updates after payment is made
         $trans = new Transcript($data);
         $trans->save();
+        
+        if($request->charge_id != null){
+            $chge = Charge::find($request->charge_id);
+            $chge->used = true;
+            $chge->save();
+        }
+        // return $request->all();
         // save the id of the transcript application to session
-        session()->put('pending_transcript_id', $trans->id);
-        if(($tsId = TransactionController::makePayments($request)) != false){
-            $data['momoTransactionId'] = $tsId;
-            return view('student.payment_waiter', $data);
-        }
-        else{
-            return back()->with('error', 'Operation failed. Verify your data and try again later');
-        }
+        // session()->put('pending_transcript_id', $trans->id);
+        $_data = $request->all();
+        $_data['payment_id'] = $trans->id;
+        $req =$request->replace($_data);
+        // return $_data;
+        return $this->pay_fee_momo($req);
     }
 
     public function transcript_history()
@@ -1100,6 +1152,10 @@ class HomeController extends Controller
         return $pdf->download($fileName);
     }
 
+
+
+
+    // PAYMENT OF SCHOOL FEE, OTHER ITEMS, TRANSCRIPTS, RESIT; INTO THE SCHOOL ACCOUNT DIRECTLY
     public function pay_fee()
     {
         # code...
@@ -1199,7 +1255,7 @@ class HomeController extends Controller
                         "payment_id"=>$transaction->payment_id,
                         "student_id"=>$transaction->student_id,
                         "batch_id"=>$transaction->year_id,
-                        'unit_id'=>auth('student')->user()->_class($transaction->year_id)->id,
+                        'unit_id'=>Students::find($transaction->student_id)->_class($transaction->year_id)->id,
                         "amount"=>$transaction->amount,
                         "reference_number"=>$transaction->transaction_id,
                         'user_id'=>0
@@ -1213,7 +1269,7 @@ class HomeController extends Controller
                     $data = [
                         'income_id'=>$transaction->payment_id,
                         'batch_id'=>$transaction->year_id,
-                        'class_id'=>auth('student')->user()->_class($transaction->year_id)->id,
+                        'class_id'=>Students::find($transaction->student_id)->_class($transaction->year_id)->id,
                         'student_id'=>$transaction->student_id,
                         'user_id'=>0
                     ];
@@ -1221,7 +1277,7 @@ class HomeController extends Controller
                     return redirect(route('student.pay_others'))->with('success', 'Payment complete');
                     break;
                 case 'TRANSCRIPT':
-                    $transcript_id = session()->get('pending_transcript_id');
+                    $transcript_id = $transaction->payment_id;
                     if($transcript_id != null){
                         $transcript = Transcript::find($transcript_id);
                         $transcript->paid = true;
@@ -1245,7 +1301,7 @@ class HomeController extends Controller
             $transaction->save();
             switch($transaction->payment_purpose){
                 case 'TRANSCRIPT':
-                    DB::table('transcripts')->where(['student_id'=>auth()->id(), 'paid'=>0])->delete();
+                    DB::table('transcripts')->where(['student_id'=>$transaction->student_id, 'paid'=>0])->delete();
                     return redirect(route('student.transcript.history'))->with('error', 'Operation Failed');
                     break;
                 case 'TUTION':
@@ -1258,4 +1314,214 @@ class HomeController extends Controller
             return redirect(route('student.home'))->with('error', 'Operation failed.');
         }
     }
+
+
+
+    // PAYMENTS FOR PLATFORM CHARGES, SEMESTER RESULT CHARGES AND TRANSCRIPT CHARGES(FOR FORMER STUDENTS ONLY) INTO THE COMPANY's ACCOUNT
+
+    public function pay_semester_results(Request $request)
+    {
+        # code...
+        $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester(auth()->user()->_class()->id);
+        $charge = $semester->result_charges;
+        if($charge == 0){return back()->with('error', 'Semester result charges are not required.');}
+        if($charge == null){return back()->with('error', 'Semester result charges not set.');}
+        $data['title'] = "Pay Semester Result Charges";
+        $data['amount'] = $charge;
+        $data['purpose'] = 'RESULTS';
+        $data['year_id'] = $request->year_id ?? null;
+        $data['semester'] = $semester;
+        $data['semester_id'] = $request->semester_id ?? null;
+        $data['payment_id'] = $request->semester_id ?? null;
+        return view('student.platform.charges', $data);
+    }
+
+    public function pay_platform_charges(Request $request)
+    {
+        # code...
+        $semester = Helpers::instance()->getSemester(auth()->user()->_class()->id);
+        $charge = PlatformCharge::first();
+        if($charge == null || $charge->yearly_amount == null || $charge->yearly_amount == 0){return back()->with('error', 'Platform charges not set.');}
+        $data['title'] = "Pay Platform Charges";
+        $data['amount'] = $charge->yearly_amount;
+        $data['purpose'] = 'PLATFORM';
+        $data['year_id'] = $request->year_id ?? null;
+        $data['semester_id'] = $semester->id;
+        $data['semester'] = null;
+        $data['payment_id'] = $charge->id;
+        return view('student.platform.charges', $data);
+    }
+
+    public function pay_transcript_charges(Request $request)
+    {
+        # code...
+        $charges = Charge::where(['type'=>'TRANSCRIPT', 'student_id'=>auth()->id(), 'used'=>0])->orderBy('id', 'DESC')->get();
+        $c_class = auth()->user()->_class(Helpers::instance()->getCurrentAccademicYear());
+        if($c_class == null){
+            // dd($charges);
+            if($charges->count() > 0){
+                $data['charge_id'] = $charges->first()->id;
+                $data['title'] = "Apply For Transcript";
+                return view('student.transcript.apply', $data)->with('success', 'You have an unused transcript charges');
+            }else{
+                $charge = PlatformCharge::first();
+                if($charge == null || $charge->transcript_amount == null || $charge->transcript_amount == 0){return back()->with('error', 'Transcript charges not set.');}
+                $data['title'] = "Pay Transcript Charges";
+                $data['amount'] = $charge->transcript_amount;
+                $data['purpose'] = 'TRANSCRIPT';
+                $data['year_id'] = Helpers::instance()->getCurrentAccademicYear();
+                $data['payment_id'] = 0;
+                return view('student.platform.charges', $data);
+            }
+        }
+
+        // Check if there are platform charges and if the student has payed
+        $plcharge = PlatformCharge::first();
+        if($plcharge == null || $plcharge->yearly_amount == 0 || $plcharge->yearly_amount == null){
+            $data['title'] = "Apply For Transcript";
+            return view('student.transcript.apply', $data);
+        }
+        else{
+            // check if student has payed platform charges
+            if($charges->count() == 0 || $charges->first()->yearly_amount == 0 || $charges->first()->yearly_amount == null){
+                return redirect(route('student.platform_charge.pay'))->with('message', 'Pay PLATFORM CHARGES to proceed');
+            }
+            $data['title'] = "Apply For Transcript";
+            $data['charge_id'] = $charges->first()->id;
+            return view('student.transcript.apply', $data);
+        }
+    }
+
+
+    public function pay_charges_save(Request $request)
+    {
+        // return $request->all();
+        # code...
+        $validator = Validator::make($request->all(),
+        [
+            'tel'=>'required|numeric|min:9',
+            'amount'=>'required|numeric',
+            // 'callback_url'=>'required|url',
+            'student_id'=>'required|numeric',
+            'year_id'=>'required|numeric',
+            'payment_purpose'=>'required',
+            'payment_id'=>'required|numeric'
+        ]);
+
+
+        if ($validator->fails()) {
+            # code...
+            return back()->with('error', $validator->errors()->first());
+        }
+
+        try {
+            //code...
+            $data = $request->all();
+            $response = Http::post(env('CHARGES_PAYMENT_URL'), $data);
+            // dd($response->body());
+            if(!$response->ok()){
+                // throw $response;
+                return back()->with('error', 'Operation failed. '.$response->__toString());
+                // dd($response->body());
+            }
+            
+            if($response->ok()){
+            
+                $_data['title'] = "Pending Confirmation";
+                $_data['transaction_id'] = $response->collect()->first();
+                // return $_data;
+                return view('student.platform.payment_waiter', $_data);
+            }
+        } 
+        catch(ConnectException $e){
+            return back()->with('error', $e->getMessage());
+        }
+        catch (Throwable $th) {
+            return back()->with('error', $th->getMessage());
+            // throw $th;
+        }
+    }
+
+    public function complete_charges_transaction(Request $request, $ts_id)
+    {
+        # code...
+
+        $transaction = Transaction::where(['transaction_id'=>$ts_id])->first();
+        if($transaction != null){
+            // update transaction
+            $transaction->status = "SUCCESSFUL";
+            $transaction->is_charges = true;
+            $transaction->financialTransactionId = $request->financialTransactionId;
+            $transaction->save();
+            // return $transaction;
+            // update payment record
+            // CHECK PAYMENT PURPOSE, EITHER 
+            switch($transaction->payment_purpose){
+                case 'PLATFORM':
+                case 'RESULTS':
+                    $charge = new Charge();
+                    $data = [
+                        "student_id"=>$transaction->student_id,
+                        "year_id"=>$transaction->year_id,
+                        'semester_id'=>$transaction->semester_id ?? Helpers::instance()->getSemester(Students::find($transaction->student_id)->_class($transaction->year_id)),
+                        'type'=>$transaction->payment_purpose,
+                        "item_id"=>$transaction->payment_id,
+                        "amount"=>$transaction->amount,
+                        "financialTransactionId"=>$request->financialTransactionId,
+                    ];
+                    $charge->fill($data);
+                    $charge->save();
+                    return redirect($transaction->payment_purpose == 'PLATFORM' ? route('student.transcript.apply') : route('student.result.exam'))->with('success', 'Payment complete');
+                    break;
+
+                case 'TRANSCRIPT':
+                    // set used to 0 on transactions to indicate that the transcript associated to the transaction is not yet done.
+
+
+                    $charge = new Charge();
+                    $data = [
+                        "student_id"=>$transaction->student_id,
+                        "year_id"=>$transaction->year_id,
+                        'semester_id'=>$transaction->semester_id ?? null,
+                        'type'=>$transaction->payment_purpose,
+                        "item_id"=>$transaction->payment_id,
+                        "amount"=>$transaction->amount,
+                        "financialTransactionId"=>$request->financialTransactionId,
+                        'used'=>false
+                    ];
+                    $charge->fill($data);
+                    $charge->save();
+                    $_data['title'] = "Apply For Transcript";
+                    $_data['charge_id'] = $charge->id;
+                    return view('student.transcript.apply', $_data)->with('success', 'Payment complete');
+                    break;
+
+            }
+        }
+    }
+
+    public function failed_charges_transaction(Request $request, $ts_id)
+    {
+        # code...
+        $transaction = Transaction::where(['transaction_id'=>$ts_id])->first();
+        if($transaction != null){
+            // update transaction
+            $transaction->status = "FAILED";
+            $transaction->financialTransactionId = $request->financialTransactionId;
+            $transaction->is_charges = 'true';
+            $transaction->save();
+            switch($transaction->payment_purpose){
+                case 'TRANSCRIPT':
+                case 'RESULTS':
+                case 'PLATFORM':
+                    // DB::table('transcripts')->where(['student_id'=>auth()->id(), 'paid'=>0])->delete();
+                    return redirect(route('student.home'))->with('error', 'Operation Failed');
+                    break;
+            }
+
+            // redirect user
+            return redirect(route('student.home'))->with('error', 'Operation failed.');
+        }
+    }
+
 }

@@ -10,7 +10,7 @@ class Semester extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'background_id', 'sem', 'program_id', 'ca_latest_date', 'exam_latest_date'];
+    protected $fillable = ['name', 'background_id', 'sem', 'program_id', 'ca_latest_date', 'exam_latest_date', 'result_charges'];
 
     public function background()
     {

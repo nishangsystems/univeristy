@@ -3,11 +3,13 @@
 namespace App\Helpers;
 
 use App\Models\Batch;
+use App\Models\Charge;
 use App\Models\File;
 use App\Models\ProgramLevel;
 use App\Models\Resit;
 use App\Models\Result;
 use App\Models\SchoolUnits;
+use App\Models\Students;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -294,6 +296,55 @@ class Helpers
             return $resit;
         }
         return null;
+    }
+
+    public function has_paid_platform_charges($student_id, $year_id = null)
+    {
+        # code...
+        // if current student, he must have paid platform charges
+        $year = $year_id == null ? $this->getCurrentAccademicYear() : $year_id;
+        $current_class = Students::find($student_id)->_class($year);
+        if($current_class == null){
+            // this is a former student; doesn't have to pay platform charges
+            return true;
+        }else{
+            // check if student has payed platform charges
+            if(Charge::where(['year_id'=>$year, 'student_id'=>$student_id, 'type'=>'PLATFORM'])->count() > 0){
+                // student has paid platform charges
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public function has_paid_result_charges($student_id, $semester_id, $year_id)
+    {
+        # code...
+        $year = $year_id;
+        // $class = Students::find($student_id)->_class();
+
+
+        // check if student has payed result charges for the given accademic year
+        if(Charge::where(['year_id'=>$year, 'student_id'=>$student_id, 'type'=>'RESULTS', 'semester_id'=>$semester_id])->count() > 0){
+            // student has paid platform charges
+            return true;
+        }
+        return false;
+    }
+
+    public function has_paid_transcript_charges($student_id, $semester_id, $year_id)
+    {
+        # code...
+        $year = $year_id;
+        // $class = Students::find($student_id)->_class();
+
+
+        // check if student has payed result charges for the given accademic year
+        if(Charge::where(['year_id'=>$year, 'student_id'=>$student_id, 'type'=>'RESULTS', 'semester_id'=>$semester_id])->count() > 0){
+            // student has paid platform charges
+            return true;
+        }
+        return false;
     }
 
 }
