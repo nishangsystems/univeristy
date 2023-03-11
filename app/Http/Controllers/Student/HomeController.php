@@ -563,9 +563,11 @@ class HomeController extends Controller
         // }
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
         $data['access'] =  Helpers::instance()->resit_available(auth()->user()->_class($c_year)->id);
-        $data['resit_id'] =  Helpers::instance()->available_resit(auth()->user()->_class($c_year)->id)->id;
-        // dd($data['access']);
-        return view('student.resit.register', $data);
+        if($data['access']){
+            $data['resit_id'] =  Helpers::instance()->available_resit(auth()->user()->_class($c_year)->id)->id;
+            // dd($data['access']);
+            return view('student.resit.register', $data);
+        }else{return back()->with('error', "Resit not open.");}
     }
 
     public function form_b()
@@ -1346,7 +1348,7 @@ class HomeController extends Controller
         # code...
         $semester = Helpers::instance()->getSemester(auth()->user()->_class()->id);
         $charge = PlatformCharge::first();
-        if($charge == null || $charge->yearly_amount == null || $charge->yearly_amount == 0){return back()->with('error', 'Platform charges not set.');}
+        // if($charge == null || $charge->yearly_amount == null || $charge->yearly_amount == 0){return back()->with('error', 'Platform charges not set.');}
         $data['title'] = "Pay Platform Charges";
         $data['amount'] = $charge->yearly_amount;
         $data['purpose'] = 'PLATFORM';
