@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\Batch;
 use App\Models\Charge;
 use App\Models\File;
+use App\Models\PlatformCharge;
 use App\Models\ProgramLevel;
 use App\Models\Resit;
 use App\Models\Result;
@@ -298,18 +299,21 @@ class Helpers
         return null;
     }
 
-    public function has_paid_platform_charges($student_id, $year_id = null)
+    public function has_paid_platform_charges($year_id = null)
     {
         # code...
         // if current student, he must have paid platform charges
         $year = $year_id == null ? $this->getCurrentAccademicYear() : $year_id;
-        $current_class = Students::find($student_id)->_class($year);
+        $current_class = auth()->user()->_class($year);
+        $count = PlatformCharge::count();
+        if($count == 0){return true;}
         if($current_class == null){
+            // dd(auth()->user());
             // this is a former student; doesn't have to pay platform charges
             return true;
         }else{
             // check if student has payed platform charges
-            if(Charge::where(['year_id'=>$year, 'student_id'=>$student_id, 'type'=>'PLATFORM'])->count() > 0){
+            if(Charge::where(['year_id'=>$year, 'student_id'=>auth()->id(), 'type'=>'PLATFORM'])->count() > 0){
                 // student has paid platform charges
                 return true;
             }

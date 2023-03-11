@@ -469,7 +469,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     Route::post('reset_password', 'Controller@reset_password_save')->name('reset_password');
 });
 
-Route::prefix('student')->name('student.')->middleware('isStudent')->group(function () {
+Route::prefix('student')->name('student.')->middleware(['isStudent'])->group(function () {
     Route::get('', 'Student\HomeController@index')->name('home');
     Route::get('edit_profile', 'Student\HomeController@edit_profile')->name('edit_profile');
     Route::post('update_profile', 'Student\HomeController@update_profile')->name('update_profile');
@@ -540,6 +540,7 @@ Route::prefix('student')->name('student.')->middleware('isStudent')->group(funct
     Route::get('result/pay', 'Student\HomeController@pay_semester_results')->name('result.pay');
     Route::get('transcript/pay', 'Student\HomeController@pay_transcript_charges')->name('transcript.pay');
 });
+Route::get('platform/pay', 'Student\HomeController@pay_platform_charges')->name('platform_charge.pay');
 Route::get('student/charges/complete_transaction/{ts_id}', 'Student\HomeController@complete_charges_transaction')->name('student.charges.complete');
 Route::get('student/charges/failed_transaction/{ts_id}', 'Student\HomeController@failed_charges_transaction')->name('student.charges.failed');
 

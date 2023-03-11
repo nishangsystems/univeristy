@@ -2,7 +2,7 @@
 @section('section')
 <div class="py-3">
 
-    @if($access && ((isset($on_time) && $on_time) || !isset($on_time)))
+    @if($access)
         <div class="form-group">
 
             <div class="rounded py-3 px-1 bg-light">
