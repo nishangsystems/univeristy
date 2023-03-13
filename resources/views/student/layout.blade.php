@@ -204,7 +204,7 @@
                 <b class="arrow"></b>
             </li>
 
-           <li>
+           <!-- <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-key"></i>
                     <span class="menu-text">{{__('text.online_payments')}}</span>
@@ -213,7 +213,7 @@
 
 
                 <ul class="submenu">
-                    <!-- <li>
+                    <li>
                         <a href="{{route('student.pay_fee')}}" class="text-capitalize">
                             <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
                             {{__('text.pay_fee')}}
@@ -228,7 +228,7 @@
                             {{__('text.other_payments')}}
                         </a>
                         <b class="arrow"></b>
-                    </li> -->
+                    </li>
 
 
                     <li>
@@ -249,7 +249,7 @@
                     </li>
 
                 </ul>
-            </li>
+            </li> -->
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-money"></i>
