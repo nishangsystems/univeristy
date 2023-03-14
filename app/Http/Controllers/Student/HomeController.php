@@ -1470,7 +1470,7 @@ class HomeController extends Controller
                     $data = [
                         "student_id"=>$transaction->student_id,
                         "year_id"=>$transaction->year_id,
-                        'semester_id'=>$transaction->semester_id ?? Helpers::instance()->getSemester(Students::find($transaction->student_id)->_class($transaction->year_id)),
+                        'semester_id'=>$transaction->semester_id ?? Helpers::instance()->getSemester(Students::find($transaction->student_id)->_class($transaction->year_id)->id),
                         'type'=>$transaction->payment_purpose,
                         "item_id"=>$transaction->payment_id,
                         "amount"=>$transaction->amount,
