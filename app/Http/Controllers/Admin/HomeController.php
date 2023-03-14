@@ -15,6 +15,7 @@ use App\Models\Resit;
 use App\Models\SchoolUnits;
 use App\Models\Semester;
 use App\Models\Students;
+use App\Models\StudentSubject;
 use App\Models\Subjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config as FacadesConfig;
@@ -334,6 +335,12 @@ class HomeController  extends Controller
         # code...
         $resit =  Resit::find($resit_id);
         $data['title'] = "Course List For " . $resit->name();
+        $data['courses'] = Subjects::join('student_courses', ['student_courses.course_id'=>'subjects.id'])
+                    ->where(['student_courses.resit_id'=>$resit_id, 'student_courses.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
+                    ->join('students', ['students.id'=>'student_courses.student_id'])
+                    ->where(['students.campus_id'=>auth()->user()->campus_id])
+                    ->get(['subjects.*', 'resit_id', 'year_id']);
+        // dd($data['courses']);
         $data['resit'] = $resit;
         return view('admin.resit.course_list', $data);
     }
@@ -349,6 +356,7 @@ class HomeController  extends Controller
             $pdf = Pdf::loadView('admin.resit._course_list_print', $data);
             return $pdf->download($data['title'] . '.pdf');
         }
+        // dd($data['subjects']);
         return view('admin.resit.course_list_print', $data);
     }
 }
