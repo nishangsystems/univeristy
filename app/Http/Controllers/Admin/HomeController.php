@@ -339,9 +339,13 @@ class HomeController  extends Controller
                     ->where(['student_courses.resit_id'=>$resit_id, 'student_courses.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
                     ->join('students', ['students.id'=>'student_courses.student_id'])
                     ->where(['students.campus_id'=>auth()->user()->campus_id])
-                    ->get(['subjects.*', 'resit_id', 'year_id']);
+                    ->select(['subjects.*', 'resit_id', 'year_id'])->orderBy('subjects.name')->distinct()->get();
         // dd($data['courses']);
         $data['resit'] = $resit;
+        if($request->has('print') && $request->print == 1){
+            $pdf = Pdf::loadView('admin.resit.course_list_downloadable', $data);
+            return $pdf->download($data['title'] . '.pdf');
+        }
         return view('admin.resit.course_list', $data);
     }
 
@@ -350,7 +354,9 @@ class HomeController  extends Controller
         # code...
         $subject = Subjects::find($request->subject_id);
         $data['title'] = "Resit Course List For [ ".$subject->code .' ] '. $subject->name.' - '.Resit::find($request->resit_id)->year->name;
-        $data['subjects'] = Subjects::find($request->subject_id)->student_subjects()->where(['resit_id' => $request->resit_id])->get();
+        $data['subjects'] = Subjects::find($request->subject_id)->student_subjects()->where(['resit_id' => $request->resit_id])
+                        ->join('students',  ['students.id'=>'student_courses.student_id'])
+                        ->orderBy('students.name')->get(['student_courses.*']);
         if($request->print == 1){
 
             $pdf = Pdf::loadView('admin.resit._course_list_print', $data);

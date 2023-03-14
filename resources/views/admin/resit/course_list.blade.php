@@ -1,7 +1,7 @@
 @extends('admin.layout')
 @section('section')
-<div class="py-3">
-    <input class="form-control border border-dark rounded" id="search_course" placeholder="search course by course code or course title" oninput="changed()">
+<div class="py-3 d-flex justify-content-end">
+    <a class="btn btn-sm btn-primary rounded text-capitalize" href="{{Request::url()}}?print=1" target="new">{{__('text.download_statistics')}}</a>
 </div>
 <div class="py-2">
     <table class="table">
