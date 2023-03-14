@@ -24,7 +24,7 @@ class StudentMiddleware
     {
         if(Auth::user() == null){
             return redirect(route('login'));
-          }elseif (!auth()->guard('student')->check()) //If user does //not have this permission
+          }elseif (!auth('student')->check()) //If user does //not have this permission
             {
                 return redirect(route('login'));
             }
