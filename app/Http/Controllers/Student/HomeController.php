@@ -198,7 +198,7 @@ class HomeController extends Controller
         if($amount != null && $amount > 0){
             $charge = Charge::where(['year_id'=>$year, 'semester_id'=>$semester->id, 'student_id'=>auth()->id(), 'type'=>'RESULTS'])->first();
             if($charge == null){
-                return redirect(route('student.result.pay'));
+                return redirect(route('student.result.pay'))->with('error', 'Pay Semester Result Charges to continue');
             }
         }
 
@@ -207,9 +207,9 @@ class HomeController extends Controller
         }
 
         // CODE TO CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS; WILL BE COMMENTED OUT TILL IT SHOULD TAKE EFFECT
-        if(!(Helpers::instance()->has_paid_platform_charges(auth()->id(), $year) && Helpers::instance()->has_paid_result_charges(auth()->id(), $semester, $year))){
-            return back()->with('error', "You have not paid plaftorm or semester result charges for the selected semester");
-        }
+        // if(){
+        //     return back()->with('error', "You have not paid plaftorm or semester result charges for the selected semester");
+        // }
 
         // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
         
