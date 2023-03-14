@@ -569,4 +569,5 @@ return [
     'mtn_mobile_money'=>'MTN Mobile Money',
     'orange_money'=>'Orange Money',
     'pay_with'=>'pay with',
+    'download_statistics'=>'download statistics',
 ];
