@@ -360,7 +360,7 @@ class HomeController  extends Controller
         if($request->print == 1){
 
             $pdf = Pdf::loadView('admin.resit._course_list_print', $data);
-            return $pdf->download($data['title'] . '.pdf');
+            return $pdf->download("Resit Statistics For [ ".$subject->code .' ] '. $subject->name.' - '.Resit::find($request->resit_id)->year->name . '.pdf');
         }
         // dd($data['subjects']);
         return view('admin.resit.course_list_print', $data);

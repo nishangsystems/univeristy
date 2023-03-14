@@ -43,7 +43,7 @@
                 <!-- check if student has already paid the request  -->
                 <div class="container">
 
-                    <div class="text-center text-info h3">
+                    <div class="text-center text-danger h3">
                         @switch($purpose)
                             @case('PLATFORM')
                                 {{__('text.platform_payments_template_text', ['purpose'=>__('text.PLATFORM_CHARGES'), 'amount'=>$amount, 'year'=>\App\Models\Batch::find($year_id)->name, 'semester'=>''])}}
