@@ -39,6 +39,19 @@
                 </div>
             </div>
 
+            @if (\App\Models\SchoolUnits::find($parent_id)->unit_id == 3)
+                <div class="form-group ">
+                    <label  class="control-label col-lg-2 text-capitalize">{{__('text.word_department')}}</label>
+                    <div class="col-lg-10">
+                        <select name="parent_id" class="form-control" required>
+                            @foreach (\App\Models\SchoolUnits::where('unit_id', '=', 3)->orderBy('name')->get() as $unit)
+                                <option value="{{$unit->id}}" {{$unit->id == $parent_id ? 'selected' : ''}}>{{$unit->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>                
+            @endif
+
             <div class="form-group">
                 <div class="col-lg-offset-2 col-lg-10 text-capitalize">
                     <button class="btn btn-xs btn-theme" type="submit">{{__('text.word_save')}}</button>

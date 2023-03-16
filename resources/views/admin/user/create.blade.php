@@ -33,7 +33,7 @@
                         @if(\Auth::user()->campus_id != null)
                             <input type="hidden" name="campus" id="" value="{{\Auth::user()->campus_id}}">
                         @endif
-                        <select class=" form-control" name="campus" type="text" required {{\Auth::user()->campus_id != null ? 'disabled' : ''}}>
+                        <select class=" form-control" name="campus" type="text" {{\Auth::user()->campus_id != null ? 'readonly' : ''}}>
                             <option value="" selected>{{__('text.word_campus')}}</option>
                             @foreach(\App\Models\Campus::all()  as $cmps)
                                 <option value="{{$cmps->id}}" {{\Auth::user()->campus_id == $cmps->id ? 'selected' : ''}}>{{$cmps->name}}</option>

@@ -2,7 +2,7 @@
 @section('section')
     @php
         $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-        $current = auth()->user()->_class($year) != null;
+        $current = auth('student')->user()->_class($year) != null;
     @endphp
     @if (request('config_id') == null)
         <div class="my-2">
@@ -36,7 +36,7 @@
         <div class="py-3">
             <form method="post">
                 @csrf
-                <input type="hidden" name="student_id" value="{{auth()->id()}}">
+                <input type="hidden" name="student_id" value="{{auth('student')->id()}}">
                 <input type="hidden" name="payment_purpose" value="TRANSCRIPT">
                 <input type="hidden" name="purpose" value="TRANSCRIPT">
                 <input type="hidden" name="charge_id" value="{{request('pid') ?? null}}">
@@ -81,14 +81,14 @@
                 <div class="row my-2">
                     <label class="col-sm-3 col-md-2 text-capitalize">{{__('text.word_phone')}}</label>
                     <div class="col-sm-9 col-md-10">
-                        <input type="tel" class="form-control" name="contact" required value="{{auth()->user()->phone ?? ''}}">
+                        <input type="tel" class="form-control" name="contact" required value="{{auth('student')->user()->phone ?? ''}}">
                     </div>
                 </div>
                 
                 <div class="row my-2">
                     <label class="col-sm-3 col-md-2 text-capitalize">{{__('text.momo_number')}}</label>
                     <div class="col-sm-9 col-md-10">
-                        <input type="tel" class="form-control" name="tel" required value="{{auth()->user()->phone ?? ''}}">
+                        <input type="tel" class="form-control" name="tel" required value="{{auth('student')->user()->phone ?? ''}}">
                     </div>
                 </div>
 

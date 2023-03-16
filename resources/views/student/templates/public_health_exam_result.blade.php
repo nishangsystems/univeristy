@@ -2,10 +2,10 @@
 @section('section')
 @php
     $header = \App\Helpers\Helpers::instance()->getHeader();
-    $program_name = \App\Models\ProgramLevel::find(auth()->user()->program_id)->program()->first()->name;
+    $program_name = \App\Models\ProgramLevel::find(auth('student')->user()->program_id)->program()->first()->name;
     $current_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
-    $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id)->id;
-    $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->program_id)->name;
+    $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->program_id)->id;
+    $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->program_id)->name;
     $flag = true;
 @endphp
     @if($access == true)

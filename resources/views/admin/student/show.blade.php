@@ -1,6 +1,9 @@
 @extends('admin.layout')
 
 @section('section')
+@php
+    $class = $user->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear()) ?? $user->_class()
+@endphp
 <div>
     <div id="user-profile-1" class="user-profile row">
         <div class=" col-md-6 center">
@@ -100,7 +103,7 @@
                     <div class="profile-info-name text-capitalize"> {{__('text.word_class')}}</div>
 
                     <div class="profile-info-value">
-                        <span class="editable" id="username"> {{$user->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name()}}</span>
+                        <span class="editable" id="username"> {{$class->name()}}</span>
                     </div>
                 </div>
 
@@ -109,6 +112,26 @@
                 </div>
             </div>
             <div class="space-20"></div>
+            
+                    <div class="py-3">
+                        <table class="table adv-table">
+                            <thead class="text-capitalize">
+                                <th>##</th>
+                                <th>{{__('text.academic_year')}}</th>
+                                <th>{{__('text.word_class')}}</th>
+                            </thead>
+                            <tbody>
+                                @php($k = 1)
+                                @foreach ($user->classes()->get() as $st_class)
+                                    <tr>
+                                        <td>{{$k++}}</td>
+                                        <td>{{$st_class->year->name}}</td>
+                                        <td>{{$st_class->class->name()}}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
         </div>
     </div>
 </div>

@@ -189,6 +189,7 @@ class ProgramController extends Controller
             $unit->unit_id = $request->input('type');
             $unit->prefix = $request->input('prefix');
             $unit->suffix = $request->input('suffix');
+            $unit->parent_id = $request->input('parent_id');
             $unit->save();
             DB::commit();
 

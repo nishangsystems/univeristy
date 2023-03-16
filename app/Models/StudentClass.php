@@ -30,4 +30,10 @@ class StudentClass extends Model
     {
         return $this->hasMany(PayIncome::class, 'student_class_id');
     }
+
+    public function year()
+    {
+        # code...
+        return $this->belongsTo(Batch::class, 'year_id');
+    }
 }

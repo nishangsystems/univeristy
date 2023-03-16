@@ -53,20 +53,35 @@ class RolesController extends Controller{
 
     public function destroy(Request $request, $id)
     {
-        return $id;
+        // return $id;
         if ($request->user()->can('manage_roles')) {
             $role = Role::find($id);
+            // return $role;
+            // check if authenticated user is not deleting his/her role
+            // dd($role->users);
+            if($role->users()->where('users.id', auth()->id())->count() > 0){
+                return back()->with('error', 'You can not delete this role because you are a use in it');
+            }
             if($role != null){
+                // delete all permissions associated to the role being deleted
                 foreach ($role->permissionsR as $key => $value) {
                     $value->delete();
+                }
+                // delete all user-roles associated to the role being deleted
+                foreach ($role->users as $key => $user) {
+                    # code...
+                    $user->delete();
                 }
                 $role->delete();
             }
         }
-        // return redirect()->to(route('admin.roles.index'));
+        return back()->with('success', 'Done');
     }
 
     public function edit(Request $request, $slug){
+        if(!auth()->user()->can('manage_permissions')){
+            return redirect(route('admin.roles.index'))->with('error', 'Operation not allowed');
+        }
         $data['role'] = \App\Models\Role::whereSlug($slug)->first();
         if(!$data['role']){
             abort(404);

@@ -2,7 +2,7 @@
 @section('section')
 <div class="py-1">
 
-    <div class="py-2 text-center h4">{{'[ '.auth()->user()->matric.' ] - '.auth()->user()->name}}</div>
+    <div class="py-2 text-center h4">{{'[ '.auth('student')->user()->matric.' ] - '.auth('student')->user()->name}}</div>
     <table class="table">
         <thead class="text-capitalize bg-secondary">
             <th class=" border-left border-right border-light text-dark">#</th>

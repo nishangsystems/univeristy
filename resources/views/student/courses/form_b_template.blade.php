@@ -81,11 +81,11 @@
 </head>
 <body>
         @php
-            $program_name = \App\Models\ProgramLevel::find(auth()->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->name;
-            $faculty = \App\Models\ProgramLevel::find(auth()->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->parent->parent;
+            $program_name = \App\Models\ProgramLevel::find(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->name;
+            $faculty = \App\Models\ProgramLevel::find(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->parent->parent;
             $current_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
-            $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->id;
-            $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->name;
+            $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->id;
+            $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->name;
             $flag = true;
         @endphp
             <div class=""id="table_____">

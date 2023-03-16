@@ -286,6 +286,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('permissions', 'Admin\RolesController@permissions')->name('roles.permissions');
     Route::get('assign_role', 'Admin\RolesController@rolesView')->name('roles.assign');
     Route::post('assign_role', 'Admin\RolesController@rolesStore')->name('roles.assign.post');
+    Route::post('roles/destroy/{id}', 'Admin\RolesController@destroy')->name('roles.destroy');
     Route::get('school/debts', 'Admin\SchoolDebtsController@index')->name('debts.schoolDebts');
     Route::post('school/debts', 'Admin\SchoolDebtsController@getStudentsWithDebts')->name('debts.getStudentWithDebts');
     Route::get('school/debts/{id}', 'Admin\SchoolDebtsController@getStudentDebts')->name('debts.showDebts');
@@ -469,7 +470,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     Route::post('reset_password', 'Controller@reset_password_save')->name('reset_password');
 });
 
-Route::prefix('student')->name('student.')->middleware(['isStudent'])->group(function () {
+Route::prefix('student')->name('student.')->middleware('isStudent')->group(function () {
     Route::get('', 'Student\HomeController@index')->name('home');
     Route::get('edit_profile', 'Student\HomeController@edit_profile')->name('edit_profile');
     Route::post('update_profile', 'Student\HomeController@update_profile')->name('update_profile');
@@ -539,6 +540,8 @@ Route::prefix('student')->name('student.')->middleware(['isStudent'])->group(fun
     Route::post('charges/pay', 'Student\HomeController@pay_charges_save')->name('charge.pay')->withoutMiddleware('isStudent');
     Route::get('result/pay', 'Student\HomeController@pay_semester_results')->name('result.pay');
     Route::get('transcript/pay', 'Student\HomeController@pay_transcript_charges')->name('transcript.pay');
+
+    Route::get('online_payments/history', 'Student\HomeController@online_payment_history')->name('online.payments.history');
 });
 // Route::post('student/charges/pay', 'Student\HomeController@pay_charges_save')->name('student.charge.pay');
 Route::get('platform/pay', 'Student\HomeController@pay_platform_charges')->name('platform_charge.pay');

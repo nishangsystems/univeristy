@@ -239,13 +239,13 @@ class StudentController extends Controller
                 // create student class (check to be sure student class doesn't already exist for current academic year before creating one)
                 $classes = StudentClass::where(['student_id' => $student->id])
                     ->where(['class_id' => $request->program_id])
-                    ->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()]);
+                    ->where(['year_id' => $request->admission_batch_id]);
                 
                 $classes->count() == 0 ?
                 StudentClass::create([
                     'student_id' => $student->id,
                     'class_id' => $request->program_id,
-                    'year_id' => Helpers::instance()->getCurrentAccademicYear()
+                    'year_id' => $request->admission_batch_id
                 ]):null;
     
                 DB::commit();
@@ -334,9 +334,9 @@ class StudentController extends Controller
             $input = $request->all();
             $student = Students::find($id);
             $student->update($input);
-            $class = StudentClass::where('student_id', $student->id)->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first();
-            $class->class_id = $request->program_id;
-            $class->save();
+            // $class = StudentClass::where('student_id', $student->id)->where('year_id', $request)->first();
+            // $class->class_id = $request->program_id;
+            // $class->save();
             DB::commit();
             return redirect()->back()->with('success', "Student saved successfully !");
         } catch (\Exception $e) {

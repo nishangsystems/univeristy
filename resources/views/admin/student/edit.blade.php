@@ -6,6 +6,7 @@
             <form class="form-horizontal" role="form" method="POST" action="{{route('admin.student.update',$student->id)}}">
                 <input name="type" value="{{request('type','teacher')}}" type="hidden"/>
                 <input name="_method" value="put" type="hidden"/>
+                <input name="year" value="{{$student->admission_batch_id}}" type="hidden"/>
                 <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.personal_information')}}</h5>
                 @csrf
                 <div class="form-group @error('name') has-error @enderror">

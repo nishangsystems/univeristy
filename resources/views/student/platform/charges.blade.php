@@ -2,7 +2,7 @@
 @section('section')
 @php
     $c_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-    $c_semester = \App\Helpers\Helpers::instance()->getSemester(auth()->user()->_class()->id);
+    $c_semester = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->_class()->id);
     if($purpose == 'TRANSCRIPT'){
         $year = $c_year;
     }
@@ -24,7 +24,7 @@
                         <label class="text-capitalize col-sm-3">{{__('text.word_semester')}}</label>
                         <div class="col-sm-9"><select class="form-control" name="semester_id" required>
                             <option>----------</option>
-                            @foreach (auth()->user()->_class()->program->background->semesters as $sem)
+                            @foreach (auth('student')->user()->_class()->program->background->semesters as $sem)
                                 <option value="{{$sem->id}}">{{$sem->name}}</option>
                             @endforeach
                         </select></div>
@@ -35,9 +35,9 @@
                 </div>
             </form>
         @else
-            @if ($purpose == 'RESULTS' && (\App\Models\Charge::where(['year_id'=>$year_id, 'semester_id'=>$semester->id, 'student_id'=>auth()->id(), 'type'=>'RESULTS'])->count() > 0))
+            @if ($purpose == 'RESULTS' && (\App\Models\Charge::where(['year_id'=>$year_id, 'semester_id'=>$semester->id, 'student_id'=>auth('student')->id(), 'type'=>'RESULTS'])->count() > 0))
                 <div class="text-center py-3 h4 text-info">{{__('text.dublicate_charges_attempt')}}</div>
-            @elseif ($purpose == 'PLATFORM' && (\App\Models\Charge::where(['year_id'=>$year_id, 'student_id'=>auth()->id(), 'type'=>'PLATFORM'])->count() > 0))
+            @elseif ($purpose == 'PLATFORM' && (\App\Models\Charge::where(['year_id'=>$year_id, 'student_id'=>auth('student')->id(), 'type'=>'PLATFORM'])->count() > 0))
                 <div class="text-center py-3 h4 text-info">{{__('text.dublicate_charges_attempt')}}</div>
             @else
                 <!-- check if student has already paid the request  -->
@@ -64,7 +64,7 @@
                         <!-- SET REQUIRED HIDDEN INPUT FIELDS HERE -->
                         @csrf
                         <input type="hidden" name="payment_purpose" value="{{$purpose}}">
-                        <input type="hidden" name="student_id" value="{{auth()->id()}}">
+                        <input type="hidden" name="student_id" value="{{auth('student')->id()}}">
                         <input type="hidden" name="payment_id" value="{{$payment_id}}">
                         <input type="hidden" name="amount" value="{{$amount}}">
                         <input type="hidden" name="year_id" value="{{$year_id}}">
@@ -79,7 +79,7 @@
                         <div class="row my-4 py-3">
                             <label class="col-sm-3 text-capitalize">{{__('text.payment_number')}}</label>
                             <div class="col-sm-9">
-                                <input class="form-control" type="tel" name="tel" value="{{auth()->user()->phone}}">
+                                <input class="form-control" type="tel" name="tel" value="{{auth('student')->user()->phone}}">
                             </div>
                         </div>
                         <div class="row my-4 py-3">
