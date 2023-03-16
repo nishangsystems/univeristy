@@ -21,9 +21,9 @@
                     <td>{{$schl->contact}}</td>
                     <td>{{$schl->address}}</td>
                     <td class="d-flex justify-content-end">
-                        <span><a href="{{route('admin.schools.edit', $schl->id)}}" class="btn btn-sm btn-primary mx-1">edit</a></span>
-                        <span><a href="{{route('admin.schools.preview', $schl->id)}}" class="btn btn-sm btn-success mx-1">details</a></span>
-                        <span><a href="{{route('admin.schools.delete', $schl->id)}}" class="btn btn-sm btn-danger mx-1">delete</a></span>
+                        <span><a href="{{route('admin.schools.edit', $schl->id)}}" class="btn btn-sm btn-primary mx-1">{{__('text.word_edit')}}</a></span>
+                        <span><a href="{{route('admin.schools.preview', $schl->id)}}" class="btn btn-sm btn-success mx-1">{{__('text.word_details')}}</a></span>
+                        <span><a href="{{route('admin.schools.delete', $schl->id)}}" class="btn btn-sm btn-danger mx-1">{{__('text.word_delete')}}</a></span>
                     </td>
                 </tr>
                 @endforeach

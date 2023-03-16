@@ -1,7 +1,7 @@
 @extends('student.layout')
 @section('section')
     @php
-        $student = \Auth::user();
+        $student = auth('student')->user();
         $year = request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
         $header = \App\Helpers\Helpers::instance()->getHeader();
     @endphp

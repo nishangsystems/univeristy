@@ -17,12 +17,9 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         
-        if ((time() - Session::activity()) > (Config::get('session.lifetime') * 60))
-        {
-            return redirect(route('login'));
-        }
         if (! $request->expectsJson()) {
             return redirect(route('login'));
         }
+
     }
 }

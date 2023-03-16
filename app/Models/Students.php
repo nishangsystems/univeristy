@@ -314,4 +314,10 @@ class Students extends Authenticatable
         return $this->hasMany(StudentSubject::class, 'student_id')->WHERE('year_id', '=', $year);
     }
 
+    public function transactions()
+    {
+        # code...
+        return $this->hasMany(Transaction::class, 'student_id');
+    }
+
 }

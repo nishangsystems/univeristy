@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ClassMaster;
 use App\Models\TeachersSubject;
+use App\Models\UserRole;
 use App\Option;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        // auth()->logout();
         if(\request()->has('role') || \request()->has('type')){
             $data['type'] = \request('role') ? \request('role') : \request('type');
             $data['title'] = "Role ".($data['type'] ?? " Users");
@@ -141,12 +143,22 @@ class UserController extends Controller
             'type' => 'required',
         ]);
         $user = \App\Models\User::find($id);
-        if (\Auth::user()->id == $id || \Auth::user()->id == 1) {
-            return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('error', "User can't be updated");
-        }
+        // if (\Auth::user()->id == $id || \Auth::user()->id == 1) {
+        //     return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('error', "User can't be updated");
+        // }
 
+        // update users table
         $input = $request->all();
         $user->update($input);
+
+        // update User roles
+        $role_id = $request->role_id;
+        if(!$role_id == null){
+            $user_role = $user->roleR->first();
+            $user_role->role_id = $role_id;
+            $user_role->save();
+        }
+
         return redirect()->to(route('admin.users.show', [$user->id]))->with('success', "User updated Successfully !");
     }
 

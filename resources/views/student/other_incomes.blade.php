@@ -1,7 +1,7 @@
 @extends('student.layout')
 @section('section')
     @php
-        $student = \Auth::user()
+        $student = auth('student')->user()
     @endphp
 
     <div class="col-sm-12">

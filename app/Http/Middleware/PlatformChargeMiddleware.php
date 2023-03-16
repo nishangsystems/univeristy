@@ -23,7 +23,7 @@ class PlatformChargeMiddleware
         // dd(auth()->user());
         $charge = PlatformCharge::first();
         if ($charge != null && $charge->yearly_amount > 0){
-            if(Helpers::instance()->has_paid_platform_charges(auth()->user())){
+            if(Charge::where(['student_id'=>auth('student')->id(), 'year_id'=>Helpers::instance()->getCurrentAccademicYear()])->count() == 0){
                 return redirect(route('student.platform_charge.pay'))->with('error', 'Pay PLATFORM CHARGES to continue.');
             }
         }

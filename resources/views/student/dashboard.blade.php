@@ -1,7 +1,7 @@
 @extends('student.layout')
 @section('section')
 @php
-$user = \Auth::user()
+$user = auth('student')->user();
 @endphp
 <div>
     <div id="user-profile-1" class="user-profile row">
@@ -45,7 +45,7 @@ $user = \Auth::user()
 
                 <div class="profile-info-row">
                     <div class="profile-info-name"> Class</div>
-                    @php($class = auth()->user()->_class())
+                    @php($class = auth('student')->user()->_class())
                     <div class="profile-info-value">
                         <span class="editable" id="username"> {{$class->program->name.' : '.__('text.word_level').' '.$class->level->level}}</span>
                     </div>
@@ -93,6 +93,25 @@ $user = \Auth::user()
                 </div>
             </div>
             <div class="space-20"></div>
+            <div class="py-3">
+                <table class="table adv-table">
+                    <thead class="text-capitalize">
+                        <th>##</th>
+                        <th>{{__('text.academic_year')}}</th>
+                        <th>{{__('text.word_class')}}</th>
+                    </thead>
+                    <tbody>
+                        @php($k = 1)
+                        @foreach (auth('student')->user()->classes()->get() as $st_class)
+                            <tr>
+                                <td>{{$k++}}</td>
+                                <td>{{$st_class->year->name}}</td>
+                                <td>{{$st_class->class->name()}}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

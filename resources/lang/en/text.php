@@ -570,4 +570,7 @@ return [
     'orange_money'=>'Orange Money',
     'pay_with'=>'pay with',
     'download_statistics'=>'download statistics',
+    'word_structure'=>'structure',
+    'platform_charges'=>'platform charges',
+    'semester_results'=>'semester results',
 ];

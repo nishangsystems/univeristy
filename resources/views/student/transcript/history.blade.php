@@ -2,7 +2,7 @@
 @section('section')
     @php
         $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-        $current = auth()->user()->_class($year) != null;
+        $current = auth('student')->user()->_class($year) != null;
     @endphp
     <div class="py-3">
     <table class="table">

@@ -150,11 +150,11 @@
                     </a>
                     <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
-                            @if(\Auth::guard('student')->user() == null)
-                                @if(\Auth::user()->isHod || \Auth::user()->isTeacher)
+                            @if(auth('student')->user() == null)
+                                @if(auth('student')->user()->isHod || auth('student')->user()->isTeacher)
                                     <a href="{{route('user.home')}}"><i
                                             class="ace-icon fa fa-user"></i>Profile</a>
-                                @elseif(\Auth::user()->isAdmin)
+                                @elseif(auth('student')->user()->isAdmin)
                                     <a href="{{route('admin.home')}}"><i
                                             class="ace-icon fa fa-user"></i>Profile</a>
                                 @endif
@@ -204,7 +204,7 @@
                 <b class="arrow"></b>
             </li>
 
-           <!-- <li>
+           <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-key"></i>
                     <span class="menu-text">{{__('text.online_payments')}}</span>
@@ -234,7 +234,7 @@
                     <li>
                         <a href="{{route('student.platform_charge.pay')}}" class="text-capitalize">
                             <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.platform_charge')}}
+                            {{__('text.platform_charges')}}
                         </a>
                         <b class="arrow"></b>
                     </li>
@@ -248,8 +248,18 @@
                         <b class="arrow"></b>
                     </li>
 
+                    <li>
+                        <a href="{{route('student.online.payments.history')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_history')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
                 </ul>
-            </li> -->
+            </li>
+
+
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-money"></i>
@@ -279,7 +289,7 @@
                 </ul>
             </li>
 
-           <!-- <li>
+           <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-flag"></i>
                     <span class="menu-text">{{trans_choice('text.word_transcript', 2)}}</span>
@@ -306,7 +316,7 @@
                     </li>
 
                 </ul>
-            </li> -->
+            </li>
 
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">

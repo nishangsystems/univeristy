@@ -14,7 +14,7 @@
             <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_payment_details')}}</h5>
             @csrf
             <input type="hidden" name="payment_purpose" value="OTHERS">
-            <input type="hidden" name="student_id" value="{{auth()->id()}}">
+            <input type="hidden" name="student_id" value="{{auth('student')->id()}}">
             <input type="hidden" name="year_id" value="{{$c_year}}">
             <input type="hidden" name="amount" value="" id="amount_field">
             <div class="form-group">

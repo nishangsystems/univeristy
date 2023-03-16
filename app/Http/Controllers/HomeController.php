@@ -150,7 +150,8 @@ class HomeController extends Controller
                     \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
                 })
                 ->distinct()
-                ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])
+                ->take(5)
+                ->get(['students.*', 'student_classes.student_id', 'campuses.name as campus'])
                 ->toArray();
             
             return \response()->json(StudentResource3::collection($students));
