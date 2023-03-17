@@ -7,6 +7,7 @@ use App\Models\Batch;
 use App\Models\ClassSubject;
 use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
+use App\Models\StudentClass;
 use App\Models\Students;
 use App\Models\Subjects;
 use App\Session;
@@ -221,7 +222,7 @@ class ProgramController extends Controller
     // Request contains $program_id as $parent_id and $level_id
     public function subjects($program_level_id)
     {
-        $parent = \App\Models\ProgramLevel::find($program_level_id);
+        $parent = ProgramLevel::find($program_level_id);
         $data['title'] = "Subjects under " . \App\Http\Controllers\Admin\StudentController::baseClasses()[$parent->program_id].' Level '.$parent->level()->first()->level;
         $data['parent'] = $parent;
         // dd($parent->subjects()->get());
@@ -231,7 +232,7 @@ class ProgramController extends Controller
 
     public function manageSubjects($parent_id)
     {
-        $parent = \App\Models\ProgramLevel::find($parent_id);
+        $parent = ProgramLevel::find($parent_id);
         $data['parent'] = $parent;
         // return $parent;
         
@@ -260,7 +261,7 @@ class ProgramController extends Controller
             ->whereIn('class_id', $subUnits)
             ->join('students', 'students.id', '=', 'student_classes.student_id')
             ->get();
-    $parent = \App\Models\ProgramLevel::find($id);
+    $parent = ProgramLevel::find($id);
     $data['parent'] = $parent;
     $data['students'] = $students;
     // dd($parent);
@@ -426,8 +427,8 @@ class ProgramController extends Controller
         // return $request->all();
 
         foreach ($request->levels as $key => $lev) {
-            if (\App\Models\ProgramLevel::where('program_id', $request->program_id)->where('level_id', $lev)->count() == 0) {
-                \App\Models\ProgramLevel::create(['program_id'=>$request->program_id, 'level_id'=>$lev]);
+            if (ProgramLevel::where('program_id', $request->program_id)->where('level_id', $lev)->count() == 0) {
+                ProgramLevel::create(['program_id'=>$request->program_id, 'level_id'=>$lev]);
             }
         }
         return back()->with('success', 'Program levels assigned.');
@@ -436,7 +437,7 @@ class ProgramController extends Controller
     public function program_levels($id)
     {
         $data['title'] = "Program Levels for ".\App\Models\SchoolUnits::find($id)->name;
-        $data['program_levels'] =  \App\Models\ProgramLevel::where('program_id', $id)->pluck('level_id')->toArray();
+        $data['program_levels'] =  ProgramLevel::where('program_id', $id)->pluck('level_id')->toArray();
         // $data['program_levels'] =  DB::table('school_units')->where('school_units.id', '=', $id)
         //             ->join('program_levels', 'program_id', '=', 'school_units.id')
         //             ->join('levels', 'levels.id', '=', 'program_levels.level_id')
@@ -444,6 +445,7 @@ class ProgramController extends Controller
         // dd($data);
         return view('admin.units.program-levels', $data);
     }
+
 
     public function program_index()
     {
@@ -457,23 +459,36 @@ class ProgramController extends Controller
     public function add_program_level($id, $level_id)
     {
         # code...
-        if (\App\Models\ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->count()>0) {
+        if (ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->count()>0) {
             # code...
             return back()->with('error', 'Level already exist in this program');
         }
-        $pl = new \App\Models\ProgramLevel(['program_id'=>$id, 'level_id'=>$level_id]);
+        $pl = new ProgramLevel(['program_id'=>$id, 'level_id'=>$level_id]);
         $pl->save();
         return back()->with('success','done');
+    }
+
+    public function _drop_program_level($id)
+    {
+        # code...
+        if (ProgramLevel::find($id)==null) {
+            # code...
+            return back()->with('error', "Level doesn't exist in this program");
+        }
+
+        ProgramLevel::find($id)->delete();
+        return back()->with('success', 'done');
+        
     }
 
     public function drop_program_level($id, $level_id)
     {
         # code...
-        if (\App\Models\ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->count()==0) {
+        if (ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->count()==0) {
             # code...
             return back()->with('error', "Level doesn't exist in this program");
         }
-        \App\Models\ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->first()->delete();
+        ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->first()->delete();
         return back()->with('success', 'done');
         
     }
@@ -481,8 +496,32 @@ class ProgramController extends Controller
     public function program_levels_list()
     {
         # code...
-        $data['title'] = "Class List".(request()->has('campus_id') ? \App\Models\Campus::find(request('campus_id'))->first()->name : '').(request()->has('id') ? ' For '.\App\Models\ProgramLevel::find(request('id'))->program()->first()->name.' Level '.\App\Models\ProgramLevel::find(request('id'))->level()->first()->level : null).' '.(request('year_id') != null ? Batch::find(request('year_id'))->name : '');
+        $data['title'] = "Class List".(request()->has('campus_id') ? \App\Models\Campus::find(request('campus_id'))->first()->name : '').(request()->has('id') ? ' For '.ProgramLevel::find(request('id'))->program()->first()->name.' Level '.ProgramLevel::find(request('id'))->level()->first()->level : null).' '.(request('year_id') != null ? Batch::find(request('year_id'))->name : '');
         return view('admin.student.class_list', $data);
+    }
+
+    public function bulk_program_levels_list(Request $request)
+    {
+        # code...
+        switch($request->filter){
+            case 'level':
+                $level = ProgramLevel::find($request->class_id)->level;
+                $data['title'] = "All Students For ".$level->name??''.' - '.Batch::find($request->year_id)->name;
+                $classes = ProgramLevel::where('level_id', '=', $level->id)->pluck('id')->toArray();
+                $students = StudentClass::whereIn('class_id', $classes)->where('year_id', '=', $request->year_id)
+                ->join('students', ['students.id'=>'student_classes.student_id'])->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id']);
+                $data['students'] = $students;
+                return view('admin.student.bulk_list', $data);
+                break;
+            case 'program':
+                $data['title'] = "All Students For ".ProgramLevel::find($request->class_id)->program->name.' - '.Batch::find($request->year_id)->name;
+                $classes = ProgramLevel::find($request->class_id)->program->classes()->pluck('id')->toArray();
+                $students = StudentClass::whereIn('class_id', $classes)->where('year_id', '=', $request->year_id)
+                ->join('students', ['students.id'=>'student_classes.student_id'])->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
+                $data['students'] = $students;
+                return view('admin.student.bulk_list', $data);
+                break;
+        }
     }
     
     public function set_program_grading_type(Request $request, $program_id)

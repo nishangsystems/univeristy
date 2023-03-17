@@ -573,4 +573,9 @@ return [
     'word_structure'=>'structure',
     'platform_charges'=>'platform charges',
     'semester_results'=>'semester results',
+    'set_charges'=>'set charges',
+    'results_chages'=>'results charges',
+    'transcript_charges'=>'transcript charges',
+    'per_level'=>'per level',
+    'per_program'=>'per program',
 ];

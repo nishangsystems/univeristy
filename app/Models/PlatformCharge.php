@@ -10,6 +10,6 @@ class PlatformCharge extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['year_id', 'yearly_amount', 'transcript_amount'];
+    protected $fillable = ['year_id', 'yearly_amount', 'transcript_amount', 'result_amount'];
     protected $table = 'platform_charges';
 }

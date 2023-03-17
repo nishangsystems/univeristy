@@ -305,8 +305,8 @@ class Helpers
         // if current student, he must have paid platform charges
         $year = $year_id == null ? $this->getCurrentAccademicYear() : $year_id;
         $current_class = auth('student')->user()->_class($year);
-        $count = PlatformCharge::count();
-        if($count == 0){return true;}
+        $plcharge = PlatformCharge::where(['year_id'=>$year])->first();
+        if($plcharge == null){return true;}
         if($current_class == null){
             // dd(auth()->user());
             // this is a former student; doesn't have to pay platform charges

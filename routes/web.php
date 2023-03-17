@@ -80,6 +80,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('units/{parent_id}/edit', 'Admin\ProgramController@edit')->name('units.edit');
     Route::resource('units', 'Admin\ProgramController')->except(['index', 'create', 'edit']);
     Route::get('units/{program_level_id}/subjects', 'Admin\ProgramController@subjects')->name('units.subjects');
+    Route::get('units/{program_level_id}/drop_level', 'Admin\ProgramController@_drop_program_level')->name('units.drop_level');
     Route::get('sections/{section_id}/subjects/{id}', 'Admin\ClassSubjectController@edit')->name('edit.class_subjects');
     Route::get('sections/{section_id}/subjects/{id}/delete', 'Admin\ClassSubjectController@delete')->name('delete.class_subjects');
     Route::put('sections/{section_id}/subjects/{id}', 'Admin\ClassSubjectController@update')->name('units.class_subjects.update');
@@ -90,6 +91,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
 
+    Route::get('/class_list/bulk/{year_id}/{filter}/{class_id}', 'Admin\ProgramController@bulk_program_levels_list')->name('bulk.list');
     Route::get('/class_list/{year_id?}', 'Admin\ProgramController@program_levels_list')->name('class.list');
     Route::get('programs/assign_level', 'Admin\ProgramController@assign_program_level')->name('programs.set_levels');
     Route::post('programs/assign_level', 'Admin\ProgramController@store_program_level');
@@ -429,7 +431,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::get('reset_password', 'Controller@reset_password')->name('reset_password');
     Route::post('reset_password', 'Controller@reset_password_save')->name('reset_password');
-
+    
+    Route::get('charges/set', 'Admin\HomeController@set_charges')->name('charges.set');
+    Route::post('charges/set', 'Admin\HomeController@save_charges')->name('charges.save');
 });
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {
@@ -470,7 +474,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     Route::post('reset_password', 'Controller@reset_password_save')->name('reset_password');
 });
 
-Route::prefix('student')->name('student.')->middleware('isStudent')->group(function () {
+Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.charges'])->group(function () {
     Route::get('', 'Student\HomeController@index')->name('home');
     Route::get('edit_profile', 'Student\HomeController@edit_profile')->name('edit_profile');
     Route::post('update_profile', 'Student\HomeController@update_profile')->name('update_profile');
@@ -544,7 +548,7 @@ Route::prefix('student')->name('student.')->middleware('isStudent')->group(funct
     Route::get('online_payments/history', 'Student\HomeController@online_payment_history')->name('online.payments.history');
 });
 // Route::post('student/charges/pay', 'Student\HomeController@pay_charges_save')->name('student.charge.pay');
-Route::get('platform/pay', 'Student\HomeController@pay_platform_charges')->name('platform_charge.pay');
+Route::get('platform/pay', 'Student\HomeController@pay_platform_charges')->name('platform_charge.pay')->middleware('isStudent');
 Route::get('student/charges/complete_transaction/{ts_id}', 'Student\HomeController@complete_charges_transaction')->name('student.charges.complete');
 Route::get('student/charges/failed_transaction/{ts_id}', 'Student\HomeController@failed_charges_transaction')->name('student.charges.failed');
 

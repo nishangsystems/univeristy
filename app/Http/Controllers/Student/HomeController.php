@@ -194,7 +194,8 @@ class HomeController extends Controller
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
         
         // check if semester result fee is set && that student has payed 
-        $amount = $semester->result_charges;
+        $plcharge = PlatformCharge::where(['year_id'=>$year->id])->first();
+        $amount = $plcharge->result_amount ?? null;
         if($amount != null && $amount > 0){
             $charge = Charge::where(['year_id'=>$year, 'semester_id'=>$semester->id, 'student_id'=>auth('student')->id(), 'type'=>'RESULTS'])->first();
             if($charge == null){
@@ -1055,15 +1056,16 @@ class HomeController extends Controller
     public function apply_transcript()
     {
         # code...
+        // return 1111111;
         // if charges are not set
-        if(PlatformCharge::count() == 0){
+        if(PlatformCharge::where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->count() == 0){
             $data['title'] = "Apply For Transcript";
             return view('student.transcript.apply', $data);
         }
         // check if student is former, platform charges set and payed,
         $class = auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear());
         if($class == null){
-            $_charges = Charge::where(['type'=>'TRANSCRIPT', 'student_id'=>auth('student')->id(), 'used'=>0])->orderBy('id', 'DESC')->get();
+            $_charges = Charge::where(['year_id'=>Helpers::instance()->getCurrentAccademicYear(),'type'=>'TRANSCRIPT', 'student_id'=>auth('student')->id(), 'used'=>0])->orderBy('id', 'DESC')->get();
             if($_charges->count() > 0){
                 $data['charge_id'] = $_charges->first()->id;
                 $data['title'] = "Apply For Transcript";
@@ -1072,12 +1074,12 @@ class HomeController extends Controller
             return redirect(route('student.transcript.pay'));
         } 
         else{
-            $charge = PlatformCharge::first();
+            $charge = PlatformCharge::where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first();
             if($charge == null || $charge->yearly_amount == 0 || $charge->yearly_amount == null){
                 $data['title'] = "Apply For Transcript";
                 return view('student.transcript.apply', $data);
             }else{
-                $charges = Charge::where(['type'=>'PLATFORM', 'student_id'=>auth('student')->id(), 'used'=>0])->orderBy('id', 'DESC')->get();
+                $charges = Charge::where(['year_id'=>Helpers::instance()->getCurrentAccademicYear(), 'type'=>'PLATFORM', 'student_id'=>auth('student')->id(), 'used'=>0])->orderBy('id', 'DESC')->get();
                 if($charges->count() > 0){
                     $data['charge_id'] = $charges->first()->id;
                     $data['title'] = "Apply For Transcript";
@@ -1335,9 +1337,12 @@ class HomeController extends Controller
     {
         # code...
         $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester(auth('student')->user()->_class()->id);
-        $charge = $semester->result_charges;
-        if($charge == 0){return back()->with('error', 'Semester result charges are not required.');}
-        if($charge == null){return back()->with('error', 'Semester result charges not set.');}
+        $plcharge = PlatformCharge::where(['year_id'=>$request->year_id ?? Helpers::instance()->getCurrentAccademicYear()])->first();
+        $charge = $plcharge == null ? null : $plcharge->result_amount;
+        if($charge == 0 || $charge == null){return back()->with('error', 'Semester result charges are not required.');}
+        if(Charge::where(['year_id'=>$request->year_id ?? Helpers::instance()->getCurrentAccademicYear(), 'semester_id'=>$semester->id, 'student_id'=>auth('student')->id(), 'type'=>'RESULTS'])->count() > 0){
+            return redirect(route('student.result.exam'))->with('message', 'Already paid SEMESTER RESULT CHARGES for specified semester');
+        }
         $data['title'] = "Pay Semester Result Charges";
         $data['amount'] = $charge;
         $data['purpose'] = 'RESULTS';
