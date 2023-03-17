@@ -11,6 +11,7 @@ use App\Models\Batch;
 use App\Models\CampusSemesterConfig;
 use App\Models\Config;
 use App\Models\File;
+use App\Models\PlatformCharge;
 use App\Models\Resit;
 use App\Models\SchoolUnits;
 use App\Models\Semester;
@@ -364,5 +365,29 @@ class HomeController  extends Controller
         }
         // dd($data['subjects']);
         return view('admin.resit.course_list_print', $data);
+    }
+
+    public function set_charges()
+    {
+        # code...
+        $data['title'] = "Set Charges";
+        return view('admin.setting.charges', $data);
+    }
+
+    public function save_charges(Request $request)
+    {
+        # code...
+        // return $request->all();
+        $validity = Validator::make($request->all(), [
+            'year_id'=>'required',
+            'yearly_amount'=>'numeric',
+            'transcript_amount'=>'numeric',
+            'result_amount'=>'numeric'
+        ]);
+        if($validity->failed()){
+            return back()->with('error', $validity->errors()->first());
+        }
+        PlatformCharge::updateOrInsert(['year_id'=>$request->year_id], ['yearly_amount'=>$request->yearly_amount, 'result_amount'=>$request->result_amount, 'transcript_amount'=>$request->transcript_amount]);
+        return back()->with('success', 'Done');
     }
 }

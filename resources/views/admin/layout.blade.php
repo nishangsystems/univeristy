@@ -272,6 +272,7 @@
                 <b class="arrow"></b>
 
                 <ul class="submenu">
+                    
                     @if(auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.set_letter_head')}}" class="text-capitalize">
@@ -304,10 +305,17 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-
-                    
                     @endif
 
+                    @if (auth()->user()->can('manage_charges'))
+                        <li>
+                            <a href="{{route('admin.charges.set')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.set_charges')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    @endif
                     <li>
                         <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>

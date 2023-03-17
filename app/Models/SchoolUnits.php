@@ -109,6 +109,11 @@ class SchoolUnits extends Model
         return $this->hasManyThrough(Level::class, ProgramLevel::class);
     }
 
+    public function classes()
+    {
+        return $this->hasMany(ProgramLevel::class, 'program_id');
+    }
+
     public function background()
     {
         return $this->belongsTo(Background::class);

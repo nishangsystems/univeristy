@@ -21,10 +21,11 @@ class PlatformChargeMiddleware
     public function handle($request, Closure $next)
     {
         // dd(auth()->user());
-        $charge = PlatformCharge::first();
+        
+        $charge = PlatformCharge::where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first();
         if ($charge != null && $charge->yearly_amount > 0){
-            if(Charge::where(['student_id'=>auth('student')->id(), 'year_id'=>Helpers::instance()->getCurrentAccademicYear()])->count() == 0){
-                return redirect(route('student.platform_charge.pay'))->with('error', 'Pay PLATFORM CHARGES to continue.');
+            if(!Helpers::instance()->has_paid_platform_charges()){
+                return redirect(route('platform_charge.pay'))->with('error', 'Pay PLATFORM CHARGES to continue.');
             }
         }
 
