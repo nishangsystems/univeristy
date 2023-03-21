@@ -54,8 +54,7 @@
                             <td>{{ $pl['name'] }}</td>
                             <td>
                                 <a href="{{Request::url().'?id='.$pl['id']}}" class="btn btn-sm btn-primary">{{__('text.word_students')}}</a>
-                                <a href="{{route('admin.bulk.list', ['year_id'=>$year, 'filter'=>'level', 'class_id'=>$pl['id']])}}" class="btn btn-sm btn-info">{{__('text.per_level')}}</a>
-                                <a href="{{route('admin.bulk.list', ['year_id'=>$year, 'filter'=>'program', 'class_id'=>$pl['id']])}}" class="btn btn-sm btn-success">{{__('text.per_program')}}</a>
+
                             </td>
                         </tr>
                         @endif
@@ -66,8 +65,7 @@
                             <td>
                                 <a href="{{Request::url().'?id='.$pl['id']}}" class="btn btn-sm btn-primary">{{__('text.word_students')}}</a>
                                 <a href="{{Request::url().'?action=campuses&id='.$pl['id']}}" class="btn btn-sm btn-success">{{__('text.word_campuses')}}</a>
-                                <a href="{{route('admin.bulk.list', ['year_id'=>$year, 'filter'=>'level', 'class_id'=>$pl['id']])}}" class="btn btn-sm btn-info">{{__('text.per_level')}}</a>
-                                <a href="{{route('admin.bulk.list', ['year_id'=>$year, 'filter'=>'program', 'class_id'=>$pl['id']])}}" class="btn btn-sm btn-success">{{__('text.per_program')}}</a>
+
                             </td>
                         </tr>
                         @endif

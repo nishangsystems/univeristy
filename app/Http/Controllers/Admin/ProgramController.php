@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\ClassSubject;
+use App\Models\Level;
 use App\Models\ProgramLevel;
+use App\Models\School;
 use App\Models\SchoolUnits;
 use App\Models\StudentClass;
 use App\Models\Students;
@@ -500,27 +503,166 @@ class ProgramController extends Controller
         return view('admin.student.class_list', $data);
     }
 
-    public function bulk_program_levels_list(Request $request)
+    public function program_levels_list_index(Request $request)
     {
         # code...
+        $data['title'] = "Student Listing";
+        $data['filter'] = $request->filter ?? null;
+        $data['items'] = [];
+        if ($request->filter != null) {
+            # code...
+            switch ($request->filter) {
+                case 'SCHOOL':
+                    # code...
+                    $schools = SchoolUnits::where(['unit_id'=>1])->get();
+                    foreach ($schools as $key => $value) {
+                        # code...
+                        $data['items'][] = ['id'=>$value->id, 'name'=>$value->name];
+                    }
+                    return view('admin.student.student_list_index', $data);
+                    break;
+                    
+                case 'FACULTY':
+                    # code...
+                    $faculties = SchoolUnits::where(['unit_id'=>2])->get();
+                    foreach ($faculties as $key => $value) {
+                        # code...
+                        $data['items'][] = ['id'=>$value->id, 'name'=>$value->name];
+                    }
+                    return view('admin.student.student_list_index', $data);
+                    break;
+                        
+                case 'DEPARTMENT':
+                    # code...
+                    $departments = SchoolUnits::where(['unit_id'=>3])->get();
+                    foreach ($departments as $key => $value) {
+                        $data['items'][] = ['id'=>$value->id, 'name'=>$value->name];
+                        # code...
+                    }
+                    return view('admin.student.student_list_index', $data);
+                    break;
+                
+                case 'PROGRAM':
+                    # code...
+                    $programs = SchoolUnits::where(['unit_id'=>4])->get();
+                    // dd($programs);
+                    foreach ($programs as $key => $value) {
+                        $data['items'][] = ['id'=>$value->id, 'name'=>$value->name];
+                        # code...
+                    }
+                    return view('admin.student.student_list_index', $data);
+                    break;
+                
+                case 'CLASS':
+                    # code...
+                    $classes = Controller::sorted_program_levels();
+                    foreach ($classes as $key => $value) {
+                        $data['items'][] = ['id'=>$value['id'], 'name'=>$value['name']];
+                        # code...
+                    }
+                    return view('admin.student.student_list_index', $data);
+                    break;
+                
+                case 'LEVEL':
+                    # code...
+                    $levels = Level::all();
+                    foreach ($levels as $key => $value) {
+                        $data['items'][] = ['id'=>$value->id, 'name'=>'Level '.$value->level];
+                        # code...
+                    }
+                    return view('admin.student.student_list_index', $data);
+                    break;
+                    
+                    default:
+                    # code...
+                    break;
+                }
+            }
+            // dd($data);
+            return view('admin.student.student_list_index', $data);
+    }
+
+    public function bulk_program_levels_list(Request $request)
+    {
+        $year = $request->year_id ?? Helpers::instance()->getCurrentAccademicYear();
+        # code...
         switch($request->filter){
-            case 'level':
-                $level = ProgramLevel::find($request->class_id)->level;
-                $data['title'] = "All Students For ".$level->name??''.' - '.Batch::find($request->year_id)->name;
+            case 'SCHOOL':
+                $data['title'] = "Students For School Of ".SchoolUnits::find($request->item_id)->name ?? null;
+                $programs = SchoolUnits::where(['school_units.unit_id'=>1])->where(['school_units.id'=>$request->item_id])
+                        // ->join('school_units as faculties', ['faculties.parent_id'=>'school_units.id'])->where(['faculties.unit_id'=>2])
+                        ->join('school_units as departments', ['departments.parent_id'=>'school_units.id'])->where(['departments.unit_id'=>3])
+                        ->join('school_units as programs', ['programs.parent_id'=>'departments.id'])->where(['programs.unit_id'=>4])
+                        ->pluck('programs.id')->toArray();
+                $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
+                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
+                // dd($students);
+                $data['students'] = $students;
+                return view('admin.student.bulk_list', $data);
+                break;
+            
+            case 'FACULTY' :
+                $data['title'] = "Students For Faculty Of ".SchoolUnits::find($request->item_id)->name ?? null;
+                $programs = SchoolUnits::where(['school_units.unit_id'=>2])->where(['school_units.id'=>$request->item_id])
+                        // ->join('school_units as faculties', ['faculties.parent_id'=>'school_units.id'])->where(['faculties.unit_id'=>2])
+                        ->join('school_units as departments', ['departments.parent_id'=>'school_units.id'])->where(['departments.unit_id'=>3])
+                        ->join('school_units as programs', ['programs.parent_id'=>'departments.id'])->where(['programs.unit_id'=>4])
+                        ->pluck('programs.id')->toArray();
+                $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
+                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
+                // dd($students);
+                $data['students'] = $students;
+                return view('admin.student.bulk_list', $data);
+                break;
+
+            case 'DEPARTMENT':
+                $data['title'] = "Students For Department Of ".SchoolUnits::find($request->item_id)->name ?? null;
+                $programs = SchoolUnits::where(['school_units.unit_id'=>3])->where(['school_units.id'=>$request->item_id])
+                        // ->join('school_units as faculties', ['faculties.parent_id'=>'school_units.id'])->where(['faculties.unit_id'=>2])
+                        // ->join('school_units as departments', ['departments.parent_id'=>'school_units.id'])->where(['departments.unit_id'=>3])
+                        ->join('school_units as programs', ['programs.parent_id'=>'school_units.id'])->where(['programs.unit_id'=>4])
+                        ->pluck('programs.id')->toArray();
+                $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
+                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                        ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
+                // dd($students);
+                $data['students'] = $students;
+                return view('admin.student.bulk_list', $data);
+                break;
+
+            case 'PROGRAM':
+                $data['title'] = "Students For ".SchoolUnits::find($request->item_id)->name ?? null;
+                $classes = ProgramLevel::where('program_id', $request->item_id)->pluck('id')->toArray();
+                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
+                // dd($students);
+                $data['students'] = $students;
+                return view('admin.student.bulk_list', $data);
+                break;
+                
+
+            case 'CLASS':
+                $data['title'] = "All Students For ".ProgramLevel::find($request->item_id)->name();
+                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->orderBy('students.name')->where('class_id', $request->item_id)->where('year_id', '=', $year)
+                            ->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
+                $data['students'] = $students;
+                return view('admin.student.bulk_list', $data);
+                break;
+
+            case 'LEVEL':
+                $level = Level::find($request->item_id);
+                $data['title'] = "All Students For ".$level->level??''.' - '.Batch::find($request->year_id)->name;
                 $classes = ProgramLevel::where('level_id', '=', $level->id)->pluck('id')->toArray();
-                $students = StudentClass::whereIn('class_id', $classes)->where('year_id', '=', $request->year_id)
-                ->join('students', ['students.id'=>'student_classes.student_id'])->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id']);
+                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $request->year_id)
+                            ->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id']);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
                 break;
-            case 'program':
-                $data['title'] = "All Students For ".ProgramLevel::find($request->class_id)->program->name.' - '.Batch::find($request->year_id)->name;
-                $classes = ProgramLevel::find($request->class_id)->program->classes()->pluck('id')->toArray();
-                $students = StudentClass::whereIn('class_id', $classes)->where('year_id', '=', $request->year_id)
-                ->join('students', ['students.id'=>'student_classes.student_id'])->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
-                $data['students'] = $students;
-                return view('admin.student.bulk_list', $data);
-                break;
+            
         }
     }
     

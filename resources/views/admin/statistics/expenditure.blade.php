@@ -1,6 +1,9 @@
 @extends('admin.layout')
 
 @section('section')
+    @php
+        $year_listing = \App\Helpers\Helpers::instance()->year_listing();
+    @endphp
     <div class="w-100 py-3">
         <form action="{{route('admin.stats.expenditure')}}" method="get">
             @csrf
@@ -80,7 +83,11 @@
                     html = `<div class="w-100">
                                 <div class="form-group">
                                     <label for="" class="text-secondary h4 fw-bold">{{__("text.pick_a_year")}}:</label>
-                                    <input name="value" class="form-control" type='month'>
+                                    <select name="value" class="form-control">
+                                        @foreach($year_listing as $yr)
+                                            <option value="{{$yr}}">{{$yr}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>`;
                     $('#filterLoader').html(html);

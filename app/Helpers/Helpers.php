@@ -351,4 +351,18 @@ class Helpers
         return false;
     }
 
+    public function year_listing()
+    {
+        # code...
+        $ac_year = Batch::find($this->getCurrentAccademicYear())->name;
+        $year = (int)substr($ac_year, 0, 4);
+        // dd($year);
+        $years = [];
+        for ($i=$year-20; $i < $year+10; $i++) { 
+            # code...
+            $years[] = $i;
+        }
+        return $years;
+    }
+
 }
