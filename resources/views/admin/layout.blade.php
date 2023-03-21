@@ -79,6 +79,7 @@
     $bg1 = \App\Http\Controllers\HomeController::getColor('background_color_1');
     $bg2 = \App\Http\Controllers\HomeController::getColor('background_color_2');
     $bg3 = \App\Http\Controllers\HomeController::getColor('background_color_3');
+    $current_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
 @endphp
 </head>
 <body class="no-skin">
@@ -432,6 +433,14 @@
                             <a href="{{route('admin.class.list')}}?action=class_list"  class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.class_list')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        
+                        <li>
+                            <a href="{{route('admin.student.bulk.index')}}?action=class_list"  class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.student_listing')}}
                             </a>
                             <b class="arrow"></b>
                         </li>

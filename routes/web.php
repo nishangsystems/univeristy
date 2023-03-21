@@ -91,8 +91,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
 
-    Route::get('/class_list/bulk/{year_id}/{filter}/{class_id}', 'Admin\ProgramController@bulk_program_levels_list')->name('bulk.list');
-    Route::get('/class_list/{year_id?}', 'Admin\ProgramController@program_levels_list')->name('class.list');
+    Route::get('student_list/select/{filter?}', 'Admin\ProgramController@program_levels_list_index')->name('student.bulk.index');
+    Route::get('student_list/bulk/{filter}/{item_id}/{year_id?}', 'Admin\ProgramController@bulk_program_levels_list')->name('student.bulk.list');
+    Route::get('class_list/{year_id?}', 'Admin\ProgramController@program_levels_list')->name('class.list');
     Route::get('programs/assign_level', 'Admin\ProgramController@assign_program_level')->name('programs.set_levels');
     Route::post('programs/assign_level', 'Admin\ProgramController@store_program_level');
     Route::get('programs/{id}/levels', 'Admin\ProgramController@program_levels')->name('programs.levels');
