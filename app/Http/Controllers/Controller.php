@@ -21,6 +21,13 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public function __construct()
+    {
+        # code...
+        ini_set('max_execution_time', 360);
+
+    }
+
     public function set_local(Request $request, $lang)
     {
         # code...

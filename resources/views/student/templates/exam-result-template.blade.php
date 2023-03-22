@@ -3,15 +3,15 @@
     <table>
         <thead>
             @php
-                $program_name = \App\Models\ProgramLevel::find(auth('student')->user()->program_id)->program()->first()->name;
-                $current_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
-                $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->program_id)->id;
-                $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->program_id)->name;
+                $program_name = $user->first()->name;
+                $current_year_name = \App\Models\Batch::find($year)->name;
+                $current_semester = $semester->id;
+                $current_semester_name = $semester->name;
                 $flag = true;
             @endphp
             <tr class="py-3 h4 my-0">
                 <th colspan="9" class="text-center">
-                    {{\App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->program_id)->name .' '.\App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name. ' '.__('text.individual_results_slip') }}
+                    {{$semester->name .' '.$current_year_name. ' '.__('text.individual_results_slip') }}
                 </th>
             </tr>
             <tr>

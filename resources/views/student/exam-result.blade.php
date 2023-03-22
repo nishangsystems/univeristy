@@ -2,18 +2,21 @@
 @section('section')
 @php
     $header = \App\Helpers\Helpers::instance()->getHeader();
+    $class = $user->_class(request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+    // dd(request()->all());
 @endphp
 
     @if($access == true)
-        @if (collect($results)->count() > 0)
+        @if (collect($results)->count() > 0 && $class != null)
             <div class="d-flex justify-content-end py-3">
                 <form action="{{Request::url()}}/download">
                     <input type="hidden" name="year" value="{{request('year')}}">
                     <input type="hidden" name="semester" value="{{request('semester')}}">
                     <button type="submit" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_download')}}</button>
+                    <!-- <button type="button" class="btn btn-sm btn-secondary text-capitalize" onclick="print_result()">{{__('text.word_print')}}</button> -->
                 </form>
             </div>
-            <div class="card-body">
+            <div class="card-body" id="result_template">
                 <div id="table table-responsive" class="table-editable">
 
                     <table class="table table-bordered table-responsive-md table-striped text-center">
@@ -32,7 +35,7 @@
                                     </div>
                                     <div class="row py-2 border-top border-bottom border-1">
                                         <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_program')}} :</label>
-                                        <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{\App\Models\ProgramLevel::find($user->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id)->program->name}}</div>
+                                        <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{$class->program->name}}</div>
                                     </div>
                                     <div class="row py-2 border-top border-bottom border-1">
                                         <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_matricule')}} :</label>
@@ -40,7 +43,7 @@
                                     </div>
                                     <div class="row py-2 border-top border-bottom border-1">
                                         <label for="" class="text-capitalize fw-bold h5 col-sm-12 col-md-4">{{__('text.word_level')}} :</label>
-                                        <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{ \App\Models\ProgramLevel::find($user->_class(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id)->level->level}}</div>
+                                        <div class="col-sm-12 col-md-8 h4 text-uppercase fw-bolder">{{ $class->level->level}}</div>
                                     </div>
                                 </div>
                                 <div class="col-sm-5 col-md-4 border">
@@ -106,4 +109,15 @@
             {{trans('text.fee_access_phrase', ['amount'=>$min_fee, 'action'=>'access your results'])}}
         </div>
     @endif
+@endsection
+@section('script')
+    <script>
+        function print_result(){
+            let body = document.body.innerHTML;
+            let result = $('#result_template').html();
+            document.body.innerHTML = result;
+            window.print();
+            document.body.innerHTML = body;
+        }
+    </script>
 @endsection

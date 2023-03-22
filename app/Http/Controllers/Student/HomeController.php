@@ -279,12 +279,13 @@ class HomeController extends Controller
         $data['title'] = "My Exam Result";
         $data['user'] = auth('student')->user();
         $data['class'] = $data['user']->_class($year);
+        $data['year'] = $year;
         $data['semester'] = $semester;
         $data['ca_total'] = auth('student')->user()->_class($year)->program()->first()->ca_total;
         $data['exam_total'] = auth('student')->user()->_class($year)->program()->first()->exam_total;
         $data['grading'] = auth('student')->user()->_class($year)->program()->first()->gradingType->grading()->get() ?? [];
         $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
-        $data['subjects'] = Auth('student')->user()->_class(Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
+        $data['subjects'] = Auth('student')->user()->_class($year)->subjects()->whereIn('subjects.id', $res)->get();
         $data['results'] = array_map(function($subject_id)use($data, $year, $semester){
             $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;

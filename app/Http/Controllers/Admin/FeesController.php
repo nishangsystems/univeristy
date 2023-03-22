@@ -23,7 +23,7 @@ class FeesController extends Controller
     public function classes(Request  $request)
     {
 
-        $title = "Classes";
+        $title = __('text.word_classes');
         $classes = \App\Models\SchoolUnits::where('parent_id', $request->get('parent_id', '0'))->get();
 
         return view('admin.fee.classes', compact('classes', 'title'));
@@ -32,20 +32,20 @@ class FeesController extends Controller
     public function student(Request  $request, $class_id)
     {
         $class = SchoolUnits::find($class_id);
-        $title = $class->name . " Students";
+        $title = $class->name . " ".__('text.word_students');
         $students = $class->students(Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(20);
         return view('admin.fee.students', compact('students', 'title'));
     }
 
     public function collect(Request  $request)
     {
-        $title = "Collect Fee";
+        $title = __('text.collect_fee');
         return view('admin.fee.collect', compact('title'));
     }
 
     public function printFee(Request  $request)
     {
-        $title = "Print Fee";
+        $title = __('text.print_fee');
         return view('admin.fee.print', compact('title'));
     }
 
@@ -59,7 +59,7 @@ class FeesController extends Controller
 
     public function daily_report(Request  $request)
     {
-        $title = "Fee Daily Report for " . ($request->date ? $request->date : Carbon::now()->format('d/m/Y'));
+        $title = __('text.fee_daily_report_for')." " . ($request->date ? $request->date : Carbon::now()->format('d/m/Y'));
         $fees = Payments::whereDate('payments.created_at', $request->date ?? date('Y-m-d', time()))
         ->join('students', 'students.id', '=', 'payments.student_id')
         ->where(function($q) {
@@ -74,7 +74,7 @@ class FeesController extends Controller
     public function fee(Request  $request)
     {
         $type = request('type', 'completed');
-        $data['title'] = $type . " fee ";
+        $data['title'] = $type . " ".__('text.word_fee');
         // dd($data);
         return view('admin.fee.fee', $data);
     }
@@ -84,7 +84,7 @@ class FeesController extends Controller
         # code...
 
         $class = ProgramLevel::find($request->class);
-        $data['title'] = 'Fee Situation';
+        $data['title'] = __('text.fee_situation');
         return view('admin.fee.fee_situation', $data);
     }
 
@@ -92,7 +92,7 @@ class FeesController extends Controller
     {
         # code...
         $class = ProgramLevel::find($request->class);
-        $data['title'] = 'Fee Situation For '.$class->program->name.' : Level '.$class->level->level.' - '.Batch::find($request->year)->name;
+        $data['title'] = __('text.fee_situation').' '.__('text.word_for').' '.$class->program->name.' : Level '.$class->level->level.' - '.Batch::find($request->year)->name;
         $data['data'] = HomeController::fee_situation($request);
         // return $data;
         return view('admin.fee.fee_situation_list', $data);
@@ -101,7 +101,7 @@ class FeesController extends Controller
     public function fee_list(Request  $request)
     {
         $type = request('type', 'completed');
-        $data['title'] = $type . " Fee ";
+        $data['title'] = $type . " ".__('text.word_fee');
         $data['students'] = HomeController::_fee($request);
 
         // return $data;
@@ -110,7 +110,7 @@ class FeesController extends Controller
 
     public function drive(Request  $request)
     {
-        $title = "Fee Drive";
+        $title = __('text.fee_drive');
         $students = [];
         return view('admin.fee.drive', compact('students', 'title'));
     }
@@ -120,7 +120,7 @@ class FeesController extends Controller
         // return $request->all();
         # code...
         $data = HomeController::_fee($request);
-        $data['title'] = $data['title'].' Who Have Paid Atleast '.$request->amount;
+        $data['title'] = $data['title'].' '.__('text.who_have_paid_atleast').' '.$request->amount;
         return view('admin.fee.drive_listing', $data);
     }
 
@@ -134,7 +134,7 @@ class FeesController extends Controller
     public function import()
     {
         # code...
-        $data['title'] = "Import Fee";
+        $data['title'] = __('text.import_fees');
         return view('admin.fee.import', $data);
     }
 

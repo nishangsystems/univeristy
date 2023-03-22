@@ -304,7 +304,7 @@ class ResultController extends Controller
                         'class_subject_id'=>$course->_class_subject($request->class_id)->id??0
                     ];
                     if(OfflineResult::where($base)->whereNotNull('ca_score')->count() == 0){
-                        OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id()]);
+                        OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id]);
                     }
                 }else{
                     $null_students .= "Student with matricule ".$data[0].' not found <br>';
@@ -407,13 +407,13 @@ class ResultController extends Controller
                         $existing_results .= "<br> CA results already exist for ".$data[0];
                     }elseif (!$data[1] == null) {
                         # code...
-                        OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id()]);
+                        OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(),  'campus_id'=>$student->campus_id]);
                     }
                     if(OfflineResult::where($base)->whereNotNull('exam_score')->count()>0){
                         $existing_results .= "<br> Exam results already exist for ".$data[0];
                     }elseif (!$data[2] == null) {
                         # code...
-                        OfflineResult::updateOrCreate($base, ['exam_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id()]);
+                        OfflineResult::updateOrCreate($base, ['exam_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(),  'campus_id'=>$student->campus_id]);
                     }
                 }
                 else{

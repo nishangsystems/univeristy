@@ -19,7 +19,7 @@ class CampusesController extends Controller
     public function index()
     {
         # code...
-        $data['title'] = "Manage Campuses";
+        $data['title'] = __("text.manage_campuses");
         if (request()->has('school_id')) {
             $data['campuses'] = \App\Models\School::find(request('school_id'))->campuses();
         }
@@ -32,7 +32,7 @@ class CampusesController extends Controller
     public function create()
     {
         # code...
-        $data['title'] = "Add New Campus";
+        $data['title'] = __("text.add_new_campus");
         if (request()->has('school_id')) {
             $data['campuses'] = \App\Models\School::find(request('school_id'))->campuses();
         }
@@ -60,12 +60,12 @@ class CampusesController extends Controller
         try {
             //code...
             if (\App\Models\School::find($request->school_id)->campuses()->where('name', $request->name)->count() > 0) {
-                return back()->with('error', 'A campus with name '.$request->name.' already exist');
+                return back()->with('error', __('text.record_already_exist'));
             }
     
             (new \App\Models\Campus($request->all()))
                 ->save();
-            return back()->with('success', 'Campus created');
+            return back()->with('success', __('text.word_done'));
         } catch (\Throwable $th) {
             //throw $th;
             throw $th;
@@ -76,7 +76,7 @@ class CampusesController extends Controller
 
     public function edit($id)
     {
-        $data['title'] = "edit campus";
+        $data['title'] = __("text.edit_campus");
         $data['campus'] = \App\Models\Campus::find($id);
         if (request()->has('school_id')) {
             $data['campuses'] = \App\Models\School::find(request('school_id'))->campuses();
@@ -101,7 +101,7 @@ class CampusesController extends Controller
             $campus = \App\Models\Campus::find($id);
             if ($campus->name != $request->name && \App\Models\Campus::where('name', $request->name)->count() > 0) {
                 # code...
-                return back()->with('error', 'Update rejected. The campus name '.$request->name.' already exist');
+                return back()->with('error', __('text.record_already_exist', ['item'=>__('text.word_campus')]));
             }
             if (isset($request->telephone) && $campus->telephone != $request->telephone && \App\Models\Campus::where('telephone', $request->telephone)->count() > 0) {
                 # code...
@@ -129,7 +129,7 @@ class CampusesController extends Controller
     public function programs($id)//$id for the campus_id
     {
         # code...
-        $data['title'] = "Manage Programs Under ".\App\Models\Campus::find($id)->name;
+        $data['title'] = __('text.manage_programs_under')." ".\App\Models\Campus::find($id)->name;
         $data['programs'] = \App\Models\CampusProgram::where('campus_id', $id)->pluck('program_level_id')->toArray();
         return view('admin.campuses.programs', $data);
     }
@@ -137,7 +137,7 @@ class CampusesController extends Controller
     public function set_program_fee($id, $program_id)
     {
         # code...
-        $data['title'] = "Manage Fee Under ".Campus::find($id)->name.' For '.ProgramLevel::find($program_id)->program()->first()->name . ' : LEVEL '.ProgramLevel::find($program_id)->level()->first()->level;
+        $data['title'] = __('text.manage_fee_under')." ".Campus::find($id)->name.' For '.ProgramLevel::find($program_id)->program()->first()->name . ' : LEVEL '.ProgramLevel::find($program_id)->level()->first()->level;
         // $data['data'] = [
         //     'tution' = \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', request('program_id'))->first()->payment_items()->where('name', 'TUTION')->first()->amount ?? '----',
         //     'min-1'

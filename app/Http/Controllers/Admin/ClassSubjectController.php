@@ -23,7 +23,7 @@ class ClassSubjectController extends Controller
             ->where('class_subjects.subject_id', $id)
             ->select('class_subjects.subject_id', 'subjects.name', 'class_subjects.coef')
             ->first();
-        $data['title'] = 'Edit ' . $data['subject']->name . ' for ' . $data['parent']->name;
+        $data['title'] = __('text.word_edit').' ' . $data['subject']->name . ' '.__('text.word_for').' ' . $data['parent']->name;
         return view('admin.class_subjects.edit')->with($data);
     }
 
