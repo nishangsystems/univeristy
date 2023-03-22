@@ -108,7 +108,8 @@ class ImportCenter extends Controller
                                      ClassSubject::where(['subject_id'=>$subject->id, 'class_id'=> $class->id])->first()->id :
                                       null,
                                 'reference' => $request->reference,
-                                'user_id'=>auth()->id()
+                                'user_id'=>auth()->id(),
+                                'campus_id'=>$student->campus_id
                             ];
                             if (Result::where([
                                 'batch_id'=>$data['batch_id'],
@@ -244,7 +245,8 @@ class ImportCenter extends Controller
                                 'class_subject_id' => ClassSubject::where(['subject_id'=>$subject->id, 'class_id'=> $class->id])->count() > 0 ?
                                      ClassSubject::where(['subject_id'=>$subject->id, 'class_id'=> $class->id])->first()->id :
                                       null,
-                                'reference' => $request->reference
+                                'reference' => $request->reference,
+                                'campus_id'=>$student->campus_id
                             ];
                             $base = [
                                 'batch_id' => $ca['batch_id'],
@@ -258,7 +260,8 @@ class ImportCenter extends Controller
                             $update = [
                                 $row[2] == null ? null : 'ca_score' => $row[2],
                                 'exam_score' => $row[3],
-                                'reference' => $request->reference
+                                'reference' => $request->reference,
+                                'campus_id'=>$student->campus_id
                             ];
                             if (Result::where($base)->whereNotNull('ca_score')->count()>0) {
                                 # code...

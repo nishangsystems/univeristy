@@ -2,6 +2,7 @@
 @section('section')
 @php
 $user = auth('student')->user();
+$user = $user == null ? auth()->user() : $user;
 @endphp
 <div>
     <div id="user-profile-1" class="user-profile row">

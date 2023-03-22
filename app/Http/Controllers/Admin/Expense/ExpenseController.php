@@ -31,7 +31,7 @@ class ExpenseController extends Controller
         })
         ->orderBy('expenses.id', 'DESC')
         ->select('expenses.*')->paginate(5);
-        $data['title'] = 'School expense';
+        $data['title'] = __('text.school_expenses');
 
         return view('admin.expense.index')->with($data);
     }
@@ -41,7 +41,7 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        $data['title'] = 'Create New Expense';
+        $data['title'] = __('text.create_new_expense');
         return view('admin.expense.create')->with($data);
     }
 
@@ -76,7 +76,7 @@ class ExpenseController extends Controller
         $expense->user_id = Auth::id();
         $expense->date = $request->date;
         $expense->save();
-        return redirect()->route('admin.expense.index')->with('success', 'Expense saved successfully !');
+        return redirect()->route('admin.expense.index')->with('success', __('text.word_done'));
     }
 
     /**
@@ -86,7 +86,7 @@ class ExpenseController extends Controller
     public function edit($id)
     {
         $data['expense'] = Expenses::findOrFail($id);
-        $data['title'] = 'Edit Expense';
+        $data['title'] = __('text.edit_expense');
         return view('admin.expense.edit')->with($data);
     }
 
@@ -100,7 +100,7 @@ class ExpenseController extends Controller
     {
         //$this->validateData($request);
         $updated_expense = Expenses::findOrFail($id)->update($request->all());
-        return  redirect()->route('admin.expense.index')->with('success', 'Expense updated successfully !');
+        return  redirect()->route('admin.expense.index')->with('success', __('text.word_done'));
     }
 
     /**
@@ -111,7 +111,7 @@ class ExpenseController extends Controller
     public function destroy($id)
     {
         $deleted = Expenses::findOrFail($id)->delete();
-        return back()->with('success', 'Expense deleted successfully!');
+        return back()->with('success', __('text.word_done'));
     }
 
     /**
@@ -122,7 +122,7 @@ class ExpenseController extends Controller
     public function show($id)
     {
         $data['expense'] = Expenses::findOrFail($id);
-        $data['title'] = 'Expense Details';
+        $data['title'] = __('text.expense_details');
         return view('admin.expense.show')->with($data);
     }
 }

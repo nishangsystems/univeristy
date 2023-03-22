@@ -39,17 +39,31 @@
                 </div>
             </div>
 
-            @if (\App\Models\SchoolUnits::find($parent_id)->unit_id == 3)
-                <div class="form-group ">
-                    <label  class="control-label col-lg-2 text-capitalize">{{__('text.word_department')}}</label>
-                    <div class="col-lg-10">
-                        <select name="parent_id" class="form-control" required>
-                            @foreach (\App\Models\SchoolUnits::where('unit_id', '=', 3)->orderBy('name')->get() as $unit)
-                                <option value="{{$unit->id}}" {{$unit->id == $parent_id ? 'selected' : ''}}>{{$unit->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>                
+            @if ($parent_id)
+                @if (\App\Models\SchoolUnits::find($parent_id)->unit_id == 3)
+                    <div class="form-group ">
+                        <label  class="control-label col-lg-2 text-capitalize">{{__('text.word_department')}}</label>
+                        <div class="col-lg-10">
+                            <select name="parent_id" class="form-control" required>
+                                @foreach (\App\Models\SchoolUnits::where('unit_id', '=', $unit->parent->unit_id)->orderBy('name')->get() as $s_unit)
+                                    <option value="{{$s_unit->id}}" {{$s_unit->id == $parent_id ? 'selected' : ''}}>{{$s_unit->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>                
+                @endif
+                @if (\App\Models\SchoolUnits::find($parent_id)->unit_id == 1)
+                    <div class="form-group ">
+                        <label  class="control-label col-lg-2 text-capitalize">{{__('text.word_school')}}</label>
+                        <div class="col-lg-10">
+                            <select name="parent_id" class="form-control" required>
+                                @foreach (\App\Models\SchoolUnits::where('unit_id', '=', $unit->parent->unit_id)->orderBy('name')->get() as $_unit)
+                                    <option value="{{$_unit->id}}" {{$_unit->id == $parent_id ? 'selected' : ''}}>{{$_unit->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>                
+                @endif
             @endif
 
             <div class="form-group">

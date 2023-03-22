@@ -582,5 +582,19 @@ return [
     'transcript_charges'=>'transcript charges',
     'per_level'=>'per level',
     'per_program'=>'per program',
-    'student_listing'=>'student listing'
+    'student_listing'=>'student listing',
+    'create_new_expense'=>'create new expense',
+    'edit_expense'=>'edit expense',
+    'expense_details'=>'expense details',
+    'add_new_campus'=>'add new campus',
+    'edit_campus'=>'edit campus',
+    'select_background'=>'select background',
+    'manage_programs_under'=>'manage programs under',
+    'manage_fee_under'=>'manage fee under',
+    'print_fee'=>'print fee',
+    'fee_daily_report_for'=>'fee daily report for',
+    'who_have_paid_atleast'=>'who have paid atleast',
+    'word_done'=>'done',
+    'record_already_exist'=>'record already exist',
+    ''
 ];

@@ -7,7 +7,7 @@
             <form class="cmxform form-horizontal style-form" method="post" action="{{route('admin.courses.create_next')}}">
                 {{csrf_field()}}
                 <div class="form-group @error('name') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_backgroun')}} ({{__('text.word_required')}})</label>
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_background')}} ({{__('text.word_required')}})</label>
                     <div class="col-lg-10">
                         <select class=" form-control" name="background" required onchange="loadSemesters(event.target)">
                             <option value="">{{__('text.select_background')}}</option>
