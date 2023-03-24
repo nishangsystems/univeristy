@@ -51,7 +51,7 @@ class PayIncomeController extends Controller
             ->where('pay_incomes.batch_id', $batch_id)
             ->select($this->select)->distinct()
             ->paginate(5);
-        $data['title'] = 'Pay Incomes';
+        $data['title'] = __('text.pay_income');
         $data['years'] = Batch::all();
         $data['school_units'] = SchoolUnits::where('parent_id', '=', 0)->get();
         //  dd($data['school_units']);
@@ -104,7 +104,7 @@ class PayIncomeController extends Controller
             ->select($this->select)
             ->paginate(5);
         $class_name = $this->getSchoolUnit($request->class_id);
-        $data['title'] = 'Pay Incomes: ' . $class_name;
+        $data['title'] = __('text.pay_income').': ' . $class_name;
         $data['years'] = Batch::all();
         $data['school_units'] = SchoolUnits::where('parent_id', '=', 0)->get();
         return view('admin.payIncome.index')->with($data);
@@ -116,17 +116,17 @@ class PayIncomeController extends Controller
      */
     public function create()
     {
-        $data['title'] = 'Collect Income';
+        $data['title'] = __('text.collect_income');
         return view('admin.payIncome.create')->with($data);
     }
-
-
+    
+    
     /**
      * show view form to find a student to collect income
      */
     public function create_cash()
     {
-        $data['title'] = 'Collect Income';
+        $data['title'] = __('text.collect_income');
         return view('admin.payIncome.create_cash')->with($data);
     }
 
@@ -152,7 +152,7 @@ class PayIncomeController extends Controller
             'cash'=>1
         ];
         DB::table('pay_incomes')->insert($payment);
-        return back()->with('success', 'Done!');
+        return back()->with('success', __('text.word_done'));
     }
 
 
@@ -257,7 +257,7 @@ class PayIncomeController extends Controller
     {
 
         $student = Students::where('id', $student_id)->first();
-        $data['title'] = 'Collect Income for ' . $student->name;
+        $data['title'] = __('text.collect_income_for', ['item'=>$student->name]);
         $data['class_id'] = $class_id;
         $data['incomes'] = Income::where('cash', '=', false)->get();
         $data['years'] = Batch::all();
@@ -292,7 +292,7 @@ class PayIncomeController extends Controller
 
         $student = $this->checkStudentPaidIncome($student_id, $request->income_id, $class_id);
         if (!empty($student)) {
-            return redirect()->route('admin.pay_income.index')->with('error', 'The Student has paid this Income Fee!');
+            return redirect()->route('admin.pay_income.index')->with('error', __('text.record_already_exist', ['item'=>'']));
         }
 
         $validate_data = $request->validate([
@@ -306,7 +306,7 @@ class PayIncomeController extends Controller
             'student_id' => $student_id,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.pay_income.index')->with('success', 'Payed Income successfully');
+        return redirect()->route('admin.pay_income.index')->with('success', __('text.word_done'));
     }
 
     /**
@@ -345,6 +345,6 @@ class PayIncomeController extends Controller
     {
         # code...
         PayIncome::find($pay_income_id)->delete();
-        return back()->with('success', 'Done');
+        return back()->with('success', __('text.word_done'));
     }
 }

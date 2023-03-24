@@ -20,7 +20,7 @@ class ImportCenter extends Controller
     public function import_ca()
     {
         # code...
-        $data['title'] = 'Import CA';
+        $data['title'] = __('text.word_import').' '.__('text.CA');
         return view('admin.imports.import_ca', $data);
     }
     
@@ -45,7 +45,7 @@ class ImportCenter extends Controller
             // make sure reference doesn't exist
             if (Result::where('reference', '=', $request->reference)->count() > 0) {
                 # code...
-                return back()->with('error', 'Could not import. Reference already exist.');
+                return back()->with('error', __('text.import_ref_exist'));
             }
     
             $file = $request->file('file');
@@ -70,29 +70,29 @@ class ImportCenter extends Controller
                         $subject = Subjects::where('code', '=', $row[1])->first() ?? null;
                         if ($student == null) {
                             # code...
-                            $errors .= 'student with matricule <strong>'.$row[0].'</strong> not found. </br>';                        
+                            $errors .= __('text.student_matric_not_found', ['matric'=>'<strong>'.$row[0].'</strong> </br>']);                        
                         }
                         else if ($subject == null) {
                             # code...
-                            $errors .= 'Course with code <strong>'.$row[1].'</strong> not found. </br>';
+                            $errors .= __('text.course_with_code_not_found', ['code'=>'<strong>'.$row[1].'</strong> </br>']);
                         }
                         else{
                             // return $row;
                             $class = Students::find($student->id)->_class($request->year);
                             if ($class == null) {
                                 # code...
-                                $errors .= 'No class registered for student <strong>'.$row[0].'</strong> year '.Batch::find($request->year)->name.' </br>';
+                                $errors .= __('text.no_class_phrase', ['student'=>'<strong>'.$row[0].'</strong>', 'year'=>Batch::find($request->year)->name.' </br>']);
                                 continue;
                                 
                             }
                             $ca_total = $student->_class($request->year)->program->ca_total;
                             if ($ca_total == null || $ca_total == 0) {
                                 # code...
-                                $errors .= "CA TOTAL not set for " . $student->_class($request->year)->program->name .' for student [ '.$student->matric.' ]</br>';
+                                $errors .= __('text.CA_total_not_set_for', ['program'=>$student->_class($request->year)->program->name]);
                                 continue;
                             }else{
                                 if($row[2] > $ca_total){
-                                    $errors .= "CA mark for [ ".$subject->code.' ] '.$subject->name.' exceeds CA TOTALS for student [ '.$student->matric.' ]</br>';
+                                    $errors .= __('text.CA_mark_exceeds_totals', ['course'=>'[ '.$subject->code.' ] '.$subject->name.']', 'student'=>'[ '.$student->matric.' ]</br>']);
                                     continue;
                                 }
                             }
@@ -121,7 +121,7 @@ class ImportCenter extends Controller
                                 'class_subject_id'=>$data['class_subject_id']
                             ])->whereNotNull('ca_score')->count()>0) {
                                 # code...
-                                $errors .= $row[0]." already has a CA mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";
+                                $errors .= __('text.already_has_ca_mark', ['student'=>$row[0], 'course'=>$row[1]]);
                             }else{
                                 Result::create($data);
                             }
@@ -130,9 +130,9 @@ class ImportCenter extends Controller
                     }
                 }
                 DB::commit();
-                return back()->with('message', $errors .'<br>!Done');
+                return back()->with('message', $errors .'<br>'.__('text.word_done'));
             }
-            else{return back()->with('error', 'File must be of type .csv');}
+            else{return back()->with('error', __('text.file_type_constraint', ['type'=>'.csv']));}
         } catch (\Throwable $th) {
             DB::rollBack();
             // return back()->with('error', $th->getMessage());
@@ -143,7 +143,7 @@ class ImportCenter extends Controller
     public function import_exam()
     {
         # code...
-        $data['title'] = 'Import Exams';
+        $data['title'] = __('text.import_exams');
         return view('admin.imports.import_exam', $data);
     }
     
@@ -168,7 +168,7 @@ class ImportCenter extends Controller
             // make sure reference doesn't exist
             if (Result::where('reference', '=', $request->reference)->count() > 0) {
                 # code...
-                return back()->with('error', 'Could not import. Reference already exist.');
+                return back()->with('error', __('text.record_already_exist', ['item'=>__('text.word_reference')]));
             }
     
             $file = $request->file('file');
@@ -193,18 +193,18 @@ class ImportCenter extends Controller
                         $subject = Subjects::where('code', '=', $row[1])->first() ?? null;
                         if ($student == null) {
                             # code...
-                            $errors .= 'student with matricule <strong>'.$row[0].'</strong> not found. </br>';                        
+                            $errors .=__('text.student_matric_not_found', ['matric'=>'<strong>'.$row[0].'</strong> </br>']);                        
                         }
                         else if ($subject == null) {
                             # code...
-                            $errors .= 'Course with code <strong>'.$row[1].'</strong> not found. </br>';
+                            $errors .= __('text.course_with_code_not_found', ['code'=>'<strong>'.$row[1].'</strong> </br>']);
                         }
                         else{
                             // return $row;
                             $class = Students::find($student->id)->_class($request->year);
                             if ($class == null) {
                                 # code...
-                                $errors .= 'No class registered for student <strong>'.$row[0].'</strong> year '.Batch::find($request->year)->name.' </br>';
+                                $errors .= __('text.no_class_phrase', ['student'=>'<strong>'.$row[0].'</strong>', 'year'=>Batch::find($request->year)->name.' </br>']);
                                 continue;
                                 
                             }
@@ -213,21 +213,21 @@ class ImportCenter extends Controller
                             $exam_total = $student->_class($request->year)->program->exam_total;
                             if ($ca_total == null || $ca_total == 0) {
                                 # code...
-                                $errors .= "CA TOTAL not set for " . $student->_class($request->year)->program->name . ' for student [ '.$student->matric.' ]</br>';
+                                $errors .= __('text.CA_total_not_set_for', ['program'=>$student->_class($request->year)->program->name]);
                                 continue;
                             }else{
                                 if($row[2] > $ca_total){
-                                    $errors .= "CA mark for [ ".$subject->code.' ] '.$subject->name.' exceeds CA TOTALS for student [ '.$student->matric.' ]</br>';
+                                    $errors .= __('text.CA_mark_exceeds_totals', ['course'=>"[ ".$subject->code.' ] '.$subject->name, 'student'=>'[ '.$student->matric.' ]']);
                                     continue;
                                 }
                             }
                             if ($exam_total == null || $exam_total == 0) {
                                 # code...
-                                $errors .= "EXAM TOTAL not set for " . $student->_class($request->year)->program->name. ' for student [ '.$student->matric.' ]</br>';
+                                $errors .= __('text.exam_total_not_set_for', ['program'=>$student->_class($request->year)->program->name]);
                                 continue;
                             }else{
                                 if($row[3] > $exam_total){
-                                    $errors .= "EXAM mark for [ ".$subject->code.' ] '.$subject->name.' exceeds EXAM TOTALS for student [ '.$student->matric.' ]</br>';
+                                    $errors .= __('text.exam_mark_exceeds_totals', ['course'=>"[ ".$subject->code.' ] '.$subject->name, 'student'=>'[ '.$student->matric.' ]']);
                                     continue;
                                 }
                             }
@@ -265,13 +265,13 @@ class ImportCenter extends Controller
                             ];
                             if (Result::where($base)->whereNotNull('ca_score')->count()>0) {
                                 # code...
-                                $errors .= $row[0]." already has CA mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";
+                                $errors .= __('text.already_has_ca_mark', ['student'=>$row[0], 'course'=>$row[1]]);
                             }elseif(array_key_exists('ca_score', $ca)){
                                 Result::updateOrCreate($base, ['ca_score'=>$ca['ca_score'], 'reference'=>$request->reference]);
                             }
                             if (Result::where($base)->whereNotNull('exam_score')->count()>0) {
                                 # code...
-                                $errors .= $row[0]." already has Exam mark for ".$row[1]." this academic year and will not be added. Clear or delete record and re-import to make sure all data is correct</br>";
+                                $errors .= __('text.already_has_exam_mark', ['student'=>$row[0], 'course'=>$row[1]]);
                             }else{
                                 Result::updateOrCreate($base, $update);
                             }
@@ -280,9 +280,9 @@ class ImportCenter extends Controller
                     }
                 }
                 DB::commit();
-                return back()->with('message', $errors .'<br>!Done');
+                return back()->with('message', $errors .'<br>'.__('text.word_done'));
             }
-            else{return back()->with('error', 'File must be of type .csv');}
+            else{return back()->with('error', __('text.file_type_constraint', ['type'=>'.csv']));}
         } catch (\Throwable $th) {
             DB::rollBack();
             // return back()->with('error', $th->getMessage());
@@ -293,7 +293,7 @@ class ImportCenter extends Controller
     public function clear_ca()
     {
         # code...
-        $data['title'] = 'Clear Results';
+        $data['title'] = __('text.clear_results');
         return view('admin.imports.clear_ca', $data);
     }
 
@@ -315,13 +315,13 @@ class ImportCenter extends Controller
             # code...
             $value->delete();
         }
-        return back()->with('success', 'Done.');
+        return back()->with('success', __('text.word_done'));
     }
     
     public function clear_exam()
     {
         # code...
-        $data['title'] = 'Clear Exams';
+        $data['title'] = __('text.clear_exams');
         return view('admin.imports.clear_exam', $data);
     }
 
@@ -343,13 +343,13 @@ class ImportCenter extends Controller
             # code...
             $value->delete();
         }
-        return back()->with('success', 'Done.');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function clear_fee()
     {
         # code...
-        $data['title'] = 'Clear Fees';
+        $data['title'] = __('text.clear_fees');
         return view('admin.imports.clear_fee', $data);
     }
 

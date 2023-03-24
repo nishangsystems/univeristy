@@ -193,6 +193,11 @@ class HomeController extends Controller
         $class = auth('student')->user()->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
         
+        // check if results are published
+        if(!$semester->result_is_published($year->id)){
+            return back()->with('error', 'Results Not Yet Published For This Semester.');
+        }
+
         // check if semester result fee is set && that student has payed 
         $plcharge = PlatformCharge::where(['year_id'=>$year->id])->first();
         $amount = $plcharge->result_amount ?? null;

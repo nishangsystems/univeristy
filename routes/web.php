@@ -199,6 +199,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('class_results', 'Admin\ResultController@class_results')->name('class_results');
         Route::post('class_results', 'Admin\ResultController@class_results');
         Route::get('individual_results/instances/{searchValue}', 'Admin\ResultController@individual_instances')->name('individual.instances');
+        Route::get('publishing', 'Admin\ResultController@result_publishing')->name('publishing');
+        Route::get('publish/{year}/{semester}', 'Admin\ResultController@publish_results')->name('publish');
+        Route::get('unpublish/{year}/{semester}', 'Admin\ResultController@unpublish_results')->name('unpublish');
     
     
         // ADDED RESULT ROUTES FOR OFFLINE SYSTEM
@@ -456,6 +459,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
     Route::get('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@show')->name('subject.show');
     Route::get('subjects/students/{class_id}/{course_id}', 'Teacher\SubjectController@course_list')->name('subject.students');
+    Route::get('subjects/result_template/{class_id}/{course_id}/{campus_id}', 'Teacher\SubjectController@result_template')->name('subject.result_template');
     Route::put('subjects/notes/{id}', 'Teacher\SubjectNotesController@publish_notes')->name('subject.note.publish');
     Route::post('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@store')->name('subject.note.store');
     Route::delete('subjects/notes/{id}', 'Teacher\SubjectNotesController@destroy')->name('subject.note.destroy');

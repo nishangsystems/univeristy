@@ -37,7 +37,7 @@ class HomeController  extends Controller
     public function set_letter_head()
     {
         # code...
-        $data['title'] = "Upload Letter-head";
+        $data['title'] = __('text.upload_letter_head');
         return view('admin.setting.set-letter-head', $data);
     }
 
@@ -63,15 +63,15 @@ class HomeController  extends Controller
             }else {
                 File::where(['name'=>'letter-head'])->update(['path'=>$path]);
             }
-            return back()->with('success', 'Done');
+            return back()->with('success', __('text.word_done'));
         }
-        return back()->with('error', 'Error reading file');
+        return back()->with('error', __('text.error_reading_file'));
     }
 
     public function set_background_image()
     {
         # code...
-        $data['title'] = 'Set Background Image';
+        $data['title'] = __('text.set_background_image');
         return view('admin.setting.bg_image', $data);
     }
     public function save_background_image(Request $request)
@@ -91,14 +91,14 @@ class HomeController  extends Controller
             $filename = 'background_image.jpeg';
             // $path = $filename;
             $file->storeAs('/bg_image', $filename);
-            return back()->with('success', 'Done');
+            return back()->with('success', __('text.word_done'));
         }
-        return back()->with('error', 'Error reading file');
+        return back()->with('error', __('text.error_reading_file'));
     }
 
     public function setayear()
     {
-        $data['title'] = 'Set Current Academic Year';
+        $data['title'] = __('text.set_current_accademic_year');
         return view('admin.setting.setbatch')->with($data);
     }
 
@@ -109,7 +109,7 @@ class HomeController  extends Controller
 
     public function courses_date_line(Request $request)
     {
-        $data['title'] = "Set Course Registration Date Line".($request->has('semester') ? ' For '.Semester::find($request->semester)->name : '');
+        $data['title'] = __('text.set_course_registration_dateline').($request->has('semester') ? ' '.__('text.word_for').' '.Semester::find($request->semester)->name : '');
         if(request()->has('background')){
             $data['current_semester'] = Semester::where(['background_id'=>$request->background, 'status'=>1])->first()->id ?? null;
         }
@@ -138,7 +138,7 @@ class HomeController  extends Controller
                     'semester_id'=>$request->semester, 'campus_id'=>auth()->user()->campus_id ?? null, 'courses_date_line'=>$request->date
                 ]);
             }
-            return back()->with('success', 'Done');
+            return back()->with('success', __('text.word_done'));
         } catch (\Throwable $th) {
             //throw $th;
             return back()->with('error', $th->getMessage());
@@ -154,7 +154,7 @@ class HomeController  extends Controller
             ])->count();
             if ($conf == 0) {
                 # code...
-                return ['semester'=>Semester::find($semester)->name, 'date_line'=>"DATE LINE NOT SET"];
+                return ['semester'=>Semester::find($semester)->name, 'date_line'=>__('text.DATELINE_NOT_SET')];
             }
             // return __DIR__;
             return ['semester'=>Semester::find($semester)->name, 'date_line'=>date('l d-m-Y', strtotime(CampusSemesterConfig::where(['campus_id'=>$campus, 'semester_id'=>$semester])->first()->courses_date_line)), 'date'=>CampusSemesterConfig::where(['campus_id'=>$campus, 'semester_id'=>$semester])->first()->courses_date_line];
@@ -163,7 +163,7 @@ class HomeController  extends Controller
     public function program_settings(Request $request)
     {
         # code...
-        $data['title'] = "Program Settings";
+        $data['title'] = __('text.program_settings');
         return view('admin.setting.program_settings', $data);
     }
 
@@ -179,16 +179,16 @@ class HomeController  extends Controller
             $program->exam_total=$request->exam_total;
             $program->resit_cost=$request->resit_cost;
             $program->save();
-            return back()->with('success', 'Done');
+            return back()->with('success', __('text.word_done'));
         }
-        return back()->with('error', 'Program Not Found.');
+        return back()->with('error', __('text.page_not_found'));
     }
 
 
     public function setsemester(Request $request)
     {
         # code...
-        $data['title'] = "Set Current Semester";
+        $data['title'] = __('text.set_current_semester');
         $data['semesters'] = Semester::join('backgrounds', ['backgrounds.id'=>'semesters.background_id'])
                     ->distinct()->select(['semesters.*', 'backgrounds.background_name'])->orderBy('background_name', 'DESC')->orderBy('name', 'ASC')->get();
         // return $data;
@@ -209,10 +209,10 @@ class HomeController  extends Controller
             $semester = Semester::find($id);
             $semester->status = 1;
             $semester->save();
-            return back()->with('success', 'Done');
+            return back()->with('success', __('text.word_done'));
         } catch (\Throwable $th) {
             //throw $th;
-            return back()->with('error', 'Operation failed. '.$th->getMessage());
+            return back()->with('error', __('text.operation_failed').' '.$th->getMessage());
         }
     }
 
@@ -226,10 +226,10 @@ class HomeController  extends Controller
     public function deletebatch($id)
     {
         if (DB::table('batches')->count() == 1) {
-            return redirect()->back()->with('error', 'Cant delete last batch');
+            return redirect()->back()->with('error', __('text.can_not_delete_last_batch'));
         }
         DB::table('batches')->where('id', '=', $id)->delete();
-        return redirect()->back()->with('success', 'batch deleted');
+        return redirect()->back()->with('success', __('text.word_done'));
     }
 
 
@@ -243,13 +243,13 @@ class HomeController  extends Controller
         ];
         $year->update($data);
 
-        return redirect()->back()->with('success', 'Set Current Academic Year successfully');
+        return redirect()->back()->with('success', __('text.word_done'));
     }
 
     public function extraFee(Request $request)
     {
         # code...
-        $data['title'] = "ADD ADDITIONAL FEE ".($request->student_id == null ? '' : ' FOR '.Students::find($request->student_id)->name ?? '');
+        $data['title'] = __('text.add_additional_fee_for', ['item'=>$request->student_id == null ? '' : Students::find($request->student_id)->name ?? '']);
         return view('admin.fee.extra-fee', $data);
     }
 
@@ -263,20 +263,20 @@ class HomeController  extends Controller
         }
         // return $request->all();
         \App\Models\ExtraFee::create(['student_id'=>$request->student_id, 'amount'=>$request->amount, 'year_id'=>$request->year_id]);
-        return back()->with('success', 'Done');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function custom_resit_create()
     {
         # code...
-        $data['title'] = "Open Resit";
+        $data['title'] = __('text.open_resit');
         return view('admin.setting.custom_resit.create', $data);
     }
 
     public function custom_resit_edit(Request $request, $id)
     {
         # code...
-        $data['title'] = "Open Resit";
+        $data['title'] = __('text.edit_resit');
         $data['resit'] = Resit::find($id);
         return view('admin.setting.custom_resit.edit', $data);
     }
@@ -291,7 +291,7 @@ class HomeController  extends Controller
 
         $resit = new Resit($request->all());
         $resit->save();
-        return back()->with('success', 'Done');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function custom_resit_update(Request $request, $id)
@@ -306,10 +306,10 @@ class HomeController  extends Controller
         if($resit != null){
             $resit->fill($request->all());
             $resit->save();
-            return back()->with('success', 'Done');
+            return back()->with('success', __('text.word_done'));
         }
 
-        return back()->with('error', 'Update failed. Resit record not found.');
+        return back()->with('error', __('text.operation_failed_record_not_found'));
     }
 
     public function custom_resit_delete(Request $request, $id)
@@ -321,13 +321,13 @@ class HomeController  extends Controller
             return back()->with('success', 'Done');
         }
 
-        return back()->with('error', 'Operation failed. Resit record not found.');
+        return back()->with('error', __('text.operation_failed_record_not_found'));
     }
 
     public function resits_index()
     {
         # code...
-        $data['title'] = "Resits";
+        $data['title'] = __('text.word_resits');
         return view('admin.resit.index', $data);
     }
 
@@ -335,7 +335,7 @@ class HomeController  extends Controller
     {
         # code...
         $resit =  Resit::find($resit_id);
-        $data['title'] = "Course List For " . $resit->name();
+        $data['title'] = __('text.course_list_for', ['item'=>$resit->name()]);
         $data['courses'] = Subjects::join('student_courses', ['student_courses.course_id'=>'subjects.id'])
                     ->where(['student_courses.resit_id'=>$resit_id, 'student_courses.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
                     ->join('students', ['students.id'=>'student_courses.student_id'])
@@ -354,14 +354,14 @@ class HomeController  extends Controller
     {
         # code...
         $subject = Subjects::find($request->subject_id);
-        $data['title'] = "Resit Course List For [ ".$subject->code .' ] '. $subject->name.' - '.Resit::find($request->resit_id)->year->name;
+        $data['title'] = __('text.resit_course_list_for', ['item'=>"[ ".$subject->code .' ] '. $subject->name.' - '.Resit::find($request->resit_id)->year->name]);
         $data['subjects'] = Subjects::find($request->subject_id)->student_subjects()->where(['resit_id' => $request->resit_id])
                         ->join('students',  ['students.id'=>'student_courses.student_id'])
                         ->orderBy('students.name')->get(['student_courses.*']);
         if($request->print == 1){
 
             $pdf = Pdf::loadView('admin.resit._course_list_print', $data);
-            return $pdf->download("Resit Statistics For [ ".$subject->code .' ] '. $subject->name.' - '.Resit::find($request->resit_id)->year->name . '.pdf');
+            return $pdf->download(__('text.resit_course_list_for', ['item'>"[ ".$subject->code .' ] '. $subject->name.' - '.Resit::find($request->resit_id)->year->name . '.pdf']));
         }
         // dd($data['subjects']);
         return view('admin.resit.course_list_print', $data);
@@ -370,7 +370,7 @@ class HomeController  extends Controller
     public function set_charges()
     {
         # code...
-        $data['title'] = "Set Charges";
+        $data['title'] = __('text.set_charges');
         return view('admin.setting.charges', $data);
     }
 
@@ -388,6 +388,6 @@ class HomeController  extends Controller
             return back()->with('error', $validity->errors()->first());
         }
         PlatformCharge::updateOrInsert(['year_id'=>$request->year_id], ['yearly_amount'=>$request->yearly_amount, 'result_amount'=>$request->result_amount, 'transcript_amount'=>$request->transcript_amount]);
-        return back()->with('success', 'Done');
+        return back()->with('success', __('text.word_done'));
     }
 }

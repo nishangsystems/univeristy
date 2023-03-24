@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helpers;
 use App\Models\CampusProgram;
 use App\Models\Students;
 use App\Models\User;
@@ -21,9 +22,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    var $current_accademic_year;
     public function __construct()
     {
         # code...
+        $this->current_accademic_year = Helpers::instance()->getCurrentAccademicYear();
         ini_set('max_execution_time', 360);
 
     }

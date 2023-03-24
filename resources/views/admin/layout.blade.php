@@ -341,6 +341,15 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    
+                    <li>
+                        <a href="{{route('admin.result.publishing')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.publish_results')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
                     @if (auth()->user()->can('access_hidden_features'))
                         <li>
                             <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
@@ -1117,7 +1126,6 @@
                         <b class="arrow"></b>
                         <form action="{{route('admin.res_and_trans.grd_sheet')}}" method="post" class="hidden" id="grd_post_form">@csrf</form>
                     </li>
-                    
 
                     <li>
                         <a href="{{route('admin.result.individual_results')}}" class="text-capitalize">

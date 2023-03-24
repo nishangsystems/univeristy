@@ -42,4 +42,12 @@ class Semester extends Model
             return now()->isAfter(Carbon::createFromDate($this->exam_latest_date));
         return false;
     }
+
+    public function result_is_published($year){
+        if (Result::where(['batch_id'=>$year, 'semester_id'=>$this->id, 'student_id'=>auth('student')->id(), 'published'=>1])->count() > 0) {
+            # code...
+            return true;
+        }
+        return false;
+    }
 }

@@ -92,7 +92,7 @@ class FeesController extends Controller
     {
         # code...
         $class = ProgramLevel::find($request->class);
-        $data['title'] = __('text.fee_situation').' '.__('text.word_for').' '.$class->program->name.' : Level '.$class->level->level.' - '.Batch::find($request->year)->name;
+        $data['title'] = __('text.fee_situation').' '.__('text.word_for').' '.$class->program->name.' : '.__('text.word_level').' '.$class->level->level.' - '.Batch::find($request->year)->name;
         $data['data'] = HomeController::fee_situation($request);
         // return $data;
         return view('admin.fee.fee_situation_list', $data);
@@ -127,7 +127,7 @@ class FeesController extends Controller
     public function delete(Request  $request, $id)
     {
         Payments::find($id)->delete();
-        Session::flash('success', "Fee collection deleted successfully!");
+        Session::flash('success', __('text.word_done'));
         return redirect()->back();
     }
 
@@ -157,7 +157,7 @@ class FeesController extends Controller
 
             // cancel operation if provided import_reference already exist
             if(Payments::where('import_reference', $request->import_reference)->count() > 0){
-                return back()->with('error', "Import failed. Import already exists with import reference : ".$request->import_reference);
+                return back()->with('error', __('text.record_already_exist', ['item'=>__('text.word_reference').' '.$request->import_reference]));
             }
 
             $file = $request->file('file');
@@ -177,7 +177,7 @@ class FeesController extends Controller
                 $matric_probs = '';
                 $ref_probs = '';
                 $campus_access = '';
-                $campus_access_prefix= "Permission denied. Wrong campus. Can not import for ";
+                $campus_access_prefix= __('text.x_phrase_2');
                 $fee_settings_probs = '';
                 if (count($file_data) > 0){
                     DB::beginTransaction();
@@ -204,7 +204,7 @@ class FeesController extends Controller
                                 # code...
                                 $prog = \App\Models\ProgramLevel::find($student->program_id);
                                 $cmps = \App\Models\Campus::find($student->campus_id)->name;
-                                $str = " Tution not set for Program : ".$prog->program()->first()->name." LEVEL ".$prog->level()->first()->level.' in '.$cmps.' campus';
+                                $str = " Tution not set for Program : ".$prog->program()->first()->name." ".__('text.word_level')." ".$prog->level()->first()->level.' '.__('text.word_in').' '.$cmps.' '.__('text.word_campus');
                                 $fee_settings_probs .= str_contains($fee_settings_probs, $str) ? '' : $str;
                                 continue;
                             }
@@ -217,7 +217,7 @@ class FeesController extends Controller
                                 'reference_number' => $value['2'] ?? ''
                             ];
                         }else{
-                            $matric_probs .= ' matricule '.$value[0].' not found,';
+                            $matric_probs .= ' '.__('text.word_matricule').' '.$value[0].' '.__('text.not_found').',';
                         }
                     }
                     foreach ($payments as $value) {
@@ -226,7 +226,7 @@ class FeesController extends Controller
                             \App\Models\Payments::create($value);
                         }
                         else{
-                            $ref_probs .= " reference error with ".\App\Models\Students::find($value['student_id'])->matric;
+                            $ref_probs .= __('text.reference_error_with', ['item'=>\App\Models\Students::find($value['student_id'])->matric]);
                         }
                     }
                     DB::commit();
@@ -234,15 +234,15 @@ class FeesController extends Controller
                     if(strlen($fee_settings_probs) > 0) {throw new Error($fee_settings_probs);}
                     if(strlen($matric_probs) > 0) {throw new Error($matric_probs);}
                     if(strlen($ref_probs) > 0){throw new Error($ref_probs);}
-                    return back()->with('success', 'Done');
+                    return back()->with('success', __('text.word_done'));
                     // return $request->all();
                 }
                 else {
-                    return back()->with('error', 'No data could be read from file');
+                    return back()->with('error', __('text.x_phrase_3'));
                 }
             }
             else{
-                return back()->with('error', 'File must be of type .csv');
+                return back()->with('error', __('text.file_type_constraint', ['type'=>'.csv']));
             }
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -261,6 +261,6 @@ class FeesController extends Controller
                 $record->delete();
             }
         }
-        return back()->with('success', 'Done');
+        return back()->with('success', __('text.word_done'));
     }
 }

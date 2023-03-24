@@ -13,13 +13,13 @@ class SchoolsController extends Controller
     public function index()
     {
         # code...
-        $data['title'] = "Manage Schools";
+        $data['title'] = __('text.manage_schools');
         return view('admin.schools.index');
     }
 
     public function create()
     {
-        $data['title'] = "New School";
+        $data['title'] = __('text.new_school');
         return view('admin.schools.create');
     }
 
@@ -42,7 +42,7 @@ class SchoolsController extends Controller
                     $school->logo_path = $filename;
                 }
                 $school->save();
-                return back()->with('success', 'School created');
+                return back()->with('success', __('text.word_done'));
             } catch (\Throwable $th) {
                 //throw $th;
                 return back()->with('error', $th->getMessage());
@@ -54,7 +54,7 @@ class SchoolsController extends Controller
 
     public function edit($id)
     {
-        $data['title'] = "Edit School";
+        $data['title'] = __('text.edit_school');
         $data['school'] = \App\Models\School::find($id);
         return view('admin.schools.edit', $data);
     }
@@ -73,7 +73,7 @@ class SchoolsController extends Controller
                 $school = \App\Models\School::find($id);
                 if (\App\Models\School::where('name', '=', $request->name)->count()>0 && $school->name != $request->name) {
                     # code...
-                    return back()->with('error', 'School name already exists');
+                    return back()->with('error', __('text.record_already_exist', ['item'=>$request->name]));
                 }
                 $school->name = $request->name;
                 $school->contact = $request->contact;
@@ -87,7 +87,7 @@ class SchoolsController extends Controller
                     $school->logo_path = $filename;
                 }
                 $school->save();
-                return back()->with('success', 'School updated');
+                return back()->with('success', __('text.word_done'));
             } catch (\Throwable $th) {
                 //throw $th;
                 return back()->with('error', $th->getMessage());
@@ -100,7 +100,7 @@ class SchoolsController extends Controller
     public function preview($id)
     {
         # code...
-        $data['title'] = "School Preview";
+        $data['title'] = __('text.school_preview');
         $data['school'] = \App\Models\School::find($id);
         return view('admin.schools.preview', $data);
     }

@@ -24,23 +24,23 @@ class StockController extends Controller
     {
         # code...
         $data['stock'] = \App\Models\Stock::all();
-        $data['title'] = "Available Items";
+        $data['title'] = __('text.available_items');
         return view('admin.stock.index', $data);
     }
-
-
+    
+    
     public function campus_index()
     {
         # code...
         $data['stock'] = \App\Models\Stock::all();
-        $data['title'] = "Available Items";
+        $data['title'] = __('text.available_items');
         return view('admin.stock.campus.index', $data);
     }
 
     public function create()
     {
         # code...
-        $data['title'] = "Create Item";
+        $data['title'] = __('text.create_item');
         return view('admin.stock.create', $data);
     }
 
@@ -54,16 +54,16 @@ class StockController extends Controller
             return back()->with('error', $validate->errors()->first());
         }
         if(Stock::where(['name'=>$request->name])->count() > 0){
-            return back()->with('error', 'Item with name '.$request->name.' already exist.');
+            return back()->with('error', __('text.record_already_exist', ['item'=>$request->name]));
         }
         Stock::create(['name'=>$request->name, 'type'=>$request->type ?? 'givable']);
-        return back()->with('success', 'Done');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function edit(Request $request, $id)
     {
         # code...
-        $data['title'] = "Edit Stock Item";
+        $data['title'] = __('text.edit_stock_item');
         $data['item'] = Stock::find($id);
         return view('admin.stock.edit', $data);
     }
@@ -80,9 +80,9 @@ class StockController extends Controller
         if(!$item == null){
             $item->update($request->all());
             $item->save();
-            return back()->with('success', '!Done');
+            return back()->with('success', __('text.word_done'));
         }
-        else{return back()->with('error', 'Item could not be resolved');}
+        else{return back()->with('error', __('text.not_found'));}
     }
 
     public function delete(Request $request, $id)
@@ -92,15 +92,15 @@ class StockController extends Controller
         if (!$item == null) {
             # code...
             $item->delete();
-            return redirect(route('admin.stock.index'))->with('success', '!Done');
+            return redirect(route('admin.stock.index'))->with('success', __('text.word_done'));
         }
-        return back()->with('error', 'Stock item/entry not found.');
+        return back()->with('error', __('text.not_found'));
     }
 
     public function receive(Request $request, $id)
     {
         # code...
-        $data['title'] = "Receive ".Stock::find($id)->name ?? 'Item';
+        $data['title'] = __('text.receive', ['item'=>Stock::find($id)->name ?? 'Item']);
         return view('admin.stock.receive', $data);
     }
 
@@ -108,21 +108,21 @@ class StockController extends Controller
     {
         # code...
         $record = StockTransfers::find($request->record);
-        if ($record == null) {return back()->with('error', 'Record could not be resolved.');}
+        if ($record == null) {return back()->with('error', __('text.item_not_found', ['item'=>__('text.stock_transfer')]));}
         $item = $record->stock;
 
-        if($item == null){ return back()->with('error', 'Item could not be resolved.');}
+        if($item == null){ return back()->with('error', __('text.item_not_found', ['item'=>__('text.stock_item')]));}
         $item->quantity -= $record->quantity;
         $item->save();
         $record->delete();
 
-        return back()->with('success', 'Done');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function campus_receive(Request $request, $campus_id, $id)
     {
         # code...
-        $data['title'] = "Receive ".Stock::find($id)->name ?? 'Item ' . ($request->has('student_id')? Students::find($request->student_id)->name : null);
+        $data['title'] = __('text.receive', ['item'=>Stock::find($id)->name ?? __('text.word_item') . ($request->has('student_id')? Students::find($request->student_id)->name : null)]);
         return view('admin.stock.campus.receive', $data);
     }
 
@@ -138,11 +138,11 @@ class StockController extends Controller
 
                 StockTransfers::create(['quantity'=>$request->quantity, 'user_id'=>auth()->id(), 'stock_id'=>$request->id, 'type'=>'receive']);
 
-                return back()->with('success', 'Done');
+                return back()->with('success', __('text.word_done'));
             }
         } catch (\Throwable $th) {
             //throw $th;
-            return back()->with('error', 'Operation failed. Item could not be resolved. '.$th->getMessage());
+            return back()->with('error', __('text.operation_failed').'. '.__('text.item_not_found', ['item'=>__('text.word_item')]));
         }
     }
 
@@ -166,7 +166,7 @@ class StockController extends Controller
                 $stk_count = $item->studentStock(request('campus_id'))->where(['type'=>'receivable'])->where(['student_id'=>$request->student_id])->count();
                 if ($stk_count > 0) {
                     # code...
-                    return back()->with('error', 'Can\'t receive item more than once. Record already exist for '.Students::find($request->student_id)->name);
+                    return back()->with('error', __('text.already_received_item_for', ['item'=>Students::find($request->student_id)->name]));
                 }
 
                 StudentStock::create(['stock_id'=>$id, 'student_id'=>$request->student_id, 'quantity'=>$request->quantity, 'type'=>$item->type, 'campus_id'=>Students::find($request->student_id)->campus_id ?? auth()->user()->campus_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear()]);
@@ -180,19 +180,19 @@ class StockController extends Controller
                 }else{
                     CampusStock::create(['campus_id'=>$campus_id, 'stock_id'=>$id, 'quantity'=>$request->quantity]);
                 }
-                return back()->with('success', 'Done');
+                return back()->with('success', __('text.word_done'));
             }
         } catch (\Throwable $th) {
             //throw $th;
             throw $th;
-            return back()->with('error', 'Operation failed. Item could not be resolved. '.$th->getMessage());
+            return back()->with('error',  __('text.operation_failed').'. '.__('text.item_not_found', ['item'=>__('text.word_item')]));
         }
     }
 
     public function send(Request $request, $id)
     {
         # code...
-        $data['title'] = "Send ".Stock::find($id)->name ?? 'Item';
+        $data['title'] = __('text.send_item', ['item'=>Stock::find($id)->name ?? __('text.word_item')]);
         return view('admin.stock.send', $data);
     }
 
@@ -200,10 +200,10 @@ class StockController extends Controller
     {
         # code...
         $record = StockTransfers::find($request->record);
-        if($record==null){return back()->with('error', 'Record could not be resolved.');}
+        if($record==null){return back()->with('error', __('text.item_not_found', ['item'=>__('text.stock_transfer')]));}
         $item = $record->stock;
 
-        if($item==null){return back()->with('error', 'Item could not be resolved.');}
+        if($item==null){return back()->with('error', __('text.item_not_found', ['item'=>__('text.stock_item')]));}
         $item->quantity += $record->quantity;
         $item->save();
         
@@ -213,7 +213,7 @@ class StockController extends Controller
             $campusStock->save();
         }
         $record->delete();
-        return back()->with('success', '!Done');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function __send(Request $request, $id)
@@ -234,7 +234,7 @@ class StockController extends Controller
                 'type'=>'send',
                 'quantity'=>$request->quantity
             ]);
-            return back()->with('success', '!Done');
+            return back()->with('success', __('text.word_done'));
 
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
@@ -246,12 +246,12 @@ class StockController extends Controller
         # code...
         $campus_stock = Stock::find($id)->campusStock($request->campus_id) ?? null;
         if($campus_stock == null){
-            return back()->with('error', 'This Campus does not have selected item.');
+            return back()->with('error', __('text.item_not_in_campus'));
         }elseif ($campus_stock->quantity == 0) {
             # code...
-            return back()->with('error', 'Not enough items in stock.');
+            return back()->with('error', __('text.insuficient_items'));
         }
-        $data['title'] = "Give Out ".Stock::find($id)->name ?? 'Item';
+        $data['title'] = __('text.give_out_item', ['item'=>Stock::find($id)->name ?? __('text.word_item')]);
         return view('admin.stock.campus.giveout', $data);
     }
 
@@ -271,12 +271,12 @@ class StockController extends Controller
             $stk_count = Stock::find($request->id)->studentStock(request('campus_id'))->where(['type'=>'givable'])->where(['student_id'=>$request->student_id])->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->count();
             if ($stk_count > 0) {
                 # code...
-                return back()->with('error', 'Can\'t give out item more than once per student. Record already exist for '.Students::find($request->student_id)->name);
+                return back()->with('error', __('text.already_gave_out_item_to', ['item'=>Students::find($request->student_id)->name]));
             }
 
             // Check if there is enough to give out
             if($campus_stock->quantity < $request->quantity){
-                return back()->with('error', 'Not enough stock to give out.');
+                return back()->with('error', __('text.insuficient_items'));
             }
 
             StudentStock::create(['student_id'=>$request->student_id, 'stock_id'=>$id, 'quantity'=>$request->quantity, 'type'=>Stock::find($id)->type ?? 'receivable',  'campus_id'=>Students::find($request->student_id)->campus_id ?? auth()->user()->campus_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear()]);
@@ -284,9 +284,9 @@ class StockController extends Controller
             $campus_stock->quantity -= $request->quantity;
             $campus_stock->save();
 
-            return back()->with('success', '!Done');
+            return back()->with('success', __('text.word_done'));
         }else {
-            return back()->with('error', 'Stock item could not be resolved');
+            return back()->with('error', __('text.item_not_found', ['item'=>__('text.stock_item')]));
         }
         
     }
@@ -294,7 +294,7 @@ class StockController extends Controller
     public function restore(Request $request, $campus_id, $id)
     {
         # code...
-        $data['title'] = "Restore ".Stock::find($id)->name ?? 'Item';
+        $data['title'] = __('text.restore_item', ['item'=>Stock::find($id)->name ?? __('text.word_item')]);
         $data['item'] = Stock::find($id);
         return view('admin.stock.campus.restore', $data);
     }
@@ -309,10 +309,10 @@ class StockController extends Controller
             return back()->with('error', $validate->errors()->first());
         }
         $item = Stock::find($id);
-        if ($item == null) {return back()->with('error', 'Item could not be resolved');}
+        if ($item == null) {return back()->with('error', __('text.item_not_found', ['item'=>__('text.word_item')]));}
         $campusStock = $item->campusStock($campus_id);
-        if($campusStock == null){return back()->with('error', 'Nothing to restore.');}
-        if($campusStock->quantity < $request->quantity ){return back()->with('error', 'Can\'t restore. Not enough items in stock.');}
+        if($campusStock == null){return back()->with('error', __('text.insuficient_items'));}
+        if($campusStock->quantity < $request->quantity ){return back()->with('error', __('text.insuficient_items'));}
         
         $campusStock->quantity -= $request->quantity;
         $campusStock->save();
@@ -322,7 +322,7 @@ class StockController extends Controller
 
         StockTransfers::create(['sender_campus'=>$campus_id, 'receiver_campus'=>null, 'user_id'=>auth()->id(), 'stock_id'=>$id, 'quantity'=>$request->quantity, 'type'=>'restore']);
 
-        return redirect(route('admin.stock.campus.index', $request->campus_id))->with('success', '!Done');
+        return redirect(route('admin.stock.campus.index', $request->campus_id))->with('success', __('text.word_done'));
     }
 
     public function delete_student_stock(Request $request)
@@ -330,20 +330,20 @@ class StockController extends Controller
         # code...
         $ss = StudentStock::find($request->id);
         $ss ? $ss->delete() : null;
-        return back()->with('success', 'Done');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function report(Request $request)
     {
         # code...
-        $data['title'] = Stock::find($request->id)->name." Stock Report";
+        $data['title'] = __('text.item_stock_report', ['item'=>Stock::find($request->id)->name]);
         return view('admin.stock.report', $data);
     }
     
     public function print_report(Request $request)
     {
         # code...
-        $data['title'] = Stock::find($request->id)->name." Stock Report";
+        $data['title'] = __('text.item_stock_report', ['item'=>Stock::find($request->id)->name]);
         return view('admin.stock.print', $data);
     }
 
@@ -352,7 +352,7 @@ class StockController extends Controller
         # code...
         $stock = Stock::find($id);
         $campus = Campus::find($campus_id);
-        $data['title'] = $stock->name . ' Report For ' . $campus->name;
+        $data['title'] = __('text.item_campus_stock_report', ['item'=>$stock->name, 'campus'=>$campus->name]);
 
         $data['external_transfers'] = $stock->studentStock($campus_id)->get();
         $data['internal_transfers'] = $stock->transfers($campus_id)->where(function ($bldr) use ($campus_id) {
@@ -379,9 +379,9 @@ class StockController extends Controller
                 ->get(['student_stock.*', 'students.name as student_name', 'students.matric as student_matric', ]);
             return view('admin.stock.campus.givable_report', $data);
         }
-        $data['title'] = "Stock Report";
+        $data['title'] = __('text.item_stock_report', ['item'=>'']);
         return view('admin.stock.campus.report_index', $data);
-
+        
     }
 
     public function campus_receivable_report(Request $request)
@@ -392,15 +392,15 @@ class StockController extends Controller
             $data['class'] = ProgramLevel::find($request->class_id);
             $data['item'] = Stock::find($request->item_id);
             $data['year'] = Batch::find($request->year_id);
-            $data['title'] = "Report For " . $data['item']->name . " -- " . $data['class']->name() . " -- " . $data['year']->name;
+            $data['title'] = __('text.report_for', ['item'=>$data['item']->name . " -- " . $data['class']->name() . " -- " . $data['year']->name]);
             $data['report'] = StudentStock::where(['student_stock.year_id' => $request->year_id, 'student_stock.campus_id' => auth()->user()->campus_id, 'student_stock.type' => 'receivable', 'student_stock.stock_id' => $request->item_id])
                 ->join('student_classes', ['student_classes.student_id' => 'student_stock.student_id', 'student_classes.year_id' => 'student_stock.year_id'])
                 ->where(['student_classes.class_id' => $request->class_id])
                 ->join('students', ['students.id'=>'student_classes.student_id'])
                 ->get(['student_stock.*', 'students.name as student_name', 'students.matric as student_matric', ]);
-            return view('admin.stock.campus.receivable_report', $data);
-        }
-        $data['title'] = "Stock Report";
+                return view('admin.stock.campus.receivable_report', $data);
+            }
+        $data['title'] = __('text.item_stock_report', ['item'=>'']);
         return view('admin.stock.campus.report_index', $data);
     }
 }

@@ -31,7 +31,7 @@ class PaymentController extends Controller
     public function index(Request $request, $student_id)
     {
         $student = Students::find($student_id);
-        $data['title'] = "Fee collections for " . $student->name;
+        $data['title'] = __('text.fee_collections_for', ['item'=>$student->name]);
         $data['student'] = $student;
         return view('admin.fee.payments.index')->with($data);
     }
@@ -45,8 +45,7 @@ class PaymentController extends Controller
         $data['total_fee'] = (int)$student->total();
         // $data['total_fee'] = CampusProgram::where('campus_id', $student->campus_id)->where('program_level_id', $student->program_id)->first()->payment_items()->first()->amount;
         $data['balance'] =  $student->bal($student_id);
-        $data['title'] = "Collect Fee for " . $student->name;
-        
+        $data['title'] = __('text.collect_fee_for', ['item'=>$student->name]);
 
         // if ($data['balance'] == 0) {
         //     return redirect(route('admin.fee.collect'))->with('success', 'Student has already completed fee');
@@ -54,7 +53,7 @@ class PaymentController extends Controller
         
         if ($data['total_fee'] <= 0) {
 
-            return redirect(route('admin.fee.collect'))->with('error', 'Fee not set');
+            return redirect(route('admin.fee.collect'))->with('error', __('text.fee_not_set'));
         }
         return view('admin.fee.payments.create')->with($data);
     }
@@ -64,7 +63,7 @@ class PaymentController extends Controller
         $student = Students::find($student_id);
         $data['student'] = $student;
         $data['payment'] = Payments::find($id);
-        $data['title'] = "Collect Fee for " . $student->name;
+        $data['title'] = __('text.collect_fee_for', ['item'=>$student->name]);
         return view('admin.fee.payments.edit')->with($data);
     }
 
@@ -103,9 +102,9 @@ class PaymentController extends Controller
                 'user_id' => auth()->user()->id,
                 'debt' => $debt,
             ]);
-            return back()->with('success', "Fee collection recorded successfully!");
+            return back()->with('success', __('text.word_done'));
         }
-        else{return back()->with('error', 'Dublicate referernce error');}
+        else{return back()->with('error', __('text.reference_already_exist'));}
 
     }
 
@@ -119,12 +118,12 @@ class PaymentController extends Controller
         $total_fee = $student->total($student_id);
         $paid =  $student->paid();
         if ($request->amount > $total_fee) {
-            return back()->with('error', 'The amount deposited has exceeded the total fee amount');
+            return back()->with('error', __('text.deposited_amount_exceeds_total_fee_amount'));
         }
         $p =  Payments::find($id);
         $new_balance = $paid - $p->amount;
         if(($new_balance + $request->amount) > $total_fee){
-            return back()->with('error', 'The amount deposited has exceeded the total fee amount');
+            return back()->with('error', __('text.deposited_amount_exceeds_total_fee_amount'));
         }
         $p->update([
             "payment_id" => $request->item,
@@ -132,14 +131,14 @@ class PaymentController extends Controller
             "unit_id" => $student->class(Helpers::instance()->getYear())->id,
         ]);
 
-        return redirect()->to(route('admin.fee.student.payments.index', $student_id))->with('success', "Fee collection record updated successfully !");
+        return redirect()->to(route('admin.fee.student.payments.index', $student_id))->with('success', __('text.word_done'));
     }
 
     public function destroy(Request $request, $student_id, $id)
     {
         $p =  Payments::find($id);
         $p->delete();
-        return back()->with('success', "Fee collection record deleted successfully !");
+        return back()->with('success', __('text.word_done'));
     }
 
     // private function checkScholars($student_id)
