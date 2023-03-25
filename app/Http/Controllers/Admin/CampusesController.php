@@ -105,11 +105,11 @@ class CampusesController extends Controller
             }
             if (isset($request->telephone) && $campus->telephone != $request->telephone && \App\Models\Campus::where('telephone', $request->telephone)->count() > 0) {
                 # code...
-                return back()->with('error', 'Update rejected. The campus tel '.$request->telephone.' already exist');
+                return back()->with('error', __('text.record_already_exist', ['item'=>$request->telephone]));
             }
             $campus->fill($request->all());
             $campus->save();
-            return back()->with('success', 'Campus updated');
+            return back()->with('success', __('text.word_done'));
         } catch (\Throwable $th) {
             //throw $th;
             return back()->with('error', $th->getMessage());
@@ -121,7 +121,7 @@ class CampusesController extends Controller
         # code...
         if (\App\Models\Campus::find($id)->students()->count() > 0) {
             # code...
-            return back()->with('error', 'Campus can not be deleted. Campus has students');
+            return back()->with('error', __('text.campus_not_deleted_phrase_1'));
         }
         \App\Models\Campus::find($id)->delete();
     }
@@ -137,7 +137,7 @@ class CampusesController extends Controller
     public function set_program_fee($id, $program_id)
     {
         # code...
-        $data['title'] = __('text.manage_fee_under')." ".Campus::find($id)->name.' For '.ProgramLevel::find($program_id)->program()->first()->name . ' : LEVEL '.ProgramLevel::find($program_id)->level()->first()->level;
+        $data['title'] = __('text.manage_fee_under')." ".Campus::find($id)->name.' '.__('text.word_for').' '.ProgramLevel::find($program_id)->program()->first()->name . ' : '.__('text.word_level').' '.ProgramLevel::find($program_id)->level()->first()->level;
         // $data['data'] = [
         //     'tution' = \App\Models\CampusProgram::where('campus_id', request('id'))->where('program_level_id', request('program_id'))->first()->payment_items()->where('name', 'TUTION')->first()->amount ?? '----',
         //     'min-1'
@@ -150,11 +150,11 @@ class CampusesController extends Controller
     # code...
         if (\App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->count()>0) {
             # code...
-            return back()->with('error', 'Already exist in this campus');
+            return back()->with('error', __('text.record_already_exist', ['item'=>__('text.word_program')]));
         }
         $cp = new \App\Models\CampusProgram(['campus_id'=>$id, 'program_level_id'=>$program_id]);
         $cp->save();
-        return back()->with('success', 'done');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function drop_program($id, $program_id)
@@ -162,11 +162,11 @@ class CampusesController extends Controller
         # code...
         if (\App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->count()==0) {
             # code...
-            return back()->with('error', 'Does not exist in this campus');
+            return back()->with('error', __('text.does_not_exist_in_this_campus'));
         }
 
         \App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->first()->delete();
-        return back()->with('success', 'done');
+        return back()->with('success', __('text.word_done'));
 
     }
 
@@ -188,6 +188,6 @@ class CampusesController extends Controller
         $inst->slug = Hash::make('TUTION');
         $inst->amount = $request->fees;
         $inst->save();
-        return redirect(route('admin.campuses.programs', $id))->with('success', 'Done');
+        return redirect(route('admin.campuses.programs', $id))->with('success', __('text.word_done'));
     }
 }

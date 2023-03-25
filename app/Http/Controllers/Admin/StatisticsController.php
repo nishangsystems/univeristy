@@ -27,7 +27,7 @@ class StatisticsController extends Controller
         # code...
         // return $request->all();
         // $classes = \App\Http\Controllers\Admin\ProgramController::allUnitNames();
-        $data['title'] = "Student Statistics";
+        $data['title'] = __('text.student_statistics');
         if ($request->has('filter_key')) {
             # code...
             switch ($request->filter_key) {
@@ -70,7 +70,7 @@ class StatisticsController extends Controller
                         # code...
                         $data['data'] = array_map(function($level_id) use ($request){
                             return [
-                                'unit' => 'LEVEL '.\App\Models\Level::find($level_id)->level,
+                                'unit' => __('text.word_level').' '.\App\Models\Level::find($level_id)->level,
 
                                 'total' => \App\Models\ProgramLevel::where('program_levels.level_id', $level_id)
                                             ->join('students', ['students.program_id'=>'program_levels.id'])
@@ -104,9 +104,7 @@ class StatisticsController extends Controller
                     # code...
                     $data['data'] = array_map(function($class_id) use ($request){
                         return [
-                            'unit' => \App\Models\ProgramLevel::find($class_id)->program()->first()->name
-                                    . ' : LEVEL '
-                                    . \App\Models\ProgramLevel::find($class_id)->level()->first()->level,
+                            'unit' => \App\Models\ProgramLevel::find($class_id)->name(),
 
                             'total' => \App\Models\ProgramLevel::find($class_id)->students()
                                         ->where(function($q){
@@ -216,7 +214,7 @@ class StatisticsController extends Controller
                                                 auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
                                             })->distinct()->pluck('students.id')->toArray();       
         $return = [
-            'unit' => 'LEVEL '.Level::find($level_id)->level,
+            'unit' => __('text.word_level').' '.Level::find($level_id)->level,
             'students' => count($students), 'complete'=> 0, 'incomplete'=>0, 
             'recieved' => 0, 'expected' => 0, 'per_completed'=>0, 
             'per_uncompleted' =>0, 'per_recieved'=>0];
@@ -276,7 +274,7 @@ class StatisticsController extends Controller
                                             })->distinct()->pluck('students.id')->toArray();  
         // dd($students);
         $return = [
-            'unit' => ProgramLevel::find($class_id)->program()->first()->name.': LEVEL '.ProgramLevel::find($class_id)->level()->first()->level,
+            'unit' => ProgramLevel::find($class_id)->name(),
             'students' => count($students), 'complete'=> 0, 'incomplete'=>0, 
             'recieved' => 0, 
             'expected' => 0, 
@@ -332,7 +330,7 @@ class StatisticsController extends Controller
     public function fees(Request $request)
     {
         try{
-            $data['title'] = 'Fee Statistics';
+            $data['title'] = __('text.fee_statistics');
             if($request->has('filter_key')){
                 // return $request->all();
                 switch ($request->filter_key) {
@@ -380,7 +378,7 @@ class StatisticsController extends Controller
             $classes = \App\Http\Controllers\Admin\ProgramController::orderedUnitsTree();
             $year = request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
             $class_id = $request->class_id;
-            $data['title'] = $classes[$class_id]." Fee Details";
+            $data['title'] = $classes[$class_id]." ".__('text.fee_details');
             
             $class_students = DB::table('student_classes')
                             ->whereIn('class_id', \App\Http\Controllers\Admin\ProgramController::subunitsOf($class_id))
@@ -441,7 +439,7 @@ class StatisticsController extends Controller
     public function results(Request $request)
     {
         # code...
-        $data['title'] = "Results Statistics";
+        $data['title'] = __('text.results_statistics');
         return view('admin.statistics.results', $data);
     }
     //
@@ -453,7 +451,7 @@ class StatisticsController extends Controller
             'start_date'=>'date',
             'end_date'=>'date'
         ]);
-        $data['title'] = "Income Statistics";
+        $data['title'] = __('text.income_statistics');
         try {
             $expenditureItems = null;
             if ($request->filter == null) {
@@ -568,7 +566,7 @@ class StatisticsController extends Controller
             'start_date'=>'date',
             'end_date'=>'date'
         ]);
-        $data['title'] = "Expenditure Statistics";
+        $data['title'] = __('text.expenditure_statistics');
         try {
             if ($request->filter == null) {
                 # code...
@@ -603,7 +601,7 @@ class StatisticsController extends Controller
                     //     ];
                     // }, $names);
                     $data['totals'] = [
-                        'name'=>"Total",
+                        'name'=>__('text.word_total'),
                         'cost'=>array_sum($data['data']->pluck('amount_spend')->toArray())
                     ];
                     return view('admin.statistics.expenditure')->with($data);
@@ -626,7 +624,7 @@ class StatisticsController extends Controller
                     //     ];
                     // }, $names);
                     $data['totals'] = [
-                        'name'=>"Total",
+                        'name'=>__('text.word_total'),
                         'cost'=>array_sum($data['data']->pluck('amount_spend')->toArray())
                     ];
                     return view('admin.statistics.expenditure')->with($data);
@@ -650,7 +648,7 @@ class StatisticsController extends Controller
                     //     ];
                     // }, $names);
                     $data['totals'] = [
-                        'name'=>"Total",
+                        'name'=>__('text.word_total'),
                         'cost'=>array_sum($data['data']->pluck('amount_spend')->toArray())
                     ];
                     return view('admin.statistics.expenditure')->with($data);
@@ -672,16 +670,16 @@ class StatisticsController extends Controller
     public function ie_report()
     {
         # code...
-        $data['title'] = "IMCOME-EXPENDITURE STATISTICS";
+        $data['title'] = __('text.income_expenditure_statistics');
         return view('admin.statistics.ie_report', $data);
     }
-
+    
     public function ie_monthly_report()
     {
         try {
             //code...
             $month = request('month');
-            $data['title'] = "Income-Expenditure Report for ".date('F Y', strtotime($month));
+            $data['title'] = __('text.income_expenditure_statistics_for', ['item'=>date('F Y', strtotime($month))]);
             $data['report'] = [];
             $days = cal_days_in_month(CAL_GREGORIAN, (int)date('m', strtotime($month)), (int)date('Y', strtotime($month)));
             for($i=01; $i <= $days; $i++){

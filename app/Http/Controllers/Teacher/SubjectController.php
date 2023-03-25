@@ -9,6 +9,8 @@ use App\Models\ClassSubject;
 use App\Models\TeachersSubject;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Batch;
+use App\Models\Campus;
 use App\Models\CourseNotification;
 use App\Models\OfflineResult;
 use App\Models\ProgramLevel;
@@ -177,5 +179,13 @@ class SubjectController extends Controller
         $data['notification'] = CourseNotification::find($id);
         $data['title'] = "Create Course Notification For ".$subject->code.' '.$subject->name.' - '.$data['notification']->title;
         return view('teacher.course.notifications.show', $data);
+    }
+
+    public function result_template(Request $request)
+    {
+        # code...
+        $data['title'] = "Course Result Template For ".Subjects::find($request->course_id)->name.' - '.ProgramLevel::find($request->class_id)->name().' - '.Campus::find($request->campus_id)->name.' - '.Batch::find($this->current_accademic_year)->name;
+        $data['students'] = ProgramLevel::find($request->class_id)->_students($this->current_accademic_year)->get(['students.id', 'students.matric']);
+        return view('teacher.result_template', $data);
     }
 }

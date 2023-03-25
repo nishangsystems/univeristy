@@ -25,7 +25,7 @@ class IncomeController extends Controller
     {
         $user_id = Auth::id();
         $data['incomes'] = Income::select($this->select)->paginate(15);
-        $data['title'] = 'School Income';
+        $data['title'] = __('text.school_income');
         return view('admin.Income.index')->with($data);
     }
 
@@ -34,7 +34,7 @@ class IncomeController extends Controller
      */
     public function create()
     {
-        $data['title'] = 'Create Other Income';
+        $data['title'] = __('text.create_other_incomes');
         return view('admin.Income.create')->with($data);
     }
 
@@ -53,7 +53,7 @@ class IncomeController extends Controller
         $income->amount = $request->amount;
         $income->user_id = Auth::id();
         $income->save();
-        return redirect()->back()->with('success', 'Income saved successfully !');
+        return redirect()->back()->with('success', __('text.word_done'));
     }
 
     /**
@@ -75,7 +75,7 @@ class IncomeController extends Controller
     public function edit($id)
     {
         $data['income'] = Income::findOrFail($id);
-        $data['title'] =  'Update Income';
+        $data['title'] =  __('text.update_income');
         return view('admin.Income.edit')->with($data);
     }
 
@@ -92,7 +92,7 @@ class IncomeController extends Controller
             'amount' => 'required|numeric',
         ]);
         $updated_income = Income::findOrFail($id)->update($request->all());
-        return  redirect()->route('admin.income.index')->with('success', 'Income updated successfully !');
+        return  redirect()->route('admin.income.index')->with('success', __('text.word_done'));
     }
 
     /**
@@ -103,7 +103,7 @@ class IncomeController extends Controller
     public function destroy($id)
     {
         $deleted = Income::findOrFail($id)->delete();
-        return back()->with('success', 'Income deleted successfully!');
+        return back()->with('success', __('text.word_done'));
     }
 
     /**
@@ -114,7 +114,7 @@ class IncomeController extends Controller
     public function show($id)
     {
         $data['income'] = Income::findOrFail($id);
-        $data['title'] = 'Income details';
+        $data['title'] = __('text.income_details');
         return view('admin.Income.show')->with($data);
     }
 }

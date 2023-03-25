@@ -23,21 +23,21 @@ class ResultsAndTranscriptsController extends Controller{
     public function frequency_distribution()
     {
         # code...
-        $data['title'] = "Frequency Distribution";
+        $data['title'] = __('text.frequency_distribution');
         return view('admin.res_and_trans.fre_dis', $data);
     }
 
     public function spread_sheet(Request $request)
     {
         # code...
-        $data['title'] = "Spread Sheet";
+        $data['title'] = __('text.spread_sheet');
         return view('admin.res_and_trans.spr_sheet', $data);
     }
 
     public function grade_sheet(Request $request)
     {
         # code...
-        $data['title'] = "Grades Sheet";
+        $data['title'] = __('text.grades_sheet');
         if($request->has('class_id'))
             return view('admin.res_and_trans.grd_sheet', $data);
         else
@@ -47,7 +47,7 @@ class ResultsAndTranscriptsController extends Controller{
     public function ca_only(Request $request)
     {
         # code...
-        $data['title'] = "CA";
+        $data['title'] = __('text.CA');
         if($request->has('class_id'))
             return view('admin.res_and_trans.ca_only', $data);
         else
@@ -57,7 +57,7 @@ class ResultsAndTranscriptsController extends Controller{
     public function semester_results_report(Request $request)
     {
         # code...
-        $data['title'] = "Semester Results Report";
+        $data['title'] = __('text.semester_results_report');
         if($request->has('class_id'))
             return view('admin.res_and_trans.sem_res_report', $data);
         else
@@ -67,7 +67,7 @@ class ResultsAndTranscriptsController extends Controller{
     public function passfail_report(Request $request)
     {
         # code...
-        $data['title'] = "PassFail Report";
+        $data['title'] = __('text.passfail_report');
         if($request->has('class_id'))
             return view('admin.res_and_trans.passfail_report', $data);
         else
@@ -77,14 +77,14 @@ class ResultsAndTranscriptsController extends Controller{
     public function configure_transcript()
     {
         # code...
-        $data['title'] = "Configure Transcripts";
+        $data['title'] = __('text.configure_transcripts');
         return view('admin.res_and_trans.transcripts.create', $data);
     }
 
     public function configure_edit_transcript($id)
     {
         # code...
-        $data['title'] = "Configure Transcripts";
+        $data['title'] = __('text.configure_transcripts');
         $data['instance'] = TranscriptRating::find($id);
         return view('admin.res_and_trans.transcripts.create', $data);
     }
@@ -104,11 +104,11 @@ class ResultsAndTranscriptsController extends Controller{
         }
         if (TranscriptRating::where(['mode'=>$request->mode])->count() > 0) {
             # code...
-            return back()->with('error', 'A transcript configuration already exists for mode :' . $request->mode);
+            return back()->with('error', __('text.record_already_exist', ['item'=>$request->mode]));
         }
         $rating = new TranscriptRating($request->all());
         $rating->save();
-        return back()->with('success', 'Done');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function configure_update_transcript(Request $request, $id)
@@ -127,17 +127,17 @@ class ResultsAndTranscriptsController extends Controller{
         $rating = TranscriptRating::find($id);
         if (TranscriptRating::where(['mode'=>$request->mode])->whereNot('mode', $rating->mode)->count() > 0) {
             # code...
-            return back()->with('error', 'A transcript configuration already exists for mode :' . $request->mode);
+            return back()->with('error', __('text.record_already_exist', ['item'=>$request->mode]));
         }
         $rating->fill($request->all());
         $rating->save();
-        return back()->with('success', 'Done');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function completed_transcripts()
     {
         # code...
-        $data['title'] = "Completed Transcripts";
+        $data['title'] = __('text.completed_transcripts');
         // filter completed transcripts if the duration has not yet expired, then the rest of the done transcripts follow; order by Mode, created_at(date of application)
         $transcripts = Transcript::whereNotNull('transcripts.done')
                     ->join('transcript_ratings', ['transcript_ratings.id'=>'transcripts.config_id'])
@@ -157,7 +157,7 @@ class ResultsAndTranscriptsController extends Controller{
     public function pending_transcripts()
     {
         # code...
-        $data['title'] = "Pending Transcripts";
+        $data['title'] = __('text.pending_transcripts');
         // filter completed transcripts if the duration has not yet expired, then the rest of the done transcripts follow; order by Mode, created_at(date of application)
         $transcripts = Transcript::whereNull('transcripts.done')
                     ->join('transcript_ratings', ['transcript_ratings.id'=>'transcripts.config_id'])
@@ -173,7 +173,7 @@ class ResultsAndTranscriptsController extends Controller{
     public function undone_transcripts()
     {
         # code...
-        $data['title'] = "Undone Transcripts";
+        $data['title'] = __('text.undone_transcripts');
                 // filter completed transcripts if the duration has not yet expired, then the rest of the done transcripts follow; order by Mode, created_at(date of application)
                 $transcripts = Transcript::whereNull('transcripts.done')
                 ->join('transcript_ratings', ['transcript_ratings.id'=>'transcripts.config_id'])
@@ -193,9 +193,9 @@ class ResultsAndTranscriptsController extends Controller{
         if($trans != null){
             $trans->fill(['done'=>now()->toDateTimeString(), 'user_id'=>auth()->id()]);
             $trans->save();
-            return back()->with('success', 'Done');
+            return back()->with('success', __('text.word_done'));
         }
-        return back()->with('error', 'Transcript not found');
+        return back()->with('error', __('text.not_found'));
     }
 
 }

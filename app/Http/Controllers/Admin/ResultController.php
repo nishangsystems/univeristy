@@ -30,19 +30,19 @@ class ResultController extends Controller
     public function index(Request $request)
     {
         $data['releases'] = \App\Models\Config::orderBy('id', 'desc')->get();
-        $data['title'] = "All result releases";
+        $data['title'] = __('text.all_result_releases');
         return view('admin.setting.result.index')->with($data);
     }
 
     public function create(Request $request)
     {
-        $data['title'] = "Add Release";
+        $data['title'] = __('text.add_release');
         return view('admin.setting.result.create')->with($data);
     }
 
     public function edit(Request $request, $id)
     {
-        $data['title'] = "Edit result releases";
+        $data['title'] = __('text.edit_result_release');
         $data['release'] = \App\Models\Config::find($id);
         return view('admin.setting.result.edit')->with($data);
     }
@@ -56,7 +56,7 @@ class ResultController extends Controller
             'end_date' => 'required',
         ]);
         Config::create($request->all());
-        return redirect()->to(route('admin.result_release.index'))->with('success', "Release created successfully");
+        return redirect()->to(route('admin.result_release.index'))->with('success', __('text.word_done'));
     }
 
     public function update(Request $request, $id)
@@ -69,7 +69,7 @@ class ResultController extends Controller
         ]);
         $release = \App\Models\Config::find($id);
         $release->update($request->all());
-        return redirect()->to(route('admin.result_release.index'))->with('success', "Release updated successfully");
+        return redirect()->to(route('admin.result_release.index'))->with('success', __('text.word_done'));
     }
 
     public function destroy(Request $request, $id)
@@ -77,9 +77,9 @@ class ResultController extends Controller
         $config = Config::find($id);
         if (\App\Models\Config::all()->count() > 0) {
             $config->delete();
-            return redirect()->back()->with('success', "Release deleted successfully");
+            return redirect()->back()->with('success', __('text.word_done'));
         } else {
-            return redirect()->back()->with('error', "Change current academic year");
+            return redirect()->back()->with('error', __('text.change_current_accademic_year'));
         }
     }
 
@@ -156,13 +156,13 @@ class ResultController extends Controller
                 DB::rollback();
                 echo ($e->getMessage());
             }
-            Session::flash('message', 'Import Successful.');
+            Session::flash('message', __('text.word_done'));
             //echo("<h3 style='color:#0000ff;'>Import Successful.</h3>");
 
         } else {
-            Session::flash('message', 'Invalid File Extension.');
+            Session::flash('message', __('text.file_type_constraint', ['type'=>'.csv']));
         }
-        return redirect()->back()->with('success', 'Result Imported successfully!');
+        return redirect()->back()->with('success', __('text.word_done'));
     }
 
     public function export()
@@ -211,7 +211,7 @@ class ResultController extends Controller
     public function report(Request $request)
     {
         # code...
-        $data['title'] = "Student Results";
+        $data['title'] = __('text.student_results');
         return view('admin.result.report', $data);
     }
 
@@ -224,7 +224,7 @@ class ResultController extends Controller
     // ADDITIONAL RESULT METHODS FOR OFFLINE APP
     
     public function ca_result(){
-        $data['title'] = "Student CA Results";
+        $data['title'] = __('text.student_CA_results');
         return view('admin.result.ca_result', $data);
     }
 
@@ -232,12 +232,12 @@ class ResultController extends Controller
         // check if CA total is set forthis program
         if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
             # code...
-            return back()->with('error', 'CA total not set for this program.');
+            return back()->with('error', __('text.CA_total_not_set_for', ['program'=>__('text.word_program')]));
         }
 
         $subject = Subjects::find(request('course_id'));
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
-        $data['title'] = "Fill CA Results For [ ".$subject->code." ] ".$subject->name." / ".ProgramLevel::find(request('class_id'))->name();
+        $data['title'] = __('text.fill_CA_results_for', ['course'=>'[ '.$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
         return view('admin.result.fill_ca', $data);
     }
 
@@ -245,11 +245,11 @@ class ResultController extends Controller
         // check if CA total is set forthis program
         if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
             # code...
-            return back()->with('error', 'CA total not set for this program.');
+            return back()->with('error',  __('text.CA_total_not_set_for', ['program'=>__('text.word_program')]));
         }
 
         $subject = Subjects::find(request('course_id'));
-        $data['title'] = "Import CA Results For [ ".$subject->code." ] ".$subject->name." / ".ProgramLevel::find(request('class_id'))->name();
+        $data['title'] = __('text.import_CA_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
         return view('admin.result.import_ca', $data);
     }
 
@@ -281,7 +281,7 @@ class ResultController extends Controller
                 $imported_data[] = [$row[0], $row[1]];
             }
             if(count($imported_data)==0){
-                return back()->with('error', 'No data or wrong data format.');
+                return back()->with('error', __('text.empty_or_wrong_data_format'));
             }
 
             $bad_results = 0;
@@ -307,21 +307,21 @@ class ResultController extends Controller
                         OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id]);
                     }
                 }else{
-                    $null_students .= "Student with matricule ".$data[0].' not found <br>';
+                    $null_students .= __('text.student_matric_not_found', ['matric'=>$data[0]]);
                 }
             }
             if($bad_results > 1){
-                return back()->with('message', 'Done. ' .( $bad_results == 0 ? '' : $bad_results. ' records not imported. Unsupported values supplied. <br>').$null_students);
+                return back()->with('message', __('text.word_done').'. ' .( $bad_results == 0 ? '' : $bad_results. ' '.__('text.records_not_imported_phrase')).$null_students);
             }
-            return back()->with('success', 'Done');
+            return back()->with('success', __('text.word_done'));
         }else{
-            return back()->with('error', 'Empty or bad file type. CSV files only are accepted.');
+            return back()->with('error', __('text.file_type_constraint', ['type'=>'.csv']));
         }
         
     }
     
     public function exam_result(){
-        $data['title'] = "Student Exam Results";
+        $data['title'] = __('text.student_exam_results');
         return view('admin.result.exam_result', $data);
     }
 
@@ -329,25 +329,25 @@ class ResultController extends Controller
         // check if exam total is set for this program
         if (!Helpers::instance()->exam_total_isset(request('class_id')) || !Helpers::instance()->ca_total_isset(request('class_id'))) {
             # code...
-            return back()->with('error', 'CA or Exam total not set for this program.');
+            return back()->with('error', __('text.exam_total_not_set_for', ['program'=>__('text.word_program')]));
         }
 
         $subject = Subjects::find(request('course_id'));
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
         $data['exam_total'] = Helpers::instance()->exam_total(request('class_id'));
-        $data['title'] = "Fill Exam Results For [ ".$subject->code." ] ".$subject->name." / ".ProgramLevel::find(request('class_id'))->name();
+        $data['title'] = __('text.fill_exam_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
         return view('admin.result.fill_exam', $data);
     }
-
+    
     public function exam_import(){
         // check if exam total is set for this program
         if (!Helpers::instance()->exam_total_isset(request('class_id'))) {
             # code...
-            return back()->with('error', 'CA total not set for this program.');
+            return back()->with('error',  __('text.exam_total_not_set_for', ['program'=>__('text.word_program')]));
         }
-
+        
         $subject = Subjects::find(request('course_id'));
-        $data['title'] = "Import Exam Results For [ ".$subject->code." ] ".$subject->name." / ".ProgramLevel::find(request('class_id'))->name();
+        $data['title'] = __('text.import_exam_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
         return view('admin.result.import_exam', $data);
     }
 
@@ -380,7 +380,7 @@ class ResultController extends Controller
                 $imported_data[] = [$row[0], $row[1], $row[2]];
             }
             if(count($imported_data)==0){
-                return back()->with('error', 'No data or wrong data format.');
+                return back()->with('error', __('text.empty_or_wrong_data_format'));
             }
 
             $bad_results = 0;
@@ -404,47 +404,47 @@ class ResultController extends Controller
                         'class_subject_id'=>$course->_class_subject($request->class_id)->id??0
                     ];
                     if(OfflineResult::where($base)->whereNotNull('ca_score')->count()>0){
-                        $existing_results .= "<br> CA results already exist for ".$data[0];
+                        $existing_results .= "<br> ".__('text.ca_results_already_exist_for', ['item'=>$data[0]]);
                     }elseif (!$data[1] == null) {
                         # code...
                         OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(),  'campus_id'=>$student->campus_id]);
                     }
                     if(OfflineResult::where($base)->whereNotNull('exam_score')->count()>0){
-                        $existing_results .= "<br> Exam results already exist for ".$data[0];
+                        $existing_results .= "<br> ".__('text.exam_results_already_exist_for', ['item'=>$data[0]]);
                     }elseif (!$data[2] == null) {
                         # code...
                         OfflineResult::updateOrCreate($base, ['exam_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(),  'campus_id'=>$student->campus_id]);
                     }
                 }
                 else{
-                    $null_students .= "Student with matricule ".$data[0]." not found <br>";
+                    $null_students .= __('text.student_matric_not_found', ['matric'=>$data[0]])." <br>";
                 }
             }
             if($bad_results > 1){
-                return back()->with('message', 'Done. ' . ($bad_results == 0 ? '' : $bad_results . ' records not imported. Unsupported values supplied. <br>') . $null_students . $existing_results);
+                return back()->with('message', __('text.word_done').'. ' . ($bad_results == 0 ? '' : $bad_results . ' '.__('text.records_not_imported_phrase')) . $null_students . $existing_results);
             }
-            return back()->with('success', 'Done');
+            return back()->with('success', __('text.word_done'));
         }else{
-            return back()->with('error', 'Empty or bad file type. CSV files only are accepted.');
+            return back()->with('error', __('text.file_type_constraint', ['type'=>'.csv']));
         }
     }
 
     public function imports_index()
     {
         # code...
-        $data['title'] = "Result Imports";
+        $data['title'] = __('text.result_imports');
         return view('admin.result.imports_index', $data);
     }
 
     public function individual_results()
     {
-        $data['title'] = "Individual Results";
+        $data['title'] = __('text.individual_results');
         return view('admin.result.individual_result', $data);
     }
 
     public function class_results(Request $request)
     {
-        $data['title'] = "Class Results";
+        $data['title'] = __('text.class_results');
         if ($request->has('class_id')) {
             # code...
             $results = OfflineResult::where(['batch_id' => $request->year_id, 'class_id' => $request->class_id, 'semester_id' => $request->semester_id]);
@@ -498,7 +498,7 @@ class ResultController extends Controller
         $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id);
         $class = $student->_class($year);
-        $data['title'] = "My Exam Result";
+        $data['title'] = __('text.my_exam_results');
         $data['user'] = $student;
         $data['semester'] = $semester;
         $data['ca_total'] = $class->program()->first()->ca_total;
@@ -555,7 +555,7 @@ class ResultController extends Controller
     public function date_line(Request $request)
     {
         # code...
-        $data['title'] = "Set Result Submission Date Line".($request->has('semester') ? ' For '.Semester::find($request->semester)->name : '');
+        $data['title'] = __('text.set_result_submission_dateline_for', ['item'=>$request->has('semester') ? Semester::find($request->semester)->name : '']);
         if(request()->has('background')){
             $data['current_semester'] = Semester::where(['background_id'=>$request->background, 'status'=>1])->first()->id ?? null;
         }
@@ -564,5 +564,31 @@ class ResultController extends Controller
     public function date_line_save(Request $request)
     {
         # code...
+    }
+
+    public function result_publishing (Request $request)
+    {
+        # code...
+        $year = $request->year ?? $this->current_accademic_year;
+        $data['title'] = __('text.publish_results').' - '.Batch::find($year)->name;
+        return view('admin.result.publish', $data);
+    }
+
+    public function publish_results(Request $request)
+    {
+        # code...
+        $results = Result::where(['batch_id'=>$request->year, 'campus_id'=>auth()->user()->campus_id, 'semester_id'=>$request->semester]);
+        if($results->count() == 0){return back()->with('error', 'Results not yet uploaded');}
+        $results->update(['published'=>1]);
+        return back()->with('success', __('text.word_done'));
+    }
+    
+    public function unpublish_results(Request $request)
+    {
+        # code...
+        $results = Result::where(['batch_id'=>$request->year, 'campus_id'=>auth()->user()->campus_id, 'semester_id'=>$request->semester]);
+        if($results->count() == 0){return back()->with('error', 'Results not yet uploaded');}
+        Result::where(['batch_id'=>$request->year, 'semester_id'=>$request->semester])->update(['published'=>0]);
+        return back()->with('success', __('text.word_done'));
     }
 }

@@ -40,13 +40,13 @@ class RolesController extends Controller{
                     ]);
                 }
                 \DB::commit();
-                $request->session()->flash('success', $request->role.' saved successfully');
+                $request->session()->flash('success', __('text.word_done'));
             }catch(\Exception $e){
                 \DB::rollback();
                 $request->session()->flash('error', $e->getMessage());
             }
         }else{
-            $request->session()->flash('error', "Not Permitted to perform this action");
+            $request->session()->flash('error', __('text.operation_not_allowed'));
         }
         return redirect()->to(route('admin.roles.index'));
     }
@@ -60,7 +60,7 @@ class RolesController extends Controller{
             // check if authenticated user is not deleting his/her role
             // dd($role->users);
             if($role->users()->where('users.id', auth()->id())->count() > 0){
-                return back()->with('error', 'You can not delete this role because you are a use in it');
+                return back()->with('error', __('text.you_can_not_delete_role_phrase'));
             }
             if($role != null){
                 // delete all permissions associated to the role being deleted
@@ -75,12 +75,12 @@ class RolesController extends Controller{
                 $role->delete();
             }
         }
-        return back()->with('success', 'Done');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function edit(Request $request, $slug){
         if(!auth()->user()->can('manage_permissions')){
-            return redirect(route('admin.roles.index'))->with('error', 'Operation not allowed');
+            return redirect(route('admin.roles.index'))->with('error', __('text.operation_not_allowed'));
         }
         $data['role'] = \App\Models\Role::whereSlug($slug)->first();
         if(!$data['role']){
@@ -116,9 +116,9 @@ class RolesController extends Controller{
                     ]);
                 }
                 \DB::commit();
-                $request->session()->flash('success', $request->role.' role saved successfully');
+                $request->session()->flash('success', __('text.word_done'));
             }else{
-                $request->session()->flash('error', 'Cant edit this role');
+                $request->session()->flash('error', __('text.can_not_edit_this_role'));
             }
         }catch(\Exception $e){
             \DB::rollback();
@@ -167,14 +167,14 @@ class RolesController extends Controller{
                     'user_id'=>$user->id,
                 ]);
                 \DB::commit();
-                $request->session()->flash('success', $request->role.' Role saved successfully');
+                $request->session()->flash('success', __('text.word_done'));
 
             }catch(\Exception $e){
                 \DB::rollback();
                 $request->session()->flash('error', $e->getMessage());
             }
         }else{
-            $request->session()->flash('error', 'Cant Edit this Role');
+            $request->session()->flash('error', __('text.can_not_edit_this_role'));
         }
         return redirect()->to(route('admin.user.index'));
     }

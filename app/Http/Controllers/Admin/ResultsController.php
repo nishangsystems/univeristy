@@ -67,7 +67,7 @@ class ResultsController extends Controller
                 ->count()
                 >0)
         {
-            return redirect()->back()->with('e','Grade Already Exists in the System');
+            return redirect()->back()->with('e',__('text.grading_already_exist_phrase'));
 
         }
         else {
@@ -120,7 +120,7 @@ class ResultsController extends Controller
                             >0
         )
         {
-            return redirect()->back()->with('e','Grading has been set for this Program');
+            return redirect()->back()->with('e', __('text.grading_has_been_set_phrase'));
    
         }
         else {

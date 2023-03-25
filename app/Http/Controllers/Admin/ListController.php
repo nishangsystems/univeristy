@@ -19,14 +19,14 @@ class ListController extends Controller{
         $unit = SchoolUnits::find($unit_id);
         $data['unit'] = $unit;
         $data['lists'] = $unit->items;
-        $data['title'] = "Fee Listing for ".$unit->name;
+        $data['title'] = __('text.fee_listing_for', ['item'=>$unit->name]);
         return view('admin.fee.list.index')->with($data);
     }
-
+    
     public function create(Request $request, $unit_id){
         $unit = SchoolUnits::find($unit_id);
         $data['unit'] = $unit;
-        $data['title'] = "Add Fee Listing for ".$unit->name;
+        $data['title'] = __('text.add_fee_listing_for', ['item'=>$unit->name]);
         return view('admin.fee.list.create')->with($data);
     }
 
@@ -56,7 +56,7 @@ class ListController extends Controller{
             ]);
 
             \Illuminate\Support\Facades\DB::commit();
-            return redirect()->to(route('admin.fee.list.index', $unit_id))->with('success', "Fee saved successfully !");
+            return redirect()->to(route('admin.fee.list.index', $unit_id))->with('success', __('text.word_done'));
         }catch(\Exception $e){
             DB::rollBack();
             echo $e;
@@ -68,7 +68,7 @@ class ListController extends Controller{
         $unit = SchoolUnits::find($unit_id);
         $data['unit'] = $unit;
         $data['item'] = PaymentItem::find($id);
-        $data['title'] = "Edit Fee Listing for ".$unit->name;
+        $data['title'] = __('text.edit_fee_listing_for', ['item'=>$unit->name]);
         return view('admin.fee.list.edit')->with($data);
     }
 
@@ -92,7 +92,7 @@ class ListController extends Controller{
             $item->update($input);
 
             DB::commit();
-            return redirect()->to(route('admin.fee.list.index', $unit_id))->with('success', "Fee List Successfully !");
+            return redirect()->to(route('admin.fee.list.index', $unit_id))->with('success', __('text.word_done'));
         }catch(\Exception $e){
             DB::rollBack();
             echo $e;
@@ -110,11 +110,11 @@ class ListController extends Controller{
        $item = PaymentItem::find($id);
       
        if($item->payments->count() > 0){
-        return redirect()->to(route('admin.fee.list.index', $unit_id))->with('error', "Fee cant be deleted, some student have payed for already !");
-    }
+        return redirect()->to(route('admin.fee.list.index', $unit_id))->with('error', __('text.fee_can_not_be_deleted'));
+        }
 
         $item->delete();
-        return redirect()->to(route('admin.fee.list.index', $unit_id))->with('success', "Fee deleted successfully !");
+        return redirect()->to(route('admin.fee.list.index', $unit_id))->with('success', __('text.word_done'));
     }
 
 

@@ -25,7 +25,7 @@ class ProgramController extends Controller
 
     public function sections()
     {
-        $data['title'] = "Sections";
+        $data['title'] = __('text.word_sections');
         $data['parent_id'] = 0;
         $data['units'] = \App\Models\SchoolUnits::where('parent_id', 0)->get();
         return view('admin.units.sections')->with($data);
@@ -109,7 +109,7 @@ class ProgramController extends Controller
         }
         $units =  $parent->unit;
         $name = $parent->name;
-        $data['title'] = ($units->count() == 0) ? "No Sub Units Available in " . $name : "All " . $units->first()->type->name . " > {$name}";
+        $data['title'] = ($units->count() == 0) ? __('text.no_sub_units_available_in', ['parent'=>$name]) : __('text.word_all').' '.$units->first()->type->name . " > {$name}";
         $data['units']  = $units;
         $data['parent_id']  = $parent_id;
         return view('admin.units.index')->with($data);
@@ -145,7 +145,7 @@ class ProgramController extends Controller
             $unit->suffix = $request->input('suffix');
             $unit->save();
             DB::commit();
-            return redirect()->to(route('admin.units.index', [$unit->parent_id]))->with('success', $unit->name . " Added to units !");
+            return redirect()->to(route('admin.units.index', [$unit->parent_id]))->with('success', __('text.word_done'));
         } catch (\Exception $e) {
             DB::rollback();
             echo ($e);
@@ -160,7 +160,7 @@ class ProgramController extends Controller
         $unit = \App\Models\SchoolUnits::find($id);
         $data['unit'] = $unit;
         $data['parent_id'] = \App\Models\SchoolUnits::find($id)->parent_id;
-        $data['title'] = "Edit " . $unit->name;
+        $data['title'] = __('text.word_edit')." " . $unit->name;
         return view('admin.units.edit')->with($data);
     }
 
@@ -168,7 +168,7 @@ class ProgramController extends Controller
     {
         $data['parent_id'] = $parent_id;
         $parent = \App\Models\SchoolUnits::find($parent_id);
-        $data['title'] = $parent ? "New Sub-unit Under " . $parent->name : "New Section";
+        $data['title'] = $parent ? __('text.new_sub_unit_under', ['item'=>$parent->name]) : __('text.new_section');
         return view('admin.units.create')->with($data);
     }
 
@@ -197,7 +197,7 @@ class ProgramController extends Controller
             $unit->save();
             DB::commit();
 
-            return redirect()->to(route('admin.units.index', [$unit->parent_id]))->with('success', $unit->name . " Updated !");
+            return redirect()->to(route('admin.units.index', [$unit->parent_id]))->with('success', __('text.word_done'));
         } catch (\Exception $e) {
             DB::rollback();
             echo ($e);
@@ -215,10 +215,10 @@ class ProgramController extends Controller
     {
         $unit = \App\Models\SchoolUnits::find($slug);
         if ($unit->unit->count() > 0) {
-            return redirect()->back()->with('error', "Unit cant be deleted");
+            return redirect()->back()->with('error', __('text.operation_not_allowed'));
         }
         $unit->delete();
-        return redirect()->back()->with('success', "units deleted");
+        return redirect()->back()->with('success', __('text.word_done'));
     }
 
 
@@ -226,7 +226,7 @@ class ProgramController extends Controller
     public function subjects($program_level_id)
     {
         $parent = ProgramLevel::find($program_level_id);
-        $data['title'] = "Subjects under " . \App\Http\Controllers\Admin\StudentController::baseClasses()[$parent->program_id].' Level '.$parent->level()->first()->level;
+        $data['title'] = __('text.subjects_under', ['class'=>$parent->name()]);
         $data['parent'] = $parent;
         // dd($parent->subjects()->get());
         $data['subjects'] = ProgramLevel::find($program_level_id)->subjects()->get();
@@ -239,7 +239,7 @@ class ProgramController extends Controller
         $data['parent'] = $parent;
         // return $parent;
         
-        $data['title'] = "Manage subjects under " . $parent->program()->first()->name .' Level '.$parent->level()->first()->level;
+        $data['title'] = __('text.manage_subjects_under', ['class'=>$parent->name()]);
         return view('admin.units.manage_subjects')->with($data);
     }
 
@@ -250,7 +250,7 @@ class ProgramController extends Controller
         $parent = \App\Models\SchoolUnits::find($id);
         $data['parent'] = $parent;
 
-        $data['title'] = "Manage student under " . $parent->name;
+        $data['title'] = __('text.manage_students_under', ['unit'=>$parent->name]);
         return view('admin.units.student')->with($data);
     }
     public function studentsListing($id)
@@ -269,7 +269,7 @@ class ProgramController extends Controller
     $data['students'] = $students;
     // dd($parent);
     $data['classes'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
-    $data['title'] = "Manage student under " . $parent->program()->first()->name;
+    $data['title'] = __('text.manage_students_under', ['unit'=>$parent->program()->first()->name]);
     return view('admin.units.student-listing')->with($data);
     }
 
@@ -317,8 +317,8 @@ class ProgramController extends Controller
         }
 
 
-        $data['title'] = "Manage subjects under " . $parent->name();
-        return redirect()->back()->with('success', "Subjects Saved Successfully");
+        $data['title'] = __('text.manage_subjects_under', ['class'=>$parent->name()]);
+        return redirect()->back()->with('success', __('text.word_done'));
     }
 
     public function getSubUnits($parent_id)
@@ -330,7 +330,7 @@ class ProgramController extends Controller
     public function semesters($background_id)
     {
         # code...
-        $data['title'] = "Manage Semesters Under ".\App\Models\SchoolUnits::find($background_id)->name;
+        $data['title'] = __('text.manage_semesters_under', ['unit'=>\App\Models\SchoolUnits::find($background_id)->name]);
         $data['semesters'] = \App\Models\SchoolUnits::find($background_id)->semesters()->get();
         return view('admin.semesters.index')->with($data);
     }
@@ -338,7 +338,7 @@ class ProgramController extends Controller
     public function create_semester($background_id)
     {
         # code...
-        $data['title'] = "Create Semesters Under ".\App\Models\SchoolUnits::find($background_id)->name;
+        $data['title'] = __('text.create_semesters_under', ['unit'=>\App\Models\SchoolUnits::find($background_id)->name]);
         $data['semesters'] = \App\Models\SchoolUnits::find($background_id)->semesters()->get();
         return view('admin.semesters.create')->with($data);
     }
@@ -346,7 +346,7 @@ class ProgramController extends Controller
     public function edit_semester($background_id, $id)
     {
         # code...
-        $data['title'] = "Edit Semester";
+        $data['title'] = __('text.edit_semester');
         $data['semesters'] = \App\Models\SchoolUnits::find($background_id)->semesters()->get();
         $data['semester'] = \App\Models\Semester::find($id);
         return view('admin.semesters.edit');
@@ -368,11 +368,11 @@ class ProgramController extends Controller
             //code...
             if (\App\Models\SchoolUnits::find($program_id)->semesters()->where('name', $request->name)->first()) {
                 # code...
-                return back()->with('error', "Semester already exists");
+                return back()->with('error', __('text.record_already_exist', ['item'=>$request->name]));
             }
             $semester = new \App\Models\Semester($request->all());
             $semester->save();
-            return back()->with('success', 'Semester created');
+            return back()->with('success', __('text.word_done'));
         } catch (\Throwable $th) {
             //throw $th;
             return back()->with('error', $th->getMessage());
@@ -392,7 +392,7 @@ class ProgramController extends Controller
     public function set_program_semester_type($program_id)
     {
         # code...
-        $data['title'] = "Set Semester Type for ".\App\Models\SchoolUnits::find($program_id)->name;
+        $data['title'] = __('text.set_semester_type_for', ['unit'=>\App\Models\SchoolUnits::find($program_id)->name]);
         $data['semester_types'] = \App\Models\SemesterType::all();
         return view('admin.semesters.set_type', $data);
     }
@@ -412,12 +412,12 @@ class ProgramController extends Controller
         $program = \App\Models\SchoolUnits::find($program_id);
         $program->background_id = $request->background_id;
         $program->save();
-        return back()->with('success', 'Done!');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function assign_program_level()
     {
-        $data['title'] = "Manage Program Levels";
+        $data['title'] = __('text.manage_program_levels');
         return view('admin.units.set-levels', $data);
     }
 
@@ -434,12 +434,12 @@ class ProgramController extends Controller
                 ProgramLevel::create(['program_id'=>$request->program_id, 'level_id'=>$lev]);
             }
         }
-        return back()->with('success', 'Program levels assigned.');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function program_levels($id)
     {
-        $data['title'] = "Program Levels for ".\App\Models\SchoolUnits::find($id)->name;
+        $data['title'] = __('text.program_levels_for', ['unit'=>\App\Models\SchoolUnits::find($id)->name]);
         $data['program_levels'] =  ProgramLevel::where('program_id', $id)->pluck('level_id')->toArray();
         // $data['program_levels'] =  DB::table('school_units')->where('school_units.id', '=', $id)
         //             ->join('program_levels', 'program_id', '=', 'school_units.id')
@@ -453,7 +453,7 @@ class ProgramController extends Controller
     public function program_index()
     {
         # code...
-        $data['title'] = "Manage Programs";
+        $data['title'] = __('text.manage_programs');
         $data['programs'] = \App\Models\SchoolUnits::where('unit_id', 4)->get();
         // dd($data);
         return view('admin.units.programs', $data);
@@ -464,11 +464,11 @@ class ProgramController extends Controller
         # code...
         if (ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->count()>0) {
             # code...
-            return back()->with('error', 'Level already exist in this program');
+            return back()->with('error', __('text.level_not_in_program'));
         }
         $pl = new ProgramLevel(['program_id'=>$id, 'level_id'=>$level_id]);
         $pl->save();
-        return back()->with('success','done');
+        return back()->with('success', __('text.word_done'));
     }
 
     public function _drop_program_level($id)
@@ -476,11 +476,11 @@ class ProgramController extends Controller
         # code...
         if (ProgramLevel::find($id)==null) {
             # code...
-            return back()->with('error', "Level doesn't exist in this program");
+            return back()->with('error', __('text.level_not_in_program'));
         }
 
         ProgramLevel::find($id)->delete();
-        return back()->with('success', 'done');
+        return back()->with('success', __('text.word_done'));
         
     }
 
@@ -489,24 +489,24 @@ class ProgramController extends Controller
         # code...
         if (ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->count()==0) {
             # code...
-            return back()->with('error', "Level doesn't exist in this program");
+            return back()->with('error', __('text.level_not_in_program'));
         }
         ProgramLevel::where('program_id', $id)->where('level_id', $level_id)->first()->delete();
-        return back()->with('success', 'done');
+        return back()->with('success', __('text.word_done'));
         
     }
 
     public function program_levels_list()
     {
         # code...
-        $data['title'] = "Class List".(request()->has('campus_id') ? \App\Models\Campus::find(request('campus_id'))->first()->name : '').(request()->has('id') ? ' For '.ProgramLevel::find(request('id'))->program()->first()->name.' Level '.ProgramLevel::find(request('id'))->level()->first()->level : null).' '.(request('year_id') != null ? Batch::find(request('year_id'))->name : '');
+        $data['title'] = __('text.class_list_for', ['campus'=>request()->has('campus_id') ? \App\Models\Campus::find(request('campus_id'))->name : '', 'class'=>request()->has('id') ? ProgramLevel::find(request('id'))->name() : '', 'year'=>request('year_id') != null ? Batch::find(request('year_id'))->name : '']);
         return view('admin.student.class_list', $data);
     }
 
     public function program_levels_list_index(Request $request)
     {
         # code...
-        $data['title'] = "Student Listing";
+        $data['title'] = __('text.student_listing');
         $data['filter'] = $request->filter ?? null;
         $data['items'] = [];
         if ($request->filter != null) {
@@ -588,14 +588,17 @@ class ProgramController extends Controller
         # code...
         switch($request->filter){
             case 'SCHOOL':
-                $data['title'] = "Students For School Of ".SchoolUnits::find($request->item_id)->name ?? null;
+                $data['title'] = __('text.students_for_school_of', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
                 $programs = SchoolUnits::where(['school_units.unit_id'=>1])->where(['school_units.id'=>$request->item_id])
                         // ->join('school_units as faculties', ['faculties.parent_id'=>'school_units.id'])->where(['faculties.unit_id'=>2])
                         ->join('school_units as departments', ['departments.parent_id'=>'school_units.id'])->where(['departments.unit_id'=>3])
                         ->join('school_units as programs', ['programs.parent_id'=>'departments.id'])->where(['programs.unit_id'=>4])
                         ->pluck('programs.id')->toArray();
                 $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
-                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                $students = Students::where(function($q){
+                                auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);
+                            })
+                            ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                             ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 // dd($students);
                 $data['students'] = $students;
@@ -603,14 +606,17 @@ class ProgramController extends Controller
                 break;
             
             case 'FACULTY' :
-                $data['title'] = "Students For Faculty Of ".SchoolUnits::find($request->item_id)->name ?? null;
+                $data['title'] = __('text.students_for_faculty_of', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
                 $programs = SchoolUnits::where(['school_units.unit_id'=>2])->where(['school_units.id'=>$request->item_id])
                         // ->join('school_units as faculties', ['faculties.parent_id'=>'school_units.id'])->where(['faculties.unit_id'=>2])
                         ->join('school_units as departments', ['departments.parent_id'=>'school_units.id'])->where(['departments.unit_id'=>3])
                         ->join('school_units as programs', ['programs.parent_id'=>'departments.id'])->where(['programs.unit_id'=>4])
                         ->pluck('programs.id')->toArray();
                 $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
-                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                $students = Students::where(function($q){
+                                auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);
+                            })
+                            ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                             ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 // dd($students);
                 $data['students'] = $students;
@@ -618,14 +624,16 @@ class ProgramController extends Controller
                 break;
 
             case 'DEPARTMENT':
-                $data['title'] = "Students For Department Of ".SchoolUnits::find($request->item_id)->name ?? null;
+                $data['title'] = __('text.students_for_department_of', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
                 $programs = SchoolUnits::where(['school_units.unit_id'=>3])->where(['school_units.id'=>$request->item_id])
                         // ->join('school_units as faculties', ['faculties.parent_id'=>'school_units.id'])->where(['faculties.unit_id'=>2])
                         // ->join('school_units as departments', ['departments.parent_id'=>'school_units.id'])->where(['departments.unit_id'=>3])
                         ->join('school_units as programs', ['programs.parent_id'=>'school_units.id'])->where(['programs.unit_id'=>4])
                         ->pluck('programs.id')->toArray();
                 $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
-                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                $students = Students::where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
+                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                         ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 // dd($students);
                 $data['students'] = $students;
@@ -633,9 +641,11 @@ class ProgramController extends Controller
                 break;
 
             case 'PROGRAM':
-                $data['title'] = "Students For ".SchoolUnits::find($request->item_id)->name ?? null;
+                $data['title'] = __('text.students_for', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
                 $classes = ProgramLevel::where('program_id', $request->item_id)->pluck('id')->toArray();
-                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                $students = Students::where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
+                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                             ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 // dd($students);
                 $data['students'] = $students;
@@ -644,8 +654,10 @@ class ProgramController extends Controller
                 
 
             case 'CLASS':
-                $data['title'] = "All Students For ".ProgramLevel::find($request->item_id)->name();
-                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                $data['title'] = __('text.all_students_for', ['unit'=>ProgramLevel::find($request->item_id)->name()]);
+                $students = Students::where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
+                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                             ->orderBy('students.name')->where('class_id', $request->item_id)->where('year_id', '=', $year)
                             ->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 $data['students'] = $students;
@@ -654,9 +666,11 @@ class ProgramController extends Controller
 
             case 'LEVEL':
                 $level = Level::find($request->item_id);
-                $data['title'] = "All Students For ".$level->level??''.' - '.Batch::find($request->year_id)->name;
+                $data['title'] = __('text.all_students_for', ['unit'=>$level->level??''.' - '.Batch::find($request->year_id)->name]);
                 $classes = ProgramLevel::where('level_id', '=', $level->id)->pluck('id')->toArray();
-                $students = Students::join('student_classes', ['students.id'=>'student_classes.student_id'])
+                $students = Students::where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
+                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                             ->whereIn('class_id', $classes)->where('year_id', '=', $request->year_id)
                             ->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id']);
                 $data['students'] = $students;
@@ -669,7 +683,7 @@ class ProgramController extends Controller
     public function set_program_grading_type(Request $request, $program_id)
     {
         # code...
-        $data['title'] = "Set Program Grading Type For ".SchoolUnits::find($program_id)->name;
+        $data['title'] = __('text.set_program_grading_type_for', ['unit'=>SchoolUnits::find($program_id)->name]);
         return view('admin.grading.set_grading_type', $data);
     }
 
@@ -685,6 +699,6 @@ class ProgramController extends Controller
         $program  = SchoolUnits::find($program_id);
         $program->grading_type_id = $request->grading_type;
         $program->save();
-        return back()->with('success', '!Done');
+        return back()->with('success', __('text.word_done'));
     }
 }
