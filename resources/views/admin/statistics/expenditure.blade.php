@@ -6,22 +6,30 @@
     @endphp
     <div class="w-100 py-3">
         <form action="{{route('admin.stats.expenditure')}}" method="get">
-            @csrf
             <div class="form-group">
-                <div class="d-flex justify-content-between">
-                    <div class="container">
-                        <label for="" class="text-secondary h4 fw-bold text-capitalize">{{__('text.filter_by')}}:</label>
-                        <select name="filter" id="stats_filter" class="form-control text-capitalize">
-                            <option value="" selected>{{__('text.statistics_filter')}}</option>
-                            <option value="month">{{__('text.word_month')}}</option>
-                            <option value="year">{{__('text.word_year')}}</option>
-                            <option value="range">{{__('text.word_range')}}</option>
+                <div class="d-flex flex-wrap justify-content-between">
+                    <div class="">
+                        <label for="" class="text-secondary h4 fw-bold text-capitalize">{{__('text.select_campus')}}:</label>
+                        <select name="campus" class="form-control">
+                            <option value="">{{__('text.word_all')}}</option>
+                            @foreach (\App\Models\Campus::orderBy('name')->get() as $campus)
+                                <option value="{{$campus->id}}" {{request('campus') == $campus->id ? 'selected' : ''}}>{{$campus->name??null}}</option>                            
+                            @endforeach
                         </select>
-                        <div class="py-3 mt-3 border-top" id="filterLoader">
-                        </div>
                     </div>
                     <div class="">
-                        <input type="submit" name="" id="" class="h-auto w-auto btn btn-light btn-md btn-primary" value="{{__('text.get_statistics')}}">
+                        <label for="" class="text-secondary h4 fw-bold text-capitalize">{{__('text.filter_by')}}:</label>
+                        <select name="filter" id="stats_filter" class="form-control">
+                            <option value="">{{__('text.statistics_filter')}}</option>
+                            <option value="month" {{request('filter') == 'month' ? 'selected' : ''}}>{{__('text.word_month')}}</option>
+                            <option value="year" {{request('filter') == 'year' ? 'selected' : ''}}>{{__('text.word_year')}}</option>
+                            <option value="range" {{request('filter') == 'range' ? 'selected' : ''}}>{{__('text.word_range')}}</option>
+                        </select>
+                    </div>
+                    <div class="py-3 mt-3 border-top" id="filterLoader">
+                    </div>
+                    <div class="">
+                        <input type="submit" name="" id="" class="h-auto w-auto btn btn-primary btn-md" value="get statistics">
                     </div>
                 </div>
             </div>

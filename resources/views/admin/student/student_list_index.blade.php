@@ -12,6 +12,7 @@
                 <option value="FACULTY" {{ ($filter == 'FACULTY') ? 'selected' : ''}}>{{__('text.word_faculty')}}</option>
                 <option value="DEPARTMENT" {{ ($filter == 'DEPARTMENT') ? 'selected' : ''}}>{{__('text.word_department')}}</option>
                 <option value="PROGRAM" {{ ($filter == 'PROGRAM') ? 'selected' : ''}}>{{__('text.word_program')}}</option>
+                <option value="CLASS" {{ ($filter == 'CLASS') ? 'selected' : ''}}>{{__('text.word_class')}}</option>
                 <option value="LEVEL" {{ ($filter == 'LEVEL') ? 'selected' : ''}}>{{__('text.word_level')}}</option>
             </select>
             <button type="submit" class="btn btn-sm btn-dark text-capitalize col-sm-2 text-center" onclick="event.preventDefault(); window.location = `{{route('admin.student.bulk.index', ['filter'=>'__FILTER__'])}}`.replace('__FILTER__', $('#group_filter_field').val())">{{__('text.word_get')}}</button>
@@ -31,6 +32,8 @@
                             <td>{{$row['name']}}</td>
                             <td>
                                 <a class="btn btn-sm btn-primary" href="{{route('admin.student.bulk.list', ['filter'=>$filter, 'item_id'=>$row['id']])}}">{{__('text.word_students')}}</a>
+                                <!-- <a class="btn btn-sm btn-success" href="{{route('admin.messages.bulk', ['filter'=>$filter, 'item_id'=>$row['id'], 'recipients'=>'students'])}}">{{__('text.notify_students')}}</a>
+                                <a class="btn btn-sm btn-info" href="{{route('admin.messages.bulk', ['filter'=>$filter, 'item_id'=>$row['id'], 'recipients'=>'parents'])}}">{{__('text.notify_parents')}}</a> -->
                             </td>
                         </tr>
                     @endforeach

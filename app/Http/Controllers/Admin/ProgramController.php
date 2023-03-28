@@ -679,6 +679,166 @@ class ProgramController extends Controller
             
         }
     }
+
+    public function bulk_message_notifications(Request $request)
+    {
+        $recipients = $request->recipients;
+        $year = $request->year_id ?? Helpers::instance()->getCurrentAccademicYear();
+        # code...
+        switch($request->filter){
+            case 'SCHOOL':
+                $data['title'] = "Send Message Notification";
+                $data['target'] = SchoolUnits::find($request->item_id)->name ?? null;
+                return view('admin.student.bulk_messages', $data);
+            
+            case 'FACULTY' :
+                $data['title'] = "Send Message Notification";
+                $data['target'] = SchoolUnits::find($request->item_id)->name ?? null;
+                return view('admin.student.bulk_messages', $data);
+
+            case 'DEPARTMENT':
+                $data['title'] = "Send Message Notification";
+                $data['target'] = SchoolUnits::find($request->item_id)->name ?? null;
+                return view('admin.student.bulk_messages', $data);
+
+            case 'PROGRAM':
+                $data['title'] = "Send Message Notification";
+                $data['target'] = SchoolUnits::find($request->item_id)->name ?? null;
+                return view('admin.student.bulk_messages', $data);
+                
+
+            case 'CLASS':
+                $data['title'] = "Send Message Notification";
+                $data['target'] = ProgramLevel::find($request->item_id)->name();
+                return view('admin.student.bulk_messages', $data);
+
+            case 'LEVEL':
+                $level = Level::find($request->item_id);
+                $data['title'] = "Send Message Notification";
+                $data['target'] = $level->level??''.' - '.Batch::find($request->year_id)->name;
+                return view('admin.student.bulk_messages', $data);
+            
+        }
+    }
+    public function bulk_message_notifications_save(Request $request)
+    {
+        $request->validate(['text'=>'required']);
+        $recipients = $request->recipients;
+        $recipients_field = $recipients == 'students' ? 'phone' : 'parent_phone_number';
+        $year = $request->year_id ?? Helpers::instance()->getCurrentAccademicYear();
+        # code...
+        switch($request->filter){
+            case 'SCHOOL':
+                $data['title'] = __('text.students_for_school_of', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
+                $programs = SchoolUnits::where(['school_units.unit_id'=>1])->where(['school_units.id'=>$request->item_id])
+                        // ->join('school_units as faculties', ['faculties.parent_id'=>'school_units.id'])->where(['faculties.unit_id'=>2])
+                        ->join('school_units as departments', ['departments.parent_id'=>'school_units.id'])->where(['departments.unit_id'=>3])
+                        ->join('school_units as programs', ['programs.parent_id'=>'departments.id'])->where(['programs.unit_id'=>4])
+                        ->pluck('programs.id')->toArray();
+                $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
+                $contacts = Students::where(function($q){
+                                auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);
+                            })
+                            ->join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->pluck($recipients_field)->toArray();
+                
+                Self::sendSmsNotificaition($request->text, $contacts);
+                
+                // dd($students);
+                // $data['students'] = $students;
+                // return view('admin.student.bulk_list', $data);
+                break;
+            
+            case 'FACULTY' :
+                $data['title'] = __('text.students_for_faculty_of', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
+                $programs = SchoolUnits::where(['school_units.unit_id'=>2])->where(['school_units.id'=>$request->item_id])
+                        // ->join('school_units as faculties', ['faculties.parent_id'=>'school_units.id'])->where(['faculties.unit_id'=>2])
+                        ->join('school_units as departments', ['departments.parent_id'=>'school_units.id'])->where(['departments.unit_id'=>3])
+                        ->join('school_units as programs', ['programs.parent_id'=>'departments.id'])->where(['programs.unit_id'=>4])
+                        ->pluck('programs.id')->toArray();
+                $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
+                $contacts = Students::where(function($q){
+                                auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);
+                            })
+                            ->join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->pluck($recipients_field)->toArray();
+
+
+                Self::sendSmsNotificaition($request->text, $contacts);
+                
+                // dd($students);
+                // $data['students'] = $students;
+                // return view('admin.student.bulk_list', $data);
+                break;
+
+            case 'DEPARTMENT':
+                $data['title'] = __('text.students_for_department_of', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
+                $programs = SchoolUnits::where(['school_units.unit_id'=>3])->where(['school_units.id'=>$request->item_id])
+                        // ->join('school_units as faculties', ['faculties.parent_id'=>'school_units.id'])->where(['faculties.unit_id'=>2])
+                        // ->join('school_units as departments', ['departments.parent_id'=>'school_units.id'])->where(['departments.unit_id'=>3])
+                        ->join('school_units as programs', ['programs.parent_id'=>'school_units.id'])->where(['programs.unit_id'=>4])
+                        ->pluck('programs.id')->toArray();
+                $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
+                $contacts = Students::where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
+                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
+                        ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->pluck($recipients_field)->toArray();
+                // dd($students);
+                
+                Self::sendSmsNotificaition($request->text, $contacts);
+                
+                // $data['students'] = $students;
+                // return view('admin.student.bulk_list', $data);
+                break;
+
+            case 'PROGRAM':
+                $data['title'] = __('text.students_for', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
+                $classes = ProgramLevel::where('program_id', $request->item_id)->pluck('id')->toArray();
+                $contacts = Students::where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
+                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->pluck($recipients_field)->toArray();
+                // dd($students);
+
+                Self::sendSmsNotificaition($request->text, $contacts);
+
+                // $data['students'] = $students;
+                // return view('admin.student.bulk_list', $data);
+                break;
+                
+
+            case 'CLASS':
+                $data['title'] = __('text.all_students_for', ['unit'=>ProgramLevel::find($request->item_id)->name()]);
+                $contacts = Students::where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
+                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->orderBy('students.name')->where('class_id', $request->item_id)->where('year_id', '=', $year)
+                            ->distinct()->pluck($recipients_field)->toArray();
+                // $data['students'] = $students;
+                
+                Self::sendSmsNotificaition($request->text, $contacts);
+
+                // return view('admin.student.bulk_list', $data);
+                break;
+
+            case 'LEVEL':
+                $level = Level::find($request->item_id);
+                $data['title'] = __('text.all_students_for', ['unit'=>$level->level??''.' - '.Batch::find($request->year_id)->name]);
+                $classes = ProgramLevel::where('level_id', '=', $level->id)->pluck('id')->toArray();
+                $contacts = Students::where(function($q){
+                            auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
+                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $request->year_id)
+                            ->orderBy('students.name')->distinct()->pluck($recipients_field)->toArray();
+                // $data['students'] = $students;
+
+                Self::sendSmsNotificaition($request->text, $contacts);
+
+                // return view('admin.student.bulk_list', $data);
+                break;
+            
+        }
+    }
     
     public function set_program_grading_type(Request $request, $program_id)
     {

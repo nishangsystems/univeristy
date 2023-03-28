@@ -7,6 +7,12 @@
     <form method="post" class="text-capitalize" id="this_resit_form">
         @csrf
         <div class="my-2 row">
+            <label class="col-sm-3 col-md-3">{{__('text.word_name')}}</label>
+            <div class="col-sm-9 col-md-9">
+                <input type="text" class="form-control" name="name" value="{{$resit->name??null}}" required >
+            </div>
+        </div>
+        <div class="my-2 row">
             <label class="col-sm-3 col-md-3">{{__('text.academic_year')}}</label>
             <div class="col-sm-9 col-md-9">
                 <select class="form-control" name="year_id" required>
@@ -49,6 +55,7 @@
     <table class="table">
         <thead class="bg-secondary text-light text-capitalize">
                 <th class="border-left border-right border-white">#</th>
+                <th class="border-left border-right border-white">{{__('text.word_name')}}</th>
                 <th class="border-left border-right border-white">{{__('text.academic_year')}}</th>
                 <th class="border-left border-right border-white">{{__('text.word_background')}}</th>
                 <th class="border-left border-right border-white">{{__('text.start_date')}}</th>
@@ -61,6 +68,7 @@
             @foreach (\App\Models\Resit::orderBy('id', 'DESC')->get() as $resit)
                 <tr class="border-bottom border-white">
                     <td class="border-left border-right border-white">{{$k++}}</td>
+                    <td class="border-left border-right border-white">{{$resit->name ?? ''}}</td>
                     <td class="border-left border-right border-white">{{$resit->year->name}}</td>
                     <td class="border-left border-right border-white">{{$resit->background->background_name}}</td>
                     <td class="border-left border-right border-white">{{date('l d-m-Y', strtotime($resit->start_date))}}</td>

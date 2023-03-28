@@ -7,6 +7,12 @@
                 <label class="border-0 h5 mx-3">{{__('text.select_month')}}</label>
                 <div class="input-group input-group-merge border">
                     <input class="w-100 border-0 section form-control" type="month" id="month" required placeholder="select month">
+                    <select class="w-100 border-0 section form-control" id="campus">
+                        <option value="">{{__('text.select_campus')}}</option>
+                        @foreach (\App\Models\Campus::orderBy('name')->get() as $campus)
+                            <option value="{{$campus->id}}" {{request('campus') == $campus->id ? 'selected' : ''}}>{{$campus->name}}</option>
+                        @endforeach
+                    </select>
                     <button type="submit" onclick="getReport()" class="border-0 text-uppercase" >{{__('text.word_get')}}</button>
                 </div>
             </div>
