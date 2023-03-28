@@ -10,7 +10,7 @@ class Resit extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['year_id', 'background_id', 'start_date', 'end_date'];
+    protected $fillable = ['name', 'year_id', 'background_id', 'start_date', 'end_date'];
     
     public function is_open()
     {
@@ -38,7 +38,7 @@ class Resit extends Model
     public function name()
     {
         # code...
-        return Batch::find($this->year_id)->name." Resit For " . $this->background->background_name . " ( FROM ".$this->asDate($this->start_date)." TO ".$this->asDate($this->end_date) .' ) '; 
+        return $this->name == null ? Batch::find($this->year_id)->name." Resit For " . $this->background->background_name . " ( FROM ".$this->asDate($this->start_date)." TO ".$this->asDate($this->end_date) .' ) ' : $this->name(); 
     }
 
     public function courses($student_id = null)

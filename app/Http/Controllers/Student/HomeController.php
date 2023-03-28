@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\TransactionController;
 use App\Models\Batch;
+use App\Models\CampusProgram;
 use App\Models\CampusSemesterConfig;
 use App\Models\Charge;
 use App\Models\ClassSubject;
@@ -22,6 +23,7 @@ use App\Models\Result;
 use App\Models\SchoolUnits;
 use App\Models\Semester;
 use App\Models\Sequence;
+use App\Models\StudentClass;
 use App\Models\Students;
 use App\Models\StudentStock;
 use App\Models\StudentSubject;
@@ -478,7 +480,7 @@ class HomeController extends Controller
     {
         # code...
         $data['title'] = "Course Registration For " .Helpers::instance()->getSemester(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->name ?? ''." ".Batch::find(Helpers::instance()->getYear())->name;
-        $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth('student')->id()])->where(['year_id'=>Helpers::instance()->getYear()])->first()->class_id);
+        $data['student_class'] = ProgramLevel::find(StudentClass::where(['student_id'=>auth('student')->id()])->where(['year_id'=>Helpers::instance()->getYear()])->first()->class_id);
         $data['cv_total'] = ProgramLevel::find(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->program()->first()->max_credit;        
         
         $student = auth('student')->id();
@@ -493,7 +495,7 @@ class HomeController extends Controller
 
         $fee = [
             'amount' => array_sum(
-                \App\Models\Payments::where('payments.student_id', '=', $student)
+                Payments::where('payments.student_id', '=', $student)
                 ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
                 ->where('payment_items.name', '=', 'TUTION')
                 ->where('payments.batch_id', '=', $year)
@@ -501,7 +503,7 @@ class HomeController extends Controller
                 ->toArray()
             ),
             'total' => 
-                    \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                    CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                     ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                     ->where('payment_items.name', '=', 'TUTION')
                     ->whereNotNull('payment_items.amount')
@@ -531,7 +533,7 @@ class HomeController extends Controller
         if(!$is_current_student){
             return back()->with('error', 'You are not a current student');
         }
-        $data['title'] = "Resit Registration For " .Helpers::instance()->getSemester(auth('student')->user()->_class($is_current_student ? $c_year : null)->id)->name." ".\App\Models\Batch::find(Helpers::instance()->getYear())->name;
+        $data['title'] = "Resit Registration For " .Helpers::instance()->getSemester(auth('student')->user()->_class($is_current_student ? $c_year : null)->id)->name." ".Batch::find(Helpers::instance()->getYear())->name;
         $data['student_class'] =  auth('student')->user()->_class($is_current_student ? $c_year : null);
         $data['cv_total'] = auth('student')->user()->_class($is_current_student ? $c_year : null)->program()->first()->max_credit;
         // resit course price is set in campus_programs table //
@@ -545,7 +547,7 @@ class HomeController extends Controller
         }
         $fee = [
             'amount' => array_sum(
-                \App\Models\Payments::where('payments.student_id', '=', $student)
+                Payments::where('payments.student_id', '=', $student)
                 ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
                 ->where('payment_items.name', '=', 'TUTION')
                 ->where('payments.batch_id', '=', $year)
@@ -553,7 +555,7 @@ class HomeController extends Controller
                 ->toArray()
             ),
             'total' => 
-                    \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                    CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                     ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                     ->where('payment_items.name', '=', 'TUTION')
                     ->whereNotNull('payment_items.amount')
@@ -719,16 +721,17 @@ class HomeController extends Controller
         // return $request->value;
 
         try{
-            $pl = DB::table('students')->find(auth('student')->id())->program_id;
-            $program = \App\Models\ProgramLevel::find($pl);
-            $subjects = \App\Models\ProgramLevel::where(['program_levels.program_id'=>$program->program_id])->where('program_levels.level_id', '<=', $program->level_id)
-                        ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])
-                        ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
-                        ->where(function($q)use($request){
+            // $pl = DB::table('students')->find(auth('student')->id())->program_id;
+            // $program = ProgramLevel::find($pl);
+            $subjects = Subjects::
+                        // where(['program_levels.program_id'=>$program->program_id])->where('program_levels.level_id', '<=', $program->level_id)
+                        // ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])
+                        // ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
+                        where(function($q)use($request){
                             $q->where('subjects.code', 'like', '%'.$request->value.'%')
                             ->orWhere('subjects.name', 'like', '%'.$request->value.'%');
                         })
-                        ->select(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->orderBy('name')->distinct()->paginate(15);
+                        ->select(['subjects.*', 'subjects.coef as cv', 'subjects.status as status'])->orderBy('name')->distinct()->paginate(15);
             return $subjects;
         }
         catch(Throwable $th){return $th->getLine() . '  '.$th->getMessage();}
@@ -740,8 +743,8 @@ class HomeController extends Controller
         
         try{
             $pl = Students::find(auth('student')->id())->classes()->where('year_id', '=', Helpers::instance()->getCurrentAccademicYear())->first()->class_id;
-            $program_id = \App\Models\ProgramLevel::find($pl)->program_id;
-            $subjects = \App\Models\ProgramLevel::where(['program_levels.program_id'=>$program_id])->where(['program_levels.level_id'=>$level])
+            $program_id = ProgramLevel::find($pl)->program_id;
+            $subjects = ProgramLevel::where(['program_levels.program_id'=>$program_id])->where(['program_levels.level_id'=>$level])
                         ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
                         ->where(['subjects.semester_id'=>Helpers::instance()->getSemester($pl)->id])
                         ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->toArray();
@@ -768,7 +771,7 @@ class HomeController extends Controller
         try {
             if ($request->has('courses')) {
                 // DB::beginTransaction();
-                $ids = \App\Models\StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['resit_id'=>$resit_id])->pluck('id');
+                $ids = StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['resit_id'=>$resit_id])->pluck('id');
                 foreach ($ids as $key => $value) {
                     # code...
                     StudentSubject::find($value)->delete();
@@ -839,7 +842,7 @@ class HomeController extends Controller
             }
             if ($request->has('courses')) {
                 // DB::beginTransaction();
-                $ids = \App\Models\StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->pluck('id');
+                $ids = StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->pluck('id');
                 foreach ($ids as $key => $value) {
                     # code...
                     StudentSubject::find($value)->delete();

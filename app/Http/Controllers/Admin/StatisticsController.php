@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Batch;
+use App\Models\Campus;
 use App\Models\Level;
 use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
@@ -27,110 +29,114 @@ class StatisticsController extends Controller
         # code...
         // return $request->all();
         // $classes = \App\Http\Controllers\Admin\ProgramController::allUnitNames();
+        $campus_id = $request->campus ?? auth()->user()->campus_i;
         $data['title'] = __('text.student_statistics');
         if ($request->has('filter_key')) {
             # code...
             switch ($request->filter_key) {
                 case 'program':
                     # code...
-                    $data['data'] = array_map(function($program_id) use ($request){
+                    $data['title'] = Campus::find($campus_id ?? 0)->name??null.' '.__('text.student_statistics').' '.Batch::find($request->year)->name??null.' By Program';
+                    $data['data'] = array_map(function($program_id) use ($request, $campus_id){
                         return [
-                            'unit' => \App\Models\SchoolUnits::find($program_id)->name,
-                            'total' => \App\Models\ProgramLevel::where('program_levels.program_id', '=', $program_id)
+                            'unit' => SchoolUnits::find($program_id)->name,
+                            'total' => ProgramLevel::where('program_levels.program_id', '=', $program_id)
                                         ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
                                         ->where('student_classes.year_id', '=', $request->year)
                                         ->join('students', 'students.id', '=','student_classes.student_id')
-                                        ->where(function($q){
-                                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                                        ->where(function($q)use($campus_id){
+                                            $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                         })
                                         ->count(),
-                            'males' => \App\Models\ProgramLevel::where('program_levels.program_id', '=', $program_id)
+                            'males' => ProgramLevel::where('program_levels.program_id', '=', $program_id)
                                         ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
                                         ->where('student_classes.year_id', '=', $request->year)
                                         ->join('students', 'students.id', '=','student_classes.student_id')
-                                        ->where(function($q){
-                                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                                        ->where(function($q)use($campus_id){
+                                            $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                         })
                                         ->where('students.gender', '=', 'male')
                                         ->count(),
-                            'females' => \App\Models\ProgramLevel::where('program_levels.program_id', '=', $program_id)
+                            'females' => ProgramLevel::where('program_levels.program_id', '=', $program_id)
                                         ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
                                         ->where('student_classes.year_id', '=', $request->year)
                                         ->join('students', 'students.id', '=','student_classes.student_id')
-                                        ->where(function($q){
-                                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                                        ->where(function($q)use($campus_id){
+                                            $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                         })
                                         ->where('students.gender', '=', 'female')
                                         ->count(),
                         ];
-                    }, \App\Models\SchoolUnits::where('unit_id', 4)->pluck('id')->toArray());
+                    }, SchoolUnits::where('unit_id', 4)->pluck('id')->toArray());
                     // dd($data);
                     break;
                     case 'level':
                         # code...
-                        $data['data'] = array_map(function($level_id) use ($request){
+                        $data['title'] = Campus::find($campus_id ?? 0)->name??null.' '.__('text.student_statistics').' '.Batch::find($request->year)->name??null.' By Level';
+                        $data['data'] = array_map(function($level_id) use ($request, $campus_id){
                             return [
-                                'unit' => __('text.word_level').' '.\App\Models\Level::find($level_id)->level,
+                                'unit' => __('text.word_level').' '.Level::find($level_id)->level,
 
-                                'total' => \App\Models\ProgramLevel::where('program_levels.level_id', $level_id)
+                                'total' => ProgramLevel::where('program_levels.level_id', $level_id)
                                             ->join('students', ['students.program_id'=>'program_levels.id'])
-                                            ->where(function($q){
-                                                auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                                            ->where(function($q)use($campus_id){
+                                                $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })
                                             ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                             ->where('student_classes.year_id', $request->year)->count(),
 
-                                'males' => \App\Models\ProgramLevel::where('program_levels.level_id', $level_id)
+                                'males' => ProgramLevel::where('program_levels.level_id', $level_id)
                                             ->join('students', ['students.program_id'=>'program_levels.id'])
-                                            ->where(function($q){
-                                                auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                                            ->where(function($q)use($campus_id){
+                                                $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })
                                             ->where('students.gender', 'male')
                                             ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                             ->where('student_classes.year_id', $request->year)->count(),
 
-                                'females' => \App\Models\ProgramLevel::where('program_levels.level_id', $level_id)
+                                'females' => ProgramLevel::where('program_levels.level_id', $level_id)
                                             ->join('students', ['students.program_id'=>'program_levels.id'])
-                                            ->where(function($q){
-                                                auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                                            ->where(function($q)use($campus_id){
+                                                $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })
                                             ->where('students.gender', 'female')
                                             ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                             ->where('student_classes.year_id', $request->year)->count(),
                             ];
-                        }, \App\Models\Level::pluck('id')->toArray());
+                        }, Level::pluck('id')->toArray());
                     break;
                 case 'class':
                     # code...
-                    $data['data'] = array_map(function($class_id) use ($request){
+                    $data['title'] = Campus::find($campus_id ?? 0)->name??null.' '.__('text.student_statistics').' '.Batch::find($request->year)->name??null.' By Class';
+                    $data['data'] = array_map(function($class_id) use ($request, $campus_id){
                         return [
-                            'unit' => \App\Models\ProgramLevel::find($class_id)->name(),
+                            'unit' => ProgramLevel::find($class_id)->name(),
 
-                            'total' => \App\Models\ProgramLevel::find($class_id)->students()
-                                        ->where(function($q){
-                                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                            'total' => ProgramLevel::find($class_id)->students()
+                                        ->where(function($q)use($campus_id){
+                                            $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                         })
                                         ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                         ->where('student_classes.year_id', '=', $request->year)->count(),
 
-                            'males' => \App\Models\ProgramLevel::find($class_id)->students()
+                            'males' => ProgramLevel::find($class_id)->students()
                                         ->where('students.gender', '=', 'male')
-                                        ->where(function($q){
-                                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                                        ->where(function($q)use($campus_id){
+                                            $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                         })
                                         ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                         ->where('student_classes.year_id', '=', $request->year)->count(),
 
-                            'females' => \App\Models\ProgramLevel::find($class_id)->students()
+                            'females' => ProgramLevel::find($class_id)->students()
                                         ->where('students.gender', '=', 'female')
-                                        ->where(function($q){
-                                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                                        ->where(function($q)use($campus_id){
+                                            $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                         })
                                         ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                         ->where('student_classes.year_id', '=', $request->year)->count(),
                             
                         ];
-                    }, \App\Models\ProgramLevel::pluck('id')->toArray());
+                    }, ProgramLevel::pluck('id')->toArray());
                     break;
                 
                 default:
@@ -145,13 +151,13 @@ class StatisticsController extends Controller
     
 
     // get fee statistics per program per academic year 
-    function program_fee_stats($program_id, $year){
+    function program_fee_stats($program_id, $year, $campus_id = null){
         $students = ProgramLevel::where('program_levels.program_id', '=', $program_id)
                                             ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
                                             ->where('student_classes.year_id', '=', $year)
                                             ->join('students', 'students.id', '=', 'student_classes.student_id')
-                                            ->where(function($q){
-                                                auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                                            ->where(function($q)use($campus_id){
+                                                $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })->distinct()->pluck('students.id')->toArray();       
         $return = [
             'unit' => SchoolUnits::find($program_id)->name,
@@ -203,15 +209,15 @@ class StatisticsController extends Controller
     }
 
     // get fee statistics per level per academic year
-    public function level_fee_stats($level_id, $year)
+    public function level_fee_stats($level_id, $year, $campus_id = null)
     {
         # code...
         $students = ProgramLevel::where('program_levels.level_id', '=', $level_id)
                                             ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
                                             ->where('student_classes.year_id', '=', $year)
                                             ->join('students', 'students.id', '=', 'student_classes.student_id')
-                                            ->where(function($q){
-                                                auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                                            ->where(function($q)use($campus_id){
+                                                $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })->distinct()->pluck('students.id')->toArray();       
         $return = [
             'unit' => __('text.word_level').' '.Level::find($level_id)->level,
@@ -263,14 +269,14 @@ class StatisticsController extends Controller
     }
 
     // get fee statistics per class per academic year
-    public function class_fee_stats($class_id, $year)
+    public function class_fee_stats($class_id, $year, $campus_id = null)
     {
         # code...
         $students = \App\Models\StudentClass::where('student_classes.class_id', '=', $class_id)
                                             ->where('student_classes.year_id', '=', $year)
                                             ->join('students', 'students.id', '=', 'student_classes.student_id')
-                                            ->where(function($q){
-                                                auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                                            ->where(function($q)use($campus_id){
+                                                $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })->distinct()->pluck('students.id')->toArray();  
         // dd($students);
         $return = [
@@ -330,27 +336,31 @@ class StatisticsController extends Controller
     public function fees(Request $request)
     {
         try{
+            $campus_id = $request->campus ?? auth()->user()->campus_id;
             $data['title'] = __('text.fee_statistics');
             if($request->has('filter_key')){
                 // return $request->all();
                 switch ($request->filter_key) {
                     case 'program':
                         # code...
-                        $data['data'] = array_map(function($program_id) use ($request){
-                            return $this->program_fee_stats($program_id, $request->year);
+                        $data['title'] = Campus::find($campus_id ?? 0)->name??null.' '.__('text.fee_statistics').' '.Batch::find($request->year)->name??null.' By Program';
+                        $data['data'] = array_map(function($program_id) use ($request, $campus_id){
+                            return $this->program_fee_stats($program_id, $request->year, $campus_id);
                         }, SchoolUnits::where('unit_id', 4)->pluck('id')->toArray());
                         // dd($data);
                         break;
                     case 'level':
                         # code...
-                        $data['data'] = array_map(function($level_id) use ($request){
-                            return $this->level_fee_stats($level_id, $request->year);
+                        $data['title'] = Campus::find($campus_id ?? 0)->name??null.' '.__('text.fee_statistics').' '.Batch::find($request->year)->name??null.' By Level';
+                        $data['data'] = array_map(function($level_id) use ($request, $campus_id){
+                            return $this->level_fee_stats($level_id, $request->year, $campus_id);
                         }, Level::pluck('id')->toArray());
                     break;
                     case 'class':
                         # code...
-                        $data['data'] = array_map(function($class_id) use ($request){
-                            return $this->class_fee_stats($class_id, $request->year);
+                        $data['title'] = Campus::find($campus_id ?? 0)->name??null.' '.__('text.fee_statistics').' '.Batch::find($request->year)->name??null.' By Class';
+                        $data['data'] = array_map(function($class_id) use ($request, $campus_id){
+                            return $this->class_fee_stats($class_id, $request->year, $campus_id);
                         }, ProgramLevel::pluck('id')->toArray());
                         break;
                     
@@ -374,6 +384,7 @@ class StatisticsController extends Controller
     {
         # code...
         try {
+            $campus_id = $request->campus ?? auth()->user()->campus_id;
             $data = [];
             $classes = \App\Http\Controllers\Admin\ProgramController::orderedUnitsTree();
             $year = request('year') ?? \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
@@ -384,8 +395,8 @@ class StatisticsController extends Controller
                             ->whereIn('class_id', \App\Http\Controllers\Admin\ProgramController::subunitsOf($class_id))
                             ->where('year_id', '=', $year)
                             ->join('students', 'students.id', '=', 'student_classes.student_id')
-                            ->where(function($q){
-                                auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                            ->where(function($q)use($campus_id){
+                                $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                             })
                             ->get(['students.id as id', 'students.name as name']);
 
@@ -447,12 +458,14 @@ class StatisticsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'filter'=>'string',
-            '$value'=>'month',
+            // 'value'=>'month',
             'start_date'=>'date',
             'end_date'=>'date'
         ]);
         $data['title'] = __('text.income_statistics');
         try {
+            // return $request->all();
+            $campus_id = $request->campus ?? auth()->user()->campus_id;
             $expenditureItems = null;
             if ($request->filter == null) {
                 # code...
@@ -474,8 +487,8 @@ class StatisticsController extends Controller
                         ->whereMonth('pay_incomes.created_at', '=', date('m', strtotime($request->value)))
                         ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
                         ->join('students', ['students.id'=>'pay_incomes.student_id'])
-                        ->where(function($q){
-                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                        ->where(function($q)use($campus_id){
+                            $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                         })
                         ->get();
                         $names = array_unique($expenditureItems->pluck('name')->toArray());
@@ -499,8 +512,8 @@ class StatisticsController extends Controller
                         ->where('pay_incomes.batch_id', '=', $request->value)
                         ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
                         ->join('students', ['students.id'=>'pay_incomes.student_id'])
-                        ->where(function($q){
-                            auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                        ->where(function($q)use($campus_id){
+                            $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                         })
                         ->get();
                     $names = array_unique($expenditureItems->pluck('name')->toArray());
@@ -525,8 +538,8 @@ class StatisticsController extends Controller
                     ->whereDate('pay_incomes.created_at', '<=', date('Y-m-d', strtotime($request->end_date)))
                     ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
                     ->join('students', ['students.id'=>'pay_incomes.student_id'])
-                    ->where(function($q){
-                        auth()->user()->campus_id == null ? null : $q->where(['students.campus_id'=>auth()->user()->campus_id]);
+                    ->where(function($q)use($campus_id){
+                        $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                     })
                     ->get();
                     $names = array_unique($expenditureItems->pluck('name')->toArray());
@@ -568,6 +581,7 @@ class StatisticsController extends Controller
         ]);
         $data['title'] = __('text.expenditure_statistics');
         try {
+            $campus_id = $request->campus ?? auth()->user()->campus_id;
             if ($request->filter == null) {
                 # code...
                 return view('admin.statistics.expenditure')->with($data);
@@ -588,8 +602,8 @@ class StatisticsController extends Controller
                         ->whereYear('date', '=', date('Y', strtotime($request->value)))
                         ->whereMonth('date', '=', date('m', strtotime($request->value)))
                         ->join('users', ['users.id'=>'expenses.user_id'])
-                        ->where(function($q){
-                            auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
+                        ->where(function($q)use($campus_id){
+                            $campus_id == null ? null : $q->where(['.campus_id'=>$campus_id]);
                         })
                         ->get(['expenses.*']);
                         // $names = array_unique($expenditureItems->pluck('name')->toArray());
@@ -611,8 +625,8 @@ class StatisticsController extends Controller
                     $data['data'] = DB::table('expenses')
                         ->whereYear('date', '=', date('Y',strtotime($request->value)))
                         ->join('users', ['users.id'=>'expenses.user_id'])
-                        ->where(function($q){
-                            auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
+                        ->where(function($q)use($campus_id){
+                            $campus_id == null ? null : $q->where(['.campus_id'=>$campus_id]);
                         })
                         ->get(['expenses.*']);
                     // $names = array_unique($expenditureItems->pluck('name')->toArray());
@@ -635,8 +649,8 @@ class StatisticsController extends Controller
                     ->whereDate('date', '>=', date('Y-m-d', strtotime($request->start_date)))
                     ->whereDate('date', '<=', date('Y-m-d', strtotime($request->end_date)))
                     ->join('users', ['users.id'=>'expenses.user_id'])
-                    ->where(function($q){
-                        auth()->user()->campus_id == null ? null : $q->where(['.campus_id'=>auth()->user()->campus_id]);
+                    ->where(function($q)use($campus_id){
+                        $campus_id == null ? null : $q->where(['.campus_id'=>$campus_id]);
                     })
                     ->get(['expenses.*']);
                     // $names = array_unique($expenditureItems->pluck('name')->toArray());

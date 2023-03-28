@@ -199,7 +199,7 @@ return [
     'get_statistics'=>'get statistics',
     'word_count'=>'count',
     'pick_a_month'=>'pick a month',
-    'pick_a_year'=>'pick_a_year',
+    'pick_a_year'=>'pick a year',
     'word_from'=>'from',
     'word_to'=>'to',
     'select_academic_year'=>'select academic year',
@@ -719,4 +719,8 @@ return [
     'word_published'=>'published',
     'word_unpublished'=>'unpublished',
     'results_template'=>'results template',
+    'notify_students'=>'notify students',
+    'notify_parents'=>'notify parents',
+    'word_target'=>'target',
+    'word_message'=>'message',
 ];

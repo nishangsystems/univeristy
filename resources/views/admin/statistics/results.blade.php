@@ -8,7 +8,7 @@
                 <label for="" class="text-secondary h4 fw-bold">{{__('text.select_academic_year')}}</label>
                 <div class="d-flex justify-content-between">
                     <select name="year" id="" class="form-control">
-                        <option value="" selected>{{__(*'text.academic_year')}}</option>
+                        <option value="" selected>{{__('text.academic_year')}}</option>
                         @forelse(\App\Models\Batch::all() as $batch)
                             <option value="{{$batch->id}}">{{$batch->name}}</option>
                         @empty

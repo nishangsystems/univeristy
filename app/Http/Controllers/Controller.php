@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Summary of Controller
+ */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -205,5 +208,24 @@ class Controller extends BaseController
             }
         }
 
+    }
+
+    /**
+     * Summary of sendSmsNotificaition
+     * @param string $message_text
+     * @param array|Collection $contacts
+     * @return bool
+     */
+    public static function sendSmsNotificaition(String $message_text, $contacts)
+    {
+        $sms_sender_address = env('SMS_SENDER_ADDRESS');
+        $basic  = new \Vonage\Client\Credentials\Basic('8d8bbcf8', '04MLvso1he1b8ANc');
+        $client = new \Vonage\Client($basic);
+        foreach ($contacts as $key => $contact) {
+            # code...
+            $message = new \Vonage\SMS\Message\SMS($contact, $sms_sender_address, $message_text);
+            $client->sms()->send($message);
+        }
+        return true;
     }
 }

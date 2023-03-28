@@ -3,32 +3,49 @@
 @section('section')
     <div class="w-100 py-3">
         <form action="{{Request::url()}}" method="get">
-            @csrf
-            <div class="d-flex justify-content-end flex-wrap">
-                <div class="col-md-9">
-                    <div class="py-2 form-group">
-                        <label for="" class="text-secondary h6 fw-bold">{{__('text.select_academic_year')}}</label>
+            <!-- @csrf -->
+            <div class="">
+                <div class="py-2 form-group row">
+                    <label for="" class="text-secondary h6 fw-bold col-sm-3 text-capitalize">{{__('text.select_academic_year')}}</label>
+                    <div class="col-sm-9">
                         <select name="year" id="" class="form-control">
                             <option value="" selected>{{__('text.academic_year')}}</option>
                             @forelse(\App\Models\Batch::all() as $batch)
-                                <option value="{{$batch->id}}">{{$batch->name}}</option>
+                                <option value="{{$batch->id}}" {{request('year') == $batch->id ? 'selected' : ''}}>{{$batch->name}}</option>
                             @empty
                                 <option value="" selected>{{__('text.academic_year_not_set')}} </option>
                             @endforelse
                         </select>
                     </div>
-                    <div class="py-2 form-group">
-                        <label for="" class="text-secondary h6 fw-bold">{{__('text.filter_statistics_by')}}</label>
+                </div>
+                <div class="py-2 form-group row">
+                    <label for="" class="text-secondary h6 fw-bold col-sm-3 text-capitalize">{{__('text.filter_statistics_by')}}</label>
+                    <div class="col-sm-9">
                         <select name="filter_key" id="" class="form-control text-uppercase">
-                            <option value="" selected>{{__('text.filter_by')}}</option>
-                            <option value="class">{{__('text.word_class')}}</option>
-                            <option value="program">{{__('text.word_program')}}</option>
-                            <option value="level">{{__('text.word_level')}}</option>
+                            <option value="">{{__('text.filter_by')}}</option>
+                            <option value="class" {{request('filter_key') == 'class' ? 'selected' : ''}}>{{__('text.word_class')}}</option>
+                            <option value="program" {{request('filter_key') == 'program' ? 'selected' : ''}}>{{__('text.word_program')}}</option>
+                            <option value="level" {{request('filter_key') == 'level' ? 'selected' : ''}}>{{__('text.word_level')}}</option>
                         </select>
                     </div>
-
                 </div>
-                <div class="d-flex flex-column justify-content-center">
+                
+                @if (auth()->user()->campus_id == null)
+                    <div class="py-2 form-group row">
+                        <label for="" class="text-secondary h6 fw-bold col-sm-3 text-capitalize">{{__('text.select_campus')}}</label>
+                        <div class="col-sm-9">
+                            <select name="campus" id="" class="form-control">
+                                <option value="" selected>{{__('text.word_all')}}</option>
+                                @foreach(\App\Models\Campus::orderBy('name')->get() as $campus)
+                                    <option value="{{$campus->id}}" {{request('campus') == $campus->id ? 'selected' : ''}}>{{$campus->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    
+                @endif
+
+                <div class="d-flex flex justify-content-end">
                     <input type="submit" name="" id="" class=" btn btn-primary btn-sm" value="get statistics">
                 </div>
             </div>
