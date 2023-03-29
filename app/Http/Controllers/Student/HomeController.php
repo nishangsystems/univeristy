@@ -768,7 +768,7 @@ class HomeController extends Controller
         }else{$resit_id = 0;}
         try {
             $user = auth('student')->id();
-            DB::createTransaction();
+            DB::beginTransaction();
             foreach (StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['resit_id'=>$resit_id])->get() as $key => $value) {
                 # code...
                 $value->delete();
