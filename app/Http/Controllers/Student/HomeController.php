@@ -758,7 +758,6 @@ class HomeController extends Controller
         // TO MAKE THE PAYMENT, MAKE A REQUEST TO ANOTHER URL WHERE THE PAYMENT 
         // IS DONE AND RESPONSE RETURNED BACK HERE, THEN THE COURSES ARE REGISTERED 
 
-        // return $request->all();
         # code...
         // first clear all registered courses for the year, semester, student then rewrite
         $year = Helpers::instance()->getYear();
@@ -767,22 +766,20 @@ class HomeController extends Controller
             // dd($resits);
             $resit_id = $resits->first()->id;
         }else{$resit_id = 0;}
-        $user = auth('student')->id();
         try {
-            if ($request->has('courses')) {
-                // DB::beginTransaction();
-                $ids = StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['resit_id'=>$resit_id])->pluck('id');
-                foreach ($ids as $key => $value) {
-                    # code...
-                    StudentSubject::find($value)->delete();
-                }
+            $user = auth('student')->id();
+            DB::createTransaction();
+            foreach (StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['resit_id'=>$resit_id])->get() as $key => $value) {
                 # code...
-                foreach (array_unique($request->courses) as $key => $value) {
-                    # code...
-                    StudentSubject::create(['year_id'=>$year, 'resit_id'=>$resit_id, 'student_id'=>$user, 'course_id'=>$value]);
-                }
+                $value->delete();
             }
-            // DB::commit();
+            // return $request->all();
+            # code...
+            foreach (array_unique($request->courses == null ? [] : $request->courses) as $key => $value) {
+                # code...
+                StudentSubject::create(['year_id'=>$year, 'resit_id'=>$resit_id, 'student_id'=>$user, 'course_id'=>$value]);
+            }
+            DB::commit();
             return back()->with('success', "!Done");
         } catch (\Throwable $th) {
             // DB::rollBack();

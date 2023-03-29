@@ -32,8 +32,8 @@
                             <td>{{$row['name']}}</td>
                             <td>
                                 <a class="btn btn-sm btn-primary" href="{{route('admin.student.bulk.list', ['filter'=>$filter, 'item_id'=>$row['id']])}}">{{__('text.word_students')}}</a>
-                                <!-- <a class="btn btn-sm btn-success" href="{{route('admin.messages.bulk', ['filter'=>$filter, 'item_id'=>$row['id'], 'recipients'=>'students'])}}">{{__('text.notify_students')}}</a>
-                                <a class="btn btn-sm btn-info" href="{{route('admin.messages.bulk', ['filter'=>$filter, 'item_id'=>$row['id'], 'recipients'=>'parents'])}}">{{__('text.notify_parents')}}</a> -->
+                                <a class="btn btn-sm btn-success" href="{{route('admin.messages.bulk', ['filter'=>$filter, 'item_id'=>$row['id'], 'recipients'=>'students'])}}">{{__('text.notify_students')}}</a>
+                                <a class="btn btn-sm btn-info" href="{{route('admin.messages.bulk', ['filter'=>$filter, 'item_id'=>$row['id'], 'recipients'=>'parents'])}}">{{__('text.notify_parents')}}</a>
                             </td>
                         </tr>
                     @endforeach
