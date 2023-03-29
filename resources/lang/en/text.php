@@ -723,4 +723,9 @@ return [
     'notify_parents'=>'notify parents',
     'word_target'=>'target',
     'word_message'=>'message',
+    'word_content'=>'content',
+    'word_topic'=>'topic',
+    'word_topics'=>'topics',
+    'in_hours'=>'in hours',
+    ''
 ];
