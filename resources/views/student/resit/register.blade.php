@@ -76,6 +76,7 @@
         $.ajax({
             method: 'GET',
             url: url,
+            data: {'resit_id': '{{$resit_id}}'},
             success: function(data){
                 if (data != null) {
                     registered_courses = data.courses;
