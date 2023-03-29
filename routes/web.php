@@ -461,6 +461,11 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
     Route::get('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@show')->name('subject.show');
     Route::get('subjects/students/{class_id}/{course_id}', 'Teacher\SubjectController@course_list')->name('subject.students');
+
+    // COURSE CONTENT ROUTES
+    Route::get('subjects/{subject_id}/content/{parent_id?}/{level?}', 'Teacher\SubjectController@course_content')->name('subject.content');
+    Route::post('subjects/{subject_id}/content/topics/{parent_id?}/{level?}', 'Teacher\SubjectController@create_content_save')->name('subject.topics');
+
     Route::get('subjects/result_template/{class_id}/{course_id}/{campus_id}', 'Teacher\SubjectController@result_template')->name('subject.result_template');
     Route::put('subjects/notes/{id}', 'Teacher\SubjectNotesController@publish_notes')->name('subject.note.publish');
     Route::post('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@store')->name('subject.note.store');

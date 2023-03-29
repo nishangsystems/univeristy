@@ -7,6 +7,7 @@ use App\Models\Result;
 use App\Models\SchoolUnits;
 use App\Models\ClassSubject;
 use App\Models\TeachersSubject;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
@@ -187,5 +188,34 @@ class SubjectController extends Controller
         $data['title'] = "Course Result Template For ".Subjects::find($request->course_id)->name.' - '.ProgramLevel::find($request->class_id)->name().' - '.Campus::find($request->campus_id)->name.' - '.Batch::find($this->current_accademic_year)->name;
         $data['students'] = ProgramLevel::find($request->class_id)->_students($this->current_accademic_year)->get(['students.id', 'students.matric']);
         return view('teacher.result_template', $data);
+    }
+
+    public function course_content(Request $request)
+    {
+        # code...
+        
+        $subject = Subjects::find($request->subject_id);
+        // dd($subject);
+        if(!($subject == null)){
+            $data['title'] = "Course Content For ".$subject->name.", ".TeachersSubject::where(['teacher_id'=>auth()->id(), 'subject_id'=>$request->subject_id])->first()->class->name();
+            if($request->parent_id != null){
+                $data['title'] = "Topics under ".Topic::find($request->parent_id)->title.', '.$subject->name.", ".TeachersSubject::where(['teacher_id'=>auth()->id(), 'subject_id'=>$request->subject_id])->first()->class->name();
+            }
+            $data['content'] = Topic::where(['subject_id'=>$subject->id, 'level'=>$request->level??1])->get();
+            $data['level'] = $request->level??1;
+            $data['parent_id'] = $request->parent_id??0;
+            $data['subject_id'] = $request->subject_id??0;
+            return view('teacher.course.content', $data);
+        }
+    }
+
+    public function create_content_save(Request $request)
+    {
+        # code...
+        // return $request->all();
+        $data = ['title'=>$request->title, 'subject_id'=>$request->subject_id, 'level'=>$request->level, 'parent_id'=>$request->parent_id, 'coverage_duration'=>$request->coverage_duration??null];
+        $instance = new Topic($data);
+        $instance->save();
+        return back()->with('success', __('text.word_done'));
     }
 }

@@ -56,6 +56,7 @@
                         </td> */
                         ?>
                         <td style="float: right;" class="d-flex">
+                            <a class="btn btn-xs btn-info text-capitalize" href="{{route('user.subject.content', ['subject_id'=>$subject->id])}}">{{__('text.word_content')}}</a> |
                             <a class="btn btn-xs btn-success text-capitalize" href="{{route('course.notification.index', [$subject->id])}}">{{__('text.word_notifications')}}</a> |
                             <a class="btn btn-xs btn-primary text-capitalize" href="{{route('user.subject.students', [$subject->class, $subject->id])}}?campus_id={{$subject->campus_id}}">{{__('text.word_students')}}</a> |
                             <a class="btn btn-xs btn-success text-capitalize" href="{{route('user.subject.show', [$subject->class, $subject->id])}}">{{__('text.upload_material')}}</a>
