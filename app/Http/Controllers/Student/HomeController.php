@@ -700,12 +700,13 @@ class HomeController extends Controller
             $_student = $student ?? auth('student')->id();
             $_year = $year ?? Helpers::instance()->getCurrentAccademicYear();
             // get resit semester for the student's background
-            $resit_id = Helpers::instance()->available_resit(auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
+            $resit_id = request('resit_id');
+            // $resit_id = Helpers::instance()->available_resit(auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
             // return $_semester;
             # code...
-            $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year])->where(['student_courses.resit_id'=>$resit_id])
+            $courses = StudentSubject::where(['student_courses.student_id'=>$_student, 'student_courses.year_id'=>$_year, 'student_courses.resit_id'=>$resit_id])
                     ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
-                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
+                    ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'subjects.coef as cv', 'subjects.status as status']);
             return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
         } catch (\Throwable $th) {
             return $th->getMessage();
