@@ -65,7 +65,7 @@
         </thead>
         <tbody>
             @php($k = 1)
-            @foreach (\App\Models\Resit::orderBy('id', 'DESC')->get() as $resit)
+            @foreach (\App\Models\Resit::where(['campus_id'=>auth()->user()->campus_id??null])->orderBy('id', 'DESC')->get() as $resit)
                 <tr class="border-bottom border-white">
                     <td class="border-left border-right border-white">{{$k++}}</td>
                     <td class="border-left border-right border-white">{{$resit->name ?? ''}}</td>

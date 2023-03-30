@@ -41,4 +41,10 @@ class Campus extends Model
         return $this->hasMany(CampusProgram::class);
     }
 
+
+    public function resits()
+    {
+        # code...
+        return $this->hasMany(Resit::class, 'campus_id');
+    }
 }
