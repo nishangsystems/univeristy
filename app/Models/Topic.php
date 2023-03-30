@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Topic extends Model
 {
     use HasFactory;
-    protected $fillable = ['teacher_subject_id', 'subject_id', 'title', 'coverage_duration', 'level', 'parent_id'];
+    protected $fillable = ['teacher_subject_id', 'subject_id', 'title', 'duration', 'level', 'parent_id', 'week', 'teacher_id'];
 
     public function teacherSubject()
     {
@@ -23,5 +23,11 @@ class Topic extends Model
     public function parent()
     {
         return $this->belongsTo(Topic::class, 'parent_id');
+    }
+    
+    public function teacher()
+    {
+        # code...
+        return $this->belongsTo(User::class, 'teacher_id');
     }
 }

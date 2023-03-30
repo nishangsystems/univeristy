@@ -727,5 +727,12 @@ return [
     'word_topic'=>'topic',
     'word_topics'=>'topics',
     'in_hours'=>'in hours',
-    ''
+    'sub_topic'=>'sub topic',
+    'sub_topics'=>'sub topics',
+    'word_week'=>'week',
+    'word_objective'=>'objective',
+    'course_objective'=>'course objective',
+    'expected_outcomes'=>'extected outcomes',
+    'course_content'=>'course content',
+    'course_instructors'=>'course instructors',
 ];

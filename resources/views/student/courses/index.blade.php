@@ -87,7 +87,7 @@
     })
     
     function load(x = null, y = null) {
-        if ("{{$access}}" == true) {
+        if ('{{$access}}' == true) {
             loadCourses(x,y);
         }
         else{alert('Minimum Fee requirement not met.');}
@@ -128,6 +128,7 @@
                                 <td class="border-left border-right">`+registered_courses[key]['cv']+`</td>
                                 <td class="border-left border-right">`+registered_courses[key]['status']+`</td>
                                 <td class="border-left border-right d-flex text-capitalize">
+                                    <a href="{{url('student/courses/content')}}/`+registered_courses[key]['id']+`" class="btn btn-sm btn-primary">{{__('text.word_content')}}</a> | 
                                     <a href="{{url('student/note/index')}}/`+registered_courses[key]['id']+`" class="btn btn-sm btn-primary">{{__('text.word_notes')}}</a> | 
                                     <a href="{{url('student/assignment/index')}}/`+registered_courses[key]['id']+`" class="btn btn-sm btn-success">{{__('text.word_assignments')}}</a> | 
                                     <a href="{{url('student/notification/index')}}/`+registered_courses[key]['id']+`" class="btn btn-sm btn-info">{{__('text.word_notifications')}}</a>
