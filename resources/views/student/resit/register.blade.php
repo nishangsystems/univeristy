@@ -29,6 +29,7 @@
             <div class="py-3">
                 <form method="post" action="{{route('student.resit.registration')}}" class="" id="signed_courses_form">
                     @csrf
+                    <input type="hidden" name="resit_id" value="{{$resit_id}}">
                     <table>
                         <thead class="text-capitalize bg-secondary text-white">
                             <th class="border-left border-right">{{__('text.course_code')}}</th>
