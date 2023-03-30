@@ -6,6 +6,7 @@
 <div class="py-3">
     <form method="post" class="text-capitalize" id="this_resit_form">
         @csrf
+        <input type="hidden" name="campus_id" value="{{auth()->user()->campus_id}}">
         <div class="my-2 row">
             <label class="col-sm-3 col-md-3">{{__('text.word_name')}}</label>
             <div class="col-sm-9 col-md-9">
@@ -65,7 +66,7 @@
         </thead>
         <tbody>
             @php($k = 1)
-            @foreach (\App\Models\Resit::orderBy('id', 'DESC')->get() as $resit)
+            @foreach (\App\Models\Resit::where(['campus_id'=>auth()->user()->campus_id??null])->orderBy('id', 'DESC')->get() as $resit)
                 <tr class="border-bottom border-white">
                     <td class="border-left border-right border-white">{{$k++}}</td>
                     <td class="border-left border-right border-white">{{$resit->name ?? ''}}</td>

@@ -271,12 +271,13 @@ class Helpers
         return $resits;
     }
 
-    public function resit_available($class_id)
+    public function resit_available($class_id, $campus_id = null)
     {
         # code...
         $class = ProgramLevel::find($class_id);
+        $campus = $campus_id == null ? auth('student')->user()->campus_id : $campus_id;
         // dd($class);
-        $resits = $class->program->background->resits()->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()])->get();
+        $resits = $class->program->background->resits()->where(['year_id' => Helpers::instance()->getCurrentAccademicYear(), 'campus_id'=>$campus])->get();
         foreach ($resits as $key => $resit) {
             # code...
             if(now()->between(Carbon::createFromDate($resit->start_date), Carbon::createFromDate($resit->end_date)))
@@ -285,12 +286,13 @@ class Helpers
         return false;
     }
 
-    public function available_resit($class_id)
+    public function available_resit($class_id, $campus_id = null)
     {
         # code...
         $class = ProgramLevel::find($class_id);
+        $campus = $campus_id == null ? auth('student')->user()->campus_id : $campus_id;
         // dd($class);
-        $resits = $class->program->background->resits()->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()])->get();
+        $resits = $class->program->background->resits()->where(['year_id' => Helpers::instance()->getCurrentAccademicYear(), 'campus_id'=>$campus])->get();
         foreach ($resits as $key => $resit) {
             # code...
             if(now()->between(Carbon::createFromDate($resit->start_date), Carbon::createFromDate($resit->end_date)))
