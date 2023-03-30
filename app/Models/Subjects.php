@@ -10,7 +10,7 @@ class Subjects extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'code', 'coef', 'level_id', 'semester_id', 'status'];
+    protected $fillable = ['name', 'code', 'coef', 'level_id', 'semester_id', 'status', 'objective'];
 
     public function units()
     {

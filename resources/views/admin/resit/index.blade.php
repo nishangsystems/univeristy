@@ -4,7 +4,7 @@
     <table class="table">
         <thead class="bg-secondary text-light text-capitalize">
                 <th class="border-left border-right border-white">#</th>
-                <th class="border-left border-right border-white">{{__('text.academic_year')}}</th>
+                <th class="border-left border-right border-white">{{__('text.word_title')}}</th>
                 <th class="border-left border-right border-white">{{__('text.word_background')}}</th>
                 <th class="border-left border-right border-white">{{__('text.start_date')}}</th>
                 <th class="border-left border-right border-white">{{__('text.end_date')}}</th>
@@ -13,10 +13,10 @@
         </thead>
         <tbody>
             @php($k = 1)
-            @foreach (\App\Models\Resit::orderBy('id', 'DESC')->get() as $resit)
+            @foreach (\App\Models\Resit::where(function($q){auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})->orderBy('id', 'DESC')->get() as $resit)
                 <tr class="border-bottom border-white">
                     <td class="border-left border-right border-white">{{$k++}}</td>
-                    <td class="border-left border-right border-white">{{$resit->year->name}}</td>
+                    <td class="border-left border-right border-white">{{$resit->name??null}}</td>
                     <td class="border-left border-right border-white">{{$resit->background->background_name}}</td>
                     <td class="border-left border-right border-white">{{date('l d-m-Y', strtotime($resit->start_date))}}</td>
                     <td class="border-left border-right border-white">{{date('l d-m-Y', strtotime($resit->end_date))}}</td>

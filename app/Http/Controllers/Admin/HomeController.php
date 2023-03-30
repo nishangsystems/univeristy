@@ -336,7 +336,11 @@ class HomeController  extends Controller
     {
         # code...
         $resit =  Resit::find($resit_id);
-        $data['title'] = __('text.course_list_for', ['item'=>$resit->name()]);
+        if($resit == null){
+            return back()->with('error', 'Resit is not found');
+        }
+        $data['title'] = __('text.course_list_for', ['item'=>$resit->name]);
+        // return 'nonsense going on here';
         $data['courses'] = Subjects::join('student_courses', ['student_courses.course_id'=>'subjects.id'])
                     ->where(['student_courses.resit_id'=>$resit_id, 'student_courses.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
                     ->join('students', ['students.id'=>'student_courses.student_id'])
@@ -355,7 +359,7 @@ class HomeController  extends Controller
     {
         # code...
         $subject = Subjects::find($request->subject_id);
-        $data['title'] = __('text.resit_course_list_for', ['item'=>"[ ".$subject->code .' ] '. $subject->name.' - '.Resit::find($request->resit_id)->year->name]);
+        $data['title'] = __('text.resit_course_list_for', ['item'=>Resit::find($request->resit_id)->name]);
         $data['subjects'] = Subjects::find($request->subject_id)->student_subjects()->where(['resit_id' => $request->resit_id])
                         ->join('students',  ['students.id'=>'student_courses.student_id'])
                         ->orderBy('students.name')->get(['student_courses.*']);

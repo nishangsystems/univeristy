@@ -29,6 +29,7 @@ use App\Models\StudentStock;
 use App\Models\StudentSubject;
 use App\Models\SubjectNotes;
 use App\Models\Subjects;
+use App\Models\Topic;
 use App\Models\Transaction;
 use App\Models\Transcript;
 use Illuminate\Http\Request;
@@ -1565,4 +1566,17 @@ class HomeController extends Controller
         return view('student.online_payment_history', $data);
     }
 
+
+    public function course_content_index(Request $request){
+        $year = Helpers::instance()->getCurrentAccademicYear();
+        $subject = Subjects::find($request->subject_id);
+        $cl_sub = $subject->class_subject()->where(['class_id'=>auth('student')->user()->_class($year)])->first();
+        $teachers = $cl_sub == null ? [] : $cl_sub->teachers;
+        // dd($teachers);
+        $data['title'] = "Course Content For [".$subject->code."]".$subject->name;
+        $data['subject'] = $subject;
+        $data['teachers'] = $teachers;
+        $data['topics'] = Topic::where(['subject_id'=>$subject->id])->get();;
+        return view('student.courses.content', $data);
+    }
 }

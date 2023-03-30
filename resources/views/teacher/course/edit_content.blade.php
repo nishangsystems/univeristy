@@ -4,22 +4,22 @@
 
 <div class="row m-4">
           <div class="col-md-5">
-                <form class="bg-light rounded form-horizontal form m-4 py-4 px-3" method="post" action="{{route('user.subject.topics', ['subject_id'=>$subject_id, 'parent_id'=>$parent_id, 'level'=>$level])}}">
+                <form class="bg-light rounded form-horizontal form m-4 py-4 px-3" method="post">
                 {{csrf_field()}}
                         
                     <div class="p-4">
                         @if ($level == 1)
                             <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.word_topic')}}</label>
-                            <textarea class="form-control rounded" rows="3"  required name="title"></textarea>
+                            <textarea class="form-control rounded" rows="3"  required name="title">{{$topic->title}}</textarea>
                         @endif
                         @if ($level == 2)
                             <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.sub_topic')}}</label>
-                            <textarea class="form-control rounded" rows="3"  required name="title"></textarea>
+                            <textarea class="form-control rounded" rows="3"  required name="title">{{$topic->title}}</textarea>
                             <input type="hidden" name="teacher_id" value="{{auth()->id()}}">
                             <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.word_duration').'('.__('text.in_hours').')'}}</label>
-                            <input class="form-control rounded" type="number" min="0" required name="duration">
+                            <input class="form-control rounded" type="number" min="0" required name="duration" value="{{$topic->duration}}">
                             <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.word_week')}}</label>
-                            <input class="form-control rounded" type="number" min="0" required name="week">
+                            <input class="form-control rounded" type="number" min="0" required name="week" value="{{$topic->week}}">
                         @endif
                         <div class="d-flex justify-content-end py-3">
                             <input class="btn btn-sm btn-primary" type="submit" value="{{__('text.word_save')}}">

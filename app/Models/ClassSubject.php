@@ -18,6 +18,12 @@ class ClassSubject extends Model
         return $this->belongsTo(Subjects::class, 'subject_id');
     }
 
+    public function teachers()
+    {
+        # code...
+        return $this->belongsToMany(User::class, TeachersSubject::class, 'subject_id', 'teacher_id');
+    }
+
     public function class()
     {
         return $this->belongsTo(ProgramLevel::class, 'class_id');

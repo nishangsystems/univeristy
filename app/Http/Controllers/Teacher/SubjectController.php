@@ -198,10 +198,13 @@ class SubjectController extends Controller
         // dd($subject);
         if(!($subject == null)){
             $data['title'] = "Course Content For ".$subject->name.", ".TeachersSubject::where(['teacher_id'=>auth()->id(), 'subject_id'=>$request->subject_id])->first()->class->name();
-            if($request->parent_id != null){
-                $data['title'] = "Topics under ".Topic::find($request->parent_id)->title.', '.$subject->name.", ".TeachersSubject::where(['teacher_id'=>auth()->id(), 'subject_id'=>$request->subject_id])->first()->class->name();
+            if($request->parent_id != null && $request->parent_id != 0){
+                $data['title'] = "Sub topics Under ".Topic::find($request->parent_id)->title.', '.$subject->name.", ".TeachersSubject::where(['teacher_id'=>auth()->id(), 'subject_id'=>$request->subject_id])->first()->class->name();
             }
-            $data['content'] = Topic::where(['subject_id'=>$subject->id, 'level'=>$request->level??1])->get();
+            $data['content'] = Topic::where(['subject_id'=>$subject->id, 'level'=>$request->level??1, 'parent_id'=>$request->parent_id??0])
+                                    ->where(function($q)use($request){
+                                        $request->level??1 == 2 ? $q->where('teacher_id', auth()->id()): null;
+                                    })->orderBy('id', 'DESC')->get();
             $data['level'] = $request->level??1;
             $data['parent_id'] = $request->parent_id??0;
             $data['subject_id'] = $request->subject_id??0;
@@ -209,13 +212,80 @@ class SubjectController extends Controller
         }
     }
 
+    public function course_content_edit(Request $request)
+    {
+        # code...
+        
+        $subject = Subjects::find($request->subject_id);
+        // dd($subject);
+        if(!($subject == null)){
+            $item = Topic::find($request->topic_id);
+            // dd($item);
+            $data['title'] = "Edit : ".$item->title;
+            $data['content'] = Topic::where(['subject_id'=>$subject->id, 'level'=>$item->level, 'parent_id'=>$item->parent_id??0])
+                                ->where(function($q)use($item){
+                                    $item->level == 2 ? $q->where('teacher_id', auth()->id()): null;
+                                })->orderBy('id', 'DESC')->get();
+            $data['level'] = $item->level??1;
+            $data['topic'] = $item;
+            $data['parent_id'] = $item->parent_id??0;
+            $data['subject_id'] = $request->subject_id??0;
+            return view('teacher.course.edit_content', $data);
+        }
+    }
+
     public function create_content_save(Request $request)
     {
         # code...
         // return $request->all();
-        $data = ['title'=>$request->title, 'subject_id'=>$request->subject_id, 'level'=>$request->level, 'parent_id'=>$request->parent_id, 'coverage_duration'=>$request->coverage_duration??null];
+        $data = ['title'=>$request->title, 'subject_id'=>$request->subject_id, 'level'=>$request->level, 'parent_id'=>$request->parent_id, 'duration'=>$request->duration??null, 'week'=>$request->week??null, 'teacher_id'=>$request->teacher_id??null];
         $instance = new Topic($data);
         $instance->save();
         return back()->with('success', __('text.word_done'));
+    }
+
+    public function course_content_update(Request $request)
+    {
+        // return $request->all();
+        # code...
+        $data = ['title'=>$request->title, 'duration'=>$request->duration??null, 'week'=>$request->week??null];
+        $instance = Topic::find($request->topic_id);
+        // return $data;
+        $instance->update($data);
+        // return $instance;
+        // $instance->save();
+        if($instance->level == 1){
+            return redirect(route('user.subject.content', ['subject_id'=>$instance->subject_id]))->with('success', __('text.word_done'));
+        }
+        return redirect(route('user.subject.content', ['subject_id'=>$instance->subject_id, 'level'=>$instance->level, 'parent_id'=>$instance->parent_id]))->with('success', __('text.word_done'));
+    }
+
+    public function course_objective(Request $request){
+        $data['title'] = "Set Course Objectives  For ".Subjects::find($request->subject_id)->name;
+        $data['subject_id'] = $request->subject_id;
+        $data['subject'] = Subjects::find($request->subject_id);
+        return view('teacher.course.set_objective', $data);
+    }
+
+    public function course_objective_save(Request $request)
+    {
+        # code...
+        // $request->validate(['objective'=>'required']);
+        $subject = Subjects::find($request->subject_id);
+        // dd($subject);
+        if($subject != null){
+            if($request->has('objective')){
+                $subject->objective  = $request->objective;
+                $subject->save();
+                return back()->with('success', __('text.word_done'));
+            }
+            if($request->has('outcomes')){
+                $subject->outcomes  = $request->outcomes;
+                $subject->save();
+                return back()->with('success', __('text.word_done'));
+            }
+            return back();
+        }
+        return back()->with('error', __('text.item_not_found', ['item'=>__('text.word_course')]));
     }
 }
