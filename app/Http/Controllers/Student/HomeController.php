@@ -530,10 +530,11 @@ class HomeController extends Controller
         # code...
         $c_year = Helpers::instance()->getCurrentAccademicYear();
         $is_current_student = !(auth('student')->user()->_class($c_year) == null);
+        $resit = Helpers::instance()->available_resit(auth('student')->user()->_class($c_year)->id);
         if(!$is_current_student){
             return back()->with('error', 'You are not a current student');
         }
-        $data['title'] = "Resit Registration For " .Helpers::instance()->getSemester(auth('student')->user()->_class($is_current_student ? $c_year : null)->id)->name." ".Batch::find(Helpers::instance()->getYear())->name;
+        $data['title'] = "Resit Registration For " .$resit->name??(Helpers::instance()->getSemester(auth('student')->user()->_class($is_current_student ? $c_year : null)->id)->name." ".Batch::find(Helpers::instance()->getYear())->name);
         $data['student_class'] =  auth('student')->user()->_class($is_current_student ? $c_year : null);
         $data['cv_total'] = auth('student')->user()->_class($is_current_student ? $c_year : null)->program()->first()->max_credit;
         // resit course price is set in campus_programs table //
@@ -573,7 +574,7 @@ class HomeController extends Controller
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
         $data['access'] =  Helpers::instance()->resit_available(auth('student')->user()->_class($c_year)->id);
         if($data['access']){
-            $data['resit_id'] =  Helpers::instance()->available_resit(auth('student')->user()->_class($c_year)->id)->id;
+            $data['resit_id'] =  $resit->id;
             // dd($data['access']);
             return view('student.resit.register', $data);
         }else{return back()->with('error', "Resit not open.");}
@@ -756,17 +757,14 @@ class HomeController extends Controller
 
     public function register_resit(Request $request)//takes class course id
     {
+        // return $request->all();
         // TO MAKE THE PAYMENT, MAKE A REQUEST TO ANOTHER URL WHERE THE PAYMENT 
         // IS DONE AND RESPONSE RETURNED BACK HERE, THEN THE COURSES ARE REGISTERED 
 
         # code...
         // first clear all registered courses for the year, semester, student then rewrite
         $year = Helpers::instance()->getYear();
-        $resits = Helpers::instance()->available_resit(auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id);
-        if($resits != null){
-            // dd($resits);
-            $resit_id = $resits->first()->id;
-        }else{$resit_id = 0;}
+        $resit_id = $request->resit_id;
         try {
             $user = auth('student')->id();
 

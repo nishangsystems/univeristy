@@ -289,6 +289,7 @@ class HomeController  extends Controller
             return back()->with('error', $validator->errors()->first());
         }
 
+        // if(Resit::where(['year_id'=>$request->year_id, 'background_id'=>$request->background_id, 'campus_id'=>$request->campus_id])->whereBetween('start_date'))
         $resit = new Resit($request->all());
         $resit->save();
         return back()->with('success', __('text.word_done'));
