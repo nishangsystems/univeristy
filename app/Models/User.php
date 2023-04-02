@@ -28,7 +28,8 @@ class User extends Authenticatable
         'type',
         'password',
         'campus_id',
-        'school_id'
+        'school_id',
+        'matric'
     ];
 
     /**

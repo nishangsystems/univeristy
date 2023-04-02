@@ -735,4 +735,7 @@ return [
     'expected_outcomes'=>'extected outcomes',
     'course_content'=>'course content',
     'course_instructors'=>'course instructors',
+    'take_attendance'=>'take attendance',
+    'check_in'=>'check in',
+    ''
 ];

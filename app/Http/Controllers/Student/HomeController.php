@@ -535,7 +535,7 @@ class HomeController extends Controller
         if(!$is_current_student){
             return back()->with('error', 'You are not a current student');
         }
-        $data['title'] = "Resit Registration For " .$resit->name??(Helpers::instance()->getSemester(auth('student')->user()->_class($is_current_student ? $c_year : null)->id)->name." ".Batch::find(Helpers::instance()->getYear())->name);
+        $data['title'] = "Resit Registration For " .$resit->name??(Helpers::instance()->getSemester(auth('student')->user()->_class()->id)->name." ".Batch::find(Helpers::instance()->getCurrentAccademicYear())->name);
         $data['student_class'] =  auth('student')->user()->_class($is_current_student ? $c_year : null);
         $data['cv_total'] = auth('student')->user()->_class($is_current_student ? $c_year : null)->program()->first()->max_credit;
         // resit course price is set in campus_programs table //

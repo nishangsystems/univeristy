@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\ResultsAndTranscriptsController;
 use App\Http\Controllers\admin\StockController;
@@ -12,6 +13,8 @@ use App\Http\Controllers\Student\HomeController as StudentHomeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Transactions;
 use App\Http\Resources\SubjectResource;
+use App\Models\Resit;
+use App\Models\StudentSubject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -440,6 +443,17 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     
     Route::get('charges/set', 'Admin\HomeController@set_charges')->name('charges.set');
     Route::post('charges/set', 'Admin\HomeController@save_charges')->name('charges.save');
+
+
+    // ATTENDANCE ROUTE GROUP
+    Route::name('attendance.')->prefix('attendance')->group(function(){
+        Route::get('teachers/init_attendance', [AttendanceController::class, 'init_teacher_attendance'])->name('teacher.init');
+        Route::get('teachers/take_attence/{matric}/{subject_id}', [AttendanceController::class, 'take_teacher_attendance'])->name('teacher.record');
+        Route::post('teachers/take_attence/{matric}/{subject_id}', [AttendanceController::class, 'save_teacher_attendance'])->name('teacher.record');
+        Route::get('teachers/subjects/{matric}', [AttendanceController::class, 'teacher_subjects'])->name('teacher.subjects');
+        Route::get('teachers/attendance/{attendance_id}/checkout', [AttendanceController::class, 'checkout_teacher'])->name('teacher.checkout');
+        Route::post('teachers/attendance/{attendance_id}/checkout', [AttendanceController::class, 'save_checkout_teacher']);
+    });
 });
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {
@@ -683,3 +697,10 @@ Route::get('mode/{locale}', function ($batch) {
 
     return redirect()->back();
 })->name('mode');
+
+Route::get('trace_resits', function(){
+    $data['resits'] = Resit::all();
+    $resit_ids = $data['resits']->pluck('id')->toArray();
+    $data['resit_students'] = StudentSubject::whereIn('resit_id', $resit_ids)->get();
+    return $data;
+});
