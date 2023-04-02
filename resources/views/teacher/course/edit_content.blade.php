@@ -3,19 +3,36 @@
 @section('section')
 
 <div class="row m-4">
-          <div class="col-md-5">
-                <form class="bg-light rounded form-horizontal form m-4 py-4 px-3" method="post">
+    <div class="col-md-6 col-lg-6">
+              @if($level == 2)
+                  <form class="form bg-light my-4 border rounded mx-2" method="get">
+                      <div class="py-4 input-group-merge d-flex">
+                          <label class="py-2 fw-bold text-capitalize input-group-text">{{__('text.select_campus')}}</label>
+                          <select class="form-control rounded" name="campus">
+                              <option></option>
+                              <@foreach (\App\Models\Campus::all() as $campus)
+                                  <option value="{{$campus->id}}" {{request('campus') == $campus->id ? 'selected' : ''}}>{{$campus->name}}</option>
+                              @endforeach
+                          </select>
+                          <input class="btn btn-sm btn-primary" type="submit" value="{{__('text.word_get')}}">
+                      </div>
+                  </form>
+              @endif
+              @if ((request()->has('campus')) && (request('campus') != null))
+                <form class="bg-light rounded form my-4 mx-2 py-4 px-3" method="post">
                 {{csrf_field()}}
                         
                     <div class="p-4">
                         @if ($level == 1)
                             <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.word_topic')}}</label>
-                            <textarea class="form-control rounded" rows="3"  required name="title">{{$topic->title}}</textarea>
+                            <textarea class="form-control rounded" rows="3"  required name="title" id="content">{!! $topic->title !!}</textarea>
                         @endif
                         @if ($level == 2)
+                            <div class="text-right h5 text-uppercase">{{\App\Models\Campus::find(request('campus'))->name??null.' '.__('text.word_campus')}}</div>
                             <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.sub_topic')}}</label>
-                            <textarea class="form-control rounded" rows="3"  required name="title">{{$topic->title}}</textarea>
+                            <textarea class="form-control rounded" rows="3"  required name="title" id="content">{!! $topic->title !!}</textarea>
                             <input type="hidden" name="teacher_id" value="{{auth()->id()}}">
+                            <input type="hidden" name="campus_id" value="{{request('campus')}}">
                             <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.word_duration').'('.__('text.in_hours').')'}}</label>
                             <input class="form-control rounded" type="number" min="0" required name="duration" value="{{$topic->duration}}">
                             <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.word_week')}}</label>
@@ -25,11 +42,12 @@
                             <input class="btn btn-sm btn-primary" type="submit" value="{{__('text.word_save')}}">
                         </div>
                     </div>
-                       
- 
+                        
+
                 </form>
+              @endif
           </div>
-          <div class="col-md-7">
+          <div class="col-md-6 col-lg-6">
             <table class="adv-table table">
                 <thead class="text-capitalize">
                     <th>{{__('text.sn')}}</th>
@@ -49,7 +67,7 @@
                     @foreach ($content as $item)
                         <tr>
                             <td>{{$k++}}</td>
-                            <td>{{$item->title}}</td>
+                            <td>{!! $item->title !!}</td>
                             @if ($level == 2)
                                 <td>{{$item->duration}}</td>
                                 <td>{{$item->week}}</td>
@@ -73,6 +91,6 @@
 @section('script')
 <script src="{{ asset('public/assets/js') }}/ckeditor/ckeditor.js"></script>
 <script>
-// CKEDITOR.replace('content');
+CKEDITOR.replace('content');
 </script>
 @stop

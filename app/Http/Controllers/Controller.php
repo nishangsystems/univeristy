@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
+use App\Http\Controllers\SMS\Helpers as SMSHelpers;
 use App\Models\CampusProgram;
 use App\Models\Students;
 use App\Models\User;
@@ -219,13 +220,27 @@ class Controller extends BaseController
     public static function sendSmsNotificaition(String $message_text, $contacts)
     {
         $sms_sender_address = env('SMS_SENDER_ADDRESS');
-        $basic  = new \Vonage\Client\Credentials\Basic('8d8bbcf8', '04MLvso1he1b8ANc');
-        $client = new \Vonage\Client($basic);
-        foreach ($contacts as $key => $contact) {
-            # code...
-            $message = new \Vonage\SMS\Message\SMS($contact, $sms_sender_address, $message_text);
-            $client->sms()->send($message);
-        }
+        // dd($contacts);
+        $contacts_no_spaces = array_map(function($el){
+            return str_replace([' ', '.', '-', '(', ')', '+'], '', $el);
+        }, $contacts);
+        // dd($contacts_no_spaces);
+        $cleaned_contacts = array_map(function($el){
+            return explode('/',explode(',', $el)[0])[0];
+        }, $contacts_no_spaces);
+        // dd($cleaned_contacts);
+        // $basic  = new \Vonage\Client\Credentials\Basic('8d8bbcf8', '04MLvso1he1b8ANc');
+        // $client = new \Vonage\Client($basic);
+
+
+        // SEND SMS PROPER
+        SMSHelpers::sendSMS($message_text, $cleaned_contacts);
+
+        // foreach ($contacts as $key => $contact) {
+        //     # code...
+        //     $message = new \Vonage\SMS\Message\SMS($contact, $sms_sender_address, $message_text);
+        //     $client->sms()->send($message);
+        // }
         return true;
     }
 }

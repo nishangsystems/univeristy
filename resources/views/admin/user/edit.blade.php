@@ -7,6 +7,16 @@
 
                 <input name="_method" value="put" type="hidden" />
                 @csrf
+                <div class="form-group @error('matric') has-error @enderror">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_matricule')}}</label>
+                    <div class="col-lg-10">
+                        <input class=" form-control" name="matric" value="{{old('matric', $user->matric)}}" type="text" required />
+                        @error('matric')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="form-group @error('name') has-error @enderror">
                     <label for="cname" class="control-label col-lg-2 text-capitalize">Full Name (required)</label>
                     <div class="col-lg-10">
@@ -21,7 +31,7 @@
                 <div class="form-group @error('email') has-error @enderror">
                     <label for="cname" class="control-label col-lg-2 text-capitalize">Username (required)</label>
                     <div class="col-lg-10">
-                        <input class=" form-control" readonly value="{{old('email', $user->email)}}" type="text" required />
+                        <input class=" form-control" readonly name="email" value="{{old('email', $user->email)}}" type="text" required />
                         @error('email')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
@@ -91,20 +101,23 @@
                     </div>
                 </div>
 
-                <div class="form-group @error('campus_id') has-error @enderror">
-                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_role')}}</label>
-                    <div class="col-lg-10">
-                        <select class="form-control" name="role_id">
-                            <option>{{__('text.word_role')}}</option>
-                            @foreach (\App\Models\Role::all() as $role)
-                                <option value="{{$role->id}}" {{$role->id == \App\Models\User::find($user->id)->roleR()->first()->role_id??null ? 'selected' : ''}}>{{$role->name}}</option>
-                            @endforeach
-                        </select>
-                        @error('type')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+
+                @if ($user->type == 'admin')
+                    <div class="form-group @error('role_id') has-error @enderror">
+                        <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_role')}}</label>
+                        <div class="col-lg-10">
+                            <select class="form-control" name="role_id">
+                                <option>{{__('text.word_role')}}</option>
+                                @foreach (\App\Models\Role::all() as $role)
+                                    <option value="{{$role->id}}" {{$role->id == \App\Models\User::find($user->id)->roleR()->first()->role_id??null ? 'selected' : ''}}>{{$role->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('type')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
-                </div>
+                @endif
 
                 <div class="form-group">
                     <div class="col-lg-offset-2 col-lg-10">

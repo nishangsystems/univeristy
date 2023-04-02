@@ -149,6 +149,7 @@ class UserController extends Controller
 
         // update users table
         $input = $request->all();
+        // return $input;
         $user->update($input);
 
         // update User roles

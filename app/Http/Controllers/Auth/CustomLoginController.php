@@ -117,7 +117,7 @@ class CustomLoginController extends Controller
             // return "Spot 1";
             return redirect()->intended(route('student.home'));
         }else{
-            if( Auth::attempt(['username'=>$request->username,'password'=>$request->password])){
+            if( Auth::attempt(['username'=>$request->username,'password'=>$request->password]) ||  Auth::attempt(['matric'=>$request->username,'password'=>$request->password])){
                 // return "Spot 2";
                 if(Auth::user()->type == 'teacher'){
                     return redirect()->route('user.home')->with('success','Welcome to Teachers Dashboard '.Auth::user()->name);

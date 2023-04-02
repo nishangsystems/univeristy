@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Topic extends Model
 {
     use HasFactory;
-    protected $fillable = ['teacher_subject_id', 'subject_id', 'title', 'duration', 'level', 'parent_id', 'week', 'teacher_id'];
+    protected $fillable = ['teacher_subject_id', 'subject_id', 'title', 'duration', 'level', 'parent_id', 'week', 'teacher_id', 'campus_id'];
 
     public function teacherSubject()
     {

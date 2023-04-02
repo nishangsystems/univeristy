@@ -197,13 +197,14 @@ class SubjectController extends Controller
         $subject = Subjects::find($request->subject_id);
         // dd($subject);
         if(!($subject == null)){
+            $campus = $request->campus??0;
             $data['title'] = "Course Content For ".$subject->name.", ".TeachersSubject::where(['teacher_id'=>auth()->id(), 'subject_id'=>$request->subject_id])->first()->class->name();
             if($request->parent_id != null && $request->parent_id != 0){
                 $data['title'] = "Sub topics Under ".Topic::find($request->parent_id)->title.', '.$subject->name.", ".TeachersSubject::where(['teacher_id'=>auth()->id(), 'subject_id'=>$request->subject_id])->first()->class->name();
             }
             $data['content'] = Topic::where(['subject_id'=>$subject->id, 'level'=>$request->level??1, 'parent_id'=>$request->parent_id??0])
-                                    ->where(function($q)use($request){
-                                        $request->level??1 == 2 ? $q->where('teacher_id', auth()->id()): null;
+                                    ->where(function($q)use($request, $campus){
+                                        $request->level??1 == 2 ? $q->where(['teacher_id'=>auth()->id(), 'campus_id'=>$campus]): null;
                                     })->orderBy('id', 'DESC')->get();
             $data['level'] = $request->level??1;
             $data['parent_id'] = $request->parent_id??0;
@@ -219,12 +220,13 @@ class SubjectController extends Controller
         $subject = Subjects::find($request->subject_id);
         // dd($subject);
         if(!($subject == null)){
+            $campus = $request->campus??0;
             $item = Topic::find($request->topic_id);
             // dd($item);
             $data['title'] = "Edit : ".$item->title;
             $data['content'] = Topic::where(['subject_id'=>$subject->id, 'level'=>$item->level, 'parent_id'=>$item->parent_id??0])
-                                ->where(function($q)use($item){
-                                    $item->level == 2 ? $q->where('teacher_id', auth()->id()): null;
+                                ->where(function($q)use($item, $campus){
+                                    $item->level == 2 ? $q->where(['teacher_id'=>auth()->id(), 'campus_id'=>$campus]): null;
                                 })->orderBy('id', 'DESC')->get();
             $data['level'] = $item->level??1;
             $data['topic'] = $item;
@@ -238,7 +240,7 @@ class SubjectController extends Controller
     {
         # code...
         // return $request->all();
-        $data = ['title'=>$request->title, 'subject_id'=>$request->subject_id, 'level'=>$request->level, 'parent_id'=>$request->parent_id, 'duration'=>$request->duration??null, 'week'=>$request->week??null, 'teacher_id'=>$request->teacher_id??null];
+        $data = ['title'=>$request->title, 'subject_id'=>$request->subject_id, 'level'=>$request->level, 'parent_id'=>$request->parent_id, 'duration'=>$request->duration??null, 'week'=>$request->week??null, 'teacher_id'=>$request->teacher_id??null, 'campus_id'=>$request->campus_id??null];
         $instance = new Topic($data);
         $instance->save();
         return back()->with('success', __('text.word_done'));
@@ -257,7 +259,7 @@ class SubjectController extends Controller
         if($instance->level == 1){
             return redirect(route('user.subject.content', ['subject_id'=>$instance->subject_id]))->with('success', __('text.word_done'));
         }
-        return redirect(route('user.subject.content', ['subject_id'=>$instance->subject_id, 'level'=>$instance->level, 'parent_id'=>$instance->parent_id]))->with('success', __('text.word_done'));
+        return redirect(route('user.subject.content', ['subject_id'=>$instance->subject_id, 'level'=>$instance->level, 'parent_id'=>$instance->parent_id]).'?campus='.$request->campus)->with('success', __('text.word_done'));
     }
 
     public function course_objective(Request $request){
