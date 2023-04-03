@@ -454,6 +454,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('teachers/subjects/{matric}', [AttendanceController::class, 'teacher_subjects'])->name('teacher.subjects');
         Route::get('teachers/attendance/{attendance_id}/checkout', [AttendanceController::class, 'checkout_teacher'])->name('teacher.checkout');
         Route::post('teachers/attendance/{attendance_id}/checkout', [AttendanceController::class, 'save_checkout_teacher']);
+        Route::get('teachers/attendance/{attendance_id}/delete', [AttendanceController::class, 'delete_teacher_attendance'])->name('teacher.drop');
     });
 });
 

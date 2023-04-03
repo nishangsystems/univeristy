@@ -748,4 +748,6 @@ return [
     'course_management'=>'course management',
     'course_material'=>'course material',
     'word_management'=>'management',
+    'word_period'=>'period',
+    ''
 ];

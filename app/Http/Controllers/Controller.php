@@ -57,7 +57,7 @@ class Controller extends BaseController
                 'level_id'=>$value->level_id,
                 'program_id'=>$value->program_id,
                 'name' => $value->program()->first()->name.': LEVEL '.$value->level()->first()->level,
-                'department'=> $value->program()->first()->parent()->first()->id
+                'department'=> $value->program->parent_id
             ];
         }
         $pls = collect($pls)->sortBy(['name', 'level_id']);

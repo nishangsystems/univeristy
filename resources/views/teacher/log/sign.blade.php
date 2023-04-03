@@ -1,7 +1,7 @@
 @extends('teacher.layout')
 @section('section')
     <div class="row py-2">
-        <div class="col-md-6 col-lg-6 px-2">
+        <div class="col-md-5 col-lg-5 px-2">
             <div class="shadow-lg px-2">
                 <div class="py-4">
                     <form method="post" class="form py-4 px-3 bg-light">
@@ -16,7 +16,7 @@
                         </div> -->
                         <div class="py-2">
                             <input type="hidden" name="topic_id" value="{{$topic->id}}">
-                            <input class="form-control" value="{!! $topic->title !!}" readonly>
+                            <label class="form-control">{!! $topic->title !!}</label>
                         </div>
                         <input type="hidden" name="attendance_id" value="{{$attendance_record->id}}">
                         <!-- <div class="py-2">
@@ -33,11 +33,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-lg-6 px-2">
+        <div class="col-md-7 col-lg-7 px-2">
             <table class="table table-primary rounded shadow-lg">
                 <thead class="text-primary text-capitalize">
                     <th class="border-left border-right border-light">{{__('text.sn')}}</th>
-                    <th class="border-left border-right border-light">{{__('text.word_period')}}</th>
+                    <th class="border-left border-right border-light">{{__('text.sub_topic')}}</th>
+                    <th class="border-left border-right border-light">{{__('text.check_in')}}</th>
+                    <th class="border-left border-right border-light">{{__('text.check_out')}}</th>
                     <th class="border-left border-right border-light">{{__('text.course_log')}}</th>
                     <th></th>
                 </thead>
@@ -46,7 +48,9 @@
                     @foreach ($log_history as $record)
                         <tr class="border-bottom border-light">
                             <td class="border-left border-right border-light">{{$k++}}</td>
-                            <td class="border-left border-right border-light">from {!! $record->attendance->check_in.' <br> to '.$record->attendance->check_out !!}</td>
+                            <td class="border-left border-right border-light">{!! '<div class="text-capitalize text-primary h4">'.$record->topic->subject->name.' [ '.$record->topic->subject->code.' ]</div><div class="text-success h4 fa fa-circle fa-2x"> '.$record->topic->parent->title.'</div><div class="text-primary h5 fa-1x">'.$record->topic->title.'</div>' !!}</td>
+                            <td class="border-left border-right border-light"><span class="text-primary">{{ date('d-m-Y', strtotime($record->attendance->check_in)) }}</span> <br> <span>{{ date('H:i', strtotime($record->attendance->check_in)) }}</span></td>
+                            <td class="border-left border-right border-light"><span class="text-primary">{{ date('d-m-Y', strtotime($record->attendance->check_out)) }}</span> <br> <span>{{ date('H:i', strtotime($record->attendance->check_out)) }}</span></td>
                             <td class="border-left border-right border-light">{!! $record->details !!}</td>
                             <td class="border-left border-right border-light">
                                 <a class="btn btn-sm btn-danger" href="{{route('user.course.log.drop', ['subject_id'=>$record->attendance->subject_id, 'log_id'=>$record->id])}}">{{__('text.word_delete')}}</a>
