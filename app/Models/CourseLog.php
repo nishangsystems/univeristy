@@ -15,4 +15,8 @@ class CourseLog extends Model
     public function attendance(){
         return $this->belongsTo(Attendance::class, 'attendance_id');
     }
+
+    public function topic(){
+        return $this->belongsTo(Topic::class, 'topic_id');
+    }
 }

@@ -19,7 +19,7 @@
                     <div class="py-1">
                         <label class="text-capitalize pb-1">{{__('text.word_course')}}:</label>
                         <input name="subject_id" value="{{$subject->id}}" hidden>
-                        <input value="{{$subject->name}} [ {{$subject->code}} ]}" type="text" class="form-control">
+                        <input value="{{$subject->name}} [ {{$subject->code}} ]" type="text" class="form-control">
                     </div>
                     <div class="py-1">
                         <label class="text-capitalize pb-1">{{__('text.check_in')}}:</label>
@@ -35,7 +35,8 @@
                     <thead class="bg-light h4">
                         <th class="border-left border-right">{{__('text.sn')}}</th>
                         <th class="border-left border-right text-primary">{{__('text.checked_in')}}</th>
-                        <th class="border-left border-right text-success">{{__('text.checked_out')}}</th>
+                        <th class="border-left border-right text-primary">{{__('text.checked_out')}}</th>
+                        <th class="border-left border-right"></th>
                     </thead>
                     <tbody>
                         @php($k = 1)
@@ -45,7 +46,7 @@
                                 <td class="border-left border-right border-light text-primary">{{date('d-m-Y', strtotime($row->check_in))}} <br> <span class="text-success">
                                 {{date('H:i', strtotime($row->check_in))}}
                                 </span> </td>
-                                <td class="border-left border-right border-light text-success">
+                                <td class="border-left border-right border-light text-primary">
                                     @if($row->check_out == null)
                                         <a class="btn btn-xs btn-danger" href="{{route('admin.attendance.teacher.checkout', ['attendance_id'=>$row->id])}}">{{__('text.check_out')}}</a>
                                     @else
@@ -53,6 +54,9 @@
                                         {{date('H:i', strtotime($row->check_out))}}
                                         </span> 
                                     @endif
+                                </td>
+                                <td class="border-left border-right border-light">
+                                    <a class="btn btn-xs btn-danger" href="{{route('admin.attendance.teacher.drop', ['attendance_id'=>$row->id])}}">{{__('text.word_delete')}}</a>
                                 </td>
                             </tr>
                         @endforeach

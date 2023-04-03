@@ -41,7 +41,7 @@ class AttendanceController extends Controller
         $matric = $request->matric;
         $data['teacher'] = User::where(['matric'=>$matric])->first();
         $data['subject'] = Subjects::find($request->subject_id);
-        $data['title'] = 'Take Attendance For <span class="text-success">'.$data['teacher']->name.'</span> In <span class="text-primary">'.$data['subject']->name. '</span>';
+        $data['title'] = 'Take Attendance For <span class="text-primary">'.$data['teacher']->name.'</span> In <span class="text-primary">'.$data['subject']->name. ' [ '.$data['subject']->code.' ]</span>';
         $data['year'] = Helpers::instance()->getCurrentAccademicYear();
         $data['time'] = now()->format('Y-m-d H:m');
         $data['campus'] = Campus::find(auth()->user()->campus_id??0);
@@ -68,7 +68,7 @@ class AttendanceController extends Controller
         # code...
         $attendance = Attendance::find($request->attendance_id);
         $data['attendance'] = $attendance;
-        $data['title'] = "Check Out";
+        $data['title'] = 'Check Out <span class="text-primary">'.$attendance->teacher->name.'</span> In <span class="text-primary">'.$attendance->subject->name.' [ '.$attendance->subject->code.' ] </span>';
         $data['time'] = now()->format('Y-m-d H:i');
         $data['record'] = Attendance::where(['year_id'=>$attendance->year_id, 'campus_id'=>$attendance->campus_id, 'teacher_id'=>$attendance->teacher_id, 'subject_id'=>$attendance->subject_id])->orderBy('id', 'DESC')->get();
         return view('admin.attendance.checkout', $data);

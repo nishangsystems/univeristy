@@ -62,7 +62,7 @@
                             <h4 class="panel-title">
                                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{$topic->id}}">
                                     <i class="ace-icon fa fa-angle-down bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
-                                    &nbsp;{{$topic->title}}
+                                    &nbsp;{!! $topic->title !!}
                                 </a>
                             </h4>
                         </div>
@@ -78,14 +78,20 @@
                                         <div class="body">
                                             <div class="time">
                                                 <i class="ace-icon fa fa-clock-o"></i>
-                                                <span class="green">4 sec</span>
+                                                <span class="green">@if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->count() > 0)
+                                                        {{date('l d-m-Y', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->orderBy('id')->first()->attendance->check_in))}}
+                                                    @endif</span>
                                             </div>
 
                                             <div class="name">
                                                 <a href="#">{{$sub_topic->teacher->name??null}}</a>
-                                                <span class="label label-info arrowed arrowed-in-right">NOT TAUGHT</span>
+                                                @if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->count() > 0)
+                                                    <span class="label label-success arrowed arrowed-in-right">TAUGHT</span>
+                                                @else
+                                                    <span class="label label-info arrowed arrowed-in-right">NOT TAUGHT</span>
+                                                @endif
                                             </div>
-                                            <div class="text fle flex-wrap">{{$sub_topic->title}}</div>
+                                            <div class="text fle flex-wrap">{!! $sub_topic->title !!}</div>
 
                                             <div class="tools">
                                                 <a href="#" class="btn btn-minier btn-info">
