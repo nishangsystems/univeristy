@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
 use App\Models\ClassSubject;
 use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
+use App\Models\Subjects;
+use App\Models\Topic;
+use App\Models\Campus;
+use App\Models\CourseLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -121,5 +127,68 @@ class HomeController extends Controller
             'coef' => $request->coef
         ]);
         return redirect()->route('teacher.units.subjects', $program_level_id)->with('success', 'Updated class subject successfully');
+    }
+
+    public function course_log_index(Request $request)
+    {
+        # code...
+        // return $request->campus;
+        $subject = Subjects::find($request->subject_id);
+        $year = Helpers::instance()->getCurrentAccademicYear();
+        $teacher = auth()->user();
+        $data['title'] = "Sign Course Log For ".$subject->name.' [ '.$subject->code.' ] ';
+        if ($request->has('campus') && $request->campus != null) {
+            # code...
+            $data['attendance'] = Attendance::where(['year_id'=>$year, 'campus_id'=>$request->campus??null, 'teacher_id'=>$teacher->id, 'subject_id'=>$subject->id])->orderBy('id', 'DESC')->get();
+            // dd($data);
+            $data['content'] = Topic::where('subject_id', $subject->id)->where(function($q)use($request, $teacher){
+                $q->where(['level'=>1])
+                    // ->orWhere(['level'=>2, 'campus_id'=>$request->campus, 'teacher_id'=>$teacher->id])->whereNotNull('campus_id');
+                    ->orWhere(['level'=>2, 'teacher_id'=>$teacher->id])->where('campus_id', $request->campus);
+            })->get();
+        }
+        return view('teacher.log.index', $data);
+    }
+
+    public function course_log_sign(Request $request)
+    {
+        # code...
+        $subject = Subjects::find($request->subject_id);
+        $campus = Campus::find($request->campus_id);
+        $topic = Topic::find($request->topic_id);
+        $attendance_record = Attendance::find($request->attendance_id);
+        $data['title'] = "Sign Course Log For ".$subject->name.'['.$subject->code.'] '.$attendance_record->check_in.' - '.$attendance_record->check_out;
+        $data['subject'] = $subject;
+        $data['campus'] = $campus;
+        $data['topic'] = $topic;
+        $data['attendance_record'] = $attendance_record;
+        $data['log_history'] = CourseLog::join('topics', ['topics.id'=>'course_log.topic_id'])
+                                ->where(['topics.subject_id'=>$subject->id, 'topics.teacher_id'=>auth()->id()])->orderBy('id', 'DESC')->distinct()
+                                ->select(['course_log.*'])->get();
+        
+        return view('teacher.log.sign', $data);
+    }
+
+    public function course_log_save(Request $request)
+    {
+        # code...
+        // return $request->all();
+        $request->validate([
+            'topic_id'=>'required', 'campus_id'=>'required', 'attendance_id'=>'required'
+        ]);
+        $data = ['topic_id'=>$request->topic_id, 'campus_id'=>$request->campus_id, 'attendance_id'=>$request->attendance_id, 'details'=>$request->details];
+        $instance = new CourseLog($data);
+        $instance->save();
+        return back()->with('success', __('text.word_done'));
+    }
+
+    public function delete_course_log(Request $request)
+    {
+        # code...
+        $instance = CourseLog::find($request->log_id);
+        if($instance != null){
+            $instance->delete();
+        }
+        return back()->with('success', __('text.word_done'));
     }
 }

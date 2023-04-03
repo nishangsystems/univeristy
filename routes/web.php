@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\Student\HomeController as StudentHomeController;
+use App\Http\Controllers\Teacher\HomeController as TeacherHomeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Transactions;
 use App\Http\Resources\SubjectResource;
@@ -471,6 +472,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     Route::get('student/{class_id}', 'Teacher\ClassController@students')->name('class.student');
     Route::get('{class_id}/student/{term_id}/report_card/{student_id}', 'Teacher\ClassController@reportCard')->name('student.report_card');
     Route::get('subject', 'Teacher\SubjectController@index')->name('subject');
+    Route::get('course/management', 'Teacher\SubjectController@course_management')->name('course.management');
     Route::get('subject/{subject}/result', 'Teacher\SubjectController@result')->name('result');
     Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
     Route::get('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@show')->name('subject.show');
@@ -502,6 +504,13 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     Route::get('{program_level_id}/class_courses', 'Teacher\HomeController@manage_courses')->name('edit.class_courses');
     Route::get('reset_password', 'Controller@reset_password')->name('reset_password');
     Route::post('reset_password', 'Controller@reset_password_save')->name('reset_password');
+
+    Route::name('course.log.')->prefix('course_log/{subject_id}')->group(function(){
+        Route::get('/', [TeacherHomeController::class, 'course_log_index'])->name('index');
+        Route::get('sign/{attendance_id}/{topic_id}/{campus_id?}', [TeacherHomeController::class, 'course_log_sign'])->name('sign');
+        Route::post('sign/{attendance_id}/{topic_id}/{campus_id?}', [TeacherHomeController::class, 'course_log_save']);
+        Route::get('drop/{log_id}', [TeacherHomeController::class, 'delete_course_log'])->name('drop');
+    });
 });
 
 Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.charges'])->group(function () {

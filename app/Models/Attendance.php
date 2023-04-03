@@ -28,6 +28,6 @@ class Attendance extends Model
     public function subject()
     {
         # code...
-        return $this->belongsTo(Subjetcs::class, 'subject_id');
+        return $this->belongsTo(Subjects::class, 'subject_id');
     }
 }

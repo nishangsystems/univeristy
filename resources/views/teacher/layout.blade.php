@@ -239,11 +239,32 @@
                 </li>
             @endif
             <li>
-                <a href="{{route('user.subject')}}">
-                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-book"></i>
-                    <span class="menu-text text-capitalize">{{__('text.word_courses')}}</span>
+
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                    <span class="menu-text">
+						{{__('text.course_management')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
                 </a>
-                <b class="arrow"></b>
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('user.subject')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.course_material')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('user.course.management')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_management')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
             </li>
          
             <li>

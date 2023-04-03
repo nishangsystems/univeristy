@@ -39,13 +39,15 @@ class AttendanceController extends Controller
     {
         # code...
         $matric = $request->matric;
-        $data['title'] = "Take Attendance";
         $data['teacher'] = User::where(['matric'=>$matric])->first();
         $data['subject'] = Subjects::find($request->subject_id);
+        $data['title'] = 'Take Attendance For <span class="text-success">'.$data['teacher']->name.'</span> In <span class="text-primary">'.$data['subject']->name. '</span>';
         $data['year'] = Helpers::instance()->getCurrentAccademicYear();
         $data['time'] = now()->format('Y-m-d H:m');
         $data['campus'] = Campus::find(auth()->user()->campus_id??0);
-        $data['record'] = [];
+        $teacher_subject = TeachersSubject::where(['teacher_id'=>$data['teacher']->id, 'subject_id'=>$data['subject']->id, 'batch_id'=>$data['year'], 'campus_id'=>auth()->user()->campus_id??0])->first();
+        $data['class'] = $teacher_subject->class??null;
+        $data['record'] = Attendance::where(['year_id'=>$data['year'], 'campus_id'=>auth()->user()->campus_id??0, 'teacher_id'=>$data['teacher']->id, 'subject_id'=>$data['subject']->id])->orderBy('id', 'DESC')->get();
         return view('admin.attendance.record', $data);
     }
 
