@@ -53,8 +53,6 @@
         <div class="col-sm-12 col-md-12">
             <h3 class="row header smaller lighter blue">
                 <span class="col-xs-6 text-capitalize"> {{__('text.course_content')}} </span><!-- /.col -->
-
-                
             </h3>
 
             <div id="accordion" class="accordion-style1 panel-group">
@@ -103,6 +101,7 @@
                 @endforeach
             </div>
         </div><!-- /.col -->
+    </div>
 </div>
 @endsection
 @section('script')

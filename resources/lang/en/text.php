@@ -737,5 +737,15 @@ return [
     'course_instructors'=>'course instructors',
     'take_attendance'=>'take attendance',
     'check_in'=>'check in',
-    ''
+    'check_out'=>'check out',
+    'checked_in'=>'checked in',
+    'checked_out'=>'checked out',
+    'course_log'=>'course log',
+    'sign_course_log'=>'sign course log',
+    'word_attendance'=>'attendance',
+    'manage_attendance'=>'manage attendance',
+    'teacher_attendance'=>'teacher attendance',
+    'course_management'=>'course management',
+    'course_material'=>'course material',
+    'word_management'=>'management',
 ];

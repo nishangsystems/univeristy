@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta charset="utf-8" />
-    <title>{{$title ?? ''}} | {{__('text.app_name')}}</title>
+    <title>{!! $title ?? '' !!} | {{__('text.app_name')}}</title>
 
     <meta name="description" content="overview &amp; stats" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1246,6 +1246,35 @@
             </li>
             @endif
         
+            
+
+            
+            @if (\Auth::user()->hasPermissionTo('manage_attendance'))
+            @endif
+            <!-- Attendance management -->
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                    <span class="menu-text">
+						{{__('text.manage_attendance')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <ul class="submenu">
+                    @if(auth()->user()->campus_id != null)
+                    <li>
+                        <a href="{{route('admin.attendance.teacher.init')}}?type=admin" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.teacher_attendance')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    @endif
+                </ul>
+            </li>
+            <!-- End attaendance management -->
+        
             <li>
                 <a href="{{route('admin.reset_password')}}" class="text-capitalize">
                     <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
@@ -1312,7 +1341,7 @@
 
 
                 <div class="mb-4 mx-3">
-                    <h4 id="title" class="font-weight-bold text-capitalize">{{ $title ?? '' }}</h4>
+                    <h4 id="title" class="font-weight-bold text-capitalize">{!! $title ?? '' !!}</h4>
                 </div>
                 @if ((auth()->user()->password_reset != 1) && (now()->diffInDays(\Illuminate\Support\Carbon::createFromTimestamp(auth()->user()->created_at)) >= 14) && (url()->current() != route('admin.reset_password')))
                     <div class="py-5 h3 text-center text-danger mt-5 text-capitalize">{{__('text.password_reset_request')}}</div>
@@ -1376,7 +1405,7 @@
                         doc['footer']=(function(page, pages) {
                             return {
                                 columns: [
-                                    "{{ $title ?? '' }}",
+                                    "{!! $title ?? '' !!}",
                                     {
                                         // This is the right column
                                         alignment: 'right',
