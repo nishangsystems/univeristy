@@ -78,10 +78,7 @@ class AttendanceController extends Controller
         # code...
         // return $request->all();
         $request->validate(['check_out'=>'required']);
-        // $data = ['year_id'=>$request->year_id, 'campus_id'=>$request->campus_id, 'teacher_id'=>$request->teacher_id, 'subject_id'=>$request->subject_id, 'check_in'=>$request->check_in, 'check_out'=>$request->check_out];
         $instance = Attendance::where('id', $request->attendance_id)->update(['check_out'=>$request->check_out]);
-        // $instance->fill($data);
-        // $instance->save();
         return back()->with('success', __('text.word_done'));
     }
 
