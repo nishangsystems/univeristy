@@ -69,7 +69,7 @@ class AttendanceController extends Controller
         $attendance = Attendance::find($request->attendance_id);
         $data['attendance'] = $attendance;
         $data['title'] = 'Check Out <span class="text-primary">'.$attendance->teacher->name.'</span> In <span class="text-primary">'.$attendance->subject->name.' [ '.$attendance->subject->code.' ] </span>';
-        $data['time'] = now()->format('Y-m-d H:i');
+        $data['time'] = now()->format('d-m-Y H:i');
         $data['record'] = Attendance::where(['year_id'=>$attendance->year_id, 'campus_id'=>$attendance->campus_id, 'teacher_id'=>$attendance->teacher_id, 'subject_id'=>$attendance->subject_id])->orderBy('id', 'DESC')->get();
         return view('admin.attendance.checkout', $data);
     }
@@ -78,10 +78,17 @@ class AttendanceController extends Controller
         # code...
         // return $request->all();
         $request->validate(['check_out'=>'required']);
-        $data = ['year_id'=>$request->year_id, 'campus_id'=>$request->campus_id, 'teacher_id'=>$request->teacher_id, 'subject_id'=>$request->subject_id, 'check_in'=>$request->check_in];
-        $instance = Attendance::find($request->attendance_id);
-        $instance->check_out = $request->check_out;
-        $instance->save();
+        $instance = Attendance::where('id', $request->attendance_id)->update(['check_out'=>$request->check_out]);
         return back()->with('success', __('text.word_done'));
+    }
+
+    public function delete_teacher_attendance(Request $request)
+    {
+        # code...
+        $instance = Attendance::find($request->attendance_id);
+        // dd($instance);
+        $route = route('admin.attendance.teacher.record', ['matric'=>$instance->teacher->matric, 'subject_id'=>$instance->subject_id]);
+        $instance->delete();
+        return redirect($route)->with('success', __('text.word_done'));
     }
 }

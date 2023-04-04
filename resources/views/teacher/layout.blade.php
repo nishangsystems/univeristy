@@ -264,6 +264,39 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    <li>
+                        <a href="{{route('user.course.coverage.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.course_coverage')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                    <span class="menu-text">
+						{{__('text.my_attendance')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('user.attendance.by_course.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.by_course')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('user.attendance.by_month.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.by_month')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                 </ul>
             </li>
          
@@ -325,7 +358,7 @@
 
 
                 <div class="mb-4 mx-3">
-                    <h4 class="font-weight-bold">{{ $title ?? '' }}</h4>
+                    <h4 class="font-weight-bold">{!! $title ?? '' !!}</h4>
                 </div>
                 <!-- check if the user is more than 2 weeks old and hasn't reset his/her password since creation -->
                 @if ((auth()->user()->password_reset != 1) && (now()->diffInDays(\Illuminate\Support\Carbon::createFromTimestamp(auth()->user()->created_at)) >= 14)  && (url()->current() != route('user.reset_password')))

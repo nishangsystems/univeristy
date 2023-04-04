@@ -27,7 +27,7 @@
                     </div>
                     <div class="py-1">
                         <label class="text-capitalize pb-1">{{__('text.check_out')}}:</label>
-                        <input value="{{$time}}" type="datetime-local" name="check_out" class="form-control">
+                        <input value="{{$attendance->check_in}}" type="datetime-local" name="check_out" class="form-control" required>
                     </div>
                     <div class="py-3 d-flex justify-content-between">
                         <a href="{{route('admin.attendance.teacher.record', ['matric'=>$attendance->teacher->matric, 'subject_id'=>$attendance->subject_id])}}" class="btn btn-sm btn-danger">{{__('text.word_back')}}</a>
