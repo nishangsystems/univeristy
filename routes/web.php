@@ -472,8 +472,14 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     Route::get('student/{class_id}/detail', 'Teacher\ClassController@student')->name('student.show');
     Route::get('student/{class_id}', 'Teacher\ClassController@students')->name('class.student');
     Route::get('{class_id}/student/{term_id}/report_card/{student_id}', 'Teacher\ClassController@reportCard')->name('student.report_card');
+    
+    
     Route::get('subject', 'Teacher\SubjectController@index')->name('subject');
     Route::get('course/management', 'Teacher\SubjectController@course_management')->name('course.management');
+    Route::get('course/coverage', 'Teacher\SubjectController@course_coverage_index')->name('course.coverage.index');
+    Route::get('course/coverage/{subject_id}', 'Teacher\SubjectController@course_coverage_show')->name('course.coverage.show');
+
+
     Route::get('subject/{subject}/result', 'Teacher\SubjectController@result')->name('result');
     Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
     Route::get('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@show')->name('subject.show');
@@ -511,6 +517,13 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::get('sign/{attendance_id}/{topic_id}/{campus_id?}', [TeacherHomeController::class, 'course_log_sign'])->name('sign');
         Route::post('sign/{attendance_id}/{topic_id}/{campus_id?}', [TeacherHomeController::class, 'course_log_save']);
         Route::get('drop/{log_id}', [TeacherHomeController::class, 'delete_course_log'])->name('drop');
+    });
+
+    Route::name('attendance.')->prefix('attendance')->group(function(){
+        Route::get('bycourse/index', [TeacherHomeController::class, 'attendance_bycourse_index'])->name('by_course.index');
+        Route::get('bycourse/{subject_id}/show', [TeacherHomeController::class, 'attendance_bycourse'])->name('by_course');
+        Route::get('bymonth/index', [TeacherHomeController::class, 'attendance_bymonth_index'])->name('by_month.index');
+        Route::get('bymonth/{month}/show', [TeacherHomeController::class, 'attendance_bymonth'])->name('by_month');
     });
 });
 

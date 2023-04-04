@@ -749,5 +749,5 @@ return [
     'course_material'=>'course material',
     'word_management'=>'management',
     'word_period'=>'period',
-    ''
+    'word_coverage'=>'coverage',
 ];

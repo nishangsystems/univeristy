@@ -66,6 +66,31 @@ class SubjectController extends Controller
         return view('teacher.manage_courses')->with($data);
     }
 
+    public function course_coverage_index()
+    {
+        # code...
+        $data['title'] = "Course Coverage";
+        $data['courses'] = \App\Models\TeachersSubject::where([
+                    'teacher_id' => auth()->id(),
+                    'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear(),
+                ])->join('subjects', ['subjects.id'=>'teachers_subjects.subject_id'])
+                ->distinct()->select('subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id')->get();
+
+        return view('teacher.course.coverage_index', $data);
+    }
+
+    public function course_coverage_show(Request $request)
+    {
+        # code...
+        $data['title'] = "Course Coverage For ".Subjects::find($request->subject_id)->name;
+        $data['topics'] = Topic::where('subject_id', $request->subject_id)->where('level', 1)->orWhere(function($q)use($request){
+                $q->Where(['level'=>2, 'teacher_id'=>auth()->id()])->where('campus_id', $request->campus);
+        })->get();
+        $data['subject'] = Subjects::find($request->subject_id);
+        // dd($data);
+        return view('teacher.course.coverage', $data);
+    }
+
 
     public function course_list(Request $request, $class_id, $course_id)
     {
@@ -221,7 +246,7 @@ class SubjectController extends Controller
             $campus = $request->campus??0;
             $data['title'] = "Course Content For ".$subject->name.", ".TeachersSubject::where(['teacher_id'=>auth()->id(), 'subject_id'=>$request->subject_id])->first()->class->name();
             if($request->parent_id != null && $request->parent_id != 0){
-                $data['title'] = "Sub topics Under ".Topic::find($request->parent_id)->title.', '.$subject->name.", ".TeachersSubject::where(['teacher_id'=>auth()->id(), 'subject_id'=>$request->subject_id])->first()->class->name();
+                $data['title'] = '<h4 class="text-danger"><label> Sub topics Under '.Topic::find($request->parent_id)->title.'</label><span class="text-secondary mx-1 fa fa-caret-right"></span> '.$subject->name.'<span class="text-secondary mx-1 fa fa-caret-right"></span>'.TeachersSubject::where(['teacher_id'=>auth()->id(), 'subject_id'=>$request->subject_id])->first()->class->name();
             }
             $data['content'] = Topic::where(['subject_id'=>$subject->id, 'level'=>$request->level??1, 'parent_id'=>$request->parent_id??0])
                                     ->where(function($q)use($request, $campus){

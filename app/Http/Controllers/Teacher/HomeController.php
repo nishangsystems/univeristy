@@ -19,6 +19,7 @@ class HomeController extends Controller
 {
 
     public function index(){
+
         return view('teacher.dashboard');
     }
 
@@ -157,7 +158,7 @@ class HomeController extends Controller
         $campus = Campus::find($request->campus_id);
         $topic = Topic::find($request->topic_id);
         $attendance_record = Attendance::find($request->attendance_id);
-        $data['title'] = "Sign Course Log For ".$subject->name.'['.$subject->code.'] '.$attendance_record->check_in.' - '.$attendance_record->check_out;
+        $data['title'] = "Sign Course Log For ".$subject->name.'['.$subject->code.'] '.date('d/m/Y H:i', strtotime($attendance_record->check_in)).' - '.date('d/m/Y H:i', strtotime($attendance_record->check_out));
         $data['subject'] = $subject;
         $data['campus'] = $campus;
         $data['topic'] = $topic;
@@ -190,5 +191,24 @@ class HomeController extends Controller
             $instance->delete();
         }
         return back()->with('success', __('text.word_done'));
+    }
+
+    public function attendance_bycourse_index()
+    {
+        # code...
+        $data['title'] = "Attendance By Course";
+        $data['courses'] = \App\Models\TeachersSubject::where(['teacher_id' => auth()->id(),'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear(),
+            ])->join('subjects', ['subjects.id'=>'teachers_subjects.subject_id'])
+            ->distinct()->select('subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id')->get();
+        return view('teacher.attendance.bycourse_index', $data);
+    }
+
+    public function attendance_bycourse(Request $request)
+    {
+        # code...
+        $data['title'] = "Attendance By Course For ".Subjects::find($request->subject_id);
+        $data['attendance'] = Attendance::where(['subject_id'=>$request->subject_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear(), 'teacher_id'=>auth()->id()])->get();
+        dd($data);
+        return view('teacher.attendance.bycourse', $data);
     }
 }

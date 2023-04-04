@@ -16,7 +16,7 @@
                         </div> -->
                         <div class="py-2">
                             <input type="hidden" name="topic_id" value="{{$topic->id}}">
-                            <label class="form-control">{!! $topic->title !!}</label>
+                            <div class="py-2 px-2 rounded border-top border-bottom" readonly>{!! $topic->title !!}</div>
                         </div>
                         <input type="hidden" name="attendance_id" value="{{$attendance_record->id}}">
                         <!-- <div class="py-2">
