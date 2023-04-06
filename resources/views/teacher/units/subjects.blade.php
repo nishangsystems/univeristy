@@ -19,6 +19,7 @@
                         <th>{{__('text.word_semester')}}</th>
                         <th>{{__('text.word_level')}}</th>
                         <th>{{__('text.word_status')}}</th>
+                        <th>{{__('text.word_hours')}}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -29,10 +30,11 @@
                         <td>{{ $k+1 }}</td>
                         <td>{{ $subject->code }}</td>
                         <td>{{ $subject->name }}</td>
-                        <td>{{ $subject->coef }}</td>
+                        <td>{{ \App\Models\ClassSubject::where(['class_id'=>request('program_level_id'), 'subject_id'=>$subject->id])->first()->coef??null }}</td>
                         <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
                         <td>{{ \App\Models\Level::find($subject->level_id)->level }}</td>
                         <td>{{ $subject->status }}</td>
+                        <td>{{ \App\Models\ClassSubject::where(['class_id'=>request('program_level_id'), 'subject_id'=>$subject->id])->first()->hours??null }}</td>
                         <td class="d-flex justify-content-end">
                             <a class="btn btn-sm btn-primary" href="{{route('user.edit.class_courses',[request('program_level_id'), $subject->id])}}">
                                 <i class="fa fa-edit"> Edit</i>

@@ -532,6 +532,10 @@ class HomeController extends Controller
         $c_year = Helpers::instance()->getCurrentAccademicYear();
         $is_current_student = !(auth('student')->user()->_class($c_year) == null);
         $resit = Helpers::instance()->available_resit(auth('student')->user()->_class($c_year)->id);
+        if($resit == null){
+            return back()->with('error', 'Resit not open');
+        }
+        
         if(!$is_current_student){
             return back()->with('error', 'You are not a current student');
         }

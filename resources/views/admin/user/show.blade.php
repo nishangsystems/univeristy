@@ -62,11 +62,11 @@
                         </div>
                     </div>
                     <div class="profile-info-row">
-                        <div class="profile-info-name"> Address</div>
+                        <div class="profile-info-name text-capitalize"> {{__('text.word_matricule')}}</div>
 
                         <div class="profile-info-value">
                             <span class="editable"
-                                  id="username"> {{$user->address}}</span>
+                                  id="username"> {{$user->matric}}</span>
                         </div>
                     </div>
                     <div class="profile-info-row">

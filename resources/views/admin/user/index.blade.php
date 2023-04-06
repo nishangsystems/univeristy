@@ -15,7 +15,7 @@
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.word_email')}}</th>
                         <th>{{__('text.word_phone')}}</th>
-                        <th>{{__('text.word_address')}}</th>
+                        <th>{{__('text.word_matricule')}}</th>
                         <th>{{__('text.word_campus')}}</th>
                         <th>{{__('text.word_gender')}}</th>
                         <th></th>
@@ -29,7 +29,7 @@
                                 <td>{{$user->name}}</td>
                                 <td>{{$user->email}}</td>
                                 <td>{{$user->phone}}</td>
-                                <td>{{$user->address}}</td>
+                                <td>{{$user->matric}}</td>
                                 <td>{{!($user->campus_id == null) ? \App\Models\Campus::find($user->campus_id)->name ?? '' : ''}}</td>
                                 <td>{{$user->gender}}</td>
                                 <td  class="d-flex justify-content-end align-items-center" >

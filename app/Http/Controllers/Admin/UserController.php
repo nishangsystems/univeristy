@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassMaster;
+use App\Models\Matriculation;
 use App\Models\TeachersSubject;
+use App\Models\User;
 use App\Models\UserRole;
 use App\Option;
 use Illuminate\Http\Request;
@@ -71,11 +73,16 @@ class UserController extends Controller
             'gender' => 'required',
             'type' => 'required',
         ]);
-
+        $pattern = Matriculation::first();
+        $pattern->last_number = $pattern->last_number+1;
+        if(User::where('matric', $pattern->pattern . $pattern->last_number)->count() > 0){
+            $pattern->last_number = $pattern->last_number+1;
+        }
         $input = $request->all();
         $input['password'] = Hash::make('password');
         $input['username'] = $request->email;
         $input['campus_id'] = $request->campus ?? null;
+        $input['matric'] = $pattern->pattern . str_pad($pattern->last_number, 4, '0', STR_PAD_LEFT); ;
         if($request->type == "teacher"){
             $input['type'] = "teacher";
         }else{
@@ -83,6 +90,8 @@ class UserController extends Controller
         }
         $user = new \App\Models\User($input);
         $user->save();
+
+        $pattern->save();
         if($request->type != "teacher"){
             $user_role = new \App\Models\UserRole();
             $user_role->role_id = DB::table('roles')->where('slug', '=', $request->type)->first()->id;
