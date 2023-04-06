@@ -507,8 +507,10 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::get('{program_level_id}/courses', 'Teacher\HomeController@unit_courses')->name('courses');
         Route::get('{program_level_id}/manage_courses', 'Teacher\HomeController@manage_courses')->name('manage_courses');
         Route::post('{program_level_id}/manage_courses', 'Teacher\HomeController@save_courses')->name('save_courses');
+        Route::get('{program_level_id}/course_report', 'Teacher\HomeController@course_report')->name('course_report');
     });
-    Route::get('{program_level_id}/class_courses', 'Teacher\HomeController@manage_courses')->name('edit.class_courses');
+    Route::get('edit/{program_level_id}/{subject_id}/class_courses', 'Teacher\HomeController@edit_course')->name('edit.class_courses');
+    Route::post('edit/{program_level_id}/{subject_id}/class_courses', 'Teacher\HomeController@update_course');
     Route::get('reset_password', 'Controller@reset_password')->name('reset_password');
     Route::post('reset_password', 'Controller@reset_password_save')->name('reset_password');
 

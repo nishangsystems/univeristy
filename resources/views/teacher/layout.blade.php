@@ -207,11 +207,30 @@
             
             @if(auth()->user()->classes()->count() > 0)
             <li>
-                <a href="{{route('user.class')}}?type=master">
-                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-graduation-cap"></i>
-                    <span class="menu-text">{{__('text.HOD_center')}}</span>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-graduation-cap"></i>
+                    <span class="menu-text">
+						{{__('text.HOD_center')}}
+					</span>
+                    <b class="arrow fa fa-angle-down"></b>
                 </a>
-                <b class="arrow"></b>
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('user.class')}}?type=master" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_programs')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('user.class')}}?type=master&&arg=cr" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.course_report')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="{{route('user.teacher.index')}}?type=teacher" class="text-capitalize">
@@ -264,6 +283,7 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    
                     <li>
                         <a href="{{route('user.course.coverage.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
