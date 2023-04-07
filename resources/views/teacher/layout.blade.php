@@ -279,7 +279,7 @@
                     <li>
                         <a href="{{route('user.course.management')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_management')}}
+                            {{__('text.course_log_and_syllabus')}}
                         </a>
                         <b class="arrow"></b>
                     </li>
