@@ -761,4 +761,6 @@ return [
     'lessons_taught'=>'lessons taught',
     'per_coverage'=>'% coverage',
     'per_hours'=>'% hours used',
+    'course_log_and_syllabus'=>'course log & syllabus',
+    'word_taught'=>'taught',
 ];

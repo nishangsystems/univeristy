@@ -1,5 +1,8 @@
 @extends('teacher.layout')
 @section('section')
+@php
+    $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+@endphp
 <div class="py-3">
 
     <div class="py-4">
@@ -62,15 +65,17 @@
                                             <div class="body">
                                                 <div class="time">
                                                     <i class="ace-icon fa fa-clock-o"></i>
-                                                    <span class="green">@if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->count() > 0)
-                                                            {{date('l d-m-Y', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->orderBy('id')->first()->attendance->check_in))}}
+                                                    <span class="green">@if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->count() > 0)
+                                                            {{date('l d-m-Y', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->orderBy('id')->first()->attendance->check_in))}}
                                                         @endif</span>
                                                 </div>
 
-                                                <div class="name">
+                                                <div class="name text-capitalize">
                                                     <a href="#">{{$sub_topic->teacher->name??null}}</a>
                                                     @if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->count() > 0)
                                                         <span class="label label-success arrowed arrowed-in-right">TAUGHT</span>
+                                                        <span class="label label-danger arrowed arrowed-in-left">{{__('text.word_from')}} : {{date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->orderBy('id')->first()->attendance->check_in))}}</span>
+                                                        <span class="label label-danger arrowed arrowed-in-left">{{__('text.word_to')}} : {{date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->orderBy('id')->first()->attendance->check_out))}}</span>
                                                     @else
                                                         <span class="label label-info arrowed arrowed-in-right">NOT TAUGHT</span>
                                                     @endif

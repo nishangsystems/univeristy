@@ -166,15 +166,13 @@ class HomeController extends Controller
         $year = Helpers::instance()->getCurrentAccademicYear();
         $teacher = auth()->user();
         $data['title'] = "Sign Course Log For ".$subject->name.' [ '.$subject->code.' ] ';
+        $data['attendance'] = collect([]);
+        $data['content'] = collect([]);
         if ($request->has('campus') && $request->campus != null) {
             # code...
             $data['attendance'] = Attendance::where(['year_id'=>$year, 'campus_id'=>$request->campus??null, 'teacher_id'=>$teacher->id, 'subject_id'=>$subject->id])->orderBy('id', 'DESC')->get();
             // dd($data);
-            $data['content'] = Topic::where('subject_id', $subject->id)->where(function($q)use($request, $teacher){
-                $q->where(['level'=>1])
-                    // ->orWhere(['level'=>2, 'campus_id'=>$request->campus, 'teacher_id'=>$teacher->id])->whereNotNull('campus_id');
-                    ->orWhere(['level'=>2, 'teacher_id'=>$teacher->id])->where('campus_id', $request->campus);
-            })->get();
+            $data['content'] = Topic::where(['subject_id'=>$subject->id, 'level'=>2, 'teacher_id'=>$teacher->id])->where('campus_id', $request->campus)->get();
         }
         return view('teacher.log.index', $data);
     }
@@ -186,13 +184,13 @@ class HomeController extends Controller
         $campus = Campus::find($request->campus_id);
         $topic = Topic::find($request->topic_id);
         $attendance_record = Attendance::find($request->attendance_id);
-        $data['title'] = "Sign Course Log For ".$subject->name.'['.$subject->code.'] '.date('d/m/Y H:i', strtotime($attendance_record->check_in)).' - '.date('d/m/Y H:i', strtotime($attendance_record->check_out));
+        $data['title'] = "Sign Course Log For ".$subject->name.'['.$subject->code.'] <br><b class="text-primary pt-3 d-block">'.date('d/m/Y H:i', strtotime($attendance_record->check_in)).' - '.date('d/m/Y H:i', strtotime($attendance_record->check_out)).'</b>';
         $data['subject'] = $subject;
         $data['campus'] = $campus;
         $data['topic'] = $topic;
         $data['attendance_record'] = $attendance_record;
-        $data['log_history'] = CourseLog::join('topics', ['topics.id'=>'course_log.topic_id'])
-                                ->where(['topics.subject_id'=>$subject->id, 'topics.teacher_id'=>auth()->id()])->orderBy('id', 'DESC')->distinct()
+        $data['log_history'] = CourseLog::where(['year_id'=>$this->current_accademic_year])->join('topics', ['topics.id'=>'course_log.topic_id'])
+                                ->where(['topics.subject_id'=>$subject->id, 'topics.teacher_id'=>auth()->id()])->orderBy('course_log.id', 'DESC')->distinct()
                                 ->select(['course_log.*'])->get();
         
         return view('teacher.log.sign', $data);
@@ -205,7 +203,7 @@ class HomeController extends Controller
         $request->validate([
             'topic_id'=>'required', 'campus_id'=>'required', 'attendance_id'=>'required'
         ]);
-        $data = ['topic_id'=>$request->topic_id, 'campus_id'=>$request->campus_id, 'attendance_id'=>$request->attendance_id, 'details'=>$request->details];
+        $data = ['topic_id'=>$request->topic_id, 'campus_id'=>$request->campus_id, 'attendance_id'=>$request->attendance_id, 'details'=>$request->details, 'year_id'=>$this->current_accademic_year];
         $instance = new CourseLog($data);
         $instance->save();
         return back()->with('success', __('text.word_done'));
@@ -281,10 +279,10 @@ class HomeController extends Controller
             'campus' => $request->campus ?? auth()->user()->campus_id,
             'semester' => $request->semester ?? Helpers::instance()->getSemester($request->program_level_id)->id
         ];
-
         $class = ProgramLevel::find($request->program_level_id);
         $data['title'] = "Course Report For ".$class->name();
-        $class_subjects = collect($class->class_subjects);
+        $class_subjects = collect($class->class_subjects_by_semester($filters['semester']));
+        // dd($class_subjects);
         $data['data'] = array_map(function($el)use($request, $class_subjects, $filters){
             $record['id'] = $el;
             $record['name'] = $class_subjects->firstWhere('id', '=', $el)->subject->name.' [ '.$class_subjects->firstWhere('id', '=', $el)->subject->code.' ] ';

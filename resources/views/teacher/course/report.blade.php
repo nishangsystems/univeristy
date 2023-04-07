@@ -39,7 +39,6 @@
             </thead>
             <tbody>
                 @php
-                    //dd($data);
                     $k = 1;
                 @endphp
                 @foreach ($data as $d)
@@ -53,12 +52,12 @@
                         <td class="border-left border-right border-light">{{$d['topics_taught']}}/{{$d['topics']}}</td>
                         <td class="border-left border-right border-light">
                             @if ($d['topics'] > 0)
-                                {{($d['topics_taught'] / $d['topics']) * 100}}%
+                                {{number_format(($d['topics_taught'] / $d['topics']) * 100, 2)}}%
                             @endif
                         </td>
                         <td class="border-left border-right border-light">
                             @if ($d['hours'] > 0)
-                                {{($d['hours_covered'] / $d['hours']) * 100}}%
+                                {{number_format(($d['hours_covered'] / $d['hours']) * 100, 2)}}%
                             @endif
                         </td>
                     </tr>

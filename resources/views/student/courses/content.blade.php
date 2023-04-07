@@ -83,10 +83,12 @@
                                                     @endif</span>
                                             </div>
 
-                                            <div class="name">
+                                            <div class="name text-capitalize">
                                                 <a href="#">{{$sub_topic->teacher->name??null}}</a>
                                                 @if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->count() > 0)
-                                                    <span class="label label-success arrowed arrowed-in-right">TAUGHT</span>
+                                                    <span class="label label-success arrowed arrowed-in-right text-uppercase">{{__('tect.word_taught')}}</span>
+                                                    <span class="label label-danger arrowed arrowed-in-right">{{__('text.word_from')}} : {{ date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->orderBy('id')->first()->attendance->check_in)) }}</span>
+                                                    <span class="label label-danger arrowed arrowed-in-right">{{__('text.word_to')}} : {{ date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->orderBy('id')->first()->attendance->check_out)) }}</span>
                                                 @else
                                                     <span class="label label-info arrowed arrowed-in-right">NOT TAUGHT</span>
                                                 @endif

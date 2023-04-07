@@ -10,7 +10,7 @@ class CourseLog extends Model
     use HasFactory;
 
     protected $table = 'course_log';
-    protected $fillable = ['topic_id', 'attendance_id', 'campus_id', 'details'];
+    protected $fillable = ['topic_id', 'attendance_id', 'campus_id', 'details', 'year_id'];
 
     public function attendance(){
         return $this->belongsTo(Attendance::class, 'attendance_id');
