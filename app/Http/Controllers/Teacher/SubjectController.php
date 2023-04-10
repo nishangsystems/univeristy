@@ -96,17 +96,32 @@ class SubjectController extends Controller
     public function course_list(Request $request, $class_id, $course_id)
     {
         # code...
-        
-        $data['students'] = StudentClass::where(['student_classes.class_id'=>$class_id])
-                    ->where(['student_classes.year_id'=>Helpers::instance()->getYear()])
-                    ->join('students', ['students.id'=>'student_classes.student_id'])
-                    ->where(['students.campus_id'=>$request->campus_id])
-                    ->join('student_courses', ['student_courses.student_id'=>'students.id'])
-                    ->where(['student_courses.course_id'=>$course_id])
-                    ->select(['students.*'])->get();
 
-        $class = ProgramLevel::find($class_id);
-        $data['title'] = "Class List For ".$class->program()->first()->name.': LEVEL '.$class->level()->first()->level.' ('.Subjects::find($course_id)->name.') : '.\App\Models\Campus::find(request('campus_id'))->name;
+        $switch = $request->switch ?? null;
+        if ($switch == 'true') {
+            # code...
+            $class = ProgramLevel::find($class_id);
+            $data['title'] = "Course List For ".Subjects::find($course_id)->name.' [ '.Subjects::find($course_id)->code.' ] : '.\App\Models\Campus::find(request('campus_id'))->name;
+            $data['students'] = StudentClass::where(['student_classes.year_id'=>Helpers::instance()->getYear()])
+                        ->join('students', ['students.id'=>'student_classes.student_id'])
+                        ->where(['students.campus_id'=>$request->campus_id])
+                        ->join('student_courses', ['student_courses.student_id'=>'students.id'])
+                        ->where(['student_courses.course_id'=>$course_id])
+                        ->select(['students.*'])->get();
+        } else {
+            # code...
+            $class = ProgramLevel::find($class_id);
+            $data['title'] = "Class List For ".$class->program()->first()->name.': LEVEL '.$class->level()->first()->level.' ('.Subjects::find($course_id)->name.') : '.\App\Models\Campus::find(request('campus_id'))->name;
+            $data['students'] = StudentClass::where(['student_classes.class_id'=>$class_id])
+                        ->where(['student_classes.year_id'=>Helpers::instance()->getYear()])
+                        ->join('students', ['students.id'=>'student_classes.student_id'])
+                        ->where(['students.campus_id'=>$request->campus_id])
+                        ->join('student_courses', ['student_courses.student_id'=>'students.id'])
+                        ->where(['student_courses.course_id'=>$course_id])
+                        ->select(['students.*'])->get();
+        }
+        
+
         
         return view('teacher.students', $data);
     }

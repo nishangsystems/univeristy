@@ -763,4 +763,5 @@ return [
     'per_hours'=>'% hours used',
     'course_log_and_syllabus'=>'course log & syllabus',
     'word_taught'=>'taught',
+    'course_list'=>'course list',
 ];
