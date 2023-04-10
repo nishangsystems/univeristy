@@ -92,7 +92,7 @@
                                 <td class="border-left border-right">`+registered_courses[key]['name']+`</td>
                                 <td class="border-left border-right d-none d-md-table-cell">`+registered_courses[key]['cv']+`</td>
                                 <td class="border-left border-right d-none d-md-table-cell">`+registered_courses[key]['status']+`</td>
-                                <td class="border-left border-right"><span class="btn btn-sm btn-danger" onclick='drop(`+JSON.stringify(registered_courses[key])+`)'>{{__('text.word_drop')}}</span></td>
+                                <td class="border-left border-right"><span class="btn btn-sm btn-danger" onclick='drop(`+registered_courses[key]['id']+`)'>{{__('text.word_drop')}}</span></td>
                             </tr>`
                     }
                     $('#course_table').html(html2);
@@ -126,7 +126,7 @@
                             <td class="border-left border-right">`+data.data[key]['name']+`</td>
                             <td class="border-left border-right d-none d-md-table-cell">`+data.data[key]['cv']+`</td>
                             <td class="border-left border-right d-none d-md-table-cell">`+data.data[key]['status']+`</td>
-                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(data.data[key])+`)'>{{__('text.word_sign')}}</span></td>
+                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+data.data[key]['id']+`)'>{{__('text.word_sign')}}</span></td>
                         </tr>`
                 }
                 $('#modal_table').html(html);
@@ -143,7 +143,7 @@
                             <td class="border-left border-right">`+class_courses[key]['name']+`</td>
                             <td class="border-left border-right d-none d-md-table-cell">`+class_courses[key]['cv']+`</td>
                             <td class="border-left border-right d-none d-md-table-cell">`+class_courses[key]['status']+`</td>
-                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+JSON.stringify(class_courses[key])+`)'>{{__('text.word_sign')}}</span></td>
+                            <td class="border-left border-right"><span class="btn btn-sm btn-primary" onclick='add(`+class_courses[key]['id']+`)'>{{__('text.word_sign')}}</span></td>
                         </tr>`;
                 }
                 $('#modal_table').html(html);
@@ -156,7 +156,7 @@
                             <td class="border-left border-right">`+registered_courses[key]['name']+`</td>
                             <td class="border-left border-right d-none d-md-table-cell">`+registered_courses[key]['cv']+`</td>
                             <td class="border-left border-right d-none d-md-table-cell">`+registered_courses[key]['status']+`</td>
-                            <td class="border-left border-right"><span class="btn btn-sm btn-danger" onclick='drop(`+JSON.stringify(registered_courses[key])+`)'>{{__('text.word_drop')}}</span></td>
+                            <td class="border-left border-right"><span class="btn btn-sm btn-danger" onclick='drop(`+registered_courses[key]['id']+`)'>{{__('text.word_drop')}}</span></td>
                         </tr>`;
                 }
                 $('#amount-sum').html(course_cost)
@@ -165,7 +165,8 @@
 
     }
     
-    function add(course) {
+    function add(course_id) {
+        course = Object.values(class_courses).filter(crs=>crs['id']==course_id)[0]
         if((cv_sum + parseInt(course['cv'])) > parseInt("{{$cv_total}}")){
             alert("Can't add this course. Maximum credits can not be exceeded");
             return;
@@ -176,9 +177,10 @@
         refresh();
     }
 
-    function drop(course) {
+    function drop(course_id) {
+        course = registered_courses.filter(crs=>crs['id']==course_id)[0];
         course_cost -= parseInt("{{$unit_cost}}");
-        cv_sum -= parseInt(course['cv']);
+        cv_sum -= course['cv'];
         if(cv_sum <= 0){cv_sum = 0;}
         registered_courses = registered_courses.filter(e => e['id'] !== course['id']);
         refresh();
