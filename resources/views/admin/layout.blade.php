@@ -1270,6 +1270,13 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    <li>
+                        <a href="{{route('admin.attendance.report', ['type'=>'general', 'campus_id'=>auth()->user()->campus_id])}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.attendance_report')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                     @endif
                 </ul>
             </li>

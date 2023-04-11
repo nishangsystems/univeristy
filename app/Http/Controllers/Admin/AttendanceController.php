@@ -11,6 +11,7 @@ use App\Models\Subjects;
 use App\Models\TeachersSubject;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 
 class AttendanceController extends Controller
 {
@@ -90,5 +91,29 @@ class AttendanceController extends Controller
         $route = route('admin.attendance.teacher.record', ['matric'=>$instance->teacher->matric, 'subject_id'=>$instance->subject_id]);
         $instance->delete();
         return redirect($route)->with('success', __('text.word_done'));
+    }
+
+    public function attendance_report(Request $request)
+    {
+        # code...
+        $campus = $request->campus_id;
+        $data['title'] = "Attendance Report For ".Campus::find(auth()->user()->campus_id)->name;
+        if($request->month != null){
+            $date = Date::parse($request->month);
+            $year = Helpers::instance()->getCurrentAccademicYear();
+            $data['title'] = "Attendance Report For ".date('F Y', strtotime($request->month)).' - '.Campus::find(auth()->user()->campus_id)->name;
+            // Get all lecturers alongside the subjects they handle and their corresponding attendance records
+            // Attendance uses subject_id from subjects table
+            // 
+            $data['report'] = User::where(['users.type'=>'teacher'])
+                    ->join('teachers_subjects', ['teachers_subjects.teacher_id'=>'users.id'])->where(['teachers_subjects.batch_id'=>$year, 'teachers_subjects.campus_id'=>$campus])
+                    // ->join('class_subjects', ['class_subjects.id'=>'teachers_subjects.subject_id'])
+                    ->join('attendance', ['attendance.teacher_id'=>'users.id'])->where(['attendance.year_id'=>$year, 'attendance.campus_id'=>$campus])->whereNotNull('attendance.check_out')
+                    ->whereMonth('check_in', $date)->whereYear('check_in', $date)
+                    ->select(['users.id as teacher_id', 'users.name', 'attendance.*'])->distinct()->get()->groupBy(['teacher_id']);
+            return view('admin.attendance.report.general', $data);
+            // dd($data['report']->toArray());
+        }
+        return view('admin.attendance.report.index', $data);
     }
 }
