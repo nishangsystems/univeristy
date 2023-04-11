@@ -102,18 +102,19 @@ class SubjectController extends Controller
             # code...
             $class = ProgramLevel::find($class_id);
             $data['title'] = "Course List For ".Subjects::find($course_id)->name.' [ '.Subjects::find($course_id)->code.' ] : '.\App\Models\Campus::find(request('campus_id'))->name;
-            $data['students'] = StudentClass::where(['student_classes.year_id'=>Helpers::instance()->getYear()])
+            $data['students'] = StudentClass::where(['student_classes.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
                         ->join('students', ['students.id'=>'student_classes.student_id'])
                         ->where(['students.campus_id'=>$request->campus_id])
                         ->join('student_courses', ['student_courses.student_id'=>'students.id'])
                         ->where(['student_courses.course_id'=>$course_id])
-                        ->select(['students.*'])->get();
+                        ->groupBy('student_classes.class_id', 'students.name')
+                        ->select(['students.*', 'student_classes.class_id as class_id'])->get();
         } else {
             # code...
             $class = ProgramLevel::find($class_id);
             $data['title'] = "Class List For ".$class->program()->first()->name.': LEVEL '.$class->level()->first()->level.' ('.Subjects::find($course_id)->name.') : '.\App\Models\Campus::find(request('campus_id'))->name;
             $data['students'] = StudentClass::where(['student_classes.class_id'=>$class_id])
-                        ->where(['student_classes.year_id'=>Helpers::instance()->getYear()])
+                        ->where(['student_classes.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
                         ->join('students', ['students.id'=>'student_classes.student_id'])
                         ->where(['students.campus_id'=>$request->campus_id])
                         ->join('student_courses', ['student_courses.student_id'=>'students.id'])
@@ -247,8 +248,20 @@ class SubjectController extends Controller
     public function result_template(Request $request)
     {
         # code...
-        $data['title'] = "Course Result Template For ".Subjects::find($request->course_id)->name.' - '.ProgramLevel::find($request->class_id)->name().' - '.Campus::find($request->campus_id)->name.' - '.Batch::find($this->current_accademic_year)->name;
-        $data['students'] = ProgramLevel::find($request->class_id)->_students($this->current_accademic_year)->get(['students.id', 'students.matric']);
+        if($request->switch == 'true'){
+            $data['title'] = "Course Result Template For ".Subjects::find($request->course_id)->name.' - '.ProgramLevel::find($request->class_id)->name().' - '.Campus::find($request->campus_id)->name.' - '.Batch::find($this->current_accademic_year)->name;
+            $data['students'] = StudentClass::where(['student_classes.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
+                        ->where(['student_classes.class_id'=>$request->class_id])
+                        ->join('students', ['students.id'=>'student_classes.student_id'])
+                        ->where(['students.campus_id'=>$request->campus_id])
+                        ->join('student_courses', ['student_courses.student_id'=>'students.id'])
+                        ->where(['student_courses.course_id'=>$request->course_id])
+                        ->select(['students.id', 'students.matric'])->distinct()->get();
+        }else{
+            $data['title'] = "Class Result Template For ".Subjects::find($request->course_id)->name.' - '.ProgramLevel::find($request->class_id)->name().' - '.Campus::find($request->campus_id)->name.' - '.Batch::find($this->current_accademic_year)->name;
+            $data['students'] = ProgramLevel::find($request->class_id)->_students($this->current_accademic_year)->distinct()->get(['students.id', 'students.matric']);
+            // dd($data);
+        }
         return view('teacher.result_template', $data);
     }
 
