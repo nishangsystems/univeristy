@@ -448,6 +448,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     // ATTENDANCE ROUTE GROUP
     Route::name('attendance.')->prefix('attendance')->group(function(){
+        // recording attendance
         Route::get('teachers/init_attendance', [AttendanceController::class, 'init_teacher_attendance'])->name('teacher.init');
         Route::get('teachers/take_attence/{matric}/{subject_id}', [AttendanceController::class, 'take_teacher_attendance'])->name('teacher.record');
         Route::post('teachers/take_attence/{matric}/{subject_id}', [AttendanceController::class, 'save_teacher_attendance'])->name('teacher.record');
@@ -455,6 +456,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('teachers/attendance/{attendance_id}/checkout', [AttendanceController::class, 'checkout_teacher'])->name('teacher.checkout');
         Route::post('teachers/attendance/{attendance_id}/checkout', [AttendanceController::class, 'save_checkout_teacher']);
         Route::get('teachers/attendance/{attendance_id}/delete', [AttendanceController::class, 'delete_teacher_attendance'])->name('teacher.drop');
+
+        // Attendance reporting
+        Route::get('teachers/report/{type}/{campus_id?}/{teacher_id?}', [AttendanceController::class, 'attendance_report'])->name('report');
+        Route::get('teachers/report/{type}/{campus_id}/{teacher_id}/print', [AttendanceController::class, 'attendance_report'])->name('report.print');
     });
 });
 
