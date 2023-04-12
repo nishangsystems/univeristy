@@ -238,6 +238,12 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('users/{user_id}/subjects', 'Admin\UserController@createSubject')->name('users.subjects.add');
     Route::delete('users/{user_id}/subjects', 'Admin\UserController@dropSubject')->name('users.subjects.drop');
     Route::post('users/{user_id}/subjects', 'Admin\UserController@saveSubject')->name('users.subjects.save');
+    Route::get('users/search', [Controller::class, 'search_user'])->name('users.search');
+    Route::prefix('users/wages')->name('users.wages.')->group(function(){
+        Route::get('', [AdminHomeController::class, 'wages'])->name('index');
+        Route::get('create', [AdminHomeController::class, 'create_wages'])->name('create');
+        Route::post('create', [AdminHomeController::class, 'save_wages']);
+    });
 
     Route::resource('users', 'Admin\UserController');
     Route::get('students/init_promotion', 'Admin\StudentController@initialisePromotion')->name('students.init_promotion');

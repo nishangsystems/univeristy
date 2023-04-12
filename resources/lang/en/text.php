@@ -765,5 +765,12 @@ return [
     'word_taught'=>'taught',
     'course_list'=>'course list',
     'no_of_courses'=>'No of courses',
-    
+    'hourly_wages'=>'hourly wages',
+    'add_wages'=>'add wages',
+    'per_teacher'=>'per teacher',
+    'per_background_per_level'=>'per background per level',
+    'word_select'=>'select',
+    'hourly_rate'=>'hourly rate',
+    'word_rate'=>'rate',
+    ''
 ];

@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use App\Http\Controllers\SMS\Helpers as SMSHelpers;
 use App\Models\CampusProgram;
+use App\Models\ClassSubject;
 use App\Models\Students;
+use App\Models\TeachersSubject;
 use App\Models\User;
+use App\Models\Wage;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -242,5 +245,46 @@ class Controller extends BaseController
         //     $client->sms()->send($message);
         // }
         return true;
+    }
+
+    public function search_user(Request $request)
+    {
+        # code...
+        $search_key = $request->key;
+        if($search_key == null){
+            return null;
+        }
+        $users = User::where('name', 'LIKE', '%'.$search_key.'%')
+                ->orWhere('matric', 'LIKE', '%'.$search_key.'%')
+                ->orWhere('email', 'LIKE', '%'.$search_key.'%')
+                ->orWhere('username', 'LIKE', '%'.$search_key.'%')
+                ->take(10)->get();
+        return response()->json(['users'=>$users]);
+    }
+
+    public static function get_payment_rate($teacher_id, $class_subject_id){
+        $course = ClassSubject::find($class_subject_id)->subject;
+        if($teacher_id != null){
+            $tch_sbj = TeachersSubject::where(['teacher_id'=>$teacher_id, 'subject_id'=>$course->id])->first();
+            if($tch_sbj != null){
+                $background_id = $tch_sbj->class->program->bacnground->id;
+                if (Wage::where(['background_id'=>$background_id, 'level_id'=>$course->levle_id, 'teacher_id'=>$teacher_id])->count() > 0) {
+                    # code...
+                    return Wage::where(['background_id'=>$background_id, 'level_id'=>$course->levle_id, 'teacher_id'=>$teacher_id])->first()->price;
+                }
+                if (Wage::where(['background_id'=>$background_id, 'level_id'=>$course->levle_id])->count() > 0) {
+                    # code...
+                    return Wage::where(['background_id'=>$background_id, 'level_id'=>$course->levle_id])->first()->price;
+                }
+                if (Wage::where(['background_id'=>$background_id, 'teacher_id'=>$teacher_id])->count() > 0) {
+                    # code...
+                    return Wage::where(['background_id'=>$background_id, 'teacher_id'=>$teacher_id])->first()->price;
+                }
+                if (Wage::where(['background_id'=>$background_id])->count() > 0) {
+                    # code...
+                    return Wage::where(['background_id'=>$background_id])->first()->price;
+                }
+            }
+        }
     }
 }

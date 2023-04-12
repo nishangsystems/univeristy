@@ -18,6 +18,7 @@ use App\Models\Semester;
 use App\Models\Students;
 use App\Models\StudentSubject;
 use App\Models\Subjects;
+use App\Models\Wage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config as FacadesConfig;
 use Illuminate\Support\Facades\DB;
@@ -394,5 +395,39 @@ class HomeController  extends Controller
         }
         PlatformCharge::updateOrInsert(['year_id'=>$request->year_id], ['yearly_amount'=>$request->yearly_amount, 'result_amount'=>$request->result_amount, 'transcript_amount'=>$request->transcript_amount]);
         return back()->with('success', __('text.word_done'));
+    }
+
+
+
+    // MANAGE WAGES
+    public function wages(Request $request)
+    {
+        # code...
+        $campus_id = auth()->user()->campus_id;
+        $data['title'] = "Wages";
+        // $data['wages'] = Wage::all();
+        $data['rates'] = Wage::orderBy('id', 'DESC')->get();
+        return view('admin.setting.wages.index', $data);
+    }
+
+    public function create_wages(Request $request)
+    {
+        # code...
+        $data['title'] = "Add Teacher Hour Wages";
+        return view('admin.setting.wages.create', $data);
+    }
+
+    public function save_wages(Request $request)
+    {
+        # code...
+        // return $request->all();
+        $validate = Validator::make($request->all(), ['background_id'=>'required', 'rate'=>'required']);
+        if($validate->failed()){
+            return back()->with('error', $validate->errors()->first());
+        }
+        $data = ['background_id'=>$request->background_id, 'price'=>$request->rate, 'teacher_id'=>$request->teacher_id??null, 'level_id'=>$request->level_id??null];
+        $instance = new Wage($data);
+        $instance->save();
+        return redirect(route('admin.users.wages.index'))->with('success', __('text.word_done'));
     }
 }
