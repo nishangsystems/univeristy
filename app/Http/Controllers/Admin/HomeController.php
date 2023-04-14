@@ -18,6 +18,8 @@ use App\Models\Semester;
 use App\Models\Students;
 use App\Models\StudentSubject;
 use App\Models\Subjects;
+use App\Models\User;
+use App\Models\Wage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config as FacadesConfig;
 use Illuminate\Support\Facades\DB;
@@ -394,5 +396,51 @@ class HomeController  extends Controller
         }
         PlatformCharge::updateOrInsert(['year_id'=>$request->year_id], ['yearly_amount'=>$request->yearly_amount, 'result_amount'=>$request->result_amount, 'transcript_amount'=>$request->transcript_amount]);
         return back()->with('success', __('text.word_done'));
+    }
+
+
+
+    // MANAGE WAGES
+    public function wages(Request $request)
+    {
+        # code...
+        $campus_id = auth()->user()->campus_id;
+        $data['title'] = "Wages";
+        return view('admin.setting.wages.index', $data);
+    }
+
+    public function create_wages(Request $request)
+    {
+        # code...
+        $data['title'] = "Add Teacher Hour Wages for ".User::find($request->teacher_id)->name;
+        $data['rates'] = Wage::where('teacher_id', $request->teacher_id)->get();
+        return view('admin.setting.wages.create', $data);
+    }
+
+    public function save_wages(Request $request)
+    {
+        # code...
+        // return $request->all();
+        $validate = Validator::make($request->all(), ['background_id'=>'required', 'rate'=>'required']);
+        if($validate->failed()){
+            return back()->with('error', $validate->errors()->first());
+        }
+        $data = ['price'=>$request->rate, 'teacher_id'=>$request->teacher_id, 'level_id'=>$request->level_id??null];
+        if(Wage::where(['teacher_id'=>$request->teacher_id, 'level_id'=>$request->level_id??null])->count() > 0){
+            return back()->with('error', __('text.record_already_exist', ['item'=>'']));
+        }
+        $instance = new Wage($data);
+        $instance->save();
+        return back()->with('success', __('text.word_done'));
+    }
+
+    public function drop_wages(Request $request)
+    {
+        # code...
+        $wage = Wage::find($request->wage_id);
+        if($wage !== null){
+            $wage->delete();
+            return back()->with('success', __('text.word_done'));
+        }
     }
 }

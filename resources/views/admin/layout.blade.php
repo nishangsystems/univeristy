@@ -318,6 +318,14 @@
                         </li>
                     @endif
                     <li>
+                        <a href="{{route('admin.users.wages.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           {{__('text.hourly_wages')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
                         <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                            {{__('text.manage_custom_resits')}}
