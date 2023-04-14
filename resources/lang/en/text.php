@@ -772,5 +772,8 @@ return [
     'word_select'=>'select',
     'hourly_rate'=>'hourly rate',
     'word_rate'=>'rate',
+    'set_wages'=>'set wages',
+    'attendance_report'=>'attendance report',
+    'salary_slip_for'=>'salary slip for',
     ''
 ];

@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Campus;
+use App\Models\ClassSubject;
 use App\Models\ProgramLevel;
 use App\Models\Subjects;
 use App\Models\TeachersSubject;
@@ -105,12 +106,20 @@ class AttendanceController extends Controller
             // Get all lecturers alongside the subjects they handle and their corresponding attendance records
             // Attendance uses subject_id from subjects table
             // 
-            $data['report'] = User::where(['users.type'=>'teacher'])
-                    ->join('teachers_subjects', ['teachers_subjects.teacher_id'=>'users.id'])->where(['teachers_subjects.batch_id'=>$year, 'teachers_subjects.campus_id'=>$campus])
-                    // ->join('class_subjects', ['class_subjects.id'=>'teachers_subjects.subject_id'])
-                    ->join('attendance', ['attendance.teacher_id'=>'users.id'])->where(['attendance.year_id'=>$year, 'attendance.campus_id'=>$campus])->whereNotNull('attendance.check_out')
+
+            $data['report'] = ClassSubject::join('teachers_subjects', ['teachers_subjects.subject_id'=>'class_subjects.id'])->where(['teachers_subjects.batch_id'=>$year, 'teachers_subjects.campus_id'=>$campus])
+                    ->join('users', ['users.id'=>'teachers_subjects.teacher_id'])->where('users.type', '=', 'teacher')
+                    ->join('attendance', ['attendance.teacher_id'=>'teachers_subjects.teacher_id'])->where(['attendance.year_id'=>$year, 'attendance.campus_id'=>$campus])->whereNotNull('attendance.check_out')
                     ->whereMonth('check_in', $date)->whereYear('check_in', $date)
                     ->select(['users.id as teacher_id', 'users.name', 'attendance.*'])->distinct()->get()->groupBy(['teacher_id']);
+
+            // $data['report'] = User::where(['users.type'=>'teacher'])
+            //         ->join('teachers_subjects', ['teachers_subjects.teacher_id'=>'users.id'])->where(['teachers_subjects.batch_id'=>$year, 'teachers_subjects.campus_id'=>$campus])
+            //         ->join('class_subjects', ['class_subjects.id'=>'teachers_subjects.subject_id'])
+            //         ->join('attendance', ['attendance.teacher_id'=>'users.id'])->where(['attendance.year_id'=>$year, 'attendance.campus_id'=>$campus])->whereNotNull('attendance.check_out')
+            //         ->whereMonth('check_in', $date)->whereYear('check_in', $date)
+            //         ->select(['users.id as teacher_id', 'users.name', 'attendance.*'])->distinct()->get()->groupBy(['teacher_id']);
+
             return view('admin.attendance.report.general', $data);
             // dd($data['report']->toArray());
         }

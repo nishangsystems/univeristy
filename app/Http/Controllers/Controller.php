@@ -262,29 +262,11 @@ class Controller extends BaseController
         return response()->json(['users'=>$users]);
     }
 
-    public static function get_payment_rate($teacher_id, $class_subject_id){
-        $course = ClassSubject::find($class_subject_id)->subject;
+    public static function get_payment_rate($teacher_id, $level_id){
         if($teacher_id != null){
-            $tch_sbj = TeachersSubject::where(['teacher_id'=>$teacher_id, 'subject_id'=>$course->id])->first();
-            if($tch_sbj != null){
-                $background_id = $tch_sbj->class->program->bacnground->id;
-                if (Wage::where(['background_id'=>$background_id, 'level_id'=>$course->levle_id, 'teacher_id'=>$teacher_id])->count() > 0) {
-                    # code...
-                    return Wage::where(['background_id'=>$background_id, 'level_id'=>$course->levle_id, 'teacher_id'=>$teacher_id])->first()->price;
-                }
-                if (Wage::where(['background_id'=>$background_id, 'level_id'=>$course->levle_id])->count() > 0) {
-                    # code...
-                    return Wage::where(['background_id'=>$background_id, 'level_id'=>$course->levle_id])->first()->price;
-                }
-                if (Wage::where(['background_id'=>$background_id, 'teacher_id'=>$teacher_id])->count() > 0) {
-                    # code...
-                    return Wage::where(['background_id'=>$background_id, 'teacher_id'=>$teacher_id])->first()->price;
-                }
-                if (Wage::where(['background_id'=>$background_id])->count() > 0) {
-                    # code...
-                    return Wage::where(['background_id'=>$background_id])->first()->price;
-                }
-            }
+            $rate = Wage::where(['teacher_id'=>$teacher_id, 'level_id'=>$level_id])->first();
+            return $rate->price??0;
         }
+        return null;
     }
 }

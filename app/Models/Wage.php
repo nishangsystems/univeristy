@@ -10,13 +10,8 @@ class Wage extends Model
     use HasFactory;
 
     protected $table = 'wages';
-    protected $fillable = ['background_id', 'level_id', 'teacher_id', 'price'];
+    protected $fillable = ['level_id', 'teacher_id', 'price'];
 
-    public function background()
-    {
-        # code...
-        return $this->belongsTo(Background::class, 'background_id');
-    }
 
     public function level()
     {

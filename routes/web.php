@@ -241,8 +241,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('users/search', [Controller::class, 'search_user'])->name('users.search');
     Route::prefix('users/wages')->name('users.wages.')->group(function(){
         Route::get('', [AdminHomeController::class, 'wages'])->name('index');
-        Route::get('create', [AdminHomeController::class, 'create_wages'])->name('create');
-        Route::post('create', [AdminHomeController::class, 'save_wages']);
+        Route::get('create/{teacher_id}', [AdminHomeController::class, 'create_wages'])->name('create');
+        Route::post('create/{teacher_id}', [AdminHomeController::class, 'save_wages']);
+        Route::get('drop/{teacher_id}/{wage_id}/drop', [AdminHomeController::class, 'drop_wages'])->name('drop');
     });
 
     Route::resource('users', 'Admin\UserController');
