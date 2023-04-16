@@ -116,14 +116,14 @@
                             <td>{{$k+1}}</td>
                             <td>{{$subject->code}}</td>
                             <td>{{$subject->name}}</td>
-                            <td>{{$value->program()->first()->name.': LEVEL '.$value->level()->first()->level}}</td>
+                            <td>{{$value->name()}}</td>
                             <td>{{\App\Models\Campus::find($subject->campus_id)->name ?? '----'}}</td>
                             <td style="float: right;">
                                 <a onclick="event.preventDefault();
-                                            document.getElementById('delete{{$subject->id}}').submit();" class=" btn btn-danger btn-xs m-2">DROP</a>
-                                <form id="delete{{$subject->id}}" action="{{route('admin.users.subjects.drop',$subject->id)}}" method="POST" style="display: none;">
+                                            $('#delete{{$subject->id}}').submit();" class=" btn btn-danger btn-xs m-2">DROP</a>
+                                <form id="delete{{$subject->id}}" action="{{route('admin.users.subjects.drop',$subject->teacher_subject_id)}}" method="POST" style="display: none;">
                                     @method('DELETE')
-                                    {{ csrf_field() }}
+                                    @csrf
                                 </form>
                             </td>
                         </tr>
