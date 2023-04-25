@@ -1,8 +1,7 @@
 @extends('admin.layout')
 @section('section')
 <div class="py-3">
-    <form method="post">
-        @csrf
+    <form method="get">
         <div class="input-group border border-secondary rounded my-3 text-capitalize">
             <span class="input-group-text bg-secondary text-light fw-bolder col-sm-3 col-md-2">{{__('text.word_background')}}</span>
             <select name="background" id="" class="form-control text-uppercase" required>
@@ -17,8 +16,8 @@
 
     <div class="text-center alert-info py-1 hidden" id="alert">
         <span class="tetx-primary py-1 text-capitalize mx-4">{{__('text.word_semester')}} : <strong id="current_semester"></strong></span>
-        <span class="tetx-success py-1 text-capitalize mx-4">{{__('text.ca_date_line')}} : <strong id="ca_date_line"></strong></span>
-        <span class="tetx-success py-1 text-capitalize mx-4">{{__('text.exam_date_line')}} : <strong id="exam_date_line"></strong></span>
+        <span class="tetx-success py-1 text-capitalize mx-4">{{__('text.ca_dateline')}} : <strong id="ca_date_line"></strong></span>
+        <span class="tetx-success py-1 text-capitalize mx-4">{{__('text.exam_dateline')}} : <strong id="exam_date_line"></strong></span>
     </div>
     
     @if(request()->has('background'))
@@ -50,9 +49,7 @@
 @endsection
 @section('script')
 <script>
-    $(document).ready(function name(params) {
-        loadDate();
-    })
+    $(document).ready(loadDate())
     function loadDate(el=null) {
         sem = el==null ? "{{$current_semester ?? null}}" : $(el).val();
         campus = "{{auth()->user()->campus_id ?? null}}";
@@ -60,19 +57,18 @@
             return;
         }
         console.log(campus+' '+sem);
-        url = "{{route('admin.courses.registration.date_line', ['__C__', '__S__'])}}";
-        url = url.replace('__C__', campus);
-        url = url.replace('__S__', sem);
+        url = "{{route('admin.results.get_dateline')}}";
         $.ajax({
             method: 'get',
             url: url,
+            data: {'campus_id' : campus, 'semester_id' : sem},
             success:function(data){
                 console.log(data);
                 $('#current_semester').text(data.semester);
-                $('#ca_date_line').text(data.ca_latest_date);
-                $('#exam_date_line').text(data.exam_latest_date);
+                $('#ca_date_line').text(data.ca_dateline);
+                $('#exam_date_line').text(data.exam_dateline);
                 $('#date').val(data.date);
-                $('#semester').val(sem);
+                $('#semester').val(data.semester_id);
                 $('#alert').removeClass('hidden');
             }
         })

@@ -50,4 +50,14 @@ class Semester extends Model
         }
         return false;
     }
+
+    public function campus_semesters()
+    {
+        return $this->hasMany(CampusSemester::class, 'semester_id');
+    }
+
+    public function campus_semester($campus_id)
+    {
+        return $this->hasMany(CampusSemester::class, 'semester_id')->where('campus_id', $campus_id)->first();
+    }
 }

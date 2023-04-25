@@ -3,6 +3,7 @@
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="_token" content="{{csrf_token()}}">
     <meta charset="utf-8" />
     <title>{!! $title ?? '' !!} | {{__('text.app_name')}}</title>
 
@@ -252,6 +253,13 @@
                         <a href="{{route('admin.subjects.create')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.add_course')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.subjects.non_gpa')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.non_GPA_courses')}}
                         </a>
                         <b class="arrow"></b>
                     </li>

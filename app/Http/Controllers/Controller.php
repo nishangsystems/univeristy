@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\SMS\Helpers as SMSHelpers;
+use App\Models\Campus;
 use App\Models\CampusProgram;
+use App\Models\CampusSemester;
 use App\Models\ClassSubject;
+use App\Models\Semester;
 use App\Models\Students;
+use App\Models\Subjects;
 use App\Models\TeachersSubject;
 use App\Models\User;
 use App\Models\Wage;
@@ -21,6 +25,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 /**
  * Summary of Controller
@@ -268,5 +273,46 @@ class Controller extends BaseController
             return $rate->price??0;
         }
         return null;
+    }
+
+    public function populateCampusSemesterTable()
+    {
+        # code...
+        $campuses = Campus::pluck('id')->toArray();
+        $semesters = Semester::pluck('id')->toArray();
+        foreach ($campuses as $campus) {
+            # code...
+            foreach ($semesters as $sem) {
+                # code...
+                if(CampusSemester::where(['campus_id'=>$campus, 'semester_id'=>$sem])->count() == 0){
+                    CampusSemester::create(['campus_id'=>$campus, 'semester_id'=>$sem]);
+                }
+            }
+        }
+    }
+
+    
+    // Search course by name or course code as req
+    public function search_course(Request $request)
+    {
+        # code...
+        $validate = Validator::make($request->all(), ['value'=>'required']);
+        // return $request->value;
+
+        try{
+            // $pl = DB::table('students')->find(auth('student')->id())->program_id;
+            // $program = ProgramLevel::find($pl);
+            $subjects = Subjects::
+                        // where(['program_levels.program_id'=>$program->program_id])->where('program_levels.level_id', '<=', $program->level_id)
+                        // ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])
+                        // ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
+                        where(function($q)use($request){
+                            $q->where('subjects.code', 'like', '%'.$request->value.'%')
+                            ->orWhere('subjects.name', 'like', '%'.$request->value.'%');
+                        })
+                        ->select(['subjects.*', 'subjects.coef as cv', 'subjects.status as status'])->orderBy('name')->distinct()->paginate(15);
+            return $subjects;
+        }
+        catch(Throwable $th){return $th->getLine() . '  '.$th->getMessage();}
     }
 }

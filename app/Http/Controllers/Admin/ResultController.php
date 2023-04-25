@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResultResource;
 use App\Models\Batch;
+use App\Models\CampusSemester;
 use App\Models\ClassSubject;
 use App\Models\Config;
 use App\Models\OfflineResult;
@@ -19,6 +20,7 @@ use App\Models\Subjects;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Redirect;
@@ -554,16 +556,35 @@ class ResultController extends Controller
 
     public function date_line(Request $request)
     {
+        
         # code...
         $data['title'] = __('text.set_result_submission_dateline_for', ['item'=>$request->has('semester') ? Semester::find($request->semester)->name : '']);
         if(request()->has('background')){
             $data['current_semester'] = Semester::where(['background_id'=>$request->background, 'status'=>1])->first()->id ?? null;
+            $this->populateCampusSemesterTable();
+            // if(auth()->user()->campus_id != null){
+            //     $campus_id = auth()->user()->campus_id;
+            //     $data['current_semester'] = Semester::find($data['current_semester'])->campus_semester($campus_id)->first();
+            //     if($data['current_semester'] == null){
+            //         $data['current_semester'] = Semester::find($data['current_semester'])->campus_semester($campus_id)->first();
+            //     }
+            // }
         }
         return view('admin.setting.results_date_line', $data);
     }
+
     public function date_line_save(Request $request)
     {
         # code...
+        // return $request->all();
+        $semester = Semester::find($request->semester)->campus_semester(auth()->user()->campus_id);
+        if($semester == null){
+            $semester = new CampusSemester(['campus_id'=>auth()->user()->campus_id, 'semester_id'=>$request->semester]);
+            $semester->save();
+        }
+        $semester->update(['ca_date_line'=>$request->ca_latest_date, 'exam_date_line'=>$request->exam_latest_date]);
+        $semester->save();
+        return back()->with('success', __('text.word_done'));
     }
 
     public function result_publishing (Request $request)
@@ -590,5 +611,18 @@ class ResultController extends Controller
         if($results->count() == 0){return back()->with('error', 'Results not yet uploaded');}
         Result::where(['batch_id'=>$request->year, 'semester_id'=>$request->semester])->update(['published'=>0]);
         return back()->with('success', __('text.word_done'));
+    }
+
+    public function get_date_line(Request $request)
+    {
+        # code...
+        // return $request->all();
+        $campus_semester = CampusSemester::where(['campus_id'=>$request->campus_id, 'semester_id'=>$request->semester_id])->first();
+        if($campus_semester == null)
+        {
+            $campus_semester = CampusSemester::where(['campus_id'=>$request->campus_id, 'semester_id'=>$request->semester_id])->first();
+            $this->populateCampusSemesterTable();
+        }
+        return response()->json(['ca_dateline'=>$campus_semester->ca_date_line==null?null:Date::parse($campus_semester->ca_date_line)->format('d/m/Y'), 'exam_dateline'=>$campus_semester->exam_date_line==null?null:Date::parse($campus_semester->exam_date_line)->format('d/m/Y'), 'semester'=>$campus_semester->semester->name, 'semester_id'=>$campus_semester->semester_id]);
     }
 }

@@ -775,5 +775,5 @@ return [
     'set_wages'=>'set wages',
     'attendance_report'=>'attendance report',
     'salary_slip_for'=>'salary slip for',
-    ''
+    'non_GPA_courses'=>'non-GPA courses',
 ];

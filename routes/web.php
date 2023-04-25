@@ -181,6 +181,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     });
 
 
+    Route::get('subjects/non_gpa', 'Admin\SubjectController@non_gpa_courses')->name('subjects.non_gpa');
+    Route::get('subjects/non_gpa/save', 'Admin\SubjectController@non_gpa_courses_save');
     Route::resource('subjects', 'Admin\SubjectController');
     Route::post('subjects/create/next', 'Admin\SubjectController@next')->name('courses.create_next');
     Route::get('subjects/create/{background}/{semester}', 'Admin\SubjectController@_create')->name('courses._create');
@@ -193,6 +195,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     
     Route::get('results/date_line', 'Admin\ResultController@date_line')->name('results.date_line');
     Route::post('results/date_line', 'Admin\ResultController@date_line_save')->name('results.date_line');
+    Route::get('results/get_date_line', 'Admin\ResultController@get_date_line')->name('results.get_dateline');
     Route::prefix('result')->name('result.')->group(function(){
         Route::get('import', 'Admin\ResultController@import')->name('import');
         Route::post('import', 'Admin\ResultController@importPost')->name('import');
@@ -468,6 +471,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('teachers/report/{type}/{campus_id?}/{teacher_id?}', [AttendanceController::class, 'attendance_report'])->name('report');
         Route::get('teachers/report/{type}/{campus_id}/{teacher_id}/print', [AttendanceController::class, 'attendance_report'])->name('report.print');
     });
+    Route::get('search_course', 'Controller@search_course')->name('search_course');
 });
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {

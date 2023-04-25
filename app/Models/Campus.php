@@ -47,4 +47,16 @@ class Campus extends Model
         # code...
         return $this->hasMany(Resit::class, 'campus_id');
     }
+
+    public function campus_semesters()
+    {
+        # code...
+        return $this->hasMany(CampusSemester::class, 'campus_id');
+    }
+
+    public function campus_semester($semester_id)
+    {
+        # code...
+        return $this->hasMany(CampusSemester::class, 'campus_id')->where('semester_id', $semester_id);
+    }
 }

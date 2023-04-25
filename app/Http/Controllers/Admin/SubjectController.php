@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Background;
+use App\Models\NonGPACourse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Validator;
 use function Ramsey\Uuid\v1;
 
 class SubjectController extends Controller
@@ -120,5 +123,32 @@ class SubjectController extends Controller
         $data['title'] = "List of all Subjects";
         $data['subjects'] = \App\Models\Subjects::orderBy('name')->paginate(100);
         return view('admin.subject.index')->with($data);
+    }
+    
+
+    public function non_gpa_courses(Request $request)
+    {
+        # code...
+        $data['title'] = "Non GPA Courses";
+        if($request->has('background_id') and $request->background_id != null){
+            $data['title'] .= ' For '.Background::find($request->background_id)->background_name??'';
+        }
+        $data['courses'] = NonGPACourse::all();
+        return view('admin.subject.non_gpa_courses', $data);
+    }
+    
+
+    public function non_gpa_courses_save(Request $request)
+    {
+        # code...
+        // return $request->all();
+        $validate = Validator::make($request->all(), ['background_id'=>'required', 'course_id'=>'required']);
+        if ($validate->fails()) {
+            # code...
+            return back()->with('error', $validate->errors()->first());
+        }
+        $course = new NonGPACourse(['background_id'=>$request->background_id, 'course_id'=>$request->course_id]);
+        $course->save();
+        return back()->with('success', __('text.word_done'));
     }
 }
