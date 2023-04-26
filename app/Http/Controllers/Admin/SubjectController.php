@@ -142,12 +142,12 @@ class SubjectController extends Controller
     {
         # code...
         // return $request->all();
-        $validate = Validator::make($request->all(), ['background_id'=>'required', 'course_id'=>'required']);
+        $validate = Validator::make($request->all(), ['background_id'=>'required', 'course_code'=>'required']);
         if ($validate->fails()) {
             # code...
             return back()->with('error', $validate->errors()->first());
         }
-        $course = new NonGPACourse(['background_id'=>$request->background_id, 'course_id'=>$request->course_id]);
+        $course = new NonGPACourse(['background_id'=>$request->background_id, 'course_code'=>$request->course_code]);
         $course->save();
         return back()->with('success', __('text.word_done'));
     }

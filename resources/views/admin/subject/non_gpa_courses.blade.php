@@ -56,7 +56,7 @@
                                 <span class="btn btn-sm btn-primary" onclick="$('#_form_`+data.data[key]['id']+`').submit()">{{__('text.word_add')}}</span>
                                 <form method="get" class="hidden" id="_form_`+data.data[key]['id']+`" action="{{Request::url()}}/save">                                    
                                     <input type="hidden" name="background_id" value="{{request('background_id')}}">
-                                    <input type="hidden" name="course_id" value="`+data.data[key]['id']+`">
+                                    <input type="hidden" name="course_code" value="`+data.data[key]['code']+`">
                                 </form>
                             </td>
                         </tr>`
