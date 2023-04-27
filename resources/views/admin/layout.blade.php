@@ -1059,7 +1059,6 @@
                         <b class="arrow"></b>
                     </li>
 
-
                     <li>
                         <a href="{{route('admin.result.exam.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>

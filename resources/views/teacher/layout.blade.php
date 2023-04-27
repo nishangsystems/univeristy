@@ -269,6 +269,7 @@
                 </a>
 
                 <ul class="submenu">
+
                     <li>
                         <a href="{{route('user.subject')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -276,6 +277,7 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+
                     <li>
                         <a href="{{route('user.course.management')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>

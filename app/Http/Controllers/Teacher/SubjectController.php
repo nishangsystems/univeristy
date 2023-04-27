@@ -6,6 +6,8 @@ use App\Helpers\Helpers;
 use App\Models\Result;
 use App\Models\SchoolUnits;
 use App\Models\ClassSubject;
+use App\Models\Semester;
+use App\Models\Students;
 use App\Models\TeachersSubject;
 use App\Models\Topic;
 use Illuminate\Http\Request;
@@ -19,6 +21,7 @@ use App\Models\StudentClass;
 use App\Models\Subjects;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use \Session;
 
 
@@ -129,20 +132,22 @@ class SubjectController extends Controller
 
     public function result($subject)
     {
-       if(request('class')){
-            $data['subject'] = ClassSubject::find($subject);
-       }else{
-            $data['subject'] = TeachersSubject::find($subject)->subject;
-       }
+    //    if(request('class')){
+    //         $data['subject'] = ClassSubject::find($subject);
+    //    }else{
+            $data['subject'] = Subjects::find($subject)->subject;
+    //    }
+       $data['semester'] = ProgramLevel::find(request('class_id'))->program->background->currentSemesters()->first();
         return view('teacher.result')->with($data);
     }
 
     public function store(Request $request)
     {
         $result = OfflineResult::where([
-            'student_id' => $request->student,
+            'student_id' => $request->student_id,
+            'student_matric' => $request->student_matric,
             'class_id' => $request->class_id,
-            'sequence' => $request->sequence,
+            'semester_id' => $request->semester,
             'subject_id' => $request->subject,
             'batch_id' => $request->year
         ])->first();
@@ -153,10 +158,13 @@ class SubjectController extends Controller
 
         $result->batch_id = $request->year;
         $result->student_id =  $request->student;
+        $result->student_matric =  $request->student_matric;
         $result->class_id =  $request->class_id;
-        $result->sequence =  $request->sequence;
+        $result->semester_id =  $request->semester_id;
         $result->subject_id =  $request->subject;
-        $result->score =  $request->score;
+        $result->subject_code =  Subjects::find($request->subject)->code;
+        $result->ca_score =  $request->ca_score??$result->ca_score??null;
+        $result->exam_score =  $request->exam_score??$result->exam_score??null;
         $result->coef =  $request->coef;
         $result->remark = "";
         $result->class_subject_id =  $request->class_subject_id;
@@ -364,5 +372,274 @@ class SubjectController extends Controller
             return back();
         }
         return back()->with('error', __('text.item_not_found', ['item'=>__('text.word_course')]));
+    }
+
+    public function import_results()
+    {
+        # code...
+        // check if exam total is set for this program
+        if (!Helpers::instance()->exam_total_isset(request('class_id'))) {
+            # code...
+            return back()->with('error',  __('text.exam_total_not_set_for', ['program'=>__('text.word_program')]));
+        }
+        
+        $subject = Subjects::find(request('course_id'));
+        $data['title'] = __('text.import_ca_and_exam_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+        return view('teacher.results.import_exam', $data);
+    }
+
+    public function import_results_save(Request $request)
+    {
+        # code...
+        $check = Validator::make($request->all(), [
+            'reference'=>'required',
+            'file'=>'required|file'
+        ]);
+        if($check->fails()){
+            return back()->with('error', $check->errors()->first());
+        }
+
+        $ca_total = Helpers::instance()->ca_total(request('class_id'));
+        $exam_total = Helpers::instance()->exam_total(request('class_id'));
+
+        $file = $request->file('file');
+        if($file != null &&$file->getClientOriginalExtension() == 'csv'){
+            $filename = 'ca_and_exam_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
+            $file->move(storage_path('app/files'), $filename);
+
+            $file_pointer = fopen(storage_path('app/files').'/'.$filename, 'r');
+
+            $imported_data = [];
+            $course = Subjects::find($request->course_id);
+            $year = Helpers::instance()->getCurrentAccademicYear();
+            $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester($request->class_id);
+            
+            while(($row = fgetcsv($file_pointer, 100, ',')) != null){
+                if(is_numeric($row[1]))
+                $imported_data[] = [$row[0], $row[1], $row[2]];
+            }
+            if(count($imported_data)==0){
+                return back()->with('error', __('text.empty_or_wrong_data_format'));
+            }
+
+            $bad_results = 0;
+            $null_students = '';
+            $existing_results = '';
+            foreach($imported_data as $data){
+                if ($data[1] > $ca_total || $data[2] > $exam_total) {
+                    # code...
+                    $bad_results++;
+                    continue;
+                }
+                $student = Students::where(['matric'=>$data[0]])->first() ?? null;
+                if($student != null){
+                    $base=[
+                        'batch_id' => $year, 
+                        // 'subject_id' => $request->course_id,
+                        'subject_code' => Subjects::find($request->course_id)->code,
+                        // 'student_id' => $student->id,
+                        'student_matric' => $data[0],
+                        'class_id' => $request->class_id,
+                        'semester_id' => $semester->id,
+                        'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef,
+                        'class_subject_id'=>$course->_class_subject($request->class_id)->id??0
+                    ];
+                    if(OfflineResult::where($base)->whereNotNull('ca_score')->count()>0){
+                        $existing_results .= "<br> ".__('text.ca_results_already_exist_for', ['item'=>$data[0]]);
+                    }elseif (!$data[1] == null) {
+                        # code...
+                        OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(),  'campus_id'=>$student->campus_id, 'student_id'=>$student->id, 'subject_id' => $request->course_id]);
+                    }
+                    if(OfflineResult::where($base)->whereNotNull('exam_score')->count()>0){
+                        $existing_results .= "<br> ".__('text.exam_results_already_exist_for', ['item'=>$data[0]]);
+                    }elseif (!$data[2] == null) {
+                        # code...
+                        OfflineResult::updateOrCreate($base, ['exam_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(),  'campus_id'=>$student->campus_id, 'student_id'=>$student->id, 'subject_id' => $request->course_id]);
+                    }
+                }
+                else{
+                    $null_students .= __('text.student_matric_not_found', ['matric'=>$data[0]])." <br>";
+                }
+            }
+            if($bad_results > 1){
+                return back()->with('message', __('text.word_done').'. ' . ($bad_results == 0 ? '' : $bad_results . ' '.__('text.records_not_imported_phrase')) . $null_students . $existing_results);
+            }
+            return back()->with('success', __('text.word_done'));
+        }else{
+            return back()->with('error', __('text.file_type_constraint', ['type'=>'.csv']));
+        }
+    }
+
+    public function import_ca()
+    {
+        # code...
+        // check if CA total is set forthis program
+        if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
+            # code...
+            return back()->with('error',  __('text.CA_total_not_set_for', ['program'=>__('text.word_program')]));
+        }
+
+        $subject = Subjects::find(request('course_id'));
+        $data['title'] = __('text.import_CA_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+        return view('teacher.results.import_ca', $data);
+    }
+
+    public function import_ca_save(Request $request)
+    {
+        # code...
+        $check = Validator::make($request->all(), [
+            'reference'=>'required',
+            'file'=>'required|file'
+        ]);
+
+        $ca_total = Helpers::instance()->ca_total(request('class_id'));
+        if($check->fails()){
+            return back()->with('error', $check->errors()->first());
+        }
+        $file = $request->file('file');
+        if($file != null &&$file->getClientOriginalExtension() == 'csv'){
+            $filename = 'ca_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
+            $file->move(storage_path('app/files'), $filename);
+
+            $file_pointer = fopen(storage_path('app/files').'/'.$filename, 'r');
+
+            $imported_data = [];
+            $course = Subjects::find($request->course_id);
+            $year = Helpers::instance()->getCurrentAccademicYear();
+            $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester($request->class_id);
+            
+            while(($row = fgetcsv($file_pointer, 100, ',')) != null){
+                if(is_numeric($row[1]))
+                $imported_data[] = [$row[0], $row[1]];
+            }
+            if(count($imported_data)==0){
+                return back()->with('error', __('text.empty_or_wrong_data_format'));
+            }
+
+            $bad_results = 0;
+            $null_students = '';
+            foreach($imported_data as $data){
+                if ($data[1] > $ca_total) {
+                    # code...
+                    $bad_results++;
+                    continue;
+                }
+                $student = Students::where(['matric'=>$data[0]])->first() ?? null;
+                if($student != null){
+                    $base=[
+                        'batch_id' => $year, 
+                        // 'subject_id' => $request->course_id,
+                        'subject_code' => Subjects::find($request->course_id)->code,
+                        // 'student_id' => $student->id,
+                        'student_matric' => $data[0],
+                        'class_id' => $request->class_id,
+                        'semester_id' => $semester->id,
+                        'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef,
+                        'class_subject_id'=>$course->_class_subject($request->class_id)->id??0
+                    ];
+                    if(OfflineResult::where($base)->whereNotNull('ca_score')->count() == 0){
+                        OfflineResult::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'student_id'=>$student->id, 'subject_id' => $request->course_id]);
+                    }
+                }else{
+                    $null_students .= __('text.student_matric_not_found', ['matric'=>$data[0]]);
+                }
+            }
+            if($bad_results > 1){
+                return back()->with('message', __('text.word_done').'. ' .( $bad_results == 0 ? '' : $bad_results. ' '.__('text.records_not_imported_phrase')).$null_students);
+            }
+            return back()->with('success', __('text.word_done'));
+        }else{
+            return back()->with('error', __('text.file_type_constraint', ['type'=>'.csv']));
+        }
+    }
+
+    public function import_exam()
+    {
+        # code...
+        // check if exam total is set for this program
+        if (!Helpers::instance()->exam_total_isset(request('class_id'))) {
+            # code...
+            return back()->with('error',  __('text.exam_total_not_set_for', ['program'=>__('text.word_program')]));
+        }
+        
+        $subject = Subjects::find(request('course_id'));
+        $data['title'] = __('text.import_exam_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+        return view('teacher.results.import_exam_only', $data);
+    }
+
+    public function import_exam_save(Request $request)
+    {
+        # code...
+        $check = Validator::make($request->all(), [
+            'reference'=>'required',
+            'file'=>'required|file'
+        ]);
+        if($check->fails()){
+            return back()->with('error', $check->errors()->first());
+        }
+
+        // $ca_total = Helpers::instance()->ca_total(request('class_id'));
+        $exam_total = Helpers::instance()->exam_total(request('class_id'));
+
+        $file = $request->file('file');
+        if($file != null &&$file->getClientOriginalExtension() == 'csv'){
+            $filename = 'exam_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
+            $file->move(storage_path('app/files'), $filename);
+
+            $file_pointer = fopen(storage_path('app/files').'/'.$filename, 'r');
+
+            $imported_data = [];
+            $course = Subjects::find($request->course_id);
+            $year = Helpers::instance()->getCurrentAccademicYear();
+            $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester($request->class_id);
+            
+            while(($row = fgetcsv($file_pointer, 100, ',')) != null){
+                if(is_numeric($row[1]))
+                $imported_data[] = [$row[0], $row[1]];
+            }
+            if(count($imported_data)==0){
+                return back()->with('error', __('text.empty_or_wrong_data_format'));
+            }
+
+            $bad_results = 0;
+            $null_students = '';
+            $existing_results = '';
+            foreach($imported_data as $data){
+                if ($data[1] > $exam_total) {
+                    # code...
+                    $bad_results++;
+                    continue;
+                }
+                $student = Students::where(['matric'=>$data[0]])->first() ?? null;
+                if($student != null){
+                    $base=[
+                        'batch_id' => $year, 
+                        // 'subject_id' => $request->course_id,
+                        'subject_code' => Subjects::find( $request->course_id)->code,
+                        // 'student_id' => $student->id,
+                        'student_matric' => $data[0],
+                        'class_id' => $request->class_id,
+                        'semester_id' => $semester->id,
+                        'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef,
+                        'class_subject_id'=>$course->_class_subject($request->class_id)->id??0
+                    ];
+                    if(OfflineResult::where($base)->whereNotNull('exam_score')->count() > 0){
+                        $existing_results .= "<br> ".__('text.exam_results_already_exist_for', ['item'=>$data[0]]);
+                    }elseif (!$data[1] == null) {
+                        # code...
+                        OfflineResult::updateOrCreate($base, ['exam_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(),  'campus_id'=>$student->campus_id, 'student_id'=>$student->id, 'subject_id' => $request->course_id]);
+                    }
+                }
+                else{
+                    $null_students .= __('text.student_matric_not_found', ['matric'=>$data[0]])." <br>";
+                }
+            }
+            if($bad_results > 1){
+                return back()->with('message', __('text.word_done').'. ' . ($bad_results == 0 ? '' : $bad_results . ' '.__('text.records_not_imported_phrase')) . $null_students . $existing_results);
+            }
+            return back()->with('success', __('text.word_done'));
+        }else{
+            return back()->with('error', __('text.file_type_constraint', ['type'=>'.csv']));
+        }
     }
 }

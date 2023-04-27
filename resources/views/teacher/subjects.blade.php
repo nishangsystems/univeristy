@@ -34,9 +34,10 @@
                             <td>{{$class->program()->first()->name.': LEVEL '.$class->level()->first()->level}}</td>
                             <td>{{ \App\Models\Campus::find($subject->campus_id)->name ?? '----' }}</td>
                             <td>{{ $subject->coef }}</td>
-                            <?php /*<td style="float: right;">
-                                <a class="btn btn-xs btn-primary" href="{{route('user.result', ['subject'=>$subject->id, 'class'=>request('class')])}}">Result</a>
-                            </td> */
+                            <td style="float: right;">
+                                <a class="btn btn-xs btn-primary" href="{{route('user.result', ['subject'=>$subject->id, 'class_id'=>request('class')])}}">Result</a>
+                            </td>
+                            <?php 
                             ?>
                         </tr>
                         @endforeach

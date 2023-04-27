@@ -60,7 +60,7 @@
                                 <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
                                 <td class="pt-3-half {{$ca_total/2 > $student->ca_score($subject->id, request('class_id'), $year) ? 'text-danger' : ''}}">
                                     @if($semester->ca_is_late() == false)
-                                        <input class="score form-control bg-white border-0" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->id}}" value="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}">
+                                        <input class="score form-control bg-white border-0" data-sequence="{{$semester->id}}" type='number' data-student_id="{{$student->id}}" data-student="{{$student->matric}}" value="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}">
                                     @else
                                         <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}">
                                     @endif
@@ -83,7 +83,7 @@
                 event.target.style.color = 'black';
             }
 
-            let subject_url = "{{route('user.store_result',$subject->id)}}";
+            let subject_url = "{{route('admin.store_result',$subject->id)}}";
             // $(".pre-loader").css("display", "block");
 
             if($(this).val() > parseFloat('{{$ca_total}}')){
@@ -93,7 +93,8 @@
                     type: "POST",
                     url: subject_url,
                     data : {
-                        "student" : $(this).attr('data-student'),
+                        "student_id" : $(this).attr('data-student_id'),
+                        "student_matric" : $(this).attr('data-student'),
                         "semester_id" :$(this).attr('data-sequence'),
                         "subject" : '{{$subject->id}}',
                         "year" :'{{$year}}',

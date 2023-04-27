@@ -21,6 +21,11 @@
     @endphp
 
     @csrf
+    <div class="d-flex justify-content-end py-3 px-3">
+        <a class="btn btn-xs btn-primary mx-2" href="{{route('user.results.import', ['course_id'=>request('subject'), 'class_id'=>request('class')])}}">{{__('text.import_results')}}</a>
+        <a class="btn btn-xs btn-primary mx-2" href="{{route('user.results.ca.import', ['course_id'=>request('subject'), 'class_id'=>request('class')])}}">{{__('text.import_ca')}}</a>
+        <a class="btn btn-xs btn-primary mx-2" href="{{route('user.results.exam.import', ['course_id'=>request('subject'), 'class_id'=>request('class')])}}">{{__('text.import_exams')}}</a>
+    </div>
     <div class="card">
        <div class="d-flex justify-content-between">
            <div class="card-header d-flex justify-content-between align-items-center w-100">
@@ -34,40 +39,45 @@
                </div>
            </div>
        </div>
-        <div class="card-body">
+       <div class="card-body">
             <div id="table table-responsive" class="table-editable">
                 <table class="table table-bordered table-responsive-md table-striped text-center">
-                    <thead>
-                    <tr>
-                        <th style="width: 50px" class="text-center" colspan="3">Sequences</th>
-                        @foreach($seqs as $seq)
-                            <th class="text-center">{{$seq->name}}</th>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <th>#</th>
-                        <th style="width: 200px;">Name</th>
-                        <th style="width: 100px;">Matricule</th>
-                        <th class="text-center" colspan="{{$seqs->count()}}">Score</th>
-                    </tr>
+                    <thead class="text-capitalize">
+                        <tr>
+                            <th style="width: 50px" class="text-center" colspan="3">{{$semester->name}}</th>
+                            <th class="text-center">{{__('text.CA')}}</th>
+                            <th class="text-center">{{__('text.word_exams')}}</th>
+                        </tr>
+                        <tr>
+                            <th>#</th>
+                            <th style="width: 200px;">{{__('text.word_name')}}</th>
+                            <th style="width: 100px;">{{__('text.word_matricule')}}</th>
+                            <th class="text-center" colspan="2">{{__('text.word_score')}}</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach($subject->class->students($year)->get() as $student)
-                        <tr data-role="student">
-                            <td>1</td>
-                            <td class="name" style="width: 200px; text-align: left">{{$student->name}}</td>
-                            <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
-                            @foreach($seqs as $seq)
+                        @php($k = 1)
+                        @foreach($subject->class->_students($year)->get() as $student)
+                            <tr data-role="student">
+                                <td>{{$k++}}</td>
+                                <td class="name" style="width: 200px; text-align: left">{{$student->name}}</td>
+                                <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
                                 <td class="pt-3-half">
-                                   @if(\App\Models\Config::where(['seq_id'=> $seq->id,'year_id'=>$year])->whereDate('start_date','<=', \Carbon\Carbon::now())->whereDate('end_date','>=', \Carbon\Carbon::now())->first() || \Auth::user()->isMaster($year, $subject->class_id))
-                                        <input class="score form-control bg-white border-0" data-sequence="{{$seq->id}}" type='number' data-student="{{$student->id}}" value="{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->subject_id, $subject->class_id,$year, $student->id)}}">
+                                    @if($semester->ca_is_late() == false)
+                                        <input class="score form-control bg-white border-0" data-score-type="ca" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->matric}}" data-student-id="{{$student->id}}" ca-score="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}" exam-score="{{$student->exam_score($subject->id, request('class_id'), $year)}}" value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
                                     @else
-                                        <input class="score form-control bg-white border-0" readonly type='number'  value="{{\App\Helpers\Helpers::instance()->getScore($seq->id, $subject->subject_id, $subject->class_id,$year, $student->id)}}">
+                                        <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}">
                                     @endif
                                 </td>
-                            @endforeach
-                        </tr>
-                    @endforeach
+                                <td class="pt-3-half">
+                                    @if($semester->exam_is_late() == false)
+                                        <input class="score form-control bg-white border-0" data-score-type="exam" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->matric}}" data-student-id="{{$student->id}}" ca-score="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}" exam-score="{{$student->exam_score($subject->id, request('class_id'), $year)}}" value="{{$student->exam_score($subject->id, request('class_id'), $year)}}">
+                                    @else
+                                        <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->offline_exam_score($subject->id, request('class_id'), $year)}}">
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -100,7 +110,7 @@
                         "year" :'{{$year}}',
                         "class_id" :'{{$subject->class_id}}',
                         "class_subject_id" : '{{$subject->id}}',
-                        "coef" : {{$subject->subject->coef}},
+                        "coef" : "{{$subject->subject->coef}}",
                         "score" : $(this).val(),
                         '_token': '{{ csrf_token() }}'
                     },
@@ -141,4 +151,48 @@
         }
     </script>
 
+@endsection
+@section('script')
+    <script>
+        $('.score').on('change', function (){
+            if(($(this).attr('data-score-type') == 'ca' && $(this).val() < parseFloat('{{$ca_total/2}}')) || ($(this).attr('data-score-type') == 'exam' && $(this).val() < parseFloat('{{$exam_total/2}}'))){
+                event.target.style.color = 'red';
+            }
+            else{
+                event.target.style.color = 'black';
+            }
+
+            let subject_url = "{{route('user.store_result',$subject->id)}}";
+            // $(".pre-loader").css("display", "block");
+
+            if( ($(this).attr('data-score-type') == 'ca' && $(this).val() > parseFloat('{{$ca_total}}')) || ($(this).attr('data-score-type') == 'exam' && $(this).val() > parseFloat('{{$exam_total}}'))){
+
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: subject_url,
+                    data : {
+                        "student_id" : $(this).attr('data-student_id'),
+                        "student_matric" : $(this).attr('data-student'),
+                        "semester_id" :$(this).attr('data-sequence'),
+                        "subject" : '{{$subject->id}}',
+                        "year" :'{{$year}}',
+                        "class_id" :'{{$class_id}}',
+                        "class_subject_id" : '{{$subject->_class_subject($class_id)->id}}',
+                        "coef" : '{{$subject->coef}}',
+                        "ca_score" : $(this).attr('data-score-type') == 'ca' ? $(this).val() : $(this).attr('ca-score'),
+                        "exam_score" : $(this).attr('data-score-type') == 'exam' ? $(this).val() : $(this).attr('exam-score'),
+                        '_token': '{{ csrf_token() }}'
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $(".pre-loader").css("display", "none");
+                    }, error: function (e) {
+                        $(".pre-loader").css("display", "none");
+                    }
+                });
+            }
+
+        });
+    </script>
 @endsection

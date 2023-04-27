@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\Student\HomeController as StudentHomeController;
 use App\Http\Controllers\Teacher\HomeController as TeacherHomeController;
+use App\Http\Controllers\Teacher\SubjectController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Transactions;
 use App\Http\Resources\SubjectResource;
@@ -227,7 +228,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::prefix('exam')->name('exam.')->group(function(){
             Route::get('{class_id?}', 'Admin\ResultController@exam_result')->name('index');
             Route::get('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import')->name('import');
-            Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import_save')->name('import');
+            Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import_save');
+            Route::get('{class_id}/{course_id}/import/only', 'Admin\ResultController@exam_import_only')->name('import.only');
+            Route::post('{class_id}/{course_id}/import/only', 'Admin\ResultController@exam_import_only_save');
             Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill')->name('fill');
             Route::post('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill_save')->name('fill');
             Route::get('set_dateline', 'Admin\ResultController@exam_set_dateline')->name('dateline.set');
@@ -472,6 +475,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('teachers/report/{type}/{campus_id}/{teacher_id}/print', [AttendanceController::class, 'attendance_report'])->name('report.print');
     });
     Route::get('search_course', 'Controller@search_course')->name('search_course');
+    Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
 });
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {
@@ -496,8 +500,15 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     Route::get('course/coverage/{subject_id}', 'Teacher\SubjectController@course_coverage_show')->name('course.coverage.show');
 
 
-    Route::get('subject/{subject}/result', 'Teacher\SubjectController@result')->name('result');
+    Route::get('subject/{subject}/{class_id}/result', 'Teacher\SubjectController@result')->name('result');
     Route::post('subject/{subject}/result', 'Teacher\SubjectController@store')->name('store_result');
+    Route::get('results/{course_id}/{class_id}/import', [SubjectController::class, 'import_results'])->name('results.import');
+    Route::post('results/{course_id}/{class_id}/import', [SubjectController::class, 'import_results_save']);
+    Route::get('results/{course_id}/{class_id}/ca/import', [SubjectController::class, 'import_ca'])->name('results.ca.import');
+    Route::post('results/{course_id}/{class_id}/ca/import', [SubjectController::class, 'import_ca_save']);
+    Route::get('results/{course_id}/{class_id}/exam/import', [SubjectController::class, 'import_exam'])->name('results.exam.import');
+    Route::post('results/{course_id}/{class_id}/exam/import', [SubjectController::class, 'import_exam_save']);
+
     Route::get('subjects/notes/{class_id}/{id}', 'Teacher\SubjectNotesController@show')->name('subject.show');
     Route::get('subjects/students/{class_id}/{course_id}', 'Teacher\SubjectController@course_list')->name('subject.students');
     // Course Objectives
@@ -543,6 +554,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::get('bymonth/index', [TeacherHomeController::class, 'attendance_bymonth_index'])->name('by_month.index');
         Route::get('bymonth/{month}/show', [TeacherHomeController::class, 'attendance_bymonth'])->name('by_month');
     });
+
 });
 
 Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.charges'])->group(function () {
