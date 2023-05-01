@@ -111,7 +111,7 @@ class HomeController extends Controller
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
         $res = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->toArray();
         $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
-        $data['results'] = array_map(function($subject_id)use($data, $year, $semester){
+        $results = array_map(function($subject_id)use($data, $year, $semester){
             return [
                 'id'=>$subject_id,
                 'code'=>Subjects::find($subject_id)->code ?? '',
@@ -122,6 +122,7 @@ class HomeController extends Controller
             ];
         }, $res);
         // dd($data['results']);
+        $data['results'] = collect($results)->filter(function($el){return $el != null;});
         return view('student.ca-result')->with($data);
     }
 
@@ -141,7 +142,7 @@ class HomeController extends Controller
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
         $res = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->toArray();
         $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
-        $data['results'] = array_map(function($subject_id)use($data, $year, $semester){
+        $results = array_map(function($subject_id)use($data, $year, $semester){
             return [
                 'id'=>$subject_id,
                 'code'=>Subjects::find($subject_id)->code ?? '',
@@ -151,6 +152,7 @@ class HomeController extends Controller
                 'ca_mark'=>auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? '',
             ];
         }, $res);
+        $data['results'] = collect($results)->filter(function($el){return $el != null;});
         // dd($data);
         // return view('student.templates.ca-result-template',$data);
         $pdf = PDF::loadView('student.templates.ca-result-template',$data);
@@ -232,7 +234,7 @@ class HomeController extends Controller
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
         $res = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
         $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
-        $data['results'] = array_map(function($subject_id)use($data, $year, $semester){
+        $results = array_map(function($subject_id)use($data, $year, $semester){
             $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
             $total = $ca_mark + $exam_mark;
@@ -258,6 +260,8 @@ class HomeController extends Controller
             
             // dd($grade);
         }, $res);
+
+        $data['results'] = collect($results)->filter(function($el){return $el != null;});
 
         $student = auth('student')->id();
         $fee = [
@@ -294,7 +298,7 @@ class HomeController extends Controller
         $data['grading'] = auth('student')->user()->_class($year)->program()->first()->gradingType->grading()->get() ?? [];
         $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
         $data['subjects'] = Auth('student')->user()->_class($year)->subjects()->whereIn('subjects.id', $res)->get();
-        $data['results'] = array_map(function($subject_id)use($data, $year, $semester){
+        $results = array_map(function($subject_id)use($data, $year, $semester){
             $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
             $total = $ca_mark + $exam_mark;
@@ -320,6 +324,8 @@ class HomeController extends Controller
             
             // dd($grade);
         }, $res);
+        $data['results'] = collect($results)->filter(function($el){return $el != null;});
+
         // dd($data);
         if ($data['class']->program->background->background_name == "PUBLIC HEALTH") {
             # code...
