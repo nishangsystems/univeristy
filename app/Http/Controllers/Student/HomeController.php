@@ -238,29 +238,35 @@ class HomeController extends Controller
             $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
             $total = $ca_mark + $exam_mark;
+            $rol = [
+                'id'=>$subject_id,
+                'code'=>Subjects::find($subject_id)->code ?? '',
+                'name'=>Subjects::find($subject_id)->name ?? '',
+                'status'=>Subjects::find($subject_id)->status ?? '',
+                'coef'=>Subjects::find($subject_id)->coef ?? '',
+                'ca_mark'=>$ca_mark,
+                'exam_mark'=>$exam_mark,
+                'total'=>$total
+            ];
             foreach ($data['grading'] as $key => $value) {
                 # code...
                 if ($total >= $value->lower && $total <= $value->upper) {
                     # code...
                     $grade = $value;
-                    return [
-                        'id'=>$subject_id,
-                        'code'=>Subjects::find($subject_id)->code ?? '',
-                        'name'=>Subjects::find($subject_id)->name ?? '',
-                        'status'=>Subjects::find($subject_id)->status ?? '',
-                        'coef'=>Subjects::find($subject_id)->coef ?? '',
-                        'ca_mark'=>$ca_mark,
-                        'exam_mark'=>$exam_mark,
-                        'total'=>$total,
-                        'grade'=>$grade->grade,
-                        'remark'=>$grade->remark
-                    ];
+                    $rol['grade'] = $grade->grade;
+                    $rol['remark'] = $grade->remark;
                 }
             }
+            if(!array_key_exists('grade', $rol)){
+                $rol['grade'] = null;
+                $rol['remark'] = null;
+
+            }
+            return $rol; 
             
             // dd($grade);
         }, $res);
-
+        // dd($res);
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
 
         $student = auth('student')->id();
@@ -302,25 +308,31 @@ class HomeController extends Controller
             $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
             $total = $ca_mark + $exam_mark;
+            $rol = [
+                'id'=>$subject_id,
+                'code'=>Subjects::find($subject_id)->code ?? '',
+                'name'=>Subjects::find($subject_id)->name ?? '',
+                'status'=>Subjects::find($subject_id)->status ?? '',
+                'coef'=>Subjects::find($subject_id)->coef ?? '',
+                'ca_mark'=>$ca_mark,
+                'exam_mark'=>$exam_mark,
+                'total'=>$total
+            ];
             foreach ($data['grading'] as $key => $value) {
                 # code...
                 if ($total >= $value->lower && $total <= $value->upper) {
                     # code...
                     $grade = $value;
-                    return [
-                        'id'=>$subject_id,
-                        'code'=>Subjects::find($subject_id)->code ?? '',
-                        'name'=>Subjects::find($subject_id)->name ?? '',
-                        'status'=>Subjects::find($subject_id)->status ?? '',
-                        'coef'=>Subjects::find($subject_id)->coef ?? '',
-                        'ca_mark'=>$ca_mark,
-                        'exam_mark'=>$exam_mark,
-                        'total'=>$total,
-                        'grade'=>$grade->grade,
-                        'remark'=>$grade->remark
-                    ];
+                    $rol['grade'] = $grade->grade;
+                    $rol['remark'] = $grade->remark;
                 }
             }
+            if(!array_key_exists('grade', $rol)){
+                $rol['grade'] = null;
+                $rol['remark'] = null;
+
+            }
+            return $rol;
             
             // dd($grade);
         }, $res);
