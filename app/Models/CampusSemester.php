@@ -35,4 +35,24 @@ class CampusSemester extends Model
         # code...
         return Date::parse($this->exam_date_line());
      }
+     
+    
+    public function ca_is_late()
+    {
+        // return false;
+        # code...
+        if ($this->ca_date_line != null)
+            return now()->isAfter(Date::parse($this->ca_date_line));
+        return false;
+    }
+
+    public function exam_is_late()
+    {
+        // return false;
+        # code...
+        if ($this->exam_date_line != null)
+            return now()->isAfter(Date::parse($this->exam_date_line));
+        return false;
+    }
+
 }

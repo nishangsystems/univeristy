@@ -60,14 +60,14 @@
                                 <td class="name" style="width: 200px; text-align: left">{{$student->name}}</td>
                                 <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
                                 <td class="pt-3-half">
-                                    @if($semester->ca_is_late() == false)
+                                    @if($semester->campus_semester(auth()->user()->campus_id)->ca_is_late() == false)
                                         <input class="score form-control bg-white border-0" data-score-type="ca" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->matric}}" data-student-id="{{$student->id}}" ca-score="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}" exam-score="{{$student->exam_score($subject->id, request('class_id'), $year)}}" value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
                                     @else
                                         <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}">
                                     @endif
                                 </td>
                                 <td class="pt-3-half">
-                                    @if($semester->exam_is_late() == false)
+                                    @if($semester->campus_semester(auth()->user()->campus_id)->exam_is_late() == false)
                                         <input class="score form-control bg-white border-0" data-score-type="exam" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->matric}}" data-student-id="{{$student->id}}" ca-score="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}" exam-score="{{$student->exam_score($subject->id, request('class_id'), $year)}}" value="{{$student->exam_score($subject->id, request('class_id'), $year)}}">
                                     @else
                                         <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->offline_exam_score($subject->id, request('class_id'), $year)}}">

@@ -18,6 +18,8 @@ class SchoolUnits extends Model
         'parent_id',
         'grading_type_id',
         'resit_cost',
+        'conferred_diploma',
+        'min_graduation_credit'
     ];
 
     public function gradingType()

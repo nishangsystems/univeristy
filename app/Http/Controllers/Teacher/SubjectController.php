@@ -130,14 +130,18 @@ class SubjectController extends Controller
         return view('teacher.students', $data);
     }
 
-    public function result($subject)
+    public function result($subject, $class_id)
     {
     //    if(request('class')){
     //         $data['subject'] = ClassSubject::find($subject);
     //    }else{
-            $data['subject'] = Subjects::find($subject)->subject;
-    //    }
-       $data['semester'] = ProgramLevel::find(request('class_id'))->program->background->currentSemesters()->first();
+        //    }
+        //    dd($data);
+        $data['class'] = ProgramLevel::find($class_id);
+        $data['subject'] = Subjects::find($subject);
+        $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
+        $data['exam_total'] = Helpers::instance()->exam_total(request('class_id'));
+        $data['semester'] = ProgramLevel::find(request('class_id'))->program->background->currentSemesters()->first();
         return view('teacher.result')->with($data);
     }
 
@@ -169,6 +173,7 @@ class SubjectController extends Controller
         $result->remark = "";
         $result->class_subject_id =  $request->class_subject_id;
         $result->save();
+        return $request->all();
     }
 
 

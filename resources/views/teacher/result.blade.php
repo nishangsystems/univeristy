@@ -22,15 +22,15 @@
 
     @csrf
     <div class="d-flex justify-content-end py-3 px-3">
-        <a class="btn btn-xs btn-primary mx-2" href="{{route('user.results.import', ['course_id'=>request('subject'), 'class_id'=>request('class')])}}">{{__('text.import_results')}}</a>
-        <a class="btn btn-xs btn-primary mx-2" href="{{route('user.results.ca.import', ['course_id'=>request('subject'), 'class_id'=>request('class')])}}">{{__('text.import_ca')}}</a>
-        <a class="btn btn-xs btn-primary mx-2" href="{{route('user.results.exam.import', ['course_id'=>request('subject'), 'class_id'=>request('class')])}}">{{__('text.import_exams')}}</a>
+        <a class="btn btn-xs btn-primary mx-2" href="{{route('user.results.import', ['course_id'=>request('subject'), 'class_id'=>request('class_id')])}}">{{__('text.import_results')}}</a>
+        <a class="btn btn-xs btn-primary mx-2" href="{{route('user.results.ca.import', ['course_id'=>request('subject'), 'class_id'=>request('class_id')])}}">{{__('text.import_ca')}}</a>
+        <a class="btn btn-xs btn-primary mx-2" href="{{route('user.results.exam.import', ['course_id'=>request('subject'), 'class_id'=>request('class_id')])}}">{{__('text.import_exams')}}</a>
     </div>
     <div class="card">
        <div class="d-flex justify-content-between">
            <div class="card-header d-flex justify-content-between align-items-center w-100">
                <h3 class=" font-weight-bold text-uppercase py-4 flex-grow-1">
-                   Student Result ({{$subject->subject->name}})
+                   Student Result ({{$subject->name}})
                </h3>
 
                <div class="input-group radius-5 overflow-hidden" data-placement="left" data-align="top"
@@ -57,20 +57,20 @@
                     </thead>
                     <tbody>
                         @php($k = 1)
-                        @foreach($subject->class->_students($year)->get() as $student)
+                        @foreach($class->_students($year)->get() as $student)
                             <tr data-role="student">
                                 <td>{{$k++}}</td>
                                 <td class="name" style="width: 200px; text-align: left">{{$student->name}}</td>
                                 <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
                                 <td class="pt-3-half">
-                                    @if($semester->ca_is_late() == false)
+                                    @if($semester->campus_semester(auth()->user()->campus_id)->ca_is_late() == false)
                                         <input class="score form-control bg-white border-0" data-score-type="ca" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->matric}}" data-student-id="{{$student->id}}" ca-score="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}" exam-score="{{$student->exam_score($subject->id, request('class_id'), $year)}}" value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
                                     @else
                                         <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}">
                                     @endif
                                 </td>
                                 <td class="pt-3-half">
-                                    @if($semester->exam_is_late() == false)
+                                    @if($semester->campus_semester(auth()->user()->campus_id)->exam_is_late() == false)
                                         <input class="score form-control bg-white border-0" data-score-type="exam" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->matric}}" data-student-id="{{$student->id}}" ca-score="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}" exam-score="{{$student->exam_score($subject->id, request('class_id'), $year)}}" value="{{$student->exam_score($subject->id, request('class_id'), $year)}}">
                                     @else
                                         <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->offline_exam_score($subject->id, request('class_id'), $year)}}">
@@ -86,75 +86,76 @@
 @endsection
 @section('script')
     <script>
-        $('.score').on('change', function (){
-            if(event.target.value < 10){
-                event.target.style.color = 'red';
-            }
-            else{
-                event.target.style.color = 'black';
-            }
+        // $('.score').on('change', function (){
+        //     if(event.target.value < 10){
+        //         event.target.style.color = 'red';
+        //     }
+        //     else{
+        //         event.target.style.color = 'black';
+        //     }
 
-            let subject_url = "{{route('user.store_result',$subject->subject_id)}}";
-            // $(".pre-loader").css("display", "block");
+        //     let subject_url = "{{route('user.store_result',$subject->id)}}";
+        //     // $(".pre-loader").css("display", "block");
 
-            if( $(this).val() > 20){
+        //     if( $(this).val() > 20){
 
-            }else{
-                $.ajax({
-                    type: "POST",
-                    url: subject_url,
-                    data : {
-                        "student" : $(this).attr('data-student'),
-                        "sequence" :$(this).attr('data-sequence'),
-                        "subject" : '{{$subject->subject_id}}',
-                        "year" :'{{$year}}',
-                        "class_id" :'{{$subject->class_id}}',
-                        "class_subject_id" : '{{$subject->id}}',
-                        "coef" : "{{$subject->subject->coef}}",
-                        "score" : $(this).val(),
-                        '_token': '{{ csrf_token() }}'
-                    },
-                    success: function (data) {
-                        $(".pre-loader").css("display", "none");
-                    }, error: function (e) {
-                        $(".pre-loader").css("display", "none");
-                    }
-                });
-            }
+        //     }else{
+        //         $.ajax({
+        //             type: "POST",
+        //             url: subject_url,
+        //             data : {
+        //                 "student" : $(this).attr('data-student'),
+        //                 "sequence" :$(this).attr('data-sequence'),
+        //                 "subject" : '{{$subject->id}}',
+        //                 "year" :'{{$year}}',
+        //                 "class_id" :'{{$class->id}}',
+        //                 "class_subject_id" : '{{$subject->id}}',
+        //                 "coef" : "{{$subject->coef}}",
+        //                 "score" : $(this).val(),
+        //                 '_token': '{{ csrf_token() }}'
+        //             },
+        //             success: function (data) {
+        //                 $(".pre-loader").css("display", "none");
+        //             }, error: function (e) {
+        //                 $(".pre-loader").css("display", "none");
+        //             }
+        //         });
+        //     }
 
-        })
+        // })
 
-        $("#searchbox").on("keyup", function() {
-            console.log($(this).val());
-            var value = $(this).val().toLowerCase();
-            $('tr[data-role="student"]').filter(function() {
-                $(this).toggle($(this).find('.name').text().toLowerCase().indexOf(value) > -1)
-            });
-        });
-        $('.score').on('load', ColorValues(this));
-        // $('.score').on('change', ColorValue(event));
-        function ColorValue(evt){
-            if(evt.target.value < 10){
-                evt.target.style.color = 'red';
-            }
-            else{evt.target.style.color = 'black';}
-        }
-        function ColorValues(input){
-            document.querySelectorAll('.score').forEach(function(elt, key, parent){
-                if(elt.value < 10){
-                    elt.style.color = 'red';
-                }
-                else{
-                    elt.style.color = 'black';
-                }
-            })
-        }
+        // $("#searchbox").on("keyup", function() {
+        //     console.log($(this).val());
+        //     var value = $(this).val().toLowerCase();
+        //     $('tr[data-role="student"]').filter(function() {
+        //         $(this).toggle($(this).find('.name').text().toLowerCase().indexOf(value) > -1)
+        //     });
+        // });
+        // $('.score').on('load', ColorValues(this));
+        // // $('.score').on('change', ColorValue(event));
+        // function ColorValue(evt){
+        //     if(evt.target.value < 10){
+        //         evt.target.style.color = 'red';
+        //     }
+        //     else{evt.target.style.color = 'black';}
+        // }
+        // function ColorValues(input){
+        //     document.querySelectorAll('.score').forEach(function(elt, key, parent){
+        //         if(elt.value < 10){
+        //             elt.style.color = 'red';
+        //         }
+        //         else{
+        //             elt.style.color = 'black';
+        //         }
+        //     })
+        // }
     </script>
 
 @endsection
 @section('script')
     <script>
         $('.score').on('change', function (){
+            console.log(123);
             if(($(this).attr('data-score-type') == 'ca' && $(this).val() < parseFloat('{{$ca_total/2}}')) || ($(this).attr('data-score-type') == 'exam' && $(this).val() < parseFloat('{{$exam_total/2}}'))){
                 event.target.style.color = 'red';
             }
@@ -177,8 +178,8 @@
                         "semester_id" :$(this).attr('data-sequence'),
                         "subject" : '{{$subject->id}}',
                         "year" :'{{$year}}',
-                        "class_id" :'{{$class_id}}',
-                        "class_subject_id" : '{{$subject->_class_subject($class_id)->id}}',
+                        "class_id" :'{{$class->id}}',
+                        "class_subject_id" : '{{$subject->_class_subject($class->id)->id}}',
                         "coef" : '{{$subject->coef}}',
                         "ca_score" : $(this).attr('data-score-type') == 'ca' ? $(this).val() : $(this).attr('ca-score'),
                         "exam_score" : $(this).attr('data-score-type') == 'exam' ? $(this).val() : $(this).attr('exam-score'),

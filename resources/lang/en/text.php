@@ -778,5 +778,8 @@ return [
     'non_GPA_courses'=>'non-GPA courses',
     'import_ca_and_exam_results_for'=>'import CA & Exam results for ',
     'exam_only'=>'exam only',
-    ''
+    'conferred_diploma'=>'diploma conferred',
+    'min_graduation_credits'=>'minimum graduation credits',
+    'credits_earned'=>'credits earned',
+    'grade_point'=>'grade point',
 ];

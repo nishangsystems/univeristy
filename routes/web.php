@@ -433,6 +433,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('passfail_report', [ResultsAndTranscriptsController::class, 'passfail_report'])->name('passfail_report');
         Route::post('sem_res_report', [ResultsAndTranscriptsController::class, 'semester_results_report'])->name('sem_res_report');
         Route::post('grd_sheet', [ResultsAndTranscriptsController::class, 'grades_sheet'])->name('grd_sheet');
+        Route::get('print_transcript', [ResultsAndTranscriptsController::class, 'print_transcript'])->name('print_transcript');
+        Route::post('print_index', [ResultsAndTranscriptsController::class, 'print_index'])->name('print_index');
         Route::name('transcripts.')->prefix('transcripts')->group(function () {
             Route::get('config', [ResultsAndTranscriptsController::class, 'configure_transcript'])->name('config');
             Route::post('config', [ResultsAndTranscriptsController::class, 'configure_save_transcript']);

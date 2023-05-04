@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
 
 class Semester extends Model
 {
@@ -30,7 +31,7 @@ class Semester extends Model
         // return false;
         # code...
         if ($this->ca_latest_date != null)
-            return now()->isAfter(Carbon::createFromDate($this->ca_latest_date));
+            return now()->isAfter(Date::parse($this->ca_latest_date));
         return false;
     }
 
@@ -39,7 +40,7 @@ class Semester extends Model
         // return false;
         # code...
         if ($this->exam_latest_date != null)
-            return now()->isAfter(Carbon::createFromDate($this->exam_latest_date));
+            return now()->isAfter(Date::parse($this->exam_latest_date));
         return false;
     }
 

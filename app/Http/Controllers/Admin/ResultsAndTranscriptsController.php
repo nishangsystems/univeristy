@@ -198,4 +198,16 @@ class ResultsAndTranscriptsController extends Controller{
         return back()->with('error', __('text.not_found'));
     }
 
+
+    public function print_transcript(Request $request){
+        return view('admin.res_and_trans.transcripts.transcript');
+    }
+
+    public function print_index(Request $request)
+    {
+        # code...
+        $data['title'] = __('text.search_student');
+        return view('admin.res_and_trans.transcripts.print_index', $data);
+    }
+
 }
