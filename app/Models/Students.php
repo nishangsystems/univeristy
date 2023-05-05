@@ -176,11 +176,11 @@ class Students extends Authenticatable
     }
 
     
-    public function offline_ca_score($course_id, $class_id, $year_id, $semester_id = null)
+    public function offline_ca_score($course_code, $class_id, $year_id, $semester_id = null)
     {
         # code...
         $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
-        $record = OfflineResult::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
+        $record = OfflineResult::where(['student_matric' => $this->matric, 'subject_code' => $course_code, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
         if ($record != null) {
             # code...
             return $record->ca_score ?? '';
@@ -200,11 +200,11 @@ class Students extends Authenticatable
         return '';
     }
     
-    public function offline_exam_score($course_id, $class_id, $year_id, $semester_id = null)
+    public function offline_exam_score($course_code, $class_id, $year_id, $semester_id = null)
     {
         # code...
         $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
-        $record = OfflineResult::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
+        $record = OfflineResult::where(['student_matric' => $this->matric, 'subject_code' => $course_code, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
         if ($record != null) {
             # code...
             return $record->exam_score ?? '';

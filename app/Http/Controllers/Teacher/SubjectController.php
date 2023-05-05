@@ -144,36 +144,44 @@ class SubjectController extends Controller
         $data['semester'] = ProgramLevel::find(request('class_id'))->program->background->currentSemesters()->first();
         return view('teacher.result')->with($data);
     }
-
+    
     public function store(Request $request)
     {
-        $result = OfflineResult::where([
-            'student_id' => $request->student_id,
-            'student_matric' => $request->student_matric,
-            'class_id' => $request->class_id,
-            'semester_id' => $request->semester,
-            'subject_id' => $request->subject,
-            'batch_id' => $request->year
-        ])->first();
-
-        if ($result == null) {
-            $result = new OfflineResult();
+        try {
+            // return $request->all();
+            //code...
+            $result = OfflineResult::where([
+                // 'student_id' => $request->student_id,
+                'student_matric' => $request->student_matric,
+                'class_id' => $request->class_id,
+                'semester_id' => $request->semester_id,
+                'subject_code' => Subjects::find($request->subject)->code,
+                'batch_id' => $request->year
+                ])->first();
+                
+            if ($result == null) {
+                $result = new OfflineResult();
+            }
+            
+            $result->batch_id = $request->year;
+            $result->student_id =  $request->student;
+            $result->student_matric =  $request->student_matric;
+            $result->class_id =  $request->class_id;
+            $result->semester_id =  $request->semester_id;
+            $result->subject_id =  $request->subject;
+            $result->subject_code =  Subjects::find($request->subject)->code;
+            $result->ca_score =  $request->ca_score??$result->ca_score??null;
+            $result->exam_score =  $request->exam_score??$result->exam_score??null;
+            $result->coef =  $request->coef;
+            $result->remark = "";
+            $result->user_id = auth()->id();
+            $result->class_subject_id =  $request->class_subject_id;
+            $result->student_id = $request->student_id;
+            $result->save();
+            return true;  
+        } catch (\Throwable $th) {
+            return $th->getMessage();
         }
-
-        $result->batch_id = $request->year;
-        $result->student_id =  $request->student;
-        $result->student_matric =  $request->student_matric;
-        $result->class_id =  $request->class_id;
-        $result->semester_id =  $request->semester_id;
-        $result->subject_id =  $request->subject;
-        $result->subject_code =  Subjects::find($request->subject)->code;
-        $result->ca_score =  $request->ca_score??$result->ca_score??null;
-        $result->exam_score =  $request->exam_score??$result->exam_score??null;
-        $result->coef =  $request->coef;
-        $result->remark = "";
-        $result->class_subject_id =  $request->class_subject_id;
-        $result->save();
-        return $request->all();
     }
 
 

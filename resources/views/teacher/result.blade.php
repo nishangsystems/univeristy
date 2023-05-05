@@ -64,16 +64,16 @@
                                 <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
                                 <td class="pt-3-half">
                                     @if($semester->campus_semester(auth()->user()->campus_id)->ca_is_late() == false)
-                                        <input class="score form-control bg-white border-0" data-score-type="ca" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->matric}}" data-student-id="{{$student->id}}" ca-score="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}" exam-score="{{$student->exam_score($subject->id, request('class_id'), $year)}}" value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
+                                        <input class="score form-control bg-white border-0" data-score-type="ca" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->matric}}" data-student-id="{{$student->id}}" ca-score="{{$student->offline_ca_score($subject->code, request('class_id'), $year)}}" exam-score="{{$student->offline_exam_score($subject->code, request('class_id'), $year)}}" value="{{$student->offline_ca_score($subject->code, request('class_id'), $year)}}">
                                     @else
-                                        <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}">
+                                        <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->offline_ca_score($subject->code, request('class_id'), $year)}}">
                                     @endif
                                 </td>
                                 <td class="pt-3-half">
                                     @if($semester->campus_semester(auth()->user()->campus_id)->exam_is_late() == false)
-                                        <input class="score form-control bg-white border-0" data-score-type="exam" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->matric}}" data-student-id="{{$student->id}}" ca-score="{{$student->offline_ca_score($subject->id, request('class_id'), $year)}}" exam-score="{{$student->exam_score($subject->id, request('class_id'), $year)}}" value="{{$student->exam_score($subject->id, request('class_id'), $year)}}">
+                                        <input class="score form-control bg-white border-0" data-score-type="exam" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->matric}}" data-student-id="{{$student->id}}" ca-score="{{$student->offline_ca_score($subject->code, request('class_id'), $year)}}" exam-score="{{$student->offline_exam_score($subject->code, request('class_id'), $year)}}" value="{{$student->offline_exam_score($subject->code, request('class_id'), $year)}}">
                                     @else
-                                        <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->offline_exam_score($subject->id, request('class_id'), $year)}}">
+                                        <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->offline_exam_score($subject->code, request('class_id'), $year)}}">
                                     @endif
                                 </td>
                             </tr>
@@ -85,77 +85,20 @@
     </div>
 @endsection
 @section('script')
+
     <script>
-        // $('.score').on('change', function (){
-        //     if(event.target.value < 10){
-        //         event.target.style.color = 'red';
-        //     }
-        //     else{
-        //         event.target.style.color = 'black';
-        //     }
-
-        //     let subject_url = "{{route('user.store_result',$subject->id)}}";
-        //     // $(".pre-loader").css("display", "block");
-
-        //     if( $(this).val() > 20){
-
-        //     }else{
-        //         $.ajax({
-        //             type: "POST",
-        //             url: subject_url,
-        //             data : {
-        //                 "student" : $(this).attr('data-student'),
-        //                 "sequence" :$(this).attr('data-sequence'),
-        //                 "subject" : '{{$subject->id}}',
-        //                 "year" :'{{$year}}',
-        //                 "class_id" :'{{$class->id}}',
-        //                 "class_subject_id" : '{{$subject->id}}',
-        //                 "coef" : "{{$subject->coef}}",
-        //                 "score" : $(this).val(),
-        //                 '_token': '{{ csrf_token() }}'
-        //             },
-        //             success: function (data) {
-        //                 $(".pre-loader").css("display", "none");
-        //             }, error: function (e) {
-        //                 $(".pre-loader").css("display", "none");
-        //             }
-        //         });
-        //     }
-
-        // })
-
-        // $("#searchbox").on("keyup", function() {
-        //     console.log($(this).val());
-        //     var value = $(this).val().toLowerCase();
-        //     $('tr[data-role="student"]').filter(function() {
-        //         $(this).toggle($(this).find('.name').text().toLowerCase().indexOf(value) > -1)
-        //     });
-        // });
-        // $('.score').on('load', ColorValues(this));
-        // // $('.score').on('change', ColorValue(event));
-        // function ColorValue(evt){
-        //     if(evt.target.value < 10){
-        //         evt.target.style.color = 'red';
-        //     }
-        //     else{evt.target.style.color = 'black';}
-        // }
-        // function ColorValues(input){
-        //     document.querySelectorAll('.score').forEach(function(elt, key, parent){
-        //         if(elt.value < 10){
-        //             elt.style.color = 'red';
-        //         }
-        //         else{
-        //             elt.style.color = 'black';
-        //         }
-        //     })
-        // }
-    </script>
-
-@endsection
-@section('script')
-    <script>
+        $(document).ready(function(){
+            $('.score').each((index, element)=>{
+                if(($(element).attr('data-score-type') == 'ca' && $(element).val() < parseFloat('{{$ca_total/2}}')) || ($(element).attr('data-score-type') == 'exam' && $(element).val() < parseFloat('{{$exam_total/2}}'))){
+                    element.style.color = 'red';
+                }
+                else{
+                    element.style.color = 'black';
+                }
+            })
+        });
         $('.score').on('change', function (){
-            console.log(123);
+            // console.log(123);
             if(($(this).attr('data-score-type') == 'ca' && $(this).val() < parseFloat('{{$ca_total/2}}')) || ($(this).attr('data-score-type') == 'exam' && $(this).val() < parseFloat('{{$exam_total/2}}'))){
                 event.target.style.color = 'red';
             }
@@ -167,26 +110,27 @@
             // $(".pre-loader").css("display", "block");
 
             if( ($(this).attr('data-score-type') == 'ca' && $(this).val() > parseFloat('{{$ca_total}}')) || ($(this).attr('data-score-type') == 'exam' && $(this).val() > parseFloat('{{$exam_total}}'))){
-
             }else{
+                let _data = {
+                            "student_id" : $(this).attr('data-student-id'),
+                            "student_matric" : $(this).attr('data-student'),
+                            "semester_id" :$(this).attr('data-sequence'),
+                            "subject" : '{{$subject->id}}',
+                            "year" :'{{$year}}',
+                            "class_id" :'{{$class->id}}',
+                            "class_subject_id" : '{{$subject->_class_subject($class->id)->id}}',
+                            "coef" : '{{$subject->coef}}',
+                            "ca_score" : $(this).attr('data-score-type') == 'ca' ? $(this).val() : $(this).attr('ca-score'),
+                            "exam_score" : $(this).attr('data-score-type') == 'exam' ? $(this).val() : $(this).attr('exam-score'),
+                            '_token': '{{ csrf_token() }}'
+                        };
+                // console.log(_data);
                 $.ajax({
                     type: "POST",
                     url: subject_url,
-                    data : {
-                        "student_id" : $(this).attr('data-student_id'),
-                        "student_matric" : $(this).attr('data-student'),
-                        "semester_id" :$(this).attr('data-sequence'),
-                        "subject" : '{{$subject->id}}',
-                        "year" :'{{$year}}',
-                        "class_id" :'{{$class->id}}',
-                        "class_subject_id" : '{{$subject->_class_subject($class->id)->id}}',
-                        "coef" : '{{$subject->coef}}',
-                        "ca_score" : $(this).attr('data-score-type') == 'ca' ? $(this).val() : $(this).attr('ca-score'),
-                        "exam_score" : $(this).attr('data-score-type') == 'exam' ? $(this).val() : $(this).attr('exam-score'),
-                        '_token': '{{ csrf_token() }}'
-                    },
+                    data : _data,
                     success: function (data) {
-                        console.log(data);
+                        // console.log(data);
                         $(".pre-loader").css("display", "none");
                     }, error: function (e) {
                         $(".pre-loader").css("display", "none");
@@ -196,4 +140,5 @@
 
         });
     </script>
+
 @endsection

@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Models\Batch;
+use App\Models\OfflineResult;
 use App\Models\PaymentItem;
 use App\Models\SchoolUnits;
+use App\Models\Students;
 use App\Models\Transcript;
 use App\Models\TranscriptRating;
 use Illuminate\Http\Request;
@@ -200,7 +203,17 @@ class ResultsAndTranscriptsController extends Controller{
 
 
     public function print_transcript(Request $request){
-        return view('admin.res_and_trans.transcripts.transcript');
+        $data['student'] = Students::where('matric', '=', $request->student_matric)->first();
+        $data['grading'] = $data['student']->_class()->program->gradingType->grading()->get();
+        $data['school_last_attended'] = null;
+        $years = OfflineResult::where('student_matric', $request->student_matric)->distinct()->pluck('batch_id')->toArray();
+        $year_counter = 0;
+        $data['years'] = array_map(function($bch)use($year_counter){
+            $batch = Batch::find($bch);
+            return ['index'=>$year_counter++, 'name'=>$batch->name];
+        }, $years);
+        // dd($data);
+        return view('admin.res_and_trans.transcripts.transcript', $data);
     }
 
     public function print_index(Request $request)

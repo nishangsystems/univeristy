@@ -782,4 +782,12 @@ return [
     'min_graduation_credits'=>'minimum graduation credits',
     'credits_earned'=>'credits earned',
     'grade_point'=>'grade point',
+    'student_academic_records'=>'student academic records',
+    'student_no'=>'student No',
+    'word_sex'=>'sex',
+    'school_last_attended'=>'school last attended',
+    'transcript_validity_note'=>'this transcript is not valid without the signature of the registrar and enbossed seal of the school',
+    'date_of_enrolment'=>'date of enrolment',
+    'word_page'=>'page',
+    'word_of'=>'of',
 ];
