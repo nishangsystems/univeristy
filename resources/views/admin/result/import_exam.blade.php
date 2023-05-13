@@ -5,6 +5,17 @@
         <form action="{{Request::url()}}"  method="post" id="import_form" name="import_form" enctype="multipart/form-data" class="col-md-7 text-capitalize">
             @csrf
             <div class="my-2 row">
+                <label for="" class="col-md-2">{{__('text.word_year')}}</label>
+                <div class="col-md-10">
+                    <select name="year" id="" class="form-control" required>
+                        <option></option>
+                        @foreach (\App\Models\Batch::all() as $year)
+                            <option value="{{$year->id}}" {{$year->id == \App\Helpers\Helpers::instance()->getCurrentAccademicYear() ? 'selected' : ''}}>{{$year->name ? 'selected' : ''}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="my-2 row">
                 <label for="" class="col-md-2">{{__('text.word_semester')}}</label>
                 <div class="col-md-10">
                     <select name="semester_id" id="" class="form-control" required>

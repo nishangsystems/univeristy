@@ -78,6 +78,7 @@
             table-layout: fixed;
             width: 100%;
             border: 1px solid black;
+            font-size: 12px;
         }
         #transcript_print tr, #transcript_print th, #transcript_print td{
             padding-block: 2px;

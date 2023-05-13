@@ -275,7 +275,7 @@ class ResultController extends Controller
 
             $imported_data = [];
             $course = Subjects::find($request->course_id);
-            $year = Helpers::instance()->getCurrentAccademicYear();
+            $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
             $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester($request->class_id);
             
             while(($row = fgetcsv($file_pointer, 100, ',')) != null){
@@ -388,7 +388,7 @@ class ResultController extends Controller
 
             $imported_data = [];
             $course = Subjects::find($request->course_id);
-            $year = Helpers::instance()->getCurrentAccademicYear();
+            $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
             $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester($request->class_id);
             
             while(($row = fgetcsv($file_pointer, 100, ',')) != null){
@@ -469,7 +469,7 @@ class ResultController extends Controller
 
             $imported_data = [];
             $course = Subjects::find($request->course_id);
-            $year = Helpers::instance()->getCurrentAccademicYear();
+            $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
             $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester($request->class_id);
             
             while(($row = fgetcsv($file_pointer, 100, ',')) != null){
