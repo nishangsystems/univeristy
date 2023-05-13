@@ -181,6 +181,7 @@ class HomeController  extends Controller
             $program->exam_total=$request->exam_total;
             $program->resit_cost=$request->resit_cost;
             $program->conferred_diploma=$request->conferred_diploma;
+            $program->degree_proposed=$request->degree_proposed;
             $program->min_graduation_credit=$request->min_graduation_credit;
             $program->save();
             return back()->with('success', __('text.word_done'));

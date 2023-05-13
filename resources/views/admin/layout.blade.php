@@ -74,6 +74,18 @@
         .dropdown-toggle:after {
             display: none;
         }
+        #transcript_print{
+            table-layout: fixed;
+            width: 100%;
+            border: 1px solid black;
+        }
+        #transcript_print tr, #transcript_print th, #transcript_print td{
+            padding-block: 2px;
+        }
+        #transcript_print th, #transcript_print td{width: 4;}
+        #transcript_print tr{
+            border-inline: 1px solid black;
+        }
         
     </STYLE>
 @php

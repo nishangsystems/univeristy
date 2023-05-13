@@ -36,11 +36,21 @@
             </div>
             <div class="input-group-merge border border-dark rounded d-flex text-capitalize my-2">
                 <span class="input-group-text col-sm-2 col-md-3" style="font-size: small;">{{__('text.conferred_diploma')}}</span>
-                <select type="text" name="conferred_diploma" id="" class="form-control" required value="{{$p->conferred_diploma}}">
+                <select type="text" name="conferred_diploma" id="" class="form-control" required>
                     <option></option>
                     <option value="HND" {{$p->conferred_diploma == 'HND' ? 'selected' : ''}}>HND</option>
                     <option value="BSC" {{$p->conferred_diploma == 'BSC' ? 'selected' : ''}}>BSC (Bachelor)</option>
                     <option value="MSC" {{$p->conferred_diploma == 'MSC' ? 'selected' : ''}}>MSC (Master)</option>
+                </select>
+                <span class="input-group-text col-sm-4" style="font-size: small;">{{__('text.word_in').' '.$p->parent->name}}</span>
+            </div>
+            <div class="input-group-merge border border-dark rounded d-flex text-capitalize my-2">
+                <span class="input-group-text col-sm-2 col-md-3" style="font-size: small;">{{__('text.degree_proposed')}}</span>
+                <select type="text" name="degree_proposed" id="" class="form-control" required>
+                    <option></option>
+                    <option value="HND" {{$p->degree_proposed == 'HND' ? 'selected' : ''}}>HND</option>
+                    <option value="BSC" {{$p->degree_proposed == 'BSC' ? 'selected' : ''}}>BSC (Bachelor)</option>
+                    <option value="MSC" {{$p->degree_proposed == 'MSC' ? 'selected' : ''}}>MSC (Master)</option>
                 </select>
                 <span class="input-group-text col-sm-4" style="font-size: small;">{{__('text.word_in').' '.$p->parent->name}}</span>
             </div>

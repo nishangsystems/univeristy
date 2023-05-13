@@ -19,6 +19,7 @@ class SchoolUnits extends Model
         'grading_type_id',
         'resit_cost',
         'conferred_diploma',
+        'degree_proposed',
         'min_graduation_credit'
     ];
 

@@ -571,11 +571,10 @@ class ResultController extends Controller
         // return $request->searchValue;
         try {
             //code...
-            $instances = Students::where(function ($blda) use ($request) {
-                $blda->where('name', 'like', "%{$request->searchValue}%")
-                    ->orWhere('matric', 'like', "%{$request->searchValue}%");
-            })->join('student_classes', ['student_classes.student_id' => 'students.id'])
-                ->get(['student_classes.id', 'student_classes.year_id', 'student_classes.class_id', 'students.name', 'students.id as student_id', 'students.matric']);
+            $instances = Students::where('name', 'like', "%{$request->searchValue}%")
+                    ->orWhere('matric', 'like', "%{$request->searchValue}%")
+                    ->join('student_classes', ['student_classes.student_id' => 'students.id'])->take(10)->distinct()
+                    ->get(['student_classes.id', 'student_classes.year_id', 'student_classes.class_id', 'students.name', 'students.id as student_id', 'students.matric']);
     
             return \response()->json(ResultResource::collection($instances));
             

@@ -24,11 +24,11 @@
 
          function loadInstances(event) {
             value = event.target.value;
-            url = "{{route('admin.result.individual.instances', '__V__')}}";
-            url = url.replace('__V__', value);
+            url = "{{route('admin.result.individual_instances')}}";
             $.ajax({
                 method : 'GET',
                 url : url,
+                data:{'searchValue':value},
                 success : function(data) {
                     console.log(data);
                     tbody_content ='';

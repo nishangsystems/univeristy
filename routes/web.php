@@ -59,6 +59,7 @@ Route::post('reset_password_with_token', [CustomForgotPasswordController::class,
 
 Route::get('', 'WelcomeController@home');
 Route::get('home', 'WelcomeController@home');
+Route::get('fill_matric_and_course_codes', [ResultsAndTranscriptsController::class, 'fill_matric_and_course_codes']);
 
 // Route::middleware('password_reset')->group(function(){
 // });
@@ -208,6 +209,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('individual_results/{student_id}/print', 'Admin\ResultController@print_individual_results')->name('individual_results.print');
         Route::get('class_results', 'Admin\ResultController@class_results')->name('class_results');
         Route::post('class_results', 'Admin\ResultController@class_results');
+        Route::get('individual_results/instances', 'Admin\ResultController@individual_instances')->name('individual_instances');
         Route::get('individual_results/instances/{searchValue}', 'Admin\ResultController@individual_instances')->name('individual.instances');
         Route::get('publishing', 'Admin\ResultController@result_publishing')->name('publishing');
         Route::get('publish/{year}/{semester}', 'Admin\ResultController@publish_results')->name('publish');

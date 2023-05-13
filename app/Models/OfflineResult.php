@@ -35,13 +35,13 @@ class OfflineResult extends Model
 
     public function total()
     {
-        return $this->ca_score ?? 0 + $this->exam_score ?? 0;
+        return ($this->ca_score ?? 0) + ($this->exam_score ?? 0);
     }
 
     public function passed()
     {
         $prog = ProgramLevel::find($this->class_id)->program;
-        return ($this->ca_score ?? 0 + $this->exam_score ?? 0) >= ($prog->ca_total + $prog->exam_total)*0.5;
+        return (($this->ca_score ?? 0) + ($this->exam_score ?? 0)) >= ($prog->ca_total + $prog->exam_total)*0.5;
     }
 
     public function grade()
@@ -51,7 +51,7 @@ class OfflineResult extends Model
 
         if(count($grades) == 0){return '-';}
 
-        $score = $this->ca_score ?? 0 + $this->exam_score ?? 0;
+        $score = ($this->ca_score ?? 0) + ($this->exam_score ?? 0);
         if (!$score == 0) {
             # code...
             foreach ($grades as $key => $grade) {

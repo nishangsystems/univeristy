@@ -102,7 +102,7 @@ class HomeController extends Controller
             })
             ->where(function($query){
                 \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
-                        })
+                        })->take(10)
             ->get(['students.*', 'campuses.name as campus']);
 
             // return $students;
@@ -122,7 +122,7 @@ class HomeController extends Controller
                 ->join('campuses', ['students.campus_id'=>'campuses.id'])
                 ->where('students.name', 'LIKE', "%$name%")
                 ->orWhere('students.matric', 'LIKE', "%$name%")
-                ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])->toArray();
+                ->take(10)->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])->toArray();
             return \response()->json(StudentResource3::collection($students));
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -180,7 +180,7 @@ class HomeController extends Controller
                 ->where(function($query){
                     \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
                 })
-                ->distinct()
+                ->distinct()->take(10)
                 ->get(['students.*', 'student_classes.class_id', 'campuses.name as campus'])
                 ->toArray();
             
