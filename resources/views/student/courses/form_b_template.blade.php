@@ -93,7 +93,7 @@
                 
                 <div class=""  style="background-color: rgba(255, 255, 255, 0.9);">
                     <div class="" >
-                        <img src="{{asset('assets/images/header.jpg')}}" class="w-100 h-auto" alt="">
+                        <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" class="w-100 h-auto" alt="">
                         <div class="border-top border-dashed my-2 " style="display: flex;">
                             <div class="" style="flex: 1;">
                                 <div class="py-1 h4 row">
