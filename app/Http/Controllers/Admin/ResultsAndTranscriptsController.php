@@ -8,6 +8,7 @@ use App\Models\Batch;
 use App\Models\NonGPACourse;
 use App\Models\OfflineResult;
 use App\Models\PaymentItem;
+use App\Models\ProgramLevel;
 use App\Models\School;
 use App\Models\SchoolUnits;
 use App\Models\Students;
@@ -247,7 +248,7 @@ class ResultsAndTranscriptsController extends Controller{
                 $size = count($r1); $size = $size > count($r2) ? $size : count($r2);
                 for ($i=0; $i < $size; $i++) { 
                     # code...
-                    $_results[] = ['s1'=>count($r1) > $i ? $r1[$i] : null, 's2'=>count($r2) > $i ? $r2[$i] : null];
+                    $_results[] = ['s1'=>count($r1) > $i ? $r1->values()->get($i) : null, 's2'=>count($r2) > $i ? $r2->values()->get($i) : null];
                 }
             }
 
@@ -296,7 +297,7 @@ class ResultsAndTranscriptsController extends Controller{
         $all_results = collect($all_results);
         // dd($all_results);
 
-        $cum_gpa_data = [
+        $data['cum_gpa_data'] = [
             'credits_attempted' => $all_results->map(function($row){return ['id'=>$row->id, 'coef'=>$row->coef];})->unique()->sum('coef'),
             'gpa_credits_attempted' => $all_results->map(function($row){return ['id'=>$row->id, 'coef'=>$row->coef];})->filter(function($rec)use($data){return !in_array($rec['id'], $data['non_gpa_courses']);})->unique()->sum('coef'),
             'credits_earned' => $all_results->filter(function($rec){return $rec->passed();})->map(function($row){return ['id'=>$row->id, 'coef'=>$row->coef];})->unique()->sum('coef'),
@@ -311,7 +312,7 @@ class ResultsAndTranscriptsController extends Controller{
                 }
         ];
 
-        // dd($all_results);
+        // dd($allcum_results);
         $data['years'] = collect($data['years'] )->sortBy('name')->toArray();
         return view('admin.res_and_trans.transcripts.transcript', $data);
     }
@@ -332,6 +333,43 @@ class ResultsAndTranscriptsController extends Controller{
             $item->save();
         });
         return back()->with('success', 'Done');
+    }
+
+    public function random_result_generator()
+    {
+        # code...
+        // Generate results for all students for three years from 2022/2023 (3) to 2024/2025 (5)
+        $_year_ = 3;
+        for($i = 1; $i < 3; $i++){// for each year
+            foreach (Students::all() as $student) {// for each student
+                if($student->matric == null){continue;}
+                $result_pack = [];
+                $_class_ = $student->_class($_year_);//get student's current class
+                $class = ProgramLevel::where('program_id', $_class_->program_id ?? 0)->where('level_id', ($_class_->level_id ?? -$i)+$i)->first();//evaluate students class for the $_year_ + $i accademic year
+                if($class == null){continue;}
+                $semesters = $class->program->background->semesters??[];//get semesters for the student's program
+                $ca_total = $class->program->ca_total; //get CA total
+                $ca_total = ($ca_total == null || $ca_total == 0) ? 30 : $ca_total;
+                $exam_total = $class->program->exam_total;//get EXAM total
+                $exam_total = ($exam_total == null || $exam_total == 0) ? 70 : $exam_total;
+                $class_subjects = $class->class_subjects();
+                // dd($semesters);
+                foreach ($semesters as $sem) {//for each semester of a class, generate and save results for subjects associated to that class and semester
+                    // $subjects = $class->subjects()->where('semester_id', $sem)->get();//get class semester subjects
+                    $subjects = Subjects::where('level_id', $class->level_id)->inRandomOrder()->limit(13)->get();//get class semester subjects
+                    // dd($subjects);
+                    if($subjects->count() == 0){continue;}
+                    foreach ($subjects as $subject) {//for each subject, generate CA and exam result
+                        $result_pack[] = [
+                            'student_id'=>$student->id, 'student_matric'=>$student->matric, 'subject_id'=>$subject->id, 'subject_code'=>$subject->code, 'batch_id'=>$_year_+$i, 'semester_id'=>$sem->id,
+                            'ca_score'=>random_int(4, $ca_total), 'exam_score'=>random_int(22, $exam_total), 'class_id'=>$class->id??0, 'coef'=>$subject->coef, 'campus_id'=>$student->campus_id, 'user_id'=>random_int(1, 3)
+                        ];
+                    }
+                }
+                # code...
+                OfflineResult::insert($result_pack);
+            }
+        }
     }
 
 }

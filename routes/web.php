@@ -60,6 +60,7 @@ Route::post('reset_password_with_token', [CustomForgotPasswordController::class,
 Route::get('', 'WelcomeController@home');
 Route::get('home', 'WelcomeController@home');
 Route::get('fill_matric_and_course_codes', [ResultsAndTranscriptsController::class, 'fill_matric_and_course_codes']);
+Route::get('random_result_generator', [ResultsAndTranscriptsController::class, 'random_result_generator']);
 
 // Route::middleware('password_reset')->group(function(){
 // });
