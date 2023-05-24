@@ -13,6 +13,7 @@ use App\Models\ClassSubject;
 use App\Models\CourseNotification;
 use App\Models\Income;
 use App\Models\Material;
+use App\Models\NonGPACourse;
 use App\Models\Notification;
 use App\Models\PayIncome;
 use App\Models\Payments;
@@ -234,6 +235,7 @@ class HomeController extends Controller
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
         $res = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
         $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
+        $non_gpa_courses = \App\Models\NonGPACourse::pluck('id')->toArray();
         $results = array_map(function($subject_id)use($data, $year, $semester){
             $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
@@ -255,12 +257,13 @@ class HomeController extends Controller
                     $grade = $value;
                     $rol['grade'] = $grade->grade;
                     $rol['remark'] = $grade->remark;
+                    $rol['weight'] = $grade->weight;
                 }
             }
             if(!array_key_exists('grade', $rol)){
                 $rol['grade'] = null;
                 $rol['remark'] = null;
-
+                $rol['weight'] = null;
             }
             return $rol; 
             
@@ -268,6 +271,22 @@ class HomeController extends Controller
         }, $res);
         // dd($res);
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
+        $sum_cv = $data['results']->sum('coef');
+        $sum_earned_cv = collect($results)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
+        $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->sum('coef');
+        $gpa_cv_earned = $data['results']->whereNotIn('id', $non_gpa_courses)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
+        $sum_gpts = $data['results']->whereNotIn('id', $non_gpa_courses)->sum(function($item){
+            return $item['coef'] * $item['weight'];
+        });
+        $gpa = $sum_gpts/$gpa_cv;
+        // dd($gpa);
+        $gpa_data['sum_cv'] = $sum_cv;
+        $gpa_data['gpa_cv'] = $gpa_cv;
+        $gpa_data['sum_cv_earned'] = $sum_earned_cv;
+        $gpa_data['gpa_cv_earned'] = $gpa_cv_earned;
+        $gpa_data['gpa'] = $gpa;
+
+        $data['gpa_data'] = $gpa_data;
 
         $student = auth('student')->id();
         $fee = [
@@ -302,6 +321,7 @@ class HomeController extends Controller
         $data['ca_total'] = auth('student')->user()->_class($year)->program()->first()->ca_total;
         $data['exam_total'] = auth('student')->user()->_class($year)->program()->first()->exam_total;
         $data['grading'] = auth('student')->user()->_class($year)->program()->first()->gradingType->grading()->get() ?? [];
+        $non_gpa_courses = NonGPACourse::pluck('id')->toArray();
         $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
         $data['subjects'] = Auth('student')->user()->_class($year)->subjects()->whereIn('subjects.id', $res)->get();
         $results = array_map(function($subject_id)use($data, $year, $semester){
@@ -325,17 +345,39 @@ class HomeController extends Controller
                     $grade = $value;
                     $rol['grade'] = $grade->grade;
                     $rol['remark'] = $grade->remark;
+                    $rol['weight'] = $grade->weight;
                 }
             }
             if(!array_key_exists('grade', $rol)){
                 $rol['grade'] = null;
                 $rol['remark'] = null;
+                $rol['weight'] = null;
 
             }
             return $rol;
             
             // dd($grade);
         }, $res);
+
+        $data['results'] = collect($results)->filter(function($el){return $el != null;});
+        $sum_cv = $data['results']->sum('coef');
+        $sum_earned_cv = collect($results)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
+        $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->sum('coef');
+        $gpa_cv_earned = $data['results']->whereNotIn('id', $non_gpa_courses)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
+        $sum_gpts = $data['results']->whereNotIn('id', $non_gpa_courses)->sum(function($item){
+            return $item['coef'] * $item['weight'];
+        });
+        $gpa = $sum_gpts/$gpa_cv;
+        // dd($gpa);
+        $gpa_data['sum_cv'] = $sum_cv;
+        $gpa_data['gpa_cv'] = $gpa_cv;
+        $gpa_data['sum_cv_earned'] = $sum_earned_cv;
+        $gpa_data['gpa_cv_earned'] = $gpa_cv_earned;
+        $gpa_data['gpa'] = $gpa;
+
+        $data['gpa_data'] = $gpa_data;
+
+
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
 
         // dd($data);

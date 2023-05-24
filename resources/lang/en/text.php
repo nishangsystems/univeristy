@@ -775,5 +775,10 @@ return [
     'set_wages'=>'set wages',
     'attendance_report'=>'attendance report',
     'salary_slip_for'=>'salary slip for',
+    'total_credits_attempted'=>'total credits attempted',
+    'gpa_credits_attempted'=>'GPA credits attempted',
+    'total_credits_earned'=>'total credits earned',
+    'gpa_credits_earened'=>'GPA credits earned',
+    'semester_gpa'=>'semester GPA',
     ''
 ];
