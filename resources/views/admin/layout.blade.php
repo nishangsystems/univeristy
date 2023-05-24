@@ -261,11 +261,11 @@
             </li>
             @endif
             
-            @if (\Auth::user()->hasPermissionTo('manage_setting'))
+            @if (\Auth::user()->hasPermissionTo('basic_settings'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}}"class="menu-icon  fa fa-cog"></i>
-                    <span class="menu-text"> {{__('text.settings_zone')}}</span>
+                    <span class="menu-text"> {{__('text.school_base_settings')}}</span>
 
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
@@ -274,7 +274,6 @@
 
                 <ul class="submenu">
                     
-                    @if(auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.set_letter_head')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -299,6 +298,24 @@
 
                         <b class="arrow"></b>
                     </li>
+                </ul>
+            </li>
+            @endif
+
+            @if (\Auth::user()->hasPermissionTo('manage_setting'))
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-cog"></i>
+                    <span class="menu-text"> {{__('text.settings_zone')}}</span>
+
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                    
+                    @if(auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.program_settings')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>

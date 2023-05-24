@@ -18,7 +18,7 @@
                         <input type="text" name="name" value="{{$role->name}}" placeholder="" class="form-control">
                     </div>
                     <div class="row my-5 mx-3">
-                        @foreach(\App\Models\Permission::all() as $p)
+                        @foreach(\App\Models\Permission::whereNotNull('slug')->get() as $p)
                             <div class="col-md-3 my-2">
                                 <div class="form-check">
                                     <input type="checkbox" {{($role->permissions->contains($p))?'checked':''}} value="{{$p->id}}" name="permissions[]" class="form-check-input">

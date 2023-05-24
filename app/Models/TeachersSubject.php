@@ -11,7 +11,7 @@ class TeachersSubject extends Model
 
     protected $fillable = [
         'teacher_id',
-        'subject_id',
+        'subject_id',//refers to class_subject id
         'batch_id',
         'class_id',
         'campus_id'
