@@ -93,15 +93,15 @@
                 <td colspan="4" class="text-center">{{__('text.total_courses_attempted')}} : <span class="px-3">{{count($results)}}</span></td>
                 <td colspan="5" class="text-center">{{__('text.total_courses_passed')}} : <span class="px-3">{{collect($results)->where('total', '>=', 50)->count()}}</span></td>
             </tr>
-            <tr class="border border-secondary text-capitalize h4 fw-bolder" style="font-size: small;">
-                <td colspan="4" class="border-0">
+            <tr class="border border-secondary text-capitalize h4 fw-bolder" style="font-size: medium; font-weight: 500;">
+                <td colspan="3" class="border-0">
                     <span class="d-flex">{{__('text.total_credits_attempted')}} : {{$gpa_data['sum_cv']}}</span>
                     <span class="d-flex">{{__('text.gpa_credits_attempted')}} : {{$gpa_data['gpa_cv']}}</span>
                 </td>
-                <td colspan="5" class="border-0">
+                <td colspan="7" class="border-0">
                     <span class="d-flex">{{__('text.total_credits_earned')}} : {{$gpa_data['sum_cv_earned']}}</span>
                     <span class="d-flex">{{__('text.gpa_credits_earened')}} : {{$gpa_data['gpa_cv_earned']}}</span>
-                    <span class="d-flex py-3">{{__('text.gpa_credits_earened')}} : {{$gpa_data['gpa']}}</span>
+                    <span class="d-flex py-3">{{__('text.semester_gpa')}} : {{number_format($gpa_data['gpa'], 2)}}</span>
                 </td>
             </tr>
         </tbody>
