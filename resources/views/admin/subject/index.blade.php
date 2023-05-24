@@ -36,12 +36,14 @@
                         <td>{{ $subject->status }}</td>
                         <td class="d-flex justify-content-end align-items-center text-capitalize">
                             <a class="btn btn-xs btn-success" href="{{route('admin.subjects.edit',[$subject->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a> |
-                            <a onclick="event.preventDefault();
-                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">{{__('text.word_delete')}}</a>
-                            <form id="delete" action="{{route('admin.subjects.destroy',$subject->id)}}" method="POST" style="display: none;">
-                                @method('DELETE')
-                                {{ csrf_field() }}
-                            </form>
+                            @if ((\App\Models\ClassSubject::where('subject_id', $subject->id)->count() == 0) && (\App\Models\StudentSubject::where('course_id', $subject->id)->count() == 0) && (\App\Models\Result::where('subject_id', $subject->id)->count() == 0))
+                                <a onclick="event.preventDefault();
+                                                document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">{{__('text.word_delete')}}</a>
+                                <form id="delete" action="{{route('admin.subjects.destroy',$subject->id)}}" method="POST" style="display: none;">
+                                    @method('DELETE')
+                                    {{ csrf_field() }}
+                                </form>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
