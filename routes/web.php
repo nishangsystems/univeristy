@@ -69,6 +69,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('home', 'Admin\HomeController@index')->name('home');
     Route::get('background_image', 'Admin\HomeController@set_background_image')->name('set_background_image');
     Route::post('background_image', 'Admin\HomeController@save_background_image');
+    Route::get('set_watermark', 'Admin\HomeController@set_watermark')->name('set_watermark');
+    Route::post('set_watermark', 'Admin\HomeController@save_watermark');
     Route::get('course/date_line', 'Admin\HomeController@courses_date_line')->name('course.date_line');
     Route::post('course/date_line', 'Admin\HomeController@save_courses_date_line');
     Route::get('setayear', 'Admin\HomeController@setayear')->name('setayear');

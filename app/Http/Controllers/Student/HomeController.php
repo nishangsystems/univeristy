@@ -313,7 +313,7 @@ class HomeController extends Controller
         $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id);
         $seqs = $semester->sequences()->get('id')->toArray();
-        $data['title'] = "My Exam Result";
+        $data['title'] = "";
         $data['user'] = auth('student')->user();
         $data['class'] = $data['user']->_class($year);
         $data['year'] = $year;
@@ -934,8 +934,8 @@ class HomeController extends Controller
         $data['user'] = auth('student')->user();
         
         $pdf = PDF::loadView('student.courses.form_b_template',$data);
-        return $pdf->download(auth('student')->user()->matric.'_FORM-B.pdf');
-        // return view('student.courses.form_b_template', $data);
+        // return $pdf->download(auth('student')->user()->matric.'_FORM_B.pdf');
+        return view('student.courses.form_b_template', $data);
     }
     public function add_course()//takes class course id
     {

@@ -780,5 +780,7 @@ return [
     'total_credits_earned'=>'total credits earned',
     'gpa_credits_earened'=>'GPA credits earned',
     'semester_gpa'=>'semester GPA',
-    'school_base_settings'=>'school base settings',
+    'base_settings'=>'base settings',
+    'jpeg_required_phrase'=>'image must be of type .jpeg',
+    'set_watermark'=>'set watermark'
 ];

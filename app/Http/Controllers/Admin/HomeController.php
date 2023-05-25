@@ -76,6 +76,7 @@ class HomeController  extends Controller
         $data['title'] = __('text.set_background_image');
         return view('admin.setting.bg_image', $data);
     }
+
     public function save_background_image(Request $request)
     {
         # code...
@@ -93,6 +94,38 @@ class HomeController  extends Controller
             $filename = 'background_image.jpeg';
             // $path = $filename;
             $file->storeAs('/bg_image', $filename);
+            return back()->with('success', __('text.word_done'));
+        }
+        return back()->with('error', __('text.error_reading_file'));
+    }
+
+    
+    public function set_watermark()
+    {
+        # code...
+        $data['title'] = __('text.set_watermark');
+        return view('admin.setting.set_watermark', $data);
+    }
+
+    public function save_watermark(Request $request)
+    {
+        # code...
+        # code...
+        $check = Validator::make($request->all(), ['file'=>'required|file|mimes:jpeg']);
+        if ($check->fails()) {
+            # code...
+            return back()->with('error', $check->errors()->first());
+        }
+        
+        $file = $request->file('file');
+        // return $file->getClientOriginalName();
+        if(!($file == null)){
+            $ext = $file->getClientOriginalExtension();
+            $filename = 'logo.jpeg';
+            $path = base_path('/assets/images');
+            // $file->n('/bg_image', $filename);
+            // \Storage::put($path, $file);
+            $request->file('file')->move($path, $filename);
             return back()->with('success', __('text.word_done'));
         }
         return back()->with('error', __('text.error_reading_file'));
