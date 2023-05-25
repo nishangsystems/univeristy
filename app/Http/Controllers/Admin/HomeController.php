@@ -59,6 +59,7 @@ class HomeController  extends Controller
             $ext = $file->getClientOriginalExtension();
             $filename = '_'.random_int(100000, 999999).'_'.time().'.'.$ext;
             $path = $filename;
+            if(!file_exists(url('storage/app/').'/files')){mkdir(url('storage/app/').'/files');}
             $file->move(url('storage/app/').'/files', $filename);
             if(File::where(['name'=>'letter-head'])->count() == 0){
                 File::create(['name'=>'letter-head', 'path'=>$path]);
@@ -86,14 +87,16 @@ class HomeController  extends Controller
             # code...
             return back()->with('error', $check->errors()->first());
         }
-        
         $file = $request->file('file');
         // return $file->getClientOriginalName();
         if(!($file == null)){
             $ext = $file->getClientOriginalExtension();
             $filename = 'background_image.jpeg';
             // $path = $filename;
-            $file->storeAs('/bg_image', $filename);
+            if(!file_exists(url('/storage/app/bg_image'))){
+                mkdir(url('/storage/app/bg_image'));
+            }
+            $file->move(url('/storage/app/bg_image'), $filename);
             return back()->with('success', __('text.word_done'));
         }
         return back()->with('error', __('text.error_reading_file'));
