@@ -21,34 +21,34 @@
                             <td>
                                 <table>
                                     <tr>
-                                        <td class="text-capitalize fw-bold h5 col-sm-4">{{__('text.word_name')}} :</td>
-                                        <td class="col-sm-8 h5 text-uppercase fw-bolder">{{$user->name}}</td>
+                                        <td class="text-capitalize fw-bold h4 col-sm-4">{{__('text.word_name')}} :</td>
+                                        <td class="col-sm-8 h4 text-uppercase fw-bolder">{{$user->name}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="text-capitalize fw-bold h5 col-sm-4">{{__('text.word_program')}} :</td>
-                                        <td class="col-sm-8 h5 text-uppercase fw-bolder">{{$class->program->name}}</td>
+                                        <td class="text-capitalize fw-bold h4 col-sm-4">{{__('text.word_program')}} :</td>
+                                        <td class="col-sm-8 h4 text-uppercase fw-bolder">{{$class->program->name}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="text-capitalize fw-bold h5 col-sm-4">{{__('text.word_matricule')}} :</td>
-                                        <td class="col-sm-8 h5 text-uppercase fw-bolder">{{$user->matric}}</td>
+                                        <td class="text-capitalize fw-bold h4 col-sm-4">{{__('text.word_matricule')}} :</td>
+                                        <td class="col-sm-8 h4 text-uppercase fw-bolder">{{$user->matric}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="text-capitalize fw-bold h5 col-sm-4">{{__('text.word_level')}} :</td>
-                                        <td class="col-sm-8 h5 text-uppercase fw-bolder">{{ $class->level->level}}</td>
+                                        <td class="text-capitalize fw-bold h4 col-sm-4">{{__('text.word_level')}} :</td>
+                                        <td class="col-sm-8 h4 text-uppercase fw-bolder">{{ $class->level->level}}</td>
                                     </tr>
                                 </table>
                             </td>
                             <td>
                                 <div class=" px-0 py-0">
-                                    <table class="h6">
-                                        <thead class="text-primary">
+                                    <table >
+                                        <!-- <thead class="text-primary">
                                             <th>Grd</th>
                                             <th colspan="2">Range</th>
                                             <th>Wt</th>
                                             <th>Rmk</th>
-                                        </thead>
+                                        </thead> -->
                                         @foreach($grading as $grd)
-                                            <tr class="pb-1 pt-0" style="text-decoration: none;">
+                                            <tr class="pb-1 pt-0" style="text-decoration: none; font-size:x-small">
                                                 <td class="py-0">{{($grd->grade ?? '')}}</td>
                                                 <td class="py-0">{{($grd->lower ?? '')}}</td>
                                                 <td class="py-0">{{($grd->upper ?? '')}}</td>
@@ -64,7 +64,7 @@
                 </th>
             </tr>
             <tr class="text-capitalize">
-                <th class="text-center" >{{__('text.word_code')}}</th>
+                <th class="text-center d-flex" >{{__('text.word_code')}}</th>
                 <th class="text-center" >{{__('text.word_course')}}</th>
                 <th class="text-center" >ST</th>
                 <th class="text-center" >CV</th>
@@ -95,12 +95,12 @@
             </tr>
             <tr class="border border-secondary text-capitalize h4 fw-bolder" style="font-size: medium; font-weight: 500;">
                 <td colspan="3" class="border-0">
-                    <span class="d-flex">{{__('text.total_credits_attempted')}} : {{$gpa_data['sum_cv']}}</span>
-                    <span class="d-flex">{{__('text.gpa_credits_attempted')}} : {{$gpa_data['gpa_cv']}}</span>
+                    <!-- <span class="d-flex">{{__('text.total_credits_attempted')}} : {{$gpa_data['sum_cv']}}</span>
+                    <span class="d-flex">{{__('text.gpa_credits_attempted')}} : {{$gpa_data['gpa_cv']}}</span> -->
                 </td>
                 <td colspan="7" class="border-0">
-                    <span class="d-flex">{{__('text.total_credits_earned')}} : {{$gpa_data['sum_cv_earned']}}</span>
-                    <span class="d-flex">{{__('text.gpa_credits_earened')}} : {{$gpa_data['gpa_cv_earned']}}</span>
+                    <!-- <span class="d-flex">{{__('text.total_credits_earned')}} : {{$gpa_data['sum_cv_earned']}}</span>
+                    <span class="d-flex">{{__('text.gpa_credits_earened')}} : {{$gpa_data['gpa_cv_earned']}}</span> -->
                     <span class="d-flex py-3">{{__('text.semester_gpa')}} : {{number_format($gpa_data['gpa'], 2)}}</span>
                 </td>
             </tr>

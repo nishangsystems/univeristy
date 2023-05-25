@@ -51,7 +51,8 @@
         }
         table{padding: 0px !important}
         table th, table td{
-            padding: 10px;
+            padding: 2px 6px !important;
+            font-size: smaller !important;
         }
         .table td{
             border-bottom: 1px  solid  #f1f1f1 !important;

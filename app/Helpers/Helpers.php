@@ -229,7 +229,7 @@ class Helpers
 
     public function getBackground()
     {
-        return url('/bg_image/background_image.jpeg');
+        return url('/storage/app/bg_image/background_image.jpeg');
     }
 
 

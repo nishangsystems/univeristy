@@ -265,7 +265,7 @@
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}}"class="menu-icon  fa fa-cog"></i>
-                    <span class="menu-text"> {{__('text.school_base_settings')}}</span>
+                    <span class="menu-text"> {{__('text.base_settings')}}</span>
 
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
@@ -278,6 +278,22 @@
                         <a href="{{route('admin.set_letter_head')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.set_letter_head')}}
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.set_background_image')}}
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.set_watermark')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.set_watermark')}}
                         </a>
 
                         <b class="arrow"></b>
