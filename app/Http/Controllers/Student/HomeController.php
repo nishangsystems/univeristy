@@ -235,7 +235,9 @@ class HomeController extends Controller
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
         $res = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
         $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
-        $non_gpa_courses = \App\Models\NonGPACourse::pluck('id')->toArray();
+        $non_gpa_courses = Subjects::whereIn('code', NonGPACourse::pluck('course_code')->toArray())->pluck('id')->toArray();
+        // $non_gpa_courses = [];
+        // return $non_gpa_courses;
         $results = array_map(function($subject_id)use($data, $year, $semester){
             $ca_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
@@ -279,7 +281,7 @@ class HomeController extends Controller
             return $item['coef'] * $item['weight'];
         });
         $gpa = $sum_gpts/$gpa_cv;
-        // dd($gpa);
+        // dd($sum_gpts);
         $gpa_data['sum_cv'] = $sum_cv;
         $gpa_data['gpa_cv'] = $gpa_cv;
         $gpa_data['sum_cv_earned'] = $sum_earned_cv;
