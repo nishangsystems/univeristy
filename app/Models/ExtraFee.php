@@ -16,7 +16,7 @@ class ExtraFee extends Model
         # code...
         return $this->belongsTo(Students::class, 'student_id');
     }
-    public function Batch()
+    public function batch()
     {
         # code...
         return $this->belongsTo(Batch::class, 'year_id');

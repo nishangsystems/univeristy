@@ -511,7 +511,7 @@
                                 <b class="arrow"></b>
                             </li>
                         @endif
-                        @if (\Auth::user()->hasPermissionTo('demote_students'))
+                        @if (\Auth::user()->hasPermissionTo('demote_students-option_already_removed'))
                             <li>
                                 <a href="{{route('admin.students.init_demotion')}}?type=promotion" class="text-capitalize">
                                     <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
@@ -584,13 +584,13 @@
 
 
                 <ul class="submenu">
-                    <li>
+                    <!-- <li>
                         <a href="{{route('admin.scholarship.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{trans_choice('text.scholarship', 2)}}
                         </a>
                         <b class="arrow"></b>
-                    </li>
+                    </li> -->
 
 
                     <li>
@@ -624,14 +624,7 @@
 
 
                 <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.fee.collect')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.collect_fee')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
+                    
                     <li>
                         <a href="{{route('admin.extra-fee')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -639,8 +632,15 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-
-
+                    
+                    <li>
+                        <a href="{{route('admin.fee.collect')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.collect_fee')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    
 
                     <li>
                         <a href="{{route('admin.print_fee')}}" class="text-capitalize">
