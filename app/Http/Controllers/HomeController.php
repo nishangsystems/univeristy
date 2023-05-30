@@ -82,6 +82,7 @@ class HomeController extends Controller
             ->join('levels', ['program_levels.level_id' => 'levels.id'])
             ->where('students.name', 'LIKE', "%{$name}%")
             ->orWhere('students.matric', '=', $name)
+            ->take(10)
             ->get(['students.*', 'campuses.name as campus']);
 
         return \response()->json(StudentFee::collection($students));
@@ -103,7 +104,7 @@ class HomeController extends Controller
             ->where(function($query){
                 \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
                         })
-            ->get(['students.*', 'campuses.name as campus']);
+            ->take(10)->get(['students.*', 'campuses.name as campus']);
 
             // return $students;
         return \response()->json(StudentFee::collection($students));
@@ -121,7 +122,7 @@ class HomeController extends Controller
                 ->join('student_classes', ['students.id' => 'student_classes.student_id'])
                 ->join('campuses', ['students.campus_id'=>'campuses.id'])
                 ->where('students.name', 'LIKE', "%$name%")
-                ->orWhere('students.matric', 'LIKE', "%$name%")
+                ->orWhere('students.matric', 'LIKE', "%$name%")->distinct()->take(10)
                 ->get(['students.*', 'student_classes.student_id', 'student_classes.class_id', 'campuses.name as campus'])->toArray();
             return \response()->json(StudentResource3::collection($students));
         } catch (\Throwable $th) {
@@ -150,7 +151,7 @@ class HomeController extends Controller
                     \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
                 })
                 ->distinct()
-                ->take(5)
+                ->take(10)
                 ->get(['students.*', 'student_classes.student_id', 'campuses.name as campus'])
                 ->toArray();
             
@@ -180,7 +181,7 @@ class HomeController extends Controller
                 ->where(function($query){
                     \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
                 })
-                ->distinct()
+                ->distinct()->take(10)
                 ->get(['students.*', 'student_classes.class_id', 'campuses.name as campus'])
                 ->toArray();
             

@@ -304,6 +304,14 @@ class HomeController  extends Controller
         return back()->with('success', __('text.word_done'));
     }
 
+    public function extraDestroy(Request $request){
+        $row = \App\Models\ExtraFee::where(['student_id'=>$request->student_id, 'id'=>$request->extra_fee_id])->first();
+        if($row != null){
+            $row -> delete();
+        }
+        return back()->with('success', __('text.word_done'));
+    }
+    
     public function custom_resit_create()
     {
         # code...

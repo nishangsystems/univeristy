@@ -62,6 +62,8 @@
                     <th>##</th>
                     <th>{{__('text.word_amount')}}</th>
                     <th>{{__('text.word_date')}}</th>
+                    <th>{{__('text.word_batch')}}</th>
+                    <th></th>
                 </thead>
                 <tbody>
                     @php($k = 1)
@@ -70,6 +72,10 @@
                             <td>{{$k++}}</td>
                             <td>{{$ext->amount}}</td>
                             <td>{{date('l d-m-Y', strtotime($ext->created_at))}}</td>
+                            <td>{{$ext->batch->name}}</td>
+                            <td><a class="btn btn-xs btn-danger" onclick="
+                                confirm('Are you sure you want to delete this extra-fee entry. You will not be able to undo this operation.') ? window.location = `{{route('admin.extra-fee.destroy', [request('student_id'), $ext->id])}}` : null;
+                            ">{{__('text.word_delete')}}</a></td>
                         </tr>
                     @endforeach
                 </tbody>
