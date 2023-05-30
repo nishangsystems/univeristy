@@ -1,7 +1,9 @@
 /node_modules
 /public/hot
-# /public/storage
+/public/storage
 /storage/*.key
+/storage/app/bg_image/*.*
+/storage/app/files/*.*
 /vendor
 /files
 /bg_image
