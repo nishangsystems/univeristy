@@ -232,7 +232,7 @@
            
             @if (\Auth::user()->hasPermissionTo('manage_documentation'))
             <li>
-                <a href="" class="dropdown-toggle text-capitalize">
+                <a href="{{route('documentation.index')}}" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
                     <span class="menu-text">
 							{{__('text.word_documentation')}}
@@ -245,7 +245,7 @@
                         <li>
                         @if($doc->children->count() > 0)
                             <a href="{{route('documentation.show', [$doc->id])}}" class="dropdown-toggle text-capitalize">
-                                <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
+                                <!-- <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i> -->
                                 <span class="menu-text">
                                         {{ $doc->title }}
                                 </span>
@@ -256,7 +256,7 @@
                                     <li>
                                         @if ($child->children->count() > 0)
                                             <a href="{{route('documentation.show', [$child->id])}}" class="dropdown-toggle text-capitalize">
-                                                <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
+                                                <!-- <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i> -->
                                                 <span class="menu-text">
                                                         {{ $child->title }}
                                                 </span>
@@ -265,7 +265,7 @@
                                             <ul class="submenu">
                                                 @foreach ($child->children as $sub_child)
                                                 <li>
-                                                    <a href="{{route('documentation.show', [$sub_child->id])}}" class="text-capitalize dropdown-toggle">
+                                                    <a href="{{route('documentation.show', [$sub_child->id])}}" class="text-capitalize">
                                                         <i class="menu-icon fa fa-caret-right"></i>
                                                         {{ $sub_child->title }}
                                                     </a>
@@ -273,7 +273,7 @@
                                                 @endforeach
                                             </ul>
                                         @else
-                                            <a href="{{route('documentation.show', [$child->id])}}" class="text-capitalize dropdown-toggle">
+                                            <a href="{{route('documentation.show', [$child->id])}}" class="text-capitalize">
                                                 <i class="menu-icon fa fa-caret-right"></i>
                                                 {{ $child->title }}
                                             </a>
@@ -282,7 +282,7 @@
                                 @endforeach
                             </ul>
                         @else
-                            <a href="{{route('documentation.show', [$doc->id])}}" class="text-capitalize dropdown-toggle">
+                            <a href="{{route('documentation.show', [$doc->id])}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{ $doc->title }}
                             </a>

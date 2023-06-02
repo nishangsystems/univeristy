@@ -19,6 +19,9 @@
                         <td>
                             <a class="btn btn-sm btn-primary text-capitalize" href="{{route('documentation.show', [$doc->id])}}">{{__('text.get_started')}}</a>|
                             <a class="btn btn-sm btn-success text-capitalize" href="{{route('documentation.create', [$doc->id])}}">{{__('text.add_child')}}</a>
+                            @if ($doc->children->count() == 0)
+                                <a class="btn btn-sm btn-danger text-capitalize" onclick="confirm(`You are about to delete {{$doc->title}}`) ? window.location = `{{route('documentation.destroy', [$doc->id])}}` : null">{{__('text.word_delete')}}</a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
