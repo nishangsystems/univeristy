@@ -20,7 +20,7 @@ class BaseController extends Controller
     public function show(Request $request)
     {
         # code...
-        $data['title'] = Documentation::find($request->id)->name()??'';
+        $data['title'] = Documentation::find($request->id)->fullname()??'';
         $data['item'] = Documentation::find($request->id);
         return view('documentation.show', $data);
     }
@@ -29,19 +29,19 @@ class BaseController extends Controller
     {
         # code...
         $data['title'] = "Create manual item";
-        if(request()->has('parent')){$data['parent'] = Documentation::find($request->parent);}
+        $data['parent'] = Documentation::find($request->parent??0);
         return view('documentation.create', $data);
     }
     
     public function store(Request $request)
     {
         # code...
-        $validator = Validator::make($request->all(), ['role_id'=>'required', 'parent_id'=>'required', 'title'=>'required', 'content'=>'required']);
+        $validator = Validator::make($request->all(), ['role'=>'required', 'parent_id'=>'required', 'title'=>'required', 'content'=>'required']);
         if($validator->fails()){return back()->with('error', $validator->errors()->first());}
         
         // item update proper
         $item = new Documentation();
-        $item->fill(['role_id'=>$request->role_id, 'parent_id'=>$request->parent_id, 'title'=>$request->title, 'content'=>$request->content]);
+        $item->fill(['role'=>$request->role, 'parent_id'=>$request->parent_id, 'title'=>$request->title, 'content'=>$request->content]);
         $item->save();
         return back()->with('success', __('text.word_done'));
     }
@@ -50,20 +50,20 @@ class BaseController extends Controller
     {
         # code...
         $data['item'] = Documentation::find($request->id);
-        $data['title'] = $data['item']->name();
+        $data['title'] = __('text.word_edit').' '.$data['item']->fullname();
         return view('documentation.edit', $data);
     }
 
     public function update(Request $request)
     {
         # code...
-        $validator = Validator::make($request->all(), ['role_id'=>'required', 'parent_id'=>'required', 'title'=>'required', 'content'=>'required']);
+        $validator = Validator::make($request->all(), ['role'=>'required', 'parent_id'=>'required', 'title'=>'required', 'content'=>'required']);
         if($validator->fails()){return back()->with('error', $validator->errors()->first());}
         
         // item update proper
         $item = Documentation::find($request->id);
         if($item != null){
-            $item->fill(['role_id'=>$request->role_id, 'parent_id'=>$request->parent_id, 'title'=>$request->title, 'content'=>$request->content]);
+            $item->fill(['role'=>$request->role, 'parent_id'=>$request->parent_id, 'title'=>$request->title, 'content'=>$request->content]);
             $item->save();
             return back()->with('success', __('text.word_done'));
         }

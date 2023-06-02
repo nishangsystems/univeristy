@@ -1,7 +1,7 @@
 @extends('documentation.layout')
 @section('section')
-    <div class="py-3 my-3 card col-md-9 mx-auto px-2 bg-light">
-        <form class="form" method="post">
+    <div class="py-5 my-3 card px-5 bg-light">
+        <form class="my-3" method="post">
             @csrf
             <div class="py-2">
                 <label>{{__('text.word_title')}}</label>
@@ -12,17 +12,17 @@
                 <select class="form-control" name="parent_id" required>
                     <option value="0" class="text-capitalize">{{__('text.word_documentation')}}</option>
                     @foreach (\App\Models\Documentation::all() as $doc)
-                        <option value="{{$doc->id}}" {{request('id')==$doc->id ? 'selected' : ''}}>{{$doc->fullname()}}</option>
+                        <option value="{{$doc->id}}" {{request('parent')==$doc->id ? 'selected' : ''}}>{{$doc->fullname()}}</option>
                     @endforeach
                 </select>
             </div>
             <div class="py-2">
                 <label>{{__('text.word_role')}}</label>
-                <select class="form-control" name="role_id" required>
-                    <option value="teacher" class="text-capitalize">{{__('text.word_teacher')}}</option>
-                    <option value="student" class="text-capitalize">{{__('text.word_student')}}</option>
+                <select class="form-control" name="role" required>
+                    <option value="teacher" class="text-capitalize" {{isset($parent) && $parent->role == 'teacher' ? 'selected' : ''}}>{{trans_choice('text.word_teacher', 1)}}</option>
+                    <option value="student" class="text-capitalize" {{isset($parent) && $parent->role == 'student' ? 'selected' : ''}}>{{trans_choice('text.word_student', 1)}}</option>
                     @foreach (\App\Models\Role::all() as $role)
-                        <option value="{{$role->slug}}">{{$role->name}}</option>
+                        <option value="{{$role->slug}}" {{isset($parent) && $parent->role == $role->slug ? 'selected' : ''}}>{{$role->name}}</option>
                     @endforeach
                 </select>
             </div>
