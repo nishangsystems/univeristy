@@ -81,7 +81,6 @@ class User extends Authenticatable
         return $this->hasMany(UserRole::class);
     }
 
-
     public function isMaster($year, $class)
     {
         return ClassMaster::where([
@@ -90,6 +89,5 @@ class User extends Authenticatable
             'user_id' => $this->id
         ])->count() > 0;
     }
-
 
 }

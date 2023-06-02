@@ -761,6 +761,14 @@
                 <ul class="submenu">
                     @if(auth()->user()->campus_id == null)
                     <li>
+                        <a href="{{route('admin.stock.create')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.create_item')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    
+                    <li>
                         <a href="{{route('admin.stock.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.word_items')}}
@@ -768,14 +776,6 @@
                         <b class="arrow"></b>
                     </li>
 
-
-                    <li>
-                        <a href="{{route('admin.stock.create')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.create_item')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
                     @endif
 
 
@@ -961,7 +961,7 @@
                         <b class="arrow"></b>
                     </li>
                     @endif
-                    @if (\Auth::user()->hasPermissionTo('manage_result_statistics'))
+                    @if (\Auth::user()->hasPermissionTo('__________manage_result_statistics'))
                     <li>
                         <a href="{{route('admin.stats.results')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -1291,7 +1291,6 @@
 
             
             @if (\Auth::user()->hasPermissionTo('manage_attendance'))
-            @endif
             <!-- Attendance management -->
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
@@ -1322,7 +1321,18 @@
                 </ul>
             </li>
             <!-- End attaendance management -->
+            @endif
         
+            @if (\Auth::user()->hasPermissionTo('manage_documentation'))
+            <li>
+                <a href="{{route('documentation.index')}}" class="text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-address-book-o menu-icon   "></i>
+                    {{__('text.word_documentation')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
+            @endif
+            
             <li>
                 <a href="{{route('admin.reset_password')}}" class="text-capitalize">
                     <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
