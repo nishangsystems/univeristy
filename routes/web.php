@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\StockController;
 use App\Http\Controllers\Auth\CustomForgotPasswordController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\documentation\BaseController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\Student\HomeController as StudentHomeController;
@@ -60,10 +61,21 @@ Route::get('', 'WelcomeController@home');
 Route::get('home', 'WelcomeController@home');
 
 // Route::middleware('password_reset')->group(function(){
-// });
+    // });
+
+    // DOCUMENTATION MANAGEMENT ROUTES
+    Route::name('documentation.')->prefix('documentation')->middleware('isAdmin')->group(function(){
+        Route::get('/', [BaseController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [BaseController::class, 'show'])->name('show');
+        Route::get('/create/{parent?}', [BaseController::class, 'create'])->name('create');
+        Route::post('/create/{parent?}', [BaseController::class, 'store']);
+        Route::get('/edit/{id}', [BaseController::class, 'edit'])->name('edit');
+        Route::post('/edit/{id}', [BaseController::class, 'update']);
+        Route::get('/destroy/{id}', [BaseController::class, 'destroy'])->name('destroy');
+    });
+    // END OF DOCUMENTATION MANAGEMENT ROUTES
 
 Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function () {
-
 
     Route::get('', 'Admin\HomeController@index')->name('home');
     Route::get('home', 'Admin\HomeController@index')->name('home');

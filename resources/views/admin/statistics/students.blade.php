@@ -8,7 +8,7 @@
                 <div class="py-2 form-group row">
                     <label for="" class="text-secondary h6 fw-bold col-sm-3 text-capitalize">{{__('text.select_academic_year')}}</label>
                     <div class="col-sm-9">
-                        <select name="year" id="" class="form-control">
+                        <select name="year" id="" class="form-control" required>
                             <option value="" selected>{{__('text.academic_year')}}</option>
                             @forelse(\App\Models\Batch::all() as $batch)
                                 <option value="{{$batch->id}}" {{request('year') == $batch->id ? 'selected' : ''}}>{{$batch->name}}</option>
@@ -21,7 +21,7 @@
                 <div class="py-2 form-group row">
                     <label for="" class="text-secondary h6 fw-bold col-sm-3 text-capitalize">{{__('text.filter_statistics_by')}}</label>
                     <div class="col-sm-9">
-                        <select name="filter_key" id="" class="form-control text-uppercase">
+                        <select name="filter_key" id="" class="form-control text-uppercase" required>
                             <option value="">{{__('text.filter_by')}}</option>
                             <option value="class" {{request('filter_key') == 'class' ? 'selected' : ''}}>{{__('text.word_class')}}</option>
                             <option value="program" {{request('filter_key') == 'program' ? 'selected' : ''}}>{{__('text.word_program')}}</option>
