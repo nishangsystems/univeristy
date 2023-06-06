@@ -1,6 +1,6 @@
 @extends('documentation.layout')
 @section('section')
-    <div class="d-flex justify-content-end py-4"><a class="btn btn-xs btn-primary rounded" href="{{route('documentation.create')}}">{{__('text.add_child')}}</a></div>
+    <div class="d-flex justify-content-end py-4"><a class="btn btn-xs btn-primary rounded" href="{{route('documentation.create')}}">{{__('text.new_document')}}</a></div>
     <div class="py-5  border border-dark shadow-md my-4 rounded-lg bg-light">
         <table class="table-stripped">
             <thead class="text-capitalize">

@@ -41,7 +41,7 @@ class BaseController extends Controller
         
         // item update proper
         $item = new Documentation();
-        $item->fill(['role'=>$request->role, 'parent_id'=>$request->parent_id, 'title'=>$request->title, 'content'=>$request->content]);
+        $item->fill(['role'=>$request->role, 'permission'=>$request->permission??null, 'parent_id'=>$request->parent_id, 'title'=>$request->title, 'content'=>$request->content]);
         $item->save();
         return back()->with('success', __('text.word_done'));
     }
@@ -63,7 +63,7 @@ class BaseController extends Controller
         // item update proper
         $item = Documentation::find($request->id);
         if($item != null){
-            $item->fill(['role'=>$request->role, 'parent_id'=>$request->parent_id, 'title'=>$request->title, 'content'=>$request->content]);
+            $item->fill(['role'=>$request->role, 'permission'=>$request->permission??null, 'parent_id'=>$request->parent_id, 'title'=>$request->title, 'content'=>$request->content]);
             $item->save();
             return back()->with('success', __('text.word_done'));
         }

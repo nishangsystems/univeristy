@@ -4,11 +4,11 @@
         <form class="my-3" method="post">
             @csrf
             <div class="py-2">
-                <label>{{__('text.word_title')}}</label>
+                <label class="text-capitalize">{{__('text.word_title')}}</label>
                 <input class="form-control" name="title" required>
             </div>
             <div class="py-2">
-                <label>{{__('text.word_parent')}}</label>
+                <label class="text-capitalize">{{__('text.word_parent')}}</label>
                 <select class="form-control" name="parent_id" required>
                     <option value="0" class="text-capitalize">{{__('text.word_documentation')}}</option>
                     @foreach (\App\Models\Documentation::all() as $doc)
@@ -17,17 +17,28 @@
                 </select>
             </div>
             <div class="py-2">
-                <label>{{__('text.word_role')}}</label>
-                <select class="form-control" name="role" required>
+                <label class="text-capitalize">{{__('text.word_role')}}</label>
+                <select class="form-control text-capitalize" name="role" required>
                     <option value="teacher" class="text-capitalize" {{isset($parent) && $parent->role == 'teacher' ? 'selected' : ''}}>{{trans_choice('text.word_teacher', 1)}}</option>
                     <option value="student" class="text-capitalize" {{isset($parent) && $parent->role == 'student' ? 'selected' : ''}}>{{trans_choice('text.word_student', 1)}}</option>
-                    @foreach (\App\Models\Role::all() as $role)
+                    <option value="admin" class="text-capitalize" {{isset($parent) && $parent->role == 'admin' ? 'selected' : ''}}>{{__('text.word_admin')}}</option>
+                    <!-- @foreach (\App\Models\Role::all() as $role)
                         <option value="{{$role->slug}}" {{isset($parent) && $parent->role == $role->slug ? 'selected' : ''}}>{{$role->name}}</option>
-                    @endforeach
+                    @endforeach -->
                 </select>
             </div>
+            @if (isset($parent) && $parent->role == 'admin')
+                <div class="py-2">
+                    <label class="text-capitalize">{{__('text.word_permissions')}}</label>
+                    <select class="form-control text-capitalize" name="permission" required>
+                        @foreach (\App\Models\Permission::all() as $role)
+                            <option value="{{$role->slug}}" {{isset($parent) && $parent->permission == $role->slug ? 'selected' : ''}}>{{$role->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
             <div class="py-2">
-                <label>{{__('text.word_content')}}</label>
+                <label class="text-capitalize">{{__('text.word_content')}}</label>
                 <textarea class="form-control" name="content" id="doc_content" rows="4"></textarea>
             </div>
             <div class="py-2 d-flex justify-content-end">

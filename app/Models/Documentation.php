@@ -10,7 +10,7 @@ class Documentation extends Model
     use HasFactory;
 
     protected $table = 'documentations';
-    protected $fillable = ['role', 'parent_id', 'title', 'content'];
+    protected $fillable = ['role', 'parent_id', 'title', 'content', 'permission'];
     
 
     public function parent()

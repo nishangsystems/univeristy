@@ -786,6 +786,8 @@ return [
     'word_documentation'=>'documentation',
     'word_document'=>'document',
     'get_started'=>'get started',
-    'add_child'=>'add child',
+    'add_child'=>'add sub-topic',
+    'new_document'=>'new document',
+    'word_admin'=>'admin',
     ''
 ];
