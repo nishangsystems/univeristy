@@ -37,7 +37,7 @@ class Documentation extends Model
         # code...
         $_item = $item == null ? $this : $item;
         if($_item->parent_id == 0){return $_item->title;}
-        else{return $this->fullname($_item->parent).' >> ';}
+        else{return $this->fullname($_item->parent).' >> '.$_item->title;}
     }
 
     public function can_see()

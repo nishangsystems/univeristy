@@ -167,6 +167,7 @@ return [
     'user_roles'=>'user roles',
     'add_role'=>'add role',
     'word_use'=>'users',
+    'word_permission'=>'permission',
     'word_permissions'=>'permissions',
     'user_permissions'=>'user permissions',
     'scholarship_type'=>'scholarship type',
@@ -789,5 +790,9 @@ return [
     'add_child'=>'add sub-topic',
     'new_document'=>'new document',
     'word_admin'=>'admin',
+    'teacher_user_manual'=>'lecturer user manual',
+    'student_user_manual'=>'student user manual',
+    'admin_user_manual'=>'admin user manual',
+    'no_manual_entries_available'=>'no manual entries available',
     ''
 ];

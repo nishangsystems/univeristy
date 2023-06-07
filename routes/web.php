@@ -66,6 +66,8 @@ Route::get('home', 'WelcomeController@home');
     // DOCUMENTATION MANAGEMENT ROUTES
     Route::name('documentation.')->prefix('documentation')->middleware('isAdmin')->group(function(){
         Route::get('/', [BaseController::class, 'index'])->name('index');
+        Route::get('/permission/{slug}', [BaseController::class, 'permission_root'])->name('permission_root');
+        Route::get('/teacher/{slug}', [BaseController::class, 'teacher_index'])->name('teacher_index');
         Route::get('/show/{id}', [BaseController::class, 'show'])->name('show');
         Route::get('/create/{parent?}', [BaseController::class, 'create'])->name('create');
         Route::post('/create/{parent?}', [BaseController::class, 'store']);

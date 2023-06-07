@@ -236,7 +236,7 @@
            
             @if (\Auth::user()->hasPermissionTo('manage_documentation'))
             <li>
-                <a href="{{route('documentation.index')}}" class="dropdown-toggle text-capitalize">
+                <a href="" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
                     <span class="menu-text">
 							{{__('text.word_documentation')}}
@@ -245,54 +245,76 @@
                 </a>
 
                 <ul class="submenu">
-                    @foreach (\App\Models\Documentation::where('parent_id', 0)->get() as $doc)
-                        <li>
-                        @if($doc->children->count() > 0)
-                            <a href="{{route('documentation.show', [$doc->id])}}" class="dropdown-toggle text-capitalize">
-                                <!-- <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i> -->
-                                <span class="menu-text">
-                                        {{ $doc->title }}
-                                </span>
-                                <b class="arrow fa fa-angle-down"></b>
-                            </a>
-                            <ul class="submenu">
-                                @foreach ($doc->children as $child)
-                                    <li>
-                                        @if ($child->children->count() > 0)
-                                            <a href="{{route('documentation.show', [$child->id])}}" class="dropdown-toggle text-capitalize">
-                                                <!-- <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i> -->
-                                                <span class="menu-text">
-                                                        {{ $child->title }}
-                                                </span>
-                                                <b class="arrow fa fa-angle-down"></b>
-                                            </a>
-                                            <ul class="submenu">
-                                                @foreach ($child->children as $sub_child)
-                                                <li>
-                                                    <a href="{{route('documentation.show', [$sub_child->id])}}" class="text-capitalize">
-                                                        <i class="menu-icon fa fa-caret-right"></i>
-                                                        {{ $sub_child->title }}
-                                                    </a>
-                                                </li>
-                                                @endforeach
-                                            </ul>
-                                        @else
-                                            <a href="{{route('documentation.show', [$child->id])}}" class="text-capitalize">
-                                                <i class="menu-icon fa fa-caret-right"></i>
-                                                {{ $child->title }}
-                                            </a>
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <a href="{{route('documentation.show', [$doc->id])}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{ $doc->title }}
-                            </a>
-                        @endif
-                        </li>
-                    @endforeach
+                    <li>
+                        <a href="{{route('documentation.index')}}" class="text-capitalize">
+                            <span class="menu-text text-capitalize">
+                                    {{ __('text.word_index') }}
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" class="dropdown-toggle text-capitalize">
+                            <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
+                            <span class="menu-text text-uppercase">
+                                    {{__('text.student_user_manual')}}
+                            </span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        <ul class="submenu">
+                            <li>
+                                <a href="{{route('documentation.index')}}" class="text-capitalize">
+                                    <span class="menu-text text-capitalize">
+                                            {{ __('text.word_index') }}
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="" class="dropdown-toggle text-capitalize">
+                            <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
+                            <span class="menu-text text-uppercase">
+                                    {{__('text.teacher_user_manual')}}
+                            </span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        <ul class="submenu">
+                            <li>
+                                <a href="{{route('documentation.teacher_index', 'teacher')}}" class=" text-capitalize">
+                                    <span class="menu-text text-capitalize">
+                                            {{ trans_choice('text.word_teacher') }}
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{route('documentation.teacher_index', 'hod')}}" class=" text-capitalize">
+                                    <span class="menu-text text-capitalize">
+                                            {{ __('text.word_HOD') }}
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="" class="dropdown-toggle text-capitalize">
+                            <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
+                            <span class="menu-text text-uppercase">
+                                    {{__('text.admin_user_manual')}}
+                            </span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        <ul class="submenu">
+                            @foreach (\App\Models\Permission::orderBy('name', 'ASC')->get() as $perm)
+                            <li>
+                                <a href="{{route('documentation.permission_root', [$perm->slug])}}" class=" text-capitalize">
+                                    <span class="menu-text text-uppercase">
+                                            {{ $perm->name }}
+                                    </span>
+                                </a>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </li>
                 </ul>
             </li>
             @endif
