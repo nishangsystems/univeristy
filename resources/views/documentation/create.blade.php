@@ -22,9 +22,6 @@
                     <option value="teacher" class="text-capitalize" {{isset($parent) && $parent->role == 'teacher' ? 'selected' : ''}}>{{trans_choice('text.word_teacher', 1)}}</option>
                     <option value="student" class="text-capitalize" {{isset($parent) && $parent->role == 'student' ? 'selected' : ''}}>{{trans_choice('text.word_student', 1)}}</option>
                     <option value="admin" class="text-capitalize" {{isset($parent) && $parent->role == 'admin' ? 'selected' : ''}}>{{__('text.word_admin')}}</option>
-                    <!-- @foreach (\App\Models\Role::all() as $role)
-                        <option value="{{$role->slug}}" {{isset($parent) && $parent->role == $role->slug ? 'selected' : ''}}>{{$role->name}}</option>
-                    @endforeach -->
                 </select>
             </div>
             @if (isset($parent) && $parent->role == 'admin')
@@ -34,6 +31,15 @@
                         @foreach (\App\Models\Permission::all() as $role)
                             <option value="{{$role->slug}}" {{isset($parent) && $parent->permission == $role->slug ? 'selected' : ''}}>{{$role->name}}</option>
                         @endforeach
+                    </select>
+                </div>
+            @endif
+            @if (isset($parent) && $parent->role == 'teacher')
+                <div class="py-2">
+                    <label class="text-capitalize">{{__('text.word_permission')}}</label>
+                    <select class="form-control text-capitalize" name="permission" required>
+                        <option value="normal_lecturer" {{isset($parent) && $parent->permission == 'normal_lecturer' ? 'selected' : ''}}>{{__('text.normal_lecturer')}}</option>
+                        <option value="hod" {{isset($parent) && $parent->permission == 'hod' ? 'selected' : ''}}>{{__('text.word_HOD')}}</option>
                     </select>
                 </div>
             @endif
@@ -49,17 +55,13 @@
 @endsection
 
 @section('script')
-    <!-- <script src="{{ asset('public/assets/js') }}/ckeditor/ckeditor.js"></script> -->
     <script>
         var editor1 = new RichTextEditor("#doc_content");
-        // CKEDITOR.replace('doc_content');
     </script>
     <script>
         function __loadContent(params) {
             console.log(params);
             $('#attendance_id_field').val(params);
-            // let attendance = $(params).attr(data);
-            // console.log(attendance);
             $('#content').removeClass('hidden')
         }
     </script>
