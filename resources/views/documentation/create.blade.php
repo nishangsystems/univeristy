@@ -49,9 +49,10 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('public/assets/js') }}/ckeditor/ckeditor.js"></script>
+    <!-- <script src="{{ asset('public/assets/js') }}/ckeditor/ckeditor.js"></script> -->
     <script>
-        CKEDITOR.replace('doc_content');
+        var editor1 = new RichTextEditor("#doc_content");
+        // CKEDITOR.replace('doc_content');
     </script>
     <script>
         function __loadContent(params) {
