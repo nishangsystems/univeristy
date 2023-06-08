@@ -282,7 +282,7 @@
                             <li>
                                 <a href="{{route('documentation.teacher_index', 'teacher')}}" class=" text-capitalize">
                                     <span class="menu-text text-capitalize">
-                                            {{ trans_choice('text.word_teacher') }}
+                                            {{ trans_choice('text.word_teacher', 1) }}
                                     </span>
                                 </a>
                             </li>
