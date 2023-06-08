@@ -84,4 +84,26 @@ class BaseController extends Controller
             return back()->with('success', __('text.word_done'));
         }
     }
+
+    public function permission_root($slug)
+    {
+        # code...
+        $doc = Documentation::where('permission', $slug)->where('role', 'admin')->orderBy('parent_id', 'ASC')->first();
+        if($doc != null){
+            return redirect(route('documentation.show', $doc->id));
+        }
+        return back()->with('error', __('text.no_manual_entries_available'));
+    }
+
+    public function teacher_index($slug)
+    {
+        # code...
+        $doc = Documentation::where('permission', $slug)->orWhere(function($query)use($slug){
+            $slug == 'hod' ? $query->where('permission', 'teacher') : null;
+        })->where('role', 'teacher')->orderBy('parent_id', 'ASC')->first();
+        if($doc != null){
+            return redirect(route('documentation.show', $doc->id));
+        }
+        return back()->with('error', __('text.no_manual_entries_available'));
+    }
 }
