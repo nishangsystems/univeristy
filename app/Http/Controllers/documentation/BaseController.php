@@ -4,6 +4,7 @@ namespace App\Http\Controllers\documentation;
 
 use App\Http\Controllers\Controller;
 use App\Models\Documentation;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -88,9 +89,13 @@ class BaseController extends Controller
     public function permission_root($slug)
     {
         # code...
-        $doc = Documentation::where('permission', $slug)->where('role', 'admin')->orderBy('parent_id', 'ASC')->first();
-        if($doc != null){
-            return redirect(route('documentation.show', $doc->id));
+        $docs = Documentation::where('permission', $slug)->where('role', 'admin')->orderBy('parent_id', 'ASC')->get();
+        if($docs != null){
+            $permission = Permission::where('slug', $slug)->first();
+            $data['title'] = __('text.admin_user_manual')." >> ".$permission->name;
+            $data['parent'] = $permission;
+            $data['data'] = $docs;
+            return view('documentation.sub_index', $data);
         }
         return back()->with('error', __('text.no_manual_entries_available'));
     }
