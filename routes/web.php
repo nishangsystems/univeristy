@@ -56,6 +56,7 @@ Route::post('logout', [CustomLoginController::class, 'logout'])->name('logout');
 Route::post('reset_password_with_token/password/reset', [CustomForgotPasswordController::class, 'validatePasswordRequest'])->name('reset_password_without_token');
 Route::get('reset_password_with_token/{token}/{email}', [CustomForgotPasswordController::class, 'resetForm'])->name('reset');
 Route::post('reset_password_with_token', [CustomForgotPasswordController::class, 'resetPassword'])->name('reset_password_with_token');
+Route::post('recover_username', [CustomForgotPasswordController::class, 'recover_username'])->name('recover_username');
 
 Route::get('', 'WelcomeController@home');
 Route::get('home', 'WelcomeController@home');
