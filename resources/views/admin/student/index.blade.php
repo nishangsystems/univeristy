@@ -84,7 +84,7 @@
                             </form>
                             <a class="btn btn-sm btn-warning m-1" onclick="confirm('Are you sure you want to reset pasword for ${element.name}?') ? $('#id_${element.id}').submit() : null"><i class="fa fa-edit"> {{__('text.reset_password')}}</i></a>|
                             <form action="${element.password_reset}" method="post" id="id_${element.id}" class="hidden">@csrf</form>
-                            <a class="btn btn-sm btn-secondary m-1" onclick="confirm('Your are about student status for ${element.name}?') ? (window.location={{route('admin.student.change_status', '__SID__')}}) : null">
+                            <a class="btn btn-sm btn-secondary m-1" onclick="confirm('Your are about student status for ${element.name}?') ? (window.location='{{route("admin.student.change_status", "__SID__")}}') : null">
                                 <i class="fa fa-cog">
                                      @if('__ACTIVE__') {{__('text.word_disactivate')}} @else {{__('text.word_activate')}} @endif 
                                 </i>
