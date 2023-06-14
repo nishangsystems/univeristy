@@ -27,7 +27,7 @@
             <tbody>
                 @php($k = 1)
                 @foreach(\App\Models\StudentClass::where('student_classes.class_id', request('id'))->where('student_classes.year_id', $year)
-                ->join('students', ['students.id'=>'student_classes.student_id'])->where('students.campus_id', request('campus_id'))->get(['students.*', 'student_classes.year_id as year']) as $stud)
+                ->join('students', ['students.id'=>'student_classes.student_id'])->where('students.campus_id', request('campus_id'))->where('students.active', 1)->get(['students.*', 'student_classes.year_id as year']) as $stud)
                     <tr>
                         <td>{{$k++}}</td>
                         <td>{{$stud->name}}</td>
@@ -82,7 +82,7 @@
                 </thead>
                 <tbody>
                     @php($k = 1)
-                    @foreach(\App\Models\StudentClass::where('class_id', request('id'))->where('year_id', $year)->join('students', ['students.id'=>'student_classes.student_id'])->distinct()->get(['students.*', 'student_classes.year_id as year']) as $stud)
+                    @foreach(\App\Models\StudentClass::where('class_id', request('id'))->where('year_id', $year)->join('students', ['students.id'=>'student_classes.student_id'])->where('students.active', 1)->distinct()->get(['students.*', 'student_classes.year_id as year']) as $stud)
                         @if((\Auth::user()->campus_id == null) || ($stud->campus_id == \Auth::user()->campus_id))
                         <tr>
                             <td>{{$k++}}</td>

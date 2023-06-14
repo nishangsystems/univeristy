@@ -808,5 +808,7 @@ return [
     'could_not_find_any_account_with_specified_matricule'=>'could not find any account with specified matricule',
     'begin_account_creation'=>'begin account creation',
     'next_step'=>'next step',
+    'word_disactivate'=>'disactivate',
+    'word_activate'=>'activate',
     ''
 ];

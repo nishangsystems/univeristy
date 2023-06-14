@@ -288,6 +288,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('result/bypass/{student_id?}', 'Admin\StudentController@studentResultBypass')->name('result.bypass');
     Route::get('result/bypass/cancel/{id}', 'Admin\StudentController@cancelResultBypass')->name('result.bypass.cancel');
     Route::get('result/bypass/{student_id}/set', 'Admin\StudentController@setStudentResultBypass')->name('result.bypass.set');
+    Route::get('student/change_status/{student_id}', 'Admin\StudentController@change_status')->name('student.change_status');
     Route::resource('result_release', 'Admin\ResultController');
 
 

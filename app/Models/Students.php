@@ -28,7 +28,8 @@ class Students extends Authenticatable
         'parent_name',
         'program_id',
         'parent_phone_number',
-        'imported'
+        'imported',
+        'active'
     ];
 
     public function extraFee($year_id)
