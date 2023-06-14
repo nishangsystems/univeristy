@@ -86,7 +86,7 @@
                             <form action="${element.password_reset}" method="post" id="id_${element.id}" class="hidden">@csrf</form>
                             <a class="btn btn-sm btn-secondary m-1" onclick="confirm('Your are about student status for ${element.name}?') ? (window.location='{{route("admin.student.change_status", "__SID__")}}') : null">
                                 <i class="fa fa-cog">
-                                     @if('__ACTIVE__') {{__('text.word_disactivate')}} @else {{__('text.word_activate')}} @endif 
+                                     @if('__ACTIVE__' == 1) {{__('text.word_disactivate')}} @else {{__('text.word_activate')}} @endif 
                                 </i>
                             </a>
                         </td>
