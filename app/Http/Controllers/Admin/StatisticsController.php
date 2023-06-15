@@ -46,7 +46,7 @@ class StatisticsController extends Controller
                                         ->join('students', 'students.id', '=','student_classes.student_id')
                                         ->where(function($q)use($campus_id){
                                             $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
-                                        })
+                                        })->where('students.active', '=', true)
                                         ->count(),
                             'males' => ProgramLevel::where('program_levels.program_id', '=', $program_id)
                                         ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
@@ -56,6 +56,7 @@ class StatisticsController extends Controller
                                             $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                         })
                                         ->where('students.gender', '=', 'male')
+                                        ->where('students.active', '=', true)
                                         ->count(),
                             'females' => ProgramLevel::where('program_levels.program_id', '=', $program_id)
                                         ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
@@ -65,6 +66,7 @@ class StatisticsController extends Controller
                                             $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                         })
                                         ->where('students.gender', '=', 'female')
+                                        ->where('students.active', '=', true)
                                         ->count(),
                         ];
                     }, SchoolUnits::where('unit_id', 4)->pluck('id')->toArray());
@@ -83,6 +85,7 @@ class StatisticsController extends Controller
                                                 $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })
                                             ->join('student_classes', ['student_classes.student_id'=>'students.id'])
+                                            ->where('students.active', '=', true)
                                             ->where('student_classes.year_id', $request->year)->count(),
 
                                 'males' => ProgramLevel::where('program_levels.level_id', $level_id)
@@ -91,6 +94,7 @@ class StatisticsController extends Controller
                                                 $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })
                                             ->where('students.gender', 'male')
+                                            ->where('students.active', '=', true)
                                             ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                             ->where('student_classes.year_id', $request->year)->count(),
 
@@ -100,6 +104,7 @@ class StatisticsController extends Controller
                                                 $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })
                                             ->where('students.gender', 'female')
+                                            ->where('students.active', '=', true)
                                             ->join('student_classes', ['student_classes.student_id'=>'students.id'])
                                             ->where('student_classes.year_id', $request->year)->count(),
                             ];
@@ -117,10 +122,12 @@ class StatisticsController extends Controller
                                             $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                         })
                                         ->join('student_classes', ['student_classes.student_id'=>'students.id'])
+                                        ->where('students.active', '=', true)
                                         ->where('student_classes.year_id', '=', $request->year)->count(),
 
                             'males' => ProgramLevel::find($class_id)->students()
                                         ->where('students.gender', '=', 'male')
+                                        ->where('students.active', '=', true)
                                         ->where(function($q)use($campus_id){
                                             $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                         })
@@ -129,6 +136,7 @@ class StatisticsController extends Controller
 
                             'females' => ProgramLevel::find($class_id)->students()
                                         ->where('students.gender', '=', 'female')
+                                        ->where('students.active', '=', true)
                                         ->where(function($q)use($campus_id){
                                             $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                         })

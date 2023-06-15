@@ -20,6 +20,7 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js"></script> -->
+
 		@php
 			$bg1 = \App\Http\Controllers\HomeController::getColor('background_color_1');
 			$bg2 = \App\Http\Controllers\HomeController::getColor('background_color_2');
@@ -27,209 +28,141 @@
 			$bg_path = \App\Helpers\Helpers::instance()->getBackground();
 		@endphp
 
-
 		<style>
+			body{
+				background-image: url("{{asset('assets/images/background1.png')}}");
+				background-position: center;
+				background-size: cover;
+				background-repeat: no-repeat;
+				background-attachment: fixed;
+
+			}
+
+				/* Rectangle 23 */
+			#login-frame{
+				position: relative;
+				width: 350px;
+				height: 450px;
+				min-height: fit-content;
+				margin-inline: auto;
+				border-radius: 24px;
+			}
+				/* Rectangle 23 */
+			#login-frame .rect1{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				min-height: fit-content;
+				background: #DBA622;
+				border-radius: 24px;
+				top: -9px;
+			}
+
+				/* Rectangle 22 */
+			#login-frame .rect2{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				min-height: fit-content;
+				margin-inline: auto;
+				background: #670404;
+				box-shadow: 0px 0px 34px rgba(0, 0, 0, 0.25);
+				border-radius: 24px;
+				left: 9px;
+				z-index: 20;
+			}
+				/* input bg */
+			#login-frame .main-rect{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				min-height: fit-content !important;
+				background: white;
+				border-radius: 24px;
+				z-index: 30;
+			}
+
+			#login-frame .main-rect div{
+				background: white;
+			}
+
 		    a{
 		        text-decoration:none;
 		        font-weight:bold;
 		        font-size:16px;
 		        color:#fff;
 		    }
-			#frame{
-				background-image: url("{{$bg_path}}");
-				/* background-color: rgba(250, 250, 250, 0.7); */
-				background-position: center;
-				background-repeat: no-repeat;
-				background-size: cover;
-				background-attachment: fixed;
-				/* background-blend-mode: overlay; */
+			#login-box{
+				border-radius: 24px;
+				margin-block: 3rem;
 			}
 		</style>
 	</head>
 
-	<nav class="navbar navbar-inverse"  style="background-color: {{$bg1}};">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">{{config('app.name')}} </a>
-    </div>
-
-  </div>
-</nav>
-
-
 	<body class="login-layout" id="frame">
-		<div class="main-container">
+		<div class="main-container px-5" style="padding-inline: 2rem;">
+			<div class="py-5 mx-5 w-100" style="padding: 2rem;">
+				<h4> <span style="color:#DBA622;">Kameleon</span>  {{__('text.tech_base')}}</h4>
+			</div>
 			<div class="main-content">
+				<div class="w-100">
+					<div class="login-container" id="login-frame">
 
+						<div class="rect1"></div>
 
-				<div class="row">
-					<div class="col-sm-10 col-sm-offset-1">
+						<div class="rect2"></div>
+						<div class="position-relative main-rect ">
 
+							<div id="login-box" class="login-box no-border">
+								<div class="widget-body">
+									<div class="widget-main">
+										<h4 class="bigger text-capitalize" style="color: black !important; font-size: xlarge;">
+											<b>{{__('text.word_register')}}</b>
+										</h4>
+										<span style="font-size: small; margin-bottom: 1rem; color: black !important;">{{__('text.begin_account_creation')}}</span>
 
-						<div class="login-container">
-							<div class="center" style=" padding:5px 10px; ">
-
-								<h4 class="yellow" id="id-company-text" style="color:#ff0">&copy; {{__('text.tech_base')}}</h4>
-							</div>
-
-							<div class="space-6"></div>
-
-				  <div class="space-6"></div>
-							<div class="position-relative">
-								<div id="login-box" class="login-box visible widget-box no-border">
-									<div class="widget-body">
-										<div class="widget-main">
-											<h4 class="header blue lighter bigger">
-												<i class="ace-icon fa fa-coffee green"></i>
-											 Start Account Creation
-											</h4>
-											@if(Session::has('error'))
-												<div class="alert alert-danger"><em> {!! session('error') !!}</em>
-												</div>
-											@endif
-
-
-											@if(Session::has('e'))
-												<div class="alert alert-danger"><em> {!! session('e') !!}</em>
-												</div>
-											@endif
-
-											@if(Session::has('s'))
-												<div class="alert alert-success"><em> {!! session('s') !!}</em>
-												</div>
-											@endif
-											<div class="space-6"></div>
-
-											<form method="post" action="{{ route('check_matricule') }}">
+										<form method="POST" action="{{ route('check_matricule') }}" style="padding-block: 3rem !important;">
 											@csrf
-												<fieldset>
-													<label class="block clearfix text-capitalize"> {{__('text.word_matricule')}}
-														<span class="block input-icon input-icon-right">
-															<input type="text" required class="form-control" value="{{old("reg_no")}}" name="reg_no" placeholder="Registration Number" />
-															<i class="ace-icon fa fa-user"></i>
-														</span>
-														@error('reg_no')
-															<span class="invalid-feedback red" role="alert">
-																<strong>{{ $message }}</strong>
-															</span>
-														@enderror
-													</label>
-													<div class="space"></div>
-													
+											<fieldset>
+												<label class="block clearfix">
+													<span class="text-capitalize">{{__('text.word_matricule')}}</span>
+													<span class="block input-icon input-icon-right">
+														<input type="text" required name="email" class="form-control"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+													</span>
+												</label>
 
-													<div class="space"></div>
+												<label class="block clearfix">
+													<span class="block input-icon input-icon-right" style="text-transform: capitalize;">
+														<input type="checkbox" name="remember_matric">  {{__('text.enter_payment_details')}}
+													</span>
+												</label>
 
-													<div class="clearfix">
-														<button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
-															<!--<i class="ace-icon fa fa-key"></i>-->
-															<!--<span class="bigger-110">{{__('text.word_login')}}</span>-->
-															<span class="bigger-110">Next Step</span>
-														</button>
-													</div>
+												<div class="clearfix">
+													<button type="submit" class="form-control btn-black btn-sm"  style="border-radius: 2rem; background-color: black; border: 1px solid black; color: white; text-transform: capitalize; margin-block: 2rem;">
+														{{__('text.next_step')}}
+													</button>
+												</div>
+											</fieldset>
+										</form>
+									</div><!-- /.widget-main -->
 
-													<div class="space-4"></div>
-												</fieldset>
-											</form>
-										</div><!-- /.widget-main -->
+									<div class="toolbar" style="border: 0px;">
+										<a href="{{route('login')}}" data-target="#login-box" class=" text-danger" style="border: 0px; font-size: xsmall !important; width: 77% !important; margin-inline: auto; text-decoration: underline !important">
+											<i class="ace-icon fa fa-arrow-left"></i>
+											{{__('text.back_to_login')}}
+										</a>
+									</div>
+								</div><!-- /.widget-body -->
+							</div><!-- /.forgot-box -->
 
-										<div class="toolbar clearfix"  style="background-color: {{$bg1}};">
-										<div>
-										
-											</div>
-
-											<div>
-												<a href="{{route('login')}}" >
-												{{__('text.back_to_login')}}
-												</a>
-											</div>
-										</div>
-									</div><!-- /.widget-body -->
-								</div><!-- /.login-box -->
-
-								<div id="forgot-box" class="forgot-box widget-box no-border">
-									<div class="widget-body">
-										<div class="widget-main">
-											<h4 class="header red lighter bigger">
-												<i class="ace-icon fa fa-key"></i>
-												Retrieve Password
-											</h4>
-
-											<div class="space-6"></div>
-											<p>
-												Enter your email where you want to receive instructions from
-											</p>
-
-											<form method="POST" action="#">
-											@csrf
-												<fieldset>
-													<label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input type="email" required name="email" class="form-control" placeholder="Email" />
-															<i class="ace-icon fa fa-envelope"></i>
-														</span>
-													</label>
-
-													<label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input type="checkbox" name="type">  Am a student
-														</span>
-													</label>
-
-													<div class="clearfix">
-														<button type="submit" class="width-35 pull-right btn btn-sm btn-danger">
-															<i class="ace-icon fa fa-lightbulb-o"></i> Next
-														</button>
-													</div>
-												</fieldset>
-											</form>
-										</div><!-- /.widget-main -->
-
-										<div class="toolbar center">
-											<a href="#" data-target="#login-box" class="back-to-login-link">
-												Back to login
-												<i class="ace-icon fa fa-arrow-right"></i>
-											</a>
-										</div>
-									</div><!-- /.widget-body -->
-								</div><!-- /.forgot-box -->
-
-
-							</div>
 						</div>
-					</div><!-- /.col -->
+					</div>
 				</div><!-- /.row -->
 			</div><!-- /.main-content -->
+
+			<div style="display: flex; justify-content: center; padding-block: 3rem; text-align: center; text-transform: capitalize; color: black !important;">
+				<span>{{__('text.powered_by')}} <b> {{__('text.nishang_system')}} </b></span>
+			</div>
 		</div><!-- /.main-container -->
-
-
-{{--		@include('inc.student.footer')--}}
-				</div>
-		<script src="{{asset('assets/js/jquery-2.1.4.min.js')}}"></script>
-		<script type="text/javascript">
-			if('ontouchstart' in document.documentElement) document.write("<script src='{{asset('assets/js/jquery.mobile.custom.min.js')}}'>"+"<"+"/script>");
-		</script>
-
-		<!-- inline scripts related to this page -->
-		<script type="text/javascript">
-			jQuery(function($) {
-			 $(document).on('click', '.toolbar a[data-target]', function(e) {
-				e.preventDefault();
-				var target = $(this).data('target');
-				$('.widget-box.visible').removeClass('visible');//hide others
-				$(target).addClass('visible');//show target
-			 });
-			});
-		</script>
-		<script type="text/javascript">
-
-$("#password").password('toggle');
-
-</script>
-
 	</body>
 </html>

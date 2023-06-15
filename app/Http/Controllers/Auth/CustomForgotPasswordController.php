@@ -116,4 +116,20 @@ return redirect()->route('login')->with('s','Password Changed Successfully');
         $data['email'] = $email;
         return view('auth.passwords.reset')->with($data);
     }
+
+    public function recover_username(Request $request)
+    {
+        $validity = Validator::make($request->all(), ['matric'=>'required']);
+        if($validity->fails()){
+            return back()->with('error', $validity->errors()->first());
+        }
+        $student = Students::where('matric', $request->matric)->first();
+        if($student != null){
+            if($student->username == null){
+                return back()->with('error', __('text.no_username_registered_for_this_account'));
+            }
+            return back()->with('success', __('text.word_done'));
+        }
+        return back()->with('error', __('text.could_not_find_any_account_with_specified_matricule'));
+    }
 }
