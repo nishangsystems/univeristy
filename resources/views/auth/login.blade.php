@@ -100,7 +100,7 @@
 	<body class="login-layout" id="frame">
 		<div class="main-container px-5" style="padding-inline: 2rem;">
 			<div class="py-5 mx-5 w-100" style="padding: 2rem;">
-				<h4> <span style="color:#DBA622;">Kameleon</span>  {{__('text.tech_base')}}</h4>
+				<h4> <span style="color:#DBA622;">Kameleon</span>  {{__('text.word_for')}} {{env('APP_NAME')}}</h4>
 			</div>
 			<div class="main-content">
 				<div class="w-100">
@@ -176,17 +176,17 @@
 											</form>
 										</div><!-- /.widget-main -->
 
-										<div class="toolbar clearfix"  style=" border: 0px;  font-size: xsmall !important; width: 77% !important; margin-inline: auto; ">
-											<div>
+										<div class="clearfix toolbar"  style=" border: 0px;  font-size: xsmall !important; width: 77% !important; margin-inline: auto; ">
+											{{-- <div>
 												<a  href="#" data-target="#forgot-username-box" class="forgot-username-link" style="color: black !important; text-decoration: underline !important;">
 													{{__('text.forgot_username')}}
 												</a>
-											</div>
+											</div> --}}
 											
-											<div>
-												<a  href="#" data-target="#forgot-box" class="forgot-password-link" style="color: black !important; text-decoration: underline !important;">
-													{{__('text.forgot_password')}}
+												<a  href="#" data-target="#forgot-box" class="text-center form-control btn-black btn-sm" style="border-radius: 2rem; background-color: black; border: 1px solid black; color: white; font-weight: normal !important;">
+													<span class="bigger-110">{{__('text._forgot_password')}}</span>
 												</a>
+											<div>
 											</div>
 
 										</div>
@@ -209,7 +209,7 @@
 											</h4>
 											<span style="font-size: small; margin-bottom: 1rem;">{{__('text.pass_reset_phrase')}}</span>
 
-											<form method="POST" action="{{ route('reset_password_without_token') }}" style="padding-block: 3rem !important;">
+											<form method="POST" action="{{ route('reset_password_without_token') }}" style="padding-block: 1rem !important;">
 											@csrf
 												<fieldset>
 													<label class="block clearfix">
@@ -219,11 +219,11 @@
 														</span>
 													</label>
 
-													<label class="block clearfix">
+													{{-- <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
 															<input type="checkbox" name="type">  Am a student
 														</span>
-													</label>
+													</label> --}}
 
 													<div class="clearfix">
 														<button type="submit" class="form-control btn-black btn-sm"  style="border-radius: 2rem; background-color: black; border: 1px solid black; color: white; text-transform: capitalize; margin-block: 2rem;">
@@ -234,8 +234,8 @@
 											</form>
 										</div><!-- /.widget-main -->
 
-										<div class="toolbar" style="border: 0px;">
-											<a href="#" data-target="#login-box" class=" text-danger" style="border: 0px; font-size: xsmall !important; width: 77% !important; margin-inline: auto; text-decoration: underline !important">
+										<div class="toolbar clearfix" style="border: 0px; padding-inline: 4rem;">
+											<a href="#" data-target="#login-box" class="form-control btn-black btn-sm text-center"  style="border-radius: 2rem; background-color: black; border: 1px solid black; color: white; text-transform: capitalize; font-weight: normal !important;">
 												<i class="ace-icon fa fa-arrow-left"></i>
 												{{__('text.back_to_login')}}
 											</a>

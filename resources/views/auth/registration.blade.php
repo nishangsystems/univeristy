@@ -102,7 +102,7 @@
 	<body class="login-layout" id="frame">
 		<div class="main-container px-5" style="padding-inline: 2rem;">
 			<div class="py-5 mx-5 w-100" style="padding: 2rem;">
-				<h4> <span style="color:#DBA622;">Kameleon</span>  {{__('text.tech_base')}}</h4>
+				<h4> <span style="color:#DBA622;">Kameleon</span> {{__('text.word_for')}} {{env('APP_NAME')}}</h4>
 			</div>
 			<div class="main-content">
 				<div class="w-100">
@@ -114,7 +114,7 @@
 						<div class="position-relative main-rect ">
 
 							<div id="login-box" class="login-box no-border">
-								<div class="widget-body">
+								<div class="widget-body" style="padding-inline: 3rem !important;">
 									<div class="widget-main">
 										<h4 class="bigger text-capitalize" style="color: black !important; font-size: xlarge;">
 											<b>{{__('text.word_register')}}</b>
@@ -127,15 +127,15 @@
 												<label class="block clearfix">
 													<span class="text-capitalize">{{__('text.word_matricule')}}</span>
 													<span class="block input-icon input-icon-right">
-														<input type="text" required name="email" class="form-control"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+														<input type="text" required name="reg_no" class="form-control"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
 													</span>
 												</label>
 
-												<label class="block clearfix">
+												{{-- <label class="block clearfix">
 													<span class="block input-icon input-icon-right" style="text-transform: capitalize;">
 														<input type="checkbox" name="remember_matric">  {{__('text.enter_payment_details')}}
 													</span>
-												</label>
+												</label> --}}
 
 												<div class="clearfix">
 													<button type="submit" class="form-control btn-black btn-sm"  style="border-radius: 2rem; background-color: black; border: 1px solid black; color: white; text-transform: capitalize; margin-block: 2rem;">
@@ -146,8 +146,8 @@
 										</form>
 									</div><!-- /.widget-main -->
 
-									<div class="toolbar" style="border: 0px;">
-										<a href="{{route('login')}}" data-target="#login-box" class=" text-danger" style="border: 0px; font-size: xsmall !important; width: 77% !important; margin-inline: auto; text-decoration: underline !important">
+									<div  class="toolbar clearfix" style="border: 0px; padding-inline: 1rem;">
+										<a href="{{route('login')}}" data-target="#login-box" class="form-control btn-black btn-sm text-center"  style="border-radius: 2rem; background-color: black; border: 1px solid black; color: white; text-transform: capitalize; font-weight: normal !important;">
 											<i class="ace-icon fa fa-arrow-left"></i>
 											{{__('text.back_to_login')}}
 										</a>

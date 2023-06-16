@@ -90,31 +90,22 @@ class Controller extends BaseController
     }
 
     public function check_matricule(Request $request){
-        // if (Students::where('matric', $request->reg_no)->exists()) { 
-        //        if (User::where('username', $request->reg_no)->exists()) {   
-        //           return redirect()->route('registration')->with('error','Matricule Number has being used already. Contact the System Administrator.');   
-        //        }else{
-        //          $student_d = Students::where('matric', $request->reg_no)->first();   
-        //          return view('auth.registration_info',compact('student_d'));
-        //        }
-             
-        //    }
-        //    else{
-        //      return redirect()->route('registration')->with('error','Invalid Registration Number.');   
-        //    }
 
-           if (Students::where('matric', $request->reg_no)->exists()) { 
-                if (Students::where('matric', $request->reg_no)->whereNotNull('email')->exists()){
-                    return redirect()->route('login')->with('error','Account already exist');   
-                }
-                else {
-                    $student_d = Students::where('matric', $request->reg_no)->first();
-                    return view('auth.registration_info',compact('student_d'));
-                }
-           }
-           else{
-             return redirect()->route('registration')->with('error','Matricule '.$request->reg_no.' Not Found in the system. Contact the registry for rectification.');   
-           }
+        $validity = Validator::make($request->all(), ['reg_no'=>'required']);
+        if($validity->fails()){return back()->with('error', $validity->errors()->first());}
+
+        if (Students::where('matric', $request->reg_no)->exists()) { 
+            // if (Students::where('matric', $request->reg_no)->whereNotNull('email')->exists()){
+            //     return redirect()->route('login')->with('error','Account already exist');   
+            // }
+            // else {
+                $student_d = Students::where('matric', $request->reg_no)->first();
+                return view('auth.registration_info',compact('student_d'));
+            // }
+        }
+        else{
+            return redirect()->route('registration')->with('error','Matricule '.$request->reg_no.' Not Found in the system. Contact the registry for rectification.');   
+        }
      }
 
      public function createAccount(Request $request){

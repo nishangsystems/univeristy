@@ -5,6 +5,7 @@ return [
     'word_password'=>'password',
     'word_login'=>'login',
     'forgot_password'=>'I forgot my password',
+    '_forgot_password'=>'forgot password',
     'want_to_register'=>'I want to register',
     'tech_base'=>'Powered by Nishang System',
     'word_batch'=>'batch',
@@ -810,5 +811,9 @@ return [
     'next_step'=>'next step',
     'word_disactivate'=>'disactivate',
     'word_activate'=>'activate',
+    'completing_account_creation'=>'completing account creation',
+    'first_name'=>'first name',
+    'phone_number'=>'phone number',
+    'confirm_password'=>'confirm password',
     ''
 ];
