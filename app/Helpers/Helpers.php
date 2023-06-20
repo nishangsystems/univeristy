@@ -222,7 +222,7 @@ class Helpers
         $lt = File::where('name','=', 'letter-head');
         if ($lt->count() > 0) {
             # code...
-            return url('storage/app/files').'/'.$lt->first()->path;
+            return asset('assets/images/avatars').'/'.$lt->first()->path;
         }
         return '';
     }
