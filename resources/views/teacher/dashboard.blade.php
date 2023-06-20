@@ -9,7 +9,7 @@
                 <div>
 							<span class="profile-picture">
 								<img width="200px" height="" id="avatar" class="editable img-responsive"
-                                     alt="Alex's Avatar" src="{{url('assets/images/avatars/profile-pic.jpg')}}"/>
+                                     alt="Alex's Avatar" src="{{asset('assets/images/avatars/profile-pic.jpg')}}"/>
 							</span>
 
                     <div class="space-4"></div>
