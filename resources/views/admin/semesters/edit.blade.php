@@ -2,7 +2,7 @@
 @section('section')
 <div class="w-100 py-5">
     <div class="py-5 px-4 mx-auto">
-        <form action="{{route('admin.semesters.store', [request('program_id'), request('id'))]}}" method="post">
+        <form action="{{route('admin.semesters.store', [request('program_id'), request('id')])}}" method="post">
             @csrf
             <input type="hidden" name="background_id" value="{{request('background_id')}}" id="">
             <div class="row text-capitalize my-3">

@@ -26,5 +26,5 @@
     @php $m += 1; @endphp
 @endforeach
 @foreach ($item->unit as $unit)
-    @include('admin.units.item', ['item' => $unit, '$m' => ])
+    @include('admin.units.item', ['item' => $unit, '$m' => ''])
 @endforeach

@@ -58,10 +58,10 @@ class HomeController  extends Controller
         if(!($file == null)){
             $ext = $file->getClientOriginalExtension();
             $filename = '_'.random_int(100000, 999999).'_'.time().'.'.$ext;
-            $path = 'storage/app/files';
+            $path = 'assets/images/avatars';
             if(!file_exists(url($path))){mkdir(url($path));}
             // $file->move(url($path), $filename);
-            $file->storeAs('files', $filename);
+            $file->move(public_path($path), $filename);
             if(File::where(['name'=>'letter-head'])->count() == 0){
                 File::create(['name'=>'letter-head', 'path'=>$filename]);
             }else {
