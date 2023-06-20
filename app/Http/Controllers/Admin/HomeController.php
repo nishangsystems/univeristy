@@ -58,13 +58,14 @@ class HomeController  extends Controller
         if(!($file == null)){
             $ext = $file->getClientOriginalExtension();
             $filename = '_'.random_int(100000, 999999).'_'.time().'.'.$ext;
-            $path = $filename;
-            if(!file_exists(url('storage/app/').'/files')){mkdir(url('storage/app/').'/files');}
-            $file->move(url('storage/app/').'/files', $filename);
+            $path = 'storage/app/files';
+            if(!file_exists(url($path))){mkdir(url($path));}
+            // $file->move(url($path), $filename);
+            $file->storeAs('files', $filename);
             if(File::where(['name'=>'letter-head'])->count() == 0){
-                File::create(['name'=>'letter-head', 'path'=>$path]);
+                File::create(['name'=>'letter-head', 'path'=>$filename]);
             }else {
-                File::where(['name'=>'letter-head'])->update(['path'=>$path]);
+                File::where(['name'=>'letter-head'])->update(['path'=>$filename]);
             }
             return back()->with('success', __('text.word_done'));
         }
