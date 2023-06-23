@@ -10,17 +10,17 @@
     <title>{{ __('text.app_name') }}</title>
 
     <!-- Scripts -->
-    <script src="{{url('public')}}/js/app.js" defer></script>
+    <script src="{{asset('js/app.js')}}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
    
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-    <link rel="stylesheet" href="{{url('public')}}/assets/css/custom.css" class="ace-main-stylesheet" id="main-ace-style" />
+    <link rel="stylesheet" href="{{asset('assets/css/custom.css')}}" class="ace-main-stylesheet" id="main-ace-style" />
 
     <!-- Styles -->
-    <link href="{{url('public')}}/css/app.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{url('public')}}/css/style.css">
+    <link href="{{asset('css/app.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>

@@ -88,10 +88,10 @@
     </div>
 <script src="{{asset('assets/js/jquery-2.1.4.min.js')}}"></script>
 <script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
-<script src="{{ asset('assets/vendor/toastr/toastr.min.js') }}"></script>
+<script src="{{asset('assets/vendor/toastr/toastr.min.js') }}"></script>
 <script src="{{asset('assets/js/ace.min.js')}}"></script>
-<script src="{{ asset('libs')}}/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="{{ asset('libs')}}/datatables.net-bs4/js/dataTables.responsive.min.js"></script>
+<script src="{{asset('libs')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('libs')}}/datatables.net-bs4/js/dataTables.responsive.min.js"></script>
 
 
 <script>
