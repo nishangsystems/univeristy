@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="{{url('public/assets/css')}}/result.css" media="all" />
+    <link rel="stylesheet" href="{{asset('assets/css/result.css')}}" media="all" />
   </head>
   <style>
          tr,td,table,th{
@@ -35,7 +35,7 @@
       </style>
   <body>
       
-  <img class="image_fluid" src="{{url('public/assets/images')}}/header.jpg">
+  <img class="image_fluid" src="{{asset('assets/images/header.jpg')}}">
     <div class="container">
             <div>Name : &nbsp;&nbsp; {{$student->studentInfo->firstname}}  {{$student->studentInfo->lastname}}</div>
             <div>Matricule : &nbsp;&nbsp;{{$student->matric}}</div>

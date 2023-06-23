@@ -936,8 +936,8 @@ class HomeController extends Controller
         $data['user'] = auth('student')->user();
         
         $pdf = PDF::loadView('student.courses.form_b_template',$data);
-        // return $pdf->download(auth('student')->user()->matric.'_FORM_B.pdf');
-        return view('student.courses.form_b_template', $data);
+        return $pdf->download(auth('student')->user()->matric.'_FORM_B.pdf');
+        // return view('student.courses.form_b_template', $data);
     }
     public function add_course()//takes class course id
     {

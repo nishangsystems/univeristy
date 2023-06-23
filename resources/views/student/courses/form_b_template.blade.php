@@ -10,16 +10,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- bootstrap & fontawesome -->
-    <link rel="stylesheet" href="{{url('css/app.css')}}" />
-    <link rel="stylesheet" href="{{url('assets/css/bootstrap.min.css')}}" />
-    <link rel="stylesheet" href="{{url('assets/font-awesome/4.5.0/css/font-awesome.min.css')}}" />
-    <link rel="stylesheet" href="{{url('assets/css/fonts.googleapis.com.css')}}" />
-    <link rel="stylesheet" href="{{url('assets/css/ace.min.css')}}" class="ace-main-stylesheet" id="main-ace-style" />
-    <link rel="stylesheet" href="{{url('assets/css/ace-part2.min.css')}}" class="ace-main-stylesheet" />
-    <link rel="stylesheet" href="{{url('assets/css/ace-skins.min.css')}}"/>
-    <link rel="stylesheet" href="{{url('assets/css/ace-rtl.min.css')}}"/>
-    <script src="{{url('assets/js/ace-extra.min.js')}}"></script>
-    <link rel="stylesheet" href="{{url('assets/css/custom.css')}}" class="ace-main-stylesheet"
+    <link rel="stylesheet" href="{{asset('css/app.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/font-awesome/4.5.0/css/font-awesome.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/css/fonts.googleapis.com.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/css/ace.min.css')}}" class="ace-main-stylesheet" id="main-ace-style" />
+    <link rel="stylesheet" href="{{asset('assets/css/ace-part2.min.css')}}" class="ace-main-stylesheet" />
+    <link rel="stylesheet" href="{{asset('assets/css/ace-skins.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('assets/css/ace-rtl.min.css')}}"/>
+    <script src="{{asset('assets/js/ace-extra.min.js')}}"></script>
+    <link rel="stylesheet" href="{{asset('assets/css/custom.css')}}" class="ace-main-stylesheet"
           id="main-ace-style"/>
     <link rel="stylesheet" type="text/css" href="{{ asset('libs')}}/datatables.net-bs4/css/dataTables.bootstrap4.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('libs')}}/datatables.net-bs4/css/responsive.dataTables.min.css">
@@ -70,7 +70,7 @@
         #table_____{
             font-weight: 700;
             background-image: url("{{url('/assets/images/logo.jpeg')}}");
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255, 255, 255, 0.8);
             background-position: center;
             background-size: contain;
             background-repeat: no-repeat;
@@ -80,15 +80,15 @@
     </STYLE>
 </head>
 <body>
-        @php
-            $program_name = \App\Models\ProgramLevel::find(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->name;
-            $faculty = \App\Models\ProgramLevel::find(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->parent->parent;
-            $current_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
-            $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->id;
-            $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->name;
-            $flag = true;
-        @endphp
-            <div class=""id="table_____">
+    @php
+        $program_name = \App\Models\ProgramLevel::find(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->name;
+        $faculty = \App\Models\ProgramLevel::find(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->parent->parent;
+        $current_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
+        $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->id;
+        $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->_class(\App\Helpers\Helpers::instance()->getYear())->id)->name;
+        $flag = true;
+    @endphp
+            <div class="" id="table_____">
                 
                 
                 <div class=""  style="background-color: rgba(255, 255, 255, 0.9);">
