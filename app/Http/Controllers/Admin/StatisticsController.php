@@ -163,7 +163,7 @@ class StatisticsController extends Controller
         $students = ProgramLevel::where('program_levels.program_id', '=', $program_id)
                                             ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
                                             ->where('student_classes.year_id', '=', $year)
-                                            ->join('students', 'students.id', '=', 'student_classes.student_id')
+                                            ->join('students', 'students.id', '=', 'student_classes.student_id')->where('students.active', true)
                                             ->where(function($q)use($campus_id){
                                                 $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })->distinct()->pluck('students.id')->toArray();       
@@ -172,7 +172,7 @@ class StatisticsController extends Controller
             'students' => count($students), 'complete'=> 0, 'incomplete'=>0, 
             'recieved' => 0, 'expected' => 0, 'per_completed'=>0, 
             'per_uncompleted' =>0, 'per_recieved'=>0];
-        $fees = array_map(function($stud) use ($program_id, $year){
+        $fees = array_map(function($stud) use ($students, $year){
             $student_class = Students::find($stud)->_class($year)->id;
             return [
                 'amount' => array_sum(
@@ -223,7 +223,7 @@ class StatisticsController extends Controller
         $students = ProgramLevel::where('program_levels.level_id', '=', $level_id)
                                             ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
                                             ->where('student_classes.year_id', '=', $year)
-                                            ->join('students', 'students.id', '=', 'student_classes.student_id')
+                                            ->join('students', 'students.id', '=', 'student_classes.student_id')->where('students.active', true)
                                             ->where(function($q)use($campus_id){
                                                 $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })->distinct()->pluck('students.id')->toArray();       
@@ -283,6 +283,7 @@ class StatisticsController extends Controller
         $students = \App\Models\StudentClass::where('student_classes.class_id', '=', $class_id)
                                             ->where('student_classes.year_id', '=', $year)
                                             ->join('students', 'students.id', '=', 'student_classes.student_id')
+                                            ->where('students.active', true)
                                             ->where(function($q)use($campus_id){
                                                 $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                                             })->distinct()->pluck('students.id')->toArray();  
@@ -403,6 +404,7 @@ class StatisticsController extends Controller
                             ->whereIn('class_id', \App\Http\Controllers\Admin\ProgramController::subunitsOf($class_id))
                             ->where('year_id', '=', $year)
                             ->join('students', 'students.id', '=', 'student_classes.student_id')
+                            ->where('students.active', true)
                             ->where(function($q)use($campus_id){
                                 $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                             })
@@ -495,6 +497,7 @@ class StatisticsController extends Controller
                         ->whereMonth('pay_incomes.created_at', '=', date('m', strtotime($request->value)))
                         ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
                         ->join('students', ['students.id'=>'pay_incomes.student_id'])
+                        ->where('students.active', true)
                         ->where(function($q)use($campus_id){
                             $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                         })
@@ -520,6 +523,7 @@ class StatisticsController extends Controller
                         ->where('pay_incomes.batch_id', '=', $request->value)
                         ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
                         ->join('students', ['students.id'=>'pay_incomes.student_id'])
+                        ->where('students.active', true)
                         ->where(function($q)use($campus_id){
                             $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                         })
@@ -546,6 +550,7 @@ class StatisticsController extends Controller
                     ->whereDate('pay_incomes.created_at', '<=', date('Y-m-d', strtotime($request->end_date)))
                     ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
                     ->join('students', ['students.id'=>'pay_incomes.student_id'])
+                    ->where('students.active', true)
                     ->where(function($q)use($campus_id){
                         $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
                     })
