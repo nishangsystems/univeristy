@@ -121,7 +121,7 @@
 
                 <li class="light-blue">
                     <span>
-                        <img class="nav-user-photo fa fa-globe"></img>
+                        <span class="nav-user-photo fa fa-globe"></span>
                         <span>
                             <small class="text-capitalize text-white">
                                 {{\Auth::user()->campus_id ? \App\Models\Campus::find(\Auth::user()->campus_id)->name : 'campus'}}
