@@ -597,7 +597,7 @@ class ProgramController extends Controller
                 $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
                 $students = Students::where(function($q){
                                 auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);
-                            })
+                            })->where('students.active', true)
                             ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                             ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 // dd($students);
@@ -615,7 +615,7 @@ class ProgramController extends Controller
                 $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
                 $students = Students::where(function($q){
                                 auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);
-                            })
+                            })->where('students.active', true)
                             ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                             ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 // dd($students);
@@ -633,8 +633,9 @@ class ProgramController extends Controller
                 $classes = ProgramLevel::whereIn('program_id', $programs)->pluck('id')->toArray();
                 $students = Students::where(function($q){
                             auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
-                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
-                        ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
+                            ->where('students.active', true)
+                            ->join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 // dd($students);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
@@ -645,7 +646,8 @@ class ProgramController extends Controller
                 $classes = ProgramLevel::where('program_id', $request->item_id)->pluck('id')->toArray();
                 $students = Students::where(function($q){
                             auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
-                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->where('students.active', true)
                             ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 // dd($students);
                 $data['students'] = $students;
@@ -657,7 +659,8 @@ class ProgramController extends Controller
                 $data['title'] = __('text.all_students_for', ['unit'=>ProgramLevel::find($request->item_id)->name()]);
                 $students = Students::where(function($q){
                             auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
-                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->where('students.active', true)
+                            ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                             ->orderBy('students.name')->where('class_id', $request->item_id)->where('year_id', '=', $year)
                             ->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 $data['students'] = $students;
@@ -670,7 +673,8 @@ class ProgramController extends Controller
                 $classes = ProgramLevel::where('level_id', '=', $level->id)->pluck('id')->toArray();
                 $students = Students::where(function($q){
                             auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
-                                        ->join('student_classes', ['students.id'=>'student_classes.student_id'])
+                            ->where('students.active', true)
+                            ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                             ->whereIn('class_id', $classes)->where('year_id', '=', $request->year_id)
                             ->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id']);
                 $data['students'] = $students;
