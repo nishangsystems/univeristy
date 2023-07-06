@@ -41,7 +41,6 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-                {{$expenses->links()}}
             </div>
         </div>
     </div>
