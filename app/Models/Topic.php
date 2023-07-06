@@ -10,6 +10,7 @@ class Topic extends Model
     use HasFactory;
     protected $fillable = ['teacher_subject_id', 'subject_id', 'title', 'duration', 'level', 'parent_id', 'week', 'teacher_id', 'campus_id'];
 
+    protected $connection = 'mysql';
     public function teacherSubject()
     {
         return $this->belongsTo(TeachersSubject::class, 'teacher_subject_id');

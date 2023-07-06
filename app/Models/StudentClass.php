@@ -10,6 +10,7 @@ class StudentClass extends Model
     use HasFactory;
 
     use \Staudenmeir\LaravelCte\Eloquent\QueriesExpressions;
+    protected $connection = 'mysql';
 
     protected $fillable = ['student_id', 'class_id', 'year_id', 'result_bypass_semester', 'current'];
 

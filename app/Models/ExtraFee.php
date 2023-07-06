@@ -10,6 +10,7 @@ class ExtraFee extends Model
     use HasFactory;
     protected $fillable = ['student_id', 'year_id', 'amount'];
     protected $table = 'extra_fees';
+    protected $connection = 'mysql';
 
     public function student()
     {

@@ -10,6 +10,7 @@ class NonGPACourse extends Model
     use HasFactory;
      protected $table = "non_gpa_courses";
      protected $fillable = ['background_id', 'course_code'];
+     protected $connection = 'mysql';
 
     public function background()
     {

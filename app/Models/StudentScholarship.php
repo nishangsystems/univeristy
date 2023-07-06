@@ -16,6 +16,7 @@ class StudentScholarship extends Model
         'user_id',
         'reason'
     ];
+    protected $connection = 'mysql';
 
     public function student()
     {

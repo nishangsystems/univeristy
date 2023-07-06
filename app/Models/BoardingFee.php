@@ -15,6 +15,7 @@ class BoardingFee extends Model
         'boarding_type',
         'parent_id'
     ];
+    protected $connection = 'mysql';
 
     public function  boardingFeeInstallments()
     {

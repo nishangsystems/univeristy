@@ -14,6 +14,7 @@ class OfflineResult extends Model
         'subject_id', 'ca_score', 'exam_score', 'coef', 'remark',
         'class_subject_id', 'reference', 'user_id'
     ];
+    protected $connection = 'mysql';
 
     protected $table = 'offline_results';
     

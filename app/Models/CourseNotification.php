@@ -10,6 +10,7 @@ class CourseNotification extends Model
     use HasFactory;
     protected $fillable = ['user_id', 'title', 'message', 'date', 'status', 'course_id', 'campus_id'];
     protected $table = 'course_notifications';
+    protected $connection = 'mysql';
 
     public function campus()
     {

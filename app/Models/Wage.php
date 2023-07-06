@@ -10,6 +10,7 @@ class Wage extends Model
     use HasFactory;
 
     protected $table = 'wages';
+    protected $connection = 'mysql';
     protected $fillable = ['level_id', 'teacher_id', 'price'];
 
 

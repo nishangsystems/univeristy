@@ -12,6 +12,7 @@ class BoardingFeeInstallment extends Model
         'installment_name',
         'installment_amount',
     ];
+    protected $connection = 'mysql';
 
 
     public function boardingFee()

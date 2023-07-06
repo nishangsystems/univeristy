@@ -11,6 +11,7 @@ class StudentStock extends Model
 
     protected $fillable = ['student_id', 'stock_id', 'quantity', 'type', 'campus_id', 'year_id'];
     protected $table = 'student_stock';
+    protected $connection = 'mysql';
 
     public function student()
     {

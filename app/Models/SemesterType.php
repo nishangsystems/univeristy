@@ -9,6 +9,7 @@ class SemesterType extends Model
 {
     use HasFactory;
      protected $fillable = ['background_name'];
+     protected $connection = 'mysql';
 
      protected $table = 'backgrounds';
 }

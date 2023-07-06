@@ -11,6 +11,7 @@ class CampusSemesterConfig extends Model
 
     protected $fillable = ['campus_id','semester_id', 'courses_date_line'];
     protected $table =  'campus_semester_config';
+    protected $connection = 'mysql';
 
     public function campus(){
         return $this->belongsTo(Campus::class, 'campus_id');

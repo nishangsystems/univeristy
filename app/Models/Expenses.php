@@ -13,4 +13,5 @@ class Expenses extends Model
         'amount_spend',
         'date'
     ];
+    protected $connection = 'mysql';
 }

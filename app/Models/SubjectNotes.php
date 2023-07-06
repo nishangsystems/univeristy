@@ -15,6 +15,7 @@ class SubjectNotes extends Model
         'status',
         'type'
     ];
+    protected $connection = 'mysql';
 
     /**
      * relationshipe between class_subject and notes

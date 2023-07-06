@@ -9,7 +9,7 @@ use \App\Helpers\Helpers;
 class ClassSubject extends Model
 {
     use HasFactory;
-
+    protected $connection = 'mysql';
     
     protected $fillable = ['class_id', 'coef', 'status', 'subject_id', 'hours'];
 

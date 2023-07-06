@@ -10,6 +10,7 @@ class TranscriptRating extends Model
     use HasFactory;
     protected $fillable = ['mode', 'duration', 'current_price', 'former_price', 'user_id'];
 
+    protected $connection = 'mysql';
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'user_id');

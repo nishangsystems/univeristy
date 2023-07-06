@@ -10,4 +10,5 @@ class Unit extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+    protected $connection = 'mysql';
 }

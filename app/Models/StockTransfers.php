@@ -11,6 +11,7 @@ class StockTransfers extends Model
 
     protected $fillable = ['sender_campus', 'stock_id', 'receiver_campus', 'user_id', 'type', 'quantity'];
     protected $table = 'stock_transfers';
+    protected $connection = 'mysql';
 
     public function stock()
     {

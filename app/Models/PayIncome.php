@@ -16,6 +16,7 @@ class PayIncome extends Model
         'student_id',
         'user_id',
     ];
+    protected $connection = 'mysql';
 
     /**
      * relationship between payments made for an income and the income type

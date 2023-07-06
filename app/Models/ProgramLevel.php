@@ -11,6 +11,7 @@ class ProgramLevel extends Model
     use HasFactory;
     
     protected $fillable = ['program_id', 'level_id', 'resit_cost'];
+    protected $connection = 'mysql';
     
     public function students()
     {

@@ -10,7 +10,7 @@ class Grading extends Model
     use HasFactory;
 
     protected $table = 'grading';
-
+    protected $connection = 'mysql';
     protected $fillable = ['lower', 'upper', 'weight', 'grade', 'status', 'remark', 'grading_type_id'];
 
     public function grading_type()

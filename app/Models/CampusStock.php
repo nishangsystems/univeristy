@@ -11,6 +11,7 @@ class CampusStock extends Model
     use HasFactory;
 
     protected $fillable = ['campus_id', 'stock_id', 'quantity'];
+    protected $connection = 'mysql';
 
     protected $table = 'campus_stock';
 

@@ -16,6 +16,7 @@ class TeachersSubject extends Model
         'class_id',
         'campus_id'
     ];
+    protected $connection = 'mysql';
 
     public function subject(){
         return $this->belongsTo(ClassSubject::class, 'subject_id');

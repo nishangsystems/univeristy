@@ -11,7 +11,7 @@ class Transcript extends Model
     /**
      * Summary of fillable
      * @var array $fillable 
-     * ['config_id':ratings id
+     * 'config_id':ratings id
      * 'studebt_id':student who applied for the trancript
      * 'status': current or former student
      * 'done': date of printing, if transcript is already done or not
@@ -19,6 +19,7 @@ class Transcript extends Model
      * 'giver_id': which user gave/signed out the transcript
      * 'user_id': who validates the transcript as 'done'
      */
+    protected $connection = 'mysql';
     protected $fillable = ['config_id', 'student_id', 'status', 'delivery_format', 'tel', 'year_id', 'description', 'done', 'collected', 'giver_id', 'user_id', 'paid'];
 
     public function done_by()

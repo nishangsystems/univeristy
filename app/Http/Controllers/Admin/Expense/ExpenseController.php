@@ -30,7 +30,7 @@ class ExpenseController extends Controller
             auth()->user()->campus_id != null ? $query->where('users.campus_id', '=', auth()->user()->campus_id):null;
         })
         ->orderBy('expenses.id', 'DESC')
-        ->select('expenses.*')->paginate(5);
+        ->select('expenses.*')->get();
         $data['title'] = __('text.school_expenses');
 
         return view('admin.expense.index')->with($data);
