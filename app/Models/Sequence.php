@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Sequence extends Model
 {
     use HasFactory;
-
     protected $fillable = ['name', 'term_id'];
+    protected $connection = 'mysql';
 }

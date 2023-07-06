@@ -10,6 +10,7 @@ class Documentation extends Model
     use HasFactory;
 
     protected $table = 'documentations';
+    protected $connection = 'mysql';
     protected $fillable = ['role', 'parent_id', 'title', 'content', 'permission'];
     
 

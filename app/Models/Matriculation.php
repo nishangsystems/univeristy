@@ -11,4 +11,5 @@ class Matriculation extends Model
 
     protected $table = 'matriculation';
     protected $fillable = ['pattern', 'last_number'];
+    protected $connection = 'mysql';
 }

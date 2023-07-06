@@ -9,6 +9,6 @@ class File extends Model
 {
     use HasFactory;
     protected $fillable = ['name', 'path'];
-
+    protected $connection = 'mysql';
     protected $table = 'files';
 }

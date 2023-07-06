@@ -12,6 +12,7 @@ class StudentPromotions extends Model
     protected $fillable = ['student_id', 'promotion_id'];
 
     protected $table = 'student_promotions';
+    protected $connection = 'mysql';
 
     function student()
     {

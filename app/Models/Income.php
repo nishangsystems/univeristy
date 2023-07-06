@@ -11,12 +11,10 @@ class Income extends Model
 
     protected $fillable = [
         'name',
-
         'amount',
-
         'pay_online'
-
     ];
+    protected $connection = 'mysql';
 
     /**
      * relationship between student and income

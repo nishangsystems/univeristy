@@ -16,6 +16,7 @@ class BoardingAmount extends Model
         'collect_boarding_fee_id',
         'balance'
     ];
+    protected $connection = 'mysql';
 
     public function collect_boarding_fee()
     {

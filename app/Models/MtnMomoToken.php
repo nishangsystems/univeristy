@@ -10,4 +10,5 @@ class MtnMomoToken extends Model
     use HasFactory;
 
     protected $fillable = ['access_token', 'refresh_token', 'token_type', 'product', 'expires_at'];
+    protected $connection = 'mysql';
 }

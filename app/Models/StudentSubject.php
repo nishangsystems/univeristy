@@ -12,6 +12,7 @@ class StudentSubject extends Model
     protected $fillable = ['student_id', 'semester_id', 'course_id', 'year_id', 'resit_id'];
 
     protected $table = 'student_courses';
+    protected $connection = 'mysql';
     
     public function student()
     {

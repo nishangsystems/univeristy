@@ -9,8 +9,8 @@ class Material extends Model
 {
     use HasFactory;
     protected $fillable = ['title', 'school_unit_id', 'unit_id', 'file', 'campus_id', 'visibility', 'user_id', 'level_id'];
-
     protected $table = 'material';
+    protected $connection = 'mysql';
     
     public function created_by()
     {

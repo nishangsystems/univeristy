@@ -32,6 +32,8 @@ class Students extends Authenticatable
         'active'
     ];
 
+    protected $connection = 'mysql';
+
     public function extraFee($year_id)
     {
         $builder = $this->hasMany(ExtraFee::class, 'student_id')->where('year_id', '=', $year_id);

@@ -9,5 +9,6 @@ class ProgramSemesterType extends Model
 {
     use HasFactory;
     protected $fillable = ['program_id', 'semester_type_id'];
+    protected $connection = 'mysql';
     
 }

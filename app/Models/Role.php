@@ -10,6 +10,7 @@ class Role extends Model
     protected $fillable = [
         'name','slug',
     ];
+    protected $connection = 'mysql';
 
     public function permissions() {
 

@@ -10,4 +10,5 @@ use App\Permissions\HasPermissionsTrait;
 class UserRole extends Authenticatable
 {
     public $table = "users_roles";
+    protected $connection = 'mysql';
 }

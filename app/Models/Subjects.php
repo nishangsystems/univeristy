@@ -12,6 +12,7 @@ class Subjects extends Model
 
     protected $fillable = ['name', 'code', 'coef', 'level_id', 'semester_id', 'status', 'objective'];
 
+    protected $connection = 'mysql';
     public function units()
     {
         return  $this->belongsToMany(SchoolUnits::class, 'class_subjects', 'subject_id', 'class_id');

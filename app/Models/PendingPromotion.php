@@ -12,6 +12,7 @@ class PendingPromotion extends Model
     use HasFactory;
 
     protected $table = 'pending_promotions';
+    protected $connection = 'mysql';
     protected $fillable = [
         'from_year', 'to_year', 'from_class', 'to_class', 'type', 'students', 'user_id'
     ];

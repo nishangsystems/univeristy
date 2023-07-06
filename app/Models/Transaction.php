@@ -9,6 +9,7 @@ class Transaction extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
     protected $fillable = ['student_id', 'amount', 'year_id', 'tel', 'status','payment_purpose','payment_method','reference', 'transaction_id', 'payment_id', 'financialTransactionId', 'used', 'is_charges', 'semester_id'];
 
     protected $table = 'transactions';

@@ -10,7 +10,7 @@ class School extends Model
     use HasFactory;
 
     protected $table = 'schools';
-
+    protected $connection = 'mysql';
     protected $fillable = ['name', 'contact', 'address', 'logo_path'];
 
     public function campuses()

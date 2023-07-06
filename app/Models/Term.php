@@ -9,6 +9,7 @@ class Term extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
     public function sequences(){
         return $this->hasMany(Sequence::class, 'term_id');
     }

@@ -10,6 +10,7 @@ class Background extends Model
 {
     use HasFactory;
     protected $fillable = ['background_name'];
+    protected $connection = 'mysql';
 
     public function semesters()
     {

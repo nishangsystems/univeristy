@@ -10,6 +10,7 @@ class Notification extends Model
     use HasFactory;
     protected $fillable = ['user_id', 'title', 'message', 'unit_id', 'date', 'status', 'campus_id', 'visibility', 'school_unit_id', 'level_id'];
     protected $table = 'notifications';
+    protected $connection = 'mysql';
 
     public function campus()
     {

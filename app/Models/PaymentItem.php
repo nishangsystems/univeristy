@@ -10,6 +10,7 @@ class PaymentItem extends Model
     use HasFactory;
 
     protected $fillable = ["name", "amount", "slug", "unit", "year_id"];
+    protected $connection = 'mysql';
 
     public function payments(){
         return  $this->hasMany(Payments::class,'payment_id');

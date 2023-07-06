@@ -10,6 +10,7 @@ class CampusProgram extends Model
     use HasFactory;
 
     protected $fillable = ['campus_id', 'program_level_id', 'fees', 'max-credit'];
+    protected $connection = 'mysql';
 
     public function program_level()
     {

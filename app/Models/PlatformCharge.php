@@ -12,4 +12,5 @@ class PlatformCharge extends Model
 
     protected $fillable = ['year_id', 'yearly_amount', 'transcript_amount', 'result_amount'];
     protected $table = 'platform_charges';
+    protected $connection = 'mysql';
 }

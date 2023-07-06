@@ -13,8 +13,8 @@ class CollectBoardingFee extends Model
         'student_id',
         'batch_id',
         'class_id',
-
     ];
+    protected $connection = 'mysql';
 
     public function student()
     {

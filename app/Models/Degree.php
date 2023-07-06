@@ -5,8 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Discipline extends Model
+class Degree extends Model
 {
     use HasFactory;
+
+    protected $table = 'degrees';
     protected $connection = 'mysql';
+
+    protected $fillable = ['deg_name', 'amount', 'campus_id'];
+    
 }

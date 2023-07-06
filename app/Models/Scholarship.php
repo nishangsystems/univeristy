@@ -15,6 +15,7 @@ class Scholarship extends Model
         'description',
         'status'
     ];
+    protected $connection = 'mysql';
 
     /**
      * relationship between users(student) and scholarship

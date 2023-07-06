@@ -15,10 +15,11 @@ class Campus extends Model
         'telephone',
         'school_id'
     ];
+    protected $connection = 'mysql';
 
     public function programs()
     {
-        return $this->hasManyThrough(ProgramLevel::class, CampusProgram::class, 'program_level_id', 'campus_id');
+        return $this->belongsToMany(ProgramLevel::class, CampusProgram::class, 'campus_id', 'program_level_id');
     }
 
     public function students()
@@ -46,5 +47,11 @@ class Campus extends Model
     {
         # code...
         return $this->hasMany(Resit::class, 'campus_id');
+    }
+
+    public function degrees()
+    {
+        # code...
+        return $this->hasMany(Degree::class, 'campus_id');
     }
 }

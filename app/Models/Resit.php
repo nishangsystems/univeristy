@@ -10,6 +10,7 @@ class Resit extends Model
 {
     use HasFactory;
     
+    protected $connection = 'mysql';
     protected $fillable = ['campus_id', 'name', 'year_id', 'background_id', 'start_date', 'end_date'];
     
     public function is_open()

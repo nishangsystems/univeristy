@@ -9,6 +9,7 @@ class FAQ extends Model
 {
     use HasFactory;
     protected $fillable = ['question', 'answer', 'status', 'campus_id', 'user_id',];
+    protected $connection = 'mysql';
 
     protected $table = 'faqs';
     

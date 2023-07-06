@@ -19,6 +19,7 @@ class SchoolUnits extends Model
         'grading_type_id',
         'resit_cost',
     ];
+    protected $connection = 'mysql';
 
     public function gradingType()
     {

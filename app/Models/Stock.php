@@ -11,6 +11,7 @@ class Stock extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'quantity', 'type'];
+    protected $connection = 'mysql';
 
     protected $table = 'stock';
 

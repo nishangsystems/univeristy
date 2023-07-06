@@ -9,6 +9,7 @@ class Payments extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
     protected $fillable = [	"payment_id","student_id","batch_id",'unit_id',"amount","reference_number","import_reference", 'user_id', 'debt'];
 
     public function item(){
