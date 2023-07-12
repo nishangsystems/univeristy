@@ -50,6 +50,7 @@ class ApiController extends Controller
     {
         # code...
         return response()->json(['data'=> Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->where('school_units.degree_id', $degree_id)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->join('certificate_programs', ['certificate_programs.program_id'=>'school_units.id'])->where('certificate_programs.certificate_id', $certificate_id)->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
+        // return response()->json(['data'=> Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->join('certificate_programs', ['certificate_programs.program_id'=>'school_units.id'])->where('certificate_programs.certificate_id', $certificate_id)->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
     }
 
     public function get_certificate_programs(Request $request, $certificate_id)
