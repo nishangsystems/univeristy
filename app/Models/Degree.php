@@ -12,6 +12,12 @@ class Degree extends Model
     protected $table = 'degrees';
     protected $connection = 'mysql';
 
-    protected $fillable = ['deg_name', 'amount', 'campus_id'];
+    protected $fillable = ['deg_name', 'amount'];
+
+    public function campuses()
+    {
+        # code...
+        return $this->belongsToMany(Campus::class, CampusDegree::class);
+    }
     
 }
