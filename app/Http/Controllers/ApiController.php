@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campus;
+use App\Models\CampusDegree;
 use App\Models\Certificate;
 use App\Models\CertificateProgram;
 use App\Models\Degree;
@@ -38,6 +39,30 @@ class ApiController extends Controller
     {
         # code...
         return response()->json(['data'=>Campus::find($campus_id)->degrees]);
+    }
+
+    public function update_campus_degrees(Request $request, $campus_id)
+    {
+        # code...
+        $validity = Validator::make($request->all(), ['degrees'=>'array']);
+        if($validity->fails()){
+            return response()->json(['data'=>$validity->errors()->first()])->setStatusCode(400, 'Invalid data provided.');
+        }
+        if($request->degrees != null){
+            CampusDegree::where('campus_id', $campus_id)->each(function($row){
+                $row->delete();
+            });
+            $campus_degs = array_map(function($degree_id)use($campus_id){
+                return ['campus_id'=>$campus_id, 'degree_id'=>$degree_id];
+            }, $request->degrees);
+            CampusDegree::insert($campus_degs);
+            return response()->json(['data'=>'1']);
+        }else{
+            CampusDegree::where('campus_id', $campus_id)->each(function($row){
+                $row->delete();
+            });
+            return response()->json(['data'=>'1']);
+        }
     }
 
     public function campus_program_levels(Request $request, $campus_id, $program_id)
