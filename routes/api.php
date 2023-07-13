@@ -29,4 +29,5 @@ Route::get('campus/program/levels/{campus_id}/{program_id}', [ApiController::cla
 Route::get('campus/programs/{campus_id}', [ApiController::class, 'campus_programs'])->name('campus.programs');
 Route::get('campus/degree/certificate/programs/{campus_id}/{degree_id}/{certificate_id}', [ApiController::class, 'campus_degree_certificate_programs'])->name('certificate.programs');
 Route::get('campus/degrees/{campus_id}', [ApiController::class, 'campus_degrees'])->name('campus.degrees');
+Route::post('campus/degrees/{campus_id}', [ApiController::class, 'update_campus_degrees']);
 
