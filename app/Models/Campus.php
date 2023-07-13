@@ -52,6 +52,6 @@ class Campus extends Model
     public function degrees()
     {
         # code...
-        return $this->hasMany(Degree::class, 'campus_id');
+        return $this->belongsToMany(Degree::class, CampusDegree::class);
     }
 }

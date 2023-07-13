@@ -15,6 +15,7 @@ use App\Http\Controllers\Teacher\HomeController as TeacherHomeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Transactions;
 use App\Http\Resources\SubjectResource;
+use App\Models\CampusDegree;
 use App\Models\Resit;
 use App\Models\StudentSubject;
 use Illuminate\Http\Request;
@@ -36,6 +37,16 @@ Route::get('/clear', function () {
     echo "Config cleared<br>";
 
 });
+
+// Route::get('fill_campus_degrees', function(){
+//     foreach (\App\Models\Campus::all() as $key => $value) {
+//         # code...
+//         $cps_degs = \App\Models\Degree::all()->map(function($el)use($value){
+//             return ['campus_id'=>$value->id, 'degree_id'=>$el->id];
+//         })->toArray();
+//         CampusDegree::insert($cps_degs);
+//     }
+// });
 
 Route::get('set_local/{lang}', [Controller::class, 'set_local'])->name('lang.switch');
 

@@ -49,14 +49,14 @@ class ApiController extends Controller
     public function campus_degree_certificate_programs(Request $request, $campus_id, $degree_id, $certificate_id)
     {
         # code...
-        return response()->json(['data'=> Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->where('school_units.degree_id', $degree_id)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->join('certificate_programs', ['certificate_programs.program_id'=>'school_units.id'])->where('certificate_programs.certificate_id', $certificate_id)->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
-        // return response()->json(['data'=> Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->join('certificate_programs', ['certificate_programs.program_id'=>'school_units.id'])->where('certificate_programs.certificate_id', $certificate_id)->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
+        // return response()->json(['data'=> Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->where('school_units.degree_id', $degree_id)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->join('certificate_programs', ['certificate_programs.program_id'=>'school_units.id'])->where('certificate_programs.certificate_id', $certificate_id)->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
+        return response()->json(['data'=> Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->join('certificate_programs', ['certificate_programs.program_id'=>'school_units.id'])->where('certificate_programs.certificate_id', $certificate_id)->whereIn('school_units.degree_id', Campus::find($campus_id)->degrees()->pluck('degrees.id')->toArray())->distinct()->groupBy('school_units.id')->orderBy('school_units.name')->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
     }
 
     public function get_certificate_programs(Request $request, $certificate_id)
     {
         # code...
-        return response()->json(['data'=>Certificate::find($certificate_id)->programs()->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
+        return response()->json(['data'=>Certificate::find($certificate_id)->programs()->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->orderBy('school_units.name')->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
     }
     public function save_certificate_programs(Request $request, $certificate_id)
     {
@@ -81,12 +81,12 @@ class ApiController extends Controller
     }
 
     public function programs(){
-        return response()->json(['data'=>SchoolUnits::where('school_units.unit_id', 4)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->orderBy('school_units.id', 'ASC')->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
+        return response()->json(['data'=>SchoolUnits::where('school_units.unit_id', 4)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->orderBy('school_units.name')->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
     }
 
     public function campus_programs($campus_id)
     {
         # code...
-        return response()->json(['data'=>Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
+        return response()->json(['data'=>Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->groupBy('school_units.id')->orderBy('school_units.name')->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
     }
 }
