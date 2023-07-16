@@ -19,6 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('student/store', [ApiController::class, 'store_student']);
+Route::get('student/update', [ApiController::class, 'update_student']);
 Route::get('degrees', [ApiController::class, 'degrees'])->name('degrees');
 Route::get('certificates', [ApiController::class, 'certificates'])->name('certificates');
 Route::get('certificate/program/{certificate_id}', [ApiController::class, 'get_certificate_programs'])->name('certificate.program.save');
@@ -30,4 +32,7 @@ Route::get('campus/programs/{campus_id}', [ApiController::class, 'campus_program
 Route::get('campus/degree/certificate/programs/{campus_id}/{degree_id}/{certificate_id}', [ApiController::class, 'campus_degree_certificate_programs'])->name('certificate.programs');
 Route::get('campus/degrees/{campus_id}', [ApiController::class, 'campus_degrees'])->name('campus.degrees');
 Route::post('campus/degrees/{campus_id}', [ApiController::class, 'update_campus_degrees']);
+Route::get('levels', [ApiController::class, 'levels']);
+Route::get('matrics/highest/{pref}/{year}', [ApiController::class, 'max_matric']);
+Route::post('matric/exists', [ApiController::class, 'matricule_exists']);
 
