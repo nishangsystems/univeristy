@@ -20,7 +20,7 @@ class Transcript extends Model
      * 'user_id': who validates the transcript as 'done'
      */
     protected $connection = 'mysql';
-    protected $fillable = ['config_id', 'student_id', 'status', 'delivery_format', 'tel', 'year_id', 'description', 'done', 'collected', 'giver_id', 'user_id', 'paid'];
+    protected $fillable = ['config_id', 'student_id', 'status', 'delivery_format', 'tel', 'year_id', 'description', 'done', 'collected', 'giver_id', 'user_id', 'paid', 'transaction_id'];
 
     public function done_by()
     {

@@ -54,6 +54,21 @@
             </form>
         </div>
     </div>*/ ?>
+    <form method="post" target="new">
+        @csrf
+        <div class="d-flex justify-content-end">
+            <label class="d-flex rounded border bg-light">
+                <span class="fa fa-filter text-dark px-3 py-3 input-sm">filter</span>
+                <select name="filter" class="d-inline-block border-0 input-sm py-0 form-control" style="max-width: 14rem;">
+                    <option>all</option>
+                    @foreach (\App\Models\Income::where('cash', 0)->get() as $inc)
+                        <option value="{{ $inc->id }}">{{ $inc->name }}</option>
+                    @endforeach
+                </select>
+                <input type="submit" value="Download CSV" class="btn btn-sm btn-dark py-0">
+            </label>
+        </div>
+    </form>
     <div class="content-panel">
         <div class="adv-table table-responsive">
             <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
@@ -85,9 +100,6 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="d-flex justify-content-end">
-                {{$pay_incomes->links()}}
-            </div>
         </div>
     </div>
 </div>
