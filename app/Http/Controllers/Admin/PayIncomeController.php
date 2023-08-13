@@ -29,6 +29,7 @@ class PayIncomeController extends Controller
         'students.name as student_name',
         'incomes.name as income_name',
         'incomes.amount',
+        'incomes.id as income_id'
     ];
 
 
@@ -48,14 +49,51 @@ class PayIncomeController extends Controller
                 auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
             })
             // ->join('school_units', 'school_units.id', '=', 'pay_incomes.class_id')
-            ->where('pay_incomes.batch_id', $batch_id)
+            ->where('pay_incomes.batch_id', $batch_id)->orderBy('students.name')
             ->select($this->select)->distinct()
-            ->paginate(5);
+            ->get();
         $data['title'] = __('text.pay_income');
         $data['years'] = Batch::all();
         $data['school_units'] = SchoolUnits::where('parent_id', '=', 0)->get();
         //  dd($data['school_units']);
         return view('admin.payIncome.index')->with($data);
+    }
+
+
+    public function download(Request $request)
+    {
+        # code...
+        $batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
+        $data['pay_incomes'] = DB::table('pay_incomes')
+            ->join('incomes', 'incomes.id', '=', 'pay_incomes.income_id')
+            ->join('students', 'students.id', '=', 'pay_incomes.student_id')
+            ->join('student_classes', 'student_classes.student_id', '=', 'students.id')
+            ->where('student_classes.year_id', '=', $batch_id)
+            ->where(function($query){
+                auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
+            })
+            // ->join('school_units', 'school_units.id', '=', 'pay_incomes.class_id')
+            ->where('pay_incomes.batch_id', $batch_id)->orderBy('students.name')
+            ->select($this->select)->distinct()
+            ->get();
+        if($request->filter != null){
+            $data['pay_incomes'] = $data['pay_incomes']->where('income_id', $request->filter);
+        }
+        if(count($data['pay_incomes']) == 0){
+            return back()->with('error', 'No income recorded for the selected income type');
+        }
+        $path = public_path('files');
+        $filename = 'file_'.time().'_'.random_int(100000, 999999).'.csv';
+        $filewriter = fopen($path.'/'.$filename, 'w');
+        $headings = ['Student Name', 'Income Type', 'Amount', 'Campus', 'Class'];
+        fputcsv($filewriter, $headings);
+        foreach ($data['pay_incomes'] as $key => $value) {
+            # code...
+            fputcsv($filewriter, [$value->student_name, $value->income_name, number_format($value->amount), Campus::find($value->campus_id)->name??'', ProgramLevel::find($value->class_id)->name()]);
+        }
+        fclose($filewriter);
+        return response()->download($path.'/'.$filename);
+
     }
 
     public function print($student_id, $pay_income_id)

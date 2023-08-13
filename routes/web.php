@@ -187,6 +187,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('incomes/{id}', 'Admin\IncomeController@show')->name('income.show');
     Route::post('incomes/collect_income/{class_id}/{student_id}', 'Admin\PayIncomeController@store')->name('pay_income.store');
     Route::get('incomes/paid_income/list', 'Admin\PayIncomeController@index')->name('pay_income.index');
+    Route::post('incomes/paid_income/list', 'Admin\PayIncomeController@download');
     Route::get('incomes/{student_id}/paid_income/{pay_income_id}/delete', 'Admin\PayIncomeController@delete_income')->name('income.delete');
     Route::get('{student_id}/incomes/{pay_income_id}/print_reciept', 'Admin\PayIncomeController@print')->name('income.print_reciept');
     Route::post('incomes/pay_income/list', 'Admin\PayIncomeController@getPayIncomePerClassYear')->name('pay_income.per_year');
@@ -644,6 +645,11 @@ Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.c
     Route::get('transcript/pay', 'Student\HomeController@pay_transcript_charges')->name('transcript.pay');
 
     Route::get('online_payments/history', 'Student\HomeController@online_payment_history')->name('online.payments.history');
+
+    Route::prefix('tzk/payment')->name('tranzak.payment.')->group(function(){
+        Route::get('processing/{type}', [StudentHomeController::class, 'tranzak_processing'])->name('processing');
+        Route::get('complete/{type}', [StudentHomeController::class, 'tranzak_complete'])->name('complete');
+    });
 });
 // Route::post('student/charges/pay', 'Student\HomeController@pay_charges_save')->name('student.charge.pay');
 Route::get('platform/pay', 'Student\HomeController@pay_platform_charges')->name('platform_charge.pay')->middleware('isStudent');

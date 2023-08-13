@@ -34,6 +34,7 @@ use App\Models\Topic;
 use App\Models\Transaction;
 use App\Models\Transcript;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -1170,6 +1171,7 @@ class HomeController extends Controller
     public function apply_save_transcript(Request $request)
     {
         # code...
+        // return $request->all();
         $validator = Validator::make($request->all(), [
             'config_id'=>'required',
             'delivery_format'=>'required',
@@ -1186,25 +1188,41 @@ class HomeController extends Controller
             'delivery_format'=>$request->delivery_format,
             'tel'=>$request->contact,
             'description'=>$request->description ?? null,
-            'paid'=>false
+            'paid'=>false,
+            'year_id'=>$request->year_id??Helpers::instance()->getCurrentAccademicYear()
         ];
-        // create transcript application and save id for updates after payment is made
-        $trans = new Transcript($data);
-        $trans->save();
+
         
-        if($request->charge_id != null){
-            $chge = Charge::find($request->charge_id);
-            $chge->used = true;
-            $chge->save();
+
+        
+        // create transcript application and save id for updates after payment is made
+        cache('__MOMO_TRANSCRIPT_DATA__', json_encode($data));
+
+        // MAKE API CALL TO PERFORM PAYMENT OF APPLICATION FEE
+        // check if token exist and hasn't expired or get new token otherwise
+        if(cache('tranzak_api_token') == null or Carbon::parse(cache('tranzak_api_token_expire'))->isAfter(now())){
+            // get and cache different token
+            $response = Http::post(config('tranzak.base').config('tranzak.token'), ['appId'=>config('tranzak.app_id'), 'appKey'=>config('tranzak.api_key')]);
+            if($response->status() == 200){
+                cache(['tranzak_api_token'=> json_decode($response->body())->data->token]);
+                cache(['tranzak_api_token_expire'=>Carbon::createFromTimestamp(time() + json_decode($response->body())->data->expiresIn)]);
+            }
         }
-        // return $request->all();
-        // save the id of the transcript application to session
-        // session()->put('pending_transcript_id', $trans->id);
-        $_data = $request->all();
-        $_data['payment_id'] = $trans->id;
-        $req =$request->replace($_data);
-        // return $_data;
-        return $this->pay_fee_momo($req);
+        // Assumed there is a valid api token
+        // Over to perform the payment request proper
+        $headers = ['Authorization'=>'Bearer '.cache('tranzak_api_token')];
+        $request_data = ['mobileWalletNumber'=>'237'.$request->tel, 'mchTransactionRef'=>'_trans_fee_'.time().'_'.random_int(1, 9999), "amount"=> $request->amount, "currencyCode"=> "XAF", "description"=>"Payment for transcript fee to ST LOUIS UNIVERSITY INSTITUTE"];
+        $_response = Http::withHeaders($headers)->post(config('tranzak.base').config('tranzak.direct_payment_request'), $request_data);
+        if($_response->status() == 200){
+            // return json_decode($_response->body())->data;
+            // save transaction and track it status
+
+            session()->put('processing_tranzak_transaction_details', json_encode(json_decode($_response->body())->data));
+            // return $this->pending_payment(array_push((), ['application_id']));
+            return redirect()->to(route('student.tranzak.payment.processing', ['type'=>'TRANSCRIPT']))->with(['data'=>json_decode($_response->body())->data]);
+        }else{
+            return back()->with('error', $_response->body());
+        }
     }
 
     public function transcript_history()
@@ -1447,6 +1465,7 @@ class HomeController extends Controller
 
     public function pay_transcript_charges(Request $request)
     {
+        // return 1234;
         # code...
         $charges = Charge::where(['type'=>'TRANSCRIPT', 'student_id'=>auth('student')->id(), 'used'=>0])->orderBy('id', 'DESC')->get();
         $c_class = auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear());
@@ -1644,5 +1663,75 @@ class HomeController extends Controller
         $data['teachers'] = $teachers;
         $data['topics'] = Topic::where(['subject_id'=>$subject->id])->get();;
         return view('student.courses.content', $data);
+    }
+
+
+    // TRANZAK PAYMENT FOR FEE AND TRANSCRIPT
+    public function tranzak_processing(Request $request, $type)
+    {
+        # code...
+        $data['title'] = "Processing Transaction";
+        $data['item_type'] = $type;
+        $data['transaction'] = json_decode(session()->get('processing_tranzak_transaction_details'));
+        // return $data;
+        return view('student.tranzak.processing_payment', $data);
+        
+    }
+
+    public function tranzak_complete(Request $request, $type)
+    {
+        # code...
+        try {
+            //code...
+            $transaction_status = json_decode($request->qstring);
+            // return $transaction_status;
+            switch ($transaction_status->status) {
+                case 'SUCCESSFUL':
+                    # code...
+                    // save transaction and update application_form
+                    $transaction = ['request_id'=>$transaction_status->requestId, 'amount'=>$transaction_status->amount, 'currency_code'=>$transaction_status->currencyCode, 'purpose'=>"application fee", 'mobile_wallet_number'=>$transaction_status->mobileWalletNumber, 'transaction_ref'=>$transaction_status->mchTransactionRef, 'app_id'=>$transaction_status->appId, 'transaction_id'=>$transaction_status->transactionId, 'transaction_time'=>$transaction_status->transactionTime, 'payment_method'=>$transaction_status->payer->paymentMethod, 'payer_user_id'=>$transaction_status->payer->userId, 'payer_name'=>$transaction_status->payer->name, 'payer_account_id'=>$transaction_status->payer->accountId, 'merchant_fee'=>$transaction_status->merchant->fee, 'merchant_account_id'=>$transaction_status->merchant->accountId, 'net_amount_recieved'=>$transaction_status->merchant->netAmountReceived];
+                    $transaction_instance = new Transaction($transaction);
+                    $transaction_instance->save();
+    
+                    if($type == 'TRANSCRIPT'){
+                        $trans = json_decode(cache('__MOMO_TRANSCRIPT_DATA__'));
+                        $trans['transacttion_id'] = $transaction_instance->id;
+                        $trans['paid'] = 1;
+                        (new Transcript($trans))->save();
+                        
+                    }elseif($type == 'FEE'){
+                        $trans = json_decode(cache('__MOMO_FEE_DATA__'));
+                        $trans['transacttion_id'] = $transaction_instance->id;
+                        ($instance = new Payments($trans))->save();
+                    }
+    
+                    return redirect(route('student.application.form.download'))->with('success', "Payment successful.");
+                    break;
+                
+                case 'CANCELLED':
+                    # code...
+                    // notify user
+                    return redirect(route('student.home'))->with('message', 'Payment Not Made. The request was cancelled.');
+                    break;
+                
+                case 'FAILED':
+                    # code...
+                    return redirect(route('student.home'))->with('error', 'Payment failed.');
+                    break;
+                
+                case 'REVERSED':
+                    # code...
+                    return redirect(route('student.home'))->with('message', 'Payment failed. The request was reversed.');
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+            return redirect(route('student.home'))->with('error', 'Payment failed. Unrecognised transaction status.');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', $th->getMessage());
+        }
     }
 }
