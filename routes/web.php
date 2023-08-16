@@ -122,11 +122,12 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('units/{parent_id}/subjects/manage', 'Admin\ProgramController@saveSubjects')->name('units.subjects.manage');
 
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
+    Route::get('students/inactive', 'Admin\ProgramController@inactive_students')->name('students.inactive');
 
     Route::get('student_list/select/{filter?}', 'Admin\ProgramController@program_levels_list_index')->name('student.bulk.index');
     Route::get('student_list/bulk/{filter}/{item_id}/{year_id?}', 'Admin\ProgramController@bulk_program_levels_list')->name('student.bulk.list');
     Route::get('messages/bulk/{filter}/{item_id}/{recipients}/{year_id?}', 'Admin\ProgramController@bulk_message_notifications')->name('messages.bulk');
-    Route::post('messages/bulk/{filter}/{item_id}/{recipients}/{year_id?}', 'Admin\ProgramController@bulk_message_notifications_save')->name('messages.bulk');
+    Route::post('messages/bulk/{filter}/{item_id}/{recipients}/{year_id?}', 'Admin\ProgramController@bulk_message_notifications_save');
     Route::get('class_list/{year_id?}', 'Admin\ProgramController@program_levels_list')->name('class.list');
     Route::get('programs/assign_level', 'Admin\ProgramController@assign_program_level')->name('programs.set_levels');
     Route::post('programs/assign_level', 'Admin\ProgramController@store_program_level');

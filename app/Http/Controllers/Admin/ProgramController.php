@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\StudentResource;
+use App\Http\Resources\StudentResourceMain;
 use App\Models\Batch;
 use App\Models\ClassSubject;
 use App\Models\Level;
+use App\Models\Message;
 use App\Models\ProgramLevel;
 use App\Models\School;
 use App\Models\SchoolUnits;
@@ -731,6 +734,10 @@ class ProgramController extends Controller
         $recipients_field = $recipients == 'students' ? 'phone' : 'parent_phone_number';
         $year = $request->year_id ?? Helpers::instance()->getCurrentAccademicYear();
         # code...
+
+        $message = new Message(['year_id'=>Helpers::instance()->getCurrentAccademicYear(), 'unit_id'=>$request->item_id, 'recipients'=>$recipients, 'message'=>$request->text]);
+        $message->save();
+
         switch($request->filter){
             case 'SCHOOL':
                 $data['title'] = __('text.students_for_school_of', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
@@ -744,13 +751,10 @@ class ProgramController extends Controller
                                 auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);
                             })
                             ->join('student_classes', ['students.id'=>'student_classes.student_id'])
-                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->pluck($recipients_field)->toArray();
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()
+                            ->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
                 
-                Self::sendSmsNotificaition($request->text, $contacts);
-                
-                // dd($students);
-                // $data['students'] = $students;
-                // return view('admin.student.bulk_list', $data);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
                 break;
             
             case 'FACULTY' :
@@ -765,14 +769,12 @@ class ProgramController extends Controller
                                 auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);
                             })
                             ->join('student_classes', ['students.id'=>'student_classes.student_id'])
-                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->pluck($recipients_field)->toArray();
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()
+                            ->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
 
 
-                Self::sendSmsNotificaition($request->text, $contacts);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
                 
-                // dd($students);
-                // $data['students'] = $students;
-                // return view('admin.student.bulk_list', $data);
                 break;
 
             case 'DEPARTMENT':
@@ -786,13 +788,12 @@ class ProgramController extends Controller
                 $contacts = Students::where(function($q){
                             auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
                                         ->join('student_classes', ['students.id'=>'student_classes.student_id'])
-                        ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->pluck($recipients_field)->toArray();
+                        ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()
+                        ->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
                 // dd($students);
                 
-                Self::sendSmsNotificaition($request->text, $contacts);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
                 
-                // $data['students'] = $students;
-                // return view('admin.student.bulk_list', $data);
                 break;
 
             case 'PROGRAM':
@@ -801,13 +802,12 @@ class ProgramController extends Controller
                 $contacts = Students::where(function($q){
                             auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
                                         ->join('student_classes', ['students.id'=>'student_classes.student_id'])
-                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()->pluck($recipients_field)->toArray();
+                            ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()
+                            ->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
                 // dd($students);
 
-                Self::sendSmsNotificaition($request->text, $contacts);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
 
-                // $data['students'] = $students;
-                // return view('admin.student.bulk_list', $data);
                 break;
                 
 
@@ -817,10 +817,10 @@ class ProgramController extends Controller
                             auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
                                         ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                             ->orderBy('students.name')->where('class_id', $request->item_id)->where('year_id', '=', $year)
-                            ->distinct()->pluck($recipients_field)->toArray();
+                            ->distinct()->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
                 // $data['students'] = $students;
                 
-                Self::sendSmsNotificaition($request->text, $contacts);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
 
                 // return view('admin.student.bulk_list', $data);
                 break;
@@ -833,15 +833,15 @@ class ProgramController extends Controller
                             auth()->user()->campus_id == null ? null : $q->where('campus_id', auth()->user()->campus_id);})
                                         ->join('student_classes', ['students.id'=>'student_classes.student_id'])
                             ->whereIn('class_id', $classes)->where('year_id', '=', $request->year_id)
-                            ->orderBy('students.name')->distinct()->pluck($recipients_field)->toArray();
+                            ->orderBy('students.name')->distinct()->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
                 // $data['students'] = $students;
 
-                Self::sendSmsNotificaition($request->text, $contacts);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
 
-                // return view('admin.student.bulk_list', $data);
                 break;
             
         }
+        return redirect(route('admin.student.bulk.index'))->with($resp == true ? 'success':'error', $resp==true?'Done':$resp);
     }
     
     public function set_program_grading_type(Request $request, $program_id)
@@ -864,5 +864,17 @@ class ProgramController extends Controller
         $program->grading_type_id = $request->grading_type;
         $program->save();
         return back()->with('success', __('text.word_done'));
+    }
+
+
+    public function inactive_students(Request $request)
+    {
+        # code...
+        $year = $request->has('year') ? $request->year : Helpers::instance()->getCurrentAccademicYear();
+        $_students = StudentClass::where('year_id', $year)->join('students', 'students.id', '=', 'student_classes.student_id')->where('active', 0)->get(['students.*', 'student_classes.class_id']);
+        $data['title'] = "Inactive Students For ".Batch::find($year)->name;
+        $data['students'] = StudentResourceMain::collection($_students);
+        // return $students;
+        return view('admin.student.inactive', $data);
     }
 }

@@ -26,7 +26,6 @@
                         <th>Title</th>
                         <th>Audience</th>
                         <th>Created on</th>
-                        <th>Due date</th>
                         <th>Status</th>
                         <th></th>
                     </tr>

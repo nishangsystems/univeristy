@@ -815,5 +815,6 @@ return [
     'first_name'=>'first name',
     'phone_number'=>'phone number',
     'confirm_password'=>'confirm password',
+    'inactive_students'=>'inactive students',
     ''
 ];

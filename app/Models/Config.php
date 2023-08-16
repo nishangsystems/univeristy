@@ -9,7 +9,7 @@ class Config extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['year_id','seq_id', 'start_date', 'end_date'];
+    protected $fillable = ['year_id','seq_id', 'start_date', 'end_date', 'sms_sent'];
     protected $dates =  ['start_date', 'end_date'];
     protected $connection = 'mysql';
 

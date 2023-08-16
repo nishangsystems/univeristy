@@ -475,6 +475,13 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
+                        <li>
+                            <a href="{{route('admin.students.inactive')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.inactive_students')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
                         
                         <li>
                             <a href="{{route('admin.class.list')}}?action=class_list"  class="text-capitalize">
@@ -1320,7 +1327,7 @@
             <!-- End attaendance management -->
             @endif
         
-            @if (\Auth::user()->hasPermissionTo('manage_documentation'))
+            {{-- @if (\Auth::user()->hasPermissionTo('manage_documentation'))
             <li>
                 <a href="{{route('documentation.index')}}" class="text-capitalize">
                     <i  style="color: {{$bg1}};" class="fa fa-address-book-o menu-icon   "></i>
@@ -1328,7 +1335,7 @@
                 </a>
                 <b class="arrow"></b>
             </li>
-            @endif
+            @endif --}}
             
             <li>
                 <a href="{{route('admin.reset_password')}}" class="text-capitalize">
