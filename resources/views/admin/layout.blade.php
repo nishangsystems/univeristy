@@ -836,6 +836,13 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    <li>
+                        <a href="{{route('admin.student.bulk.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.send_SMS')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                 </ul>
             </li>
             @endif
