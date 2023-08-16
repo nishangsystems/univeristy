@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\SMS\Helpers as SMSHelpers;
+use App\Services\FocusTargetSms;
 use App\Models\CampusProgram;
 use App\Models\ClassSubject;
+use App\Models\Config as ModelsConfig;
+use App\Models\Message;
 use App\Models\Students;
 use App\Models\TeachersSubject;
 use App\Models\User;
@@ -53,13 +56,14 @@ class Controller extends BaseController
     {
         $pls = [];
         # code...
-        foreach (\App\Models\ProgramLevel::all() as $key => $value) {
+        $pl_list = \App\Models\ProgramLevel::join('school_units', 'school_units.id', '=', 'program_levels.program_id')->get(['program_levels.*']);
+        foreach ($pl_list as $key => $value) {
             # code...
             $pls[] = [
                 'id' => $value->id,
                 'level_id'=>$value->level_id,
                 'program_id'=>$value->program_id,
-                'name' => $value->program()->first()->name.': LEVEL '.$value->level()->first()->level,
+                'name' => $value->name()??'',
                 'department'=> $value->program->parent_id
             ];
         }
@@ -211,10 +215,15 @@ class Controller extends BaseController
      * @param array|Collection $contacts
      * @return bool
      */
-    public static function sendSmsNotificaition(String $message_text, $contacts)
+    public static function sendSmsNotificaition(String $message_text, $contacts, $message_id = null)
     {
         $sms_sender_address = env('SMS_SENDER_ADDRESS');
         // dd($contacts);
+
+        
+        if(!is_array($contacts)){
+            $contacts = [$contacts];
+        }
         $contacts_no_spaces = array_map(function($el){
             return str_replace([' ', '.', '-', '(', ')', '+'], '', $el);
         }, $contacts);
@@ -222,20 +231,25 @@ class Controller extends BaseController
         $cleaned_contacts = array_map(function($el){
             return explode('/',explode(',', $el)[0])[0];
         }, $contacts_no_spaces);
-        // dd($cleaned_contacts);
-        // $basic  = new \Vonage\Client\Credentials\Basic('8d8bbcf8', '04MLvso1he1b8ANc');
-        // $client = new \Vonage\Client($basic);
 
-
+        // dd($contacts);
         // SEND SMS PROPER
-        SMSHelpers::sendSMS($message_text, $cleaned_contacts);
+        $sent = Self::sendSMS($cleaned_contacts, $message_text);
 
-        // foreach ($contacts as $key => $contact) {
-        //     # code...
-        //     $message = new \Vonage\SMS\Message\SMS($contact, $sms_sender_address, $message_text);
-        //     $client->sms()->send($message);
-        // }
-        return true;
+        if($sent == true){
+            // update sms counts record
+            $config = ModelsConfig::where('year_id', Helpers::instance()->getCurrentAccademicYear())->first();
+            $config->sms_sent += count($cleaned_contacts);
+            $config->save();
+            if($message_id != null){
+                $msg = Message::find($message_id);
+                $msg->status = 1;
+                $msg->count = count($cleaned_contacts);
+                $msg->save();
+            }
+            return true;
+        }
+        return $sent;
     }
 
     public function search_user(Request $request)
@@ -259,5 +273,17 @@ class Controller extends BaseController
             return $rate->price??0;
         }
         return null;
+    }
+
+    
+
+    public static function sendSMS($phone_numbers, $message)
+    {
+
+        if($message == null){return "Message must not be empty";}
+        if($phone_numbers == null){return "Reciever IDs must not be empty";}
+        
+        return (new FocusTargetSms($phone_numbers, $message))->send();
+
     }
 }

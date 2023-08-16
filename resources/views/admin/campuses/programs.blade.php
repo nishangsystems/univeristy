@@ -13,7 +13,7 @@
         </thead>
         <tbody>
             @php($k = 1)
-            @foreach(\App\Models\ProgramLevel::all() as $program_level)
+            @foreach(\App\Models\ProgramLevel::join('school_units', 'school_units.id', '=', 'program_levels.program_id')->get(['program_levels.*']) as $program_level)
             <tr>
                 <td>{{$k++}}</td>
                 <td>{{ \App\Models\SchoolUnits::find($program_level->program_id)->name.' : Level '. \App\Models\Level::find($program_level->level_id)->level }}</td>
