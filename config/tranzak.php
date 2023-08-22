@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'app_id'=>'apdcasgozm2fuu',
-    'api_key'=>'DC1B4360AC0545068F9DD7F1805C5BF7',
-    'san_app_id'=>'apre2qm1njvto9',
-    'san_api_key'=>'AA3C3523830542CE97729DADB79E8C6B',
+    'app_id'=>'apm5gnaevugxiw',
+    'api_key'=>'1B236631C3494FF0BAB3B96C22CA8175',
+    'san_app_id'=>'apm5gnaevugxiw',
+    'san_api_key'=>'1FEAE03E31C14473B450C82EB086009D',
 
     // END POINTS
     'base'=>'https://dsapi.tranzak.me',

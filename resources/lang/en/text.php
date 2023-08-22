@@ -817,5 +817,11 @@ return [
     'confirm_password'=>'confirm password',
     'inactive_students'=>'inactive students',
     'send_SMS'=>'send SMS',
+    'active_students'=>'active students',
+    'total_sms_sent'=>'total SMS sent',
+    'total_fee_expected'=>'total fee expected',
+    'total_fee_paid'=>'total fee paid',
+    'total_fee_owed'=>'total fee owed',
+    'tranzak_payments'=>'tranzak payments',
     ''
 ];

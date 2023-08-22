@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Batch extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'should_pay_platform_charges', 'should_pay_fee_online'];
     protected $connection = 'mysql';
 
     public function payIncomes()

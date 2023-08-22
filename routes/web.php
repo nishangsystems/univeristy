@@ -575,8 +575,8 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
 
 Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.charges'])->group(function () {
     Route::get('', 'Student\HomeController@index')->name('home');
-    Route::get('edit_profile', 'Student\HomeController@edit_profile')->name('edit_profile');
-    Route::post('update_profile', 'Student\HomeController@update_profile')->name('update_profile');
+    Route::get('edit_profile', 'Student\HomeController@edit_profile')->name('edit_profile')->withoutMiddleware('isStudent');
+    Route::post('update_profile', 'Student\HomeController@update_profile')->name('update_profile')->withoutMiddleware('isStudent');
     Route::get('subject', 'Student\HomeController@subject')->name('subject');
     Route::get('result/ca', 'Student\HomeController@result')->name('result.ca');
     Route::post('result/ca', 'Student\HomeController@ca_result');
@@ -584,12 +584,34 @@ Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.c
     Route::get('result/exam', 'Student\HomeController@result')->name('result.exam');
     Route::post('result/exam', 'Student\HomeController@exam_result');
     Route::get('result/exam/download', 'Student\HomeController@exam_result_download');
+
+
     Route::get('fee/tution', 'Student\HomeController@fee')->name('fee.tution');
     Route::get('fee/others', 'Student\HomeController@other_incomes')->name('fee.other_incomes');
     Route::get('fee/pay', 'Student\HomeController@pay_fee')->name('pay_fee');
     Route::post('fee/pay', 'Student\HomeController@pay_fee_momo')->name('pay_fee');
     Route::get('others/pay/{id?}', 'Student\HomeController@pay_other_incomes')->name('pay_others');
     Route::post('others/pay/{id?}', 'Student\HomeController@pay_other_incomes_momo')->name('pay_others');
+    Route::get('platform/pay', 'Student\HomeController@pay_platform_charges')->name('platform_charge.pay');
+    Route::post('charges/pay', 'Student\HomeController@pay_charges_save')->name('charge.pay')->withoutMiddleware('isStudent');
+    Route::get('result/pay', 'Student\HomeController@pay_semester_results')->name('result.pay');
+    Route::get('transcript/pay', 'Student\HomeController@pay_transcript_charges')->name('transcript.pay');
+
+    Route::prefix('tranzak')->name('tranzak.')->group(function(){
+        Route::get('fee/pay', [StudentHomeController::class, 'tranzak_pay_fee'])->name('pay_fee');
+        Route::post('fee/pay', [StudentHomeController::class, 'tranzak_pay_fee_momo']);
+        Route::get('others/pay/{id?}', [StudentHomeController::class, 'tranzak_pay_other_incomes'])->name('pay_others');
+        Route::post('others/pay/{id?}', [StudentHomeController::class, 'tranzak_pay_other_incomes_momo']);
+        Route::get('result/pay', [StudentHomeController::class, 'tranzak_pay_semester_results'])->name('result.pay');
+        Route::post('result/pay', [StudentHomeController::class, 'tranzak_pay_semester_results_momo']);
+        Route::get('transcript/pay', [StudentHomeController::class, 'tranzak_pay_transcript_charges'])->name('transcript.pay');
+        Route::get('payment_history', [StudentHomeController::class, 'tranzak_payment_history'])->name('online.payments.history');
+        Route::get('processing', [StudentHomeController::class, 'tranzak_payment_processing'])->name('processing');
+        Route::post('processing', [StudentHomeController::class, 'tranzak_payment_processing_complete']);
+        Route::get('processing/{type}', [StudentHomeController::class, 'tranzak_processing'])->name('processing');
+        Route::post('processing/{type}', [StudentHomeController::class, 'tranzak_complete']);
+    });
+
     Route::get('subjects/{id}/notes', 'Student\HomeController@subjectNotes')->name('subject.notes');
     Route::get('boarding_fees/details', 'Student\HomeController@boarding')->name('boarding');
     Route::post('boarding_fees/details/', 'Student\HomeController@getBoardingFeesYear')->name('boarding_fees_details');
@@ -639,11 +661,6 @@ Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.c
     });
     Route::get('reset_password', 'Controller@reset_password')->name('reset_password');
     Route::post('reset_password', 'Controller@reset_password_save')->name('reset_password');
-
-    Route::get('platform/pay', 'Student\HomeController@pay_platform_charges')->name('platform_charge.pay');
-    Route::post('charges/pay', 'Student\HomeController@pay_charges_save')->name('charge.pay')->withoutMiddleware('isStudent');
-    Route::get('result/pay', 'Student\HomeController@pay_semester_results')->name('result.pay');
-    Route::get('transcript/pay', 'Student\HomeController@pay_transcript_charges')->name('transcript.pay');
 
     Route::get('online_payments/history', 'Student\HomeController@online_payment_history')->name('online.payments.history');
 

@@ -15,6 +15,7 @@ use App\Models\PlatformCharge;
 use App\Models\Resit;
 use App\Models\SchoolUnits;
 use App\Models\Semester;
+use App\Models\StudentClass;
 use App\Models\Students;
 use App\Models\StudentSubject;
 use App\Models\Subjects;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use MongoDB\Driver\Session;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Khill\Lavacharts\Laravel\LavachartsFacade as Lava;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -33,6 +35,19 @@ class HomeController  extends Controller
 {
     public function index()
     {
+
+        $year = request()->has('year') ? request('year') : Helpers::instance()->getCurrentAccademicYear();
+        $campus_id = auth()->user()->campus_id;
+        $fees = StudentClass::where('year_id', $year)->join('students', 'students.id', '=', 'student_classes.student_id');
+        $fee_totals = 0;
+        $completed_fee = 0;
+        $uncompleted_fee = 0;
+
+        $fee_data_table = Lava::DataTable();
+        $fee_data_table->addStringColumn('Type')->addNumberColumn('Amount');
+        $fee_data_table->addRows([
+            ['COMPLETED', $completed_fee], ['UNCOMPLETED', $uncompleted_fee]
+        ]);
         return view('admin.dashboard');
     }
 

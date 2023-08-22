@@ -29,6 +29,23 @@ class Helpers
         return $config->year_id;
     }
 
+
+    public function shouldPayPlatformCharge($year_id = null)
+    {
+        if($year_id == null){
+            $year_id = $this->getCurrentAccademicYear();
+        }
+        return Batch::find($year_id)->should_pay_platform_charges == 1;
+    }
+
+    public function shouldPayFeeOnline($year_id)
+    {
+        if($year_id == null){
+            $year_id = $this->getCurrentAccademicYear();
+        }
+        return Batch::find($year_id)->should_pay_fee_online == 1;
+    }
+
     public function letterHead()
     {
         return File::where('name', 'letter-head')->first()->path ?? '';

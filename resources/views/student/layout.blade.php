@@ -258,6 +258,52 @@
                 </ul>
             </li> 
 
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-key"></i>
+                    <span class="menu-text">{{__('text.tranzak_payments')}}</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('student.tranzak.pay_fee')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.pay_fee')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('student.tranzak.pay_others')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.other_payments')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('student.tranzak.result.pay')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.semester_results')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('student.tranzak.online.payments.history')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_history')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                </ul>
+            </li> 
+
 
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
@@ -505,6 +551,12 @@
                 @if(Session::has('success'))
                     <div class="alert alert-success fade in">
                         <strong>Success!</strong> {{Session::get('success')}}
+                    </div>
+                @endif
+                
+                @if(Session::has('message'))
+                    <div class="alert alert-info fade in">
+                        <strong>Message!</strong> {{Session::get('message')}}
                     </div>
                 @endif
 
