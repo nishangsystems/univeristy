@@ -871,9 +871,9 @@ class ProgramController extends Controller
     {
         # code...
         $year = $request->has('year') ? $request->year : Helpers::instance()->getCurrentAccademicYear();
-        $_students = StudentClass::where('year_id', $year)->join('students', 'students.id', '=', 'student_classes.student_id')->where('active', 0)->get(['students.*', 'student_classes.class_id']);
+        $_students = Students::where('active', 0)->join('student_classes', 'student_classes.student_id', '=', 'students.id')->where('year_id', $year)->get(['students.*', 'student_classes.class_id']);
         $data['title'] = "Inactive Students For ".Batch::find($year)->name;
-        $data['students'] = StudentResourceMain::collection($_students);
+        $data['students'] = $_students;
         // return $students;
         return view('admin.student.inactive', $data);
     }

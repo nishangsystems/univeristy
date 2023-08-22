@@ -42,8 +42,8 @@
                             <td>{{$k++}}</td>
                             <td>{{$stud->name}}</td>
                             <td>{{$stud->matric}}</td>
-                            <td>{{$stud->campus_name}}</td>
-                            <td>{{$stud->class_name}}</td>
+                            <td>{{$stud->campus->name}}</td>
+                            <td>{{$stud->_class()->name()}}</td>
                             <td class="d-flex justify-content-end  align-items-start text-capitalize">
                                 <a class="btn btn-sm btn-primary m-1" href="{{$stud->show_link}}"><i class="fa fa-info-circle"> {{__('text.word_view')}}</i></a> |
                                 {{-- <a class="btn btn-sm btn-success m-1" href="{{$stud->edit_link}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>| --}}

@@ -33,6 +33,7 @@ use App\Models\Subjects;
 use App\Models\Topic;
 use App\Models\Transaction;
 use App\Models\Transcript;
+use App\Models\TranzakCredential;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -1666,7 +1667,7 @@ class HomeController extends Controller
     }
 
 
-    // TRANZAK PAYMENT FOR FEE AND TRANSCRIPT
+    // TRANZAK PAYMENT FOR FEE, RESULTS, OTHER_INCOME AND TRANSCRIPT
     public function tranzak_processing(Request $request, $type)
     {
         # code...
@@ -1733,5 +1734,110 @@ class HomeController extends Controller
             //throw $th;
             return back()->with('error', $th->getMessage());
         }
+    }
+
+
+    public function tranzak_payment_history()
+    {
+        
+    }
+
+    
+    public function tranzak_pay_fee ()
+    {
+        # code...
+        $data['title'] = "Pay Fee";
+        $data['student'] = auth('student')->user();
+        $data['balance'] = auth('student')->user()->bal(auth('student')->id());
+        $data['scholarship'] = Helpers::instance()->getStudentScholarshipAmount(auth('student')->id());
+        $data['total_fee'] = auth('student')->user()->total();
+
+        if ($data['total_fee'] <= 0) {
+
+            return redirect(route('student.home'))->with('error', 'Fee not set');
+        }
+        return view('student.pay_fee', $data);
+    }
+    
+
+    public function tranzak_pay_other_incomes ()
+    {
+        $data['title'] = "Pay Other Incomes";
+        return view('student.pay_others', $data);
+    }
+
+    public function tranzak_pay_other_incomes_momo (Request $request)
+    {
+        $validator = Validator::make($request->all(),
+        [
+            'tel'=>'required|numeric|min:9',
+            'amount'=>'required|numeric',
+            // 'callback_url'=>'required|url',
+            'student_id'=>'required|numeric',
+            'year_id'=>'required|numeric',
+            'payment_purpose'=>'required',
+            'payment_id'=>'required|numeric'
+        ]);
+        # code...
+        if($validator->fails()){
+            return back()->with('error', $validator->errors()->first());
+        }
+
+        return $this->tranzak_pay($request->payment_purpose, $request);
+    }
+
+
+    public function tranzak_pay(string $purpose, $request){
+            // return $request;
+
+        $validator = Validator::make($request->all(),
+        [
+            'tel'=>'required|numeric|min:9',
+            'amount'=>'required|numeric',
+            // 'callback_url'=>'required|url',
+            'student_id'=>'required|numeric',
+            'year_id'=>'required|numeric',
+            'payment_purpose'=>'required',
+            'payment_id'=>'required|numeric'
+        ]);
+
+        // return cache('tranzak_credentials_token');
+
+        // check if token exist and hasn't expired or get new token otherwise
+        $student = auth('student')->user();
+        // $tranzak_credentials = TranzakCredential::where('campus_id', $student->campus_id)->first();
+        if(cache('tranzak_credentials_token') == null or Carbon::parse(cache('tranzak_credentials_token_expiry'))->isAfter(now())){
+            // get and cache different token
+            $response = Http::post(config('tranzak.base').config('tranzak.token'), ['appId'=>config('tranzak.app_id'), 'appKey'=>config('tranzak.api_key')]);
+            // return $response;
+            if($response->status() == 200){
+                // return json_decode($response->body())->data;
+                // return Carbon::createFromTimestamp(time() + json_decode($response->body())->data->expiresIn);
+                // cache token and token expirationtot session
+                cache(['tranzak_credentials_token' => json_decode($response->body())->data->token]);
+                cache(['tranzak_credentials_token_expiry'=>Carbon::createFromTimestamp(time() + json_decode($response->body())->data->expiresIn)]);
+            }
+        }
+        // Assumed there is a valid api token
+        // Moving the performing the payment request proper
+        $headers = ['Authorization'=>'Bearer '.cache('tranzak_credentials_token')];
+        $request_data = ['mobileWalletNumber'=>'237'.$request->tel, 'mchTransactionRef'=>'_'.str_replace(' ', '_', $request->payment_purpose).'_payment_'.time().'_'.random_int(1, 9999), "amount"=> $request->amount, "currencyCode"=> "XAF", "description"=>"Payment for {$request->payment_purpose} - ST LOUIS UNIVERSITY INSTITUTE."];
+        $_response = Http::withHeaders($headers)->post(config('tranzak.base').config('tranzak.direct_payment_request'), $request_data);
+        // return $_response->body();
+        if($_response->status() == 200){
+            // save transaction and track it status
+
+            session()->put('processing_tranzak_transaction_details', json_encode(json_decode($_response->body())->data));
+            // session()->put('tranzak_credentials', json_encode($tranzak_credentials));
+            return redirect()->to(route('student.tranzak.processing', $purpose));
+        }
+    }
+
+    public function tranzak_payment_processing()
+    {
+        # code...
+        $data['title'] = "Processing Payment Request";
+        $data['transaction'] = json_decode(session('processing_tranzak_transaction_details'));
+        return view('student.momo.processing', $data);
     }
 }
