@@ -1521,6 +1521,9 @@
             window.location = event.target.href;
         }
     }
+    $('#menu-toggler').on('click', function(){
+        $('#sidebar').toggleClass('d-block');
+    })
 </script>
 
 <script src="{{ asset('libs')}}/datatables.net/js/dataTables.buttons.min.js"></script>
