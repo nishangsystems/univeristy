@@ -1766,6 +1766,28 @@ class HomeController extends Controller
         return view('student.pay_others', $data);
     }
 
+
+    public function tranzak_pay_fee_momo (Request $request)
+    {
+        $validator = Validator::make($request->all(),
+        [
+            'tel'=>'required|numeric|min:9',
+            'amount'=>'required|numeric',
+            // 'callback_url'=>'required|url',
+            'student_id'=>'required|numeric',
+            'year_id'=>'required|numeric',
+            'payment_purpose'=>'required',
+            'payment_id'=>'required|numeric'
+        ]);
+        # code...
+        if($validator->fails()){
+            return back()->with('error', $validator->errors()->first());
+        }
+
+        return $this->tranzak_pay($request->payment_purpose, $request);
+    }
+
+
     public function tranzak_pay_other_incomes_momo (Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -1840,4 +1862,5 @@ class HomeController extends Controller
         $data['transaction'] = json_decode(session('processing_tranzak_transaction_details'));
         return view('student.momo.processing', $data);
     }
+
 }
