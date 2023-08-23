@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use MongoDB\Driver\Session;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Khill\Lavacharts\Laravel\LavachartsFacade as Lava;
+// use Khill\Lavacharts\Laravel\LavachartsFacade as Lava;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -43,11 +43,11 @@ class HomeController  extends Controller
         $completed_fee = 0;
         $uncompleted_fee = 0;
 
-        $fee_data_table = Lava::DataTable();
-        $fee_data_table->addStringColumn('Type')->addNumberColumn('Amount');
-        $fee_data_table->addRows([
-            ['COMPLETED', $completed_fee], ['UNCOMPLETED', $uncompleted_fee]
-        ]);
+        // $fee_data_table = Lava::DataTable();
+        // $fee_data_table->addStringColumn('Type')->addNumberColumn('Amount');
+        // $fee_data_table->addRows([
+        //     ['COMPLETED', $completed_fee], ['UNCOMPLETED', $uncompleted_fee]
+        // ]);
         return view('admin.dashboard');
     }
 
