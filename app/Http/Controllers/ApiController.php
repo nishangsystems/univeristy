@@ -7,6 +7,7 @@ use App\Models\CampusDegree;
 use App\Models\Certificate;
 use App\Models\CertificateProgram;
 use App\Models\Degree;
+use App\Models\DegreeCertificate;
 use App\Models\Level;
 use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
@@ -80,7 +81,13 @@ class ApiController extends Controller
     {
         # code...
         // return response()->json(['data'=> Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->where('school_units.degree_id', $degree_id)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->join('certificate_programs', ['certificate_programs.program_id'=>'school_units.id'])->where('certificate_programs.certificate_id', $certificate_id)->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
-        return response()->json(['data'=> Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->join('certificate_programs', ['certificate_programs.program_id'=>'school_units.id'])->where('certificate_programs.certificate_id', $certificate_id)->whereIn('school_units.degree_id', Campus::find($campus_id)->degrees()->pluck('degrees.id')->toArray())->distinct()->groupBy('school_units.id')->orderBy('school_units.name')->get(['school_units.*', 'departments.name as parent'])]);
+        $certificate = Certificate::find($certificate_id);
+        $certificate_programs = $certificate->programs()->pluck('school_units.id')->toArray();
+        $cert_degree_programs = SchoolUnits::where('degree_id', $degree_id)->whereIn('id', $certificate_programs)->pluck('id')->toArray();
+        $campus = Campus::find($campus_id);
+        $campus_deg_cert_programs = $campus->programs()->join('school_units', 'school_units.id', '=', 'program_levels.program_id')->whereIn('school_units.id', $cert_degree_programs)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->distinct()->get(['school_units.*', 'departments.name as parent']);
+        return response()->json(['data'=> $campus_deg_cert_programs]);
+        // return response()->json(['data'=> Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->join('certificate_programs', ['certificate_programs.program_id'=>'school_units.id'])->where('certificate_programs.certificate_id', $certificate_id)->whereIn('school_units.degree_id', Campus::find($campus_id)->degrees()->pluck('degrees.id')->toArray())->distinct()->groupBy('school_units.id')->orderBy('school_units.name')->get(['school_units.*', 'departments.name as parent'])]);
     }
 
     public function get_certificate_programs(Request $request, $certificate_id)
@@ -222,5 +229,29 @@ class ApiController extends Controller
             return response()->json(['data'=>$validity->errors()->first()]);
         }
         return response()->json(['data'=>(Students::where('matric', $request->matric)->count() > 0)]);
+    }
+
+    public function get_degree_certificates($degree_id)
+    {
+        # code...
+        $degree = Degree::find($degree_id);
+        if($degree != null){
+            return response()->json(['status'=>'success', 'data'=>$degree->certificates]) ;
+        }
+        return response()->json(['status'=>'failed', 'data'=>[], 'message'=>"specified degree is missing"]);
+    }
+
+    public function set_degree_certificates(Request $request, $degree_id)
+    {
+        # code...
+        $certs = $request->certificates; //an indexed array of certificate IDs
+        if($certs != null && is_array($certs)){
+            $degree_certs = array_map(function($cert)use($degree_id){
+                return ['degree_id'=>$degree_id, 'certificate_id'=>$cert];
+            }, $certs);
+            DegreeCertificate::insert($degree_certs);
+            return response()->json(['status'=>'success', 'data'=>$certs]);
+        }
+        return response()->json(['status'=>'failed', 'data'=>[], 'message'=>'null or wrongly formated request data']);
     }
 }

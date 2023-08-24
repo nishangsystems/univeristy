@@ -1690,7 +1690,7 @@ class HomeController extends Controller
                 case 'SUCCESSFUL':
                     # code...
                     // save transaction and update application_form
-                    $transaction = ['request_id'=>$transaction_status->requestId, 'amount'=>$transaction_status->amount, 'currency_code'=>$transaction_status->currencyCode, 'purpose'=>"application fee", 'mobile_wallet_number'=>$transaction_status->mobileWalletNumber, 'transaction_ref'=>$transaction_status->mchTransactionRef, 'app_id'=>$transaction_status->appId, 'transaction_id'=>$transaction_status->transactionId, 'transaction_time'=>$transaction_status->transactionTime, 'payment_method'=>$transaction_status->payer->paymentMethod, 'payer_user_id'=>$transaction_status->payer->userId, 'payer_name'=>$transaction_status->payer->name, 'payer_account_id'=>$transaction_status->payer->accountId, 'merchant_fee'=>$transaction_status->merchant->fee, 'merchant_account_id'=>$transaction_status->merchant->accountId, 'net_amount_recieved'=>$transaction_status->merchant->netAmountReceived];
+                    $transaction = ['request_id'=>$transaction_status->requestId, 'amount'=>$transaction_status->amount, 'currency_code'=>$transaction_status->currencyCode, 'purpose'=>$request->payment_purpose, 'mobile_wallet_number'=>$transaction_status->mobileWalletNumber, 'transaction_ref'=>$transaction_status->mchTransactionRef, 'app_id'=>$transaction_status->appId, 'transaction_id'=>$transaction_status->transactionId, 'transaction_time'=>$transaction_status->transactionTime, 'payment_method'=>$transaction_status->payer->paymentMethod, 'payer_user_id'=>$transaction_status->payer->userId, 'payer_name'=>$transaction_status->payer->name, 'payer_account_id'=>$transaction_status->payer->accountId, 'merchant_fee'=>$transaction_status->merchant->fee, 'merchant_account_id'=>$transaction_status->merchant->accountId, 'net_amount_recieved'=>$transaction_status->merchant->netAmountReceived];
                     $transaction_instance = new Transaction($transaction);
                     $transaction_instance->save();
     
@@ -1704,6 +1704,15 @@ class HomeController extends Controller
                         $trans = json_decode(cache('__MOMO_FEE_DATA__'));
                         $trans['transacttion_id'] = $transaction_instance->id;
                         ($instance = new Payments($trans))->save();
+                    }elseif($type == 'OTHERS'){
+                        $trans = json_decode(cache('__MOMO_OTHERS_DATA__'));
+                        $trans['transacttion_id'] = $transaction_instance->id;
+                        $trans = ['income_id',
+                        'batch_id',
+                        'class_id',
+                        'student_id',
+                        'user_id',]
+                        ($instance = new PayIncome($trans))->save();
                     }
     
                     return redirect(route('student.application.form.download'))->with('success', "Payment successful.");
