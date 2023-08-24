@@ -35,4 +35,6 @@ Route::post('campus/degrees/{campus_id}', [ApiController::class, 'update_campus_
 Route::get('levels', [ApiController::class, 'levels']);
 Route::get('matrics/highest/{pref}/{year}', [ApiController::class, 'max_matric']);
 Route::post('matric/exists', [ApiController::class, 'matricule_exists']);
+Route::get('degree/certificates/{degree_id}', [ApiController::class, 'get_degree_certificates']);
+Route::post('degree/certificates/{degree_id}', [ApiController::class, 'set_degree_certificates']);
 

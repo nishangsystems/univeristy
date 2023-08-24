@@ -19,5 +19,10 @@ class Degree extends Model
         # code...
         return $this->belongsToMany(Campus::class, CampusDegree::class);
     }
+
+    public function certificates()
+    {
+        return $this->belongsToMany(Certificate::class, DegreeCertificate::class);
+    }
     
 }
