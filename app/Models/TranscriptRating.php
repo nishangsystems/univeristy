@@ -16,6 +16,6 @@ class TranscriptRating extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function modes(){return ['SUPER FAST MODE', 'FAST MODE', 'NORMAL MODE'];}
+    public static function modes(){return ['SUPER FAST MODE', 'FAST MODE', 'NORMAL MODE'];}
 
 }
