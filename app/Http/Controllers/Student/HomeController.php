@@ -34,6 +34,7 @@ use App\Models\Topic;
 use App\Models\Transaction;
 use App\Models\Transcript;
 use App\Models\TranzakCredential;
+use App\Models\TranzakTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -1172,16 +1173,21 @@ class HomeController extends Controller
     public function apply_save_transcript(Request $request)
     {
         # code...
-        // return $request->all();
-        $validator = Validator::make($request->all(), [
-            'config_id'=>'required',
-            'delivery_format'=>'required',
-            'tel'=>'required',
+        $validator = Validator::make($request->all(),
+        [
+            'tel'=>'required|numeric|min:9',
             'amount'=>'required|numeric',
+            // 'callback_url'=>'required|url',
+            'student_id'=>'required|numeric',
+            'year_id'=>'required|numeric',
+            'payment_purpose'=>'required',
+            'payment_id'=>'required|numeric'
         ]);
+        # code...
         if($validator->fails()){
             return back()->with('error', $validator->errors()->first());
         }
+
         $data = [
             'config_id'=>$request->config_id,
             'student_id'=>auth('student')->id(),
@@ -1193,11 +1199,17 @@ class HomeController extends Controller
             'year_id'=>$request->year_id??Helpers::instance()->getCurrentAccademicYear()
         ];
 
+        session()->put(config('tranzak.transcript_data'), $data);
+
+        if($request->has('channel') && $request->channel == 'tranzak'){
+            return $this->tranzak_pay($request->payment_purpose, $request);
+        }
+
         
 
         
         // create transcript application and save id for updates after payment is made
-        cache('__MOMO_TRANSCRIPT_DATA__', json_encode($data));
+        // cache('__MOMO_TRANSCRIPT_DATA__', json_encode($data));
 
         // MAKE API CALL TO PERFORM PAYMENT OF APPLICATION FEE
         // check if token exist and hasn't expired or get new token otherwise
@@ -1673,9 +1685,37 @@ class HomeController extends Controller
         # code...
         $data['title'] = "Processing Transaction";
         $data['item_type'] = $type;
-        $data['transaction'] = json_decode(session()->get('processing_tranzak_transaction_details'));
+        switch ($type) {
+            case 'TRANSCRIPT':
+                # code...
+                $data['cache_token_key'] = config('tranzak.transcript_token');
+                $data['tranzak_app_id'] = config('tranzak.transcript_app_id');
+                $data['tranzak_api_key'] = config('tranzak.transcript_api_key');
+                $data['transaction_data'] = config('tranzak.transcript_transaction');
+                $data['transaction'] = session()->get($data['transaction_data']);
+                break;
+                
+            case 'TUTION':
+                # code...
+                $data['cache_token_key'] = config('tranzak.tution_token');
+                $data['tranzak_app_id'] = config('tranzak.tution_app_id');
+                $data['tranzak_api_key'] = config('tranzak.tution_api_key');
+                $data['transaction_data'] = config('tranzak.tution_transaction');
+                $data['transaction'] = session()->get($data['transaction_data']);
+                break;
+                    
+            case 'OTHERS':
+                # code...
+                $data['cache_token_key'] = config('tranzak.others_token');
+                $data['tranzak_app_id'] = config('tranzak.others_app_id');
+                $data['tranzak_api_key'] = config('tranzak.others_api_key');
+                $data['transaction_data'] = config('tranzak.others_transaction');
+                $data['transaction'] = session()->get($data['transaction_data']);
+                break;
+            
+        }
         // return $data;
-        return view('student.tranzak.processing_payment', $data);
+        return view('student.momo.processing', $data);
         
     }
 
@@ -1684,38 +1724,37 @@ class HomeController extends Controller
         # code...
         try {
             //code...
-            $transaction_status = json_decode($request->qstring);
-            // return $transaction_status;
-            switch ($transaction_status->status) {
+            // return $request;
+            switch ($request->status) {
                 case 'SUCCESSFUL':
                     # code...
                     // save transaction and update application_form
-                    $transaction = ['request_id'=>$transaction_status->requestId, 'amount'=>$transaction_status->amount, 'currency_code'=>$transaction_status->currencyCode, 'purpose'=>$request->payment_purpose, 'mobile_wallet_number'=>$transaction_status->mobileWalletNumber, 'transaction_ref'=>$transaction_status->mchTransactionRef, 'app_id'=>$transaction_status->appId, 'transaction_id'=>$transaction_status->transactionId, 'transaction_time'=>$transaction_status->transactionTime, 'payment_method'=>$transaction_status->payer->paymentMethod, 'payer_user_id'=>$transaction_status->payer->userId, 'payer_name'=>$transaction_status->payer->name, 'payer_account_id'=>$transaction_status->payer->accountId, 'merchant_fee'=>$transaction_status->merchant->fee, 'merchant_account_id'=>$transaction_status->merchant->accountId, 'net_amount_recieved'=>$transaction_status->merchant->netAmountReceived];
-                    $transaction_instance = new Transaction($transaction);
+                    $transaction = ['request_id'=>$request->requestId, 'amount'=>$request->amount, 'currency_code'=>$request->currencyCode, 'purpose'=>$request->payment_purpose, 'mobile_wallet_number'=>$request->mobileWalletNumber, 'transaction_ref'=>$request->mchTransactionRef, 'app_id'=>$request->appId, 'transaction_id'=>$request->transactionId, 'transaction_time'=>$request->transactionTime, 'payment_method'=>$request->payer['paymentMethod'], 'payer_user_id'=>$request->payer['userId'], 'payer_name'=>$request->payer['name'], 'payer_account_id'=>$request->payer['accountId'], 'merchant_fee'=>$request->merchant['fee'], 'merchant_account_id'=>$request->merchant['accountId'], 'net_amount_recieved'=>$request->merchant['netAmountReceived']];
+                    $transaction_instance = new TranzakTransaction($transaction);
                     $transaction_instance->save();
     
                     if($type == 'TRANSCRIPT'){
-                        $trans = json_decode(cache('__MOMO_TRANSCRIPT_DATA__'));
+                        $trans = session()->get(config('tranzak.transcript_data'));
                         $trans['transacttion_id'] = $transaction_instance->id;
                         $trans['paid'] = 1;
                         (new Transcript($trans))->save();
-                        
-                    }elseif($type == 'FEE'){
-                        $trans = json_decode(cache('__MOMO_FEE_DATA__'));
-                        $trans['transacttion_id'] = $transaction_instance->id;
-                        ($instance = new Payments($trans))->save();
+                        $message = "Hello ".auth('student')->user()->name.", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid {$transaction_instance->amount} for this operation";
+                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }elseif($type == 'TUTION'){
+                        $trans = json_decode(session()->get(config('tranzak.tution_data')));
+                        $trans['transaction_id'] = $transaction_instance->id;
+                        (new Payments($trans))->save();
+                        $message = "Hello ".auth('student')->user()->name.", You have successfully paid a sum of {$transaction_instance->amount} as part/all of TUTION for {$transaction_instance->year->name} ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'OTHERS'){
-                        $trans = json_decode(cache('__MOMO_OTHERS_DATA__'));
+                        $trans = json_decode(session()->get(config('tranzak.others_data')));
                         $trans['transacttion_id'] = $transaction_instance->id;
-                        $trans = ['income_id',
-                        'batch_id',
-                        'class_id',
-                        'student_id',
-                        'user_id',]
                         ($instance = new PayIncome($trans))->save();
+                        $message = "Hello ".auth('student')->user()->name.", You have successfully paid a sum of {$transaction_instance->amount} as {$instance->income->name} for {$transaction_instance->year->name} ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }
     
-                    return redirect(route('student.application.form.download'))->with('success', "Payment successful.");
+                    return redirect(route('student.home'))->with('success', "Payment successful.");
                     break;
                 
                 case 'CANCELLED':
@@ -1793,6 +1832,9 @@ class HomeController extends Controller
             return back()->with('error', $validator->errors()->first());
         }
 
+        $data = ["payment_id"=>$request->payment_id,"student_id"=>auth('student')->id(),"batch_id"=>$request->year_id,'unit_id'=>auth('student')->_class()->id,"amount"=>$request->amount,"reference_number"=>'tranzak_momo_payment', 'paid_by'=>'MOMO'];
+        session()->put(config('tranzak.tution_data'), $data);
+
         return $this->tranzak_pay($request->payment_purpose, $request);
     }
 
@@ -1814,12 +1856,14 @@ class HomeController extends Controller
             return back()->with('error', $validator->errors()->first());
         }
 
+        $data = ['income_id'=>$request->payment_id, 'batch_id'=>$request->year_id, 'class_id'=>auth('student')->_class()->id, 'student_id'=>auth('student')->id(), 'paid_by'=>'MOMO'];
+        session()->put(config('tranzak.others_data'), $data);
+
         return $this->tranzak_pay($request->payment_purpose, $request);
     }
 
 
     public function tranzak_pay(string $purpose, $request){
-            // return $request;
 
         $validator = Validator::make($request->all(),
         [
@@ -1836,29 +1880,54 @@ class HomeController extends Controller
 
         // check if token exist and hasn't expired or get new token otherwise
         $student = auth('student')->user();
+        // $cache_token_key = null;
+        // $tranzak_app_id = null;
+        // $tranzak_api_key = null;
+        // $transaction_data = null;
+        switch($request->payment_purpose){
+            case "TRANSCRIPT":
+                $cache_token_key = config('tranzak.transcript_token');
+                $tranzak_app_id = config('tranzak.transcript_app_id');
+                $tranzak_api_key = config('tranzak.transcript_api_key');
+                $transaction_data = config('tranzak.transcript_transaction');
+                break;
+                
+            case "TUTION":
+                $cache_token_key = config('tranzak.tution_token');
+                $tranzak_app_id = config('tranzak.tution_app_id');
+                $tranzak_api_key = config('tranzak.tution_api_key');
+                $transaction_data = config('tranzak.tution_transaction');
+                break;
+
+            case "OTHERS":
+                $cache_token_key = config('tranzak.others_token');
+                $tranzak_app_id = config('tranzak.others_app_id');
+                $tranzak_api_key = config('tranzak.others_api_key');
+                $transaction_data = config('tranzak.others_transaction');
+                break;
+
+        }
         // $tranzak_credentials = TranzakCredential::where('campus_id', $student->campus_id)->first();
-        if(cache('tranzak_credentials_token') == null or Carbon::parse(cache('tranzak_credentials_token_expiry'))->isAfter(now())){
+        if(cache($cache_token_key) == null or Carbon::parse(cache($cache_token_key.'_expiry'))->isAfter(now())){
             // get and cache different token
-            $response = Http::post(config('tranzak.base').config('tranzak.token'), ['appId'=>config('tranzak.app_id'), 'appKey'=>config('tranzak.api_key')]);
-            // return $response;
+            $response = Http::post(config('tranzak.base').config('tranzak.token'), ['appId'=>$tranzak_app_id, 'appKey'=>$tranzak_api_key]);
             if($response->status() == 200){
-                // return json_decode($response->body())->data;
-                // return Carbon::createFromTimestamp(time() + json_decode($response->body())->data->expiresIn);
                 // cache token and token expirationtot session
-                cache(['tranzak_credentials_token' => json_decode($response->body())->data->token]);
-                cache(['tranzak_credentials_token_expiry'=>Carbon::createFromTimestamp(time() + json_decode($response->body())->data->expiresIn)]);
+                cache([$cache_token_key => json_decode($response->body())->data->token]);
+                cache([$cache_token_key.'_expiry'=>Carbon::createFromTimestamp(time() + json_decode($response->body())->data->expiresIn)]);
             }
         }
         // Assumed there is a valid api token
-        // Moving the performing the payment request proper
-        $headers = ['Authorization'=>'Bearer '.cache('tranzak_credentials_token')];
+        // Moving to performing the payment request proper
+        $headers = ['Authorization'=>'Bearer '.cache($cache_token_key)];
         $request_data = ['mobileWalletNumber'=>'237'.$request->tel, 'mchTransactionRef'=>'_'.str_replace(' ', '_', $request->payment_purpose).'_payment_'.time().'_'.random_int(1, 9999), "amount"=> $request->amount, "currencyCode"=> "XAF", "description"=>"Payment for {$request->payment_purpose} - ST LOUIS UNIVERSITY INSTITUTE."];
         $_response = Http::withHeaders($headers)->post(config('tranzak.base').config('tranzak.direct_payment_request'), $request_data);
-        // return $_response->body();
+        // return json_encode(json_decode($_response->body())->data);
         if($_response->status() == 200){
             // save transaction and track it status
 
-            session()->put('processing_tranzak_transaction_details', json_encode(json_decode($_response->body())->data));
+            session()->put($transaction_data, json_decode($_response->body())->data);
+            // return session()->get($transaction_data);
             // session()->put('tranzak_credentials', json_encode($tranzak_credentials));
             return redirect()->to(route('student.tranzak.processing', $purpose));
         }

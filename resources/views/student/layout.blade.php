@@ -286,6 +286,15 @@
 
 
                     <li>
+                        <a href="{{route('student.transcript.apply')}}?channel=tranzak" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.apply_for_transcript')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
                         <a href="{{route('student.tranzak.result.pay')}}" class="text-capitalize">
                             <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
                             {{__('text.semester_results')}}

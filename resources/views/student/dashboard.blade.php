@@ -48,7 +48,7 @@ $user = $user == null ? auth()->user() : $user;
                     <div class="profile-info-name"> Class</div>
                     @php($class = auth('student')->user()->_class())
                     <div class="profile-info-value">
-                        <span class="editable" id="username"> {{$class->program->name.' : '.__('text.word_level').' '.$class->level->level}}</span>
+                        <span class="editable" id="username"> {{$class->name()}}</span>
                     </div>
                 </div>
 

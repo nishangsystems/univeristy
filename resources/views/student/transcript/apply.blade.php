@@ -24,7 +24,7 @@
                             <th class="border-left border-right border-light">{{$rtx->current_price.' '.__('text.currency_cfa')}}</th>
                             <th class="border-left border-right border-light">{{$rtx->former_price.' '.__('text.currency_cfa')}}</th>
                             <th class="border-left border-right border-light">
-                                <a class="btn btn-sm btn-primary" href="{{route('student.transcript.apply', $rtx->id)}}?pid={{$charge_id??null}}">{{__('text.word_apply')}}</a>
+                                <a class="btn btn-sm btn-primary" href="{{route('student.transcript.apply', $rtx->id)}}?pid={{$charge_id??null}}&channel={{ request('channel') }}">{{__('text.word_apply')}}</a>
                             </th>
                         </tr>
                     @endforeach
@@ -39,6 +39,7 @@
                 <input type="hidden" name="student_id" value="{{auth('student')->id()}}">
                 <input type="hidden" name="payment_purpose" value="TRANSCRIPT">
                 <input type="hidden" name="purpose" value="TRANSCRIPT">
+                <input type="hidden" name="channel" value="{{ request('channel') }}">
                 <input type="hidden" name="charge_id" value="{{request('pid') ?? null}}">
                 <input type="hidden" name="payment_id" value="{{request('config_id')}}">
                 @if ($current)
