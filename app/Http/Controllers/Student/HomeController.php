@@ -1195,7 +1195,7 @@ class HomeController extends Controller
             'delivery_format'=>$request->delivery_format,
             'tel'=>$request->contact,
             'description'=>$request->description ?? null,
-            'paid'=>false,
+            'paid'=>true,
             'year_id'=>$request->year_id??Helpers::instance()->getCurrentAccademicYear()
         ];
 
@@ -1832,7 +1832,7 @@ class HomeController extends Controller
             return back()->with('error', $validator->errors()->first());
         }
 
-        $data = ["payment_id"=>$request->payment_id,"student_id"=>auth('student')->id(),"batch_id"=>$request->year_id,'unit_id'=>auth('student')->_class()->id,"amount"=>$request->amount,"reference_number"=>'tranzak_momo_payment', 'paid_by'=>'MOMO'];
+        $data = ["payment_id"=>$request->payment_id,"student_id"=>auth('student')->id(),"batch_id"=>$request->year_id,'unit_id'=>auth('student')->user()->_class()->id,"amount"=>$request->amount,"reference_number"=>'tranzak_momo_payment', 'paid_by'=>'MOMO'];
         session()->put(config('tranzak.tution_data'), $data);
 
         return $this->tranzak_pay($request->payment_purpose, $request);
@@ -1856,7 +1856,7 @@ class HomeController extends Controller
             return back()->with('error', $validator->errors()->first());
         }
 
-        $data = ['income_id'=>$request->payment_id, 'batch_id'=>$request->year_id, 'class_id'=>auth('student')->_class()->id, 'student_id'=>auth('student')->id(), 'paid_by'=>'MOMO'];
+        $data = ['income_id'=>$request->payment_id, 'batch_id'=>$request->year_id, 'class_id'=>auth('student')->user()->_class()->id, 'student_id'=>auth('student')->id(), 'paid_by'=>'MOMO'];
         session()->put(config('tranzak.others_data'), $data);
 
         return $this->tranzak_pay($request->payment_purpose, $request);
