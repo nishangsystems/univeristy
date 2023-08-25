@@ -227,10 +227,13 @@ class Controller extends BaseController
         $contacts_no_spaces = array_map(function($el){
             return str_replace([' ', '.', '-', '(', ')', '+'], '', $el);
         }, $contacts);
+        $complete_contacts = array_map(function($el){
+            return strlen($el) <= 9 ? '237'.$el : $el;
+        }, $contacts_no_spaces);
         // dd($contacts_no_spaces);
         $cleaned_contacts = array_map(function($el){
             return explode('/',explode(',', $el)[0])[0];
-        }, $contacts_no_spaces);
+        }, $complete_contacts);
 
         // dd($contacts);
         // SEND SMS PROPER
@@ -277,7 +280,7 @@ class Controller extends BaseController
 
     
 
-    public static function sendSMS($phone_numbers, $message)
+    private static function sendSMS($phone_numbers, $message)
     {
 
         if($message == null){return "Message must not be empty";}

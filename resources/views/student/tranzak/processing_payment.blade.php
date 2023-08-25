@@ -35,7 +35,7 @@
     // check for the transaction status every 3s
     $set_interval = setInterval(() => {
         _url = "{{config('tranzak.base').config('tranzak.transaction_details').$transaction->requestId}}";
-        headers = { 'Access-Control-Allow-Origin': '*',  'Authorization' : "Bearer {{ cache('tranzak_api_token') }}"};
+        headers = { 'Access-Control-Allow-Origin': '*',  'Authorization' : "Bearer {{ cache($cache_token_key) }}"};
         $.ajax({
             method: 'get',
             url: _url,
