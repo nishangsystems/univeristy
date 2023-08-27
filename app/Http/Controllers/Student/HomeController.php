@@ -1738,19 +1738,19 @@ class HomeController extends Controller
                         $trans['transacttion_id'] = $transaction_instance->id;
                         $trans['paid'] = 1;
                         (new Transcript($trans))->save();
-                        $message = "Hello ".auth('student')->user()->name.", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid {$transaction_instance->amount} for this operation";
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid {$transaction_instance->amount} for this operation";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'TUTION'){
                         $trans = session()->get(config('tranzak.tution_data'));
                         $trans['transaction_id'] = $transaction_instance->id;
                         (new Payments($trans))->save();
-                        $message = "Hello ".auth('student')->user()->name.", You have successfully paid a sum of {$transaction_instance->amount} as part/all of TUTION for {$transaction_instance->year->name} ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of {$transaction_instance->amount} as part/all of TUTION for {$transaction_instance->year->name} ST. LOUIS UNIVERSITY INSTITUTE.";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'OTHERS'){
                         $trans = session()->get(config('tranzak.others_data'));
                         $trans['transacttion_id'] = $transaction_instance->id;
                         ($instance = new PayIncome($trans))->save();
-                        $message = "Hello ".auth('student')->user()->name.", You have successfully paid a sum of {$transaction_instance->amount} as {$instance->income->name} for {$transaction_instance->year->name} ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of {$transaction_instance->amount} as {($instance->income->name??'')} for {$transaction_instance->year->name} ST. LOUIS UNIVERSITY INSTITUTE.";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }
     
