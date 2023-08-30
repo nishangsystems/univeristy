@@ -20,7 +20,7 @@ class Transcript extends Model
      * 'user_id': who validates the transcript as 'done'
      */
     protected $connection = 'mysql';
-    protected $fillable = ['config_id', 'student_id', 'status', 'delivery_format', 'tel', 'year_id', 'description', 'done', 'collected', 'giver_id', 'user_id', 'paid', 'transaction_id'];
+    protected $fillable = ['config_id', 'student_id', 'status', 'delivery_format', 'tel', 'year_id', 'description', 'done', 'collected', 'giver_id', 'user_id', 'paid', 'transaction_id', 'paid_by'];
 
     public function done_by()
     {
@@ -52,6 +52,16 @@ class Transcript extends Model
     {
         # code...
         return $this->collected != null;
+    }
+
+    public function transaction()
+    {
+        # code...
+        if($this->paid_by == 'TRANZAK_MOMO'){
+            return $this->belongsTo(TranzakTransaction::class, 'transaction_id');
+        }else{
+            return $this->hasOne(Transaction::class, 'payment_id')->where('payment_purpose', 'TRANSCRIPT');
+        }
     }
 
 }

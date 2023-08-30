@@ -19,4 +19,11 @@ class Transaction extends Model
         # code...
         return $this->belongsTo(Batch::class, 'year_id');
     }
+
+    public function student()
+    {
+        # code...
+        return $this->belongsTo(Students::class, 'student_id');
+    }
+
 }
