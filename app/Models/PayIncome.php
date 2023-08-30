@@ -38,4 +38,14 @@ class PayIncome extends Model
     {
         return $this->belongsTo(Batch::class, 'batch_id');
     }
+
+    public function transaction()
+    {
+        # code...
+        if($this->paid_by == 'TRANZAK_MOMO'){
+            return $this->belongsTo(TranzakTransaction::class, 'transaction_id');
+        }else{
+            return $this->hasOne(Transaction::class, 'payment_id');
+        }
+    }
 }

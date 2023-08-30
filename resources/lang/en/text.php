@@ -823,5 +823,7 @@ return [
     'total_fee_paid'=>'total fee paid',
     'total_fee_owed'=>'total fee owed',
     'tranzak_payments'=>'tranzak payments',
-    'apply_for_transcript'=>'apply for transcript'
+    'apply_for_transcript'=>'apply for transcript',
+    'word_charges'=>'charges',
+    ''
 ];

@@ -1196,6 +1196,7 @@ class HomeController extends Controller
             'tel'=>$request->contact,
             'description'=>$request->description ?? null,
             'paid'=>true,
+            'paid_by'=>'TRANZAK_MOMO',
             'year_id'=>$request->year_id??Helpers::instance()->getCurrentAccademicYear()
         ];
 
@@ -1649,9 +1650,11 @@ class HomeController extends Controller
         }
     }
 
-    public function online_payment_history()
+    public function online_payment_history(Request $request)
     {
         # code...
+        $year = $request->year ?? null;
+        $filter = $request->fiilter ?? null;
         $user = auth('student')->user();
         $data['title'] = "My Transactions";
         $data['transactions'] = $user->transactions()->where(function($row){
@@ -1661,6 +1664,11 @@ class HomeController extends Controller
         })
         ->where(['status'=>'SUCCESSFUL'])
         ->get();
+        $data['fees'] = Payments::where('student_id', auth('student')->id())->whereNotNull('transaction_id')->get();
+        $data['other_payments'] = PayIncome::where('student_id', auth('student')->id())->whereNotNull('transaction_id')->get();
+        $data['transcripts'] = Transcript::where('student_id', auth('student')->id())->whereNotNull('transaction_id')->get();
+        $data['charges'] = Charge::where('student_id', auth('student')->id())->whereNotNull('financialTransactionId')->get();
+        // return $data;
         return view('student.online_payment_history', $data);
     }
 
@@ -1729,13 +1737,14 @@ class HomeController extends Controller
                 case 'SUCCESSFUL':
                     # code...
                     // save transaction and update application_form
+                    DB::beginTransaction();
                     $transaction = ['request_id'=>$request->requestId??'', 'amount'=>$request->amount??'', 'currency_code'=>$request->currencyCode??'', 'purpose'=>$request->payment_purpose??'', 'mobile_wallet_number'=>$request->mobileWalletNumber??'', 'transaction_ref'=>$request->mchTransactionRef??'', 'app_id'=>$request->appId??'', 'transaction_id'=>$request->transactionId??'', 'transaction_time'=>$request->transactionTime??'', 'payment_method'=>$request->payer['paymentMethod']??'', 'payer_user_id'=>$request->payer['userId']??'', 'payer_name'=>$request->payer['name']??'', 'payer_account_id'=>$request->payer['accountId']??'', 'merchant_fee'=>$request->merchant['fee']??'', 'merchant_account_id'=>$request->merchant['accountId']??'', 'net_amount_recieved'=>$request->merchant['netAmountReceived']??''];
                     $transaction_instance = new TranzakTransaction($transaction);
                     $transaction_instance->save();
     
                     if($type == 'TRANSCRIPT'){
                         $trans = session()->get(config('tranzak.transcript_data'));
-                        $trans['transacttion_id'] = $transaction_instance->id;
+                        $trans['transaction_id'] = $transaction_instance->id;
                         $trans['paid'] = 1;
                         (new Transcript($trans))->save();
                         $message = "Hello ".(auth('student')->user()->name??'').", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid {($transaction_instance->amount??'')} for this operation";
@@ -1748,12 +1757,12 @@ class HomeController extends Controller
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'OTHERS'){
                         $trans = session()->get(config('tranzak.others_data'));
-                        $trans['transacttion_id'] = $transaction_instance->id;
+                        $trans['transaction_id'] = $transaction_instance->id;
                         ($instance = new PayIncome($trans))->save();
                         $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of {($transaction_instance->amount??'')} as {($instance->income->name??'')} for {($transaction_instance->year->name??'')} ST. LOUIS UNIVERSITY INSTITUTE.";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }
-    
+                    DB::commit();
                     return redirect(route('student.home'))->with('success', "Payment successful.");
                     break;
                 
@@ -1777,9 +1786,11 @@ class HomeController extends Controller
                     # code...
                     break;
             }
+
             return redirect(route('student.home'))->with('error', 'Payment failed. Unrecognised transaction status.');
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollBack();
             return back()->with('error', $th->getMessage());
         }
     }
@@ -1832,7 +1843,7 @@ class HomeController extends Controller
             return back()->with('error', $validator->errors()->first());
         }
 
-        $data = ["payment_id"=>$request->payment_id,"student_id"=>auth('student')->id(),"batch_id"=>$request->year_id,'unit_id'=>auth('student')->user()->_class()->id,"amount"=>$request->amount,"reference_number"=>'tranzak_momo_payment', 'paid_by'=>'MOMO'];
+        $data = ["payment_id"=>$request->payment_id,"student_id"=>auth('student')->id(),"batch_id"=>$request->year_id,'unit_id'=>auth('student')->user()->_class()->id,"amount"=>$request->amount,"reference_number"=>'fee.tranzak_momo_payment_'.time().'_'.random_int(100000, 999999).'_'.auth('student')->id(), 'paid_by'=>'TRANZAK_MOMO'];
         session()->put(config('tranzak.tution_data'), $data);
 
         return $this->tranzak_pay($request->payment_purpose, $request);
@@ -1856,7 +1867,7 @@ class HomeController extends Controller
             return back()->with('error', $validator->errors()->first());
         }
 
-        $data = ['income_id'=>$request->payment_id, 'batch_id'=>$request->year_id, 'class_id'=>auth('student')->user()->_class()->id, 'student_id'=>auth('student')->id(), 'paid_by'=>'MOMO'];
+        $data = ['income_id'=>$request->payment_id, 'batch_id'=>$request->year_id, 'class_id'=>auth('student')->user()->_class()->id, 'student_id'=>auth('student')->id(), 'paid_by'=>'TRANZAK_MOMO'];
         session()->put(config('tranzak.others_data'), $data);
 
         return $this->tranzak_pay($request->payment_purpose, $request);

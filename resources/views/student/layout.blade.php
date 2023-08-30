@@ -340,6 +340,15 @@
                         <b class="arrow"></b>
                     </li>
 
+
+                    <li>
+                        <a href="{{route('student.online.payments.history')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.online_payments')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
                 </ul>
             </li>
 
