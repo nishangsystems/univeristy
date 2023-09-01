@@ -117,25 +117,32 @@
 								<div class="widget-body" style="padding-inline: 3rem !important;">
 									<div class="widget-main">
 										<h4 class="bigger text-capitalize" style="color: black !important; font-size: xlarge;">
-											<b>{{__('text.word_register')}}</b>
+											<b>{{__('text.register_parent')}}</b>
 										</h4>
 										<span style="font-size: small; margin-bottom: 1rem; color: black !important;">{{__('text.begin_account_creation')}}</span>
 
-										<form method="POST" action="{{ route('check_matricule') }}" style="padding-block: 3rem !important;">
+										<form method="POST" style="padding-block: 3rem !important;">
 											@csrf
 											<fieldset>
 												<label class="block clearfix">
-													<span class="text-capitalize">{{__('text.word_matricule')}}</span>
+													<span class="text-capitalize">{{__('text.word_contact')}}</span>
 													<span class="block input-icon input-icon-right">
-														<input type="text" required name="reg_no" class="form-control"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+														<input type="text" required name="phone" class="form-control"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
 													</span>
 												</label>
 
-												{{-- <label class="block clearfix">
+												@if(isset($phone) and $phone != null)
+												<label class="block clearfix">
+													<span class="block input-icon input-icon-right" style="text-transform: capitalize;">
+														<input type="password" name="password" class="form-control">  {{__('text.enter_payment_details')}}
+													</span>
+												</label>
+												<label class="block clearfix">
 													<span class="block input-icon input-icon-right" style="text-transform: capitalize;">
 														<input type="checkbox" name="remember_matric">  {{__('text.enter_payment_details')}}
 													</span>
-												</label> --}}
+												</label>
+												@endif
 
 												<div class="clearfix">
 													<button type="submit" class="form-control btn-black btn-sm"  style="border-radius: 2rem; background-color: black; border: 1px solid black; color: white; text-transform: capitalize; margin-block: 2rem;">

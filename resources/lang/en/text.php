@@ -829,5 +829,5 @@ return [
     'student_account'=>'student account', 
     'parent_account'=>'parent account',
     'parent_phone_used'=>'A parent account already exist with this phone number',
-    ''
+    'register_parent'=>'register parent'
 ];
