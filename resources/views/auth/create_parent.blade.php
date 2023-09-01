@@ -104,6 +104,25 @@
 			<div class="py-5 mx-5 w-100" style="padding: 2rem;">
 				<h4> <span style="color:#DBA622;">Kameleon</span> {{__('text.word_for')}} {{env('APP_NAME')}}</h4>
 			</div>
+			<div style="max-height: 65vh; overflow:auto">
+				@if(Session::has('success'))
+					<div class="alert alert-success fade in">
+						<strong>Success!</strong> {{Session::get('success')}}
+					</div>
+				@endif
+
+				@if(Session::has('error'))
+					<div class="alert alert-danger fade in">
+						<strong>Error!</strong> {{Session::get('error')}}
+					</div>
+				@endif
+
+				@if(Session::has('message'))
+					<div class="alert alert-primary fade in">
+						<strong>Message!</strong> {!! Session::get('message') !!}
+					</div>
+				@endif
+			</div>
 			<div class="main-content">
 				<div class="w-100">
 					<div class="login-container" id="login-frame">
@@ -125,23 +144,25 @@
 											@csrf
 											<fieldset>
 												<label class="block clearfix">
-													<span class="text-capitalize">{{__('text.word_contact')}}</span>
+													<span class="text-capitalize">{{__('text.parents_phone_number')}}</span>
 													<span class="block input-icon input-icon-right">
-														<input type="text" required name="phone" class="form-control"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+														<input type="text" required name="phone" class="form-control" value="{{ $phone??'' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
 													</span>
 												</label>
 
 												@if(isset($phone) and $phone != null)
-												<label class="block clearfix">
-													<span class="block input-icon input-icon-right" style="text-transform: capitalize;">
-														<input type="password" name="password" class="form-control">  {{__('text.enter_payment_details')}}
-													</span>
-												</label>
-												<label class="block clearfix">
-													<span class="block input-icon input-icon-right" style="text-transform: capitalize;">
-														<input type="checkbox" name="remember_matric">  {{__('text.enter_payment_details')}}
-													</span>
-												</label>
+													<label class="block clearfix">
+														<span class="text-capitalize">{{__('text.word_password')}}</span>
+														<span class="block input-icon input-icon-right">
+															<input type="password" required name="password" class="form-control"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+														</span>
+													</label>
+													<label class="block clearfix">
+														<span class="text-capitalize">{{__('text.confirm_password')}}</span>
+														<span class="block input-icon input-icon-right">
+															<input type="password" required name="confirm_password" class="form-control"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+														</span>
+													</label>
 												@endif
 
 												<div class="clearfix">

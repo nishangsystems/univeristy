@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\documentation\BaseController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Parents\HomeController as ParentsHomeController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\Student\HomeController as StudentHomeController;
 use App\Http\Controllers\Teacher\HomeController as TeacherHomeController;
@@ -670,6 +671,24 @@ Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.c
         Route::get('processing/{type}', [StudentHomeController::class, 'tranzak_processing'])->name('processing');
         Route::get('complete/{type}', [StudentHomeController::class, 'tranzak_complete'])->name('complete');
     });
+});
+
+Route::prefix('parents')->name('parents.')->group(function(){
+    Route::get('home', [ParentsHomeController::class, 'index'])->name('home');
+    Route::get('results/{child_id}', [ParentsHomeController::class, 'results_index'])->name('results');
+    Route::post('results/{child_id}', [ParentsHomeController::class, 'results']);
+    Route::get('fees/{child_id}', [ParentsHomeController::class, 'fees'])->name('fees');
+    Route::prefix('tranzak')->name('tranzak.')->group(function(){
+        Route::get('fee/pay/{student_id}', [ParentsHomeController::class, 'tranzak_pay_fee'])->name('pay_fee');
+        Route::post('fee/pay/{student_id}', [ParentsHomeController::class, 'tranzak_pay_fee_momo']);
+        Route::get('others/pay/{student_id}/{id?}', [ParentsHomeController::class, 'tranzak_pay_other_incomes'])->name('pay_others');
+        Route::post('others/pay/{student_is}/{id?}', [ParentsHomeController::class, 'tranzak_pay_other_incomes_momo']);
+        Route::get('processing', [ParentsHomeController::class, 'tranzak_payment_processing'])->name('processing');
+        Route::post('processing', [ParentsHomeController::class, 'tranzak_payment_processing_complete']);
+        Route::get('processing/{type}', [ParentsHomeController::class, 'tranzak_processing'])->name('processing');
+        Route::post('processing/{type}', [ParentsHomeController::class, 'tranzak_complete']);
+    });
+
 });
 // Route::post('student/charges/pay', 'Student\HomeController@pay_charges_save')->name('student.charge.pay');
 Route::get('platform/pay', 'Student\HomeController@pay_platform_charges')->name('platform_charge.pay')->middleware('isStudent');
