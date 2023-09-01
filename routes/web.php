@@ -63,6 +63,8 @@ Route::get('registration', [Controller::class, 'registration'])->name('registrat
 Route::post('check_matricule', [Controller::class, 'check_matricule'])->name('check_matricule');
 Route::post('createAccount', [Controller::class, 'createAccount'])->name('createAccount');
 Route::post('logout', [CustomLoginController::class, 'logout'])->name('logout');
+Route::get('create_parent', [CustomLoginController::class, 'create_parent'])->name('create_parent');
+Route::post('create_parent', [CustomLoginController::class, 'save_parent'])->name('create_parent');
 
 Route::post('reset_password_with_token/password/reset', [CustomForgotPasswordController::class, 'validatePasswordRequest'])->name('reset_password_without_token');
 Route::get('reset_password_with_token/{token}/{email}', [CustomForgotPasswordController::class, 'resetForm'])->name('reset');

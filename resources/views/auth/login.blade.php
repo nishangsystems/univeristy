@@ -190,13 +190,9 @@
 											</div>
 
 										</div>
-										<div class="toolbar clearfix"  style="border: 0px; font-size: xsmall !important; width: 77% !important; margin-inline: auto; ">
-											<span style="text-decoration: none !important; color: black !important;">{{__('text.need_an_account?')}}</span>
-											<a href="{{ route('registration') }}" style="color: #670404 !important;">
-												{{__('text.want_to_register')}}
-												{{-- <i class="ace-icon fa fa-arrow-right"></i> --}}
-												</a>
-											</a>
+										<div class=" clearfix"  style="border: 0px; font-size: xsmall !important; width: 77% !important; margin-inline: auto; ">
+											<a href="{{ route('create_parent') }}" class="btn btn-sm border-0 mx-auto" style="border-radius: 0.3rem; pasdding: 0.2rem 0.6rem; width:47%; margin-inline: 3px; border: 0 !important; background-color: #DBA622 !important; color: white !important; font-weight: normal !important;">{{__('text.parent_account')}}</a>
+											<a href="{{ route('registration') }}" class="btn btn-sm border-0 mx-auto" style="border-radius: 0.3rem; pasdding: 0.2rem 0.6rem; width:47%; margin-inline: 3px; border: 0 !important; background-color: #DBA622 !important; color: white !important; font-weight: normal !important;">{{__('text.student_account')}}</a>
 										</div>
 									</div><!-- /.widget-body -->
 								</div><!-- /.login-box -->
