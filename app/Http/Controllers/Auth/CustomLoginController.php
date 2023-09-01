@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Parent as Parents;
+use App\Models\Guardian;
 use App\Models\Students;
 use App\Models\User;
 // use Auth;
@@ -145,12 +145,17 @@ class CustomLoginController extends Controller
             if(Students::where('parent_phone_number', $request->phone)->count() == 0){
                 return back()->with('error', __('text.parent_no_child_phrase'));
             }
-            if(Parents::where('phone', $request->phone)->count() > 0){
+            if(Guardian::where('phone', $request->phone)->count() > 0){
                 return back()->with('error', __('text.parent_phone_used'));
             }
             return view('auth.create_parent', ['phone'=>$request->phone, 'title'=>'Create Parent Account']);
         }
         return view('auth.create_parent', ['title'=>'Create Parent Account']);
+    }
+
+    public function save_parent(Request $resuest)
+    {
+        # code...
     }
 
 }
