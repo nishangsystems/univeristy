@@ -825,5 +825,9 @@ return [
     'tranzak_payments'=>'tranzak payments',
     'apply_for_transcript'=>'apply for transcript',
     'word_charges'=>'charges',
+    'parent_no_child_phrase'=>'No such parent phone number was found',
+    'student_account'=>'student account', 
+    'parent_account'=>'parent account',
+    'parent_phone_used'=>'A parent account already exist with this phone number',
     ''
 ];
