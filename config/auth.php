@@ -61,6 +61,11 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+
+        'parents' => [
+            'driver' =>'session',
+            'provider'=>'parents',
+        ]
     ],
 
     /*
@@ -89,6 +94,11 @@ return [
         'students' => [
             'driver' => 'eloquent',
             'model' => App\Models\Students::class,
+        ],
+
+        'parents' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Guardian::class,
         ],
 
         // 'users' => [

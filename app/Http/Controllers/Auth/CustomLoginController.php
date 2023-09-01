@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use \Cookie;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class CustomLoginController extends Controller
 {
@@ -117,7 +118,10 @@ class CustomLoginController extends Controller
         if( Auth::guard('student')->attempt(['matric'=>$request->username,'password'=>$request->password], $request->remember)){
             // return "Spot 1";
             return redirect()->intended(route('student.home'));
-        }else{
+        }elseif(auth('parents')->attempt(['phone'=>$request->username, 'password'=>$request->password])){
+            return redirect()->route('parents.home');
+        }
+        else{
             if( Auth::attempt(['username'=>$request->username,'password'=>$request->password]) ||  Auth::attempt(['matric'=>$request->username,'password'=>$request->password])){
                 // return "Spot 2";
                 if(Auth::user()->type == 'teacher'){
@@ -153,9 +157,33 @@ class CustomLoginController extends Controller
         return view('auth.create_parent', ['title'=>'Create Parent Account']);
     }
 
-    public function save_parent(Request $resuest)
+    public function save_parent(Request $request)
     {
         # code...
+        $validity = Validator::make($request->all(), ['phone'=>'required|min:9']);
+        if($validity->fails()){return redirect(route('create_parent'))->with('error', $validity->errors()->first());}
+        // check if parent number exists
+        
+        if($request->password == null){
+            // return 2324;
+            $phone = $request->phone;
+            if(Students::where('parent_phone_number', 'LIKE', "%{$phone}%")->count() > 1){
+                return view('auth.create_parent', ['title'=>'Create Parent Account', 'phone'=>$phone]);
+            }
+        }else{
+            $validity = Validator::make($request->all(), ['phone'=>'required', 'confirm_password'=>'required|min:6', 'password'=>'required|same:confirm_password']);
+            if($validity->fails()){
+                // return $validity->errors()->first();
+                return redirect(route('create_parent'))->with('error', $validity->errors()->first());
+            }
+            if(Guardian::where('phone', $request->phone)->count() > 0){
+                return redirect(route('login'))->with('error', __('text.account_already_exist_with_this_phone_number'));
+            }
+            // save guardian
+            $data = ['phone'=>$request->phone, 'password'=>Hash::make($request->password)];
+            (new Guardian($data))->save();
+            return redirect(route('login'))->with('success', __('text.parent_account_created_successfully'));
+        }
     }
 
 }

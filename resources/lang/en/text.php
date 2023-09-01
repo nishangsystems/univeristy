@@ -829,5 +829,12 @@ return [
     'student_account'=>'student account', 
     'parent_account'=>'parent account',
     'parent_phone_used'=>'A parent account already exist with this phone number',
-    'register_parent'=>'register parent'
+    'register_parent'=>'register parent',
+    'parent_account_created_successfully'=>'parent account created successfully',
+    'account_already_exist_with_this_phone_number'=>'account already exists with this phone number',
+    'parents_dashboard'=>'parents dashboard',
+    'my_children'=>'my children',
+    'fee_record_for'=>'Fee Record For',
+    'contact_school'=>'contact school',
+    ''
 ];

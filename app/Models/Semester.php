@@ -44,8 +44,8 @@ class Semester extends Model
         return false;
     }
 
-    public function result_is_published($year){
-        if (Result::where(['batch_id'=>$year, 'semester_id'=>$this->id, 'student_id'=>auth('student')->id(), 'published'=>1])->count() > 0) {
+    public function result_is_published($year, $student_id = null){
+        if (Result::where(['batch_id'=>$year, 'semester_id'=>$this->id, 'student_id'=>$student_id != null ? $student_id : auth('student')->id(), 'published'=>1])->count() > 0) {
             # code...
             return true;
         }
