@@ -1,4 +1,4 @@
-@extends('student.layout')
+@extends('parents.layout')
 @section('section')
     @php
         $student = auth('student')->user()

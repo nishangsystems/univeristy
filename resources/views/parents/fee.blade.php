@@ -6,7 +6,9 @@
     @endphp
 
     <div class="col-sm-12">
-        <div class="d-flex justify-content-end text-uppercase my-3"><a class="btn btn-sm btn-success text-uppercase" href="{{ route('parents.tranzak.pay_fee', $student->id) }}">{{ __('text.pay_fee') }}</a></div>
+        @if($student->bal($student->id, $year) > 0)
+            <div class="d-flex justify-content-end text-uppercase my-3"><a class="btn btn-sm btn-success text-uppercase" href="{{ route('parents.tranzak.pay_fee', $student->id) }}">{{ __('text.pay_fee') }}</a></div>
+        @endif
         <div class="d-flex flex-wrap justify-content-between alert alert-info text-center text-uppercase my-3"><span>{{__('text.total_paid').' : '.number_format($student->total_paid( $year)).' '.__('text.currency_cfa')}}</span><span>{{__('text.total_debts').' : '.number_format($student->bal($student->id, $year)).' '.__('text.currency_cfa')}}</span></div>
         <div class="content-panel">
             <form method="get">

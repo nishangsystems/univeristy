@@ -688,6 +688,7 @@ Route::prefix('parents')->name('parents.')->group(function(){
         Route::get('processing/{type}', [ParentsHomeController::class, 'tranzak_processing'])->name('processing');
         Route::post('processing/{type}', [ParentsHomeController::class, 'tranzak_complete']);
     });
+    Route::get('contact_school', [ParentsHomeController::class, 'contact_school'])->name('contact_school');
 
 });
 // Route::post('student/charges/pay', 'Student\HomeController@pay_charges_save')->name('student.charge.pay');

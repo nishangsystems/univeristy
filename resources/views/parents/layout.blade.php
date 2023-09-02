@@ -206,7 +206,7 @@
             </li>
             
             <li>
-                <a href="{{route('parents.home')}}">
+                <a href="{{route('parents.contact_school')}}">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-dashboard"></i>
                     <span class="menu-text">{{ __('text.contact_school') }}</span>
                 </a>

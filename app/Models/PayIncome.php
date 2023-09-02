@@ -48,4 +48,10 @@ class PayIncome extends Model
             return $this->hasOne(Transaction::class, 'payment_id');
         }
     }
+
+    public function student()
+    {
+        # code...
+        return $this->belongsTo(Students::class, 'student_id');
+    }
 }
