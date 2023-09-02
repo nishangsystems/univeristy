@@ -1,4 +1,4 @@
-@extends('student.layout')
+@extends('parents.layout')
 @php
     $c_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
     $header = \App\Helpers\Helpers::instance()->getHeader();
@@ -11,7 +11,7 @@
         <form class="form-horizontal" role="form" method="POST">
             <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_fee_details')}}</h5>
             @csrf
-            <input type="hidden" name="student_id" value="{{auth('student')->id()}}">
+            <input type="hidden" name="student_id" value="{{ $student->id }}">
             <input type="hidden" name="year_id" value="{{$c_year}}">
             <input type="hidden" name="payment_purpose" value="TUTION">
             <div class="form-group row">

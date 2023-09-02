@@ -1,4 +1,4 @@
-@extends('student.layout')
+@extends('parents.layout')
 @php
     $c_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
     $header = \App\Helpers\Helpers::instance()->getHeader();

@@ -1,4 +1,4 @@
-@extends('student.printable')
+@extends('parents.printable')
 @section('section')
 @php
     $header = \App\Helpers\Helpers::instance()->getHeader();

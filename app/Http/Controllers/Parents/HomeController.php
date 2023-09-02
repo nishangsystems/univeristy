@@ -231,20 +231,23 @@ class HomeController extends Controller
                         $trans = session()->get(config('tranzak.transcript_data'));
                         $trans['transaction_id'] = $transaction_instance->id;
                         $trans['paid'] = 1;
-                        (new Transcript($trans))->save();
-                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid {($transaction_instance->amount??'')} for this operation";
-                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                        $instance = new Transcript($trans);
+                        $instance->save();
+                        $message = "Hello ".$instance->student->name??''.", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid {($transaction_instance->amount??'')} for this operation";
+                        $this->sendSmsNotificaition($message, [$instance->student->phone]);
                     }elseif($type == 'TUTION'){
                         $trans = session()->get(config('tranzak.tution_data'));
                         $trans['transaction_id'] = $transaction_instance->id;
-                        (new Payments($trans))->save();
-                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of {($transaction_instance->amount??'')} as part/all of TUTION for {($transaction_instance->year->name??'')} ST. LOUIS UNIVERSITY INSTITUTE.";
-                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                        $instance = new Payments($trans);
+                        $instance->save();
+                        $message = "Hello ".$instance->student->name??''.", You have successfully paid a sum of {($transaction_instance->amount??'')} as part/all of TUTION for {($transaction_instance->year->name??'')} ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $this->sendSmsNotificaition($message, [$instance->student->phone]);
                     }elseif($type == 'OTHERS'){
                         $trans = session()->get(config('tranzak.others_data'));
                         $trans['transaction_id'] = $transaction_instance->id;
-                        ($instance = new PayIncome($trans))->save();
-                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of {($transaction_instance->amount??'')} as {($instance->income->name??'')} for {($transaction_instance->year->name??'')} ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $instance = new PayIncome($trans);
+                        $instance->save();
+                        $message = "Hello ".$instance->student->name??''.", You have successfully paid a sum of ".$transaction_instance->amount??''." as ".$instance->income->name??''." for ".$transaction_instance->year->name??''." ST. LOUIS UNIVERSITY INSTITUTE.";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }
                     DB::commit();
@@ -428,7 +431,13 @@ class HomeController extends Controller
         }
     }
 
-
+    public function contact_school()
+    {
+        # code...
+        $data['title'] = __('text.contact_school');
+        $data['contacts'] = [];
+        return view('parents.contact_school', $data);
+    }
     
     public function tranzak_payment_processing() // not used
     {
