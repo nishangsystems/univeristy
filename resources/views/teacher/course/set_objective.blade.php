@@ -4,7 +4,7 @@
         <form class="form py-4 px-3" method="post">
             @csrf
             <label class="text-capitalize my-2">{{__('text.word_objective')}}</label>
-            <textarea class="form-control rounded" rows="4" name="objective" id="objective" required>{!! $subject->objective !!}</textarea>
+            <textarea class="form-control rounded w-100" rows="4" name="objective" id="objective" required>{!! $subject->objective !!}</textarea>
             <div class="d-flex justify-content-end py-2">
                 <input type="submit" value="{{__('text.word_save')}}" class="btn btn-sm btn-primary">
             </div>
@@ -20,7 +20,7 @@
         <form class="form py-4 px-3" method="post">
             @csrf
             <label class="text-capitalize my-2">{{__('text.expected_outcomes')}}</label>
-            <textarea class="form-control rounded" rows="4" name="outcomes" id="outcomes" required>{!! $subject->outcomes !!}</textarea>
+            <textarea class="form-control rounded w-100" rows="4" name="outcomes" id="outcomes" required>{!! $subject->outcomes !!}</textarea>
             <div class="d-flex justify-content-end py-2">
                 <input type="submit" value="{{__('text.word_save')}}" class="btn btn-sm btn-primary">
             </div>
@@ -35,9 +35,8 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('public/assets/js') }}/ckeditor/ckeditor.js"></script>
     <script>
-        CKEDITOR.replace('objective');
-        CKEDITOR.replace('outcomes');
+        var editor1 = new RichTextEditor("#objective");
+        var editor2 = new RichTextEditor("#outcomes");
     </script>
 @endsection

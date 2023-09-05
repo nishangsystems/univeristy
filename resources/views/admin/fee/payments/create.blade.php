@@ -6,7 +6,7 @@
 @section('section')
 <div class="mx-3">
     <div class="form-panel">
-        @if($balance > 0)
+        @if($student->total_debts($c_year) > 0)
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.fee.student.payments.store',$student->id)}}">
             <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_fee_details')}}</h5>
             @csrf
@@ -37,7 +37,7 @@
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->debt($c_year)}} CFA" disabled></input>
+                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)-$student->bal($student->id, $c_year)}} CFA" disabled></input>
                 </div>
             </div>
             <div class="form-group @error('item') has-error @enderror">
@@ -96,17 +96,19 @@
                         <th>###</th>
                         <th>{{__('text.word_item')}}</th>
                         <th>{{__('text.word_amount')}}</th>
+                        <th>{{__('text.word_debt')}}</th>
                         <th>{{__('text.word_date')}}</th>
                         <th></th>
                     </thead>
                     <tbody>
                         @php($k=1)
-                        @forelse($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->get() as $item)
+                        @forelse($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->orderBy('id', 'DESC')->get() as $item)
                         <!-- <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end"> -->
                         <tr>
                             <td>{{$k++}}</td>
                             <td>{{($item->item)?$item->item->name:$item->created_at->format('d/m/Y')}}</td>
                             <td class="font-weight-bold">{{$item->amount}} {{__('text.currency_cfa')}}</td>
+                            <td class="font-weight-bold">{{$item->debt}} {{__('text.currency_cfa')}}</td>
                             <td>{{$item->created_at->format('l d/m/Y')}}</td>
                             <td class="d-inline-flex">
                                 <!-- <a href="{{route('admin.fee.student.payments.edit', [ $student->id, $item->id])}}" class="btn m-2 btn-sm btn-primary text-white text-capitalize">{{__('text.word_edit')}}</a> -->

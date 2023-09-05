@@ -23,6 +23,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('libs')}}/datatables.net-bs4/css/dataTables.bootstrap4.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('libs')}}/datatables.net-bs4/css/responsive.dataTables.min.css">
 
+    
+    <link rel="stylesheet" href="{{asset('richtexteditor/rte_theme_default.css')}}" />
+    <script type="text/javascript" src="{{asset('/richtexteditor/rte.js')}}"></script>
+    <script type="text/javascript" src="{{asset('/richtexteditor/plugins/all_plugins.js')}}"></script>
+
 
     <STYLE>
         body {
