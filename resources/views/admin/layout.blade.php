@@ -26,6 +26,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('libs')}}/datatables.net-bs4/css/responsive.dataTables.min.css">
 
 
+    <link rel="stylesheet" href="{{asset('richtexteditor/rte_theme_default.css')}}" />
+    <script type="text/javascript" src="{{asset('/richtexteditor/rte.js')}}"></script>
+    <script type="text/javascript" src="{{asset('/richtexteditor/plugins/all_plugins.js')}}"></script>
     
     <!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>

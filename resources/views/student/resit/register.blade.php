@@ -40,13 +40,23 @@
                         </thead>
                         <tbody id="course_table"></tbody>
                     </table>
-                    <div class="d-flex justify-content-between py-3 flex-wrap">
+                    <div class="d-flex justify-content-center py-3 flex-wrap">
                         <button type="submit" class="btn btn-success btn-sm mr-4 text-capitalize"><i class="fa fa-save mx-1"></i>{{__('text.word_save')}}</button>
-                        <!-- <div class="btn btn-primary btn-sm mr-4 text-capitalize">{{__('text.credit_value')}} : <span id="cv-sum"></span>/<span id="cv-total">{{$cv_total}}</span></div> -->
                         <div class="btn btn-primary btn-sm mr-4 text-capitalize">{{__('text.word_amount')}} : <span id="amount-sum"></span></div>
+                    </div>
+
+                </form>
+                    <hr>
+                    <div id="saved_actions" class="d-flex justify-content-center py-3 flex-wrap">
+                        @if(\App\Helpers\Helpers::instance()->payChannel() != null)
+                            <form method="post" action="{{ route('student.resit.registration.payment') }}">
+                                @csrf
+                                <input type="hidden" name="resit_id" value="{{ $resit_id }}">
+                                <button type="submit" class="btn btn-success btn-sm mr-4 text-capitalize"><i class="fa fa-money mx-1"></i>{{__('text.make_payment')}}</button>
+                            </form>
+                        @endif
                         <a href="{{route('student.resit.download_courses', [$resit_id])}}" class="btn btn-sm btn-primary">{{__('text.download_courses')}}</a>
                     </div>
-                </form>
             </div>
         </div>
     @else
@@ -174,6 +184,9 @@
         course_cost += parseInt("{{$unit_cost}}");
         cv_sum += parseInt(course['cv']);
         registered_courses.push(course);
+
+        $('#saved_actions').removeClass('d-flex');
+        $('#saved_actions').addClass('hidden');
         refresh();
     }
 
@@ -183,6 +196,9 @@
         cv_sum -= course['cv'];
         if(cv_sum <= 0){cv_sum = 0;}
         registered_courses = registered_courses.filter(e => e['id'] !== course['id']);
+
+        $('#saved_actions').removeClass('d-flex');
+        $('#saved_actions').addClass('hidden');
         refresh();
     }
 </script>

@@ -70,41 +70,55 @@ class PaymentController extends Controller
     public function store(Request $request, $student_id)
     {
 
-        // return $request->all();
-        $student = Students::find($student_id);
-        $total_fee = $student->total($student_id);
-        $balance =  $student->bal($student_id);
-        $debt = $student->debt(Helpers::instance()->getCurrentAccademicYear());
-        // return $balance;
-        $this->validate($request, [
-            'item' =>  'required',
-            'amount' => 'required',
-            'date' => 'required|date',
-        ]);
-        if ($request->amount >  $balance) {
-            $debt += -$request->amount + $balance;
-            $amount = $balance;
-        }
-        else{
-            $amount = $request->amount;
-        }
-
-        if ($request->reference_number == null || (Payments::where(['reference_number' => $request->reference_number])->count() == 0)) {
-            # code...
-            Payments::create([
-                "payment_id" => $request->item,
-                "student_id" => $student->id,
-                "unit_id" => $student->class(Helpers::instance()->getYear())->id,
-                "batch_id" => Helpers::instance()->getYear(),
-                "amount" => $amount,
-                "date" => $request->date,
-                'reference_number' => $request->reference_number,
-                'user_id' => auth()->user()->id,
-                'debt' => $debt,
+        try {
+            //code...
+            DB::beginTransaction();
+            // return $request->all();
+            $student = Students::find($student_id);
+            $total_fee = $student->total($student_id);
+            $balance =  $student->bal($student_id);
+            $debt = 0;
+            // $debt = $student->debt(Helpers::instance()->getCurrentAccademicYear());
+            // return $balance;
+            $this->validate($request, [
+                'item' =>  'required',
+                'amount' => 'required',
+                'date' => 'required|date',
             ]);
-            return back()->with('success', __('text.word_done'));
+            if($balance <= 0){
+                $debt = $request->amount;
+                $amount = 0;
+            }
+            elseif ($request->amount > $balance) {
+                $debt = -($request->amount - $balance);
+                $amount = $balance;
+            }
+            else{
+                $amount = $request->amount;
+            }
+    
+            // $student->clearDebt();
+            if ($request->reference_number == null || (Payments::where(['reference_number' => $request->reference_number])->count() == 0)) {
+                # code...
+                Payments::create([
+                    "payment_id" => $request->item,
+                    "student_id" => $student->id,
+                    "unit_id" => $student->class(Helpers::instance()->getYear())->id,
+                    "batch_id" => Helpers::instance()->getYear(),
+                    "amount" => $amount,
+                    "date" => $request->date,
+                    'reference_number' => $request->reference_number,
+                    'user_id' => auth()->user()->id,
+                    'debt' => $debt,
+                ]);
+                DB::commit();
+                return back()->with('success', __('text.word_done'));
+            }
+            else{return back()->with('error', __('text.reference_already_exist'));}
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            //throw $th;
         }
-        else{return back()->with('error', __('text.reference_already_exist'));}
 
     }
 

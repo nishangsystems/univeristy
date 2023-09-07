@@ -99,12 +99,13 @@ class Students extends Authenticatable
         return 0;
     }
 
-    public function paid()
+    public function paid() // fee paid for current academic year
     {
         $items = $this->payments()->selectRaw('COALESCE(sum(amount),0) total')->where('batch_id', Helpers::instance()->getYear())->get();
         return $items->first()->total;
     }
 
+    // current year's unpaid fee
     public function bal($student_id = null, $year = null)
     {
         $year = $year == null ? Helpers::instance()->getCurrentAccademicYear() : $year;
@@ -113,6 +114,15 @@ class Students extends Authenticatable
     }
 
 
+    public function debt($year)
+    {
+        # code...
+        $paymentBuilder = Payments::where(['student_id'=>$this->id, 'batch_id'=>$year]);
+        if($paymentBuilder->count() == 0){return 0;}
+        return $paymentBuilder->sum('debt');
+    }
+
+    
     public function totalScore($sequence, $year)
     {
         $class = $this->class($year);
@@ -155,14 +165,6 @@ class Students extends Authenticatable
         ])->first();
 
         return $rank ? $rank->position : "NOT SET";
-    }
-
-    public function debt($year)
-    {
-        # code...
-        $paymentBuilder = Payments::where(['student_id'=>$this->id, 'batch_id'=>$year]);
-        if($paymentBuilder->count() == 0){return 0;}
-        return $paymentBuilder->orderBy('id', 'DESC')->first()->debt;
     }
 
     
@@ -274,18 +276,26 @@ class Students extends Authenticatable
     } 
 
 
+    // cumulative depts upto the current academic year
     public function total_debts($year)
     {
         # code...
 
-        $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)->distinct()
-            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->where('campus_programs.campus_id', $this->campus_id)->pluck('campus_programs.id')->toArray();
-
+        $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '>=', $this->admission_batch_id)->where('year_id', '<=', $year)->distinct()
+            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->where('campus_programs.campus_id', $this->campus_id)->get(['campus_programs.id', 'student_classes.year_id']);
+        // dd($campus_program_levels);
         // fee amounts
-        $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels)->get();
+
+        $fee_items = collect();
+        foreach ($campus_program_levels as $key => $cplevel) {
+            # code...
+            $item = PaymentItem::where('campus_program_id', $cplevel->id)->where('year_id', $cplevel->year_id) ->first();
+            $fee_items->push($item);
+        }
         $fee_items_sum = $fee_items->sum('amount');
+        // dd($fee_items_sum);
         
-        $payments_builder = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $this->id])->where('batch_id', '<', $year)->get();
+        $payments_builder = Payments::whereIn('payment_id', $fee_items->pluck('id')->toArray())->where(['student_id' => $this->id])->where('batch_id', '<=', $year)->get();
         $fee_payments_sum = $payments_builder->sum('amount');
         $fee_debts_sum = $payments_builder->sum('debt');
         $next_debt = $fee_items_sum + $fee_debts_sum - $fee_payments_sum;

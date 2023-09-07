@@ -105,7 +105,7 @@
 	<body class="login-layout" id="frame">
 		<div class="main-container px-5" style="padding-inline: 2rem;">
 			<div class="py-5 mx-5 w-100" style="padding: 2rem;">
-				<h4> <span style="color:#DBA622;">Kameleon</span> {{__('text.word_for')}} {{env('APP_NAME')}}</h4>
+				<h4> <span style="color:#967117; text-shadow: 2px 2px black; font-weight: 700; font-size: x-large;">VamVam</span> {{__('text.word_for')}} {{env('APP_NAME')}}</h4>
 			</div>
 			<div class="main-content">
 				<div class="w-100">

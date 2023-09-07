@@ -71,7 +71,7 @@
                      <div class="form-group ">
                         <label for="description" class="control-label col-md-2 text-capitalize">{{__('text.word_description')}}</label>
                         <div class="col-lg-9 p-4">
-                        <textarea class="form-control"  required name="message" id="content"></textarea>
+                        <textarea class="form-control w-100"  required name="message" id="content"></textarea>
                         </div>
                     </div>
                        
@@ -90,8 +90,7 @@
 @stop
 
 @section('script')
-<script src="{{ asset('public/assets/js') }}/ckeditor/ckeditor.js"></script>
 <script>
-CKEDITOR.replace('content');
+var editor1 = new RichTextEditor("#content");
 </script>
 @stop

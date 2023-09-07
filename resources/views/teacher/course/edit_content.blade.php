@@ -25,12 +25,12 @@
                     <div class="p-4">
                         @if ($level == 1)
                             <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.word_topic')}}</label>
-                            <textarea class="form-control rounded" rows="3"  required name="title" id="content">{!! $topic->title !!}</textarea>
+                            <textarea class="form-control rounded w-100" rows="3"  required name="title" id="content">{!! $topic->title !!}</textarea>
                         @endif
                         @if ($level == 2)
                             <div class="text-right h5 text-uppercase">{{\App\Models\Campus::find(request('campus'))->name??null.' '.__('text.word_campus')}}</div>
                             <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.sub_topic')}}</label>
-                            <textarea class="form-control rounded" rows="3"  required name="title" id="content">{!! $topic->title !!}</textarea>
+                            <textarea class="form-control rounded w-100" rows="3"  required name="title" id="content">{!! $topic->title !!}</textarea>
                             <input type="hidden" name="teacher_id" value="{{auth()->id()}}">
                             <input type="hidden" name="campus_id" value="{{request('campus')}}">
                             <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.word_duration').'('.__('text.in_hours').')'}}</label>
@@ -89,8 +89,7 @@
 @stop
 
 @section('script')
-<script src="{{ asset('public/assets/js') }}/ckeditor/ckeditor.js"></script>
 <script>
-CKEDITOR.replace('content');
+var editor1 = new RichTextEditor("#content");
 </script>
 @stop

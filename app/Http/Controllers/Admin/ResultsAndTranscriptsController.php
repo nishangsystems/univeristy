@@ -193,6 +193,10 @@ class ResultsAndTranscriptsController extends Controller{
         if($trans != null){
             $trans->fill(['done'=>now()->toDateTimeString(), 'user_id'=>auth()->id()]);
             $trans->save();
+            $student = $trans->student;
+            $message = "Hello ".$student->name.", Your transcript applied on ".Carbon::parse($trans->created_at)->format('d-m-Y')." has been completely processed and is available for collection";
+            $contact = $student->phone;
+            $this->sendSmsNotificaition($message, [$contact]);
             return back()->with('success', __('text.word_done'));
         }
         return back()->with('error', __('text.not_found'));

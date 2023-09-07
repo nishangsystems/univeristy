@@ -24,7 +24,7 @@
                         </div> -->
                         <div class="py-2">
                             <label class="text-capitalize pb-1">{{__('text.course_log')}}:</label>
-                            <textarea class="form-control" name="details" id="course_log" rows="4"></textarea>
+                            <textarea class="form-control w-100" name="details" id="course_log" rows="4"></textarea>
                         </div>
                         <div class="d-flex justify-content-end py-2">
                             <input class="btn btn-sm btn-primary" type="submit" value="{{__('text.word_save')}}">
@@ -63,9 +63,8 @@
     </div>
 @endsection
 @section('script')
-    <script src="{{ asset('public/assets/js') }}/ckeditor/ckeditor.js"></script>
     <script>
-        CKEDITOR.replace('course_log');
+        var editor1 = new RichTextEditor("#course_log");
     </script>
     <script>
         function __loadContent(params) {

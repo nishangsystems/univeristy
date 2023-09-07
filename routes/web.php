@@ -649,6 +649,7 @@ Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.c
     Route::get('resit/registration', 'Student\HomeController@resit_registration')->name('resit.registration');
     Route::post('resit/registration', 'Student\HomeController@register_resit');
     Route::post('resit/registration/payment', 'Student\HomeController@resit_payment')->name('resit.registration.payment');
+    Route::post('resit/registration/pay', 'Student\HomeController@resit_pay')->name('resit.registration.pay');
     Route::get('resit/registered_courses', 'Student\HomeController@registered_resit_courses')->name('resit.registered_courses');
     Route::get('resit/index', 'Student\HomeController@resit_index')->name('resit.index');
     Route::get('resit/download/{resit_id}', 'Student\HomeController@resit_download')->name('resit.download_courses');

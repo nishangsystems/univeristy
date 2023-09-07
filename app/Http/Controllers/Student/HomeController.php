@@ -650,6 +650,63 @@ class HomeController extends Controller
         }else{return back()->with('error', "Resit not open.");}
     }
 
+    
+    public function register_resit(Request $request)//takes class course id
+    {
+        // return $request->all();
+        // TO MAKE THE PAYMENT, MAKE A REQUEST TO ANOTHER URL WHERE THE PAYMENT 
+        // IS DONE AND RESPONSE RETURNED BACK HERE, THEN THE COURSES ARE REGISTERED 
+
+        # code...
+        // first clear all registered courses for the year, semester, student then rewrite
+        $year = Helpers::instance()->getYear();
+        $resit_id = $request->resit_id;
+        try {
+            $user = auth('student')->id();
+
+
+            // DB::beginTransaction();
+            foreach (StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['resit_id'=>$resit_id])->get() as $key => $value) {
+                # code...
+                $value->delete();
+            }
+            // return $request->all();
+            # code...
+            foreach (array_unique($request->courses == null ? [] : $request->courses) as $key => $value) {
+                # code...
+                StudentSubject::create(['year_id'=>$year, 'resit_id'=>$resit_id, 'student_id'=>$user, 'course_id'=>$value]);
+            }
+            // DB::commit();
+
+
+            return back()->with('success', "!Done");
+        } catch (\Throwable $th) {
+            // DB::rollBack();
+            return back()->with('error', $th->getFile().' : '.$th->getLine().' :: '.$th->getMessage());
+        }
+    }
+    
+    public static function registered_resit_courses($year = null, $student = null )
+    {
+        try {
+            //code...
+            $_student = $student ?? auth('student')->id();
+            $_year = $year ?? Helpers::instance()->getCurrentAccademicYear();
+            // get resit semester for the student's background
+            $resit_id = request('resit_id');
+            // $resit_id = Helpers::instance()->available_resit(auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
+            // return $_semester;
+            # code...
+            $courses = StudentSubject::where(['student_courses.student_id'=>$_student, 'student_courses.year_id'=>$_year, 'student_courses.resit_id'=>$resit_id])
+                    ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
+                    ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'subjects.coef as cv', 'subjects.status as status']);
+            return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+            
+        }
+    }
+
     public function form_b()
     {
         # code...
@@ -764,26 +821,6 @@ class HomeController extends Controller
         }
     }
 
-    public static function registered_resit_courses($year = null, $student = null )
-    {
-        try {
-            //code...
-            $_student = $student ?? auth('student')->id();
-            $_year = $year ?? Helpers::instance()->getCurrentAccademicYear();
-            // get resit semester for the student's background
-            $resit_id = request('resit_id');
-            // $resit_id = Helpers::instance()->available_resit(auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
-            // return $_semester;
-            # code...
-            $courses = StudentSubject::where(['student_courses.student_id'=>$_student, 'student_courses.year_id'=>$_year, 'student_courses.resit_id'=>$resit_id])
-                    ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
-                    ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'subjects.coef as cv', 'subjects.status as status']);
-            return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
-        } catch (\Throwable $th) {
-            return $th->getMessage();
-            
-        }
-    }
 
     // Search course by name or course code as req
     public function search_course(Request $request)
@@ -823,77 +860,6 @@ class HomeController extends Controller
             return $subjects;
         }
         catch(Throwable $th){return $th->getLine() . '  '.$th->getMessage();}
-    }
-
-    public function register_resit(Request $request)//takes class course id
-    {
-        // return $request->all();
-        // TO MAKE THE PAYMENT, MAKE A REQUEST TO ANOTHER URL WHERE THE PAYMENT 
-        // IS DONE AND RESPONSE RETURNED BACK HERE, THEN THE COURSES ARE REGISTERED 
-
-        # code...
-        // first clear all registered courses for the year, semester, student then rewrite
-        $year = Helpers::instance()->getYear();
-        $resit_id = $request->resit_id;
-        try {
-            $user = auth('student')->id();
-
-
-            // DB::beginTransaction();
-            foreach (StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['resit_id'=>$resit_id])->get() as $key => $value) {
-                # code...
-                $value->delete();
-            }
-            // return $request->all();
-            # code...
-            foreach (array_unique($request->courses == null ? [] : $request->courses) as $key => $value) {
-                # code...
-                StudentSubject::create(['year_id'=>$year, 'resit_id'=>$resit_id, 'student_id'=>$user, 'course_id'=>$value]);
-            }
-            // DB::commit();
-
-
-            return back()->with('success', "!Done");
-        } catch (\Throwable $th) {
-            // DB::rollBack();
-            return back()->with('error', $th->getFile().' : '.$th->getLine().' :: '.$th->getMessage());
-        }
-    }
-
-    public function resit_payment(Request $request){
-        
-        $data['title'] = "Payment For Resit Registration";
-        $year = Helpers::instance()->getYear();
-        $semester = Helpers::instance()->getSemester(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
-        $user = auth('student')->id();
-        try {
-            if ($request->has('courses')) {
-                // DB::beginTransaction();
-                // get id-array for already registered courses that are available in the request
-                $already_registered_courses = StudentSubject::where(['student_id'=>$user, 'year_id'=>$year, 'semester_id'=>$semester])->whereIn('course_id', array_unique($request->courses))->count();
-                $registered_course_ids = StudentSubject::where(['student_id'=>$user, 'year_id'=>$year, 'semester_id'=>$semester])->whereIn('course_id', array_unique($request->courses))->pluck('course_id')->toArray();
-                $courses = collect(array_unique($request->courses))->filter(function ($course) use ($registered_course_ids) {
-                    return !in_array($course, $registered_course_ids);
-                })->toArray();
-                $unit_cost = auth('student')->user()->_class($year)->program->resit_cost;
-                if($unit_cost == null){
-                    return back()->with('error', "Resit price for resit not set. Contact administration");
-                }
-                $data['unit_cost'] = auth('student')->user()->_class($year)->program->resit_cost;
-                $data['quantity'] = count($request->courses) - $already_registered_courses;
-                $data['amount'] = $data['quantity'] * $unit_cost;
-                $data['courses'] = array_map(function ($val) {
-                    return Subjects::find($val);
-                }, $courses);
-                // return $data;
-                return view('student.resit.payment', $data);
-            }
-            // DB::commit();
-            return back()->with('success', "!Done");
-        } catch (\Throwable $th) {
-            // DB::rollBack();
-            return back()->with('error', $th->getFile().' : '.$th->getLine().' :: '.$th->getMessage());
-        }
     }
 
     public function register_courses(Request $request)//takes class course id
@@ -1278,6 +1244,34 @@ class HomeController extends Controller
 
 
     // PAYMENT OF SCHOOL FEE, OTHER ITEMS, TRANSCRIPTS, RESIT; INTO THE SCHOOL ACCOUNT DIRECTLY
+
+    
+    public function resit_pay(Request $request)
+    {
+        # code...
+        $validity = Validator::make($request->all(), [
+            'tel'=>'required|numeric|min:9',
+            'amount'=>'required|numeric',
+            'student_id'=>'required|numeric',
+            'year_id'=>'required|numeric',
+            'payment_purpose'=>'required',
+            'payment_id'=>'required|numeric'
+        ]);
+        if($validity->fails()){
+            return back()->with('error', $validity->errors()->first());
+        }
+        
+        // return $request->all();
+        if(Helpers::instance()->payChannel() == 'tranzak'){
+            $data = $request->all();
+            session()->put(config('tranzak.resit_data'), $data);
+            return $this->tranzak_pay($request->payment_purpose, $request);
+        }elseif(Helpers::instance()->payChannel() == 'momo'){
+            // handle payment directly into a momo account
+            return $this->pay_fee_momo($request);
+        }
+    }
+
     public function pay_fee()
     {
         # code...
@@ -1319,18 +1313,14 @@ class HomeController extends Controller
             //code...
             $data = $request->all();
             $response = Http::post(env('PAYMENT_URL'), $data);
-            // dd($response->body());
             if(!$response->ok()){
-                // throw $response;
                 return back()->with('error', 'Operation failed. '.$response->__toString());
-                // dd($response->body());
             }
             
             if($response->ok()){
             
                 $_data['title'] = "Pending Confirmation";
                 $_data['transaction_id'] = $response->collect()->first();
-                // return $_data;
                 return view('student.payment_waiter', $_data);
             }
         } 
@@ -1408,6 +1398,14 @@ class HomeController extends Controller
                     }
                     return redirect(route('student.transcript.history'))->with('error', 'Operation Failed');
                     break;
+                case 'RESIT':
+                    $transcript_id = $transaction->payment_id;
+                    if($transcript_id != null){
+                        StudentSubject::where(['resit_id'=>$transaction->payment_id, 'year_id'=>$transaction->year_id, 'student_id'=>$transaction->student_id])->update(['paid'=>$transaction->id]);
+                        return redirect(route('student.transcript.history'))->with('success', 'Done');
+                    }
+                    return redirect(route('student.transcript.history'))->with('error', 'Operation Failed');
+                    break;
             }
         }
     }
@@ -1425,11 +1423,13 @@ class HomeController extends Controller
                 case 'TRANSCRIPT':
                     DB::table('transcripts')->where(['student_id'=>$transaction->student_id, 'paid'=>0])->delete();
                     return redirect(route('student.transcript.history'))->with('error', 'Operation Failed');
-                    break;
+                    // break;
                 case 'TUTION':
                     return redirect(route('student.pay_fee'))->with('error', 'Transaction failed');
                 case 'OTHERS':
                     return redirect(route('student.pay_others'))->with('error', 'Transaction failed');
+                case 'RESIT':
+                    return redirect(route('student.home'))->with('error', 'Transaction failed');
             }
 
             // redirect user
@@ -1686,8 +1686,47 @@ class HomeController extends Controller
         return view('student.courses.content', $data);
     }
 
+    
+    public function resit_payment(Request $request){
+        
+        $data['title'] = "Payment For Resit Registration";
+        $year = Helpers::instance()->getCurrentAccademicYear();
+        $semester = Helpers::instance()->getSemester(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
+        $user = auth('student')->id();
+        try {
+            if ($request->has('courses') || $request->has('resit_id')) {
+                // DB::beginTransaction();
+                // get id-array for already registered courses that are available in the request
+                $registered_courses = StudentSubject::where(['student_id'=>$user, 'year_id'=>$year, 'semester_id'=>$semester])
+                    ->where(function($query)use($request){
+                        $request->resit_id == null ? $query->whereIn('course_id', array_unique($request->courses)) : $query->where('resit_id', $request->resit_id);
+                    })->get();
+                $already_registered_courses = $registered_courses->count();
+                $registered_course_ids = $registered_courses->pluck('course_id')->toArray();
+                $courses = $registered_course_ids;
+                $unit_cost = auth('student')->user()->_class($year)->program->resit_cost;
+                if($unit_cost == null){
+                    return back()->with('error', "Resit price for resit not set. Contact administration");
+                }
+                $data['unit_cost'] = auth('student')->user()->_class($year)->program->resit_cost;
+                $data['quantity'] = StudentSubject::where(['resit_id'=>$request->resit_id, 'student_id'=>$user, 'year_id'=>$year])->whereNull('paid')->count();
+                $data['resit_id'] = $request->resit_id;
+                $data['amount'] = $data['quantity'] * $unit_cost;
+                $data['courses'] = StudentSubject::where(['resit_id'=>$request->resit_id, 'student_id'=>$user, 'year_id'=>$year])->whereNull('paid')->join('subjects', 'subjects.id', '=', 'student_courses.course_id')->distinct()->get(['subjects.*']);
+                // return $data;
+                return view('student.resit.payment', $data);
+            }
+            // DB::commit();
+            return back()->with('error', "!Payment request has no courses");
+        } catch (\Throwable $th) {
+            // DB::rollBack();
+            return back()->with('error', $th->getFile().' : '.$th->getLine().' :: '.$th->getMessage());
+        }
+    }
 
-    // TRANZAK PAYMENT FOR FEE, RESULTS, OTHER_INCOME AND TRANSCRIPT
+
+
+    // TRANZAK PAYMENT FOR FEE, RESULTS, OTHER_INCOME AND TRANSCRIPT, RESIT, 
     public function tranzak_processing(Request $request, $type)
     {
         # code...
@@ -1720,6 +1759,15 @@ class HomeController extends Controller
                 $data['transaction_data'] = config('tranzak.others_transaction');
                 $data['transaction'] = session()->get($data['transaction_data']);
                 break;
+                    
+            case 'RESIT':
+                # code...
+                $data['cache_token_key'] = config('tranzak.resit_token');
+                $data['tranzak_app_id'] = config('tranzak.resit_app_id');
+                $data['tranzak_api_key'] = config('tranzak.resit_api_key');
+                $data['transaction_data'] = config('tranzak.resit_transaction');
+                $data['transaction'] = session()->get($data['transaction_data']);
+                break;
             
         }
         // return $data;
@@ -1747,19 +1795,24 @@ class HomeController extends Controller
                         $trans['transaction_id'] = $transaction_instance->id;
                         $trans['paid'] = 1;
                         (new Transcript($trans))->save();
-                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid {($transaction_instance->amount??'')} for this operation";
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid ".($transaction_instance->amount??'')." for this operation";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'TUTION'){
                         $trans = session()->get(config('tranzak.tution_data'));
                         $trans['transaction_id'] = $transaction_instance->id;
                         (new Payments($trans))->save();
-                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of {($transaction_instance->amount??'')} as part/all of TUTION for {($transaction_instance->year->name??'')} ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as part/all of TUTION for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'OTHERS'){
                         $trans = session()->get(config('tranzak.others_data'));
                         $trans['transaction_id'] = $transaction_instance->id;
                         ($instance = new PayIncome($trans))->save();
-                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of {($transaction_instance->amount??'')} as {($instance->income->name??'')} for {($transaction_instance->year->name??'')} ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($instance->income->name??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }elseif($type == 'RESIT'){
+                        $trans = session()->get(config('tranzak.resit_data'));
+                        StudentSubject::where(['resit_id'=>$trans->resit_id, 'student_id'=>$trans->student_id, 'year_id'=>$trans->year_id])->update(['paid'=>$transaction_instance->id]);
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans->payment_purpose??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }
                     DB::commit();
@@ -1802,7 +1855,7 @@ class HomeController extends Controller
     }
 
     
-    public function tranzak_pay_fee ()
+    public function tranzak_pay_fee()
     {
         # code...
         $data['title'] = "Pay Fee";
@@ -1819,14 +1872,14 @@ class HomeController extends Controller
     }
     
 
-    public function tranzak_pay_other_incomes ()
+    public function tranzak_pay_other_incomes()
     {
         $data['title'] = "Pay Other Incomes";
         return view('student.pay_others', $data);
     }
 
 
-    public function tranzak_pay_fee_momo (Request $request)
+    public function tranzak_pay_fee_momo(Request $request)
     {
         $validator = Validator::make($request->all(),
         [
@@ -1850,7 +1903,7 @@ class HomeController extends Controller
     }
 
 
-    public function tranzak_pay_other_incomes_momo (Request $request)
+    public function tranzak_pay_other_incomes_momo(Request $request)
     {
         $validator = Validator::make($request->all(),
         [
@@ -1917,10 +1970,18 @@ class HomeController extends Controller
                 $transaction_data = config('tranzak.others_transaction');
                 break;
 
+            case "RESIT":
+                $cache_token_key = config('tranzak.resit_token');
+                $tranzak_app_id = config('tranzak.resit_app_id');
+                $tranzak_api_key = config('tranzak.resit_api_key');
+                $transaction_data = config('tranzak.resit_transaction');
+                break;
+
         }
         // $tranzak_credentials = TranzakCredential::where('campus_id', $student->campus_id)->first();
         if(cache($cache_token_key) == null or Carbon::parse(cache($cache_token_key.'_expiry'))->isAfter(now())){
             // get and cache different token
+            GEN_TOKEN:
             $response = Http::post(config('tranzak.base').config('tranzak.token'), ['appId'=>$tranzak_app_id, 'appKey'=>$tranzak_api_key]);
             if($response->status() == 200){
                 // cache token and token expirationtot session
@@ -1935,8 +1996,11 @@ class HomeController extends Controller
         $_response = Http::withHeaders($headers)->post(config('tranzak.base').config('tranzak.direct_payment_request'), $request_data);
         // return json_encode(json_decode($_response->body())->data);
         if($_response->status() == 200){
+            // return $_response->collect();
             // save transaction and track it status
-
+            if($_response->collect()->toArray()['success'] == false){
+                goto GEN_TOKEN;
+            }
             session()->put($transaction_data, json_decode($_response->body())->data);
             // return session()->get($transaction_data);
             // session()->put('tranzak_credentials', json_encode($tranzak_credentials));
