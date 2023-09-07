@@ -101,8 +101,8 @@
 
 	<body class="login-layout" id="frame">
 		<div class="main-container px-5" style="padding-inline: 2rem;">
-			<div class="py-5 mx-5 w-100" style="padding: 2rem;">
-				<h4> <span style="color:#967117; text-shadow: 2px 2px black; font-weight: 700; font-size: x-large;">VamVam</span> {{__('text.word_for')}} {{env('APP_NAME')}}</h4>
+			<div class="py-5 mx-5 w-100 text-uppercase text-center" style="padding: 2rem; font-weight: bolder; vertical-align: middle;">
+				<h3> <span style="color: white; text-shadow: -1px -1px 0 #670f0e, 1px -1px 0 #670f0e, -1px 1px 0 #670f0e, 1px 1px 0 #670f0e; font-weight: bolder; font-size: xx-large;">VamVam</span>  <b>{{__('text.word_for')}} {{env('APP_NAME')}}</b></h3>
 			</div>
 			<div style="max-height: 65vh; overflow:auto">
 				@if(Session::has('success'))
