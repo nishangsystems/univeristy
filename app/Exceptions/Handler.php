@@ -4,6 +4,9 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Support\Arr;
+
 
 class Handler extends ExceptionHandler
 {
@@ -47,5 +50,21 @@ class Handler extends ExceptionHandler
             }
         });
         
+    }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Your session has expired. Please login.'
+            ], 401);
+        }
+
+        if ($request->is('admin') || $request->is('admin/*')) {
+            return redirect()->guest('admin/login');
+        }
+ 
+        return redirect()->guest(route('admin.login'));
     }
 }

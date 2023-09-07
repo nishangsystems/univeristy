@@ -26,4 +26,13 @@ class StudentSubject extends Model
         return $this->belongsTo(Subjects::class, 'course_id');
     }
 
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'semester_id');
+    }
+
+    public function level()
+    {
+        return $this->belongsTo(Level::class, 'level_id');
+    }
 }
