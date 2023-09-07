@@ -26,15 +26,27 @@
                 </tbody>
             </table>
         </div>
-        <div class="container-fluid h4">
-            <p class="text-dark my-2 py-5">
-                {{__('text.payment_details_statement', ['qnty'=>$quantity, 'amnt'=>$amount])}}
-            </p>
-            <div class="d-flex justify-content-between my-5">
-                <a href="{{URL::previous()}}" class="text-capitalize btn btn-sm btn-secondary rounded">{{__('text.word_back')}}</a>
-                <a href="" class="text-capitalize btn btn-sm btn-primary rounded">{{__('text.word_proceed')}}</a>
+        <form method="post" action="{{ route('student.resit.registration.pay') }}">
+            @csrf
+            <input type="hidden" name="amount" value="{{ $amount }}">
+            <input type="hidden" name="payment_purpose" value="RESIT">
+            <input type="hidden" name="payment_id" value="{{ $resit_id }}">
+            <input type="hidden" name="student_id" value="{{ auth('student')->id() }}">
+            <input type="hidden" name="year_id" value="{{ \App\Helpers\Helpers::instance()->getCurrentAccademicYear() }}">
+            <div class="container-fluid h4">
+                <p class="text-dark my-2 py-5">
+                    {{__('text.payment_details_statement', ['qnty'=>$quantity, 'amnt'=>$amount])}}
+                </p>
+                <div class="my-3">
+                    <label class="text-capitalize">{{ __('text.momo_number') }}</label>
+                    <input class="form-control" name="tel" type="text" value="{{ auth('student')->user()->phone }}" required>
+                </div>
+                <div class="w-100 d-flex justify-content-between my-5">
+                    <a href="{{URL::previous()}}" class="text-capitalize btn btn-sm btn-secondary rounded">{{__('text.word_back')}}</a>
+                    <button type="submit" class="text-capitalize btn btn-sm btn-primary rounded">{{__('text.word_proceed')}}</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 @endsection

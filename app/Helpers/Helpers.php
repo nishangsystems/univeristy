@@ -29,22 +29,41 @@ class Helpers
         return $config->year_id;
     }
 
-
-    public function shouldPayPlatformCharge($year_id = null)
+    public function payCharges($year_id = null)
     {
-        if($year_id == null){
-            $year_id = $this->getCurrentAccademicYear();
+        $year = $year_id == null ? $this->getCurrentAccademicYear() : $year_id;
+        $batch = Batch::find($year);
+        if($batch != null){
+            return $batch->pay_charges == 1;
         }
-        return Batch::find($year_id)->should_pay_platform_charges == 1;
+        return false;
+    }
+    public function payChannel($year_id = null)
+    {
+        $year = $year_id == null ? $this->getCurrentAccademicYear() : $year_id;
+        $batch = Batch::find($year);
+        if($batch != null){
+            return $batch->pay_channel;
+        }
+        return null;
     }
 
-    public function shouldPayFeeOnline($year_id)
-    {
-        if($year_id == null){
-            $year_id = $this->getCurrentAccademicYear();
-        }
-        return Batch::find($year_id)->should_pay_fee_online == 1;
-    }
+
+    // public function shouldPayPlatformCharge($year_id = null)
+    // {
+    //     if($year_id == null){
+    //         $year_id = $this->getCurrentAccademicYear();
+    //     }
+    //     return Batch::find($year_id)->should_pay_platform_charges == 1;
+    // }
+
+    // public function shouldPayFeeOnline($year_id)
+    // {
+    //     if($year_id == null){
+    //         $year_id = $this->getCurrentAccademicYear();
+    //     }
+    //     return Batch::find($year_id)->should_pay_fee_online == 1;
+    // }
 
     public function letterHead()
     {

@@ -9,7 +9,7 @@ class StudentSubject extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['student_id', 'semester_id', 'course_id', 'year_id', 'resit_id'];
+    protected $fillable = ['student_id', 'semester_id', 'course_id', 'year_id', 'resit_id', 'paid'];
 
     protected $table = 'student_courses';
     protected $connection = 'mysql';

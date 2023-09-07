@@ -208,116 +208,117 @@
                 <b class="arrow"></b>
             </li>
 
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-key"></i>
-                    <span class="menu-text">{{__('text.online_payments')}}</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+            @if (\App\Helpers\Helpers::instance()->payChannel() == 'momo')
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}};" class="menu-icon fa fa-key"></i>
+                        <span class="menu-text">{{__('text.online_payments')}}</span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
 
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('student.pay_fee')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.pay_fee')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('student.pay_fee')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.pay_fee')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
 
-                    <li>
-                        <a href="{{route('student.pay_others')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.other_payments')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                        <li>
+                            <a href="{{route('student.pay_others')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.other_payments')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
 
-                    <li>
-                        <a href="{{route('student.platform_charge.pay')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.platform_charges')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                        <li>
+                            <a href="{{route('student.platform_charge.pay')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.platform_charges')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
 
-                    <li>
-                        <a href="{{route('student.result.pay')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.semester_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                        <li>
+                            <a href="{{route('student.result.pay')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.semester_results')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                    <li>
-                        <a href="{{route('student.online.payments.history')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_history')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                        <li>
+                            <a href="{{route('student.online.payments.history')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_history')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                </ul>
-            </li> 
-
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-key"></i>
-                    <span class="menu-text">{{__('text.tranzak_payments')}}</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('student.tranzak.pay_fee')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.pay_fee')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    </ul>
+                </li> 
+            @elseif (\App\Helpers\Helpers::instance()->payChannel() == 'tranzak')
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}};" class="menu-icon fa fa-key"></i>
+                        <span class="menu-text">{{__('text.tranzak_payments')}}</span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
 
-                    <li>
-                        <a href="{{route('student.tranzak.pay_others')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.other_payments')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('student.tranzak.pay_fee')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.pay_fee')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
 
-                    <li>
-                        <a href="{{route('student.transcript.apply')}}?channel=tranzak" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.apply_for_transcript')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                        <li>
+                            <a href="{{route('student.tranzak.pay_others')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.other_payments')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
 
-                    <li>
-                        <a href="{{route('student.tranzak.result.pay')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.semester_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                        <li>
+                            <a href="{{route('student.transcript.apply')}}?channel=tranzak" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.apply_for_transcript')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                    <li>
-                        <a href="{{route('student.tranzak.online.payments.history')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_history')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
 
-                </ul>
-            </li> 
+                        <li>
+                            <a href="{{route('student.tranzak.result.pay')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.semester_results')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
+                        <li>
+                            <a href="{{route('student.tranzak.online.payments.history')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_history')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                    </ul>
+                </li> 
+            @endif
 
            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
