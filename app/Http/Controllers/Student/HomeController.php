@@ -653,6 +653,7 @@ class HomeController extends Controller
     
     public function register_resit(Request $request)//takes class course id
     {
+        return $request->all();
         // return $request->all();
         // TO MAKE THE PAYMENT, MAKE A REQUEST TO ANOTHER URL WHERE THE PAYMENT 
         // IS DONE AND RESPONSE RETURNED BACK HERE, THEN THE COURSES ARE REGISTERED 
@@ -665,14 +666,19 @@ class HomeController extends Controller
             $user = auth('student')->id();
 
 
+            $courses = array_unique($request->courses == null ? [] : $request->courses);
+            $student_courses = StudentSubject::where(['student_id'=>$user, 'year_id'=>$year, 'resit_id'=>$resit_id]);
             // DB::beginTransaction();
-            foreach (StudentSubject::where(['student_id'=>$user])->where(['year_id'=>$year])->where(['resit_id'=>$resit_id])->get() as $key => $value) {
+            $new_courses = array_filter($courses, function($el)use($student_courses){
+                return $student_courses->where('course_id', $el)->count() == 0;
+            } );
+            foreach (StudentSubject::where(['student_id'=>$user, 'year_id'=>$year, 'resit_id'=>$resit_id])->whereNotIn('course_id', $courses)->get() as $key => $value) {
                 # code...
                 $value->delete();
             }
             // return $request->all();
             # code...
-            foreach (array_unique($request->courses == null ? [] : $request->courses) as $key => $value) {
+            foreach ($new_courses as $key => $value) {
                 # code...
                 StudentSubject::create(['year_id'=>$year, 'resit_id'=>$resit_id, 'student_id'=>$user, 'course_id'=>$value]);
             }

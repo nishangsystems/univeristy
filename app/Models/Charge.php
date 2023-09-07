@@ -10,7 +10,7 @@ class Charge extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['student_id', 'year_id', 'semester_id', 'type', 'item_id', 'amount', 'financialTransactionId', 'used'];
+    protected $fillable = ['student_id', 'year_id', 'semester_id', 'type', 'item_id', 'amount', 'financialTransactionId', 'used', 'parent'];
     protected $connection = 'mysql';
     protected $table = 'charges';
 

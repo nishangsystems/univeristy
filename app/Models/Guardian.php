@@ -12,4 +12,16 @@ class Guardian extends User
 
     protected $table = 'guardian';
     protected $fillable = ['phone', 'password'];
+
+    public function platformCharges()
+    {
+        # code...
+        return $this->hasMany(Charge::class, 'student_id')->where('parent', 1);
+    }
+
+    public function children()
+    {
+        # code...
+        return Students::where('parent_phone_number', $this->phone)->get();
+    }
 }
