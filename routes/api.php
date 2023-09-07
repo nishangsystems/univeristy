@@ -19,6 +19,44 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('login', [ApiController::class, 'degrees'])->name('degrees');
+Route::get('login/student', [AuthController::class, 'studentLogin'])->name('student.login');
+Route::get('logout/student', [AuthController::class, 'studentLogout'])->name('student.logout');
+Route::get('login/user', [AuthController::class, 'userLogin'])->name('parent.login');
+Route::get('login/teacher', [AuthController::class, 'teacherLogin'])->name('teacher.login');
+Route::get('faqs', [\App\Http\Controllers\API\PageController::class, 'faqs'])->name('faqs');
+Route::get('year', [\App\Http\Controllers\API\PageController::class, 'year']);
+Route::get('semesters', [\App\Http\Controllers\API\PageController::class, 'semester']);
+
+Route::group([ 'prefix' => 'student', 'as' => 'student.'], function() {
+    Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
+
+    Route::get('register_course', [App\Http\Controllers\API\Student\CourseController::class, 'register']);
+    Route::get('courses', [App\Http\Controllers\API\Student\CourseController::class, 'courses']);
+
+    Route::get('results/ca', [App\Http\Controllers\API\Student\ResultController::class, 'ca']);
+    Route::get('results/exam', [App\Http\Controllers\API\Student\ResultController::class, 'exam']);
+
+
+    Route::get('fee', [App\Http\Controllers\API\Student\FeeController::class, 'index']);
+});
+
+Route::group(['prefix' => 'user', 'as' => 'user.'], function() {
+    Route::get('profile', [UserProfileController::class, 'profile'])->name('profile');
+    Route::get('students', [\App\Http\Controllers\API\PageController::class, 'students']);
+});
+
+Route::get('notifications', [App\Http\Controllers\API\NotificationController::class, 'notifications']);
+Route::get('attendance', [App\Http\Controllers\API\PageController::class, 'studentAttendance']);
+
+Route::group([ 'prefix' => 'teacher'], function() {
+    Route::get('classes', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'classes']);
+    Route::get('{campus_id}/notifications/{level_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'notifications']);
+    Route::get('{campus_id}/subjects/{class_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'subjects']);
+    Route::get('{campus_id}/student/{class_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'students']);
+    Route::get('{class_id}/attendance', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'attendance']);
+});
+
 Route::get('student/store', [ApiController::class, 'store_student']);
 Route::get('student/update', [ApiController::class, 'update_student']);
 Route::get('degrees', [ApiController::class, 'degrees'])->name('degrees');

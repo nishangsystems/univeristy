@@ -46,6 +46,11 @@ return [
             'provider' => 'users',
         ],
 
+        'student_api' => [
+            'driver' => 'passport',
+            'provider' => 'students',
+        ],
+
         'student' => [
             'driver' => 'session',
             'provider' => 'students',
@@ -57,7 +62,7 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
+            'driver' => 'passport',
             'provider' => 'users',
             'hash' => false,
         ],
