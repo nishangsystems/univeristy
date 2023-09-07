@@ -674,7 +674,7 @@ Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.c
     });
 });
 
-Route::prefix('parents')->name('parents.')->group(function(){
+Route::prefix('parents')->name('parents.')->middleware(['parents', 'parent.charges'])->group(function(){
     Route::get('home', [ParentsHomeController::class, 'index'])->name('home');
     Route::get('results/{child_id}', [ParentsHomeController::class, 'results_index'])->name('results');
     Route::post('results/{child_id}', [ParentsHomeController::class, 'results']);
@@ -684,10 +684,10 @@ Route::prefix('parents')->name('parents.')->group(function(){
         Route::post('fee/pay/{student_id}', [ParentsHomeController::class, 'tranzak_pay_fee_momo']);
         Route::get('others/pay/{student_id}/{id?}', [ParentsHomeController::class, 'tranzak_pay_other_incomes'])->name('pay_others');
         Route::post('others/pay/{student_is}/{id?}', [ParentsHomeController::class, 'tranzak_pay_other_incomes_momo']);
-        Route::get('processing', [ParentsHomeController::class, 'tranzak_payment_processing'])->name('processing');
-        Route::post('processing', [ParentsHomeController::class, 'tranzak_payment_processing_complete']);
-        Route::get('processing/{type}', [ParentsHomeController::class, 'tranzak_processing'])->name('processing');
-        Route::post('processing/{type}', [ParentsHomeController::class, 'tranzak_complete']);
+        Route::get('processing/{type}', [ParentsHomeController::class, 'tranzak_processing'])->name('processing')->withoutMiddleware('parent.charges');
+        Route::post('processing/{type}', [ParentsHomeController::class, 'tranzak_complete'])->withoutMiddleware('parent.charges');
+        Route::get('platform/pay', [ParentsHomeController::class, 'tranzak_platform'])->name('platform_charge.pay')->withoutMiddleware('parent.charges');
+        Route::post('platform/pay', [ParentsHomeController::class, 'tranzak_platform_pay'])->withoutMiddleware('parent.charges');
     });
     Route::get('contact_school', [ParentsHomeController::class, 'contact_school'])->name('contact_school');
 
