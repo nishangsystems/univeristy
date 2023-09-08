@@ -596,7 +596,7 @@ class HomeController extends Controller
         # code...
         $c_year = Helpers::instance()->getCurrentAccademicYear();
         $is_current_student = !(auth('student')->user()->_class($c_year) == null);
-        $resit = Helpers::instance()->available_resit(auth('student')->user()->_class($c_year)->id);
+        $resit = Helpers::instance()->available_resit(auth('student')->user()->_class($c_year)->id ?? auth('student')->user()->_class()->id);
         if($resit == null){
             return back()->with('error', 'Resit not open');
         }
@@ -1831,22 +1831,22 @@ class HomeController extends Controller
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'RESIT'){
                         $trans = session()->get(config('tranzak.resit_data'));
-                        StudentSubject::where(['resit_id'=>$trans->resit_id, 'student_id'=>$trans->student_id, 'year_id'=>$trans->year_id])->update(['paid'=>$transaction_instance->id]);
-                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans->payment_purpose??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        StudentSubject::where(['resit_id'=>$trans['payment_id'], 'student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id']])->update(['paid'=>$transaction_instance->id]);
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'PLATFORM'){
                         $trans = session()->get(config('tranzak.platform_data'));
                         $data = ['student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id'], 'type'=>'PLATFORM', 'item_id'=>$trans['payment_id'], 'amount'=>$transaction_instance->amount, 'financialTransactionId'=>$transaction_instance->transaction_id, 'used'=>1];
                         $instance = new Charge($data);
                         $instance->save();
-                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans->payment_purpose??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == '_TRANSCRIPT'){
                         $trans = session()->get(config('tranzak._transcript_data'));
                         $data = ['student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id'], 'type'=>'TRANSCRIPT', 'item_id'=>$trans['payment_id'], 'amount'=>$transaction_instance->amount, 'financialTransactionId'=>$transaction_instance->transaction_id, 'used'=>1];
                         $instance = new Charge($data);
                         $instance->save();
-                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans->payment_purpose??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }
                     DB::commit();
