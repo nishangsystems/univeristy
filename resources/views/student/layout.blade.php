@@ -267,7 +267,7 @@
                 <li>
                     <a href="#" class="dropdown-toggle text-capitalize">
                         <i  style="color: {{$bg1}};" class="menu-icon fa fa-key"></i>
-                        <span class="menu-text">{{__('text.tranzak_payments')}}</span>
+                        <span class="menu-text">{{__('text.online_payments')}}</span>
                         <b class="arrow fa fa-angle-down"></b>
                     </a>
 
@@ -320,14 +320,12 @@
                 </li> 
             @endif
 
-           <li>
+            <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="menu-icon fa fa-money"></i>
                     <span class="menu-text">{{__('text.finance_report')}}</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
-
-
                 <ul class="submenu">
                     <li>
                         <a href="{{route('student.fee.tution')}}" class="text-capitalize">
@@ -358,104 +356,105 @@
                 </ul>
             </li>
 
+            @if(\App\Helpers\Helpers::instance()->payChannel() != null)
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}};" class="menu-icon fa fa-flag"></i>
+                        <span class="menu-text">{{trans_choice('text.word_transcript', 2)}}</span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+
+                    <ul class="submenu">
+                        @if(\App\Helpers\Helpers::instance()->payChannel() == 'momo')
+                            <li>
+                                <a href="{{route('student.transcript.apply')}}" class="text-capitalize">
+                                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_apply')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
+                        <li>
+                            <a href="{{route('student.transcript.history')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_history')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+            @endif
+
             <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-flag"></i>
-                    <span class="menu-text">{{trans_choice('text.word_transcript', 2)}}</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}};" class="menu-icon fa fa-book"></i>
+                        <span class="menu-text">{{__('text.word_courses')}}</span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
 
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('student.transcript.apply')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_apply')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    <ul class="submenu">
+
+                        <li>
+                            <a href="{{route('student.courses.registration')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.course_registration')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
 
-                    <li>
-                        <a href="{{route('student.transcript.history')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_history')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                </ul>
-            </li>
-
-           <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-book"></i>
-                    <span class="menu-text">{{__('text.word_courses')}}</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                        <li>
+                            <a href="{{route('student.courses.registered')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.my_courses')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
 
-                <ul class="submenu">
+                        <li>
+                            <a href="{{route('student.courses.form_b')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.FORM_B')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                    <li>
-                        <a href="{{route('student.courses.registration')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.course_registration')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    </ul>
+                </li>
+                
+                
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}};" class="fa fa-gift menu-icon   "></i>
+                        <span class="menu-text">{{__('text.resit_registration')}}</span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
 
-                    <li>
-                        <a href="{{route('student.courses.registered')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.my_courses')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('student.resit.registration')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="fa fa-recycle menu-icon"></i>
+                                {{__('text.word_register')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
+                        <li>
+                            <a href="{{route('student.resit.index')}}" class="text-capitalize">
+                                <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_history')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                    <li>
-                        <a href="{{route('student.courses.form_b')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.FORM_B')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    </ul>
+                </li>
 
-                </ul>
-            </li>
-            
-            
             <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}};" class="fa fa-gift menu-icon   "></i>
-                    <span class="menu-text">{{__('text.resit_registration')}}</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('student.resit.registration')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="fa fa-recycle menu-icon"></i>
-                            {{__('text.word_register')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('student.resit.index')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_history')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                </ul>
-            </li>
-
-           <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}};" class="fa fa-circle menu-icon   "></i>
                     <span class="menu-text">{{__('text.word_results')}}</span>

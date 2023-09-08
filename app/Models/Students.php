@@ -114,7 +114,6 @@ class Students extends Authenticatable
         return $this->total() + $this->debt($year) + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid() - ($scholarship);
     }
 
-
     public function debt($year)
     {
         # code...
@@ -122,7 +121,6 @@ class Students extends Authenticatable
         if($paymentBuilder->count() == 0){return 0;}
         return $paymentBuilder->sum('debt');
     }
-
     
     public function totalScore($sequence, $year)
     {
@@ -167,7 +165,6 @@ class Students extends Authenticatable
 
         return $rank ? $rank->position : "NOT SET";
     }
-
     
     public function ca_score($course_id, $class_id, $year_id, $semester_id = null)
     {
@@ -180,7 +177,6 @@ class Students extends Authenticatable
         }
         return '';
     }
-
     
     public function offline_ca_score($course_id, $class_id, $year_id, $semester_id = null)
     {
@@ -276,7 +272,6 @@ class Students extends Authenticatable
         return '';
     } 
 
-
     // cumulative depts upto the current academic year
     public function total_debts($year)
     {
@@ -304,7 +299,6 @@ class Students extends Authenticatable
         return $next_debt;
     }
 
-
     public function total_paid($year)
     {
         # code...
@@ -327,7 +321,6 @@ class Students extends Authenticatable
         $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
         return $this->hasMany(StudentSubject::class, 'student_id')->WHERE('year_id', '=', $year);
     }
-
     public function transactions()
     {
         # code...
