@@ -404,6 +404,7 @@ class HomeController  extends Controller
         $data['title'] = __('text.course_list_for', ['item'=>$resit->name]);
         // return 'nonsense going on here';
         $data['courses'] = Subjects::join('student_courses', ['student_courses.course_id'=>'subjects.id'])
+                    ->whereNotNull('student_courses.paid')
                     ->where(['student_courses.resit_id'=>$resit_id, 'student_courses.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
                     ->join('students', ['students.id'=>'student_courses.student_id'])
                     ->where(['students.campus_id'=>auth()->user()->campus_id])
@@ -422,7 +423,7 @@ class HomeController  extends Controller
         # code...
         $subject = Subjects::find($request->subject_id);
         $data['title'] = __('text.resit_course_list_for', ['item'=>Resit::find($request->resit_id)->name]);
-        $data['subjects'] = Subjects::find($request->subject_id)->student_subjects()->where(['resit_id' => $request->resit_id])
+        $data['subjects'] = Subjects::find($request->subject_id)->student_subjects()->where(['resit_id' => $request->resit_id])->whereNotNull('paid')
                         ->join('students',  ['students.id'=>'student_courses.student_id'])
                         ->orderBy('students.name')->get(['student_courses.*']);
         if($request->print == 1){

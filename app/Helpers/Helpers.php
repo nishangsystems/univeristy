@@ -327,8 +327,8 @@ class Helpers
         # code...
         $class = ProgramLevel::find($class_id);
         $campus = $campus_id == null ? auth('student')->user()->campus_id : $campus_id;
-        // dd($class);
         $resits = $class->program->background->resits()->where(['year_id' => Helpers::instance()->getCurrentAccademicYear(), 'campus_id'=>$campus, 'background_id'=>$class->program->background->id])->get();
+        // dd($resits);
         foreach ($resits as $key => $resit) {
             # code...
             if(now()->between(Carbon::createFromDate($resit->start_date), Carbon::createFromDate($resit->end_date)))
