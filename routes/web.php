@@ -596,7 +596,7 @@ Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.c
     Route::get('others/pay/{id?}', 'Student\HomeController@pay_other_incomes')->name('pay_others');
     Route::post('others/pay/{id?}', 'Student\HomeController@pay_other_incomes_momo')->name('pay_others');
     Route::get('platform/pay', 'Student\HomeController@pay_platform_charges')->name('platform_charge.pay');
-    Route::post('charges/pay', 'Student\HomeController@pay_charges_save')->name('charge.pay')->withoutMiddleware('isStudent');
+    Route::post('charges/pay', 'Student\HomeController@pay_charges_save')->name('charge.pay')->withoutMiddleware('platform.charges');
     Route::get('result/pay', 'Student\HomeController@pay_semester_results')->name('result.pay');
     Route::get('transcript/pay', 'Student\HomeController@pay_transcript_charges')->name('transcript.pay');
 
@@ -609,10 +609,10 @@ Route::prefix('student')->name('student.')->middleware(['isStudent', 'platform.c
         Route::post('result/pay', [StudentHomeController::class, 'tranzak_pay_semester_results_momo']);
         Route::get('transcript/pay', [StudentHomeController::class, 'tranzak_pay_transcript_charges'])->name('transcript.pay');
         Route::get('payment_history', [StudentHomeController::class, 'tranzak_payment_history'])->name('online.payments.history');
-        Route::get('processing', [StudentHomeController::class, 'tranzak_payment_processing'])->name('processing');
-        Route::post('processing', [StudentHomeController::class, 'tranzak_payment_processing_complete']);
-        Route::get('processing/{type}', [StudentHomeController::class, 'tranzak_processing'])->name('processing');
-        Route::post('processing/{type}', [StudentHomeController::class, 'tranzak_complete']);
+        Route::get('processing', [StudentHomeController::class, 'tranzak_payment_processing'])->name('processing')->withoutMiddleware('platform.charges');
+        Route::post('processing', [StudentHomeController::class, 'tranzak_payment_processing_complete'])->withoutMiddleware('platform.charges');
+        Route::get('processing/{type}', [StudentHomeController::class, 'tranzak_processing'])->name('processing')->withoutMiddleware('platform.charges');
+        Route::post('processing/{type}', [StudentHomeController::class, 'tranzak_complete'])->withoutMiddleware('platform.charges');
     });
 
     Route::get('subjects/{id}/notes', 'Student\HomeController@subjectNotes')->name('subject.notes');
