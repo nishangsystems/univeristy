@@ -41,9 +41,9 @@
                 <div class="text-center py-3 h4 text-info">{{__('text.dublicate_charges_attempt')}}</div>
             @else
                 <!-- check if student has already paid the request  -->
-                <div class="container">
+                <div class="">
 
-                    <div class="text-center text-danger h3">
+                    {{-- <div class="text-center text-danger h3">
                         @switch($purpose)
                             @case('PLATFORM')
                                 {{__('text.platform_payments_template_text', ['purpose'=>__('text.PLATFORM_CHARGES'), 'amount'=>$amount, 'year'=>\App\Models\Batch::find($year_id)->name, 'semester'=>''])}}
@@ -58,9 +58,9 @@
                             @default
                                 
                         @endswitch
-                    </div>
+                    </div> --}}
                     
-                    <form method="post" action="{{route('student.charge.pay')}}" id="poster-form" class="mt-5 py-4 px-3 bg-light" style="border-radius: 1rem;">
+                    <form method="post" action="{{route('student.charge.pay')}}" id="poster-form">
                         <!-- SET REQUIRED HIDDEN INPUT FIELDS HERE -->
                         @csrf
                         <input type="hidden" name="payment_purpose" value="{{$purpose}}">
@@ -70,40 +70,33 @@
                         <input type="hidden" name="year_id" value="{{$year_id}}">
                         <input type="hidden" name="semester_id" value="{{$semester_id ?? ''}}">
                         <input type="hidden" name="channel" id="p-channel" value="{{$semester_id ?? ''}}"><!-- holds the payment channel to be used for payment -->
-                        <div class="row my-4 py-3">
-                            <label class="col-sm-3 text-capitalize">{{__('text.word_amount')}}</label>
-                            <div class="col-sm-9">
-                                <input class="form-control" type="tel" name="tel" value="{{$amount}}" readonly>
+                        <div class="form-group row">
+                            <label for="cname" class="control-label col-lg-2 text-capitalize"></label>
+                            <div class="col-sm-10 py-4 text-info text-center" style="font-size: x-large;">
+                                {{ __('text.platform_payments_template_text', ['amount'=>$amount, 'purpose'=>__('text.platform_charges'), 'semester'=>null, 'year'=>\App\Models\Batch::find($year_id)->name??'']) }}
                             </div>
                         </div>
-                        <div class="row my-4 py-3">
-                            <label class="col-sm-3 text-capitalize">{{__('text.payment_number')}}</label>
-                            <div class="col-sm-9">
-                                <input class="form-control" type="tel" name="tel" value="{{auth('student')->user()->phone}}">
+                        <div class="py-3 row">
+                            <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_amount')}} <span style="color:red">*</span></label>
+                            <div class="col-lg-10">
+                                <input class=" form-control" name="amount" value="{{ $amount }}" type="number" required readonly/>
+                                @error('amount')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
-                        <div class="row my-4 py-3">
-                            <label class="col-sm-3 text-capitalize"></label>
-                            <div class="col-sm-9">
-                                <h3 class="text-dark text-capitalize">{{__('text.pay_with')}} : </h3>
-                                <div class="flex justify-content-center text-center my-4 py-2">
-                                    <span class="mx-3 text-center d-inline-block">
-                                        <button type="submit" class="d-block border-0 btn-white rounded-md mb-4" onclick="event.preventDefault(); $('#p-channel').val('mtnmomo'); $('#poster-form').submit()">
-                                            <img class="img img-responsive rounded d-block" src="{{url('public/assets/images/mtn_momo.jpg')}}" style="height: 8rem; width: 12rem">
-                                        </button>
-                                        <span class="h4 fw-bolder">{{__('text.mtn_mobile_money')}}</span>
-                                    </span>
-                                    <span class="mx-3 text-center d-inline-block">
-                                        <button type="submit" class="d-block border-0 btn-white rounded-md mb-4" onclick="event.preventDefault(); $('#p-channel').val('orangemoney'); $('#poster-form').submit()">
-                                            <img class="img img-responsive rounded" src="{{url('public/assets/images/Orange_Money.jpg')}}" style="height: 8rem; width: 12rem">
-                                        </button>
-                                        <span class="h4 fw-bolder">{{__('text.orange_money')}}</span>
-                                    </span>
-                                </div>
+                        <div class="py-3 row">
+                            <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.payment_number')}}<span style="color:red">*</span></label>
+                            <div class="col-lg-10">
+                                <input class=" form-control" name="tel" value="{{auth('student')->user()->phone??null}}" type="number" required />
                             </div>
                         </div>
-                    
-                </form>
+                        <div class="py-3 row">
+                            <div class="d-flex justify-content-end col-lg-12">
+                                <button id="save" class="btn btn-xs btn-primary mx-3 text-capitalize" type="submit">{{__('text.make_payment')}}</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             @endif
         @endif
