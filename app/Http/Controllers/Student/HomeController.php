@@ -700,8 +700,6 @@ class HomeController extends Controller
             $_year = $year ?? Helpers::instance()->getCurrentAccademicYear();
             // get resit semester for the student's background
             $resit_id = request('resit_id');
-            // $resit_id = Helpers::instance()->available_resit(auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
-            // return $_semester;
             # code...
             $courses = StudentSubject::where(['student_courses.student_id'=>$_student, 'student_courses.year_id'=>$_year, 'student_courses.resit_id'=>$resit_id])
                     ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
@@ -827,7 +825,6 @@ class HomeController extends Controller
         }
     }
 
-
     // Search course by name or course code as req
     public function search_course(Request $request)
     {
@@ -838,11 +835,7 @@ class HomeController extends Controller
         try{
             // $pl = DB::table('students')->find(auth('student')->id())->program_id;
             // $program = ProgramLevel::find($pl);
-            $subjects = Subjects::
-                        // where(['program_levels.program_id'=>$program->program_id])->where('program_levels.level_id', '<=', $program->level_id)
-                        // ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])
-                        // ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
-                        where(function($q)use($request){
+            $subjects = Subjects::where(function($q)use($request){
                             $q->where('subjects.code', 'like', '%'.$request->value.'%')
                             ->orWhere('subjects.name', 'like', '%'.$request->value.'%');
                         })
@@ -966,6 +959,7 @@ class HomeController extends Controller
         $data['title'] = $data['notification']->title;
         return view('student.notification.show', $data);
     }
+
     public function _program_notifications_show($id)
     {
         # code...
@@ -984,6 +978,7 @@ class HomeController extends Controller
 
         return view('student.notification.home', $data);
     }
+
     public function _class_notifications(Request $request, $class_id, $campus_id)
     {
         # code...
@@ -994,6 +989,7 @@ class HomeController extends Controller
         })->get();
         return view('student.notification.index', $data);
     }
+
     public function _class_material(Request $request, $class_id, $campus_id)
     {
         # code...
@@ -1004,6 +1000,7 @@ class HomeController extends Controller
         })->get();
         return view('student.notification.material_index', $data);
     }
+
     public function _department_notifications(Request $request, $department_id, $campus_id)
     {
         # code...
@@ -1013,6 +1010,7 @@ class HomeController extends Controller
         })->get();
         return view('student.notification.index', $data);
     }
+
     public function _department_material(Request $request, $department_id, $campus_id)
     {
         # code...
@@ -1022,6 +1020,7 @@ class HomeController extends Controller
         })->get();
         return view('student.notification.material_index', $data);
     }
+
     public function _program_notifications(Request $request, $program_id, $campus_id)
     {
         # code...
@@ -1443,8 +1442,6 @@ class HomeController extends Controller
         }
     }
 
-
-
     // PAYMENTS FOR PLATFORM CHARGES, SEMESTER RESULT CHARGES AND TRANSCRIPT CHARGES(FOR FORMER STUDENTS ONLY) INTO THE COMPANY's ACCOUNT
 
     public function pay_semester_results(Request $request)
@@ -1523,7 +1520,6 @@ class HomeController extends Controller
             return view('student.transcript.apply', $data);
         }
     }
-
 
     public function pay_charges_save(Request $request)
     {
@@ -1686,7 +1682,6 @@ class HomeController extends Controller
         return view('student.online_payment_history', $data);
     }
 
-
     public function course_content_index(Request $request){
         $year = Helpers::instance()->getCurrentAccademicYear();
         $subject = Subjects::find($request->subject_id);
@@ -1699,8 +1694,7 @@ class HomeController extends Controller
         $data['topics'] = Topic::where(['subject_id'=>$subject->id])->get();;
         return view('student.courses.content', $data);
     }
-
-    
+ 
     public function resit_payment(Request $request){
         
         $data['title'] = "Payment For Resit Registration";
@@ -1737,7 +1731,6 @@ class HomeController extends Controller
             return back()->with('error', $th->getFile().' : '.$th->getLine().' :: '.$th->getMessage());
         }
     }
-
 
 
     // TRANZAK PAYMENT FOR FEE, RESULTS, OTHER_INCOME AND TRANSCRIPT, RESIT, 
@@ -1894,13 +1887,11 @@ class HomeController extends Controller
         }
     }
 
-
     public function tranzak_payment_history()
     {
         
     }
-
-    
+ 
     public function tranzak_pay_fee()
     {
         # code...
@@ -1915,15 +1906,13 @@ class HomeController extends Controller
             return redirect(route('student.home'))->with('error', 'Fee not set');
         }
         return view('student.pay_fee', $data);
-    }
-    
+    } 
 
     public function tranzak_pay_other_incomes()
     {
         $data['title'] = "Pay Other Incomes";
         return view('student.pay_others', $data);
     }
-
 
     public function tranzak_pay_fee_momo(Request $request)
     {
@@ -1948,7 +1937,6 @@ class HomeController extends Controller
         return $this->tranzak_pay($request->payment_purpose, $request);
     }
 
-
     public function tranzak_pay_other_incomes_momo(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -1971,7 +1959,6 @@ class HomeController extends Controller
 
         return $this->tranzak_pay($request->payment_purpose, $request);
     }
-
 
     public function tranzak_pay(string $purpose, $request){
 
