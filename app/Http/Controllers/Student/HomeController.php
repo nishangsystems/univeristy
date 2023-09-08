@@ -654,7 +654,6 @@ class HomeController extends Controller
     public function register_resit(Request $request)//takes class course id
     {
         // return $request->all();
-        // return $request->all();
         // TO MAKE THE PAYMENT, MAKE A REQUEST TO ANOTHER URL WHERE THE PAYMENT 
         // IS DONE AND RESPONSE RETURNED BACK HERE, THEN THE COURSES ARE REGISTERED 
 
@@ -1523,7 +1522,6 @@ class HomeController extends Controller
 
     public function pay_charges_save(Request $request)
     {
-        // return $request->all();
         # code...
         $validator = Validator::make($request->all(),
         [
@@ -1535,12 +1533,13 @@ class HomeController extends Controller
             'payment_purpose'=>'required',
             'payment_id'=>'required|numeric'
         ]);
-
-
+        
+        
         if ($validator->fails()) {
             # code...
             return back()->with('error', $validator->errors()->first());
         }
+        // return $request->all();
 
         // BRIDGE PROCESS BY PAYING WITH TRANZAK
         {
@@ -1571,10 +1570,6 @@ class HomeController extends Controller
         } 
         catch(ConnectException $e){
             return back()->with('error', $e->getMessage());
-        }
-        catch (Throwable $th) {
-            return back()->with('error', $th->getMessage());
-            // throw $th;
         }
     }
 
@@ -1960,7 +1955,7 @@ class HomeController extends Controller
         return $this->tranzak_pay($request->payment_purpose, $request);
     }
 
-    public function tranzak_pay(string $purpose, $request){
+    public function tranzak_pay(string $purpose, Request $request){
 
         $validator = Validator::make($request->all(),
         [
@@ -1972,7 +1967,7 @@ class HomeController extends Controller
             'payment_purpose'=>'required',
             'payment_id'=>'required|numeric'
         ]);
-
+        
         // return cache('tranzak_credentials_token');
 
         // check if token exist and hasn't expired or get new token otherwise
@@ -2025,6 +2020,7 @@ class HomeController extends Controller
                 break;
 
         }
+        
         // $tranzak_credentials = TranzakCredential::where('campus_id', $student->campus_id)->first();
         if(cache($cache_token_key) == null or Carbon::parse(cache($cache_token_key.'_expiry'))->isAfter(now())){
             // get and cache different token
@@ -2047,6 +2043,7 @@ class HomeController extends Controller
             if($_response->collect()->toArray()['success'] == false){
                 goto GEN_TOKEN;
             }
+            // return $request->all();
             session()->put($transaction_data, json_decode($_response->body())->data);
             return redirect()->to(route('student.tranzak.processing', $purpose));
         }
