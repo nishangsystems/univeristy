@@ -24,6 +24,7 @@ class StudentResource3 extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'address' => $this->address,
+            'parent_phone' => $this->parent_phone_number,
             'campus' => \App\Models\Campus::find($this->campus_id)->name,
             'link' => route('admin.fee.student.payments.create', [$this->id]),
             'rlink' => route('admin.print_fee.student', [$this->id]),
