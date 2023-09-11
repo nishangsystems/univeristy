@@ -74,7 +74,7 @@ class AuthController extends Controller
                 $guardian->password = Hash::make('12345678');
                 $guardian->save();
 
-                $token = $user->createToken('authToken')->accessToken;
+                $token = $guardian->createToken('authToken')->accessToken;
                 return response()->json([
                     'status' => 200,
                     'token' => $token,
