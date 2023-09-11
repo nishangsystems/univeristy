@@ -27,6 +27,7 @@ Route::get('login/student', [AuthController::class, 'studentLogin'])->name('stud
 Route::get('logout/student', [AuthController::class, 'studentLogout'])->name('student.logout');
 Route::get('login/user', [AuthController::class, 'userLogin'])->name('parent.login');
 Route::get('login/teacher', [AuthController::class, 'teacherLogin'])->name('teacher.login');
+Route::get('logout/teacher', [AuthController::class, 'teacherLogout'])->name('teacher.logout');
 Route::get('faqs', [\App\Http\Controllers\API\PageController::class, 'faqs'])->name('faqs');
 Route::get('year', [\App\Http\Controllers\API\PageController::class, 'year']);
 Route::get('semesters', [\App\Http\Controllers\API\PageController::class, 'semester']);
