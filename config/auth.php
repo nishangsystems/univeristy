@@ -70,6 +70,11 @@ return [
         'parents' => [
             'driver' =>'session',
             'provider'=>'parents',
+        ],
+        
+        'parent_api' => [
+            'driver' => 'passport',
+            'provider' => 'parents',
         ]
     ],
 
