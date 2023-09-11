@@ -51,8 +51,7 @@ class AuthController extends Controller
     public function userLogin(Request $request) 
     {
         $validated = Validator::make($request->all(), [
-            'phone' => 'required',
-            'password' => 'required|min:6'
+            'phone' => 'required'
         ]);
 
         if ($validated->fails()) {
