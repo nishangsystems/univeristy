@@ -837,4 +837,10 @@ return [
     'fee_record_for'=>'Fee Record For',
     'contact_school'=>'contact school',
     'word_position'=>'position',
+    'active_male_students'=>'active male students',
+    'active_female_students'=>'active female students',
+    'general_information'=>'general information',
+    'fee_information'=>'fee information',
+    'program_information'=>'program informatoin: active students only',
+    ''
 ];
