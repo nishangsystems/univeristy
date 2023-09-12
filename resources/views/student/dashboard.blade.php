@@ -6,7 +6,7 @@ $user = $user == null ? auth()->user() : $user;
 @endphp
 <div>
     <div id="user-profile-1" class="user-profile row">
-        <div class=" col-md-6 center">
+        {{-- <div class=" col-md-6 center">
             <div>
                 <span class="profile-picture">
                     <img width="200px" height="" id="avatar" class="editable img-responsive" alt="Alex's Avatar" src="{{asset('assets/images/avatars/profile-pic.jpg')}}" />
@@ -32,7 +32,7 @@ $user = $user == null ? auth()->user() : $user;
             <div class="hr hr12 dotted"></div>
 
             <div class="hr hr16 dotted"></div>
-        </div>
+        </div> --}}
 
         <div class="col-md-6">
             <div class="space-12"></div>
@@ -93,26 +93,26 @@ $user = $user == null ? auth()->user() : $user;
                     <div class="profile-info-name"></div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-6">
             <div class="space-20"></div>
-            <div class="py-3">
-                <table class="table adv-table">
-                    <thead class="text-capitalize">
-                        <th>##</th>
-                        <th>{{__('text.academic_year')}}</th>
-                        <th>{{__('text.word_class')}}</th>
-                    </thead>
-                    <tbody>
-                        @php($k = 1)
-                        @foreach (auth('student')->user()->classes()->get() as $st_class)
-                            <tr>
-                                <td>{{$k++}}</td>
-                                <td>{{$st_class->year->name}}</td>
-                                <td>{{$st_class->class->name()}}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+            <table class="table adv-table">
+                <thead class="text-capitalize">
+                    <th>##</th>
+                    <th>{{__('text.academic_year')}}</th>
+                    <th>{{__('text.word_class')}}</th>
+                </thead>
+                <tbody>
+                    @php($k = 1)
+                    @foreach (auth('student')->user()->classes()->get() as $st_class)
+                        <tr>
+                            <td>{{$k++}}</td>
+                            <td>{{$st_class->year->name}}</td>
+                            <td>{{$st_class->class->name()}}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

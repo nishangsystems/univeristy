@@ -11,6 +11,8 @@ use App\Models\Batch;
 use App\Models\CampusSemesterConfig;
 use App\Models\Config;
 use App\Models\File;
+use App\Models\PaymentItem;
+use App\Models\Payments;
 use App\Models\PlatformCharge;
 use App\Models\Resit;
 use App\Models\SchoolUnits;
@@ -38,17 +40,29 @@ class HomeController  extends Controller
 
         $year = request()->has('year') ? request('year') : Helpers::instance()->getCurrentAccademicYear();
         $campus_id = auth()->user()->campus_id;
-        $fees = StudentClass::where('year_id', $year)->join('students', 'students.id', '=', 'student_classes.student_id');
-        $fee_totals = 0;
-        $completed_fee = 0;
-        $uncompleted_fee = 0;
+        $expected_fees = PaymentItem::where('payment_items.year_id', $year)
+                            ->join('campus_programs', 'campus_programs.id', '=', 'payment_items.campus_program_id')
+                            ->where(function($query)use($campus_id){
+                                $campus_id != null ? $query->where('campus_programs.campus_id', $campus_id) : null;
+                            })->join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                            ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')->where('student_classes.year_id', $year)
+                            ->join('students', 'students.id', '=', 'student_classes.student_id')->where(function($query)use($campus_id){
+                                $campus_id != null ? $query->where('students.campus_id', $campus_id) : null;
+                            })->distinct()->get(['students.id as student_id', 'campus_programs.campus_id', 'payment_items.campus_program_id', 'students.matric', 'payment_items.amount']);
 
-        // $fee_data_table = Lava::DataTable();
-        // $fee_data_table->addStringColumn('Type')->addNumberColumn('Amount');
-        // $fee_data_table->addRows([
-        //     ['COMPLETED', $completed_fee], ['UNCOMPLETED', $uncompleted_fee]
-        // ]);
-        return view('admin.dashboard');
+        $payments = Payments::where('batch_id', $year)->whereIn('student_id', $expected_fees->pluck('student_id')->toArray());
+        $data['expected_fee'] = $expected_fees->sum('amount');
+        $data['paid_fee'] = $payments->sum('amount') - $payments->sum('debt');
+        $data['owed_fee'] = $data['expected_fee'] - $data['paid_fee'];
+        
+        $students = SchoolUnits::where('school_units.unit_id', 4)->join('program_levels', 'program_levels.program_id', '=', 'school_units.id')
+                        ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')->where('student_classes.year_id', $year)
+                        ->join('students', 'students.id', '=', 'student_classes.student_id')
+                        ->where(function($query)use($campus_id){
+                            $campus_id != null ? $query->where('students.campus_id', $campus_id) : null;
+                        })->distinct()->get(['school_units.name as program_name', 'school_units.id as program', 'students.*'])->groupBy('program');
+        $data['programs'] = $students;
+        return view('admin.dashboard', $data);
     }
 
     public function set_letter_head()
