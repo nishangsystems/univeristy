@@ -153,11 +153,11 @@
 														</label>
 													</div>
 													<div id="for_parents" class="hidden">
-														@if(!(isset($phone) and $phone != null))
+														{{-- @if(!(isset($phone) and $phone != null))
 															<label class="block clearfix">
 																<span class="text-capitalize">{{__('text.word_country')}}</span>
 																<span class="block input-icon input-icon-right">
-																	<select required name="phone_code" id="country_picker" class="form-control" style="border-radius: 0.5rem !important; background-color: white !important; color: black" onchange="code_change(event)">
+																	<select required id="country_picker" class="form-control" style="border-radius: 0.5rem !important; background-color: white !important; color: black" onchange="code_change(event)">
 																		<option></option>
 																		@foreach (config('country-phone-codes') as $code)
 																			<option value="+{{ $code['code'] }}">{{ $code['country'].' (+'.$code['code'].')' }}</option>
@@ -170,9 +170,9 @@
 														<label class="block clearfix">
 															<span class="text-capitalize">{{__('text.parents_phone_number')}}</span>
 															<span class="block input-icon input-icon-right">
-																<input type="text" required name="phone" id="parent_phone" class="form-control" value="{{ $phone??'' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+																<input type="text" required name="username" id="parent_phone" class="form-control" value="{{ $phone??'' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
 															</span>
-														</label>
+														</label> --}}
 													</div>
 													<div class="space"></div>
 													<label class="block clearfix">
@@ -339,13 +339,48 @@
 		<script type="text/javascript">
 
 		let toggle_parents = function(){
-			$('#for_parents').removeClass('hidden');
+			let html = `@if(!(isset($phone) and $phone != null))
+							<label class="block clearfix">
+								<span class="text-capitalize">{{__('text.word_country')}}</span>
+								<span class="block input-icon input-icon-right">
+									<select required id="country_picker" class="form-control" style="border-radius: 0.5rem !important; background-color: white !important; color: black" onchange="code_change(event)">
+										<option></option>
+										@foreach (config('country-phone-codes') as $code)
+											<option value="+{{ $code['code'] }}">{{ $code['country'].' (+'.$code['code'].')' }}</option>
+										@endforeach
+									</select>
+								</span>
+							</label>
+						@endif
+
+						<label class="block clearfix">
+							<span class="text-capitalize">{{__('text.parents_phone_number')}}</span>
+							<span class="block input-icon input-icon-right">
+								<input type="text" required name="username" id="parent_phone" class="form-control" value="{{ $phone??'' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+							</span>
+						</label>`;
+			$('#for_others').html(null);
 			$('#for_others').addClass('hidden');
+			$('#for_parents').removeClass('hidden');
+			$('#for_parents').html(html);
 		}
 
 		let toggle_others = function(){
+			let html = `<label class="block clearfix">
+					<span class="text-capitalize">{{__('text.word_username')}}</span>
+					<span class="block input-icon input-icon-right" style="background-color: white !important;">
+						<input type="text" required class="form-control" value="{{old("username")}}" name="username" style="border-radius: 0.5rem !important; background-color: white !important; color: black" />
+					</span>
+					@error('username')
+						<span class="invalid-feedback red" role="alert">
+							<strong>{{ $message }}</strong>
+						</span>
+					@enderror
+				</label>`;
+			$('#for_parents').html(null);
 			$('#for_parents').addClass('hidden');
 			$('#for_others').removeClass('hidden');
+			$('#for_others').html(html);
 		}
 
 		let p_phone = '';
@@ -354,7 +389,7 @@
 		})
 		let code_change = function(event){
 			let val = event.target.value;
-			$('#parent_phone').val(val+p_phone);
+			$('#parent_phone').val(val);
 		}
 $("#password").password('toggle');
 
