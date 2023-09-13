@@ -145,6 +145,7 @@ class CustomLoginController extends Controller
     public function create_parent(Request $request)
     {
         # code...
+        // return $request->all();
         if($request->has('phone')){
             if(Students::where('parent_phone_number', $request->phone)->count() == 0){
                 return back()->with('error', __('text.parent_no_child_phrase'));
@@ -167,9 +168,10 @@ class CustomLoginController extends Controller
         if($request->password == null){
             // return 2324;
             $phone = $request->phone;
-            if(Students::where('parent_phone_number', 'LIKE', "%{$phone}%")->count() > 1){
+            if(Students::where('parent_phone_number', 'LIKE', "%{$phone}%")->count() > 0){
                 return view('auth.create_parent', ['title'=>'Create Parent Account', 'phone'=>$phone]);
             }
+            return back()->with('error', __('text.parent_no_child_phrase'));
         }else{
             $validity = Validator::make($request->all(), ['phone'=>'required', 'confirm_password'=>'required|min:6', 'password'=>'required|same:confirm_password']);
             if($validity->fails()){

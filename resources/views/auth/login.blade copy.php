@@ -43,7 +43,7 @@
 			#login-frame{
 				position: relative;
 				width: 350px;
-				height: 480px;
+				height: 450px;
 				min-height: fit-content;
 				margin-inline: auto;
 				border-radius: 24px;
@@ -112,11 +112,10 @@
 							<div class="position-relative main-rect " >
 								<div id="login-box" class="login-box visible widget-box no-border">
 									<div class="widget-body">
-										<div  class=" clearfix"  style="border: 0px; font-size: xsmall !important; width: 77% !important; margin-inline: auto; font-weight: bolder !important;">
-											<button class="btn btn-sm border-0 mx-3" style=" color: white; background-color: black !important;" onclick="toggle_others()">{{__('text.student_slash_staff_login')}}</button> |
-											<button class="btn btn-sm border-0 mx-3" style=" color: white; background-color: black !important;" onclick="toggle_parents()">{{__('text.parent_login')}}</button>
-										</div>
 										<div class="widget-main">
+											<h4 class="bigger text-capitalize" style="color: black; font-size: xlarge;">
+											 	<b>{{__('text.log_in')}}</b>
+											</h4>
 											<span style="font-size: small; margin-bottom: 1rem;">{{__('auth.auth_request')}}</span>
 
 											@if(Session::has('error'))
@@ -139,41 +138,17 @@
 											<form method="post" action="{{route('login.submit')}}">
 											@csrf
 												<fieldset style="color: black;">
-													<div id="for_others" class="">
-														<label class="block clearfix">
-															<span class="text-capitalize">{{__('text.word_username')}}</span>
-															<span class="block input-icon input-icon-right" style="background-color: white !important;">
-																<input type="text" required class="form-control" value="{{old("username")}}" name="username" style="border-radius: 0.5rem !important; background-color: white !important; color: black" />
+													<label class="block clearfix">
+														<span class="text-capitalize">{{__('text.word_username')}}</span>
+														<span class="block input-icon input-icon-right" style="background-color: white !important;">
+															<input type="text" required class="form-control" value="{{old("username")}}" name="username" style="border-radius: 0.5rem !important; background-color: white !important; color: black" />
+														</span>
+														@error('username')
+															<span class="invalid-feedback red" role="alert">
+																<strong>{{ $message }}</strong>
 															</span>
-															@error('username')
-																<span class="invalid-feedback red" role="alert">
-																	<strong>{{ $message }}</strong>
-																</span>
-															@enderror
-														</label>
-													</div>
-													<div id="for_parents" class="hidden">
-														@if(!(isset($phone) and $phone != null))
-															<label class="block clearfix">
-																<span class="text-capitalize">{{__('text.word_country')}}</span>
-																<span class="block input-icon input-icon-right">
-																	<select required name="phone_code" id="country_picker" class="form-control" style="border-radius: 0.5rem !important; background-color: white !important; color: black" onchange="code_change(event)">
-																		<option></option>
-																		@foreach (config('country-phone-codes') as $code)
-																			<option value="+{{ $code['code'] }}">{{ $code['country'].' (+'.$code['code'].')' }}</option>
-																		@endforeach
-																	</select>
-																</span>
-															</label>
-														@endif
-
-														<label class="block clearfix">
-															<span class="text-capitalize">{{__('text.parents_phone_number')}}</span>
-															<span class="block input-icon input-icon-right">
-																<input type="text" required name="phone" id="parent_phone" class="form-control" value="{{ $phone??'' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
-															</span>
-														</label>
-													</div>
+														@enderror
+													</label>
 													<div class="space"></div>
 													<label class="block clearfix">
 														<span class="text-capitalize">{{__('text.word_password')}}</span>
@@ -338,24 +313,6 @@
 		</script>
 		<script type="text/javascript">
 
-		let toggle_parents = function(){
-			$('#for_parents').removeClass('hidden');
-			$('#for_others').addClass('hidden');
-		}
-
-		let toggle_others = function(){
-			$('#for_parents').addClass('hidden');
-			$('#for_others').removeClass('hidden');
-		}
-
-		let p_phone = '';
-		$(document).ready(function(){
-			p_phone = $('#parent_phone').val();
-		})
-		let code_change = function(event){
-			let val = event.target.value;
-			$('#parent_phone').val(val+p_phone);
-		}
 $("#password").password('toggle');
 
 </script>

@@ -11,8 +11,14 @@
         </div>
         <div class="row py-2">
             <label for="" class="col-md-3 text-capitalize">{{__('text.parents_phone_number')}}</label>
-            <div class="col-md-9">
-                <input type="text" name="parent_phone_number" id="" class="form-control" value="{{auth('student')->user()->parent_phone_number ?? ''}}">
+            <div class="col-md-9 input-group input-group-merge d-flex">
+                <select class="ml-3 form-control" id="country_picker" onchange="code_change(event)">
+                    <option></option>
+                    @foreach (config('country-phone-codes') as $code)
+                        <option value="+{{ $code['code'] }}">{{ $code['country'].' (+'.$code['code'].')' }}</option>
+                    @endforeach
+                </select>
+                <input type="text" name="parent_phone_number" id="parent_phone" class="form-control mr-3" value="{{auth('student')->user()->parent_phone_number ?? ''}}">
             </div>
         </div>
         <div class="row py-2">
@@ -24,7 +30,7 @@
         <div class="row py-2">
             <label for="" class="col-md-3 text-capitalize">{{__('text.word_gender')}}</label>
             <div class="col-md-9">
-                <select type="text" name="gender" id="" class="form-control">
+                <select type="text" name="gender" id="" class="form-control" required>
                     <option value=""></option>
                     <option value="male" {{auth('student')->user()->gender == 'male' ? 'selected' : ''}}>MALE</option>
                     <option value="female" {{auth('student')->user()->gender == 'female' ? 'selected' : ''}}>FEMALE</option>
@@ -48,4 +54,16 @@
         </div>
     </form>
  </div>
+@endsection
+@section('script')
+    <script>
+        let p_phone = '';
+        $(document).ready(function(){
+            p_phone = $('#parent_phone').val();
+        })
+        code_change = function(event){
+            let val = event.target.value;
+            $('#parent_phone').val(val+p_phone);
+        }
+    </script>
 @endsection

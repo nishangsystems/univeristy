@@ -842,5 +842,8 @@ return [
     'general_information'=>'general information',
     'fee_information'=>'fee information',
     'program_information'=>'program informatoin: active students only',
+    'word_country'=>'country',
+    'student_slash_staff_login'=>'student/staff login',
+    'parent_login'=>'parent login',
     ''
 ];

@@ -643,6 +643,7 @@ class HomeController extends Controller
         // }
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
         $data['access'] =  Helpers::instance()->resit_available(auth('student')->user()->_class($c_year)->id);
+        $data['unpaid'] = StudentSubject::where(['resit_id'=>$resit->id, 'student_id'=>auth('student')->id(), 'year_id'=>$c_year])->whereNull('paid')->join('subjects', 'subjects.id', '=', 'student_courses.course_id')->distinct()->get(['subjects.*'])->count();
         if($data['access']){
             $data['resit_id'] =  $resit->id;
             // dd($data['access']);
@@ -653,10 +654,6 @@ class HomeController extends Controller
     
     public function register_resit(Request $request)//takes class course id
     {
-        // return $request->all();
-        // TO MAKE THE PAYMENT, MAKE A REQUEST TO ANOTHER URL WHERE THE PAYMENT 
-        // IS DONE AND RESPONSE RETURNED BACK HERE, THEN THE COURSES ARE REGISTERED 
-
         # code...
         // first clear all registered courses for the year, semester, student then rewrite
         $year = Helpers::instance()->getYear();
@@ -667,11 +664,15 @@ class HomeController extends Controller
 
             $courses = array_unique($request->courses == null ? [] : $request->courses);
             $student_courses = StudentSubject::where(['student_id'=>$user, 'year_id'=>$year, 'resit_id'=>$resit_id]);
+            $old_course_ids = $student_courses->pluck('course_id')->toArray();
             // DB::beginTransaction();
-            $new_courses = array_filter($courses, function($el)use($student_courses){
-                return $student_courses->where('course_id', $el)->count() == 0;
+            $new_courses = array_filter($courses, function($el)use($old_course_ids){
+                return !in_array($el, $old_course_ids);
             } );
-            foreach (StudentSubject::where(['student_id'=>$user, 'year_id'=>$year, 'resit_id'=>$resit_id])->whereNotIn('course_id', $courses)->get() as $key => $value) {
+            $dropped_courses = array_filter($old_course_ids, function($el)use($courses){
+                return !in_array($el, $courses);
+            });
+            foreach (StudentSubject::where(['student_id'=>$user, 'year_id'=>$year, 'resit_id'=>$resit_id])->whereIn('course_id', $dropped_courses)->get() as $key => $value) {
                 # code...
                 $value->delete();
             }
@@ -1712,10 +1713,10 @@ class HomeController extends Controller
                     return back()->with('error', "Resit price for resit not set. Contact administration");
                 }
                 $data['unit_cost'] = auth('student')->user()->_class($year)->program->resit_cost;
-                $data['quantity'] = StudentSubject::where(['resit_id'=>$request->resit_id, 'student_id'=>$user, 'year_id'=>$year])->whereNull('paid')->count();
                 $data['resit_id'] = $request->resit_id;
-                $data['amount'] = $data['quantity'] * $unit_cost;
                 $data['courses'] = StudentSubject::where(['resit_id'=>$request->resit_id, 'student_id'=>$user, 'year_id'=>$year])->whereNull('paid')->join('subjects', 'subjects.id', '=', 'student_courses.course_id')->distinct()->get(['subjects.*']);
+                $data['quantity'] = $data['courses']->count();
+                $data['amount'] = $data['quantity'] * $unit_cost;
                 // return $data;
                 return view('student.resit.payment', $data);
             }
