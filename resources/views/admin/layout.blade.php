@@ -162,8 +162,8 @@
                 </li>
                 <li class="light-blue dropdown-modal">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle" id="bg_primary_2"  style="background-color: {{$bg2}};">
-                        <img class="nav-user-photo" src="{{asset('assets/images/avatars/user.jpg')}}"
-                             alt="Jason's Photo"/>
+                        {{-- <img class="nav-user-photo" src="{{asset('assets/images/avatars/user.jpg')}}"
+                             alt="Jason's Photo"/> --}}
                         <span>
 						<small class="text-capitalize">{{__('text.word_welcome')}}</small>
                          {{\Auth::user()->name}}

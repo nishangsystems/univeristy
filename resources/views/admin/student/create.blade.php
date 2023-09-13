@@ -76,7 +76,7 @@
             <div class="form-group @error('gender') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_gender')}} </label>
                 <div class="col-lg-10">
-                    <select class=" form-control" name="gender" >
+                    <select class=" form-control" name="gender" required>
                         <option value="">{{__('text.word_gender')}}</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
