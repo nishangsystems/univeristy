@@ -24,7 +24,7 @@ class IncomeController extends Controller
     public function index()
     {
         $user_id = Auth::id();
-        $data['incomes'] = Income::select($this->select)->paginate(15);
+        $data['incomes'] = Income::select($this->select)->get();
         $data['title'] = __('text.school_income');
         return view('admin.Income.index')->with($data);
     }
