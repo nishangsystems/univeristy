@@ -221,13 +221,13 @@ class HomeController extends Controller
                 ),
                 'balance' => Students::find($stud)->bal($stud, $year),
                 'total' => 
-                        \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-                        ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
-                        ->where('payment_items.name', '=', 'TUTION')
-                        ->where('payment_items.name', '=', 'TUTION')
-                        ->whereNotNull('payment_items.amount')
-                        ->join('students', 'students.program_id', '=', 'program_levels.id')
-                        ->where('students.id', '=', $stud)->pluck('payment_items.amount')[0] ?? 0
+                    \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                    ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+                    ->where('payment_items.name', '=', 'TUTION')
+                    ->where('payment_items.year_id', '=', $year)
+                    ->whereNotNull('payment_items.amount')
+                    ->join('students', 'students.program_id', '=', 'program_levels.id')
+                    ->where('students.id', '=', $stud)->pluck('payment_items.amount')[0] ?? 0
                     ,
                 'stud' => $stud
             ];
@@ -255,6 +255,7 @@ class HomeController extends Controller
                     'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
                     'total'=> $value['amount'],
+                    'owed'=>$value['balance'],
                     'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }

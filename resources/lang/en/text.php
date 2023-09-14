@@ -734,7 +734,7 @@ return [
     'word_week'=>'week',
     'word_objective'=>'objective',
     'course_objective'=>'course objective',
-    'expected_outcomes'=>'extected outcomes',
+    'expected_outcomes'=>'expected outcomes',
     'course_content'=>'course content',
     'course_instructors'=>'course instructors',
     'take_attendance'=>'take attendance',
@@ -845,5 +845,6 @@ return [
     'word_country'=>'country',
     'student_slash_staff_login'=>'student/staff login',
     'parent_login'=>'parent login',
+    'parent_platform_charges'=>'parent platform charges',
     ''
 ];

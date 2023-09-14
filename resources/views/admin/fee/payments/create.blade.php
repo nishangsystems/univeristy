@@ -37,7 +37,8 @@
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)-$student->bal($student->id, $c_year)}} CFA" disabled></input>
+                    {{-- <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)-$student->bal($student->id, $c_year)}} CFA" disabled></input> --}}
+                    <input for="cname" class="form-control" name="xtra-fee" value="{{number_format($student->total_debts($c_year))}} CFA" disabled>
                 </div>
             </div>
             <div class="form-group @error('item') has-error @enderror">

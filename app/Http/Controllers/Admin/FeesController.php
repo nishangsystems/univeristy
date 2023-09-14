@@ -120,7 +120,7 @@ class FeesController extends Controller
         // return $request->all();
         # code...
         $data = HomeController::_fee($request);
-        $data['title'] = $data['title'].' '.__('text.who_have_paid_atleast').' '.$request->amount;
+        $data['title'] = $data['title'].' '.($request->has('amount') ? __('text.who_have_paid_atleast').' '.$request->amount : null);
         return view('admin.fee.drive_listing', $data);
     }
 
