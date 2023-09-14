@@ -20,10 +20,10 @@
     <div class="col-sm-3">
         <label for="cname" class="control-label text-capitalize">{{__('text.pay_online')}} <span style="color:red">*</span></label>
         <div class="form-group text-uppercase @error('pay_online') has-error @enderror">
-            <select class=" form-control" name="pay_online" required >
+            <select class=" form-control text-uppercase" name="pay_online" required >
                 <option value=""></option>
-                <option value="1" {{old('amount') == 1 ? 'selected' : ''}}>{{__('text.word_yes')}}</option>
-                <option value="0" {{old('amount') == 0 ? 'selected' : ''}}>{{__('text.word_no')}}</option>
+                <option value="1" {{old('pay_online') == 1 ? 'selected' : ''}}>{{__('text.word_yes')}}</option>
+                <option value="0" {{old('pay_online') == 0 ? 'selected' : ''}}>{{__('text.word_no')}}</option>
             </select>
             @error('amount')
             <span class="invalid-feedback">{{ $message }}</span>

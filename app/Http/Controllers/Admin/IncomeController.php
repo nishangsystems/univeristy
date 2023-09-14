@@ -51,6 +51,7 @@ class IncomeController extends Controller
         $income = new Income();
         $income->name = $request->name;
         $income->amount = $request->amount;
+        $income->pay_online = $request->pay_online;
         $income->user_id = Auth::id();
         $income->save();
         return redirect()->back()->with('success', __('text.word_done'));
