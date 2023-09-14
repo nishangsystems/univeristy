@@ -86,20 +86,22 @@
                         </div>
                         <div class="text-center h5 fw-bolder py-3 text-capitalize"><b>{{$students['title']}}</b></div>
                         <tr class="text-capitalize bg-light">
-                            <th>#</th>
-                            <th>{{__('text.word_matricule')}}</th>
-                            <th>{{__('text.word_name')}}</th>
-                            <th>{{request()->has('amount') ? __('text.word_paid') : __('text.word_amount')}}</th>
+                            <th class="border-left border-right border-white">#</th>
+                            <th class="border-left border-right border-white">{{__('text.word_matricule')}}</th>
+                            <th class="border-left border-right border-white">{{__('text.word_name')}}</th>
+                            <th class="border-left border-right border-white">{{__('text.amount_paid')}}</th>
+                            @if(request('type')=='uncompleted') <th class="border-left border-right border-white">{{__('text.amount_owing')}}</th> @endif
                         </tr>
                     </thead>
                     @php($k = 1)
                     <tbody id="content">
                         @foreach($students['students'] ?? [] as $student)
-                            <tr class="border-bottom">
+                            <tr class="border-bottom border-top border-dark">
                                 <td class="border-left border-right">{{$k++}}</td>
                                 <td class="border-left border-right">{{$student['matric']}}</td>
                                 <td class="border-left border-right">{{$student['name']}}</td>
                                 <td class="border-left border-right">{{request()->has('amount') ? $student['paid'] : $student['total']}}</td>
+                                @if(request('type')=='uncompleted') <td class="border-left border-right">{{$student['owed']}}</td> @endif
                             </tr>
                         @endforeach
                     </tbody>

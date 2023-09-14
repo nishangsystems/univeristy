@@ -41,7 +41,7 @@
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)}} CFA" disabled></input>
+                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)}} CFA" disabled>
                 </div>
             </div>
             <div class="form-group @error('item') has-error @enderror">
@@ -49,8 +49,8 @@
                 <div class="col-lg-10">
                     <select class="form-control" name="payment_id">
                         <option value="" disabled class="text-capitalize">{{__('text.select_item')}}</option>
-                        @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->payment_items()->get() ?? [] as $item)
-                        <option value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
+                        @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->payment_items()->where(['year_id'=>$c_year])->get() ?? [] as $item)
+                            <option value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
                         @endforeach
                     </select>
                     @error('item')

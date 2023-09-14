@@ -33,6 +33,12 @@
             </div>
         </div>
         <div class="row mx-auto my-2 text-capitalize">
+            <span class="text-sm fw-bolder col-sm-3 col-md-2">{{__('text.parent_platform_charges')}}</span>
+            <div class="col-sm-9 col-md-10">
+                <input type="number" name="parent_amount" value="{{$charges->parent_amount ?? ''}}" class="form-control text-uppercase">
+            </div>
+        </div>
+        <div class="row mx-auto my-2 text-capitalize">
             <span class="text-sm fw-bolder col-sm-3 col-md-2">{{__('text.results_chages')}}</span>
             <div class="col-sm-9 col-md-10">
                 <input type="number" name="result_amount" value="{{$charges->result_amount ?? ''}}" class="form-control text-uppercase">

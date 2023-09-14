@@ -85,8 +85,11 @@
 @stop
 
 @section('script')
+<script src="{{ asset('assets/js') }}/ckeditor/ckeditor.js"></script>
 <script>
-var editor1 = new RichTextEditor("#content");
+    CKEDITOR.replace('content');
+
+    // var editor1 = new RichTextEditor("#content");
 
     function loadUnits() {
         let unit_type = parseInt($('#unit_type').val());

@@ -14,4 +14,10 @@ class Charge extends Model
     protected $connection = 'mysql';
     protected $table = 'charges';
 
+    public function batch()
+    {
+        # code...
+        return $this->belongsTo(Batch::class, 'year_id');
+    }
+
 }

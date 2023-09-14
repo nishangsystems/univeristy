@@ -35,8 +35,14 @@
 @endsection
 
 @section('script')
-    <script>
+    {{-- <script>
         var editor1 = new RichTextEditor("#objective");
         var editor2 = new RichTextEditor("#outcomes");
+    </script> --}}
+
+    <script src="{{ asset('assets/js') }}/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('objective');
+        CKEDITOR.replace('outcomes');
     </script>
 @endsection
