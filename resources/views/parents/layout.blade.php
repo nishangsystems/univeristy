@@ -140,8 +140,8 @@
                 </li>
                 <li class="light-blue dropdown-modal">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle" id="bg_primary_2"  style="background-color: {{$bg2}};">
-                        <img class="nav-user-photo" src="{{url('assets/images/avatars/user.jpg')}}"
-                             alt="Jason's Photo"/>
+                        {{-- <img class="nav-user-photo" src="{{url('assets/images/avatars/user.jpg')}}"
+                             alt="Jason's Photo"/> --}}
                         <span>
 						<small>Welcome</small>
                          {{auth('parents')->user()->phone}}

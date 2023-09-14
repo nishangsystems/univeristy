@@ -153,7 +153,7 @@ $total_fee_owed = 1;
                 <div class="stat stat-success mt-3">{{ number_format(100*$paid_fee/$expected_fee, 2) }}%</div>
             </div>
 
-            <div class="infobox border border-dark mx-2 my-1 rounded infobox-black">
+            <div class="infobox border border-dark mx-2 my-1 text-danger rounded infobox-red">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-money fa-spin"></i>
                 </div>
@@ -165,7 +165,7 @@ $total_fee_owed = 1;
                         {{ __('text.total_fee_owed') }}
                     </div>
                 </div>
-                <div class="stat stat-dark mt-3">{{ number_format(100*$owed_fee/$expected_fee, 2) }}%</div>
+                <div class="stat stat-danger mt-3" style="color: red !important;">{{ number_format(100*$owed_fee/$expected_fee, 2) }}%</div>
             </div>
 
            
@@ -175,24 +175,24 @@ $total_fee_owed = 1;
         <div class="w-100 py-3 text-capitalize" style="font-size: larger; font-weight: bold; color: gray !important;">{{ __('text.program_information') }}</div>
         <div class="">
             <table class="table-stripped table-light">
-                <thead class="border-top border-bottom text-dark text-capitalize" style="font-weight: semibold;">
-                    <th class="border-left border-right border-light">{{ __('text.sn') }}</th>
-                    <th class="border-left border-right border-light">{{ __('text.word_program') }}</th>
-                    <th class="border-left border-right border-light">{{ __('text.no_of_students') }}</th>
-                    <th class="border-left border-right border-light">{{ __('text.word_males') }}</th>
-                    <th class="border-left border-right border-light">{{ __('text.word_females') }}</th>
+                <thead class="border-top border-bottom border-dark bg-dark text-white text-capitalize" style="font-weight: semibold;">
+                    <th class="border-left border-right border-secondary">{{ __('text.sn') }}</th>
+                    <th class="border-left border-right border-secondary">{{ __('text.word_program') }}</th>
+                    <th class="border-left border-right border-secondary">{{ __('text.no_of_students') }}</th>
+                    <th class="border-left border-right border-secondary">{{ __('text.word_males') }}</th>
+                    <th class="border-left border-right border-secondary">{{ __('text.word_females') }}</th>
                 </thead>
                 <tbody>
                     @php
                         $k = 1;
                     @endphp
                     @foreach ($programs as $program)
-                        <tr>
-                            <td class="border-left border-right border-light">{{ $k++ }}</td>
-                            <td class="border-left border-right border-light">{{ $program->first()->program_name??'' }}</td>
-                            <td class="border-left border-right border-light">{{ $program->count() }}</td>
-                            <td class="border-left border-right border-light">{{ $program->where('gender', 'male')->count() }}</td>
-                            <td class="border-left border-right border-light">{{ $program->where('gender', 'female')->count() }}</td>
+                        <tr class="border-bottom border-secondary">
+                            <td class="border-left border-right border-secondary">{{ $k++ }}</td>
+                            <td class="border-left border-right border-secondary">{{ $program->first()->program_name??'' }}</td>
+                            <td class="border-left border-right border-secondary">{{ $program->count() }}</td>
+                            <td class="border-left border-right border-secondary">{{ $program->where('gender', 'male')->count() }}</td>
+                            <td class="border-left border-right border-secondary">{{ $program->where('gender', 'female')->count() }}</td>
                         </tr>
                     @endforeach
                 </tbody>

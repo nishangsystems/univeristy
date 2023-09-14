@@ -818,3 +818,5 @@ Route::get('trace_resits', function(){
     $data['resit_students'] = StudentSubject::whereIn('resit_id', $resit_ids)->get();
     return $data;
 });
+
+// Route::any('**', [CustomLoginController::class, 'login']);

@@ -63,8 +63,12 @@
     </div>
 @endsection
 @section('script')
-    <script>
+    {{-- <script>
         var editor1 = new RichTextEditor("#course_log");
+    </script> --}}
+    <script src="{{ asset('assets/js') }}/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('course_log');
     </script>
     <script>
         function __loadContent(params) {

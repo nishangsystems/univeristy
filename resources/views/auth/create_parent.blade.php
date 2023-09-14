@@ -13,6 +13,7 @@
 		<link rel="stylesheet" href="{{asset('assets/css/fonts.googleapis.com.css')}}" />
 		<link rel="stylesheet" href="{{asset('assets/css/ace.min.css')}}" />
 		<link rel="stylesheet" href="{{asset('assets/css/custom.css')}}" />
+		<script src="{{ asset('assets/js/jquery-2.1.4.min.js') }}"></script>
 		<!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -143,10 +144,24 @@
 										<form method="POST" style="padding-block: 3rem !important;">
 											@csrf
 											<fieldset>
+												@if(!(isset($phone) and $phone != null))
+													<label class="block clearfix">
+														<span class="text-capitalize">{{__('text.word_country')}}</span>
+														<span class="block input-icon input-icon-right">
+															<select required name="phone_code" id="country_picker" class="form-control" style="border-radius: 0.5rem !important; background-color: white !important; color: black" onchange="code_change(event)">
+																<option></option>
+																@foreach (config('country-phone-codes') as $code)
+																	<option value="+{{ $code['code'] }}">{{ $code['country'].' (+'.$code['code'].')' }}</option>
+																@endforeach
+															</select>
+														</span>
+													</label>
+												@endif
+
 												<label class="block clearfix">
 													<span class="text-capitalize">{{__('text.parents_phone_number')}}</span>
 													<span class="block input-icon input-icon-right">
-														<input type="text" required name="phone" class="form-control" value="{{ $phone??'' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+														<input type="text" required name="phone" id="parent_phone" class="form-control" value="{{ $phone??'' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
 													</span>
 												</label>
 
@@ -192,5 +207,15 @@
 				<span>{{__('text.powered_by')}} <b> {{__('text.nishang_system')}} </b></span>
 			</div>
 		</div><!-- /.main-container -->
+		<script>
+			let p_phone = '';
+			$(document).ready(function(){
+				p_phone = $('#parent_phone').val();
+			})
+			let code_change = function(event){
+				let val = event.target.value;
+				$('#parent_phone').val(val+p_phone);
+			}
+		</script>
 	</body>
 </html>

@@ -49,11 +49,13 @@
                     <hr>
                     <div id="saved_actions" class="d-flex justify-content-center py-3 flex-wrap">
                         @if(\App\Helpers\Helpers::instance()->payChannel() != null)
-                            <form method="post" action="{{ route('student.resit.registration.payment') }}">
-                                @csrf
-                                <input type="hidden" name="resit_id" value="{{ $resit_id }}">
-                                <button type="submit" class="btn btn-success btn-sm mr-4 text-capitalize"><i class="fa fa-money mx-1"></i>{{__('text.make_payment')}}</button>
-                            </form>
+                            @if($unpaid??0 > 0)
+                                <form method="post" action="{{ route('student.resit.registration.payment') }}">
+                                    @csrf
+                                    <input type="hidden" name="resit_id" value="{{ $resit_id }}">
+                                    <button type="submit" class="btn btn-success btn-sm mr-4 text-capitalize"><i class="fa fa-money mx-1"></i>{{__('text.make_payment')}}</button>
+                                </form>
+                            @endif
                         @endif
                         <a href="{{route('student.resit.download_courses', [$resit_id])}}" class="btn btn-sm btn-primary">{{__('text.download_courses')}}</a>
                     </div>

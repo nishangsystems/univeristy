@@ -464,12 +464,13 @@ class HomeController  extends Controller
             'year_id'=>'required',
             'yearly_amount'=>'numeric',
             'transcript_amount'=>'numeric',
-            'result_amount'=>'numeric'
+            'result_amount'=>'numeric',
+            'parent_amount'=>'numeric'
         ]);
         if($validity->failed()){
             return back()->with('error', $validity->errors()->first());
         }
-        PlatformCharge::updateOrInsert(['year_id'=>$request->year_id], ['yearly_amount'=>$request->yearly_amount, 'result_amount'=>$request->result_amount, 'transcript_amount'=>$request->transcript_amount]);
+        PlatformCharge::updateOrInsert(['year_id'=>$request->year_id], ['yearly_amount'=>$request->yearly_amount, 'result_amount'=>$request->result_amount, 'transcript_amount'=>$request->transcript_amount, 'parent_amount'=>$request->parent_amount]);
         return back()->with('success', __('text.word_done'));
     }
 

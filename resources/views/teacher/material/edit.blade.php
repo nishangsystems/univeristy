@@ -79,7 +79,11 @@
 @stop
 
 @section('script')
-<script>
+{{-- <script>
 var editor1 = new RichTextEditor("#content");
-</script>
+</script> --}}
+    <script src="{{ asset('assets/js') }}/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('content');
+    </script>
 @stop
