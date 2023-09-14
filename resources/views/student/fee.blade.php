@@ -22,7 +22,7 @@
             </form>
         </div>
         <div class="content-panel">
-            @forelse($student->payments()->where(['batch_id'=>(request('year') ?? \App\Helpers\Helpers::instance()->getYear())])->take()->get() as $item)
+            @forelse($student->payments()->where(['batch_id'=>(request('year') ?? \App\Helpers\Helpers::instance()->getYear())])->get() as $item)
                 @if ($item->amount != 0 && $item->amount != null)
                     <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
                         <div>
