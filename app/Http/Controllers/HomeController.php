@@ -220,6 +220,7 @@ class HomeController extends Controller
                     ->toArray()
                 ),
                 'balance' => Students::find($stud)->bal($stud, $year),
+                'total_balance' => Students::find($stud)->total_balance($stud, $year),
                 'total' => 
                     \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
                     ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
@@ -237,7 +238,7 @@ class HomeController extends Controller
         foreach ($fees as $key => $value) {
             # code...
             $stdt = Students::find($value['stud']);
-            if(($value['total'] > 0 && $value['amount'] >= $value['total']) && $type == 'completed'){
+            if(($value['total'] > 0 && $value['total_balance'] <= 0) && $type == 'completed'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
@@ -248,14 +249,14 @@ class HomeController extends Controller
                 ];
             }
             if($request->has('amount') && $request->amount > ($value['total']-$value['balance'])){continue;}
-            if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
+            if(($value['total_balance'] > 0 || $value['total'] == 0 ) && $type == 'uncompleted'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
                     'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
                     'total'=> $value['amount'],
-                    'owed'=>$value['balance'],
+                    'owed'=>$value['total_balance'],
                     'class'=> $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }

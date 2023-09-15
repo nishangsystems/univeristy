@@ -846,5 +846,8 @@ return [
     'student_slash_staff_login'=>'student/staff login',
     'parent_login'=>'parent login',
     'parent_platform_charges'=>'parent platform charges',
+    'user_account_blocked'=>'user account blocked',
+    'permission_denied'=>'permission denied',
+    'school_contacts'=>'school contacts',
     ''
 ];

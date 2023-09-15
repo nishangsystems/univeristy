@@ -15,6 +15,7 @@ use App\Models\PaymentItem;
 use App\Models\Payments;
 use App\Models\PlatformCharge;
 use App\Models\Resit;
+use App\Models\SchoolContact;
 use App\Models\SchoolUnits;
 use App\Models\Semester;
 use App\Models\StudentClass;
@@ -518,5 +519,45 @@ class HomeController  extends Controller
             $wage->delete();
             return back()->with('success', __('text.word_done'));
         }
+    }
+
+    public function school_contacts($id = null)
+    {
+        # code...
+        $data['title'] = __('text.school_contacts');
+        $data['contacts'] = SchoolContact::all();
+        if($id != null){
+            $data['_contact'] = SchoolContact::find($id);
+        }
+        return view('admin.setting.school_contacts', $data);
+    }
+
+    public function save_school_contact(Request $request, $id = null)
+    {
+        # code...
+        $validity = Validator::make($request->all(), [
+            'title'=>'required', 'contact'=>'required'
+        ]);
+        if($validity->fails()){
+            return back()->with('error', $validity->errors()->first());
+        }
+        $data = ['name'=>$request->name??null, 'title'=>$request->title, 'contact'=>$request->contact];
+        $instance = new SchoolContact($data);
+        if($id != null){
+            $instance = SchoolContact::find($id);
+            $instance->fill($data);
+        }
+        $instance->save();
+        return back()->with('success', __('text.word_Done'));
+    }
+
+    public function drop_school_contacts(Request $request, $id)
+    {
+        # code...
+        $contact = SchoolContact::find($id);
+        if($contact != null){
+            $contact->delete();
+        }
+        return back()->with('success', __('text.word_Done'));
     }
 }

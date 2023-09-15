@@ -30,7 +30,8 @@ class User extends Authenticatable
         'password',
         'campus_id',
         'school_id',
-        'matric'
+        'matric',
+        'active',
     ];
     protected $connection = 'mysql';
 

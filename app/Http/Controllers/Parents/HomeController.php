@@ -11,6 +11,7 @@ use App\Models\NonGPACourse;
 use App\Models\PayIncome;
 use App\Models\Payments;
 use App\Models\PlatformCharge;
+use App\Models\SchoolContact;
 use App\Models\Semester;
 use App\Models\Students;
 use App\Models\Subjects;
@@ -152,11 +153,12 @@ class HomeController extends Controller
             'total_paid'=>$student->total_paid($year->id),
             'total' => $student->total($year->id),
             'balance' => $student->bal($year->id),
+            'total_balance' => $student->total_balance(),
             'fraction' => $semester->semester_min_fee
         ];
         // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
         $data['min_fee'] = $fee['total']*$fee['fraction'];
-        $data['access'] = ($fee['total'] - $fee['balance']) >= $data['min_fee'] || $student->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        $data['access'] = ($fee['total'] - $fee['total_balance']) >= $data['min_fee'] || $student->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
         // dd($data);
         if ($class->program->background->background_name == "PUBLIC HEALTH") {
             # code...
@@ -467,7 +469,7 @@ class HomeController extends Controller
     {
         # code...
         $data['title'] = __('text.contact_school');
-        $data['contacts'] = [];
+        $data['contacts'] = SchoolContact::all();
         return view('parents.contact_school', $data);
     }
     
