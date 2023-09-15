@@ -67,7 +67,7 @@ class HomeController extends Controller
         if($amount != null && $amount > 0){
             $charge = Charge::where(['year_id'=>$year, 'semester_id'=>$semester->id, 'student_id'=>auth('student')->id(), 'type'=>'RESULTS'])->first();
             if($charge == null){
-                return redirect(route('parent.platform.pay'))->with('error', 'Pay Platform Charges to continue');
+                return redirect(route('parents.tranzak.platform_charge.pay'))->with('error', 'Pay Platform Charges to continue');
             }
         }
 
