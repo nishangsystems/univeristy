@@ -298,12 +298,13 @@ class HomeController extends Controller
             'total_debt'=>auth('student')->user()->total_debts($year->id),
             'total_paid'=>auth('student')->user()->total_paid($year->id),
             'total' => auth('student')->user()->total($year->id),
-            'balance' => auth('student')->user()->bal($year->id),
+            'balance' => auth('student')->user()->bal(null, $year->id),
+            'total_balance' => auth('student')->user()->total_balance(null, $year->id),
             'fraction' => $semester->semester_min_fee
         ];
         // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
         $data['min_fee'] = $fee['total']*$fee['fraction'];
-        $data['access'] = ($fee['total'] - $fee['balance']) >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        $data['access'] = ($fee['total'] - $fee['total_balance']) >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
         // dd($data);
         if ($class->program->background->background_name == "PUBLIC HEALTH") {
             # code...

@@ -190,6 +190,7 @@ class Controller extends BaseController
                 $stud->password = Hash::make($request->new_password);
                 $stud->password_reset = true;
                 $stud->save();
+                auth('student')->login($stud);
                 return back()->with('success', 'Done');
             }else{
                 return back()->with('error', 'Operation failed. Make sure you entered the correct password');
@@ -201,6 +202,7 @@ class Controller extends BaseController
                 $user->password = Hash::make($request->new_password);
                 $user->password_reset = true;
                 $user->save();
+                auth()->login($user);
                 return back()->with('success', 'Done');
             }else{
                 return back()->with('error', 'Operation failed. Make sure you entered the correct password');

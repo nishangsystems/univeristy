@@ -23,7 +23,11 @@ class AdminMiddleware
         return redirect(route('login'));
       }elseif(Auth::user()->type != 'admin') //If user does //not have this permission
             {
-                return redirect(route('login'));
+                auth()->logout();
+                return redirect(route('login'))->with('error', __('text.permission_denied'));
+            }elseif(auth()->user()->active != 1){
+                auth()->logout();
+                return redirect(route('login'))->with('error', __('text.user_account_blocked'));
             }
 
         return $next($request);

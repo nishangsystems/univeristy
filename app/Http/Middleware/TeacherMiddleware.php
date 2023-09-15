@@ -19,10 +19,14 @@ class TeacherMiddleware
     {
         if(Auth::user() == null){
             return redirect(route('login'));
-          }elseif (!Auth::user()->type == 'teacher') //If user does //not have this permission
-            {
-                return redirect(route('login'));
-            }
+        }elseif (!Auth::user()->type == 'teacher') //If user does //not have this permission
+        {
+            auth()->logout();
+            return redirect(route('login'))->with('error', __('text.permission_denied'));
+        }elseif(auth()->user()->active != 1){
+            auth()->logout();
+            return redirect(route('login'))->with('error', __('text.user_account_blocked'));
+        }
 
         return $next($request);
     }

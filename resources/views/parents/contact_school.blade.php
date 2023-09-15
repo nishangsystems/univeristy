@@ -4,10 +4,10 @@
     <div class="col-sm-12">
         <div class="row ">
             @foreach ($contacts as $contact)
-                <div class="col-sm-10 mx-auto col-md-5 col-lg-3 text-center alert alert-info border rounded-md py-4 px-2">
+                <div class="col-sm-10 mx-auto col-md-5 col-lg-3 text-center border py-4 px-2" style="box-shadow: -1 -1 #eee, 1 1 #eee; border-radius: 1rem;">
                     <h4 class="">{{ $contact->name??'' }}</h4>
-                    <h6 class="my-2">{{ $contact->position??'' }}</h6>
-                    <h5 class="my-2">{{ $contact->contact??'' }}</h5>
+                    <h6 class="my-2 text-secondary"><i>{{ $contact->title??'' }}</i></h6>
+                    <h5 class="my-2 text-primary">{{ $contact->contact??'' }}</h5>
                 </div>
             @endforeach
         </div>
