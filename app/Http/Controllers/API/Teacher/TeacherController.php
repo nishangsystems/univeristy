@@ -13,8 +13,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\DailyAttendance;
 use App\Models\StudentAttendance;
+use App\Models\Students;
 use Carbon\Carbon;
-
+use Helpers;
 
 class TeacherController
 {
@@ -83,21 +84,39 @@ class TeacherController
     }
 
 
-    public function students(Request $request, $campus_id, $class_id){
-        $class = ProgramLevel::find($class_id);
-        $data['class'] = $class;
+    public function students(Request $request, $campus_id, $_id){
+        if($request->get('type', 'course') === "class"){
+            //if the _id is class id
+            $class = ProgramLevel::find($_id);
+            $data['class'] = $class;
 
-        // $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
-        $data['students'] = StudentClass::where('class_id', '=', $class_id)
-            ->where('year_id', '=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
-            ->join('students', ['students.id'=>'student_classes.student_id'])
-            ->where(function($q) use ($campus_id){
-                request()->has('campus') ? $q->where(['students.campus_id'=>$campus_id]) : null;
-            })
-            ->orderBy('students.name', 'ASC')->get('students.*');
+            // $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
+            $data['students'] = StudentClass::where('class_id', '=', $_id)
+                ->where('year_id', '=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
+                ->join('students', ['students.id'=>'student_classes.student_id'])
+                ->where(function($q) use ($campus_id){
+                    request()->has('campus') ? $q->where(['students.campus_id'=>$campus_id]) : null;
+                })
+                ->orderBy('students.name', 'ASC')->get('students.*');
 
-        $data['success'] = 200;
-        return response()->json($data);
+            $data['success'] = 200;
+            return response()->json($data);
+        }else{
+            //it is course it
+            $class = ProgramLevel::find($_id);
+            $data['class'] = $class;
+
+            $year = Helpers::instance()->getCurrentAccademicYear();
+            $semester = Helpers::instance()->getCurrentSemester();
+            // $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
+            
+            $data['students'] = Students::whereHas('course_pivot', function($query) use ($year, $_id, $semester){
+                                    $query->WHERE(['year_id'=>$year_id, 'course_id'=>$_id, 'semester_id'=>$semester]);
+                                })->get();
+            $data['success'] = 200;
+            return response()->json($data);
+
+        }
     }
 
     public function attendance(Request $request, $class_id){
