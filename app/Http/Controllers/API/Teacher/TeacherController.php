@@ -15,7 +15,7 @@ use App\Models\DailyAttendance;
 use App\Models\StudentAttendance;
 use App\Models\Students;
 use Carbon\Carbon;
-use Helpers;
+use App\Helpers\Helpers;
 
 class TeacherController
 {
