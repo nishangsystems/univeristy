@@ -111,7 +111,7 @@ class TeacherController
             // $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
             
             $data['students'] = Students::whereHas('course_pivot', function($query) use ($year, $_id, $semester){
-                                    $query->WHERE(['year_id'=>$year_id, 'course_id'=>$_id, 'semester_id'=>$semester]);
+                                    $query->WHERE(['year_id'=>$year, 'course_id'=>$_id, 'semester_id'=>$semester]);
                                 })->get();
             $data['success'] = 200;
             return response()->json($data);
