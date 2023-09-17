@@ -562,7 +562,7 @@ return [
     'no_results_phrase'=>'No results are available yet for this student',
     'make_payment'=>'make payment',
     'transaction_initialized'=>"transaction initialized",
-    'pending_transaction_prase'=>'transaction pending confirmation. Dial *126# to confirm payment.',
+    'pending_transaction_prase'=>'transaction pending confirmation. Dial the MOMO or Orange Money code to confirm payment.',
     'manage_messages'=>'manage messages',
     'word_sent'=>'sent',
     'word_recipients'=>'recipients',
