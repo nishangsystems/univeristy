@@ -211,53 +211,53 @@
             </li>
             
             @if(auth()->user()->classes()->count() > 0)
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-graduation-cap"></i>
-                    <span class="menu-text">
-						{{__('text.HOD_center')}}
-					</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-graduation-cap"></i>
+                        <span class="menu-text">
+                            {{__('text.HOD_center')}}
+                        </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('user.class')}}?type=master" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_programs')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('user.class')}}?type=master&&arg=cr" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.course_report')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('user.class')}}?type=master&&arg=cr" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_notifications')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('user.class')}}?type=master&&arg=cr" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.course_material')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="{{route('user.teacher.index')}}?type=teacher" class="text-capitalize">
-                    <i  style="color: {{$bg1}};" class="menu-icon fa fa-group" aria-hidden="true"></i>
-                    {{trans_choice('text.word_teacher', 2)}}
-                </a>
-                <b class="arrow"></b>
-            </li>
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('user.class')}}?type=master" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_programs')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('user.class')}}?type=master&&arg=cr" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.course_report')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('user.class')}}?type=master&&arg=cr" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_notifications')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('user.class')}}?type=master&&arg=cr" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.course_material')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{route('user.teacher.index')}}?type=teacher" class="text-capitalize">
+                        <i  style="color: {{$bg1}};" class="menu-icon fa fa-group" aria-hidden="true"></i>
+                        {{trans_choice('text.word_teacher', 2)}}
+                    </a>
+                    <b class="arrow"></b>
+                </li>
             @endif
             <li>
                 <a href="{{route('user.class')}}">
@@ -339,6 +339,13 @@
                 </ul>
             </li>
          
+            <li>
+                <a href="{{route('user.notifications')}}" class="text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
+                    {{__('text.word_notifications')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
             <li>
                 <a href="{{route('user.reset_password')}}" class="text-capitalize">
                     <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>

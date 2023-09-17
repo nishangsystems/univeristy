@@ -12,6 +12,7 @@ use App\Models\Subjects;
 use App\Models\Topic;
 use App\Models\Campus;
 use App\Models\CourseLog;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -314,5 +315,36 @@ class HomeController extends Controller
         }, $class_subjects->pluck('id')->toArray());
         // dd($data);
         return view('teacher.course.report', $data);
+    }
+
+    public function notifications(Request $request)
+    {
+        # code...
+        $classes  = \App\Models\ProgramLevel::join('teachers_subjects', ['teachers_subjects.class_id'=>'program_levels.id'])
+            ->where(['teachers_subjects.teacher_id'=>auth()->id()])
+            ->distinct()
+            ->select(['program_levels.*', 'teachers_subjects.campus_id'])
+            ->get();
+
+        $campuses = $classes->pluck('campus_id')->toArray();
+        $levels = $classes->pluck('level_id')->toArray();
+        
+        $data['notifications'] = Notification::where(function($query){
+            $query->where('visibility', 'teachers')->orWhere('visibility', 'general');
+        })->where(function($query)use($campuses){
+            $query->whereIn('campus_id', $campuses)->orWhere('campus_id', null);
+        })->where(function($query)use($levels){
+            $query->whereIn('level_id', $levels)->orWhere('level_id', null);
+        })->get()->filter(function($row)use($classes){
+                $sc_unit = SchoolUnits::find($row->school_unit_id);
+                return ($row->school_unit_id == null && ($row->unit_id == 0 || $row->unit_id == null))
+                || function()use($classes, $sc_unit){
+                    foreach ($classes as $key => $class)
+                        if($sc_unit->has_unit(SchoolUnits::find($class->program_id)))return true;
+                    return false;
+                };
+        });
+        $data['title'] = __('text.word_notifications');
+        return view('teacher.notification.index', $data);
     }
 }

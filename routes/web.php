@@ -510,6 +510,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {
     Route::get('',  'Teacher\HomeController@index')->name('home');
+    Route::get('notifications',  'Teacher\HomeController@notifications')->name('notifications');
     Route::get('class_list/{department_id}/{campus_id?}',  'Teacher\ClassController@program_levels_list')->name('class_list');
     Route::get('course_list',  'Teacher\ClassController@program_courses')->name('course_list');
     Route::get('class', 'Teacher\ClassController@index')->name('class');
