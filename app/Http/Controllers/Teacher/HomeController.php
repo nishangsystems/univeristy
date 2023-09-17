@@ -332,10 +332,11 @@ class HomeController extends Controller
         $data['notifications'] = Notification::where(function($query){
             $query->where('visibility', 'teachers')->orWhere('visibility', 'general');
         })->where(function($query)use($campuses){
-            $query->whereIn('campus_id', $campuses)->orWhere('campus_id', null);
+            $query->whereIn('campus_id', $campuses)->orWhere('campus_id', null)->orWhere('campus_id', 0);
         })->where(function($query)use($levels){
             $query->whereIn('level_id', $levels)->orWhere('level_id', null);
-        })->get()->filter(function($row)use($classes){
+        })->get()
+        ->filter(function($row)use($classes){
                 $sc_unit = SchoolUnits::find($row->school_unit_id);
                 return ($row->school_unit_id == null && ($row->unit_id == 0 || $row->unit_id == null))
                 || function()use($classes, $sc_unit){
@@ -345,6 +346,7 @@ class HomeController extends Controller
                 };
         });
         $data['title'] = __('text.word_notifications');
-        return view('teacher.notification.index', $data);
+        // dd($data);
+        return view('teacher.notification.my_index', $data);
     }
 }
