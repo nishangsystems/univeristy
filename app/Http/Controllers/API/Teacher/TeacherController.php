@@ -70,7 +70,7 @@ class TeacherController
                     });
         });
 
-        $data['notifications'] = \App\Http\Resources\Notification::collection($nt);
+        $data['notifications'] = \App\Http\Resources\NotificationResource::collection($nt);
         $data['success'] = 200;
         return response()->json($data);
     }
