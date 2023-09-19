@@ -117,7 +117,7 @@
         @endif
     @else
         <div class="text-center py-3 h4 alert-danger ">
-            {{trans('text.fee_access_phrase', ['amount'=>$min_fee, 'action'=>'access your results'])}}
+            {{trans('text.fee_access_phrase', ['amount'=>$min_fee, 'action'=>'access your results', 'debt'=>$total_balance])}}
         </div>
     @endif
 @endsection
