@@ -16,6 +16,7 @@ use App\Models\Material;
 use App\Models\NonGPACourse;
 use App\Models\Notification;
 use App\Models\PayIncome;
+use App\Models\PaymentItem;
 use App\Models\Payments;
 use App\Models\PlatformCharge;
 use App\Models\ProgramLevel;
@@ -304,6 +305,7 @@ class HomeController extends Controller
         ];
         // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
         $data['min_fee'] = $fee['total']*$fee['fraction'];
+        $data['total_balance'] = auth('student')->user()->total_balance($student, $year->id);
         $data['access'] = ($fee['total'] - $fee['total_balance']) >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
         // dd($data);
         if ($class->program->background->background_name == "PUBLIC HEALTH") {
@@ -1380,6 +1382,70 @@ class HomeController extends Controller
                     ];
                     $paymentInstance->fill($data);
                     $paymentInstance->save();
+                    try {
+                        //code...
+                        DB::beginTransaction();
+                        // return $request->all();
+                        $student = Students::find($transaction->student_id);
+                        $total_fee = $student->total($transaction->student_id);
+                        $balance =  $student->bal($transaction->student_id);
+                        $debt = 0;
+                        $_data = [];
+                        
+                        $__amount = $transaction['amount'];
+                        
+                        foreach (Batch::orderBy('name')->pluck('id')->toArray() as $key => $year_id) {
+                            # code...
+                            if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
+                            $class = $student->_class($year_id);
+                            if($class != null){
+                                $cpid = $class->campus_programs->where('campus_id', $student->campus_id);
+                                if($cpid != null){
+                                    $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $transaction->payment_id : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
+                                    $total_balance = $student->total_balance($student->id, $year_id);
+                                    if($total_balance > 0){
+                                        $amount = 0; $debt = 0;
+                                        if($__amount >= $total_balance){
+                                            $__amount -= $total_balance;
+                                            $amount = $total_balance;
+                                        }else{
+                                            $amount = $__amount;
+                                            $__amount = 0;
+                                        }
+                                        if($year_id == Helpers::instance()->getCurrentAccademicYear()){
+                                            $debt = $__amount > 0 ? -$__amount : 0;
+                                        }else{$debt = 0;}
+            
+                                        $data = [
+                                            "payment_id" => $payment_id,
+                                            "student_id" => $student->id,
+                                            "unit_id" => $class->id,
+                                            "batch_id" => $year_id,
+                                            "amount" => $amount,
+                                            // "date" => $request->date,
+                                            'reference_number' => $request->reference_number.time().'_'.random_int(1000000, 99999999),
+                                            'user_id' => auth('parents')->user()->id,
+                                            'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
+                                            'debt' => $debt,
+                                            'paid_by' => 'MOMO',
+                                            'created_at'=>date(DATE_ATOM, time()),
+                                            'updated_at'=>date(DATE_ATOM, time())
+                                        ];
+                                        if ($data['reference_number'] == null || (Payments::where(['reference_number' => $data['reference_number']])->count() == 0)) {
+                                            $_data[] = $data;
+                                        }else{return back()->with('error', __('text.reference_already_exist'));}
+                                    };
+                                }
+                            }
+                        }
+                        // dd($_data);
+                        Payments::insert($_data);
+                        DB::commit();
+            
+                    } catch (\Throwable $th) {
+                        DB::rollBack();
+                        return back()->with('error', $th->getMessage());
+                    }
                     return redirect(route('student.pay_fee'))->with('success', 'Payment complete');
                     break;
                 case 'OTHERS':
@@ -1822,9 +1888,75 @@ class HomeController extends Controller
                     }elseif($type == 'TUTION'){
                         $trans = session()->get(config('tranzak.tution_data'));
                         $trans['transaction_id'] = $transaction_instance->id;
-                        (new Payments($trans))->save();
-                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as part/all of TUTION for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
-                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                        // (new Payments($trans))->save();
+
+                        try {
+                            //code...
+                            DB::beginTransaction();
+                            // return $request->all();
+                            $student = Students::find($trans['student_id']);
+                            $total_fee = $student->total($trans['student_id']);
+                            $balance =  $student->bal($trans['student_id']);
+                            $debt = 0;
+                            $_data = [];
+                            
+                            $__amount = $transaction['amount'];
+                            
+                            foreach (Batch::orderBy('name')->pluck('id')->toArray() as $key => $year_id) {
+                                # code...
+                                if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
+                                $class = $student->_class($year_id);
+                                if($class != null){
+                                    $cpid = $class->campus_programs->where('campus_id', $student->campus_id);
+                                    if($cpid != null){
+                                        $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $trans['payment_id'] : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
+                                        $total_balance = $student->total_balance($student->id, $year_id);
+                                        if($total_balance > 0){
+                                            $amount = 0; $debt = 0;
+                                            if($__amount >= $total_balance){
+                                                $__amount -= $total_balance;
+                                                $amount = $total_balance;
+                                            }else{
+                                                $amount = $__amount;
+                                                $__amount = 0;
+                                            }
+                                            if($year_id == Helpers::instance()->getCurrentAccademicYear()){
+                                                $debt = $__amount > 0 ? -$__amount : 0;
+                                            }else{$debt = 0;}
+                
+                                            $data = [
+                                                "payment_id" => $payment_id,
+                                                "student_id" => $student->id,
+                                                "unit_id" => $class->id,
+                                                "batch_id" => $year_id,
+                                                "amount" => $amount,
+                                                // "date" => $request->date,
+                                                'reference_number' => $request->reference_number.time().'_'.random_int(1000000, 99999999),
+                                                'user_id' => auth('students')->id(),
+                                                'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
+                                                'debt' => $debt,
+                                                'transaction_id'=>$transaction_instance->id,
+                                                'paid_by' => auth('student')->id(),
+                                                'created_at'=>date(DATE_ATOM, time()),
+                                                'updated_at'=>date(DATE_ATOM, time())
+                                            ];
+                                            if ($data['reference_number'] == null || (Payments::where(['reference_number' => $data['reference_number']])->count() == 0)) {
+                                                $_data[] = $data;
+                                            }else{return back()->with('error', __('text.reference_already_exist'));}
+                                        };
+                                    }
+                                }
+                            }
+                            // dd($_data);
+                            Payments::insert($_data);
+                            DB::commit();
+                            $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as part/all of TUTION for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                            $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                
+                        } catch (\Throwable $th) {
+                            DB::rollBack();
+                            return back()->with('error', $th->getMessage());
+                        }
                     }elseif($type == 'OTHERS'){
                         $trans = session()->get(config('tranzak.others_data'));
                         $trans['transaction_id'] = $transaction_instance->id;

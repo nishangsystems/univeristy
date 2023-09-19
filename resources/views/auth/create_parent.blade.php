@@ -149,9 +149,8 @@
 														<span class="text-capitalize">{{__('text.word_country')}}</span>
 														<span class="block input-icon input-icon-right">
 															<select required name="phone_code" id="country_picker" class="form-control" style="border-radius: 0.5rem !important; background-color: white !important; color: black" onchange="code_change(event)">
-																<option></option>
 																@foreach (config('country-phone-codes') as $code)
-																	<option value="+{{ $code['code'] }}">{{ $code['country'].' (+'.$code['code'].')' }}</option>
+																	<option value="+{{ $code['code'] }}" {{ $code['code'] == '237' ? 'selected' : '' }}>{{ $code['country'].' (+'.$code['code'].')' }}</option>
 																@endforeach
 															</select>
 														</span>
@@ -161,7 +160,7 @@
 												<label class="block clearfix">
 													<span class="text-capitalize">{{__('text.parents_phone_number')}}</span>
 													<span class="block input-icon input-icon-right">
-														<input type="text" required name="phone" id="parent_phone" class="form-control" value="{{ $phone??'' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+														<input type="text" required name="phone" id="parent_phone" class="form-control" value="+237{{ $phone??'' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
 													</span>
 												</label>
 
