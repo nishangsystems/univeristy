@@ -247,6 +247,9 @@ class ApiController extends Controller
         # code...
         $certs = $request->certificates; //an indexed array of certificate IDs
         if($certs != null && is_array($certs)){
+            DegreeCertificate::where('degree_id', $degree_id)->each(function($row){
+                $row->delete();
+            });
             $degree_certs = array_map(function($cert)use($degree_id){
                 return ['degree_id'=>$degree_id, 'certificate_id'=>$cert];
             }, $certs);
