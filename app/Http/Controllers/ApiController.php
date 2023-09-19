@@ -85,9 +85,7 @@ class ApiController extends Controller
         $certificate_programs = $certificate->programs()->pluck('school_units.id')->toArray();
         $cert_degree_programs = SchoolUnits::where('degree_id', $degree_id)->whereIn('id', $certificate_programs)->pluck('id')->toArray();
         $campus = Campus::find($campus_id);
-        $campus_deg_cert_programs = $campus->programs()->join('school_units', 'school_units.id', '=', 'program_levels.program_id')->whereIn('school_units.id', $cert_degree_programs)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->select(['school_units.*', 'departments.name as parent'])->get()->map(function($row){
-            return collect($row)->forget('pivot');
-        })->unique('id')->all();
+        $campus_deg_cert_programs = $campus->programs()->join('school_units', 'school_units.id', '=', 'program_levels.program_id')->whereIn('school_units.id', $cert_degree_programs)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->select(['school_units.*', 'departments.name as parent'])->get()->unique('id')->all();
         return response()->json(['data'=> $campus_deg_cert_programs]);
     }
 
@@ -237,7 +235,7 @@ class ApiController extends Controller
         # code...
         $degree = Degree::find($degree_id);
         if($degree != null){
-            return response()->json(['status'=>'success', 'data'=>$degree->certificates]) ;
+            return response()->json(['status'=>'success', 'data'=>$degree->certificates->unique('id')]) ;
         }
         return response()->json(['status'=>'failed', 'data'=>[], 'message'=>"specified degree is missing"]);
     }
@@ -247,6 +245,9 @@ class ApiController extends Controller
         # code...
         $certs = $request->certificates; //an indexed array of certificate IDs
         if($certs != null && is_array($certs)){
+            DegreeCertificate::where('degree_id', $degree_id)->each(function($row){
+                $row->delete();
+            });
             $degree_certs = array_map(function($cert)use($degree_id){
                 return ['degree_id'=>$degree_id, 'certificate_id'=>$cert];
             }, $certs);
