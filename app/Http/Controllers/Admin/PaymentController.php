@@ -94,7 +94,7 @@ class PaymentController extends Controller
                 if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
                 $class = $student->_class($year_id);
                 if($class != null){
-                    $cpid = $class->campus_programs->where('campus_id', $student->campus_id);
+                    $cpid = $class->campus_programs->where('campus_id', $student->campus_id)->first();
                     if($cpid != null){
                         $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $request->item : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
                         $total_balance = $student->total_balance($student->id, $year_id);
