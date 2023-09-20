@@ -1955,7 +1955,7 @@ class HomeController extends Controller
                 
                         } catch (\Throwable $th) {
                             DB::rollBack();
-                            return back()->with('error', $th->getMessage());
+                            return back()->with('error', $th->getMessage().'('.$th->getLine().')');
                         }
                     }elseif($type == 'OTHERS'){
                         $trans = session()->get(config('tranzak.others_data'));

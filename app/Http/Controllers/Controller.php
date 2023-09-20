@@ -112,7 +112,7 @@ class Controller extends BaseController
         }
      }
 
-     public function createAccount(Request $request){
+    public function createAccount(Request $request){
         
         if(User::where('phone', $request->phone)->orWhere('email', $request->email)->count() > 0){
             return redirect()->route('registration')->with('error', __('text.validation_phrase1'));
