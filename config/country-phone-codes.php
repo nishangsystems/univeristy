@@ -1,5 +1,6 @@
 <?php 
 return [
+    ["country"=>"Cameroon","code"=>"237","iso"=>"CM", 'autoselect'=>1],
     ["country"=>"Afghanistan","code"=>"93","iso"=>"AF"],
     ["country"=>"Albania","code"=>"355","iso"=>"AL"],
     ["country"=>"Algeria","code"=>"213","iso"=>"DZ"],

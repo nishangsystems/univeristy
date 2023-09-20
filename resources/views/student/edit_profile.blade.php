@@ -13,9 +13,8 @@
             <label for="" class="col-md-3 text-capitalize">{{__('text.parents_phone_number')}}</label>
             <div class="col-md-9 input-group input-group-merge d-flex">
                 <select class="ml-3 form-control" id="country_picker" onchange="code_change(event)">
-                    <option></option>
                     @foreach (config('country-phone-codes') as $code)
-                        <option value="+{{ $code['code'] }}">{{ $code['country'].' (+'.$code['code'].')' }}</option>
+                        <option value="+{{ $code['code'] }}" {{ ($code['autoselect']??null) == 1 ? 'selected' : '' }}>{{ $code['country'].' (+'.$code['code'].')' }}</option>
                     @endforeach
                 </select>
                 <input type="text" name="parent_phone_number" id="parent_phone" class="form-control mr-3" value="{{auth('student')->user()->parent_phone_number ?? ''}}">

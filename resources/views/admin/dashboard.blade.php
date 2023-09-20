@@ -35,7 +35,7 @@ $total_fee_owed = 1;
                     <div class="infobox-content">{{ __('text.active_students') }}</div>
                 </div>
 
-                <div class="stat stat-success">{{ number_format(100*count($active_students)/count($students), 2) }}%</div>
+                <div class="stat stat-success">{{count($students) == 0 ? 0 : number_format(100*count($active_students)/count($students), 2) }}%</div>
             </div>
 
             <div class="infobox border border-dark mx-2 my-1 rounded infobox-black">
@@ -49,7 +49,7 @@ $total_fee_owed = 1;
                 </div>
 
                 <div class="badge badge-dark">
-                    {{ number_format(100*count($inactive_students)/count($students), 2) }}%
+                    {{count($students) == 0 ? 0 : number_format(100*count($inactive_students)/count($students), 2) }}%
                     <i class="ace-icon fa fa-arrow-up"></i>
                 </div>
             </div>
@@ -65,7 +65,7 @@ $total_fee_owed = 1;
                 </div>
 
                 <div class="badge badge-dark">
-                    {{ number_format(100*count($active_students->where('gender', 'male'))/count($active_students), 2) }}%
+                    {{count($active_students) == 0 ? 0 : number_format(100*count($active_students->where('gender', 'male'))/count($active_students), 2) }}%
                     <i class="ace-icon fa fa-arrow-up"></i>
                 </div>
             </div>
@@ -81,7 +81,7 @@ $total_fee_owed = 1;
                 </div>
 
                 <div class="badge badge-dark">
-                    {{ number_format(100*count($active_students->where('gender', 'female'))/count($active_students), 2) }}%
+                    {{ count($active_students) == 0 ? 0 : number_format(100*count($active_students->where('gender', 'female'))/count($active_students), 2) }}%
                     <i class="ace-icon fa fa-arrow-up"></i>
                 </div>
             </div>
@@ -150,7 +150,7 @@ $total_fee_owed = 1;
                         {{ __('text.total_fee_paid') }}
                     </div>
                 </div>
-                <div class="stat stat-success mt-3">{{ number_format(100*$paid_fee/$expected_fee, 2) }}%</div>
+                <div class="stat stat-success mt-3">{{ $expected_fee == 0 ? 0 : number_format(100*$paid_fee/$expected_fee, 2) }}%</div>
             </div>
 
             <div class="infobox border border-dark mx-2 my-1 text-danger rounded infobox-red">
@@ -165,9 +165,21 @@ $total_fee_owed = 1;
                         {{ __('text.total_fee_owed') }}
                     </div>
                 </div>
-                <div class="stat stat-danger mt-3" style="color: red !important;">{{ number_format(100*$owed_fee/$expected_fee, 2) }}%</div>
+                <div class="stat stat-danger mt-3" style="color: red !important;">{{ $expected_fee == 0 ? 0 : number_format(100*$owed_fee/$expected_fee, 2) }}%</div>
             </div>
 
+            <div class="infobox border border-dark mx-2 my-1 rounded infobox-blue2">
+                <div class="infobox-icon">
+                    <a class="ace-icon fa fa-money fa-spin"></a>
+                </div>
+                <div class="infobox-data">
+                    <span class="infobox-text">{{ number_format($recovered_debt??0) }}</span>
+
+                    <div class="infobox-content">
+                        {{ __('text.debts_recovered') }}
+                    </div>
+                </div>
+            </div>
            
         </div>
 
