@@ -106,21 +106,33 @@
 				<h3> <span style="color: white; text-shadow: -1px -1px 0 #670f0e, 1px -1px 0 #670f0e, -1px 1px 0 #670f0e, 1px 1px 0 #670f0e; font-weight: bolder; font-size: xx-large;">VamVam</span>  <b>{{__('text.word_for')}} {{env('APP_NAME')}}</b></h3>
 			</div>
 			<div style="max-height: 65vh; overflow:auto">
-				@if(Session::has('success'))
-					<div class="alert alert-success fade in">
-						<strong>Success!</strong> {{Session::get('success')}}
-					</div>
-				@endif
-
 				@if(Session::has('error'))
-					<div class="alert alert-danger fade in">
-						<strong>Error!</strong> {{Session::get('error')}}
+					<div class="alert alert-danger"><em> {!! session('error') !!}</em>
 					</div>
 				@endif
 
+
+				@if(Session::has('e'))
+					<div class="alert alert-danger"><em> {!! session('e') !!}</em>
+					</div>
+				@endif
+
+				@if(Session::has('success'))
+					<div class="alert alert-success"><em> {!! session('success') !!}</em>
+					</div>
+				@endif
+
+				@if(Session::has('s'))
+					<div class="alert alert-success"><em> {!! session('s') !!}</em>
+					</div>
+				@endif
 				@if(Session::has('message'))
-					<div class="alert alert-primary fade in">
-						<strong>Message!</strong> {!! Session::get('message') !!}
+					<div class="alert alert-success"><em> {!! session('message') !!}</em>
+					</div>
+				@endif
+
+				@if(Session::has('m'))
+					<div class="alert alert-success"><em> {!! session('m') !!}</em>
 					</div>
 				@endif
 			</div>

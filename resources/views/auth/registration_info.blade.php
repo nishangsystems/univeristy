@@ -123,7 +123,7 @@
 											<b>{{__('text.completing_account_creation')}}</b>
 										</h4>
 										{{-- <span style="font-size: small; margin-bottom: 1rem; color: black !important;">{{__('text.begin_account_creation')}}</span> --}}
-										@if(Session::has('error'))
+											@if(Session::has('error'))
 												<div class="alert alert-danger"><em> {!! session('error') !!}</em>
 												</div>
 											@endif
@@ -134,8 +134,22 @@
 												</div>
 											@endif
 
+											@if(Session::has('success'))
+												<div class="alert alert-success"><em> {!! session('success') !!}</em>
+												</div>
+											@endif
+
 											@if(Session::has('s'))
 												<div class="alert alert-success"><em> {!! session('s') !!}</em>
+												</div>
+											@endif
+											@if(Session::has('message'))
+												<div class="alert alert-success"><em> {!! session('message') !!}</em>
+												</div>
+											@endif
+
+											@if(Session::has('m'))
+												<div class="alert alert-success"><em> {!! session('m') !!}</em>
 												</div>
 											@endif
 											<div class="space-6"></div>
