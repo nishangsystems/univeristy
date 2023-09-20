@@ -102,7 +102,7 @@
                     </thead>
                     <tbody>
                         @php($k=1)
-                        @forelse($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->orderBy('id', 'DESC')->get() as $item)
+                        @forelse($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->whereNull('transaction_id')->where('user_id', auth()->id())->orderBy('id', 'DESC')->get() as $item)
                         <!-- <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end"> -->
                         <tr>
                             <td>{{$k++}}</td>

@@ -124,7 +124,7 @@ class Controller extends BaseController
             
             $up = Students::where('matric', $request->username)->update($update);
             
-            if(auth('student')->attempt(['matric'=>$request->username, 'password'=>$request->password])){return redirect(route('login'));}
+            if(auth('student')->attempt(['matric'=>$request->username, 'password'=>$request->password])){return redirect(route('student.home'));}
             return redirect()->route('login')->with('s','Account created successfully.');   
             //return redirect()->route('student.home')->with('s','Account created successfully.');   
             

@@ -130,8 +130,22 @@
 												</div>
 											@endif
 
+											@if(Session::has('success'))
+												<div class="alert alert-success"><em> {!! session('success') !!}</em>
+												</div>
+											@endif
+
 											@if(Session::has('s'))
 												<div class="alert alert-success"><em> {!! session('s') !!}</em>
+												</div>
+											@endif
+											@if(Session::has('message'))
+												<div class="alert alert-success"><em> {!! session('message') !!}</em>
+												</div>
+											@endif
+
+											@if(Session::has('m'))
+												<div class="alert alert-success"><em> {!! session('m') !!}</em>
 												</div>
 											@endif
 											<div class="space-6"></div>
