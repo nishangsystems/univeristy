@@ -7,6 +7,7 @@ use App\Http\Resources\Fee;
 use App\Http\Resources\StudentResource3;
 use App\Http\Resources\StudentRank;
 use App\Http\Resources\CollectBoardingFeeResource;
+use App\Models\Batch;
 use App\Models\Rank;
 use App\Models\SchoolUnits;
 use App\Models\Sequence;
@@ -198,6 +199,7 @@ class HomeController extends Controller
         $class = ProgramLevel::find(\request('class'));
 
         $title = $type . " fee " . ($class != null ? "for " . $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level : '').(auth()->user()->campus_id != null ? ' - '.Campus::find(auth()->user()->campus_id)->name : '');
+        $title .= ' ('.Batch::find($year)->name.')';
         $students = [];
  
         $studs = $class->_students($year)

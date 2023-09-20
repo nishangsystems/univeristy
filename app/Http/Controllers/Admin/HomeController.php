@@ -63,6 +63,7 @@ class HomeController  extends Controller
                             $campus_id != null ? $query->where('students.campus_id', $campus_id) : null;
                         })->distinct()->get(['school_units.name as program_name', 'school_units.id as program', 'students.*'])->groupBy('program');
         $data['programs'] = $students;
+        $data['recovered_debt'] = Payments::where('batch_id', $year)->where('payment_year_id', '!=', $year)->sum('amount');
         return view('admin.dashboard', $data);
     }
 

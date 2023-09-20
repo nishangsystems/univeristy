@@ -849,5 +849,6 @@ return [
     'user_account_blocked'=>'user account blocked',
     'permission_denied'=>'permission denied',
     'school_contacts'=>'school contacts',
+    'debts_recovered'=>'debts recovered',
     ''
 ];
