@@ -1955,6 +1955,7 @@ class HomeController extends Controller
                 
                         } catch (\Throwable $th) {
                             DB::rollBack();
+                            // throw $th;
                             return back()->with('error', $th->getMessage().'('.$th->getLine().')');
                         }
                     }elseif($type == 'OTHERS'){

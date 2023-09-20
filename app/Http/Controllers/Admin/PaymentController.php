@@ -139,7 +139,7 @@ class PaymentController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            return back()->with('error', $th->getMessage());
+            return back()->with('error', $th->getTrace());
         }
 
     }
