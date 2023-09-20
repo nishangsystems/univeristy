@@ -1902,6 +1902,52 @@ class HomeController extends Controller
                             
                             $__amount = $transaction['amount'];
                             
+                            // foreach (Batch::orderBy('name')->distinct()->pluck('id')->toArray() as $key => $year_id) {
+                            //     # code...
+                            //     if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
+                            //     $class = $student->_class($year_id);
+                            //     if($class != null){
+                            //         $cpid = $class->campus_programs->where('campus_id', $student->campus_id)->first();
+                            //         if($cpid != null){
+                            //             $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $trans['payment_id'] : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
+                            //             $total_balance = $student->total_balance($student->id, $year_id);
+                            //             if($total_balance > 0){
+                            //                 $amount = 0; $debt = 0;
+                            //                 if($__amount >= $total_balance){
+                            //                     $__amount -= $total_balance;
+                            //                     $amount = $total_balance;
+                            //                 }else{
+                            //                     $amount = $__amount;
+                            //                     $__amount = 0;
+                            //                 }
+                            //                 if($year_id == Helpers::instance()->getCurrentAccademicYear()){
+                            //                     $debt = $__amount > 0 ? -$__amount : 0;
+                            //                 }else{$debt = 0;}
+                
+                            //                 $data = [
+                            //                     "payment_id" => $payment_id,
+                            //                     "student_id" => $student->id,
+                            //                     "unit_id" => $class->id,
+                            //                     "batch_id" => $year_id,
+                            //                     "amount" => $amount,
+                            //                     // "date" => $request->date,
+                            //                     'reference_number' => $request->reference_number.time().'_'.random_int(1000000, 99999999),
+                            //                     'user_id' => auth('student')->id(),
+                            //                     'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
+                            //                     'debt' => $debt,
+                            //                     'transaction_id'=>$transaction_instance->id,
+                            //                     'paid_by' => auth('student')->id(),
+                            //                     'created_at'=>date(DATE_ATOM, time()),
+                            //                     'updated_at'=>date(DATE_ATOM, time())
+                            //                 ];
+                            //                 if ($data['reference_number'] == null || (Payments::where(['reference_number' => $data['reference_number']])->count() == 0)) {
+                            //                     $_data[] = $data;
+                            //                 }else{return back()->with('error', __('text.reference_already_exist'));}
+                            //             };
+                            //         }
+                            //     }
+                            // }
+
                             foreach (Batch::orderBy('name')->pluck('id')->toArray() as $key => $year_id) {
                                 # code...
                                 if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
@@ -1909,7 +1955,7 @@ class HomeController extends Controller
                                 if($class != null){
                                     $cpid = $class->campus_programs->where('campus_id', $student->campus_id)->first();
                                     if($cpid != null){
-                                        $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $trans['payment_id'] : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
+                                        $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $request->item : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
                                         $total_balance = $student->total_balance($student->id, $year_id);
                                         if($total_balance > 0){
                                             $amount = 0; $debt = 0;
@@ -1930,7 +1976,6 @@ class HomeController extends Controller
                                                 "unit_id" => $class->id,
                                                 "batch_id" => $year_id,
                                                 "amount" => $amount,
-                                                // "date" => $request->date,
                                                 'reference_number' => $request->reference_number.time().'_'.random_int(1000000, 99999999),
                                                 'user_id' => auth('student')->id(),
                                                 'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
