@@ -1932,7 +1932,7 @@ class HomeController extends Controller
                                                 "amount" => $amount,
                                                 // "date" => $request->date,
                                                 'reference_number' => $request->reference_number.time().'_'.random_int(1000000, 99999999),
-                                                'user_id' => auth('students')->id(),
+                                                'user_id' => auth('student')->id(),
                                                 'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
                                                 'debt' => $debt,
                                                 'transaction_id'=>$transaction_instance->id,
