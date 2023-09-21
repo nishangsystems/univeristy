@@ -2,9 +2,9 @@
 @section('section')
 
 <div class="col-sm-12">
-    <div class="row">
+    <div class="row d-flex flex-wrap justify-content-center">
         @foreach ($children as $child)
-            <div class="col-sm-10 mx-auto col-md-5 col-lg-3 text-center alert alert-info border rounded-md py-4 px-2">
+            <div class="col-sm-10 col-md-5 col-lg-3 text-center py-4 px-2 mx-4 my-4" style="border-radius: 1rem !important; box-shadow: -1px -1px #ddd, 1px 1px #ddd !important;">
                 <h4 class="">{{ $child->name }}</h4>
                 <h5 class="my-2">{{ $child->_class($year??null)->name()??'' }}</h5>
                 <div class="d-flex flex-wrap justify-content-around mt-5">

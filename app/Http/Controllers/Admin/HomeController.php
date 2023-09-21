@@ -15,6 +15,7 @@ use App\Models\PaymentItem;
 use App\Models\Payments;
 use App\Models\PlatformCharge;
 use App\Models\Resit;
+use App\Models\SchoolContact;
 use App\Models\SchoolUnits;
 use App\Models\Semester;
 use App\Models\StudentClass;
@@ -62,6 +63,7 @@ class HomeController  extends Controller
                             $campus_id != null ? $query->where('students.campus_id', $campus_id) : null;
                         })->distinct()->get(['school_units.name as program_name', 'school_units.id as program', 'students.*'])->groupBy('program');
         $data['programs'] = $students;
+        $data['recovered_debt'] = Payments::where('batch_id', '!=', $year)->where('payment_year_id', $year)->sum('amount');
         return view('admin.dashboard', $data);
     }
 
@@ -267,6 +269,7 @@ class HomeController  extends Controller
     {
         # code...
         try {
+            // dd($request->all());
             //code...
             $semesters = Semester::where(['background_id'=>$request->background])->get();
             foreach ($semesters as $key => $sem) {
@@ -275,6 +278,10 @@ class HomeController  extends Controller
                 $sem->save();
             }
             $semester = Semester::find($id);
+            if($request->semester_min_fee != $semester->semester_min_fee){
+                $semester->semester_min_fee = $request->semester_min_fee;
+                $semester->user_id = auth()->id();
+            }
             $semester->status = 1;
             $semester->save();
             return back()->with('success', __('text.word_done'));
@@ -518,5 +525,67 @@ class HomeController  extends Controller
             $wage->delete();
             return back()->with('success', __('text.word_done'));
         }
+    }
+
+    public function school_contacts($id = null)
+    {
+        # code...
+        $data['title'] = __('text.school_contacts');
+        $data['contacts'] = SchoolContact::all();
+        if($id != null){
+            $data['_contact'] = SchoolContact::find($id);
+        }
+        return view('admin.setting.school_contacts', $data);
+    }
+
+    public function save_school_contact(Request $request, $id = null)
+    {
+        # code...
+        $validity = Validator::make($request->all(), [
+            'title'=>'required', 'contact'=>'required'
+        ]);
+        if($validity->fails()){
+            return back()->with('error', $validity->errors()->first());
+        }
+        $data = ['name'=>$request->name??null, 'title'=>$request->title, 'contact'=>$request->contact];
+        $instance = new SchoolContact($data);
+        if($id != null){
+            $instance = SchoolContact::find($id);
+            $instance->fill($data);
+        }
+        $instance->save();
+        return back()->with('success', __('text.word_Done'));
+    }
+
+    public function drop_school_contacts(Request $request, $id)
+    {
+        # code...
+        $contact = SchoolContact::find($id);
+        if($contact != null){
+            $contact->delete();
+        }
+        return back()->with('success', __('text.word_Done'));
+    }
+
+    public function block_user($user_id)
+    {
+        # code...
+        $user = User::find($user_id);
+        if($user != null){
+            $update = ['active'=>0, 'activity_changed_by'=>auth()->id(), 'activity_changed_at'=>now()->format(DATE_ATOM)];
+            $user->update($update);
+        }
+        return back()->with('success', __('text.word_Done'));
+    }
+
+    public function activate_user($user_id)
+    {
+        # code...
+        $user = User::find($user_id);
+        if($user != null){
+            $update = ['active'=>1, 'activity_changed_by'=>auth()->id(), 'activity_changed_at'=>now()->format(DATE_ATOM)];
+            $user->update($update);
+        }
+        return back()->with('success', __('text.word_Done'));
     }
 }

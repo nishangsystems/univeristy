@@ -245,13 +245,13 @@
                         </li>
 
 
-                        <li>
+                        {{-- <li>
                             <a href="{{route('student.result.pay')}}" class="text-capitalize">
                                 <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.semester_results')}}
                             </a>
                             <b class="arrow"></b>
-                        </li>
+                        </li> --}}
 
                         <li>
                             <a href="{{route('student.online.payments.history')}}" class="text-capitalize">

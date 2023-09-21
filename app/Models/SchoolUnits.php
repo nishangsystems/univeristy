@@ -100,6 +100,16 @@ class SchoolUnits extends Model
         return $this->belongsTo(SchoolUnits::class, 'parent_id');
     }
 
+    public function has_unit(SchoolUnits $school_unit)
+    {
+
+        $parent = $school_unit->parent;
+        if($parent == null){return false;}
+        elseif($parent->id == $this->id || $school_unit->id == $this->id){
+            return true;
+        }else{return $this->is_parent_to($parent);}
+    }
+
     public function semesters()
     {
         return $this->hasMany(Semester::class, 'background_id');

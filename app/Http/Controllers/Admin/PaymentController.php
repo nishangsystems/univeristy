@@ -78,46 +78,68 @@ class PaymentController extends Controller
             $total_fee = $student->total($student_id);
             $balance =  $student->bal($student_id);
             $debt = 0;
+            $_data = [];
+            
+            $__amount = $request->amount;
             // $debt = $student->debt(Helpers::instance()->getCurrentAccademicYear());
             // return $balance;
+            
             $this->validate($request, [
                 'item' =>  'required',
                 'amount' => 'required',
                 'date' => 'required|date',
             ]);
-            if($balance <= 0){
-                $debt = $request->amount;
-                $amount = 0;
-            }
-            elseif ($request->amount > $balance) {
-                $debt = -($request->amount - $balance);
-                $amount = $balance;
-            }
-            else{
-                $amount = $request->amount;
-            }
-    
-            // $student->clearDebt();
-            if ($request->reference_number == null || (Payments::where(['reference_number' => $request->reference_number])->count() == 0)) {
+            foreach (Batch::orderBy('name')->pluck('id')->toArray() as $key => $year_id) {
                 # code...
-                Payments::create([
-                    "payment_id" => $request->item,
-                    "student_id" => $student->id,
-                    "unit_id" => $student->class(Helpers::instance()->getYear())->id,
-                    "batch_id" => Helpers::instance()->getYear(),
-                    "amount" => $amount,
-                    "date" => $request->date,
-                    'reference_number' => $request->reference_number,
-                    'user_id' => auth()->user()->id,
-                    'debt' => $debt,
-                ]);
-                DB::commit();
-                return back()->with('success', __('text.word_done'));
+                if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
+                $class = $student->_class($year_id);
+                if($class != null){
+                    $cpid = $class->campus_programs->where('campus_id', $student->campus_id)->first();
+                    if($cpid != null){
+                        $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $request->item : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
+                        $total_balance = $student->total_balance($student->id, $year_id);
+                        if($total_balance > 0){
+                            $amount = 0; $debt = 0;
+                            if($__amount >= $total_balance){
+                                $__amount -= $total_balance;
+                                $amount = $total_balance;
+                            }else{
+                                $amount = $__amount;
+                                $__amount = 0;
+                            }
+                            if($year_id == Helpers::instance()->getCurrentAccademicYear()){
+                                $debt = $__amount > 0 ? -$__amount : 0;
+                            }else{$debt = 0;}
+
+                            $data = [
+                                "payment_id" => $payment_id,
+                                "student_id" => $student->id,
+                                "unit_id" => $class->id,
+                                "batch_id" => $year_id,
+                                "amount" => $amount,
+                                // "date" => $request->date,
+                                'reference_number' => $request->reference_number.time().'_'.random_int(1000000, 99999999),
+                                'user_id' => auth()->user()->id,
+                                'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
+                                'debt' => $debt,
+                                'created_at'=>date(DATE_ATOM, time()),
+                                'updated_at'=>date(DATE_ATOM, time())
+                            ];
+                            if ($data['reference_number'] == null || (Payments::where(['reference_number' => $data['reference_number']])->count() == 0)) {
+                                $_data[] = $data;
+                            }else{return back()->with('error', __('text.reference_already_exist'));}
+                        };
+                    }
+                }
             }
-            else{return back()->with('error', __('text.reference_already_exist'));}
+            // dd($_data);
+            Payments::insert($_data);
+            DB::commit();
+            return back()->with('success', __('text.word_done'));
+
         } catch (\Throwable $th) {
             DB::rollBack();
-            //throw $th;
+            return back()->with('error', $th->getMessage());
         }
 
     }

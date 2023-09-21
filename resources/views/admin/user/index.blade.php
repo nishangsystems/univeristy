@@ -33,14 +33,19 @@
                                 <td>{{!($user->campus_id == null) ? \App\Models\Campus::find($user->campus_id)->name ?? '' : ''}}</td>
                                 <td>{{$user->gender}}</td>
                                 <td  class="d-flex justify-content-end align-items-center" >
-                                    <a class="btn btn-xs btn-primary" href="{{route('admin.users.show',[$user->id])}}"><i class="fa fa-eye"> Profile</i></a> |
-                                    <a class="btn btn-xs btn-success" href="{{route('admin.users.edit',[$user->id])}}"><i class="fa fa-edit"> Edit</i></a> |
-                                    <a onclick="event.preventDefault();
+                                    <a class="btn btn-xs btn-primary" href="{{route('admin.users.show',[$user->id])}}"><i class="fa fa-eye">{{ __('text.word_profile')}}</i></a> |
+                                    <a class="btn btn-xs btn-success" href="{{route('admin.users.edit',[$user->id])}}"><i class="fa fa-edit"> {{ __('text.word_edit') }}</i></a> |
+                                    @if ($user->active == 1)
+                                        <a class="btn btn-xs btn-danger" href="{{route('admin.block_user',[$user->id])}}"><i class="fa fa-trash"> {{ __('text.word_disactivate') }}</i></a> |
+                                    @else
+                                        <a class="btn btn-xs btn-warning" href="{{route('admin.activate_user',[$user->id])}}"><i class="fa fa-recycle"> {{ __('text.word_activate') }}</i></a> |
+                                    @endif
+                                    {{-- <a onclick="event.preventDefault();
                                             confirm(`You are about to delete {{$user->type}}; {{$user->name}}`) ? document.getElementById('delete{{$user->id}}').submit() : null;" class=" btn btn-danger btn-xs m-2">Delete</a>
                                     <form id="delete{{$user->id}}" action="{{route('admin.users.destroy',$user->id)}}" method="POST" style="display: none;">
                                         @method('DELETE')
                                         {{ csrf_field() }}
-                                    </form>
+                                    </form> --}}
                                 </td>
                             </tr>
                             @endif

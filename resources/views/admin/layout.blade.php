@@ -315,6 +315,14 @@
 
                         <b class="arrow"></b>
                     </li>
+                    <li>
+                        <a href="{{route('admin.setcontacts')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.school_contacts')}}
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
                 </ul>
             </li>
             @endif
@@ -368,13 +376,13 @@
                     </li>
 
 
-                    <li>
+                    {{-- <li>
                         <a href="{{route('admin.results.date_line')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                            {{__('text.results_date_line')}}
                         </a>
                         <b class="arrow"></b>
-                    </li>
+                    </li> --}}
                     @if(!auth()->user()->campus_id == null)
                     <li>
                         <a href="{{route('admin.course.date_line')}}" class="text-capitalize">

@@ -130,8 +130,22 @@
 												</div>
 											@endif
 
+											@if(Session::has('success'))
+												<div class="alert alert-success"><em> {!! session('success') !!}</em>
+												</div>
+											@endif
+
 											@if(Session::has('s'))
 												<div class="alert alert-success"><em> {!! session('s') !!}</em>
+												</div>
+											@endif
+											@if(Session::has('message'))
+												<div class="alert alert-success"><em> {!! session('message') !!}</em>
+												</div>
+											@endif
+
+											@if(Session::has('m'))
+												<div class="alert alert-success"><em> {!! session('m') !!}</em>
 												</div>
 											@endif
 											<div class="space-6"></div>
@@ -344,9 +358,8 @@
 								<span class="text-capitalize">{{__('text.word_country')}}</span>
 								<span class="block input-icon input-icon-right">
 									<select required id="country_picker" class="form-control" style="border-radius: 0.5rem !important; background-color: white !important; color: black" onchange="code_change(event)">
-										<option></option>
 										@foreach (config('country-phone-codes') as $code)
-											<option value="+{{ $code['code'] }}">{{ $code['country'].' (+'.$code['code'].')' }}</option>
+											<option value="+{{ $code['code'] }} {{ ($code['autoselect']??null) == 1 ? 'selected' : '' }}">{{ $code['country'].' (+'.$code['code'].')' }}</option>
 										@endforeach
 									</select>
 								</span>
@@ -356,7 +369,7 @@
 						<label class="block clearfix">
 							<span class="text-capitalize">{{__('text.parents_phone_number')}}</span>
 							<span class="block input-icon input-icon-right">
-								<input type="text" required name="username" id="parent_phone" class="form-control" value="{{ $phone??'' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+								<input type="text" required name="username" id="parent_phone" class="form-control" value="+237{{ $phone??'' }}" style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
 							</span>
 						</label>`;
 			$('#for_others').html(null);

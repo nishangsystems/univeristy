@@ -25,7 +25,7 @@
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.balance_fee')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="balance" value="{{number_format($balance)}} CFA" disabled></input>
+                    <input for="cname" class="form-control" name="balance" value="{{number_format($student->total_balance())}} CFA" disabled></input>
                 </div>
             </div>
             <div class="form-group">
@@ -37,8 +37,7 @@
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
                 <div class="col-lg-10">
-                    {{-- <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)-$student->bal($student->id, $c_year)}} CFA" disabled></input> --}}
-                    <input for="cname" class="form-control" name="xtra-fee" value="{{number_format($student->total_debts($c_year))}} CFA" disabled>
+                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)-$student->bal($student->id, $c_year)}} CFA" disabled></input>
                 </div>
             </div>
             <div class="form-group @error('item') has-error @enderror">
@@ -103,7 +102,7 @@
                     </thead>
                     <tbody>
                         @php($k=1)
-                        @forelse($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->orderBy('id', 'DESC')->get() as $item)
+                        @forelse($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->whereNull('transaction_id')->where('user_id', auth()->id())->orderBy('id', 'DESC')->get() as $item)
                         <!-- <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end"> -->
                         <tr>
                             <td>{{$k++}}</td>

@@ -330,7 +330,7 @@ return [
     'word_action'=>'action',
     'sign_course'=>'sign course',
     'view_courses'=>'view courses',
-    'fee_access_phrase'=>'You must pay a minimum fee of :amount to :action. If you have already paid, contact the finance office',
+    'fee_access_phrase'=>'You must pay a minimum fee of :amount to access you results. You are still owing a total sum of :debt. If you have already paid, contact the finance office',
     'attempted_credit_value'=>'attempted credit value',
     'formb_title'=>'registered courses for :semester :year',
     'download_formb'=>'download form-b',
@@ -562,7 +562,7 @@ return [
     'no_results_phrase'=>'No results are available yet for this student',
     'make_payment'=>'make payment',
     'transaction_initialized'=>"transaction initialized",
-    'pending_transaction_prase'=>'transaction pending confirmation. Dial *126# to confirm payment.',
+    'pending_transaction_prase'=>'transaction pending confirmation. Dial the MOMO or Orange Money code to confirm payment.',
     'manage_messages'=>'manage messages',
     'word_sent'=>'sent',
     'word_recipients'=>'recipients',
@@ -846,5 +846,9 @@ return [
     'student_slash_staff_login'=>'student/staff login',
     'parent_login'=>'parent login',
     'parent_platform_charges'=>'parent platform charges',
-    ''
+    'user_account_blocked'=>'user account blocked',
+    'permission_denied'=>'permission denied',
+    'school_contacts'=>'school contacts',
+    'debts_recovered'=>'debts recovered',
+    'result_access_min_fee'=>'result-access min-fee'
 ];
