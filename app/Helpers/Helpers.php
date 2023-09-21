@@ -403,4 +403,14 @@ class Helpers
         return $years;
     }
 
+    public function can_promote($year_id = null)
+    {
+        $year = $year_id == null ? $this->getCurrentAccademicYear() : $year_id;
+        $batch = Batch::find($year);
+        if($batch != null){
+            return $batch->can_promote??false;
+        }
+        return false;
+    }
+
 }

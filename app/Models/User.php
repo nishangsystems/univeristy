@@ -31,7 +31,7 @@ class User extends Authenticatable
         'campus_id',
         'school_id',
         'matric',
-        'active',
+        'active', 'activity_changed_by', 'activity_changed_at'
     ];
     protected $connection = 'mysql';
 
