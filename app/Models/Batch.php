@@ -20,4 +20,9 @@ class Batch extends Model
     {
         return $this->hasMany(CollectBoardingFee::class, 'batch_id');
     }
+
+    public function config()
+    {
+        return $this->hasOne(Config::class, 'year_id');
+    }
 }

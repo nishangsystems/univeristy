@@ -489,7 +489,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     
     Route::get('charges/set', 'Admin\HomeController@set_charges')->name('charges.set');
     Route::post('charges/set', 'Admin\HomeController@save_charges')->name('charges.save');
-
+    
+    Route::get('user/block/{user_id}', 'Admin\HomeController@block_user')->name('block_user');
+    Route::get('user/activate/{user_id}', 'Admin\HomeController@activate_user')->name('activate_user');
 
     // ATTENDANCE ROUTE GROUP
     Route::name('attendance.')->prefix('attendance')->group(function(){

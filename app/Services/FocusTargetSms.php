@@ -14,7 +14,7 @@ class FocusTargetSms implements ShouldQueue{
     private $api_base = "https://smsvas.com/bulk/public/index.php/api/v1/sendsms";
     private $api_password = 'test2371';
     private $api_user = 'nishang@gmail.com';
-    private $sender_id = 'ST LOUIS UNIVERSITY INSTITUTE APPLICATION PLATFORM';
+    private $sender_id = 'ST LOUIS UI';
     
     public function __construct($recipients, string $message)
     {

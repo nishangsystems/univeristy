@@ -7,6 +7,7 @@ use App\Models\Guardian;
 use App\Models\Students;
 use App\Models\User;
 // use Auth;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use \Cookie;
@@ -115,6 +116,7 @@ class CustomLoginController extends Controller
         //Attempt to log the user in
 
         // return $request->all();
+        session()->flush();
         if( Auth::guard('student')->attempt(['matric'=>$request->username,'password'=>$request->password], $request->remember)){
             // return "Spot 1";
             return redirect()->intended(route('student.home'));
@@ -125,6 +127,7 @@ class CustomLoginController extends Controller
             if( Auth::attempt(['username'=>$request->username,'password'=>$request->password]) ||  Auth::attempt(['matric'=>$request->username,'password'=>$request->password])){
                 // return "Spot 2";
                 if(Auth::user()->type == 'teacher'){
+                    
                     return redirect()->route('user.home')->with('success','Welcome to Teachers Dashboard '.Auth::user()->name);
                 }else{
                     return redirect()->route('admin.home')->with('success','Welcome to Admin Dashboard '.Auth::user()->name);
@@ -139,6 +142,7 @@ class CustomLoginController extends Controller
     public function logout(Request $request){
         Auth::logout();
         Auth::guard('student')->logout();
+        Auth::guard('parents')->logout();
         return redirect(route('login'));
     }
 

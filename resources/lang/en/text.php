@@ -850,5 +850,5 @@ return [
     'permission_denied'=>'permission denied',
     'school_contacts'=>'school contacts',
     'debts_recovered'=>'debts recovered',
-    ''
+    'result_access_min_fee'=>'result-access min-fee'
 ];

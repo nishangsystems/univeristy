@@ -269,6 +269,7 @@ class HomeController  extends Controller
     {
         # code...
         try {
+            // dd($request->all());
             //code...
             $semesters = Semester::where(['background_id'=>$request->background])->get();
             foreach ($semesters as $key => $sem) {
@@ -277,6 +278,10 @@ class HomeController  extends Controller
                 $sem->save();
             }
             $semester = Semester::find($id);
+            if($request->semester_min_fee != $semester->semester_min_fee){
+                $semester->semester_min_fee = $request->semester_min_fee;
+                $semester->user_id = auth()->id();
+            }
             $semester->status = 1;
             $semester->save();
             return back()->with('success', __('text.word_done'));
@@ -558,6 +563,28 @@ class HomeController  extends Controller
         $contact = SchoolContact::find($id);
         if($contact != null){
             $contact->delete();
+        }
+        return back()->with('success', __('text.word_Done'));
+    }
+
+    public function block_user($user_id)
+    {
+        # code...
+        $user = User::find($user_id);
+        if($user != null){
+            $update = ['active'=>0, 'activity_changed_by'=>auth()->id(), 'activity_changed_at'=>now()->format(DATE_ATOM)];
+            $user->update($update);
+        }
+        return back()->with('success', __('text.word_Done'));
+    }
+
+    public function activate_user($user_id)
+    {
+        # code...
+        $user = User::find($user_id);
+        if($user != null){
+            $update = ['active'=>1, 'activity_changed_by'=>auth()->id(), 'activity_changed_at'=>now()->format(DATE_ATOM)];
+            $user->update($update);
         }
         return back()->with('success', __('text.word_Done'));
     }
