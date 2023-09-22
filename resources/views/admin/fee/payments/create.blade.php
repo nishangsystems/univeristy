@@ -6,7 +6,7 @@
 @section('section')
 <div class="mx-3">
     <div class="form-panel">
-        @if($student->total_debts($c_year) > 0)
+        @if($student->total_balance() > 0)
         <form class="form-horizontal" role="form" method="POST" action="{{route('admin.fee.student.payments.store',$student->id)}}">
             <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_fee_details')}}</h5>
             @csrf

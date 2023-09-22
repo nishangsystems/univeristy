@@ -1176,7 +1176,8 @@ class HomeController extends Controller
 
         session()->put(config('tranzak.transcript_data'), $data);
 
-        if($request->has('channel') && $request->channel == 'tranzak'){
+        
+        if(Helpers::instance()->payChannel() == 'tranzak'){
             return $this->tranzak_pay($request->payment_purpose, $request);
         }
 
@@ -1875,14 +1876,19 @@ class HomeController extends Controller
                     // save transaction and update application_form
                     DB::beginTransaction();
                     $transaction = ['request_id'=>$request->requestId??'', 'amount'=>$request->amount??'', 'currency_code'=>$request->currencyCode??'', 'purpose'=>$request->payment_purpose??'', 'mobile_wallet_number'=>$request->mobileWalletNumber??'', 'transaction_ref'=>$request->mchTransactionRef??'', 'app_id'=>$request->appId??'', 'transaction_id'=>$request->transactionId??'', 'transaction_time'=>$request->transactionTime??'', 'payment_method'=>$request->payer['paymentMethod']??'', 'payer_user_id'=>$request->payer['userId']??'', 'payer_name'=>$request->payer['name']??'', 'payer_account_id'=>$request->payer['accountId']??'', 'merchant_fee'=>$request->merchant['fee']??'', 'merchant_account_id'=>$request->merchant['accountId']??'', 'net_amount_recieved'=>$request->merchant['netAmountReceived']??''];
-                    $transaction_instance = new TranzakTransaction($transaction);
-                    $transaction_instance->save();
+                    if(TranzakTransaction::where($transaction)->count() == 0){
+                        $transaction_instance = new TranzakTransaction($transaction);
+                        $transaction_instance->save();
+                    }else{
+                        $transaction_instance = TranzakTransaction::where($transaction)->first();
+                    }
     
                     if($type == 'TRANSCRIPT'){
                         $trans = session()->get(config('tranzak.transcript_data'));
                         $trans['transaction_id'] = $transaction_instance->id;
                         $trans['paid'] = 1;
-                        (new Transcript($trans))->save();
+                        if(Transcript::where($trans)->count() == 0)
+                            (new Transcript($trans))->save();
                         $message = "Hello ".(auth('student')->user()->name??'').", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid ".($transaction_instance->amount??'')." for this operation";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'TUTION'){
@@ -2006,6 +2012,7 @@ class HomeController extends Controller
                     }elseif($type == 'OTHERS'){
                         $trans = session()->get(config('tranzak.others_data'));
                         $trans['transaction_id'] = $transaction_instance->id;
+                        if(PayIncome::where($trans)->count() == 0)
                         ($instance = new PayIncome($trans))->save();
                         $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($instance->income->name??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
@@ -2064,7 +2071,7 @@ class HomeController extends Controller
 
     public function tranzak_payment_history()
     {
-        
+        return $this->online_payment_history(request());
     }
  
     public function tranzak_pay_fee()

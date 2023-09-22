@@ -172,7 +172,7 @@
 												<label class="block clearfix">
 													<span class="text-capitalize">{{__('text.parents_phone_number')}}</span>
 													<span class="block input-icon input-icon-right">
-														<input type="text" required name="phone" id="parent_phone" class="form-control" value="+237{{ $phone??'' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
+														<input type="text" required name="phone" id="parent_phone" class="form-control" value="{{ $phone??'+237' }}"  style="border-radius: 0.5rem !important; background-color: white !important; color: black"/>
 													</span>
 												</label>
 
@@ -225,6 +225,7 @@
 			})
 			let code_change = function(event){
 				let val = event.target.value;
+
 				$('#parent_phone').val(val+p_phone);
 			}
 		</script>

@@ -7,7 +7,7 @@
 <div class="mx-3">
 
     <div class="form-panel" id="TUTION-PANEL">
-        @if($balance > 0)
+        @if($student->total_balance() > 0)
         <form class="form-horizontal" role="form" method="POST">
             <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_fee_details')}}</h5>
             @csrf
