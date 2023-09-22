@@ -13,31 +13,31 @@
             <div class="form-group row">
                 <label for="cname" class="control-label col-sm-2 text-capitalize">{{__('text.total_fee')}}: </label>
                 <div class="col-sm-10">
-                    <input for="cname" class="form-control" value="{{number_format($total_fee)}} CFA" disabled></input>
+                    <input for="cname" class="form-control" value="{{number_format($total_fee)}} CFA" disabled>
                 </div>
             </div>
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.scholarship_award')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" value="{{number_format($scholarship)}} CFA" disabled></input>
+                    <input for="cname" class="form-control" value="{{number_format($scholarship)}} CFA" disabled>
                 </div>
             </div>
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.balance_fee')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="balance" value="{{number_format($student->total_balance())}} CFA" disabled></input>
+                    <input for="cname" class="form-control" name="balance" value="{{number_format($student->total_balance())}} CFA" disabled>
                 </div>
             </div>
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.extra_fee')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->extraFee($c_year) == null ? 0 : $student->extraFee($c_year)->amount}} CFA" disabled></input>
+                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->extraFee($c_year) == null ? 0 : $student->extraFee($c_year)->amount}} CFA" disabled>
                 </div>
             </div>
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)-$student->bal($student->id, $c_year)}} CFA" disabled></input>
+                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year) - $student->bal($student->id, $c_year)}} CFA" disabled>
                 </div>
             </div>
             <div class="form-group @error('item') has-error @enderror">
