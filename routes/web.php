@@ -106,6 +106,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('setayear/{id}', 'Admin\HomeController@setAcademicYear')->name('createacademicyear');
     Route::get('setsemester', 'Admin\HomeController@setsemester')->name('setsemester');
     Route::post('setsemester/{id}', 'Admin\HomeController@postsemester')->name('postsemester');
+    Route::post('setminsemesterfee/{id}', 'Admin\HomeController@postsemesterminfee')->name('postsemester.minfee');
     Route::get('setcontacts/{id?}', 'Admin\HomeController@school_contacts')->name('setcontacts');
     Route::post('setcontacts/{id?}', 'Admin\HomeController@save_school_contact');
     Route::get('dropcontacts/{id}', 'Admin\HomeController@drop_school_contacts')->name('dropcontacts');

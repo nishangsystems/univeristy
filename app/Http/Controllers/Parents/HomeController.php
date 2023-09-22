@@ -319,7 +319,7 @@ class HomeController extends Controller
                                 if($class != null){
                                     $cpid = $class->campus_programs->where('campus_id', $student->campus_id)->first();
                                     if($cpid != null){
-                                        $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $request->item : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
+                                        $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $trans['payment_id'] : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
                                         $total_balance = $student->total_balance($student->id, $year_id);
                                         if($total_balance > 0){
                                             $amount = 0; $debt = 0;
