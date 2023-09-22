@@ -300,13 +300,13 @@
                         </li>
 
 
-                        <li>
+                        {{-- <li>
                             <a href="{{route('student.tranzak.result.pay')}}" class="text-capitalize">
                                 <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.semester_results')}}
                             </a>
                             <b class="arrow"></b>
-                        </li>
+                        </li> --}}
 
                         <li>
                             <a href="{{route('student.tranzak.online.payments.history')}}" class="text-capitalize">

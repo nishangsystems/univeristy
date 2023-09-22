@@ -88,6 +88,7 @@ class HomeController extends Controller
         $data['semester'] = $semester;
         $data['class'] = $class;
         $data['year'] = $year;
+        $data['title'] = $student->name.' '.__('text.exam_results').' - '.Batch::find($year)->name??null;
         $data['ca_total'] = $class->program()->first()->ca_total;
         $data['exam_total'] = $class->program()->first()->exam_total;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
@@ -171,8 +172,8 @@ class HomeController extends Controller
     public function results_index(Request $request, $child_id)
     {
         # code...
-        $data['title'] = "My Result";
         $data['student'] = Students::find($child_id);
+        $data['title'] = $data['student']->name.' '.__('text.exam_results').' - '.Batch::find(Helpers::instance()->getCurrentAccademicYear())->name??null;
         return view('parents.result')->with($data);
     }
 
@@ -247,8 +248,8 @@ class HomeController extends Controller
                         $trans['paid'] = 1;
                         $instance = new Transcript($trans);
                         $instance->save();
-                        $message = "Hello ".$instance->student->name??''.", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid {($transaction_instance->amount??'')} for this operation";
-                        $this->sendSmsNotificaition($message, [auth('parents')->user()->phone]);
+                        // $message = "Hello ".$instance->student->name??''.", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid {($transaction_instance->amount??'')} for this operation";
+                        // $this->sendSmsNotificaition($message, [auth('parents')->user()->phone]);
                     }elseif($type == 'TUTION'){
                         $trans = session()->get(config('tranzak.tution_data'));
                         $trans['transaction_id'] = $transaction_instance->id;
@@ -361,8 +362,8 @@ class HomeController extends Controller
                             Payments::insert($_data);
                             DB::commit();
                 
-                            $message = "Hello ".$student->name??''.", You have successfully paid a sum of {($transaction_instance->amount??'')} as part/all of TUTION for {($transaction_instance->year->name??'')} ST. LOUIS UNIVERSITY INSTITUTE.";
-                            $this->sendSmsNotificaition($message, [auth('parents')->user()->phone]);
+                            // $message = "Hello ".$student->name??''.", You have successfully paid a sum of {($transaction_instance->amount??'')} as part/all of TUTION for {($transaction_instance->year->name??'')} ST. LOUIS UNIVERSITY INSTITUTE.";
+                            // $this->sendSmsNotificaition($message, [auth('parents')->user()->phone]);
                         } catch (\Throwable $th) {
                             DB::rollBack();
                             return back()->with('error', $th->getMessage());
@@ -373,16 +374,16 @@ class HomeController extends Controller
                         $trans['transaction_id'] = $transaction_instance->id;
                         $instance = new PayIncome($trans);
                         $instance->save();
-                        $message = "Hello ".$instance->student->name??''.", You have successfully paid a sum of ".$transaction_instance->amount??''." as ".$instance->income->name??''." for ".$transaction_instance->year->name??''." ST. LOUIS UNIVERSITY INSTITUTE.";
-                        $this->sendSmsNotificaition($message, [auth('parents')->user()->phone]);
+                        // $message = "Hello ".$instance->student->name??''.", You have successfully paid a sum of ".$transaction_instance->amount??''." as ".$instance->income->name??''." for ".$transaction_instance->year->name??''." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        // $this->sendSmsNotificaition($message, [auth('parents')->user()->phone]);
                     }elseif($type == 'PLATFORM'){
                         $trans = session()->get(config('tranzak.platform_data'));
                         $trans['transaction_id'] = $transaction_instance->id;
                         $_trans = ['student_id'=>$trans['student_id'], 'year_id'=>$trans['payment_id'], 'type'=>$type, 'item_id'=>$trans['payment_id'], 'amount'=>$transaction_instance->amount??'', 'financialTransactionId'=>$transaction_instance->id??'', 'used'=>1, 'parent'=>1];
                         $instance = new Charge($_trans);
                         $instance->save();
-                        $message = "Hello ".auth('parents')->user()->children()->first()->name??''.", You have successfully paid a sum of ".$transaction_instance->amount??''." as platform charges for ".$transaction_instance->year->name??''." ST. LOUIS UNIVERSITY INSTITUTE.";
-                        $this->sendSmsNotificaition($message, [auth('parents')->user()->phone]);
+                        // $message = "Hello ".auth('parents')->user()->children()->first()->name??''.", You have successfully paid a sum of ".$transaction_instance->amount??''." as platform charges for ".$transaction_instance->year->name??''." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        // $this->sendSmsNotificaition($message, [auth('parents')->user()->phone]);
                     }
                     DB::commit();
                     return redirect(route('parents.home'))->with('success', "Payment successful.");
@@ -434,14 +435,12 @@ class HomeController extends Controller
         }
         return view('parents.pay_fee', $data);
     }
-    
 
     public function tranzak_pay_other_incomes ()
     {
         $data['title'] = "Pay Other Incomes";
         return view('parents.pay_others', $data);
     }
-
 
     public function tranzak_pay_fee_momo (Request $request, $student_id)
     {
@@ -470,7 +469,6 @@ class HomeController extends Controller
         }
     }
 
-
     public function tranzak_pay_other_incomes_momo (Request $request, $student_id)
     {
         $validator = Validator::make($request->all(),
@@ -494,7 +492,6 @@ class HomeController extends Controller
 
         return $this->tranzak_pay($request->payment_purpose, $request, $student_id);
     }
-
 
     public function tranzak_pay(string $purpose, $request, $student_id){
 
@@ -586,7 +583,6 @@ class HomeController extends Controller
         return view('parents.contact_school', $data);
     }
     
-
     public function tranzak_platform()
     {
         # code...
@@ -598,6 +594,7 @@ class HomeController extends Controller
         $data['amount'] = $plcharge->parent_amount??0;
         return view('parents.pay_platform', $data);
     }
+
     public function tranzak_platform_pay(Request $request)
     {
         # code...
