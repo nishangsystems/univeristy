@@ -251,7 +251,7 @@ class HomeController extends Controller
                 ];
             }
             if($request->has('amount') && $request->amount > ($value['total']-$value['balance'])){continue;}
-            if(($value['total_balance'] > 0 || $value['total'] == 0 ) && $type == 'uncompleted'){
+            if(($value['total_balance'] > 0) && $type == 'uncompleted'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,

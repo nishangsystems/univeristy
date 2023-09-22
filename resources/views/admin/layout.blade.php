@@ -283,14 +283,14 @@
 
                         <b class="arrow"></b>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.set_background_image')}}
                         </a>
 
                         <b class="arrow"></b>
-                    </li>
+                    </li> --}}
                     <li>
                         <a href="{{route('admin.set_watermark')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>

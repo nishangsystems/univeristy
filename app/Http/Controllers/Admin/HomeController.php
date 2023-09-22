@@ -265,6 +265,21 @@ class HomeController  extends Controller
         return view('admin.setting.setsemester', $data);
     }
 
+    public function postsemesterminfee(Request $request, $semester_id)
+    {
+        $validity = Validator::make($request->all(), ['semester_min_fee'=>'required']);
+        if($validity->fails()){
+            return back()->with('error', $validity->errors()->first());
+        }
+        $semester = Semester::find($semester_id);
+        if($semester != null){
+            $semester->semester_min_fee = $request->semester_min_fee;
+            $semester->save();
+            return back()->with('success', __('text.word_Done'));
+        }
+        return back();
+    }
+
     public function postsemester(Request $request, $id)
     {
         # code...
