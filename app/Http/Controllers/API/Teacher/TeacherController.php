@@ -16,6 +16,7 @@ use App\Models\StudentAttendance;
 use App\Models\Students;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
+use App\Models\TeachersSubject;
 
 class TeacherController
 {
@@ -38,7 +39,7 @@ class TeacherController
 
     }
 
-    public function notifications(Request $request,$campus_id, $level_id){
+    public function notifications(Request $request){
         if($request->teacher_id){
             $teacher = User::find($request->teacher_id);
         }else{
@@ -77,12 +78,19 @@ class TeacherController
 
     public function subjects(Request $request,$campus_id, $class_id){
         $unit = ProgramLevel::find($class_id);
+        if($request->teacher_id){
+            $teacher = User::find($request->teacher_id);
+        }else{
+            $teacher = Auth('api')->user();
+        }
         $data['title'] = 'My '.$unit->program()->first()->name.' : LEVEL '.$unit->level()->first()->level;
         $data['subjects'] = \App\Models\Subjects::join('teachers_subjects', ['teachers_subjects.subject_id'=>'subjects.id'])
             ->where(['teachers_subjects.class_id'=>$class_id])
+            ->where(['teachers_subjects.teacher_id'=>$teacher->id])
             ->where(function($q)use ($request, $campus_id){
                 $request->has('campus') ? $q->where(['teachers_subjects.campus_id'=>$campus_id]):null;
-            })->distinct()->select(['subjects.*','teachers_subjects.class_id as class', 'teachers_subjects.campus_id'])->get();
+            })->distinct()
+            ->select(['subjects.*','teachers_subjects.class_id as class', 'teachers_subjects.campus_id'])->get();
 
 
         $data['success'] = 200;
@@ -91,12 +99,17 @@ class TeacherController
 
 
     public function students(Request $request, $campus_id, $_id){
+        if($request->teacher_id){
+            $teacher = User::find($request->teacher_id);
+        }else{
+            $teacher = Auth('api')->user();
+        }
+
         if($request->get('type', 'course') === "class"){
             //if the _id is class id
             $class = ProgramLevel::find($_id);
             $data['class'] = $class;
 
-            // $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
             $data['students'] = StudentClass::where('class_id', '=', $_id)
                 ->where('year_id', '=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
                 ->join('students', ['students.id'=>'student_classes.student_id'])
@@ -113,8 +126,9 @@ class TeacherController
             $data['class'] = $class;
 
             $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
-            $semester = $request->semester ?? Helpers::instance()->getCurrentSemester();
-            // $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
+            $teacherSubject = TeachersSubject::where(['teacher_id'=>$teacher->id,'subject_id'=>$_id])->orderBy('id','DESC')->first();
+            $semester = Helpers::instance()->getSemester(isset($teacherSubject)?$teacherSubject->class_id:"");
+        
             
             $data['students'] = Students::whereHas('course_pivot', function($query) use ($year, $_id, $semester){
                                     $query->WHERE(['year_id'=>$year, 'course_id'=>$_id, 'semester_id'=>$semester]);

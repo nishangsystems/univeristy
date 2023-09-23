@@ -55,7 +55,7 @@ Route::get('attendance', [App\Http\Controllers\API\PageController::class, 'stude
 
 Route::group([ 'prefix' => 'teacher'], function() {
     Route::get('classes', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'classes']);
-    Route::get('{campus_id}/notifications/{level_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'notifications']);
+    Route::get('notifications', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'notifications']);
     Route::get('{campus_id}/subjects/{class_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'subjects']);
     Route::get('{campus_id}/student/{class_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'students']);
     Route::get('{class_id}/attendance', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'attendance']);
