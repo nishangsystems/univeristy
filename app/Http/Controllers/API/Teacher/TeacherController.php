@@ -83,6 +83,7 @@ class TeacherController
         }else{
             $teacher = Auth('api')->user();
         }
+        $data['teacher_id'] = $teacher->id;
         $data['title'] = 'My '.$unit->program()->first()->name.' : LEVEL '.$unit->level()->first()->level;
         $data['subjects'] = \App\Models\Subjects::join('teachers_subjects', ['teachers_subjects.subject_id'=>'subjects.id'])
             ->where(['teachers_subjects.class_id'=>$class_id])
@@ -129,7 +130,7 @@ class TeacherController
             $teacherSubject = TeachersSubject::where(['teacher_id'=>$teacher->id,'subject_id'=>$_id])->orderBy('id','DESC')->first();
             $semester = Helpers::instance()->getSemester(isset($teacherSubject)?$teacherSubject->class_id:"");
         
-            
+            $data['semester'] = $semester;
             $data['students'] = Students::whereHas('course_pivot', function($query) use ($year, $_id, $semester){
                                     $query->WHERE(['year_id'=>$year, 'course_id'=>$_id, 'semester_id'=>$semester]);
                                 })->get();
