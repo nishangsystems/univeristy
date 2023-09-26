@@ -39,16 +39,7 @@ Route::get('/clear', function () {
 
 });
 
-// Route::get('fill_campus_degrees', function(){
-//     foreach (\App\Models\Campus::all() as $key => $value) {
-//         # code...
-//         $cps_degs = \App\Models\Degree::all()->map(function($el)use($value){
-//             return ['campus_id'=>$value->id, 'degree_id'=>$el->id];
-//         })->toArray();
-//         CampusDegree::insert($cps_degs);
-//     }
-// });
-
+Route::get('promotion/class_target/{class_id}', [Homecontroller::class, 'class_target'])->name('promotion.class.target');
 Route::get('set_local/{lang}', [Controller::class, 'set_local'])->name('lang.switch');
 
 Route::get('payment-form',[TransactionController::class,'paymentForm'])->name('payment_form');
