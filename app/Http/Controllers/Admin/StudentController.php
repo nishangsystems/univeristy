@@ -587,6 +587,7 @@ class StudentController extends Controller
         $data['class_pairs'] = $classes;
         $data['class_names'] = $class_names;
         $data['classes'] = $this->getMainClasses();
+        // return config('tranzak.tranzak');
         return view('admin.student.initialise-promotion', $data);
     }
 
