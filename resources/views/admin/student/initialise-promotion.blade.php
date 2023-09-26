@@ -54,7 +54,7 @@ $next_year = $year+1;
                     <div class="form-group py-1 row">
                         <label for="cname" class="text-secondary col-md-3 col-lg-3">{{__('text.word_from')}} </label>
                         <div class="col-md-9 col-lg-9">
-                            <select name="class_from" class="form-control text-dark rounded section text-capitalize" id="section" onchange="set_target()">
+                            <select name="class_from" class="form-control text-dark rounded section text-capitalize" id="class_section" oninput="set_target()">
                                 <option selected disabled>{{__('text.select_section')}}</option>
                                 @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $class)
                                 <option value="{{$class['id']}}">{{$class['name']}}</option>
@@ -69,16 +69,10 @@ $next_year = $year+1;
                 <div id="section w-100">
                     <div class="form-group py-1 row text-capitalize">
                         <label for="cname" class="text-secondary col-md-3 col-lg-3">{{__('text.word_to')}} </label>
-                        <div class="col-md-9 col-lg-9">
-                            <select name="class_to" class="form-control text-dark rounded section" id="section" onchange="set_target()">
-                                <option selected disabled>{{__('text.select_target_section')}}</option>
-                                @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $class)
-                                <option value="{{$class['id']}}">{{$class['name']}}</option>
-                                @empty
-                                <option>{{__('text.no_sections_created')}}</option>
-                                @endforelse
+                        <div class="col-md-9 col-lg-9" id="nex_class_section">
+                            <select name="class_to" class="form-control text-dark rounded section text-uppercase">
+                                <option disabled>{{__('text.select_target_section')}}</option>
                             </select>
-                            <div class="children"></div>
                         </div>
                     </div>
                 </div>
@@ -95,6 +89,25 @@ $next_year = $year+1;
 @endsection
 @section('script')
 <script>
-    
+    function set_target(){
+        let c_from = $('#class_section').val();
+        let url = "{{ route('promotion.class.target', '__CLASSID__') }}".replace('__CLASSID__', c_from);
+        // console.log(url);
+        $.ajax({
+            method: 'get',
+            url: url,
+            success: function(data){
+                // console.log(data);
+                let html = "";
+                html += `<select name="class_to" class="form-control text-dark rounded section text-uppercase">
+                        <option disabled>{{__('text.select_target_section')}}</option>`;
+                data.classes.forEach(_class => {
+                    html += `<option value="`+_class.id+`">`+_class.name+`</option>`
+                });
+                html += `</select>`;
+                $('#nex_class_section').html(html);
+            }
+        });
+    }
 </script>
 @endsection
