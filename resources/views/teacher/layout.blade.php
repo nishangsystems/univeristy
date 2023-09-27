@@ -8,6 +8,7 @@
 
     <meta name="description" content="overview &amp; stats" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- bootstrap & fontawesome -->
     <link rel="stylesheet" href="{{asset('css/app.css')}}" />
@@ -343,6 +344,14 @@
                 <a href="{{route('user.notifications')}}" class="text-capitalize">
                     <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
                     {{__('text.word_notifications')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
+         
+            <li>
+                <a href="{{route('user.course.attendance.index')}}" class="text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
+                    {{__('text.student_attendance')}}
                 </a>
                 <b class="arrow"></b>
             </li>

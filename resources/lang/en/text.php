@@ -850,5 +850,11 @@ return [
     'permission_denied'=>'permission denied',
     'school_contacts'=>'school contacts',
     'debts_recovered'=>'debts recovered',
-    'result_access_min_fee'=>'result-access min-fee'
+    'result_access_min_fee'=>'result-access min-fee',
+    'take_course_attendance'=>'take student attendance',
+    'student_attendance'=>'student attendance',
+    'confirm_attendance'=>'confirm attendance',
+    'word_confirm'=>'confirm',
+    'record_attendance'=>'record attendance',
+    ''
 ];
