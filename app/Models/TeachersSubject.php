@@ -19,7 +19,7 @@ class TeachersSubject extends Model
     protected $connection = 'mysql';
 
     public function subject(){
-        return $this->belongsTo(ClassSubject::class, 'subject_id');
+        return $this->belongsTo(Subjects::class, 'subject_id');
     }
 
     public function class(){

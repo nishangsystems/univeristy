@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Helpers\Helpers;
 use App\Models\Batch;
 use App\Models\ClassMaster;
 use App\Models\SchoolUnits;
+use App\Models\Students;
 use App\Models\Term;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\DailyAttendance;
 use App\Models\ProgramLevel;
+use App\Models\StudentAttendance;
 use App\Models\StudentClass;
+use App\Models\TeachersSubject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use \Session;
@@ -104,5 +109,75 @@ class ClassController extends Controller
         return view('teacher.rank')->with($data);
     }
 
+    public function attendannce_index(Request $request)
+    {
+        $data['title'] = __('text.take_course_attendance');
+        $data['courses'] = \App\Models\TeachersSubject::where([
+            'teacher_id' => auth()->id(),
+            'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear(),
+        ])->join('subjects', ['subjects.id'=>'teachers_subjects.subject_id'])
+        ->distinct()->select('subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id', 'teachers_subjects.id as teacher_subject_id')->get();
+        return view('teacher.course.attendance_index', $data);
+    }
+
+    public function setup_attendance_course(Request $request, $course_id) //$course_id refers to teacher courses
+    {
+        $data['title'] = __('text.confirm_attendance');
+        $data['teacher_subject'] = TeachersSubject::find($course_id);
+        return view('teacher.course.attendance_setup', $data);
+    }
+
+    public function record_attendance(Request $request, $teacher_subject_id)
+    {
+        $data['title'] = __('text.record_attendance');
+        $teacher_subject = TeachersSubject::find($teacher_subject_id);
+        $data['course'] = $teacher_subject->subject;
+        if($teacher_subject != null){
+            $da = DailyAttendance::where(['teacher_id'=>$teacher_subject->teacher_id, 'course_id'=>$teacher_subject->subject_id, 'year'=>Helpers::instance()->getCurrentAccademicYear()])->whereDate('created_at', ' > ', now()->subHours(3)->format(DATE_ATOM))->get();
+            if($da->count() == null){
+                $dA = new DailyAttendance();
+                $dA->year = Helpers::instance()->getCurrentAccademicYear();
+                $dA->course_id = $teacher_subject->subject_id;
+                $dA->teacher_id = $teacher_subject->teacher_id;
+                $dA->save();
+                $data['attendance_id'] = $dA->id;
+            }else{
+                $data['attendance_id'] = $da->first()->id;
+            }
+            return view('teacher.course.record_attendance', $data);
+        }
+    }
+
+    public function record_attendance_save(Request $request, $attendance_id)
+    {
+        try {
+            //code...
+            // return $attendance_id;
+            $matric = $request->matric;
+            $course_id = $request->course_id;
+            $attendance = DailyAttendance::find($attendance_id);
+            // return $attendance;
+            if($matric != null){
+                $student = Students::where('matric', $matric)->first();
+                if(StudentAttendance::where(['student_id'=> $student->id, 'attendance'=>$attendance_id, 'year'=>Helpers::instance()->getCurrentAccademicYear()])->count() > 0){ goto _RETURN;}
+                $att = new StudentAttendance();
+                
+                $att->year = Helpers::instance()->getCurrentAccademicYear();
+                $att->student_id = $student->id??null;
+                $att->course_id = $course_id;
+                $att->attendance = $attendance_id;
+                $att->teacher_id = auth()->id();
+                $att->save();
+                // return 1;
+                
+                _RETURN:
+                $students = $attendance->attedance()->join('students', 'students.id', '=', 'student_attendance.student_id')->distinct()->get(['students.name', 'students.matric']);
+                return response()->json(['students'=>$students]);
+            }
+            return response()->setStatusCode(500);
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+    }
 
 }

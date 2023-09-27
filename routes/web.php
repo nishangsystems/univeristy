@@ -12,6 +12,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Parents\HomeController as ParentsHomeController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\Student\HomeController as StudentHomeController;
+use App\Http\Controllers\Teacher\ClassController;
 use App\Http\Controllers\Teacher\HomeController as TeacherHomeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Transactions;
@@ -571,6 +572,12 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::get('bycourse/{subject_id}/show', [TeacherHomeController::class, 'attendance_bycourse'])->name('by_course');
         Route::get('bymonth/index', [TeacherHomeController::class, 'attendance_bymonth_index'])->name('by_month.index');
         Route::get('bymonth/{month}/show', [TeacherHomeController::class, 'attendance_bymonth'])->name('by_month');
+    });
+    Route::name('course.attendance.')->prefix('course/attendance')->group(function(){
+        Route::get('', [ClassController::class, 'attendannce_index'])->name('index');
+        Route::get('setup/{teacher_course_id}', [ClassController::class, 'setup_attendance_course'])->name('setup');
+        Route::get('record/{teacher_course_id}', [ClassController::class, 'record_attendance'])->name('record');
+        Route::post('record/{attendance_id}', [ClassController::class, 'record_attendance_save'])->name('record');
     });
 });
 
