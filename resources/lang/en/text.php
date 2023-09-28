@@ -856,5 +856,6 @@ return [
     'confirm_attendance'=>'confirm attendance',
     'word_confirm'=>'confirm',
     'record_attendance'=>'record attendance',
+    'record_attendance_for'=>'record attendance for :title (:code)',
     ''
 ];

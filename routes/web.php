@@ -578,6 +578,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::get('setup/{teacher_course_id}', [ClassController::class, 'setup_attendance_course'])->name('setup');
         Route::get('record/{teacher_course_id}', [ClassController::class, 'record_attendance'])->name('record');
         Route::post('record/{attendance_id}', [ClassController::class, 'record_attendance_save'])->name('record');
+        Route::get('drop/{student_attendance_id}', [ClassController::class, 'drop_student_attendance'])->name('drop');
     });
 });
 

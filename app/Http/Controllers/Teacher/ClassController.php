@@ -129,20 +129,22 @@ class ClassController extends Controller
 
     public function record_attendance(Request $request, $teacher_subject_id)
     {
-        $data['title'] = __('text.record_attendance');
         $teacher_subject = TeachersSubject::find($teacher_subject_id);
         $data['course'] = $teacher_subject->subject;
+        $data['title'] = __('text.record_attendance_for', ['title'=>$data['course']->name, 'code'=>$data['course']->code]).' - '.now()->format(DATE_RFC850);
         if($teacher_subject != null){
-            $da = DailyAttendance::where(['teacher_id'=>$teacher_subject->teacher_id, 'course_id'=>$teacher_subject->subject_id, 'year'=>Helpers::instance()->getCurrentAccademicYear()])->whereDate('created_at', ' > ', now()->subHours(3)->format(DATE_ATOM))->get();
-            if($da->count() == null){
+            $da = DailyAttendance::where(['teacher_id'=>$teacher_subject->teacher_id, 'course_id'=>$teacher_subject->subject_id, 'year'=>Helpers::instance()->getCurrentAccademicYear()])->whereTime('created_at', ' > ', now()->addHours(-3)->format(DATE_ATOM))->first();
+            if($da == null){
                 $dA = new DailyAttendance();
                 $dA->year = Helpers::instance()->getCurrentAccademicYear();
                 $dA->course_id = $teacher_subject->subject_id;
                 $dA->teacher_id = $teacher_subject->teacher_id;
                 $dA->save();
                 $data['attendance_id'] = $dA->id;
+                $data['students'] = $dA->attedance()->join('students', 'students.id', '=', 'student_attendance.student_id')->orderBy('id', 'DESC')->distinct()->get(['student_attendance.id', 'students.name', 'students.matric']);
             }else{
-                $data['attendance_id'] = $da->first()->id;
+                $data['attendance_id'] = $da->id;
+                $data['students'] = $da->attedance()->join('students', 'students.id', '=', 'student_attendance.student_id')->orderBy('id', 'DESC')->distinct()->get(['student_attendance.id', 'students.name', 'students.matric']);
             }
             return view('teacher.course.record_attendance', $data);
         }
@@ -171,12 +173,28 @@ class ClassController extends Controller
                 // return 1;
                 
                 _RETURN:
-                $students = $attendance->attedance()->join('students', 'students.id', '=', 'student_attendance.student_id')->distinct()->get(['students.name', 'students.matric']);
+                $students = $attendance->attedance()->join('students', 'students.id', '=', 'student_attendance.student_id')->orderBy('id', 'DESC')->distinct()->get(['student_attendance.id', 'students.name', 'students.matric']);
                 return response()->json(['students'=>$students]);
             }
             return response()->setStatusCode(500);
         } catch (\Throwable $th) {
             return $th->getMessage();
+        }
+    }
+
+    public function drop_student_attendance(Request $request, $sa_id)
+    {
+        # code...
+        try{
+            $student_attendance = StudentAttendance::find($sa_id);
+            if($student_attendance  != null){
+                $da = DailyAttendance::find($student_attendance->attendance);
+                $student_attendance->delete();
+                $students = $da->attedance()->join('students', 'students.id', '=', 'student_attendance.student_id')->orderBy('id', 'DESC')->distinct()->get(['student_attendance.id', 'students.name', 'students.matric']);
+                return response()->json(['students'=>$students]);
+            }
+        }catch(\Throwable $th){
+            return $th->getMessage;
         }
     }
 

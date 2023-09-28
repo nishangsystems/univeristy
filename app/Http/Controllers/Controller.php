@@ -192,7 +192,7 @@ class Controller extends BaseController
      * @param array|Collection $contacts
      * @return bool
      */
-    public static function sendSmsNotificaition(String $message_text, $contacts, $message_id = null)
+    public static function sendSmsNotificaition(String $message_text, $contacts, $message_id = null, $record = 0)
     {
         $sms_sender_address = env('SMS_SENDER_ADDRESS');
         // dd($contacts);
@@ -216,7 +216,7 @@ class Controller extends BaseController
         // SEND SMS PROPER
         $sent = Self::sendSMS($cleaned_contacts, $message_text);
 
-        if($sent == true){
+        if($sent == true && $record > 0){
             // update sms counts record
             $config = ModelsConfig::where('year_id', Helpers::instance()->getCurrentAccademicYear())->first();
             $config->sms_sent += count($cleaned_contacts);
