@@ -5,7 +5,7 @@
     <div class="row py-4">
         <div class="col-sm-12 col-md-6 px-2">
             @csrf
-            <input class="form-control input-lg rounded" name="matric" onchange="record_attendance(event)">
+            <input class="form-control input-lg rounded" name="matric" onchange="record_attendance(event)" autofocus>
         </div>
         <div class="col-sm-12 col-md-6 px-2">
             <div class="d-flex justify-content-center text-dark text-capitalize" style="font-size: large; font-weight:bolder;">{{ __('text.word_total') }} : <span id="total_attendance">{{ count($students) }}</span></div>

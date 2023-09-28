@@ -754,7 +754,7 @@ class ProgramController extends Controller
                             ->whereIn('class_id', $classes)->where('year_id', '=', $year)->orderBy('students.name')->distinct()
                             ->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
                 
-                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id, 1);
                 break;
             
             case 'FACULTY' :
@@ -773,7 +773,7 @@ class ProgramController extends Controller
                             ->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
 
 
-                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id, 1);
                 
                 break;
 
@@ -792,7 +792,7 @@ class ProgramController extends Controller
                         ->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
                 // dd($students);
                 
-                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id, 1);
                 
                 break;
 
@@ -806,7 +806,7 @@ class ProgramController extends Controller
                             ->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
                 // dd($students);
 
-                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id, 1);
 
                 break;
                 
@@ -820,7 +820,7 @@ class ProgramController extends Controller
                             ->distinct()->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
                 // $data['students'] = $students;
                 
-                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id, 1);
 
                 // return view('admin.student.bulk_list', $data);
                 break;
@@ -836,7 +836,7 @@ class ProgramController extends Controller
                             ->orderBy('students.name')->distinct()->whereNotNull($recipients_field)->pluck($recipients_field)->toArray();
                 // $data['students'] = $students;
 
-                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id);
+                $resp = Self::sendSmsNotificaition($request->text, $contacts, $message->id, 1);
 
                 break;
             

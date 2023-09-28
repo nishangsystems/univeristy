@@ -131,7 +131,7 @@ class ClassController extends Controller
     {
         $teacher_subject = TeachersSubject::find($teacher_subject_id);
         $data['course'] = $teacher_subject->subject;
-        $data['title'] = __('text.record_attendance_for', ['title'=>$data['course']->name, 'code'=>$data['course']->code]);
+        $data['title'] = __('text.record_attendance_for', ['title'=>$data['course']->name, 'code'=>$data['course']->code]).' - '.now()->format(DATE_RFC850);
         if($teacher_subject != null){
             $da = DailyAttendance::where(['teacher_id'=>$teacher_subject->teacher_id, 'course_id'=>$teacher_subject->subject_id, 'year'=>Helpers::instance()->getCurrentAccademicYear()])->whereTime('created_at', ' > ', now()->addHours(-3)->format(DATE_ATOM))->first();
             if($da == null){
