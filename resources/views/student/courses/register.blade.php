@@ -108,6 +108,7 @@
             }
         })
     }
+    
     function getCourses(div = null){
         if (div == null) {
             value = "{{$student_class->level()->first()->id}}";
