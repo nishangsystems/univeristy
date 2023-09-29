@@ -135,7 +135,7 @@ class ApiController extends Controller
     public function store_student(Request $request)
     {
         # code...
-        $student = json_decode($request->query('student'))??collect([]);
+        $student = json_decode($request->student);
         // return $student;
         if($student == null){
             return response(json_encode(['data'=>'No student data specified']), 400);

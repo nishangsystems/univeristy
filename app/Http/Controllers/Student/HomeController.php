@@ -778,37 +778,6 @@ class HomeController extends Controller
         return view('student.courses.index', $data);
     }
 
-    // public function registered_resit_courses(Request $request)
-    // {
-    //     # code...
-    //     $data['title'] = "Registered Courses ".Helpers::instance()->getSemester(Students::find(auth('student')->id())->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->class_id)->name." ".\App\Models\Batch::find(Helpers::instance()->getYear())->name;
-    //     $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth('student')->id()])->where(['year_id'=>Helpers::instance()->getYear()])->first()->class_id);
-    //     $data['cv_total'] = ProgramLevel::find(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->program()->first()->max_credit;        
-        
-    //     $student = auth('student')->id();
-    //     $year = Helpers::instance()->getYear();
-    //     $fee = [
-    //         'amount' => array_sum(
-    //             \App\Models\Payments::where('payments.student_id', '=', $student)
-    //             ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
-    //             ->where('payment_items.name', '=', 'TUTION')
-    //             ->where('payments.batch_id', '=', $year)
-    //             ->pluck('payments.amount')
-    //             ->toArray()
-    //         ),
-    //         'total' => 
-    //                 \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-    //                 ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
-    //                 ->where('payment_items.name', '=', 'TUTION')
-    //                 ->whereNotNull('payment_items.amount')
-    //                 ->join('students', 'students.program_id', '=', 'program_levels.id')
-    //                 ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
-    //         'fraction' => Helpers::instance()->getSemester(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->courses_min_fee
-    //     ];
-    //     $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-    //     $data['access'] = $fee['amount'] >= $data['min_fee'];
-    //     return view('student.courses.index', $data);
-    // }
 
     public static function registerd_courses($year = null, $semester = null, $student = null )
     {
@@ -898,6 +867,7 @@ class HomeController extends Controller
             return back()->with('error', $th->getFile().' : '.$th->getLine().' :: '.$th->getMessage());
         }
     }
+    
     public function download_courses($year, $semester)//takes class course id
     {
         # code...
