@@ -266,4 +266,48 @@ class Controller extends BaseController
         return (new FocusTargetSms($phone_numbers, $message))->send();
 
     }
+
+    public function notify_app($app_data)
+    {
+        $responseData = [];
+            $server_key = env('FIREBASE_SERVER_KEY', "");
+            $vendor = cache()->remember('vendor_of_the_day_'.$country->code, 86400, function () use ($country){
+                $vendors  = User::where('country', $country->code)->where('type','vendor')->where('status','approved')->with('vendor')->whereHas('products', function ($q) {},'>=', 5)->get();
+                return $vendors->random();
+            });
+            $msg = array(
+                'body'  => $app_data['body'],
+                'title' => $app_data['title'],
+                'click_action'=>'OPEN_VENDOR_DETAIL_ACTIVITY'
+            );
+
+            $fields = array(
+                'to'  => $app_data['to'],
+                'notification'  => $msg,
+                "data"=> [
+                    'action'=>"vendor of the day",
+                    'vendor' => Vendors::make($vendor)
+                ]
+            );
+            $headers = array
+            (
+                'Authorization: key=' . $server_key,
+                'Content-Type: application/json'
+            );
+            $ch = curl_init();
+            curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+            curl_setopt( $ch,CURLOPT_POST, true );
+            curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+            curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+            curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+            curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ));
+            $result = curl_exec($ch );
+            if ($result === FALSE)
+            {
+                die('FCM Send Error: ' . curl_error($ch));
+            }
+            $result = json_decode($result,true);
+            $responseData['android'] =["result" =>$result ];
+            curl_close( $ch );
+    }
 }

@@ -34,6 +34,7 @@
                                 <a class="btn btn-sm btn-primary" href="{{route('admin.student.bulk.list', ['filter'=>$filter, 'item_id'=>$row['id']])}}">{{__('text.word_students')}}</a>
                                 <a class="btn btn-sm btn-success" href="{{route('admin.messages.bulk', ['filter'=>$filter, 'item_id'=>$row['id'], 'recipients'=>'students'])}}">{{__('text.notify_students')}}</a>
                                 <a class="btn btn-sm btn-info" href="{{route('admin.messages.bulk', ['filter'=>$filter, 'item_id'=>$row['id'], 'recipients'=>'parents'])}}">{{__('text.notify_parents')}}</a>
+                                <a class="btn btn-sm btn-dark" href="{{route('notifications.create', ['layer'=>$filter, 'layer_id'=>$row['id'], 'campus_id'=>auth()->user()->campus_id??0])}}">{{__('text.create_notification')}}</a>
                             </td>
                         </tr>
                     @endforeach

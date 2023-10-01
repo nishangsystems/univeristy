@@ -156,42 +156,48 @@ class NotificationsController extends Controller
             'visibility'=>'required|in:general,students,teachers,admins',
             'message'=>'required'
         ]);
-
+        // dd($request->all());
         try {
+            $app_title = $request->title.'/'.$request->visibility.'_';
             $data = $request->all();
             $data['campus_id'] = $campus_id;
             $data['user_id'] = auth()->id();
             $data['school_unit_id'] = $request->school_unit_id == 0 ? null : $request->school_unit_id;
             switch ($layer) {
-                case 'S':
+                case 'S': case 'SCHOOL':
                     # code...
                     // $data['unit_id'] = 1;
                     // $data['school_unit_id'] = $layer_id;
                     break;
-                case 'F':
+                case 'F': case 'FACULTY':
                     # code...
+                    $app_title .= 'faculty_'.$request->school_unit_id;
                     $data['unit_id'] = 2;
                     $data['school_unit_id'] = $layer_id;
                     break;
-                case 'D':
+                case 'D': case 'DEPARTMENT':
                     # code...
+                    $app_title .= 'department_'.$request->school_unit_id;
                     $data['unit_id'] = 3;
                     $data['school_unit_id'] = $layer_id;
                     break;
-                case 'P':
+                case 'P': case 'PROGRAM':
                     # code...
+                    $app_title .= 'program_'.$request->school_unit_id;
                     $data['unit_id'] = 4;
                     $data['school_unit_id'] = $layer_id;
                     break;
-                case 'C':
+                case 'C': case 'CLASS':
                     # code...
-                    $class = ProgramLevel::find($layer_id);
+                    $class = ProgramLevel::find($layer_id == 0 ? $request->program_level_id : $layer_id);
+                    $app_title .= 'class_'.$class->id;
                     $data['unit_id'] = 4;
                     $data['school_unit_id'] = $class->program_id;
                     $data['level_id'] = $class->level_id;
                     break;
-                case 'L':
+                case 'L': case 'LEVEL':
                     # code...
+                    $app_title .= 'level_'.$request->level_id;
                     $data['unit_id'] = 4;
                     $data['level_id'] = $layer_id;
                     break;
@@ -201,6 +207,11 @@ class NotificationsController extends Controller
                     return back()->with('error', 'Unknown notification type.');
                     break;
             }
+            if($campus_id != 0 || auth()->user()->campus_id != null){
+                $app_title .= '_campus_'.($campus_id == 0 ? auth()->user()->campus_id : $campus_id);
+            }
+            $app_data = ['to'=>$app_title, 'title'=>$request->title, 'body'=>$request->message];
+            $this->notify_app($app_data);
             Notification::create($data);
             
             return redirect(route('notifications.index', [$layer, $layer_id, $campus_id]))->with('success', 'Done');
