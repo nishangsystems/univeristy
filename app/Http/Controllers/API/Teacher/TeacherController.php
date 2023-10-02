@@ -194,12 +194,12 @@ class TeacherController
         $class = ProgramLevel::find($course_id);
         $data['class'] = $class;
         $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
-        $teacherSubject = TeachersSubject::where(['teacher_id'=>$teacher->id,'subject_id'=>$_id])->orderBy('id','DESC')->first();
+        $teacherSubject = TeachersSubject::where(['teacher_id'=>$teacher->id,'subject_id'=>$course_id])->orderBy('id','DESC')->first();
         $semester = Helpers::instance()->getSemester(isset($teacherSubject)?$teacherSubject->class_id:"");
 
         $data['semester'] = $semester;
-        $students = Students::whereHas('course_pivot', function($query) use ($year, $_id, $semester){
-            $query->WHERE(['year_id'=>$year, 'course_id'=>$_id, 'semester_id'=>$semester]);
+        $students = Students::whereHas('course_pivot', function($query) use ($year, $course_id, $semester){
+            $query->WHERE(['year_id'=>$year, 'course_id'=>$course_id, 'semester_id'=>$semester]);
         })->get();
         $data['success'] = 200;
         $data['students'] = StudentAttendanceResource::collection($students);
