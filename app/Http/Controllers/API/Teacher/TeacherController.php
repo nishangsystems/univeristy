@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Teacher;
 
 use App\Http\Resources\NotificationResource;
+use App\Http\Resources\StudentAttendanceResource;
 use App\Http\Resources\TeacherClassResource;
 use App\Models\ClassMaster;
 use App\Models\Notification;
@@ -182,4 +183,26 @@ class TeacherController
          $data['message'] = "Success";
          return response()->json($data);
      }
+
+    public function studentAttendance(Request $request){
+        if($request->teacher_id){
+            $teacher = User::find($request->teacher_id);
+        }else{
+            $teacher = Auth('api')->user();
+        }
+        $course_id = $request->get('course_id');
+        $class = ProgramLevel::find($course_id);
+        $data['class'] = $class;
+        $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
+        $teacherSubject = TeachersSubject::where(['teacher_id'=>$teacher->id,'subject_id'=>$_id])->orderBy('id','DESC')->first();
+        $semester = Helpers::instance()->getSemester(isset($teacherSubject)?$teacherSubject->class_id:"");
+
+        $data['semester'] = $semester;
+        $students = Students::whereHas('course_pivot', function($query) use ($year, $_id, $semester){
+            $query->WHERE(['year_id'=>$year, 'course_id'=>$_id, 'semester_id'=>$semester]);
+        })->get();
+        $data['success'] = 200;
+        $data['students'] = StudentAttendanceResource::collection($students);
+        return response()->json($data);
+    }
 }
