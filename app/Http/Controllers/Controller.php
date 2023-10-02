@@ -271,22 +271,16 @@ class Controller extends BaseController
     {
         $responseData = [];
             $server_key = env('FIREBASE_SERVER_KEY', "");
-            $vendor = cache()->remember('vendor_of_the_day_'.$country->code, 86400, function () use ($country){
-                $vendors  = User::where('country', $country->code)->where('type','vendor')->where('status','approved')->with('vendor')->whereHas('products', function ($q) {},'>=', 5)->get();
-                return $vendors->random();
-            });
             $msg = array(
                 'body'  => $app_data['body'],
                 'title' => $app_data['title'],
-                'click_action'=>'OPEN_VENDOR_DETAIL_ACTIVITY'
             );
 
             $fields = array(
-                'to'  => $app_data['to'],
+                'to'  => 'topic/'.$app_data['to'],
                 'notification'  => $msg,
                 "data"=> [
-                    'action'=>"vendor of the day",
-                    'vendor' => Vendors::make($vendor)
+                    'action'=>"notfication",
                 ]
             );
             $headers = array
