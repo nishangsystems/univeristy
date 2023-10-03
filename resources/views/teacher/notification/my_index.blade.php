@@ -2,12 +2,14 @@
 
 
 @section('section')
-@if(!(auth()->user()->type == 'teacher' && auth()->user()->classes()->count() == 0))
-    <div class="row flex" style="padding:20px;">
-        <div>
-            <a href="{{route('notifications.create', [request('layer'), request('layer_id'), request('campus_id') ?? 0])}}" style="padding:5px; margin:10px; float:bottom;" class="btn-primary text-capitalize">{{__('text.create_new_notification')}}</a>
+@if(!(isset($can_create) and !$can_create))
+    @if(!(auth()->user()->type == 'teacher' && auth()->user()->classes()->count() == 0))
+        <div class="row flex" style="padding:20px;">
+            <div>
+                <a href="{{route('notifications.create', [request('layer'), request('layer_id'), request('campus_id') ?? 0])}}" style="padding:5px; margin:10px; float:bottom;" class="btn-primary text-capitalize">{{__('text.create_new_notification')}}</a>
+            </div>
         </div>
-    </div>
+    @endif
 @endif
 <div class="panel panel-default">
         <div class="panel-heading">
