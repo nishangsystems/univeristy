@@ -39,7 +39,7 @@
                 @foreach(\App\Models\SchoolUnits::where('unit_id', 4)->get() as $program)
                     <tr>
                         <th>{{$k++}}</th>
-                        <td>{{$program->name}} : <span class="text-primary">{{\App\Models\SchoolUnits::find($program->parent_id)->name}}</span></td>
+                        <td>{{$program->name??null}} : <span class="text-primary">{{\App\Models\SchoolUnits::find($program->parent_id)->name??null}}</span></td>
                         <td>{{$program->gradingType->name ?? null}}</td>
                         <td><a href="{{route('admin.grading.set_type', [$program->id])}}" class="btn btn-primary btn-sm">{{__('text.word_change')}}</a></td>
                     </tr>

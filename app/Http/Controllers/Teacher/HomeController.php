@@ -346,6 +346,7 @@ class HomeController extends Controller
                 };
         });
         $data['title'] = __('text.word_notifications');
+        $data['can_create'] = false;
         // dd($data);
         return view('teacher.notification.my_index', $data);
     }
