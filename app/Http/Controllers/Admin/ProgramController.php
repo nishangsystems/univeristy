@@ -6,8 +6,11 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
 use App\Http\Resources\StudentResourceMain;
+use App\Models\Background;
 use App\Models\Batch;
 use App\Models\ClassSubject;
+use App\Models\Degree;
+use App\Models\GradingType;
 use App\Models\Level;
 use App\Models\Message;
 use App\Models\ProgramLevel;
@@ -136,7 +139,7 @@ class ProgramController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'type' => 'required',
+            'type' => 'required'
         ]);
         DB::beginTransaction();
         try {
@@ -146,6 +149,9 @@ class ProgramController extends Controller
             $unit->parent_id = $request->input('parent_id');
             $unit->prefix = $request->input('prefix');
             $unit->suffix = $request->input('suffix');
+            $unit->degree_id = $request->input('degree_id')??null;
+            $unit->background_id = $request->input('background_id')??null;
+            $unit->grading_type_id = $request->input('grading_type_id')??null;
             $unit->save();
             DB::commit();
             return redirect()->to(route('admin.units.index', [$unit->parent_id]))->with('success', __('text.word_done'));
@@ -170,7 +176,11 @@ class ProgramController extends Controller
     public function create(Request $request, $parent_id)
     {
         $data['parent_id'] = $parent_id;
+
         $parent = \App\Models\SchoolUnits::find($parent_id);
+        $data['degrees'] = Degree::all();
+        $data['backgrounds'] = Background::all();
+        $data['grading_scales'] = GradingType::all();
         $data['title'] = $parent ? __('text.new_sub_unit_under', ['item'=>$parent->name]) : __('text.new_section');
         return view('admin.units.create')->with($data);
     }
