@@ -277,7 +277,7 @@ class Controller extends BaseController
             );
 
             $fields = array(
-                'to'  => 'topic/'.$app_data['to'],
+                'to'  => '/topics/'.$app_data['to'],
                 'notification'  => $msg,
                 "data"=> [
                     'action'=>"notfication",
