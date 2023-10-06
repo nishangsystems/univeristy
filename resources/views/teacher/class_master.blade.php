@@ -1,9 +1,6 @@
 @extends('teacher.layout')
 @section('section')
     <div class="col-sm-12">
-        <p class="text-muted">
-           My Classes
-        </p>
 
         <div class="content-panel">
             <div class="adv-table table-responsive">

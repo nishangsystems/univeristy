@@ -166,6 +166,9 @@ class ProgramController extends Controller
         $lang = !$request->lang ? 'en' : $request->lang;
         \App::setLocale($lang);
         $data['id'] = $id;
+        $data['degrees'] = Degree::all();
+        $data['backgrounds'] = Background::all();
+        $data['grading_scales'] = GradingType::all();
         $unit = \App\Models\SchoolUnits::find($id);
         $data['unit'] = $unit;
         $data['parent_id'] = \App\Models\SchoolUnits::find($id)->parent_id;
@@ -197,6 +200,9 @@ class ProgramController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'type' => 'required',
+            'degree_id'=>'required',
+            'background_id'=>'required',
+            'grading_type_id'=>'required',
         ]);
 
         DB::beginTransaction();
@@ -207,6 +213,9 @@ class ProgramController extends Controller
             $unit->prefix = $request->input('prefix');
             $unit->suffix = $request->input('suffix');
             $unit->parent_id = $request->input('parent_id');
+            $unit->degree_id = $request->degree_id??$unit->degree_id;
+            $unit->background_id = $request->background_id??$unit->background_id;
+            $unit->grading_type_id = $request->grading_type_id??$unit->grading_type_id;
             $unit->save();
             DB::commit();
 

@@ -29,10 +29,14 @@ class ClassController extends Controller
         // $data['courses'] = 
     }
 
-    public function program_levels_list($department_id)
+    public function program_levels_list(Request $request, $department_id)
     {
         # code...
-        $data['title'] = "Class List".(request()->has('campus_id') ? \App\Models\Campus::find(request('campus_id'))->first()->name : '').(request()->has('id') ? ' For '.\App\Models\ProgramLevel::find(request('id'))->program()->first()->name.' Level '.\App\Models\ProgramLevel::find(request('id'))->level()->first()->level : null);
+        if(!$request->has('id')){
+            $data['title'] = "Classes ".($request->campus_id != null ? ' Under '.\App\Models\Campus::find($request->campus_id)->first()->name : '').' - '.SchoolUnits::find($department_id)->name;
+        }else{
+            $data['title'] = "Class List ".($request->campus_id != null ? ' For '.\App\Models\Campus::find($request->campus_id)->first()->name : '').' - '.ProgramLevel::find($request->id)->name();
+        }
         return view('teacher.class_list', $data);
     }
 
@@ -42,6 +46,7 @@ class ClassController extends Controller
         if (\request('type') == 'master') {
             $data['classes'] = ClassMaster::where('batch_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->where('user_id', Auth::user()->id)->get();
             // dd($data);
+            $data['title'] = "Your Departments";
             return view('teacher.class_master')->with($data);
         } else {
             $data['units']  = \App\Models\ProgramLevel::join('teachers_subjects', ['teachers_subjects.class_id'=>'program_levels.id'])

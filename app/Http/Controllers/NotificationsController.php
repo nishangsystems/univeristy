@@ -25,11 +25,14 @@ class NotificationsController extends Controller
         $notifications = Notification::where(function($q) use($campus_id){
             $campus_id == 0 ? null : $q->where('campus_id', $campus_id);
         })->get();
+
+        $campus = $campus_id == 0 ? null : Campus::find($campus_id)->name??null;
         
         switch ($layer) {
             case 'S':
                 # code...
                 $data['notifications'] = $notifications->whereNull('school_unit_id');
+                $data['title'] = "General Notifications ".$campus??'';
                 break;
             
             case 'F':
@@ -40,6 +43,7 @@ class NotificationsController extends Controller
                 # code...
                 // if the user is a class master
                 $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
+                $data['title'] = "Departmental Notifications For ".(SchoolUnits::find($layer_id)->name??null).' '.$campus??null;
                 
                 if (in_array($layer_id, $department_ids)) {
                     # code...
@@ -56,6 +60,7 @@ class NotificationsController extends Controller
                 // if the user is a class master
                 $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
                 $program_ids = SchoolUnits::where(['unit_id'=>4])->whereIn('parent_id', $department_ids)->pluck('id');
+                $data['title'] = "Program Notifications For ".(SchoolUnits::find($layer_id)->name??'').' '.$campus??null;
                 if (in_array($layer_id, $program_ids)) {
                     # code...
                     $data['notifications'] = $notifications->where('unit_id',4)->where('school_unit_it',$layer_id);
@@ -71,6 +76,7 @@ class NotificationsController extends Controller
                 // if user is class master
                 $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
                 $program_ids = SchoolUnits::where(['unit_id'=>4])->whereIn('parent_id', $department_ids)->pluck('id');
+                $data['title'] = "Level ".Level::find($layer_id)->level.' Notifications '.$campus??null;
                 $level_ids = Level::join('program_levels', ['program_levels.level_id'=>'levels.id'])
                             ->join('school_units', ['school_units.id'=>'program_levels.program_id'])
                             ->where(['school_units.uint_id'=>4])
@@ -90,6 +96,7 @@ class NotificationsController extends Controller
                 # code...
                 // for a class master
                 $class = ProgramLevel::find(request('layer_id'));
+                $data['title'] = "Class Notifications For ".$class->name().' '.$campus??null;
                 if(ClassMaster::where(['user_id'=>auth()->id()])->count() > 0){
                     // return 777;
                     $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
@@ -126,21 +133,62 @@ class NotificationsController extends Controller
         //     $c->where('user_id', auth()->id())
         //         ->where('visibility', 'teacher'||'general');
         // });
-        $data['title'] = ($request->has('type') ? "Departmental Notifications For ".SchoolUnits::find($request->_d)->name ?? '' : '')
-                        .($request->has('program_level_id') ? "Notifications For ".ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
-                        .((!$request->has('campus_id') || $request('campus_id') == 0) ? '' : ' : '.(Campus::find(request('campus_id'))->name ?? 'All').' Campus');
+        // $data['title'] = ($request->has('type') ? "Departmental Notifications For ".SchoolUnits::find($request->_d)->name ?? '' : '')
+        //                 .($request->has('program_level_id') ? "Notifications For ".ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
+        //                 .((!$request->has('campus_id') || $request('campus_id') == 0) ? '' : ' : '.(Campus::find(request('campus_id'))->name ?? 'All').' Campus');
         
         return auth()->user()->type == 'admin' ?
         view('admin.notification.index', $data) :
         view('teacher.notification.index', $data) ;
     }
 
-    public function create()
+    public function create(Request $request, $layer, $layer_id, $campus_id=0 )
     {
         # code...
-        $data['title'] = (request('type') != null ? auth()->user()->classes()->first()->name : '')
-                        .(request('program_level_id') != null ? ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
-                        .(request('campus_id') != null ? Campus::find(request('campus_id'))->name ?? '' : '');
+        $campus = $campus_id == 0 ? null : Campus::find($campus_id)->name??null;
+        
+        switch ($layer) {
+            case 'S':
+                # code...
+                $data['title'] = "Create General Notifications ".$campus??'';
+                break;
+            
+            case 'F':
+                # code...
+                break;
+            
+            case 'D':
+                # code...
+                // if the user is a class master
+                $data['title'] = "Create Departmental Notifications For ".(SchoolUnits::find($layer_id)->name??null).' '.$campus??null;
+                break;
+            
+            case 'P':
+                # code...
+                // if the user is a class master
+                $data['title'] = "Create Program Notifications For ".(SchoolUnits::find($layer_id)->name??'').' '.$campus??null;
+                break;
+            
+            case 'L':
+                # code...
+                // if user is class master
+                $data['title'] = "Create Level ".Level::find($layer_id)->level.' Notifications '.$campus??null;
+                break;
+            
+            case 'C':
+                # code...
+                // for a class master
+                $class = ProgramLevel::find(request('layer_id'));
+                $data['title'] = "Create Class Notifications For ".$class->name().' '.$campus??null;
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+        // $data['title'] = (request('type') != null ? auth()->user()->classes()->first()->name : '')
+        //                 .(request('program_level_id') != null ? ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
+        //                 .(request('campus_id') != null ? Campus::find(request('campus_id'))->name ?? '' : '');
         // return auth()->user()->roles()->first()->slug;
         return auth()->user()->type == 'admin' ?
         view('admin.notification.create', $data):

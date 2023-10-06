@@ -857,5 +857,12 @@ return [
     'word_confirm'=>'confirm',
     'record_attendance'=>'record attendance',
     'record_attendance_for'=>'record attendance for :title (:code)',
+    'promotion_history'=>'promotion history',
+    'base_class'=>'base class', 
+    'target_class'=>'target class',
+    'base_year'=>'base year',
+    'target_year'=>'target year',
+    'number_promoted'=>'number promoted',
+    'degree_type'=>'degree type',
     ''
 ];

@@ -29,11 +29,13 @@ class MaterialController extends Controller
         $material = Material::where(function($q) use($campus_id){
             $campus_id == 0 ? null : $q->where('campus_id', $campus_id);
         })->get();
+        $campus = $campus_id == 0 ? null : Campus::find($campus_id)->name??null;
         
         switch ($layer) {
             case 'S':
                 # code...
                 $data['material'] = $material->where('unit_id',1);
+                $data['title'] = $data['title'] = "General Material ".$campus??'';
                 break;
             
             case 'F':
@@ -43,6 +45,7 @@ class MaterialController extends Controller
             case 'D':
                 # code...
                 // if the user is a class master
+                $data['title'] = "Departmental Material For ".(SchoolUnits::find($layer_id)->name??null).' '.$campus??null;
                 $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
                 
                 if (in_array($layer_id, $department_ids)) {
@@ -58,6 +61,7 @@ class MaterialController extends Controller
             case 'P':
                 # code...
                 // if the user is a class master
+                $data['title'] = "Program Material For ".(SchoolUnits::find($layer_id)->name??'').' '.$campus??null;
                 $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
                 $program_ids = SchoolUnits::where(['unit_id'=>4])->whereIn('parent_id', $department_ids)->pluck('id');
                 if (in_array($layer_id, $program_ids)) {
@@ -73,6 +77,7 @@ class MaterialController extends Controller
             case 'L':
                 # code...
                 // if user is class master
+                $data['title'] = "Level ".Level::find($layer_id)->level.' Material '.$campus??null;
                 $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
                 $program_ids = SchoolUnits::where(['unit_id'=>4])->whereIn('parent_id', $department_ids)->pluck('id');
                 $level_ids = Level::join('program_levels', ['program_levels.level_id'=>'levels.id'])
@@ -94,6 +99,7 @@ class MaterialController extends Controller
                 # code...
                 // for a class master
                 $class = ProgramLevel::find(request('layer_id'));
+                $data['title'] = "Class Material For ".$class->name().' '.$campus??null;
                 if(ClassMaster::where(['user_id'=>auth()->id()])->count() > 0){
                     // return 777;
                     $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
@@ -130,18 +136,59 @@ class MaterialController extends Controller
         //     $c->where('user_id', auth()->id())
         //         ->where('visibility', 'teacher'||'general');
         // });
-        $data['title'] = ($request->has('type') ? "Departmental Material For ".SchoolUnits::find($request->_d)->name ?? '' : '')
-                        .($request->has('program_level_id') ? "Material For ".ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
-                        .($request->has('campus_id') ? ' : '.Campus::find(request('campus_id'))->name.' Campus' :'');
+        // $data['title'] = ($request->has('type') ? "Departmental Material For ".SchoolUnits::find($request->_d)->name ?? '' : '')
+        //                 .($request->has('program_level_id') ? "Material For ".ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
+        //                 .($request->has('campus_id') ? ' : '.Campus::find(request('campus_id'))->name.' Campus' :'');
         return view('teacher.material.index', $data);
     }
 
-    public function create()
+    public function create(Request $request, $layer, $layer_id, $campus_id=0 )
     {
         # code...
-        $data['title'] = (request('type') != null ? auth()->user()->classes()->first()->name : '')
-                        .(request('program_level_id') != null ? ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
-                        .(request('campus_id') != null ? Campus::find(request('campus_id'))->name : '');
+        $campus = $campus_id == 0 ? null : Campus::find($campus_id)->name??null;
+        
+        switch ($layer) {
+            case 'S':
+                # code...
+                $data['title'] = "Create General Material ".$campus??'';
+                break;
+            
+            case 'F':
+                # code...
+                break;
+            
+            case 'D':
+                # code...
+                // if the user is a class master
+                $data['title'] = "Create Departmental Material For ".(SchoolUnits::find($layer_id)->name??null).' '.$campus??null;
+                break;
+            
+            case 'P':
+                # code...
+                // if the user is a class master
+                $data['title'] = "Create Program Material For ".(SchoolUnits::find($layer_id)->name??'').' '.$campus??null;
+                break;
+            
+            case 'L':
+                # code...
+                // if user is class master
+                $data['title'] = "Create Level ".Level::find($layer_id)->level.' Material '.$campus??null;
+                break;
+            
+            case 'C':
+                # code...
+                // for a class master
+                $class = ProgramLevel::find(request('layer_id'));
+                $data['title'] = "Create Class Material For ".$class->name().' '.$campus??null;
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+        // $data['title'] = (request('type') != null ? auth()->user()->classes()->first()->name : '')
+        //                 .(request('program_level_id') != null ? ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
+        //                 .(request('campus_id') != null ? Campus::find(request('campus_id'))->name : '');
         return view('teacher.material.create', $data);
     }
 

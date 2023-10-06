@@ -283,6 +283,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('students/promotion/approve/{promotion_id?}', 'Admin\StudentController@trigger_approval')->name('students.trigger_approval');
     Route::post('students/promotion/approve', 'Admin\StudentController@approvePromotion')->name('students.approve_promotion');
     Route::get('students/promotion/cancelPromotion/{promotion_id}', 'Admin\StudentController@cencelPromotion')->name('students.cancel_promotion');
+    Route::get('students/promotions/{program_id?}', 'Admin\StudentController@promotion_history')->name('students.promotions');
     Route::get('students/init_demotion', 'Admin\StudentController@initialiseDemotion')->name('students.init_demotion');
     Route::get('students/demotion', 'Admin\StudentController@demotion')->name('students.demotion');
     Route::get('students/demote/{promotion_id}', 'Admin\StudentController@demote')->name('students.demote');

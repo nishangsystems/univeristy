@@ -526,6 +526,13 @@
                                 </a>
                                 <b class="arrow"></b>
                             </li>
+                            <li>
+                                <a href="{{route('admin.students.promotions')}}"  class="text-capitalize">
+                                    <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
+                                    {{__('text.promotion_history')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
                         @endif
                         @if (\Auth::user()->hasPermissionTo('demote_students-option_already_removed'))
                             <li>
