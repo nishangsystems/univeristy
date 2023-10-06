@@ -43,7 +43,11 @@
                             <td class="border-left border-right">{{ $prom->nextClass->name() }}</td>
                             <td class="border-left border-right">{{ $prom->year->name }}</td>
                             <td class="border-left border-right">{{ $prom->nextYear->name }}</td>
-                            <td class="border-left border-right">{{ $prom->students->count() }}</td>
+                            @if (auth()->user()->campus_id == null)
+                                <td class="border-left border-right">{{ $prom->students->count() }}</td>
+                            @else
+                                <td class="border-left border-right">{{ $prom->students()->join('students', 'students.id', '=', 'student_promotions.student_id')->where('students.campus_id', auth()->user()->campus_id)->distinct()->count() }}</td>
+                            @endif
                             <td class="border-left border-right">{{ \Illuminate\Support\Carbon::parse($prom->created_at)->format('d/m/Y - H:i') }}</td>
                         </tr>
                     @endforeach
