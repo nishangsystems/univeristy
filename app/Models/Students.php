@@ -332,6 +332,10 @@ class Students extends Authenticatable
         $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
         return $this->hasMany(StudentSubject::class, 'student_id')->WHERE('year_id', '=', $year);
     }
+    public function course_pivot(){
+        return $this->hasMany(StudentSubject::class, 'student_id');
+    }
+
     public function transactions()
     {
         # code...

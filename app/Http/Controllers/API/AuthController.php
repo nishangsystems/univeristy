@@ -7,6 +7,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource3;
 use App\Http\Resources\UserResource;
+use App\Models\Guardian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
@@ -50,22 +51,36 @@ class AuthController extends Controller
     public function userLogin(Request $request) 
     {
         $validated = Validator::make($request->all(), [
-            'phone' => 'required',
-            'password' => 'required|min:6'
+            'phone' => 'required'
         ]);
 
         if ($validated->fails()) {
             return response(['message' => $validated->errors()->first()], 200);
         }
 
-        $user = User::where(['phone' => $request->phone])->first();
+        $user = Guardian::where(['phone' => $request->phone])->first();
         if(isset($user)){
             $token = $user->createToken('authToken')->accessToken;
             return response()->json([
                 'status' => 200,
                 'token' => $token,
-                'user' => new UserResource($user)
+                'phone' => $request->phone
             ]);
+        } else {
+            $child = Students::where('parent_phone_number', $request->phone)->first();
+            if(isset($child)) {
+                $guardian = new Guardian();
+                $guardian->phone = $request->phone;
+                $guardian->password = Hash::make('12345678');
+                $guardian->save();
+
+                $token = $guardian->createToken('authToken')->accessToken;
+                return response()->json([
+                    'status' => 200,
+                    'token' => $token,
+                    'phone' => $request->phone
+                ]);
+            }
         }
 
         return response()->json(['status' => 300, 'message' => 'Invalid Credentails']);
@@ -93,5 +108,12 @@ class AuthController extends Controller
         }
 
         return response()->json(['status' => 300, 'message' => 'Invalid Credentails']);
+    }
+
+    public function teacherLogout(Request $request)
+    {
+        $token = $request->user('api')->token();
+        $token->revoke();
+        return response()->json(['status' => 200]);
     }
 }

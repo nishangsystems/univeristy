@@ -3,6 +3,9 @@
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\Student\ProfileController;
+use App\Http\Controllers\API\ProfileController as UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +27,7 @@ Route::get('login/student', [AuthController::class, 'studentLogin'])->name('stud
 Route::get('logout/student', [AuthController::class, 'studentLogout'])->name('student.logout');
 Route::get('login/user', [AuthController::class, 'userLogin'])->name('parent.login');
 Route::get('login/teacher', [AuthController::class, 'teacherLogin'])->name('teacher.login');
+Route::get('logout/teacher', [AuthController::class, 'teacherLogout'])->name('teacher.logout');
 Route::get('faqs', [\App\Http\Controllers\API\PageController::class, 'faqs'])->name('faqs');
 Route::get('year', [\App\Http\Controllers\API\PageController::class, 'year']);
 Route::get('semesters', [\App\Http\Controllers\API\PageController::class, 'semester']);
@@ -55,9 +59,10 @@ Route::get('attendance', [App\Http\Controllers\API\PageController::class, 'stude
 
 Route::group([ 'prefix' => 'teacher'], function() {
     Route::get('classes', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'classes']);
-    Route::get('{campus_id}/notifications/{level_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'notifications']);
+    Route::get('notifications', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'notifications']);
     Route::get('{campus_id}/subjects/{class_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'subjects']);
     Route::get('{campus_id}/student/{class_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'students']);
+    Route::get('student/attendance', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'studentAttendance']);
     Route::get('{class_id}/attendance', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'attendance']);
 });
 

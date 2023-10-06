@@ -864,5 +864,6 @@ return [
     'target_year'=>'target year',
     'number_promoted'=>'number promoted',
     'degree_type'=>'degree type',
+    'create_notification'=>'create notification',
     ''
 ];

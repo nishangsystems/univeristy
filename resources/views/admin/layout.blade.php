@@ -849,7 +849,7 @@
                         <b class="arrow"></b>
                     </li>
                     <li>
-                        <a href="{{route('notifications.create', ['S', 0, auth()->user()->campus_id ?? 0])}}" class="text-capitalize">
+                        <a href="{{route('admin.student.bulk.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.word_create')}}
                         </a>

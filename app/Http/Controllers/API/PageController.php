@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource3;
 use App\Models\Batch;
 use App\Models\FAQ;
+use App\Models\Guardian;
 use App\Models\Students;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -53,9 +54,9 @@ class PageController extends Controller
 
     public function students(Request $request)
     {
-        $user = Auth('api')->user();
-        if(!isset($user)){
-            $user = User::find($request->parent_id);
+        $user = Auth('parent_api')->user();
+        if(!isset($user) && $request->get('parent_id')){
+            $user = Guardian::find($request->parent_id);
         }
 
         if(!isset($user)){
@@ -64,9 +65,11 @@ class PageController extends Controller
                 'students' => []
             ]);
         }else{
+            $students = Students::where('parent_phone_number', $user->phone)->get();
+
             return response([
                 'status' => 200,
-                'students' => StudentResource3::collection($user->students)
+                'students' => StudentResource3::collection($students)
             ]);
         }
     }
@@ -98,4 +101,5 @@ class PageController extends Controller
             'attendance' => $array
         ]);
     }
+
 }

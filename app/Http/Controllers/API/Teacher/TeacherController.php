@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Teacher;
 
 use App\Http\Resources\NotificationResource;
+use App\Http\Resources\StudentAttendanceResource;
 use App\Http\Resources\TeacherClassResource;
 use App\Models\ClassMaster;
 use App\Models\Notification;
@@ -13,8 +14,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\DailyAttendance;
 use App\Models\StudentAttendance;
+use App\Models\Students;
 use Carbon\Carbon;
-
+use App\Helpers\Helpers;
+use App\Models\TeachersSubject;
 
 class TeacherController
 {
@@ -37,45 +40,59 @@ class TeacherController
 
     }
 
-    public function notifications(Request $request,$campus_id, $level_id){
-        $class = ProgramLevel::find($level_id);
-        $notifications = Notification::where(function($q) use($campus_id){
-            $campus_id == 0 ? null : $q->where('campus_id', $campus_id);
-        })->get();
-
+    public function notifications(Request $request){
         if($request->teacher_id){
             $teacher = User::find($request->teacher_id);
         }else{
             $teacher = Auth('api')->user();
         }
+        $classes  = \App\Models\ProgramLevel::join('teachers_subjects', ['teachers_subjects.class_id'=>'program_levels.id'])
+            ->where(['teachers_subjects.teacher_id'=>$teacher->id])
+            ->distinct()
+            ->select(['program_levels.*', 'teachers_subjects.campus_id'])
+            ->get();
 
-        if(ClassMaster::where(['user_id'=>$teacher->id])->count() > 0){
-            // return 777;
-            $department_ids = ClassMaster::where(['user_id'=>$teacher->id])->pluck('department_id')->toArray();
-            $class_ids = SchoolUnits::where(['unit_id'=>4])->whereIn('parent_id', $department_ids)
-                ->join('program_levels', ['program_levels.program_id'=>'school_units.id'])
-                ->pluck('program_levels.id')->toArray();
+        $campuses = $classes->pluck('campus_id')->toArray();
+        $levels = $classes->pluck('level_id')->toArray();
 
-            if(in_array($level_id, $class_ids)){
-                $data['notifications'] = NotificationResource::collection($notifications->where('school_unit_id',$class->program_id)->where('level_id',$class->level_id));
-            }else {
-                $data['notifications'] = $notifications->empty();
-            }
-        } else {
-            $data['notifications'] = $notifications->empty();
-        }
+        $nt = Notification::where(function($query){
+            $query->where('visibility', 'teachers')->orWhere('visibility', 'general');
+        })->where(function($query)use($campuses){
+            $query->whereIn('campus_id', $campuses)->orWhere('campus_id', null)->orWhere('campus_id', 0);
+        })->where(function($query)use($levels){
+            $query->whereIn('level_id', $levels)->orWhere('level_id', null);
+        })->get()
+            ->filter(function($row) use ($classes){
+                $sc_unit = SchoolUnits::find($row->school_unit_id);
+                return ($row->school_unit_id == null && ($row->unit_id == 0 || $row->unit_id == null))
+                    || (function() use ($classes, $sc_unit){
+                        foreach ($classes as $key => $class)
+                            if($sc_unit->has_unit(SchoolUnits::find($class->program_id)))return true;
+                        return false;
+                    });
+        });
+
+        $data['notifications'] = \App\Http\Resources\NotificationResource::collection($nt);
         $data['success'] = 200;
         return response()->json($data);
     }
 
     public function subjects(Request $request,$campus_id, $class_id){
         $unit = ProgramLevel::find($class_id);
+        if($request->teacher_id){
+            $teacher = User::find($request->teacher_id);
+        }else{
+            $teacher = Auth('api')->user();
+        }
+        $data['teacher_id'] = $teacher->id;
         $data['title'] = 'My '.$unit->program()->first()->name.' : LEVEL '.$unit->level()->first()->level;
         $data['subjects'] = \App\Models\Subjects::join('teachers_subjects', ['teachers_subjects.subject_id'=>'subjects.id'])
             ->where(['teachers_subjects.class_id'=>$class_id])
+            ->where(['teachers_subjects.teacher_id'=>$teacher->id])
             ->where(function($q)use ($request, $campus_id){
                 $request->has('campus') ? $q->where(['teachers_subjects.campus_id'=>$campus_id]):null;
-            })->distinct()->select(['subjects.*','teachers_subjects.class_id as class', 'teachers_subjects.campus_id'])->get();
+            })->distinct()
+            ->select(['subjects.*','teachers_subjects.class_id as class', 'teachers_subjects.campus_id'])->get();
 
 
         $data['success'] = 200;
@@ -83,21 +100,45 @@ class TeacherController
     }
 
 
-    public function students(Request $request, $campus_id, $class_id){
-        $class = ProgramLevel::find($class_id);
-        $data['class'] = $class;
+    public function students(Request $request, $campus_id, $_id){
+        if($request->teacher_id){
+            $teacher = User::find($request->teacher_id);
+        }else{
+            $teacher = Auth('api')->user();
+        }
 
-        // $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
-        $data['students'] = StudentClass::where('class_id', '=', $class_id)
-            ->where('year_id', '=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
-            ->join('students', ['students.id'=>'student_classes.student_id'])
-            ->where(function($q) use ($campus_id){
-                request()->has('campus') ? $q->where(['students.campus_id'=>$campus_id]) : null;
-            })
-            ->orderBy('students.name', 'ASC')->get('students.*');
+        if($request->get('type', 'course') === "class"){
+            //if the _id is class id
+            $class = ProgramLevel::find($_id);
+            $data['class'] = $class;
 
-        $data['success'] = 200;
-        return response()->json($data);
+            $data['students'] = StudentClass::where('class_id', '=', $_id)
+                ->where('year_id', '=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
+                ->join('students', ['students.id'=>'student_classes.student_id'])
+                ->where(function($q) use ($campus_id){
+                    request()->has('campus') ? $q->where(['students.campus_id'=>$campus_id]) : null;
+                })
+                ->orderBy('students.name', 'ASC')->get('students.*');
+
+            $data['success'] = 200;
+            return response()->json($data);
+        }else{
+            //it is course it
+            $class = ProgramLevel::find($_id);
+            $data['class'] = $class;
+
+            $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
+            $teacherSubject = TeachersSubject::where(['teacher_id'=>$teacher->id,'subject_id'=>$_id])->orderBy('id','DESC')->first();
+            $semester = Helpers::instance()->getSemester(isset($teacherSubject)?$teacherSubject->class_id:"");
+        
+            $data['semester'] = $semester;
+            $data['students'] = Students::whereHas('course_pivot', function($query) use ($year, $_id, $semester){
+                                    $query->WHERE(['year_id'=>$year, 'course_id'=>$_id, 'semester_id'=>$semester]);
+                                })->get();
+            $data['success'] = 200;
+            return response()->json($data);
+
+        }
     }
 
     public function attendance(Request $request, $class_id){
@@ -142,4 +183,26 @@ class TeacherController
          $data['message'] = "Success";
          return response()->json($data);
      }
+
+    public function studentAttendance(Request $request){
+        if($request->teacher_id){
+            $teacher = User::find($request->teacher_id);
+        }else{
+            $teacher = Auth('api')->user();
+        }
+        $course_id = $request->get('course_id');
+        $class = ProgramLevel::find($course_id);
+        $data['class'] = $class;
+        $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
+        $teacherSubject = TeachersSubject::where(['teacher_id'=>$teacher->id,'subject_id'=>$course_id])->orderBy('id','DESC')->first();
+        $semester = Helpers::instance()->getSemester(isset($teacherSubject)?$teacherSubject->class_id:"");
+
+        $data['semester'] = $semester;
+        $students = Students::whereHas('course_pivot', function($query) use ($year, $course_id, $semester){
+            $query->WHERE(['year_id'=>$year, 'course_id'=>$course_id, 'semester_id'=>$semester]);
+        })->get();
+        $data['success'] = 200;
+        $data['students'] = StudentAttendanceResource::collection($students);
+        return response()->json($data);
+    }
 }
