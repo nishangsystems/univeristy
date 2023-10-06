@@ -166,7 +166,6 @@ class UserController extends Controller
         return redirect()->to(route('user.teacher.index', ['type' => $user->type]))->with('success', "User deleted successfully!");
     }
 
-
     public function createSubject($id)
     {
         $data['user'] = \App\Models\User::find($id);
@@ -174,7 +173,6 @@ class UserController extends Controller
         // $data['classes'] = StudentController::baseClasses();
         return view('teacher.user.assignSubject')->with($data);
     }
-
 
     public function dropSubject($id)
     {

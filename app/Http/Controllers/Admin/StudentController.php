@@ -1161,7 +1161,6 @@ class StudentController extends Controller
         return back()->with('error', 'Operation failed. Bypass could not be resolved to a class.');
     }
 
-
     public function change_status($student_id)
     {
         $student = Students::find($student_id);
@@ -1171,5 +1170,15 @@ class StudentController extends Controller
             return back()->with('success', __('text.word_done'));
         }
         return back()->with('error', __('text.item_not_found', __('text.word_student')));
+    }
+
+    public function promotion_history(Request $request, $program_id = null)
+    {
+        # code...
+        $data['title'] = "Promotion History";
+        if($program_id != null){
+            $data['promotions'] = Promotion::join('program_levels', 'program_levels.id', '=', 'promotions.from_class')->where('program_levels.program_id', $program_id)->get('promotions.*');
+        }
+        return view('admin.student.promotion_history', $data);
     }
 }

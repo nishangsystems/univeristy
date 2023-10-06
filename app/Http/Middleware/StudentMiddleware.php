@@ -28,7 +28,7 @@ class StudentMiddleware
             return redirect(route('login'));
           }
 
-        if(auth('student')->user()->parent_phone_number == null || auth('student')->user()->parent_phone_number == ''){
+        if(!(auth('student')->user()->parent_phone_number != null && strlen(auth('student')->user()->parent_phone_number) > 7)){
             return redirect(route('student.edit_profile'))->with('message', 'Complete your profile to continue');
         }
 
