@@ -10,6 +10,7 @@ use App\Models\Level;
 use App\Models\Notification;
 use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,35 +28,37 @@ class NotificationsController extends Controller
         })->get();
 
         $campus = $campus_id == 0 ? null : Campus::find($campus_id)->name??null;
-        
+        $data = [];
         switch ($layer) {
-            case 'S':
+            case 'S':case 'SCHOOL':
                 # code...
                 $data['notifications'] = $notifications->whereNull('school_unit_id');
                 $data['title'] = "General Notifications ".$campus??'';
                 break;
             
-            case 'F':
+            case 'F': case 'FACULTY':
                 # code...
                 break;
             
-            case 'D':
+            case 'D': case 'DEPARTMENT':
                 # code...
                 // if the user is a class master
                 $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
                 $data['title'] = "Departmental Notifications For ".(SchoolUnits::find($layer_id)->name??null).' '.$campus??null;
                 
                 if (in_array($layer_id, $department_ids)) {
-                    # code...
+                    # teacher is a class master
                     $data['notifications'] = $notifications->where('unit_id', 3)->where('school_unit_id', request('layer_id'));
 
-                }else {
+                }elseif(User::where('id', auth()->id())->where('type', '!=', 'teacher')->count() > 0) {
+                    $data['notifications'] = $notifications->where('user_id', auth()->id())->where('school_unit_id', $layer_id);
+                }else{
                     $data['notifications'] = $notifications->empty();
                 }
                 
                 break;
             
-            case 'P':
+            case 'P': case 'PROGRAM':
                 # code...
                 // if the user is a class master
                 $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
@@ -64,6 +67,8 @@ class NotificationsController extends Controller
                 if (in_array($layer_id, $program_ids)) {
                     # code...
                     $data['notifications'] = $notifications->where('unit_id',4)->where('school_unit_it',$layer_id);
+                }elseif(User::where('id', auth()->id())->where('type', '!=', 'teacher')->count() > 0) {
+                    $data['notifications'] = $notifications->where('user_id', auth()->id())->where('school_unit_id', $layer_id);
                 } else {
                     # code...
                     $data['notifications'] = $notifications->empty();
@@ -71,7 +76,7 @@ class NotificationsController extends Controller
                 
                 break;
             
-            case 'L':
+            case 'L': case 'LEVEL':
                 # code...
                 // if user is class master
                 $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
@@ -86,13 +91,15 @@ class NotificationsController extends Controller
                 if (in_array($layer_id, $level_ids)) {
                     # code...
                     $data['notifications'] = $notifications->where('level_id', $layer_id);
-                }else {
+                }elseif(User::where('id', auth()->id())->where('type', '!=', 'teacher')->count() > 0) {
+                    $data['notifications'] = $notifications->where('user_id', auth()->id())->where('level_id', $layer_id);
+                } else {
                     # code...
                     $data['notifications'] = $notifications->empty();
                 }
                 break;
             
-            case 'C':
+            case 'C': case 'CLASS':
                 # code...
                 // for a class master
                 $class = ProgramLevel::find(request('layer_id'));
@@ -106,9 +113,11 @@ class NotificationsController extends Controller
     
                     if(in_array($layer_id, $class_ids)){
                         $data['notifications'] = $notifications->where('school_unit_id',$class->program_id)->where('level_id',$class->level_id);
-                    }else {
+                    } else {
                         $data['notifications'] = $notifications->empty();
                     }
+                }elseif(User::where('id', auth()->id())->where('type', '!=', 'teacher')->count() > 0) {
+                    $data['notifications'] = $notifications->where('user_id', auth()->id())->where('school_unit_id', $class->program_id)->where('level_id', $class->level_id);
                 }
                 else {
                     // For a normal teacher to view class notifications
@@ -133,10 +142,7 @@ class NotificationsController extends Controller
         //     $c->where('user_id', auth()->id())
         //         ->where('visibility', 'teacher'||'general');
         // });
-        // $data['title'] = ($request->has('type') ? "Departmental Notifications For ".SchoolUnits::find($request->_d)->name ?? '' : '')
-        //                 .($request->has('program_level_id') ? "Notifications For ".ProgramLevel::find(request('program_level_id'))->program()->first()->name.' : Level '.ProgramLevel::find(request('program_level_id'))->level()->first()->level : '')
-        //                 .((!$request->has('campus_id') || $request('campus_id') == 0) ? '' : ' : '.(Campus::find(request('campus_id'))->name ?? 'All').' Campus');
-        
+
         return auth()->user()->type == 'admin' ?
         view('admin.notification.index', $data) :
         view('teacher.notification.index', $data) ;
@@ -146,36 +152,36 @@ class NotificationsController extends Controller
     {
         # code...
         $campus = $campus_id == 0 ? null : Campus::find($campus_id)->name??null;
-        
+        $data = [];
         switch ($layer) {
-            case 'S':
+            case 'S': case 'SCHOOL':
                 # code...
                 $data['title'] = "Create General Notifications ".$campus??'';
                 break;
             
-            case 'F':
+            case 'F': case 'FACULTY':
                 # code...
                 break;
             
-            case 'D':
+            case 'D': case 'DEPARTMENT':
                 # code...
                 // if the user is a class master
                 $data['title'] = "Create Departmental Notifications For ".(SchoolUnits::find($layer_id)->name??null).' '.$campus??null;
                 break;
             
-            case 'P':
+            case 'P': case 'PROGRAM':
                 # code...
                 // if the user is a class master
                 $data['title'] = "Create Program Notifications For ".(SchoolUnits::find($layer_id)->name??'').' '.$campus??null;
                 break;
             
-            case 'L':
+            case 'L': case 'LEVEL':
                 # code...
                 // if user is class master
                 $data['title'] = "Create Level ".Level::find($layer_id)->level.' Notifications '.$campus??null;
                 break;
             
-            case 'C':
+            case 'C': case 'CLASS':
                 # code...
                 // for a class master
                 $class = ProgramLevel::find(request('layer_id'));

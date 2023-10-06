@@ -6,6 +6,7 @@ use App\Models\Batch;
 use App\Models\ClassMaster;
 use App\Models\SchoolUnits;
 use App\Models\Term;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Campus;
@@ -30,19 +31,19 @@ class MaterialController extends Controller
             $campus_id == 0 ? null : $q->where('campus_id', $campus_id);
         })->get();
         $campus = $campus_id == 0 ? null : Campus::find($campus_id)->name??null;
-        
+        $data = [];
         switch ($layer) {
-            case 'S':
+            case 'S': case 'SCHOOL':
                 # code...
                 $data['material'] = $material->where('unit_id',1);
                 $data['title'] = $data['title'] = "General Material ".$campus??'';
                 break;
             
-            case 'F':
+            case 'F': case 'FACULTY':
                 # code...
                 break;
             
-            case 'D':
+            case 'D': case 'DEPARTMENT':
                 # code...
                 // if the user is a class master
                 $data['title'] = "Departmental Material For ".(SchoolUnits::find($layer_id)->name??null).' '.$campus??null;
@@ -52,13 +53,15 @@ class MaterialController extends Controller
                     # code...
                     $data['material'] = $material->where('unit_id', 3)->where('school_unit_id', request('layer_id'));
 
+                }elseif(User::where('id', auth()->id())->where('type', '!=', 'teacher')->count() > 0) {
+                    $data['notifications'] = $material->where('user_id', auth()->id())->where('school_unit_id', $layer_id);
                 }else {
                     $data['material'] = $material->empty();
                 }
                 
                 break;
             
-            case 'P':
+            case 'P': case 'PROGRAM':
                 # code...
                 // if the user is a class master
                 $data['title'] = "Program Material For ".(SchoolUnits::find($layer_id)->name??'').' '.$campus??null;
@@ -67,6 +70,8 @@ class MaterialController extends Controller
                 if (in_array($layer_id, $program_ids)) {
                     # code...
                     $data['material'] = $material->where('unit_id',4)->where('school_unit_it',$layer_id);
+                }elseif(User::where('id', auth()->id())->where('type', '!=', 'teacher')->count() > 0) {
+                    $data['notifications'] = $material->where('user_id', auth()->id())->where('school_unit_id', $layer_id);
                 } else {
                     # code...
                     $data['material'] = $material->empty();
@@ -74,7 +79,7 @@ class MaterialController extends Controller
                 
                 break;
             
-            case 'L':
+            case 'L': case 'LEVEL':
                 # code...
                 // if user is class master
                 $data['title'] = "Level ".Level::find($layer_id)->level.' Material '.$campus??null;
@@ -89,13 +94,15 @@ class MaterialController extends Controller
                 if (in_array($layer_id, $level_ids)) {
                     # code...
                     $data['material'] = $material->where('level_id', $layer_id);
+                }elseif(User::where('id', auth()->id())->where('type', '!=', 'teacher')->count() > 0) {
+                    $data['notifications'] = $material->where('user_id', auth()->id())->where('level_id', $layer_id);
                 }else {
                     # code...
                     $data['material'] = $material->empty();
                 }
                 break;
             
-            case 'C':
+            case 'C': case 'CLASS':
                 # code...
                 // for a class master
                 $class = ProgramLevel::find(request('layer_id'));
@@ -112,6 +119,8 @@ class MaterialController extends Controller
                     }else {
                         $data['material'] = $material->empty();
                     }
+                }elseif(User::where('id', auth()->id())->where('type', '!=', 'teacher')->count() > 0) {
+                    $data['notifications'] = $material->where('user_id', auth()->id())->where('school_unit_id', $class->program_id)->where('level_id', $class->level_id);
                 }
                 else {
                     // For a normal teacher to view class material
