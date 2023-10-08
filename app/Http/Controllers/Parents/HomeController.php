@@ -62,6 +62,7 @@ class HomeController extends Controller
             return back()->with('error', 'Results Not Yet Published For This Semester.');
         }
 
+        dd($student, Batch::find($year));
         // check if semester result fee is set && that student has payed 
         $plcharge = PlatformCharge::where(['year_id'=>$year->id])->first();
         $amount = $plcharge->parent_amount ?? null;
