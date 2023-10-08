@@ -62,12 +62,11 @@ class HomeController extends Controller
             return back()->with('error', 'Results Not Yet Published For This Semester.');
         }
 
-        dd($student, Batch::find($year));
         // check if semester result fee is set && that student has payed 
         $plcharge = PlatformCharge::where(['year_id'=>$year->id])->first();
         $amount = $plcharge->parent_amount ?? null;
         if($amount != null && $amount > 0){
-            $charge = Charge::where(['year_id'=>$year, 'semester_id'=>$semester->id, 'student_id'=>auth('student')->id(), 'type'=>'RESULTS'])->first();
+            $charge = Charge::where(['year_id'=>$year->id, 'semester_id'=>$semester->id, 'student_id'=>auth('student')->id(), 'type'=>'RESULTS'])->first();
             if($charge == null){
                 return redirect(route('parents.tranzak.platform_charge.pay'))->with('error', 'Pay Platform Charges to continue');
             }
@@ -82,7 +81,7 @@ class HomeController extends Controller
         $data['semester'] = $semester;
         $data['class'] = $class;
         $data['year'] = $year;
-        $data['title'] = ($student->name??null).' '.__('text.exam_results').' - '.(Batch::find($year)->name??null);
+        $data['title'] = ($student->name??null).' '.__('text.exam_results').' - '.($year->name??null);
         $data['ca_total'] = $class->program()->first()->ca_total;
         $data['exam_total'] = $class->program()->first()->exam_total;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
