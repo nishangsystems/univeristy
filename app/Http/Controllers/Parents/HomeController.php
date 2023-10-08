@@ -76,19 +76,12 @@ class HomeController extends Controller
             return back()->with('error', "No result found. Make sure you were admitted to this institution by or before the selected academic year");
         }
 
-        // CODE TO CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS; WILL BE COMMENTED OUT TILL IT SHOULD TAKE EFFECT
-        // if(){
-        //     return back()->with('error', "You have not paid plaftorm or semester result charges for the selected semester");
-        // }
-
-        // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
-        
         $data['title'] = "My Exam Result";
         $data['user'] = $student;
         $data['semester'] = $semester;
         $data['class'] = $class;
         $data['year'] = $year;
-        $data['title'] = $student->name.' '.__('text.exam_results').' - '.Batch::find($year)->name??null;
+        $data['title'] = ($student->name??null).' '.__('text.exam_results').' - '.(Batch::find($year)->name??null);
         $data['ca_total'] = $class->program()->first()->ca_total;
         $data['exam_total'] = $class->program()->first()->exam_total;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
