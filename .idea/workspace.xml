@@ -19,13 +19,16 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="" />
+    <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/Student/CourseController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/Student/CourseController.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings">
+  <component name="ComposerSettings" doNotAsk="true">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
   </component>
@@ -205,6 +208,7 @@
       <option name="presentableId" value="Default" />
       <updated>1696494491487</updated>
       <workItem from="1696494492710" duration="107000" />
+      <workItem from="1696871330104" duration="583000" />
     </task>
     <servers />
   </component>
