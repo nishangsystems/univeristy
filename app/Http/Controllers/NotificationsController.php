@@ -158,7 +158,7 @@ class NotificationsController extends Controller
         ]);
         // dd($request->all());
         try {
-            $app_title = $request->title.'/'.$request->visibility.'_';
+            $app_title = '';
             $data = $request->all();
             $data['campus_id'] = $campus_id;
             $data['user_id'] = auth()->id();
