@@ -84,7 +84,7 @@ class NotificationsController extends Controller
                 $data['title'] = "Level ".Level::find($layer_id)->level.' Notifications '.$campus??null;
                 $level_ids = Level::join('program_levels', ['program_levels.level_id'=>'levels.id'])
                             ->join('school_units', ['school_units.id'=>'program_levels.program_id'])
-                            ->where(['school_units.uint_id'=>4])
+                            ->where(['school_units.unit_id'=>4])
                             ->whereIn('school_units.id', $program_ids)
                             ->distinct()->pluck('levels.id')->toArray();
 
