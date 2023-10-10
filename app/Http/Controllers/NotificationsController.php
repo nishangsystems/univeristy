@@ -62,7 +62,7 @@ class NotificationsController extends Controller
                 # code...
                 // if the user is a class master
                 $department_ids = ClassMaster::where(['user_id'=>auth()->id()])->pluck('department_id')->toArray();
-                $program_ids = SchoolUnits::where(['unit_id'=>4])->whereIn('parent_id', $department_ids)->pluck('id');
+                $program_ids = SchoolUnits::where(['unit_id'=>4])->whereIn('parent_id', $department_ids)->pluck('id')->toArray();
                 $data['title'] = "Program Notifications For ".(SchoolUnits::find($layer_id)->name??'').' '.$campus??null;
                 if (in_array($layer_id, $program_ids)) {
                     # code...
