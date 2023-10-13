@@ -60,9 +60,6 @@ class CourseController extends Controller
 
     public function register(Request $request)//takes courses=[course_ids]
     {
-        // return $request->all();
-        # code...
-        // first clear all registered courses for the year, semester, student then rewrite
 
         if($request->student_id){
             $student = Students::find($request->student_id);
@@ -75,8 +72,7 @@ class CourseController extends Controller
         $_semester = Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
         try {
             if ($semester == $_semester) {
-                # code...
-                return back()->with('error', 'Resit registration can not be done here. Do that under \"Resit Registration\"');
+                return response()->json(['success'=>400, 'message'=>"Resit registration can not be done here. Do that under \"Resit Registration\""]);
             }
             if ($request->has('courses')) {
                 // DB::beginTransaction();
@@ -92,22 +88,12 @@ class CourseController extends Controller
                 }
             }
             // DB::commit();
-            return back()->with('success', "!Done");
+            return response()->json(['success'=>200, 'message'=>"Course Registered Successfully"]);
         } catch (\Throwable $th) {
             // DB::rollBack();
-            return back()->with('error', $th->getFile().' : '.$th->getLine().' :: '.$th->getMessage());
+            return response()->json(['success'=>400, 'message'=>"Something went wrong , try again"]);
         }
     }
 
-
-    // public function register(Request $request)
-    // {
-    //     // $student = $student;
-
-    //     // return response([
-    //     //     'status' => 200,
-    //     //     'student' => new StudentResource3($student)
-    //     // ]);
-    // }
 }
 
