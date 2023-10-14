@@ -45,7 +45,7 @@ class CourseController extends Controller
             $level_id = $level == null ? $pl->level_id : $level;
             $program_id = $pl->program_id;
             // return $level_id;
-            $subjects = Subjects::join('class_subjects', 'subjects.id', '=', 'class_subjects.subject_id')
+            $subjects = Subjects::select('subjects.*')->join('class_subjects', 'subjects.id', '=', 'class_subjects.subject_id')
                 ->join('program_levels', 'program_levels.id', '=', 'class_subjects.class_id')
                 ->where('program_levels.level_id',$level_id)
                 ->where('program_levels.program_id', $program_id)->get();
@@ -82,7 +82,7 @@ class CourseController extends Controller
                     StudentSubject::find($value)->delete();
                 }
                 # code...
-                foreach (array_unique($request->courses) as $key => $value) {
+                foreach (json_decode($request->courses, true) as $key => $value) {
                     # code...
                     StudentSubject::create(['year_id'=>$year, 'semester_id'=>$semester, 'student_id'=>$student->id, 'course_id'=>$value]);
                 }
