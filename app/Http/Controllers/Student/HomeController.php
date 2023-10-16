@@ -1065,6 +1065,8 @@ class HomeController extends Controller
         }
         
         $data = $request->all();
+        $data['parent_phone_number'] = $request->parent_phone_code .''. $request->parent_phone_number;
+        // return $data;
         Students::find(auth('student')->id())->update($data);
         return redirect(route('student.home'))->with('success', __('text.word_Done'));
     }
@@ -1218,9 +1220,6 @@ class HomeController extends Controller
         $fileName =  $data['title'].'_'.time().'.'. 'pdf' ; // <--giving the random filename,
         return $pdf->download($fileName);
     }
-
-
-
 
     // PAYMENT OF SCHOOL FEE, OTHER ITEMS, TRANSCRIPTS, RESIT; INTO THE SCHOOL ACCOUNT DIRECTLY
 
