@@ -12,7 +12,7 @@
         <div class="row py-2">
             <label for="" class="col-md-3 text-capitalize">{{__('text.parents_phone_number')}}</label>
             <div class="col-md-9 input-group input-group-merge d-flex">
-                <select class="ml-3 form-control" id="country_picker" onchange="code_change(event)">
+                <select class="ml-3 form-control" id="country_picker" name="parent_phone_code">
                     @foreach (config('country-phone-codes') as $code)
                         <option value="+{{ $code['code'] }}" {{ ($code['autoselect']??null) == 1 ? 'selected' : '' }}>{{ $code['country'].' (+'.$code['code'].')' }}</option>
                     @endforeach
@@ -55,7 +55,7 @@
  </div>
 @endsection
 @section('script')
-    <script>
+    {{-- <script>
         let p_phone = '';
         $(document).ready(function(){
             p_phone = $('#parent_phone').val();
@@ -64,5 +64,5 @@
             let val = event.target.value;
             $('#parent_phone').val(val+p_phone);
         }
-    </script>
+    </script> --}}
 @endsection

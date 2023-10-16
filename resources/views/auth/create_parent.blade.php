@@ -226,7 +226,7 @@
 			let code_change = function(event){
 				let val = event.target.value;
 
-				$('#parent_phone').val(val+p_phone);
+				$('#parent_phone').val(val);
 			}
 		</script>
 	</body>
