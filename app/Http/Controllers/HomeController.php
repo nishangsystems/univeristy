@@ -144,6 +144,7 @@ class HomeController extends Controller
             // $sql = "SELECT students.*, student_classes.student_id, student_classes.class_id, campuses.name as campus from students, student_classes, campuses where students.id = student_classes.student_id and students.campus_id = campuses.id and students.name like '%{$name}%' or students.matric like '%{$name}%'";
 
             // return DB::select($sql);
+            $campus_id = auth()->user()->campus_id??null;
             $students  = DB::table('students')
                 ->join('student_classes', ['students.id' => 'student_classes.student_id'])
                 ->join('campuses', ['students.campus_id'=>'campuses.id'])
@@ -151,8 +152,8 @@ class HomeController extends Controller
                     $query->where('students.name', 'LIKE', "%$name%")
                     ->orWhere('students.matric', 'LIKE', "%$name%");
                 })
-                ->where(function($query){
-                    \auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', \auth()->user()->campus_id) : null;
+                ->where(function($query)use($campus_id){
+                    $campus_id != null ? $query->where('students.campus_id', $campus_id) : null;
                 })
                 ->distinct()
                 ->take(10)

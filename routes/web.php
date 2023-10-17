@@ -38,6 +38,9 @@ Route::get('/clear', function () {
     $clearconfig = Artisan::call('config:cache');
     echo "Config cleared<br>";
 
+    $optimize = Artisan::call('optimize:clear');
+    echo "Optimized app<br>";
+
 });
 
 Route::get('promotion/class_target/{class_id}', [Homecontroller::class, 'class_target'])->name('promotion.class.target');
