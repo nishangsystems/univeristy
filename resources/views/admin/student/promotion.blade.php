@@ -78,7 +78,9 @@
             </div>
         </div>
         <div class="d-flex justify-content-end">
-            <button onclick="confirm(`You are about to promote ${$('.checker:checked').length} students from {{$classes['cf']['name']}} : {{\App\Models\Batch::find($current_year)->name ?? '----' }} to {{$classes['ct']['name']}} : {{\App\Models\Batch::find($current_year+1)->name  ?? '----'}}`) ? $('#promote_form').submit() : ''" class="btn btn-primary mx-4 my-2">{{__('text.word_promote')}}</button>
+            <button onclick="confirm(`You are about to promote ${$('.checker:checked').length} students from {{$classes['cf']['name']}} : {{\App\Models\Batch::find($current_year)->name ?? '----' }} to {{$classes['ct']['name']}} : {{\App\Models\Batch::find($current_year+1)->name  ?? '----'}}`) ? $('#promote_form').submit() : ''" class="btn btn-primary mx-4 my-2">
+                @if($action == 'promote') {{__('text.word_promote')}} @elseif($action == 'custom') {{__('text.word_promote')}} @elseif($action == 'repeat') {{__('text.word_repeat')}} @endif
+            </button>
         </div>
     </form>
 </div>

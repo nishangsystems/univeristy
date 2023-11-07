@@ -281,7 +281,6 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::resource('users', 'Admin\UserController');
     Route::get('students/init_promotion', 'Admin\StudentController@initialisePromotion')->name('students.init_promotion');
     Route::get('students/promotion', 'Admin\StudentController@promotion')->name('students.promotion');
-    // Route::post('students/promote', 'Admin\StudentController@pend_promotion')->name('students.promote');
     Route::post('students/promote', 'Admin\StudentController@promote')->name('students.promote');
     Route::get('students/promotion/approve/{promotion_id?}', 'Admin\StudentController@trigger_approval')->name('students.trigger_approval');
     Route::post('students/promotion/approve', 'Admin\StudentController@approvePromotion')->name('students.approve_promotion');
@@ -293,6 +292,13 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('demotion_target/{id}', 'Admin\StudentController@unitDemoteTarget')->name('demotion_target');
     Route::get('promotion_target/{id}', 'Admin\StudentController@unitTarget')->name('promotion_target');
     Route::get('promotion_batch/{id}', 'Admin\StudentController@promotionBatch')->name('promotion_batch');
+    // Custom promotion and repeat
+    Route::get('students/custom_promotion', 'Admin\StudentController@custom_promotion')->name('students.custom_promotion');
+    // Route::post('students/custom_promotion', 'Admin\StudentController@custom_promote');
+    Route::get('students/repeat', 'Admin\StudentController@repeat_students')->name('students.repeat_students');
+    Route::post('students/repeat', 'Admin\StudentController@repeat_students_save');
+
+
     Route::get('students/import', 'Admin\StudentController@import')->name('students.import');
     Route::post('students/import', 'Admin\StudentController@importPost')->name('students.import');
     Route::post('students/clear', 'Admin\StudentController@clearStudents')->name('students.clear');
@@ -828,5 +834,8 @@ Route::get('trace_resits', function(){
     $data['resit_students'] = StudentSubject::whereIn('resit_id', $resit_ids)->get();
     return $data;
 });
+Route::get('next_year/{yr}', function($yr){
+    return \App\Models\Batch::find($yr+1);
+})->name('next_year');
 
 // Route::any('**', [CustomLoginController::class, 'login']);

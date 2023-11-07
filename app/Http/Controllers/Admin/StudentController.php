@@ -603,7 +603,7 @@ class StudentController extends Controller
             return back()->with('error', $validator->errors()->first());
         }
 
-        $current_year = Helpers::instance()->getCurrentAccademicYear();
+        $current_year = $request->year_from ?? Helpers::instance()->getCurrentAccademicYear();
         $data['current_year'] = $current_year;
         $mainClasses = $this->getMainClasses();
 
@@ -616,7 +616,8 @@ class StudentController extends Controller
                 ]];
 
         // return $classes;
-        $data['title'] = "Student Promotion";
+        if($request->action == 'promote') $data['title'] = "Student Promotion"; elseif($request->action == 'custom') $data['title'] = "Custom Promotion"; elseif($request->action == 'repeat') $data['title'] = "Repeat Students";
+        $data['action'] = $request->action ?? 'promote';
         $data['request'] = $request;
         $data['classes'] = $classes;
         $data['students'] =  StudentClass::where(['year_id'=>$current_year, 'class_id'=>$request->class_from, 'student_classes.current'=>true])
@@ -1180,5 +1181,29 @@ class StudentController extends Controller
             $data['promotions'] = Promotion::join('program_levels', 'program_levels.id', '=', 'promotions.from_class')->where('program_levels.program_id', $program_id)->get('promotions.*');
         }
         return view('admin.student.promotion_history', $data);
+    }
+
+    public function custom_promotion(Request $request){
+        $classes = DB::table('school_units')->distinct()->get(['id', 'base_class', 'target_class']);
+        $class_names = DB::table('school_units')->distinct()->get(['id', 'name', 'parent_id']);
+
+        $data['base_classes'] = $this->_getBaseClasses();
+        $data['class_pairs'] = $classes;
+        $data['class_names'] = $class_names;
+        $data['classes'] = $this->getMainClasses();
+        // return config('tranzak.tranzak');
+        return view('admin.student.custom_promotion', $data);
+    }
+
+    public function repeat_students(Request $request){
+        $classes = DB::table('school_units')->distinct()->get(['id', 'base_class', 'target_class']);
+        $class_names = DB::table('school_units')->distinct()->get(['id', 'name', 'parent_id']);
+
+        $data['base_classes'] = $this->_getBaseClasses();
+        $data['class_pairs'] = $classes;
+        $data['class_names'] = $class_names;
+        $data['classes'] = $this->getMainClasses();
+        // return config('tranzak.tranzak');
+        return view('admin.student.repeat_students', $data);
     }
 }
