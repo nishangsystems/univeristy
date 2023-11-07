@@ -865,5 +865,8 @@ return [
     'number_promoted'=>'number promoted',
     'degree_type'=>'degree type',
     'create_notification'=>'create notification',
+    'custom_promotion'=>'custom promotion',
+    'repeat_students'=>'repeat students',
+    'word_repeat'=>'repeat',
     ''
 ];

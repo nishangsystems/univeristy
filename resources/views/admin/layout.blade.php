@@ -526,6 +526,20 @@
                                 </a>
                                 <b class="arrow"></b>
                             </li>
+                            <li>
+                                <a href="{{route('admin.students.custom_promotion')}}"  class="text-capitalize">
+                                    <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
+                                    {{__('text.custom_promotion')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.students.repeat_students')}}"  class="text-capitalize">
+                                    <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
+                                    {{__('text.repeat_students')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
                         @endif
                         <li>
                             <a href="{{route('admin.students.promotions')}}"  class="text-capitalize">
