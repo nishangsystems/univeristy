@@ -18,6 +18,8 @@ use App\Models\Notification;
 use App\Models\PayIncome;
 use App\Models\PaymentItem;
 use App\Models\Payments;
+use App\Models\PendingTranzakTransaction;
+use App\Models\PendingTranzakTranzaction;
 use App\Models\PlatformCharge;
 use App\Models\ProgramLevel;
 use App\Models\Resit;
@@ -2199,6 +2201,11 @@ class HomeController extends Controller
             if($_response->collect()->toArray()['success'] == false){
                 goto GEN_TOKEN;
             }
+            $resp_data = $_response->collect()->toArray()['data'];
+            $pending_tranzaktion = ["request_id"=>$resp_data['requestId'],"amount"=>$resp_data['amount'],"currency_code"=>$resp_data['currencyCode'],"description"=>$resp_data['description'],"transaction_ref"=>$resp_data['mchTransactionRef'],"app_id"=>$resp_data['appId'], 'transaction_time'=>$resp_data['createdAt']];
+            $pt_instance = new PendingTranzakTransaction($pending_tranzaktion);
+            $pt_instance->save();
+            dd($_response->collect()->toArray()['data']);
             // return $request->all();
             session()->put($transaction_data, json_decode($_response->body())->data);
             return redirect()->to(route('student.tranzak.processing', $purpose));

@@ -219,13 +219,15 @@ class Helpers
         }
     }
 
-    public function getStudentScholarshipAmount($student_id)
+    public function getStudentScholarshipAmount($student_id, $year_id = null)
     {
         //  $amount = 0;
+        $year = $year_id == null ? $this->getCurrentAccademicYear() : $year_id;
         $amount = DB::table('student_scholarships')
             ->join('students', ['students.id' => 'student_scholarships.student_id'])
             ->where('student_scholarships.batch_id', $this->getCurrentAccademicYear())
             ->where('student_scholarships.student_id', $student_id)
+            ->where('student_scholarships.batch_id', $year)
             ->pluck('student_scholarships.amount')->first();
         if (empty($amount)) {
             $amount =  0;

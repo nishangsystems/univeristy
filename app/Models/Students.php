@@ -111,7 +111,7 @@ class Students extends Authenticatable
     public function bal($student_id = null, $year = null)
     {
         $year = $year == null ? Helpers::instance()->getCurrentAccademicYear() : $year;
-        $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id);
+        $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id, $year-1);
         return $this->total() + $this->debt($year) + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid() - ($scholarship);
     }
 
