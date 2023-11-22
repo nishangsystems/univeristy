@@ -2007,6 +2007,7 @@ class HomeController extends Controller
                         $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
                         $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
                     DB::commit();
                     return redirect(route('student.home'))->with('success', "Payment successful.");
                     break;
@@ -2014,16 +2015,19 @@ class HomeController extends Controller
                 case 'CANCELLED':
                     # code...
                     // notify user
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
                     return redirect(route('student.home'))->with('message', 'Payment Not Made. The request was cancelled.');
                     break;
                 
                 case 'FAILED':
                     # code...
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
                     return redirect(route('student.home'))->with('error', 'Payment failed.');
                     break;
                 
                 case 'REVERSED':
                     # code...
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
                     return redirect(route('student.home'))->with('message', 'Payment failed. The request was reversed.');
                     break;
                 
@@ -2178,7 +2182,6 @@ class HomeController extends Controller
                 break;
 
         }
-        
         // $tranzak_credentials = TranzakCredential::where('campus_id', $student->campus_id)->first();
         if(cache($cache_token_key) == null or Carbon::parse(cache($cache_token_key.'_expiry'))->isAfter(now())){
             // get and cache different token
@@ -2195,20 +2198,25 @@ class HomeController extends Controller
         $headers = ['Authorization'=>'Bearer '.cache($cache_token_key)];
         $request_data = ['mobileWalletNumber'=>'237'.$request->tel, 'mchTransactionRef'=>'_'.str_replace(' ', '_', $request->payment_purpose).'_payment_'.time().'_'.random_int(1, 9999), "amount"=> $request->amount, "currencyCode"=> "XAF", "description"=>"Payment for {$request->payment_purpose} - ST LOUIS UNIVERSITY INSTITUTE."];
         $_response = Http::withHeaders($headers)->post(config('tranzak.tranzak.base').config('tranzak.tranzak.direct_payment_request'), $request_data);
-        
+        // dd($_response);
         if($_response->status() == 200){
             // save transaction and track it status
             if($_response->collect()->toArray()['success'] == false){
                 goto GEN_TOKEN;
             }
             $resp_data = $_response->collect()->toArray()['data'];
-            $pending_tranzaktion = ["request_id"=>$resp_data['requestId'],"amount"=>$resp_data['amount'],"currency_code"=>$resp_data['currencyCode'],"description"=>$resp_data['description'],"transaction_ref"=>$resp_data['mchTransactionRef'],"app_id"=>$resp_data['appId'], 'transaction_time'=>$resp_data['createdAt']];
+            $pending_tranzaktion = [
+                "request_id"=>$resp_data['requestId'],"amount"=>$resp_data['amount'],"currency_code"=>$resp_data['currencyCode'],"description"=>$resp_data['description'],"transaction_ref"=>$resp_data['mchTransactionRef'],"app_id"=>$resp_data['appId'], 'transaction_time'=>$resp_data['createdAt'],'user_type'=>'student', 'purpose'=>$request->payment_purpose,
+                "payment_id"=>$request->payment_id,"student_id"=>auth('student')->id(),"batch_id"=>$request->year_id,'unit_id'=>auth('student')->user()->_class()->id,"original_amount"=>$request->amount,"reference_number"=>'fee.tranzak_momo_payment_'.time().'_'.random_int(100000, 999999).'_'.auth('student')->id(), 'paid_by'=>'TRANZAK_MOMO'
+            ];
             $pt_instance = new PendingTranzakTransaction($pending_tranzaktion);
             $pt_instance->save();
-            dd($_response->collect()->toArray()['data']);
+            // dd($_response->collect()->toArray()['data']);
             // return $request->all();
             session()->put($transaction_data, json_decode($_response->body())->data);
             return redirect()->to(route('student.tranzak.processing', $purpose));
+        }else{
+            goto GEN_TOKEN;
         }
     }
 

@@ -43,6 +43,7 @@ Route::get('/clear', function () {
 
 });
 
+
 Route::get('promotion/class_target/{class_id}', [Homecontroller::class, 'class_target'])->name('promotion.class.target');
 Route::get('set_local/{lang}', [Controller::class, 'set_local'])->name('lang.switch');
 

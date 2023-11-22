@@ -9,5 +9,9 @@ class PendingTranzakTransaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["request_id","amount","currency_code","description","transaction_ref","app_id", 'transaction_time'];
+    protected $fillable = [
+        "request_id", "amount", "currency_code","description","transaction_ref","app_id", 
+        'transaction_time', 'payment_type', 'user_type', "payment_id", "student_id", 
+        "batch_id", 'unit_id', "original_amount", "reference_number", 'paid_by', 'purpose'
+    ];
 }

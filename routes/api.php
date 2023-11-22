@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\Student\ProfileController;
 use App\Http\Controllers\API\ProfileController as UserProfileController;
+use App\Http\Controllers\Controller;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,8 @@ use App\Http\Controllers\API\ProfileController as UserProfileController;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('hook/payments', [Controller::class, 'payments_hook_listener'])->name('tranzak.hook');
 
 Route::get('login', [ApiController::class, 'degrees'])->name('degrees');
 Route::get('login/student', [AuthController::class, 'studentLogin'])->name('student.login');
