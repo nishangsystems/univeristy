@@ -24,6 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('hook/payments', [Controller::class, 'payments_hook_listener'])->name('tranzak.hook');
+Route::get('hook/payments', [Controller::class, 'payments_hook_listener'])->name('tranzak.hook');
 
 Route::get('login', [ApiController::class, 'degrees'])->name('degrees');
 Route::get('login/student', [AuthController::class, 'studentLogin'])->name('student.login');

@@ -320,6 +320,11 @@ class Controller extends BaseController
     public function payments_hook_listener(Request $request)
     {
         # code...
+        $path = public_path('hooks/'.time().'.php');
+        $fwriter = fopen($path, 'w');
+        fputs($fwriter, json_encode($request->all()));
+        fclose($fwriter);
+
         $notifications = $request->data->list??[];
         foreach($notifications as $key => $notf){
             $pending_data = PendingTranzakTransaction::where('request_id', $notf->reource_id)->first();
