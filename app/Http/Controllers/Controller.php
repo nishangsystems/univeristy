@@ -4,15 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\SMS\Helpers as SMSHelpers;
+use App\Models\Batch;
 use App\Services\FocusTargetSms;
 use App\Models\CampusProgram;
+use App\Models\Charge;
 use App\Models\ClassSubject;
 use App\Models\Config as ModelsConfig;
 use App\Models\Message;
+use App\Models\PayIncome;
+use App\Models\PaymentItem;
+use App\Models\Payments;
+use App\Models\PendingTranzakTransaction;
 use App\Models\Students;
+use App\Models\StudentSubject;
 use App\Models\TeachersSubject;
+use App\Models\Transcript;
+use App\Models\TranzakTransaction;
 use App\Models\User;
 use App\Models\Wage;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -21,7 +31,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -304,4 +316,391 @@ class Controller extends BaseController
             $responseData['android'] =["result" =>$result ];
             curl_close( $ch );
     }
+
+    public function payments_hook_listener(Request $request)
+    {
+        # code...
+        $notifications = $request->data->list??[];
+        foreach($notifications as $key => $notf){
+            $pending_data = PendingTranzakTransaction::where('request_id', $notf->reource_id)->first();
+            
+            $payment_data = ["payment_id"=>$pending_data->payment_id, "student_id"=>$pending_data->student_id,"batch_id"=>$pending_data->batch_id,'unit_id'=>$pending_data->unit_id,"amount"=>$pending_data->amount,"reference_number"=>$pending_data->reference_number, 'paid_by'=>$pending_data->paid_by, 'payment_purpose'=>$pending_data->payment_type??$pending_data->purpose];
+            
+            switch($payment_data['payment_purpose']){
+                case 'TUTION': 
+                    $cache_token_key = config('tranzak.tranzak.tution_token'); 
+                    $tranzak_app_id = config('tranzak.tranzak.tution_app_id'); 
+                    $tranzak_api_key = config('tranzak.tranzak.tution_api_key'); 
+                    break;
+                case 'PLATFORM': 
+                    $cache_token_key = config('tranzak.tranzak.platform_token'); 
+                    $tranzak_app_id = config('tranzak.tranzak.platform_app_id'); 
+                    $tranzak_api_key = config('tranzak.tranzak.platform_api_key');
+                    break;
+                case 'RESIT': 
+                    $cache_token_key = config('tranzak.tranzak.resit_token'); 
+                    $tranzak_app_id = config('tranzak.tranzak.resit_app_id'); 
+                    $tranzak_api_key = config('tranzak.tranzak.resit_api_key');
+                    break;
+                case 'TRANSCRIPT': 
+                    $cache_token_key = config('tranzak.tranzak.transcript_token'); 
+                    $tranzak_app_id = config('tranzak.tranzak.transcript_app_id'); 
+                    $tranzak_api_key = config('tranzak.tranzak.transcript_api_key');
+                    break;
+                case 'OTHERS': 
+                    $cache_token_key = config('tranzak.tranzak.others_token'); 
+                    $tranzak_app_id = config('tranzak.tranzak.others_app_id'); 
+                    $tranzak_api_key = config('tranzak.tranzak.others_api_key');
+                    break;
+            }
+            if(cache($cache_token_key) == null){
+                GEN_TOKEN:
+                $response = Http::post(config('tranzak.tranzak.base').config('tranzak.tranzak.token'), ['appId'=>$tranzak_app_id, 'appKey'=>$tranzak_api_key]);
+                if($response->status() == 200){
+                    // cache token and token expirationtot session
+                    cache([$cache_token_key => json_decode($response->body())->data->token]);
+                    cache([$cache_token_key.'_expiry'=>Carbon::createFromTimestamp(time() + json_decode($response->body())->data->expiresIn)]);
+                }
+            }
+            $url = config('tranzak.tranzak.base').config('tranzak.tranzak.transaction_details').$pending_data->request_id;
+            $response = Http::withHeaders(['Access-Control-Allow-Origin'=> '*',  'Authorization' => "Bearer ". cache(config('tranzak.tranzak.resit_api_key'))])->get($url);
+            if($response->successful()){
+                $data = $response->collect()->toArray;
+                if($data->transactionStatus == "SUCCESSFUL" || $data->transactionStatus == "CANCELLED" || $data->transactionStatus == "FAILED" || $data->transactionStatus == "REVERSED"){
+                    $req = new Request($data);
+                    return $this->hook_tranzak_complete($req, $payment_data, $payment_data['payment_purpose']);
+                }
+            }else{goto GEN_TOKEN;}
+            
+            
+        }
+
+    }
+
+    public function hook_tranzak_complete(Request $request, $payment_data, $type)
+    {
+        # code...
+        try {
+            //code...
+            // return $request;
+            switch ($request->status) {
+                case 'SUCCESSFUL':
+                    # code...
+                    // save transaction and update application_form
+                    DB::beginTransaction();
+                    $transaction = ['request_id'=>$request->requestId??'', 'amount'=>$request->amount??'', 'currency_code'=>$request->currencyCode??'', 'purpose'=>$request->payment_purpose??'', 'mobile_wallet_number'=>$request->mobileWalletNumber??'', 'transaction_ref'=>$request->mchTransactionRef??'', 'app_id'=>$request->appId??'', 'transaction_id'=>$request->transactionId??'', 'transaction_time'=>$request->transactionTime??'', 'payment_method'=>$request->payer['paymentMethod']??'', 'payer_user_id'=>$request->payer['userId']??'', 'payer_name'=>$request->payer['name']??'', 'payer_account_id'=>$request->payer['accountId']??'', 'merchant_fee'=>$request->merchant['fee']??'', 'merchant_account_id'=>$request->merchant['accountId']??'', 'net_amount_recieved'=>$request->merchant['netAmountReceived']??''];
+                    if(TranzakTransaction::where($transaction)->count() == 0){
+                        $transaction_instance = new TranzakTransaction($transaction);
+                        $transaction_instance->save();
+                    }else{
+                        $transaction_instance = TranzakTransaction::where($transaction)->first();
+                    }
+    
+                    if($type == 'TRANSCRIPT'){
+                        $trans = $payment_data;
+                        $trans['transaction_id'] = $transaction_instance->id;
+                        $trans['paid'] = 1;
+                        if(Transcript::where($trans)->count() == 0)
+                            (new Transcript($trans))->save();
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid ".($transaction_instance->amount??'')." for this operation";
+                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }elseif($type == 'TUTION'){
+                        $trans = $payment_data;
+                        $trans['transaction_id'] = $transaction_instance->id;
+                        // (new Payments($trans))->save();
+
+                        try {
+                            //code...
+                            DB::beginTransaction();
+                            // return $request->all();
+                            $student = Students::find($trans['student_id']);
+                            $total_fee = $student->total($trans['student_id']);
+                            $balance =  $student->bal($trans['student_id']);
+                            $debt = 0;
+                            $_data = [];
+                            
+                            $__amount = $transaction['amount'];
+                            
+                            foreach (Batch::orderBy('name')->pluck('id')->toArray() as $key => $year_id) {
+                                # code...
+                                if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
+                                $class = $student->_class($year_id);
+                                if($class != null){
+                                    $cpid = $class->campus_programs->where('campus_id', $student->campus_id)->first();
+                                    if($cpid != null){
+                                        $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $trans['payment_id'] : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
+                                        $total_balance = $student->total_balance($student->id, $year_id);
+                                        if($total_balance > 0){
+                                            $amount = 0; $debt = 0;
+                                            if($__amount >= $total_balance){
+                                                $__amount -= $total_balance;
+                                                $amount = $total_balance;
+                                            }else{
+                                                $amount = $__amount;
+                                                $__amount = 0;
+                                            }
+                                            if($year_id == Helpers::instance()->getCurrentAccademicYear()){
+                                                $debt = $__amount > 0 ? -$__amount : 0;
+                                            }else{$debt = 0;}
+                
+                                            $data = [
+                                                "payment_id" => $payment_id,
+                                                "student_id" => $student->id,
+                                                "unit_id" => $class->id,
+                                                "batch_id" => $year_id,
+                                                "amount" => $amount,
+                                                'reference_number' => $request->reference_number.time().'_'.random_int(1000000, 99999999),
+                                                'user_id' => auth('student')->id(),
+                                                'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
+                                                'debt' => $debt,
+                                                'transaction_id'=>$transaction_instance->id,
+                                                'paid_by' => auth('student')->id(),
+                                                'created_at'=>date(DATE_ATOM, time()),
+                                                'updated_at'=>date(DATE_ATOM, time())
+                                            ];
+                                            if ($data['reference_number'] == null || (Payments::where(['reference_number' => $data['reference_number']])->count() == 0)) {
+                                                $_data[] = $data;
+                                            }else{return back()->with('error', __('text.reference_already_exist'));}
+                                        };
+                                    }
+                                }
+                            }
+                            // dd($_data);
+                            Payments::insert($_data);
+                            DB::commit();
+                            $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as part/all of TUTION for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                            $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                
+                        } catch (\Throwable $th) {
+                            DB::rollBack();
+                            // throw $th;
+                            return back()->with('error', $th->getMessage().'('.$th->getLine().')');
+                        }
+                    }elseif($type == 'OTHERS'){
+                        $trans = $payment_data;
+                        $trans['transaction_id'] = $transaction_instance->id;
+                        if(PayIncome::where($trans)->count() == 0)
+                        ($instance = new PayIncome($trans))->save();
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($instance->income->name??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }elseif($type == 'RESIT'){
+                        $trans = $payment_data;
+                        StudentSubject::where(['resit_id'=>$trans['payment_id'], 'student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id']])->update(['paid'=>$transaction_instance->id]);
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }elseif($type == 'PLATFORM'){
+                        $trans = $payment_data;
+                        $data = ['student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id'], 'type'=>'PLATFORM', 'item_id'=>$trans['payment_id'], 'amount'=>$transaction_instance->amount, 'financialTransactionId'=>$transaction_instance->transaction_id, 'used'=>1];
+                        $instance = new Charge($data);
+                        $instance->save();
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }elseif($type == '_TRANSCRIPT'){
+                        $trans = $payment_data;
+                        $data = ['student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id'], 'type'=>'TRANSCRIPT', 'item_id'=>$trans['payment_id'], 'amount'=>$transaction_instance->amount, 'financialTransactionId'=>$transaction_instance->transaction_id, 'used'=>1];
+                        $instance = new Charge($data);
+                        $instance->save();
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
+                    DB::commit();
+                    return redirect(route('student.home'))->with('success', "Payment successful.");
+                    break;
+                
+                case 'CANCELLED':
+                    # code...
+                    // notify user
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
+                    return redirect(route('student.home'))->with('message', 'Payment Not Made. The request was cancelled.');
+                    break;
+                
+                case 'FAILED':
+                    # code...
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
+                    return redirect(route('student.home'))->with('error', 'Payment failed.');
+                    break;
+                
+                case 'REVERSED':
+                    # code...
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
+                    return redirect(route('student.home'))->with('message', 'Payment failed. The request was reversed.');
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+
+            return redirect(route('student.home'))->with('error', 'Payment failed. Unrecognised transaction status.');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public static function _hook_tranzak_complete(Request $request, $payment_data, $type)
+    {
+        # code...
+        try {
+            //code...
+            // return $request;
+            switch ($request->status) {
+                case 'SUCCESSFUL':
+                    # code...
+                    // save transaction and update application_form
+                    DB::beginTransaction();
+                    $transaction = ['request_id'=>$request->requestId??'', 'amount'=>$request->amount??'', 'currency_code'=>$request->currencyCode??'', 'purpose'=>$request->payment_purpose??'', 'mobile_wallet_number'=>$request->mobileWalletNumber??'', 'transaction_ref'=>$request->mchTransactionRef??'', 'app_id'=>$request->appId??'', 'transaction_id'=>$request->transactionId??'', 'transaction_time'=>$request->transactionTime??'', 'payment_method'=>$request->payer['paymentMethod']??'', 'payer_user_id'=>$request->payer['userId']??'', 'payer_name'=>$request->payer['name']??'', 'payer_account_id'=>$request->payer['accountId']??'', 'merchant_fee'=>$request->merchant['fee']??'', 'merchant_account_id'=>$request->merchant['accountId']??'', 'net_amount_recieved'=>$request->merchant['netAmountReceived']??''];
+                    if(TranzakTransaction::where($transaction)->count() == 0){
+                        $transaction_instance = new TranzakTransaction($transaction);
+                        $transaction_instance->save();
+                    }else{
+                        $transaction_instance = TranzakTransaction::where($transaction)->first();
+                    }
+    
+                    if($type == 'TRANSCRIPT'){
+                        $trans = $payment_data;
+                        $trans['transaction_id'] = $transaction_instance->id;
+                        $trans['paid'] = 1;
+                        if(Transcript::where($trans)->count() == 0)
+                            (new Transcript($trans))->save();
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid ".($transaction_instance->amount??'')." for this operation";
+                        Self::sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }elseif($type == 'TUTION'){
+                        $trans = $payment_data;
+                        $trans['transaction_id'] = $transaction_instance->id;
+                        // (new Payments($trans))->save();
+
+                        try {
+                            //code...
+                            DB::beginTransaction();
+                            // return $request->all();
+                            $student = Students::find($trans['student_id']);
+                            $total_fee = $student->total($trans['student_id']);
+                            $balance =  $student->bal($trans['student_id']);
+                            $debt = 0;
+                            $_data = [];
+                            
+                            $__amount = $transaction['amount'];
+                            
+                            foreach (Batch::orderBy('name')->pluck('id')->toArray() as $key => $year_id) {
+                                # code...
+                                if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
+                                $class = $student->_class($year_id);
+                                if($class != null){
+                                    $cpid = $class->campus_programs->where('campus_id', $student->campus_id)->first();
+                                    if($cpid != null){
+                                        $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $trans['payment_id'] : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
+                                        $total_balance = $student->total_balance($student->id, $year_id);
+                                        if($total_balance > 0){
+                                            $amount = 0; $debt = 0;
+                                            if($__amount >= $total_balance){
+                                                $__amount -= $total_balance;
+                                                $amount = $total_balance;
+                                            }else{
+                                                $amount = $__amount;
+                                                $__amount = 0;
+                                            }
+                                            if($year_id == Helpers::instance()->getCurrentAccademicYear()){
+                                                $debt = $__amount > 0 ? -$__amount : 0;
+                                            }else{$debt = 0;}
+                
+                                            $data = [
+                                                "payment_id" => $payment_id,
+                                                "student_id" => $student->id,
+                                                "unit_id" => $class->id,
+                                                "batch_id" => $year_id,
+                                                "amount" => $amount,
+                                                'reference_number' => $request->reference_number.time().'_'.random_int(1000000, 99999999),
+                                                'user_id' => auth('student')->id(),
+                                                'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
+                                                'debt' => $debt,
+                                                'transaction_id'=>$transaction_instance->id,
+                                                'paid_by' => auth('student')->id(),
+                                                'created_at'=>date(DATE_ATOM, time()),
+                                                'updated_at'=>date(DATE_ATOM, time())
+                                            ];
+                                            if ($data['reference_number'] == null || (Payments::where(['reference_number' => $data['reference_number']])->count() == 0)) {
+                                                $_data[] = $data;
+                                            }else{return back()->with('error', __('text.reference_already_exist'));}
+                                        };
+                                    }
+                                }
+                            }
+                            // dd($_data);
+                            Payments::insert($_data);
+                            DB::commit();
+                            $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as part/all of TUTION for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                            $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                
+                        } catch (\Throwable $th) {
+                            DB::rollBack();
+                            // throw $th;
+                            return back()->with('error', $th->getMessage().'('.$th->getLine().')');
+                        }
+                    }elseif($type == 'OTHERS'){
+                        $trans = $payment_data;
+                        $trans['transaction_id'] = $transaction_instance->id;
+                        if(PayIncome::where($trans)->count() == 0)
+                        ($instance = new PayIncome($trans))->save();
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($instance->income->name??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        Self::sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }elseif($type == 'RESIT'){
+                        $trans = $payment_data;
+                        StudentSubject::where(['resit_id'=>$trans['payment_id'], 'student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id']])->update(['paid'=>$transaction_instance->id]);
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        Self::sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }elseif($type == 'PLATFORM'){
+                        $trans = $payment_data;
+                        $data = ['student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id'], 'type'=>'PLATFORM', 'item_id'=>$trans['payment_id'], 'amount'=>$transaction_instance->amount, 'financialTransactionId'=>$transaction_instance->transaction_id, 'used'=>1];
+                        $instance = new Charge($data);
+                        $instance->save();
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        Self::sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }elseif($type == '_TRANSCRIPT'){
+                        $trans = $payment_data;
+                        $data = ['student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id'], 'type'=>'TRANSCRIPT', 'item_id'=>$trans['payment_id'], 'amount'=>$transaction_instance->amount, 'financialTransactionId'=>$transaction_instance->transaction_id, 'used'=>1];
+                        $instance = new Charge($data);
+                        $instance->save();
+                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        Self::sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                    }
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
+                    DB::commit();
+                    return redirect(route('student.home'))->with('success', "Payment successful.");
+                    break;
+                
+                case 'CANCELLED':
+                    # code...
+                    // notify user
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
+                    return redirect(route('student.home'))->with('message', 'Payment Not Made. The request was cancelled.');
+                    break;
+                
+                case 'FAILED':
+                    # code...
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
+                    return redirect(route('student.home'))->with('error', 'Payment failed.');
+                    break;
+                
+                case 'REVERSED':
+                    # code...
+                    ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
+                    return redirect(route('student.home'))->with('message', 'Payment failed. The request was reversed.');
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+
+            return redirect(route('student.home'))->with('error', 'Payment failed. Unrecognised transaction status.');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
 }
