@@ -319,6 +319,7 @@ class Controller extends BaseController
 
     public function payments_hook_listener(Request $request)
     {
+        return 12095794589656;
         # code...
         $path = public_path('hooks/'.time().'.php');
         $fwriter = fopen($path, 'w');
@@ -332,7 +333,7 @@ class Controller extends BaseController
             $payment_data = ["payment_id"=>$pending_data->payment_id, "student_id"=>$pending_data->student_id,"batch_id"=>$pending_data->batch_id,'unit_id'=>$pending_data->unit_id,"amount"=>$pending_data->amount,"reference_number"=>$pending_data->reference_number, 'paid_by'=>$pending_data->paid_by, 'payment_purpose'=>$pending_data->payment_type??$pending_data->purpose];
             
             switch($payment_data['payment_purpose']){
-                case 'TUTION': 
+                case 'TUTION':
                     $cache_token_key = config('tranzak.tranzak.tution_token'); 
                     $tranzak_app_id = config('tranzak.tranzak.tution_app_id'); 
                     $tranzak_api_key = config('tranzak.tranzak.tution_api_key'); 
