@@ -325,6 +325,7 @@ class Controller extends BaseController
             $path = public_path('hooks/debug.php');
             $fwriter = fopen($path, 'w+');
             fputs($fwriter, '\t\n'.now());
+            fputs($fwriter, json_encode($request->all()));
             fclose($fwriter);
     
             $notifications = $request->data->list??[];
