@@ -333,27 +333,20 @@ class Controller extends BaseController
                 $resource = $notf->get('resource');
                 $pending_data = PendingTranzakTransaction::where('request_id', $resource_id)->first();
                 if($pending_data != null){
+                    
+                    // --------
+                    $path = public_path('hooks/debug.php');
+                    $fwriter = fopen($path, 'w+');
+                    fputs($fwriter, "______________________RESOURCE______________");
+                    fputs($fwriter, $path);
+                            
+                    fclose($fwriter);
+                    // ---------
                     $payment_data = ["payment_id"=>$pending_data->payment_id, "student_id"=>$pending_data->student_id,"batch_id"=>$pending_data->batch_id,'unit_id'=>$pending_data->unit_id,"amount"=>$pending_data->amount,"reference_number"=>$pending_data->reference_number, 'paid_by'=>$pending_data->paid_by, 'payment_purpose'=>$pending_data->payment_type??$pending_data->purpose];
                     
-                    $data = $notf;
                     if($resource->transactionStatus == "SUCCESSFUL" || $resource->transactionStatus == "CANCELLED" || $resource->transactionStatus == "FAILED" || $resource->transactionStatus == "REVERSED"){
                         $req = new Request($resource->toArray());
                                 
-                        
-                        // --------
-                        $path = public_path('hooks/debug.php');
-                                $fwriter = fopen($path, 'w+');
-                                fputs($fwriter, "______________________FIRST_ITEM______________");
-                                fputs($fwriter, json_encode($request->collect()->first()));
-                                fputs($fwriter, "______________________COMPLETE REQUEST______________");
-                                fputs($fwriter, json_encode($request->collect()->toArray()));
-                                fputs($fwriter, "______________________REQUEST_ID______________");
-                                fputs($fwriter, json_encode($request->collect()->get('resourceId')));
-                                fputs($fwriter, "______________________RESOURCE______________");
-                                fputs($fwriter, json_encode($request->collect()->get('resource')));
-                                
-                                fclose($fwriter);
-                        // ---------
                                     // return $request;
                         return $this->hook_tranzak_complete($req, $payment_data, $payment_data['payment_purpose']);
                     }
