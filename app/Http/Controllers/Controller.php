@@ -328,20 +328,20 @@ class Controller extends BaseController
             // return $request;
             $path = public_path('hooks/debug.php');
             $fwriter = fopen($path, 'w+');
-            fputs($fwriter, json_encode($request->collect()->toArray()));
+            fputs($fwriter, json_encode($request->collect()->resource));
             
             fclose($fwriter);
 
 
-            $notf = $request->data;
-                $pending_data = PendingTranzakTransaction::where('request_id', $notf->reource_id)->first();
+            $notf = $request->collect();
+                $pending_data = PendingTranzakTransaction::where('request_id', $notf->reourceId)->first();
                 
                 $payment_data = ["payment_id"=>$pending_data->payment_id, "student_id"=>$pending_data->student_id,"batch_id"=>$pending_data->batch_id,'unit_id'=>$pending_data->unit_id,"amount"=>$pending_data->amount,"reference_number"=>$pending_data->reference_number, 'paid_by'=>$pending_data->paid_by, 'payment_purpose'=>$pending_data->payment_type??$pending_data->purpose];
                 
                 if($notf != null){
                     $data = $notf;
                     if($data->transactionStatus == "SUCCESSFUL" || $data->transactionStatus == "CANCELLED" || $data->transactionStatus == "FAILED" || $data->transactionStatus == "REVERSED"){
-                        $req = new Request($data);
+                        $req = new Request($data->resource);
                         return $this->hook_tranzak_complete($req, $payment_data, $payment_data['payment_purpose']);
                     }
                 }
