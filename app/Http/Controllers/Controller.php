@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 /**
  * Summary of Controller
@@ -319,66 +320,70 @@ class Controller extends BaseController
 
     public function payments_hook_listener(Request $request)
     {
-        // return 12095794589656;
         # code...
-        $path = public_path('hooks/'.time().'.php');
-        $fwriter = fopen($path, 'w');
-        fputs($fwriter, json_encode($request->all()));
-        fclose($fwriter);
-
-        $notifications = $request->data->list??[];
-        foreach($notifications as $key => $notf){
-            $pending_data = PendingTranzakTransaction::where('request_id', $notf->reource_id)->first();
-            
-            $payment_data = ["payment_id"=>$pending_data->payment_id, "student_id"=>$pending_data->student_id,"batch_id"=>$pending_data->batch_id,'unit_id'=>$pending_data->unit_id,"amount"=>$pending_data->amount,"reference_number"=>$pending_data->reference_number, 'paid_by'=>$pending_data->paid_by, 'payment_purpose'=>$pending_data->payment_type??$pending_data->purpose];
-            
-            switch($payment_data['payment_purpose']){
-                case 'TUTION':
-                    $cache_token_key = config('tranzak.tranzak.tution_token'); 
-                    $tranzak_app_id = config('tranzak.tranzak.tution_app_id'); 
-                    $tranzak_api_key = config('tranzak.tranzak.tution_api_key'); 
-                    break;
-                case 'PLATFORM': 
-                    $cache_token_key = config('tranzak.tranzak.platform_token'); 
-                    $tranzak_app_id = config('tranzak.tranzak.platform_app_id'); 
-                    $tranzak_api_key = config('tranzak.tranzak.platform_api_key');
-                    break;
-                case 'RESIT': 
-                    $cache_token_key = config('tranzak.tranzak.resit_token'); 
-                    $tranzak_app_id = config('tranzak.tranzak.resit_app_id'); 
-                    $tranzak_api_key = config('tranzak.tranzak.resit_api_key');
-                    break;
-                case 'TRANSCRIPT': 
-                    $cache_token_key = config('tranzak.tranzak.transcript_token'); 
-                    $tranzak_app_id = config('tranzak.tranzak.transcript_app_id'); 
-                    $tranzak_api_key = config('tranzak.tranzak.transcript_api_key');
-                    break;
-                case 'OTHERS': 
-                    $cache_token_key = config('tranzak.tranzak.others_token'); 
-                    $tranzak_app_id = config('tranzak.tranzak.others_app_id'); 
-                    $tranzak_api_key = config('tranzak.tranzak.others_api_key');
-                    break;
-            }
-            if(cache($cache_token_key) == null){
-                GEN_TOKEN:
-                $response = Http::post(config('tranzak.tranzak.base').config('tranzak.tranzak.token'), ['appId'=>$tranzak_app_id, 'appKey'=>$tranzak_api_key]);
-                if($response->status() == 200){
-                    // cache token and token expirationtot session
-                    cache([$cache_token_key => json_decode($response->body())->data->token]);
-                    cache([$cache_token_key.'_expiry'=>Carbon::createFromTimestamp(time() + json_decode($response->body())->data->expiresIn)]);
+        try{
+            $path = public_path('hooks/debug.php');
+            $fwriter = fopen($path, 'w+');
+            fputs($fwriter, '\t\n'.now());
+            fclose($fwriter);
+    
+            $notifications = $request->data->list??[];
+            foreach($notifications as $key => $notf){
+                $pending_data = PendingTranzakTransaction::where('request_id', $notf->reource_id)->first();
+                
+                $payment_data = ["payment_id"=>$pending_data->payment_id, "student_id"=>$pending_data->student_id,"batch_id"=>$pending_data->batch_id,'unit_id'=>$pending_data->unit_id,"amount"=>$pending_data->amount,"reference_number"=>$pending_data->reference_number, 'paid_by'=>$pending_data->paid_by, 'payment_purpose'=>$pending_data->payment_type??$pending_data->purpose];
+                
+                switch($payment_data['payment_purpose']){
+                    case 'TUTION':
+                        $cache_token_key = config('tranzak.tranzak.tution_token'); 
+                        $tranzak_app_id = config('tranzak.tranzak.tution_app_id'); 
+                        $tranzak_api_key = config('tranzak.tranzak.tution_api_key'); 
+                        break;
+                    case 'PLATFORM': 
+                        $cache_token_key = config('tranzak.tranzak.platform_token'); 
+                        $tranzak_app_id = config('tranzak.tranzak.platform_app_id'); 
+                        $tranzak_api_key = config('tranzak.tranzak.platform_api_key');
+                        break;
+                    case 'RESIT': 
+                        $cache_token_key = config('tranzak.tranzak.resit_token'); 
+                        $tranzak_app_id = config('tranzak.tranzak.resit_app_id'); 
+                        $tranzak_api_key = config('tranzak.tranzak.resit_api_key');
+                        break;
+                    case 'TRANSCRIPT': 
+                        $cache_token_key = config('tranzak.tranzak.transcript_token'); 
+                        $tranzak_app_id = config('tranzak.tranzak.transcript_app_id'); 
+                        $tranzak_api_key = config('tranzak.tranzak.transcript_api_key');
+                        break;
+                    case 'OTHERS': 
+                        $cache_token_key = config('tranzak.tranzak.others_token'); 
+                        $tranzak_app_id = config('tranzak.tranzak.others_app_id'); 
+                        $tranzak_api_key = config('tranzak.tranzak.others_api_key');
+                        break;
                 }
-            }
-            $url = config('tranzak.tranzak.base').config('tranzak.tranzak.transaction_details').$pending_data->request_id;
-            $response = Http::withHeaders(['Access-Control-Allow-Origin'=> '*',  'Authorization' => "Bearer ". cache(config('tranzak.tranzak.resit_api_key'))])->get($url);
-            if($response->successful()){
-                $data = $response->collect()->toArray;
-                if($data->transactionStatus == "SUCCESSFUL" || $data->transactionStatus == "CANCELLED" || $data->transactionStatus == "FAILED" || $data->transactionStatus == "REVERSED"){
-                    $req = new Request($data);
-                    return $this->hook_tranzak_complete($req, $payment_data, $payment_data['payment_purpose']);
+                if(cache($cache_token_key) == null){
+                    GEN_TOKEN:
+                    $response = Http::post(config('tranzak.tranzak.base').config('tranzak.tranzak.token'), ['appId'=>$tranzak_app_id, 'appKey'=>$tranzak_api_key]);
+                    if($response->status() == 200){
+                        // cache token and token expirationtot session
+                        cache([$cache_token_key => json_decode($response->body())->data->token]);
+                        cache([$cache_token_key.'_expiry'=>Carbon::createFromTimestamp(time() + json_decode($response->body())->data->expiresIn)]);
+                    }
                 }
-            }else{goto GEN_TOKEN;}
-            
-            
+                $url = config('tranzak.tranzak.base').config('tranzak.tranzak.transaction_details').$pending_data->request_id;
+                $response = Http::withHeaders(['Access-Control-Allow-Origin'=> '*',  'Authorization' => "Bearer ". cache(config('tranzak.tranzak.resit_api_key'))])->get($url);
+                if($response->successful()){
+                    $data = $response->collect()->toArray;
+                    if($data->transactionStatus == "SUCCESSFUL" || $data->transactionStatus == "CANCELLED" || $data->transactionStatus == "FAILED" || $data->transactionStatus == "REVERSED"){
+                        $req = new Request($data);
+                        return $this->hook_tranzak_complete($req, $payment_data, $payment_data['payment_purpose']);
+                    }
+                }else{goto GEN_TOKEN;}
+                
+                
+            }
+        }
+        catch(Throwable $th){
+            return $th->getTrace();
         }
 
     }
