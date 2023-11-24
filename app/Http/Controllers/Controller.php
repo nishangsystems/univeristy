@@ -319,6 +319,7 @@ class Controller extends BaseController
 
     public function payments_hook_listener(Request $request)
     {
+        return 12095794589656;
         # code...
         $path = public_path('hooks/'.time().'.php');
         $fwriter = fopen($path, 'w');
