@@ -383,7 +383,7 @@ class Controller extends BaseController
             }
         }
         catch(Throwable $th){
-            return $th->getTrace();
+            return $th->getMessage();
         }
 
     }
