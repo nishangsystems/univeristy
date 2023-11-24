@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\App;
@@ -323,18 +324,25 @@ class Controller extends BaseController
         # code...
         try{
             
-            // return $request->__toString;
             
             // return $request;
             $path = public_path('hooks/debug.php');
             $fwriter = fopen($path, 'w+');
-            fputs($fwriter, $request->collect()->__toString());
+            fputs($fwriter, "______________________FIRST_ITEM______________");
+            fputs($fwriter, json_encode($request->collect()->first()));
+            fputs($fwriter, "______________________COMPLETE REQUEST______________");
+            fputs($fwriter, json_encode($request->collect()->toArray()));
+            fputs($fwriter, "______________________REQUEST_ID______________");
+            fputs($fwriter, json_encode($request->collect()->get('resourceId')));
+            fputs($fwriter, "______________________RESOURCE______________");
+            fputs($fwriter, json_encode($request->collect()->get('resource')));
             
             fclose($fwriter);
 
 
-            $notf = $request->collect();
-                $pending_data = PendingTranzakTransaction::where('request_id', $notf->reourceId)->first();
+            $notf = $request;
+            return $notf;
+                $pending_data = PendingTranzakTransaction::where('request_id', $notf->resourceId)->first();
                 
                 $payment_data = ["payment_id"=>$pending_data->payment_id, "student_id"=>$pending_data->student_id,"batch_id"=>$pending_data->batch_id,'unit_id'=>$pending_data->unit_id,"amount"=>$pending_data->amount,"reference_number"=>$pending_data->reference_number, 'paid_by'=>$pending_data->paid_by, 'payment_purpose'=>$pending_data->payment_type??$pending_data->purpose];
                 
