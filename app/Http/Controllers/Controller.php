@@ -328,7 +328,7 @@ class Controller extends BaseController
             // return $request;
             $path = public_path('hooks/debug.php');
             $fwriter = fopen($path, 'w+');
-            fputs($fwriter, json_encode($request->collect()->__toString()));
+            fputs($fwriter, $request->collect()->__toString());
             
             fclose($fwriter);
 
