@@ -328,7 +328,7 @@ class Controller extends BaseController
             // return $request;
             $path = public_path('hooks/debug.php');
             $fwriter = fopen($path, 'w+');
-            fputs($fwriter, json_encode($request->collect()->resource));
+            fputs($fwriter, json_encode($request->collect()->__toString()));
             
             fclose($fwriter);
 
@@ -341,7 +341,7 @@ class Controller extends BaseController
                 if($notf != null){
                     $data = $notf;
                     if($data->transactionStatus == "SUCCESSFUL" || $data->transactionStatus == "CANCELLED" || $data->transactionStatus == "FAILED" || $data->transactionStatus == "REVERSED"){
-                        $req = new Request($data->resource);
+                        $req = new Request($data->resource->toArray());
                         return $this->hook_tranzak_complete($req, $payment_data, $payment_data['payment_purpose']);
                     }
                 }
