@@ -358,19 +358,19 @@ class Controller extends BaseController
         # code...
         try {
             //code...
-            // return $request->all();
             switch ($request->status) {
                 case 'SUCCESSFUL':
                     # code...
                     // save transaction and update application_form
                     DB::beginTransaction();
-                    $transaction = ['request_id'=>$request->requestId??'', 'amount'=>$request->amount??'', 'currency_code'=>$request->currencyCode??'', 'purpose'=>$request->payment_purpose??'', 'mobile_wallet_number'=>$request->mobileWalletNumber??'', 'transaction_ref'=>$request->mchTransactionRef??'', 'app_id'=>$request->appId??'', 'transaction_id'=>$request->transactionId??'', 'transaction_time'=>$request->transactionTime??'', 'payment_method'=>$request->payer['paymentMethod']??'', 'payer_user_id'=>$request->payer['userId']??'', 'payer_name'=>$request->payer['name']??'', 'payer_account_id'=>$request->payer['accountId']??'', 'merchant_fee'=>$request->merchant['fee']??'', 'merchant_account_id'=>$request->merchant['accountId']??'', 'net_amount_recieved'=>$request->merchant['netAmountReceived']??''];
+                    $transaction = ['request_id'=>$request->requestId??'', 'amount'=>$request->amount??'', 'currency_code'=>$request->currencyCode??'', 'purpose'=>$type??'', 'mobile_wallet_number'=>$request->mobileWalletNumber??'', 'transaction_ref'=>$request->mchTransactionRef??'', 'app_id'=>$request->appId??'', 'transaction_id'=>$request->transactionId??'', 'transaction_time'=>$request->createdAt??'', 'payment_method'=>$request->payer['paymentMethod']??'', 'payer_user_id'=>$request->payer['userId']??'', 'payer_name'=>$request->payer['name']??'', 'payer_account_id'=>$request->payer['accountId']??'', 'merchant_fee'=>$request->merchant['fee']??'', 'merchant_account_id'=>$request->merchant['accountId']??'', 'net_amount_recieved'=>$request->merchant['netAmountReceived']??''];
                     if(TranzakTransaction::where($transaction)->count() == 0){
                         $transaction_instance = new TranzakTransaction($transaction);
                         $transaction_instance->save();
                     }else{
                         $transaction_instance = TranzakTransaction::where($transaction)->first();
                     }
+                    // return $transaction_instance;
     
                     if($type == 'TRANSCRIPT'){
                         $trans = $payment_data;
@@ -396,7 +396,7 @@ class Controller extends BaseController
                             $_data = [];
                             
                             $__amount = $transaction['amount'];
-                            
+
                             foreach (Batch::orderBy('name')->pluck('id')->toArray() as $key => $year_id) {
                                 # code...
                                 if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
@@ -418,7 +418,7 @@ class Controller extends BaseController
                                             if($year_id == Helpers::instance()->getCurrentAccademicYear()){
                                                 $debt = $__amount > 0 ? -$__amount : 0;
                                             }else{$debt = 0;}
-                
+                                            
                                             $data = [
                                                 "payment_id" => $payment_id,
                                                 "student_id" => $student->id,
@@ -436,7 +436,7 @@ class Controller extends BaseController
                                             ];
                                             if ($data['reference_number'] == null || (Payments::where(['reference_number' => $data['reference_number']])->count() == 0)) {
                                                 $_data[] = $data;
-                                            }else{return back()->with('error', __('text.reference_already_exist'));}
+                                            }else{return response()->json(['error'=> __('text.reference_already_exist')]);}
                                         };
                                     }
                                 }
@@ -444,8 +444,9 @@ class Controller extends BaseController
                             // dd($_data);
                             Payments::insert($_data);
                             DB::commit();
-                            $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as part/all of TUTION for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
-                            $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                            // $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as part/all of TUTION for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                            // $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                            // return $_data;
                 
                         } catch (\Throwable $th) {
                             DB::rollBack();
@@ -512,7 +513,7 @@ class Controller extends BaseController
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return back()->with('error', $th->getMessage());
+            return response()->json(['error'=>$th->getMessage()]);
         }
     }
 
