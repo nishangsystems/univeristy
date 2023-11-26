@@ -336,7 +336,7 @@ class Controller extends BaseController
                     
                     fclose($fwriter);
                     // ---------
-                    $payment_data = ["payment_id"=>$pending_data->payment_id, "student_id"=>$pending_data->student_id,"batch_id"=>$pending_data->batch_id,'unit_id'=>$pending_data->unit_id,"amount"=>$pending_data->amount,"reference_number"=>$pending_data->reference_number, 'paid_by'=>$pending_data->paid_by, 'payment_purpose'=>$pending_data->payment_type??$pending_data->purpose];
+                    $payment_data = ["payment_id"=>$pending_data->payment_id, "student_id"=>$pending_data->student_id,"batch_id"=>$pending_data->batch_id,'unit_id'=>$pending_data->unit_id,"amount"=>$pending_data->amount,"reference_number"=>$pending_data->reference_number, 'paid_by'=>$pending_data->paid_by, 'payment_purpose'=>$pending_data->payment_type??$pending_data->purpose, 'year_id'=>$pending_data->batch_id??''];
                     
                     if($resource['transactionStatus'] == "SUCCESSFUL" || $resource['transactionStatus'] == "CANCELLED" || $resource['transactionStatus'] == "FAILED" || $resource['transactionStatus'] == "REVERSED"){
                         $req = new Request($resource);
@@ -379,7 +379,7 @@ class Controller extends BaseController
                         if(Transcript::where($trans)->count() == 0)
                             (new Transcript($trans))->save();
                         $message = "Hello ".(auth('student')->user()->name??'').", You have successfully applied for transcript with ST. LOUIS UNIVERSITY INSTITUTE. You paid ".($transaction_instance->amount??'')." for this operation";
-                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                        // $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'TUTION'){
                         $trans = $payment_data;
                         $trans['transaction_id'] = $transaction_instance->id;
@@ -459,26 +459,28 @@ class Controller extends BaseController
                         if(PayIncome::where($trans)->count() == 0)
                         ($instance = new PayIncome($trans))->save();
                         $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($instance->income->name??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
-                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                        // $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'RESIT'){
                         $trans = $payment_data;
                         StudentSubject::where(['resit_id'=>$trans['payment_id'], 'student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id']])->update(['paid'=>$transaction_instance->id]);
                         $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
-                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                        // $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == 'PLATFORM'){
+
                         $trans = $payment_data;
                         $data = ['student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id'], 'type'=>'PLATFORM', 'item_id'=>$trans['payment_id'], 'amount'=>$transaction_instance->amount, 'financialTransactionId'=>$transaction_instance->transaction_id, 'used'=>1];
                         $instance = new Charge($data);
                         $instance->save();
-                        $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
-                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                        // return $trans;
+                        // $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
+                        // $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }elseif($type == '_TRANSCRIPT'){
                         $trans = $payment_data;
                         $data = ['student_id'=>$trans['student_id'], 'year_id'=>$trans['year_id'], 'type'=>'TRANSCRIPT', 'item_id'=>$trans['payment_id'], 'amount'=>$transaction_instance->amount, 'financialTransactionId'=>$transaction_instance->transaction_id, 'used'=>1];
                         $instance = new Charge($data);
                         $instance->save();
                         $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as ".($trans['payment_purpose']??'')." for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
-                        $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                        // $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
                     }
                     ($pending = PendingTranzakTransaction::where('request_id', $request->requestId)->first()) != null ? $pending->delete() : null;
                     DB::commit();
@@ -513,7 +515,7 @@ class Controller extends BaseController
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return response()->json(['error'=>$th->getMessage()]);
+            return response()->json(['error'=>$th->getMessage().'___'.$th->getLine()]);
         }
     }
 
