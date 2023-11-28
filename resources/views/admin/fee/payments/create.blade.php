@@ -129,41 +129,42 @@
                         
                     </tbody>
                 </table>
-                    @if($k > 1)
-                        <div class="d-flex justify-content-end my-2">
-                            <!-- <a class="btn btn-sm btn-primary text-capitalize" href="{{route('admin.fee.student.payments.print', [ $student->id, $item->id])}}">{{__('text.word_print')}}</a> -->
-                            <button class="btn btn-sm btn-primary text-capitalize" onclick="_print()">{{__('text.word_print')}}</button>
-                            <div class="hidden" id="payment_history_printable">
-                                <div class="text-center">
-                                    <img src="{{$header}}" alt="" class="w-100">
-                                    <div class="py-2 h4 text-decoration text-decoration-italic  text-decoration-underline text-uppercase">FEE payment history for {{$student->name}}</div>
-                                </div>
-                                <table>
-                                    <thead class="text-capitalize">
-                                        <th>###</th>
-                                        <th>{{__('text.word_item')}}</th>
-                                        <th>{{__('text.word_amount')}}</th>
-                                        <th>{{__('text.word_date')}}</th>
-                                        <!-- <th></th> -->
-                                    </thead>
-                                    <tbody>
-                                        @php($k=1)
-                                        @foreach($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->get() as $item)
-                                        <!-- <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end"> -->
-                                        <tr>
-                                            <td>{{$k++}}</td>
-                                            <td>{{($item->item)?$item->item->name:$item->created_at->format('d/m/Y')}}</td>
-                                            <td class="font-weight-bold">{{$item->amount}} {{__('text.currency_cfa')}}</td>
-                                            <td>{{$item->created_at->format('l d/m/Y')}}</td>
-                                        </tr>
-                                        @endforeach
-                                        
-                                    </tbody>
-                                </table>
+                @if($k > 1)
+                    <div class="d-flex justify-content-end my-2">
+                        <!-- <a class="btn btn-sm btn-primary text-capitalize" href="{{route('admin.fee.student.payments.print', [ $student->id, $item->id])}}">{{__('text.word_print')}}</a> -->
+                        <button class="btn btn-sm btn-primary text-capitalize" onclick="_print()">{{__('text.word_print')}}</button>
+                        <div class="hidden" id="payment_history_printable">
+                            <div class="text-center">
+                                <img src="{{$header}}" alt="" class="w-100">
+                                <div class="py-2 h4 text-decoration text-decoration-italic  text-decoration-underline text-uppercase">FEE payment history for {{$student->name}}</div>
                             </div>
+                            <table>
+                                <thead class="text-capitalize">
+                                    <th>###</th>
+                                    <th>{{__('text.word_item')}}</th>
+                                    <th>{{__('text.word_amount')}}</th>
+                                    <th>{{__('text.word_date')}}</th>
+                                    <!-- <th></th> -->
+                                </thead>
+                                <tbody>
+                                    @php($k=1)
+                                    @foreach($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->get() as $item)
+                                    <!-- <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end"> -->
+                                    <tr>
+                                        <td>{{$k++}}</td>
+                                        <td>{{($item->item)?$item->item->name:$item->created_at->format('d/m/Y')}}</td>
+                                        <td class="font-weight-bold">{{$item->amount}} {{__('text.currency_cfa')}}</td>
+                                        <td>{{$item->created_at->format('l d/m/Y')}}</td>
+                                    </tr>
+                                    @endforeach
+                                    
+                                </tbody>
+                            </table>
                         </div>
-                    @endif
+                    </div>
+                @endif
             </div>
+            <div class="py-2 mb-5 px-3"><a class="btn btn-primary rounded" href="{{ route('admin.fee.history', $student->id) }}">Detail payment history</a></div>
         </div>
     </div>
     

@@ -1451,7 +1451,11 @@
                         <a class="btn btn-lg col-sm-4 rounded btn-primary text-center" href="{{route('admin.reset_password')}}">{{__('text.word_proceed')}}</a>
                     </div>
                 @else
-                    @yield('section')
+                    <div class="card">
+                        <div class="card-body">
+                            @yield('section')
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>
