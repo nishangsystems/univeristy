@@ -141,6 +141,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
     Route::get('fee/situation', 'Admin\FeesController@fee_situation')->name('fee.situation');
+    Route::get('fee/history/{student_id}', 'Admin\FeesController@fee_history')->name('fee.history');
     Route::get('fee/situation/list', 'Admin\FeesController@fee_situation_list')->name('fee.situation.list');
     Route::get('fee/fee_list', 'Admin\FeesController@fee_list');
     Route::get('print_fee', 'Admin\FeesController@printFee')->name('print_fee');

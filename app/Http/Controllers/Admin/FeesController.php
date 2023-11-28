@@ -6,10 +6,14 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
 use App\Models\Batch;
+use App\Models\ExtraFee;
+use App\Models\PaymentItem;
 use App\Models\Payments;
 use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
+use App\Models\StudentClass;
 use App\Models\Students;
+use App\Models\StudentScholarship;
 use App\Models\TeachersSubject;
 use Carbon\Carbon;
 use Error;
@@ -262,5 +266,35 @@ class FeesController extends Controller
             }
         }
         return back()->with('success', __('text.word_done'));
+    }
+
+    public function fee_history($student_id)
+    {
+        # code...
+
+        $student = Students::find($student_id);
+        $data['student'] = $student;
+        $data['classes'] = ProgramLevel::join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')->where('student_id', $student_id)->select(['student_classes.year_id', 'student_classes.id as student_class_id', 'program_levels.*'])->distinct()->get();
+        // $data['fee'] = PaymentItem::join('campus_programs', 'campus_programs.id', '=', 'payment_items.campus_program_id')->join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')->where('student_classes.year_id', 'payment_items.year_id')->where('student_classes.student_id', $student_id)->select(['payment_items.*', 'student_classes.id as student_class_id'])->distinct()->get();
+        $data['fee'] = $data['classes']->map(function($rec)use($student){
+            return ['year_id'=>$rec->year_id, 'fee'=>$student->total($rec->year_id)];
+        });
+        $data['extra_fee'] = ExtraFee::where('student_id', $student_id)->get();
+        $data['scholarship'] = StudentScholarship::where('student_id', $student_id)->get();
+        $data['payments'] = Payments::where('student_id', $student_id)->get();
+        $data['title'] = "Detailed Payment History for ".$student->name??'';
+        // dd($data);
+
+        // $_data = $data['fee'] = $data['classes']->map(function($rec)use($data){
+        //     return [
+        //         'class'=>$rec,
+        //         'fee'=>$data['fee']->where('year_id', $rec->year_id)->first()->fee??'',
+        //         'extra_fee'=>$data['extra_fee']->where('year_id', $rec->year_id)->sum('amount'),
+        //         'scholarship'=>$data['scholarship']->where('batch_id', $rec->year_id)->sum('amount'),
+        //         'payments'=>$data['payments']->where('payment_year_id', $rec->year_id)->sum('amount + debt')
+        //     ];
+        // });
+        // dd($_data);
+        return view('admin.fee.payments.history', $data);
     }
 }
