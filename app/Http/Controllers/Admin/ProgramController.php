@@ -19,6 +19,7 @@ use App\Models\SchoolUnits;
 use App\Models\StudentClass;
 use App\Models\Students;
 use App\Models\Subjects;
+use App\Models\Topic;
 use App\Session;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -895,5 +896,106 @@ class ProgramController extends Controller
         $data['students'] = $_students;
         // return $students;
         return view('admin.student.inactive', $data);
+    }
+
+    public function student_sections()
+    {
+        # code...
+        $data['title'] = "Update Student Section/Level";
+        return view('admin.student.section.index', $data);
+    }
+
+    public function change_student_section($student_id)
+    {
+        # code...
+        $student = Students::find($student_id);
+        if($student != null){
+            $class = $student->_class();
+            $data['title'] = "Change Department/Program/Level For ".$student->name??'';
+            $data['program'] = $class->program;
+            $data['department'] = $class->program->parent;
+            $data['level'] = $class->level;
+            $data['sections'] = SchoolUnits::where('unit_id', '!=', '1')->get();
+            // $data['levels'] = Level::all();
+            $data['levels'] = \App\Models\Level::join('program_levels', 'program_levels.level_id', '=', 'levels.id')->where('program_levels.program_id', $class->program_id)->get(['levels.*']);
+            // dd($data);
+            return view('admin.student.section.change', $data);
+        }
+    }
+
+    public function update_student_section(Request $request, $student_id)
+    {
+        # code...
+        $validity = Validator::make($request->all(), ['program'=>'required', 'department'=>'required', 'level'=>'required']);
+        if($validity->fails()){
+            session()->flash('error', $validity->errors()->first());
+            return back()->withInput();
+        }
+
+        try{
+            // dd($request->all());
+            DB::beginTransaction();
+            if(($program = SchoolUnits::find($request->program)) != null){
+                // Update student class
+                $class = $program->classes->where('level_id', $request->level)->first();
+                StudentClass::updateOrInsert(['student_id'=>$student_id, 'year_id'=>$this->current_accademic_year], ['class_id'=>$class->id]);
+                // update student matricule if program changes
+                $former_class = Students::find($student_id)->_class();
+                // dd($former_class);
+                if($former_class->program_id == $request->program){
+                    DB::commit();
+                    return back()->with('success', 'Student Section successfully updated');
+                }
+                $next_matric = null;
+                if(($prefix = ($program->prefix == null) ? $program->parent->prefix : $program->prefix) != null){
+                    $template = $prefix.'/'.substr(Batch::find($this->current_accademic_year)->name, 2, 2).'/';
+                    $last_matric = Students::where('matric', 'LIKE', '%'.$prefix.'%')->orderBy('matric')->first()->matric;
+                    if($last_matric == null){
+                        $next_matric = $prefix.'0001';
+                    }else{
+                        if($numb = intVal(substr($last_matric, -1, 4)) != null){
+                            $next_matric = $prefix.substr('0000'.($numb+1) -1, 4);
+                        }
+                    }
+                    Students::where('id', $student_id)->update(['matric'=>$next_matric]);
+                    return back()->with('success', 'Student Section successfully updated');
+                }
+            }
+            DB::commit();
+        }catch(\Throwable $th){ 
+            DB::rollBack();
+            return back()->with('error', $th->getMessage().'----'.$th->getLine());
+        }
+
+    }
+
+    public function change_student_level($student_id)
+    {
+        # code...
+    }
+
+    public function update_student_level($student_id)
+    {
+        # code...
+    }
+
+    public function course_content (Request $request, $unit_id, $subject_id)
+    {
+        # code...
+        $subject = Subjects::find($request->subject_id);
+        // dd($subject);
+        if(!($subject == null)){
+            $campus = $request->campus??0;
+            $data['title'] = "Course Content For ".$subject->name.' / '.ProgramLevel::find($unit_id)->name();
+            if($request->parent_id != null && $request->parent_id != 0){
+                $data['title'] = '<h4 class="text-danger"><label> Sub topics Under '.Topic::find($request->parent_id)->title.'</label><span class="text-secondary mx-1 fa fa-caret-right"></span> '.$subject->name.'<span class="text-secondary mx-1 fa fa-caret-right"></span>'.ProgramLevel::find($unit_id)->name();
+            }
+            $data['content'] = Topic::where(['subject_id'=>$subject->id, 'level'=>$request->level??1, 'parent_id'=>$request->parent_id??0])
+                                    ->orderBy('id', 'DESC')->get();
+            $data['level'] = $request->level??1;
+            $data['parent_id'] = $request->parent_id??0;
+            $data['subject_id'] = $request->subject_id??0;
+            return view('teacher.course.content', $data);
+        }
     }
 }

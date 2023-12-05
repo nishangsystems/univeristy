@@ -712,7 +712,6 @@ class HomeController extends Controller
             return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
         } catch (\Throwable $th) {
             return $th->getMessage();
-            
         }
     }
 

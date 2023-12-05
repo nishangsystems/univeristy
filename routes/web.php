@@ -119,14 +119,19 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('sections/{section_id}/subjects/{id}', 'Admin\ClassSubjectController@edit')->name('edit.class_subjects');
     Route::get('sections/{section_id}/subjects/{id}/delete', 'Admin\ClassSubjectController@delete')->name('delete.class_subjects');
     Route::put('sections/{section_id}/subjects/{id}', 'Admin\ClassSubjectController@update')->name('units.class_subjects.update');
-
+    
+    Route::get('sections/{section_id}/subjects/{id}/content', 'Admin\ProgramController@course_content')->name('course.content');
+    Route::post('sections/{section_id}/subjects/{id}/content', 'Admin\ProgramController@save_course_content');
 
     Route::get('units/{parent_id}/subjects/manage', 'Admin\ProgramController@manageSubjects')->name('units.subjects.manage_class_subjects');
     Route::post('units/{parent_id}/subjects/manage', 'Admin\ProgramController@saveSubjects')->name('units.subjects.manage');
 
     Route::get('units/{parent_id}/student', 'Admin\ProgramController@students')->name('students.index');
     Route::get('students/inactive', 'Admin\ProgramController@inactive_students')->name('students.inactive');
-
+    Route::get('student/sections', 'Admin\ProgramController@student_sections')->name('student.section');
+    Route::get('student/{student_id}/section', 'Admin\ProgramController@change_student_section')->name('student.section.change');
+    Route::post('student/{student_id}/section', 'Admin\ProgramController@update_student_section');
+    
     Route::get('student_list/select/{filter?}', 'Admin\ProgramController@program_levels_list_index')->name('student.bulk.index');
     Route::get('student_list/bulk/{filter}/{item_id}/{year_id?}', 'Admin\ProgramController@bulk_program_levels_list')->name('student.bulk.list');
     Route::get('messages/bulk/{filter}/{item_id}/{recipients}/{year_id?}', 'Admin\ProgramController@bulk_message_notifications')->name('messages.bulk');
@@ -840,4 +845,12 @@ Route::get('next_year/{yr}', function($yr){
     return \App\Models\Batch::find($yr+1);
 })->name('next_year');
 
-// Route::any('**', [CustomLoginController::class, 'login']);
+Route::get('getDeptPrograms/{dept_id}', function($dept_id){
+    return response()->json(['programs' => \App\Models\SchoolUnits::where('parent_id', $dept_id)->get()]);
+})->name('department.programs');
+Route::get('getProgLevels/{prog_id}', function($prog_id){
+    return response(['levels'=>\App\Models\Level::join('program_levels', 'program_levels.level_id', '=', 'levels.id')->where('program_levels.program_id', $prog_id)->get(['levels.*'])]) ;
+})->name('program.levels');
+
+
+Route::any('{any?}', [CustomLoginController::class, 'login']);

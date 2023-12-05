@@ -868,5 +868,7 @@ return [
     'custom_promotion'=>'custom promotion',
     'repeat_students'=>'repeat students',
     'word_repeat'=>'repeat',
+    'change_section'=>'change section',
+    'subjects_under'=>'subjects under :class',
     ''
 ];
