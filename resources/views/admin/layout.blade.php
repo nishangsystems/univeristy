@@ -582,6 +582,13 @@
                                 <b class="arrow"></b>
                             </li>
                         @endif
+                        <li>
+                            <a href="{{route('admin.student.section')}}" class="text-capitalize">
+                                <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
+                                {{__('text.change_section')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
                     </ul>
                 </li>
             @endif
@@ -1420,7 +1427,7 @@
                 </ul><!-- /.breadcrumb -->
             </div>
 
-            <div class="m-5">
+            <div class="m-5 container-fluid">
                 <div style="max-height: 65vh; overflow:auto">
                     @if(Session::has('success'))
                         <div class="alert alert-success fade in">
@@ -1451,10 +1458,8 @@
                         <a class="btn btn-lg col-sm-4 rounded btn-primary text-center" href="{{route('admin.reset_password')}}">{{__('text.word_proceed')}}</a>
                     </div>
                 @else
-                    <div class="card">
-                        <div class="card-body">
-                            @yield('section')
-                        </div>
+                    <div class="">
+                        @yield('section')
                     </div>
                 @endif
             </div>

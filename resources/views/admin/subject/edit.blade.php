@@ -49,6 +49,22 @@
                         </select>
                     </div>
                 </div>
+                <div class="row my-2">
+                    <label for="" class="col-md-3">{{__('text.course_objective')}}</label>
+                    <div class="col-md-9 col-lg-9">
+                        <textarea name="objective" id="course_obj" required class="form-control">
+                            {!! old('objective', $subject->objective) !!}
+                        </textarea>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <label for="" class="col-md-3">{{__('text.expected_outcomes')}}</label>
+                    <div class="col-md-9 col-lg-9">
+                        <textarea name="outcomes" id="course_out" required class="form-control">
+                            {!! old('outcomes', $subject->outcomes) !!}
+                        </textarea>
+                    </div>
+                </div>
                 <div class="d-flex justify-content-end my-3  text-capitalize">
                     <button class="btn btn-xs btn-primary" type="submit">{{__('text.word_save')}}</button> |
                     <a class="btn btn-xs btn-danger" href="{{route('admin.subjects.index')}}" type="button">{{__('text.word_cancel')}}</a>
@@ -86,4 +102,10 @@
             </table>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+        CKEDITOR.replace('course_obj');
+        CKEDITOR.replace('course_out');
+    </script>
 @endsection

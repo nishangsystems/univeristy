@@ -94,6 +94,8 @@ class SubjectController extends Controller
         $subject->status = $request->input('status');
         $subject->level_id = $request->input('level');
         $subject->semester_id = $request->input('semester');
+        $subject->objective = $request->input('objective');
+        $subject->outcomes = $request->input('outcomes');
         $subject->save();
         return back()->with('success', "Subject Updated Successfully!");
     }
