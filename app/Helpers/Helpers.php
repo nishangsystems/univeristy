@@ -224,8 +224,6 @@ class Helpers
         //  $amount = 0;
         $year = $year_id == null ? $this->getCurrentAccademicYear() : $year_id;
         $amount = DB::table('student_scholarships')
-            ->join('students', ['students.id' => 'student_scholarships.student_id'])
-            ->where('student_scholarships.batch_id', $this->getCurrentAccademicYear())
             ->where('student_scholarships.student_id', $student_id)
             ->where('student_scholarships.batch_id', $year)
             ->pluck('student_scholarships.amount')->first();

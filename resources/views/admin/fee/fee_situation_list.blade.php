@@ -36,6 +36,7 @@
     <STYLE>
         body {
             font-family: Arial, Helvetica, sans-serif;
+            background: #fff;
         }
         .input-group {
             position: relative;
@@ -79,7 +80,7 @@
     <div class="col-sm-12">
         <div class="bg-white" id="printable">
             <div class="my-5">
-                <table cellpadding="0" cellspacing="0" border="0" class="" id="hidden-table-info">
+                <table class="" id="hidden-table-info">
                     <thead>
                         <div id="letter-head">
                             <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100 img">
@@ -88,7 +89,11 @@
                         <tr class="text-capitalize bg-light">
                             <th>#</th>
                             <th>{{__('text.word_name')}}</th>
-                            <th>{{__('text.amount_paid')}}</th>
+                            <th>{{__('text.word_fee')}}</th>
+                            <th>{{__('text.extra_fee')}}</th>
+                            <th>{{__('text.word_debt')}}</th>
+                            <th>{{__('text.word_paid')}}</th>
+                            <th>{{__('text.total_paid')}}</th>
                             <th>{{__('text.amount_owing')}}</th>
                             <th>{{__('text.word_scholarship')}}</th>
                             <!-- <th></th> -->
@@ -100,6 +105,10 @@
                             <tr class="border-bottom">
                                 <td class="border-left border-right">{{$k++}}</td>
                                 <td class="border-left border-right">{{$student['name'] ?? ''}}</td>
+                                <td class="border-left border-right">{{$student['current_fee'] ?? ''}}</td>
+                                <td class="border-left border-right">{{$student['extra_fee'] ?? ''}}</td>
+                                <td class="border-left border-right">{{$student['debt'] ?? ''}}</td>
+                                <td class="border-left border-right">{{number_format($student['current_paid'] ?? 0)}}</td>
                                 <td class="border-left border-right">{{number_format($student['paid'] ?? 0)}}</td>
                                 <td class="border-left border-right">{{number_format($student['owing'] ?? 0)}}</td>
                                 <td class="border-left border-right">{{number_format($student['scholarship'] ?? 0)}}</td>

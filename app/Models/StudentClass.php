@@ -37,4 +37,6 @@ class StudentClass extends Model
         # code...
         return $this->belongsTo(Batch::class, 'year_id');
     }
+
+    
 }

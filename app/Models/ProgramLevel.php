@@ -15,11 +15,11 @@ class ProgramLevel extends Model
     
     public function students()
     {
-        return $this->hasMany(Students::class, 'program_id');
+        return $this->belongsToMany(Students::class, 'student_classes', 'class_id', 'student_id');
     }
     public function _students($year)
     {
-        return $this->belongsToMany(Students::class, 'student_classes', 'class_id', 'student_id')->where('year_id', '=', $year);
+        return $this->belongsToMany(Students::class, 'student_classes', 'student_id', 'class_id')->where('year_id', '=', $year);
     }
     public function program()
     {
@@ -80,5 +80,18 @@ class ProgramLevel extends Model
     public function resit_cost_isset()
     {
         return $this->resit_cost == null;
+    }
+
+    public function payment_items()
+    {
+        return $this->hasManyThrough(PaymentItem::class, CampusProgram::class);
+    }
+    public function single_payment_item($campus_id, $year_id)
+    {
+        return $this->hasManyThrough(PaymentItem::class, CampusProgram::class)->where('campus_programs.campus_id', $campus_id)->where('payment_items.year_id', $year_id);
+    }
+    public function student_classes()
+    {
+        return $this->hasMany(StudentClass::class, 'class_id');
     }
 }
