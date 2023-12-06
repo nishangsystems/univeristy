@@ -25,7 +25,7 @@
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.balance_fee')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="balance" value="{{number_format($student->total_balance())}} CFA" disabled>
+                    <input for="cname" class="form-control" name="balance" value="{{number_format($student->bal())}} CFA" disabled>
                 </div>
             </div>
             <div class="form-group">
@@ -37,7 +37,7 @@
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year) - $student->bal($student->id, $c_year)}} CFA" disabled>
+                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year-1) }} CFA" disabled>
                 </div>
             </div>
             <div class="form-group @error('item') has-error @enderror">

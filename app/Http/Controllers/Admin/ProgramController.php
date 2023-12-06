@@ -911,7 +911,7 @@ class ProgramController extends Controller
         $student = Students::find($student_id);
         if($student != null){
             $class = $student->_class();
-            $data['title'] = "Change Department/Program/Level For ".$student->name??'';
+            $data['title'] = "Change Department/Program/Level For ".($student->name??'').' - ( Matric: '.($student->matric??'').')';
             $data['program'] = $class->program;
             $data['department'] = $class->program->parent;
             $data['level'] = $class->level;
@@ -926,6 +926,7 @@ class ProgramController extends Controller
     public function update_student_section(Request $request, $student_id)
     {
         # code...
+
         $validity = Validator::make($request->all(), ['program'=>'required', 'department'=>'required', 'level'=>'required']);
         if($validity->fails()){
             session()->flash('error', $validity->errors()->first());
@@ -934,13 +935,14 @@ class ProgramController extends Controller
 
         try{
             // dd($request->all());
+            $student = Students::find($student_id);
             DB::beginTransaction();
             if(($program = SchoolUnits::find($request->program)) != null){
+                $former_class = $student->_class();
                 // Update student class
                 $class = $program->classes->where('level_id', $request->level)->first();
                 StudentClass::updateOrInsert(['student_id'=>$student_id, 'year_id'=>$this->current_accademic_year], ['class_id'=>$class->id]);
                 // update student matricule if program changes
-                $former_class = Students::find($student_id)->_class();
                 // dd($former_class);
                 if($former_class->program_id == $request->program){
                     DB::commit();
@@ -958,10 +960,10 @@ class ProgramController extends Controller
                         }
                     }
                     Students::where('id', $student_id)->update(['matric'=>$next_matric]);
+                    DB::commit();
                     return back()->with('success', 'Student Section successfully updated');
                 }
             }
-            DB::commit();
         }catch(\Throwable $th){ 
             DB::rollBack();
             return back()->with('error', $th->getMessage().'----'.$th->getLine());
