@@ -550,15 +550,19 @@ class HomeController extends Controller
     public function course_registration()
     {
         $_student = auth('student')->user();
+        $student_class = $_student->_class($this->current_accademic_year);
         # code...
-        $data['title'] = "Course Registration For " .Helpers::instance()->getSemester($_student->_class()->id)->name ?? ''." ".Batch::find($this->current_accademic_year)->name;
-        $data['student_class'] = ProgramLevel::find(StudentClass::where(['student_id'=>$_student->id])->where(['year_id'=>$this->current_accademic_year])->first()->class_id);
-        $data['cv_total'] = ProgramLevel::find($_student->_class()->id)->program()->first()->max_credit;        
+        if($student_class == null){
+            return redirect()->route('student.home')->with('error', "Student does not belong to any class within the current accademic year");
+        }
+        $data['title'] = "Course Registration For " .Helpers::instance()->getSemester($student_class->id)->name ?? ''." ".Batch::find($this->current_accademic_year)->name;
+        $data['student_class'] = $student_class;
+        $data['cv_total'] = $student_class->program->max_credit??'';        
         
-        $student = auth('student')->id();
-        $year = Helpers::instance()->getYear();
-        $semester = Helpers::instance()->getSemester($_student->_class($this->current_accademic_year)->id);
-        $_semester = Helpers::instance()->getSemester($_student->_class($this->current_accademic_year)->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
+        $student = $_student->id;
+        $year = $this->current_accademic_year;
+        $semester = Helpers::instance()->getSemester($student_class->id);
+        $_semester = Helpers::instance()->getSemester($student_class->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
         if ($semester->id == $_semester) {
             # code...
             return redirect(route('student.home'))->with('error', 'Resit registration can not be done here. Do that under "Resit Registration"');

@@ -37,18 +37,9 @@
                             <a class="btn btn-sm btn-primary" href="{{route('admin.edit.class_subjects',[request('program_level_id'), $subject->id])}}">
                                 <i class="fa fa-edit text-capitalize"> {{__('text.word_edit')}}</i>
                             </a> |
-                            {{-- <a class="btn btn-sm btn-success" href="{{route('admin.course.content',[request('program_level_id'), $subject->id])}}">
-                                <i class="fa fa-bars text-capitalize"> {{__('text.word_content')}}</i>
-                            </a> | --}}
-                            @if((\App\Models\Result::where(['subject_id'=>$subject->id])->count() == 0) && (\App\Models\StudentSubject::where(['course_id'=>$subject->id])->count() == 0))
-                                <a class="btn btn-sm btn-danger" href="{{route('admin.delete.class_subjects',[request('program_level_id'), $subject->id])}}">
-                                    <i class="fa fa-trash text-capitalize"> {{__('text.word_delete')}}</i>
-                                </a>
-                                @else
-                                <div aria-disabled="true" class="btn btn-sm btn-dark">
-                                    <i class="fa fa-trash text-capitalize"> {{__('text.word_delete')}}</i>
-                                </div>
-                            @endif
+                            <a class="btn btn-sm btn-danger" onclick="window.location=confirm('You are about to delete a course from a class. Confirm to continue.')? `{{ route('admin.delete.class_subjects',[request('program_level_id'), $subject->id])}}` : `#`">
+                                <i class="fa fa-trash text-capitalize"> {{__('text.word_delete')}}</i>
+                            </a>
                         </td>
                     </tr>
                     @endforeach
