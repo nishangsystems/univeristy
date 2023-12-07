@@ -602,6 +602,7 @@ class HomeController extends Controller
             $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
             return view('student.courses.register', $data);
         } catch (\Throwable $th) {
+            throw $th;
             return back()->with('error', 'Line:----'.$th->getLine().'----Message:----'.$th->getMessage().'----File:----'.$th->getFile());
         }
     }
