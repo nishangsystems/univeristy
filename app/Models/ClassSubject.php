@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use \App\Helpers\Helpers;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ClassSubject extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $connection = 'mysql';
     
-    protected $fillable = ['class_id', 'coef', 'status', 'subject_id', 'hours'];
+    protected $fillable = ['class_id', 'coef', 'status', 'subject_id', 'hours', 'deleted_at'];
 
     public function subject()
     {
