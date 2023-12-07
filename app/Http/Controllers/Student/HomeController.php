@@ -549,15 +549,16 @@ class HomeController extends Controller
 
     public function course_registration()
     {
+        $_student = auth('student')->user();
         # code...
-        $data['title'] = "Course Registration For " .Helpers::instance()->getSemester(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->name ?? ''." ".Batch::find(Helpers::instance()->getYear())->name;
-        $data['student_class'] = ProgramLevel::find(StudentClass::where(['student_id'=>auth('student')->id()])->where(['year_id'=>Helpers::instance()->getYear()])->first()->class_id);
-        $data['cv_total'] = ProgramLevel::find(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->program()->first()->max_credit;        
+        $data['title'] = "Course Registration For " .Helpers::instance()->getSemester($_student->_class()->id)->name ?? ''." ".Batch::find($this->current_accademic_year)->name;
+        $data['student_class'] = ProgramLevel::find(StudentClass::where(['student_id'=>$_student->id])->where(['year_id'=>$this->current_accademic_year])->first()->class_id);
+        $data['cv_total'] = ProgramLevel::find($_student->_class()->id)->program()->first()->max_credit;        
         
         $student = auth('student')->id();
         $year = Helpers::instance()->getYear();
-        $semester = Helpers::instance()->getSemester(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id);
-        $_semester = Helpers::instance()->getSemester(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
+        $semester = Helpers::instance()->getSemester($_student->_class($this->current_accademic_year)->id);
+        $_semester = Helpers::instance()->getSemester($_student->_class($this->current_accademic_year)->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
         if ($semester->id == $_semester) {
             # code...
             return redirect(route('student.home'))->with('error', 'Resit registration can not be done here. Do that under "Resit Registration"');
