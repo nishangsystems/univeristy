@@ -434,17 +434,19 @@ class HomeController extends Controller
         foreach ($class->students as $key => $student) {
             $items = [];
             foreach ($student->classes as $key => $_class) {
-                $items[] = $_class->class->single_payment_item($student->campus_id, $_class->year_id)->get()->first();
+                if(($it = $_class->class->single_payment_item($student->campus_id, $_class->year_id)->get()->first()) != null){
+                    $items[] = $it;
+                };
             }
             # code...
 
             $fee_items = collect($items);
 
             $cum_fee_items = $fee_items->filter(function($row)use($year){
-                return $row->year_id <= $year;
+                return $row != null && $row->year_id <= $year;
             });
             $past_fee = $fee_items->filter(function($row)use($year){
-                return $row->year_id < $year;
+                return $row != null && $row->year_id < $year;
             });
 
             $_payments = Payments::where('student_id', $student->id)->whereIn('payment_id', $fee_items->pluck('id')->toArray())->distinct()->get();

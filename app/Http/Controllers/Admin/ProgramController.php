@@ -953,10 +953,10 @@ class ProgramController extends Controller
                     $template = $prefix.'/'.substr(Batch::find($this->current_accademic_year)->name, 2, 2).'/';
                     $last_matric = Students::where('matric', 'LIKE', '%'.$prefix.'%')->orderBy('matric')->first()->matric;
                     if($last_matric == null){
-                        $next_matric = $prefix.'0001';
+                        $next_matric = $template.'0001';
                     }else{
                         if($numb = intVal(substr($last_matric, -1, 4)) != null){
-                            $next_matric = $prefix.substr('0000'.($numb+1) -1, 4);
+                            $next_matric = $template.substr('0000'.($numb+1) -1, 4);
                         }
                     }
                     Students::where('id', $student_id)->update(['matric'=>$next_matric]);
