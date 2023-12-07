@@ -549,56 +549,61 @@ class HomeController extends Controller
 
     public function course_registration()
     {
-        $_student = auth('student')->user();
-        $student_class = $_student->_class($this->current_accademic_year);
-        # code...
-        if($student_class == null){
-            return redirect()->route('student.home')->with('error', "Student does not belong to any class within the current accademic year");
-        }
-        $data['title'] = "Course Registration For " .Helpers::instance()->getSemester($student_class->id)->name ?? ''." ".Batch::find($this->current_accademic_year)->name;
-        $data['student_class'] = $student_class;
-        $data['cv_total'] = $student_class->program->max_credit??'';        
-        
-        $student = $_student->id;
-        $year = $this->current_accademic_year;
-        $semester = Helpers::instance()->getSemester($student_class->id);
-        $_semester = Helpers::instance()->getSemester($student_class->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
-        if ($semester->id == $_semester) {
+        try {
+            //code...
+            $_student = auth('student')->user();
+            $student_class = $_student->_class($this->current_accademic_year);
             # code...
-            return redirect(route('student.home'))->with('error', 'Resit registration can not be done here. Do that under "Resit Registration"');
-        }
-
-
-        $fee = [
-            'amount' => array_sum(
-                Payments::where('payments.student_id', '=', $student)
-                ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
-                ->where('payment_items.name', '=', 'TUTION')
-                ->where('payments.batch_id', '=', $year)
-                ->pluck('payments.amount')
-                ->toArray()
-            ),
-            'total' => 
-                    CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-                    ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+            if($student_class == null){
+                return redirect()->route('student.home')->with('error', "Student does not belong to any class within the current accademic year");
+            }
+            $data['title'] = "Course Registration For " .Helpers::instance()->getSemester($student_class->id)->name ?? ''." ".Batch::find($this->current_accademic_year)->name;
+            $data['student_class'] = $student_class;
+            $data['cv_total'] = $student_class->program->max_credit??'';        
+            
+            $student = $_student->id;
+            $year = $this->current_accademic_year;
+            $semester = Helpers::instance()->getSemester($student_class->id);
+            $_semester = Helpers::instance()->getSemester($student_class->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
+            if ($semester->id == $_semester) {
+                # code...
+                return redirect(route('student.home'))->with('error', 'Resit registration can not be done here. Do that under "Resit Registration"');
+            }
+    
+    
+            $fee = [
+                'amount' => array_sum(
+                    Payments::where('payments.student_id', '=', $student)
+                    ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
                     ->where('payment_items.name', '=', 'TUTION')
-                    ->whereNotNull('payment_items.amount')
-                    ->join('students', 'students.program_id', '=', 'program_levels.id')
-                    ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
-            'fraction' => $semester->courses_min_fee
-        ];
-        $conf = CampusSemesterConfig::where(['campus_id'=>auth('student')->user()->campus_id])->where(['semester_id'=>$semester->id])->first();
-        if ($conf != null) {
-            # code...
-            $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y'));
-        }else{
-            return redirect(route('student.home'))->with('error', 'Can not sign courses for this program at the moment. Date limit not set. Contact registry.');
+                    ->where('payments.batch_id', '=', $year)
+                    ->pluck('payments.amount')
+                    ->toArray()
+                ),
+                'total' => 
+                        CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+                        ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+                        ->where('payment_items.name', '=', 'TUTION')
+                        ->whereNotNull('payment_items.amount')
+                        ->join('students', 'students.program_id', '=', 'program_levels.id')
+                        ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
+                'fraction' => $semester->courses_min_fee
+            ];
+            $conf = CampusSemesterConfig::where(['campus_id'=>auth('student')->user()->campus_id])->where(['semester_id'=>$semester->id])->first();
+            if ($conf != null) {
+                # code...
+                $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y'));
+            }else{
+                return redirect(route('student.home'))->with('error', 'Can not sign courses for this program at the moment. Date limit not set. Contact registry.');
+            }
+            // return __DIR__;
+            // dd($data);
+            $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
+            $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+            return view('student.courses.register', $data);
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Line:----'.$th->getLine().'----Message:----'.$th->getMessage().'----File:----'.$th->getFile());
         }
-        // return __DIR__;
-        // dd($data);
-        $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
-        return view('student.courses.register', $data);
     }
 
     public function resit_registration()
