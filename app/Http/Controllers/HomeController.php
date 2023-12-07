@@ -197,7 +197,14 @@ class HomeController extends Controller
         }
     }
 
-    public static function _fee(Request  $request)
+    /* response payload: {
+            name:string, gender:string,
+            students.id:string, matric:string, 
+            admission_batch_id:int, campus_id:int, 
+            link:url={route('admin.fee.student.payments.index', [$student->id])}, 
+            fee:number=(expected), total:number=(paid), owed:number, class:string=(class-name)
+        }*/
+    public static function _fee(Request $request)
     {
         $type = request('type', 'completed');
         $year = request('year', Helpers::instance()->getCurrentAccademicYear());
@@ -205,72 +212,41 @@ class HomeController extends Controller
 
         $campus = auth()->user()->campus;
         $title = $type . " fee  -  " . $class->name(). '  -  '.($campus ? $campus->name??'' : '');
-        $title .= ' ('.Batch::find($year)->name.')';
-        $students = [];
-        $fields = ['payment_items.id', 'payment_items.amount', 'payment_items.campus_program_id', 'payment_items.year_id', 'campus_programs.campus_id'];
+        $title .= ' FOR ('.Batch::find($year)->name.') ONLY';
+        $students = $class->_students($year)->get();
+        // dd($students);
 
-        if($campus != null){
-            $class_fees = $class->_campus_programs()->join('payment_items', 'campus_programs.id', '=', 'payment_items.campus_program_id')->where('campus_programs.campus_id', $campus->id)->where('year_id', '<=', $year)->distinct();
-                // ->join('students', 'students.campus_id', '=', 'campus_programs.campus_id');
+        $data = $students->map(function($student)use($campus, $year, $class){
+            $extra_fee = ExtraFee::where('student_id', $student->id)->where('year_id', $year)->sum('amount');
+            $fee = $class->campus_programs($student->campus_id)->first()->payment_items->where('year_id', $year)->first();
+            $cash_paid = Payments::where('student_id', $student->id)->where('payment_year_id', $year)->sum(DB::raw('amount - debt'));
+            $scholarship = StudentScholarship::where('student_id', $student->id)->where('batch_id', $year)->sum('amount');
+            $student->link = route('admin.fee.student.payments.index', [$student->id]);
+            $student->class = $class->name();
+            $student->fee = $fee->amount + $extra_fee;
+            $student->total = $cash_paid + $scholarship;
+            $student->owed = $fee->amount + $extra_fee - $cash_paid - $scholarship;
+            return $student;
+        });
+
+        // dd($data->where('id', 51)->first());
+        if($type == 'completed'){
+            $resp = $data->filter(function($row){
+                return $row->owed <= 0 && $row->fee > 0;
+            });
+        }elseif(($amount = $request->amount) != null){
+            $resp = $data->filter(function($row, $amount){
+                return $row->total > $amount;
+            });
         }else{
-            $class_fees = $class->_campus_programs()->join('payment_items', 'campus_programs.id', '=', 'payment_items.campus_program_id')->where('year_id', '<=', $year)->distinct();
+            $resp = $data->filter(function($row){
+                return $row->owed > 0;
+            });
         }
-
-        $extra_fees = StudentClass::where(['class_id'=>$class->id, 'student_classes.year_id'=>$year])->join('extra_fees', 'extra_fees.student_id','=', 'student_classes.student_id')->where('extra_fees.year_id', $year)->get('extra_fees.*');
-        $set_fees = $class_fees->distinct()->select($fields)->get();
-        // $fee_payments = Payments::whereIn('payment_id', $class_fees->pluck('payment_items.id')->toArray())->where('batch_id', '<=', $year)->get(["id", "payment_id","student_id","batch_id","amount", 'debt']);
-        if($campus == null){
-            $fee_payments = Payments::whereIn('payments.payment_id', $class_fees->pluck('payment_items.id')->toArray())->where('payments.batch_id', '<=', $year)
-                ->join('students', 'students.id', '=', 'payments.student_id')
-                ->select("payments.id", "payments.payment_id","payments.student_id","payments.batch_id", DB::raw('SUM(payments.amount - payments.debt) as amount_sum'),  'students.name','students.gender','students.matric', 'students.admission_batch_id', 'campus_id')->groupBy('payments.student_id')->get();
-        }else{
-            $fee_payments = Payments::whereIn('payment_id', $class_fees->pluck('payment_items.id')->toArray())->where('payments.batch_id', '<=', $year)
-                ->join('students', 'students.id', '=', 'payments.student_id')->where('students.campus_id', $campus->id)
-                ->select("payments.id", "payments.payment_id","payments.student_id","payments.batch_id", DB::raw('SUM(payments.amount - payments.debt) as amount_sum'), 'students.name','students.gender','students.matric', 'students.admission_batch_id', 'campus_id')->groupBy('payments.student_id')->get();
-        }
-
-        if($campus != null){
-            $students = $class->_students($year)->where('students.campus_id', '=', $campus->id)->distinct()->select(['name','gender','students.id','matric', 'admission_batch_id', 'campus_id'])->get();
-        }else{
-            $students = $class->_students($year)->distinct()->select(['name','gender','students.id','matric', 'admission_batch_id', 'campus_id'])->get();
-        }
-
-        $class_name = $class->name();
-        $data = [];
-        foreach ($students as $key => $student) {
-            # code...
-            $fee = $set_fees->where('campus_id', $student->campus_id)->where('year_id', '>=', $student->admission_batch_id)->sum('amount') + $extra_fees->where('year_id', '>=', $student->admission_batch_id)->where('student_id', $student->id)->sum('amount');
-            $paid = $fee_payments->where('student_id', $student->id)->first()->amount_sum ?? 0;
-            $owing = $fee - $paid;
-    
-            if($type == 'complete' && $owing <= 0){
-                $student->link =  route('admin.fee.student.payments.index', [$student->id]);
-                $student->fee = $fee;
-                $student->total = $paid;
-                $student->owed = $owing;
-                $student->class = $class_name;
         
-                $data[] = $student;
-            }elseif(!$request->has('amount') && $owing > 0){
-                $student->link =  route('admin.fee.student.payments.index', [$student->id]);
-                $student->fee = $fee;
-                $student->total = $paid;
-                $student->owed = $owing;
-                $student->class = $class_name;
-        
-                $data[] = $student;
-            }elseif($request->has('amount') && ($request->amount >= ($set_fees->where('year_id', $year)->where('campus_id')->first()->sum_amount + ($extra_fees->where('student_id', $student->id)->where('year_id', $year)->first()->amount??0) - $owing))) {
-                $student->link =  route('admin.fee.student.payments.index', [$student->id]);
-                $student->fee = $fee;
-                $student->total = $paid;
-                $student->owed = $owing;
-                $student->class = $class_name;
-        
-                $data[] = $student;
-            }
-        }
 
-        $students = collect($data)->sortBy('name')->toArray();
+
+        $students = $resp->sortBy('name')->toArray();
 
         return ['title' => $title, 'students' => $students];
     }
@@ -431,7 +407,7 @@ class HomeController extends Controller
         // dd($st_classes);
 
         $data = [];
-        foreach ($class->students as $key => $student) {
+        foreach ($class->students($year)->get() as $key => $student) {
             $items = [];
             foreach ($student->classes as $key => $_class) {
                 if(($it = $_class->class->single_payment_item($student->campus_id, $_class->year_id)->get()->first()) != null){
