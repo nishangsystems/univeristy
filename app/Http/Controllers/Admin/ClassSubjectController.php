@@ -44,10 +44,10 @@ class ClassSubjectController extends Controller
     {
         # code...
         // return \App\Models\Result::where(['subject_id'=>$id])->count() + \App\Models\StudentSubject::where(['course_id'=>$id])->count();
-        if((\App\Models\Result::where(['subject_id'=>$id])->count() == 0) && (\App\Models\StudentSubject::where(['course_id'=>$id])->count() == 0)){
-            ClassSubject::where(['class_id'=>$program_level_id, 'subject_id'=>$id])->delete();
-            return back()->with('success', __('text.word_done'));
-        }
-        return back()->with('error', __('text.x_phrase_1'));
+        // if((\App\Models\Result::where(['subject_id'=>$id])->count() == 0) && (\App\Models\StudentSubject::where(['course_id'=>$id])->count() == 0)){
+        // }
+        ClassSubject::where(['class_id'=>$program_level_id, 'subject_id'=>$id])->delete();
+        return back()->with('success', __('text.word_done'));
+        // return back()->with('error', __('text.x_phrase_1'));
     }
 }
