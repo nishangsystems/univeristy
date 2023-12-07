@@ -287,8 +287,12 @@ class Students extends Authenticatable
     {
         # code...
 
-        $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '>=', $this->admission_batch_id)->where('year_id', '<=', $year)->distinct()
-            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->where('campus_programs.campus_id', $this->campus_id)->get(['campus_programs.id', 'student_classes.year_id']);
+        $campus_program_levels = StudentClass::where('student_id', '=', $this->id)
+            ->where('year_id', '>', $this->admission_batch_id-1)
+            ->where('year_id', '<', $year+1)->distinct()
+            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])
+            ->where('campus_programs.campus_id', $this->campus_id)
+            ->get(['campus_programs.id', 'student_classes.year_id']);
         // dd($campus_program_levels);
         // fee amounts
 
