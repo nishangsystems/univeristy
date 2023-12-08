@@ -367,6 +367,12 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::post('custom_resit/edit/{id}', 'Admin\HomeController@custom_resit_update');
     Route::get('custom_resit/delete/{id}', 'Admin\HomeController@custom_resit_delete')->name('custom_resit.delete');
     
+    Route::get('periods', 'Admin\HomeController@course_periods')->name('periods');
+    Route::post('periods', 'Admin\HomeController@save_course_periods');
+    Route::get('periods/{period_id}', 'Admin\HomeController@edit_course_periods')->name('periods.edit');
+    Route::post('periods/{period_id}', 'Admin\HomeController@update_course_periods');
+    Route::get('periods/delete/{period_id}', 'Admin\HomeController@delete_course_period')->name('periods.delete');
+
     Route::prefix('statistics')->name('stats.')->group(function(){
         Route::get('sudents', 'Admin\StatisticsController@students')->name('students');
         Route::get('fees', 'Admin\StatisticsController@fees')->name('fees');
