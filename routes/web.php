@@ -275,8 +275,16 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     });
 
     Route::get('users/{user_id}/subjects', 'Admin\UserController@createSubject')->name('users.subjects.add');
+    Route::get('users/{user_id}/subjects', 'Admin\UserController@createSubject')->name('users.subjects.add');
     Route::delete('users/{user_id}/subjects', 'Admin\UserController@dropSubject')->name('users.subjects.drop');
     Route::post('users/{user_id}/subjects', 'Admin\UserController@saveSubject')->name('users.subjects.save');
+
+    Route::get('users/{user_id}/subject/{subject_id}/content/{content_id?}', 'Admin\SubjectController@course_content')->name('users.content.index');
+    Route::post('users/{user_id}/subjects/{subject_id}/content/{content_id?}', 'Admin\SubjectController@save_course_content');
+    Route::get('users/{user_id}/subjects/{subject_id}/content/{content_id}/edit', 'Admin\SubjectController@edit_course_content')->name('users.content.edit');
+    Route::post('users/{user_id}/subjects/{subject_id}/content/{content_id}/edit', 'Admin\SubjectController@update_course_content');
+    Route::get('users/{user_id}/subjects/{subject_id}/content/{content_id}/delete', 'Admin\SubjectController@delete_course_content')->name('users.content.delete');
+
     Route::get('users/search', [Controller::class, 'search_user'])->name('users.search');
     Route::prefix('users/wages')->name('users.wages.')->group(function(){
         Route::get('', [AdminHomeController::class, 'wages'])->name('index');

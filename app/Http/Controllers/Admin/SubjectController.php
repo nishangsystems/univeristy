@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Subjects;
+use App\Models\Topic;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -122,5 +125,34 @@ class SubjectController extends Controller
         $data['title'] = "List of all Subjects";
         $data['subjects'] = \App\Models\Subjects::orderBy('name')->paginate(100);
         return view('admin.subject.index')->with($data);
+    }
+
+    public function course_content($user_id, $subject_id, $content_id=null)
+    {
+        $user = User::find($user_id);
+        $subject = Subjects::find($subject_id);
+        $data['title'] = "Course content for ".($subject->name??'').' - '.($user->name??'');
+        if($content_id != null){
+            $topic = Topic::find($content_id);
+            $data['topic'] = $topic;
+            $data['title'] .= ' - Main Topic: '.$topic->title;
+        }
+        return view('admin.content.content', $data);
+    }
+
+    public function save_course_content(Request $request, $user_id, $subject_id, $content_id=null)
+    {
+    }
+
+    public function edit_course_content($user_id, $subject_id, $content_id)
+    {
+    }
+
+    public function update_course_content(Request $request, $user_id, $subject_id, $content_id)
+    {
+    }
+
+    public function delete_course_content(Request $request, $user_id, $subject_id, $content_id)
+    {
     }
 }

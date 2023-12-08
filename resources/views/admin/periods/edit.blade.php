@@ -3,7 +3,7 @@
     @extends('admin.layout')
 @section('section')
     <div class="py-2">
-        <form method="post">
+        <form method="post" class="container">
             @csrf
             <div class="row">
                 <div class="col-md-5">
@@ -33,7 +33,7 @@
                     @endphp
                     @foreach ($periods as $period)
                         <tr>
-                            <td>{{ $K++ }}</td>
+                            <td>{{ $k++ }}</td>
                             <td>{{ $period->starts_at }}</td>
                             <td>{{ $period->ends_at }}</td>
                             <td>
