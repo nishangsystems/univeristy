@@ -611,7 +611,7 @@ class HomeController  extends Controller
     {
         # code...
         $data['title'] = "All Periods";
-        $data['periods'] = Period::orderyBy('id', 'DESC')->get();
+        $data['periods'] = Period::orderBy('id', 'DESC')->get();
         return view('admin.periods.index', $data);
     }
 
@@ -638,7 +638,7 @@ class HomeController  extends Controller
         # code...
         $data['title'] = "All Periods";
         $data['period'] = Period::find($period_id);
-        $data['periods'] = Period::orderyBy('id', 'DESC')->get();
+        $data['periods'] = Period::orderBy('id', 'DESC')->get();
         return view('admin.periods.edit', $data);
     }
 

@@ -119,6 +119,7 @@
                             <td>{{$value->name()}}</td>
                             <td>{{\App\Models\Campus::find($subject->campus_id)->name ?? '----'}}</td>
                             <td style="float: right;">
+                                <a class="btn btn-xs btn-primary text-uppercase" href="{{ route('admin.users.content.index', [$user->id, $subject->id]) }}">@lang('text.course_content')</a>
                                 <a onclick="event.preventDefault();
                                             $('#delete{{$subject->id}}').submit();" class=" btn btn-danger btn-xs m-2">DROP</a>
                                 <form id="delete{{$subject->id}}" action="{{route('admin.users.subjects.drop',$subject->teacher_subject_id)}}" method="POST" style="display: none;">

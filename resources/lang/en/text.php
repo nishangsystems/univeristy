@@ -870,5 +870,8 @@ return [
     'word_repeat'=>'repeat',
     'change_section'=>'change section',
     'subjects_under'=>'subjects under :class',
+    'starts_at'=>'starts at',
+    'ends_at'=>'ends at',
+    'word_periods'=>'periods',
     ''
 ];
