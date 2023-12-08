@@ -3,7 +3,7 @@
 @section('section')
 
 <div class="row m-4">
-    <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+    <div class="col-md-6 col-lg-6">
         
         <form class="bg-light rounded  my-4 mx-2 py-4 px-3" method="post" >
             {{csrf_field()}}
@@ -19,15 +19,15 @@
             <div class="p-4">
                 @if ($level == 1)
                     <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.word_topic')}}</label>
-                    <textarea class="form-control rounded" rows="3"  required name="title" id="content"></textarea>
+                    <textarea class="form-control rounded w-100" rows="3"  required name="title" id="content">{!! old('title', $topic->title) !!}</textarea>
                 @endif
                 @if ($level == 2)
                     <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.sub_topic')}}</label>
-                    <textarea class="form-control rounded" rows="3"  required name="title" id="content" ></textarea>
+                    <textarea class="form-control rounded w-100" rows="3"  required name="title" id="content">{!! old('title', $topic->title) !!}</textarea>
                     <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.word_duration').'('.__('text.in_hours').')'}}</label>
-                    <input class="form-control rounded" type="number" min="0" required name="duration">
+                    <input class="form-control rounded" type="number" min="0" required name="duration" value="{{ old('duration', $topic->duration) }}">
                     <label for="topic" class="py-2 fw-bold text-capitalize">{{__('text.word_week')}}</label>
-                    <input class="form-control rounded" type="number" min="0" required name="week">
+                    <input class="form-control rounded" type="number" min="0" required name="week" value="{{ old('week', $topic->week) }}">
                 @endif
                 <div class="d-flex justify-content-end py-3">
                     <input class="btn btn-sm btn-primary" type="submit" value="{{__('text.word_save')}}">
@@ -35,7 +35,7 @@
             </div>
         </form>  
     </div>
-    <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+    <div class="col-md-6 col-lg-6">
         <table class="adv-table table">
             <thead class="text-capitalize">
                 <th>{{__('text.sn')}}</th>

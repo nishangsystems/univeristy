@@ -75,7 +75,7 @@
                                                 </div>
 
                                                 <div class="body">
-                                                    @if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->count() > 0)
+                                                    @if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->count() > 0)
                                                         <div class="time">
                                                             <i class="ace-icon fa fa-clock-o"></i>
                                                             <span class="green">{{date('l d-m-Y', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->first()->attendance->check_in))}}</span>

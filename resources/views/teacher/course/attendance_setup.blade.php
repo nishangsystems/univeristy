@@ -11,6 +11,14 @@
             <span class="input-group-text text-primary border-0 border-collapse col-sm-4 rounded-0">{{ __('text.word_class') }}</span>
             <input class="form-control border-collapse border-0 rounded-0" readonly value="{{ $teacher_subject->class->name() }}">
         </div>
+        <div class="input-group my-2 border">
+            <span class="input-group-text text-primary border-0 border-collapse col-sm-4 rounded-0">@lang('text.word_period')</span>
+            <select class="form-control border-collapse border-0 rounded-0" name="period_id">
+                @foreach (\App\Models\Period::orderBy('starts_at')->get() as $period)
+                    <option value="{{ $period->id }}">FROM : {{ $period->starts_at }}  @  TO : {{ $period->ends_at }}</option>
+                @endforeach
+            </select>
+        </div>
         <div class="d-flex justify-content-end py-3">
             <a href="{{ URL::previous() }}" class="btn btn-sm btn-danger">{{ __('text.word_back') }}</a> | 
             <input type="submit" value="{{ __('text.word_confirm') }}" class="btn btn-sm btn-primary">

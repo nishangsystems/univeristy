@@ -13,6 +13,7 @@ use App\Models\Topic;
 use App\Models\Campus;
 use App\Models\CourseLog;
 use App\Models\Notification;
+use App\Models\Period;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -189,6 +190,7 @@ class HomeController extends Controller
         $data['subject'] = $subject;
         $data['campus'] = $campus;
         $data['topic'] = $topic;
+        $data['periods'] = Period::orderBy('starts_at')->get();
         $data['attendance_record'] = $attendance_record;
         $data['log_history'] = CourseLog::where(['year_id'=>$this->current_accademic_year])->join('topics', ['topics.id'=>'course_log.topic_id'])
                                 ->where(['topics.subject_id'=>$subject->id, 'topics.teacher_id'=>auth()->id()])->orderBy('course_log.id', 'DESC')->distinct()
@@ -207,6 +209,7 @@ class HomeController extends Controller
         $data = ['topic_id'=>$request->topic_id, 'campus_id'=>$request->campus_id, 'attendance_id'=>$request->attendance_id, 'details'=>$request->details, 'year_id'=>$this->current_accademic_year];
         $instance = new CourseLog($data);
         $instance->save();
+        $instance->attendance()->update(['period_id'=>$request->id]);
         return back()->with('success', __('text.word_done'));
     }
 
