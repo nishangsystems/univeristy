@@ -948,17 +948,22 @@ class ProgramController extends Controller
                     DB::commit();
                     return back()->with('success', 'Student Section successfully updated');
                 }
+                // dd($program);
                 $next_matric = null;
                 if(($prefix = ($program->prefix == null) ? $program->parent->prefix : $program->prefix) != null){
                     $template = $prefix.'/'.substr(Batch::find($this->current_accademic_year)->name, 2, 2).'/';
-                    $last_matric = Students::where('matric', 'LIKE', '%'.$prefix.'%')->orderBy('matric')->first()->matric;
+                    $last_matric = Students::where('matric', 'LIKE', '%'.$prefix.'%')->orderBy('matric', 'DESC')->first()->matric;
+                    // dd($template);
                     if($last_matric == null){
                         $next_matric = $template.'0001';
                     }else{
-                        if($numb = intVal(substr($last_matric, -1, 4)) != null){
-                            $next_matric = $template.substr('0000'.($numb+1) -1, 4);
+                        if(($numb = intVal(substr($last_matric, -4))) != null){
+                            $next_matric = $template.substr('0000'.($numb+1), -4);
+                            // dd($numb);
                         }
+                        // dd($last_matric);
                     }
+                    
                     Students::where('id', $student_id)->update(['matric'=>$next_matric]);
                     DB::commit();
                     return back()->with('success', 'Student Section successfully updated');

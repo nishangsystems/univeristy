@@ -38,7 +38,7 @@
             $.ajax({
                 method: "POST",
                 url: url,
-                data: {'matric': matric, 'course_id': "{{ $course->id }}"},
+                data: {'matric': matric, 'course_id': "{{ $course_id }}"},
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },

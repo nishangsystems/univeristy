@@ -11,7 +11,7 @@ class CourseLog extends Model
 
     protected $table = 'course_log';
     protected $connection = 'mysql';
-    protected $fillable = ['topic_id', 'attendance_id', 'campus_id', 'details', 'year_id'];
+    protected $fillable = ['topic_id', 'attendance_id', 'campus_id', 'details'];
 
     public function attendance(){
         return $this->belongsTo(Attendance::class, 'attendance_id');

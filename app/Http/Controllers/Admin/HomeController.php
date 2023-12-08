@@ -665,7 +665,7 @@ class HomeController  extends Controller
     public function delete_course_period($period_id)
     {
         # code...
-        if(CourseLog::where('period_id', $period_id)->count() > 0 || Attendance::where('period_id', $period_id)->count() > 0){
+        if(Attendance::where('period_id', $period_id)->count() > 0){
             return back()->with('error', 'Period is already has a course log or attendance record');
         }
         $period = Period::find($period_id);

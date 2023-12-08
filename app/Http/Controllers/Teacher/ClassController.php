@@ -138,16 +138,16 @@ class ClassController extends Controller
         $data['course'] = $teacher_subject->subject;
         $data['title'] = __('text.record_attendance_for', ['title'=>$data['course']->name, 'code'=>$data['course']->code]).' - '.now()->format(DATE_RFC850);
         if($teacher_subject != null){
-            $da = DailyAttendance::where(['teacher_id'=>$teacher_subject->teacher_id, 'course_id'=>$teacher_subject->subject_id, 'year'=>Helpers::instance()->getCurrentAccademicYear()])->whereTime('created_at', ' > ', now()->addHours(-3)->format(DATE_ATOM))->first();
+            $data = ['course_id'=>$teacher_subject->subject_id, 'teacher_id'=>$teacher_subject->teacher_id, 'period_id'=>$request->period_id, 'year'=>$this->current_accademic_year];
+            $da = DailyAttendance::where($data)->whereDate('created_at', now())->first();
             if($da == null){
                 $dA = new DailyAttendance();
-                $dA->year = Helpers::instance()->getCurrentAccademicYear();
-                $dA->course_id = $teacher_subject->subject_id;
-                $dA->teacher_id = $teacher_subject->teacher_id;
+                $dA->fill($data);
                 $dA->save();
                 $data['attendance_id'] = $dA->id;
                 $data['students'] = $dA->attedance()->join('students', 'students.id', '=', 'student_attendance.student_id')->orderBy('id', 'DESC')->distinct()->get(['student_attendance.id', 'students.name', 'students.matric']);
             }else{
+                session()->flash('message', "This attendance had already been registerd. Continue taking your attendance");
                 $data['attendance_id'] = $da->id;
                 $data['students'] = $da->attedance()->join('students', 'students.id', '=', 'student_attendance.student_id')->orderBy('id', 'DESC')->distinct()->get(['student_attendance.id', 'students.name', 'students.matric']);
             }
