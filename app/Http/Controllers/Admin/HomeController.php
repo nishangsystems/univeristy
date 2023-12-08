@@ -6,13 +6,16 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentFee;
+use App\Models\Attendance;
 use App\Models\Background;
 use App\Models\Batch;
 use App\Models\CampusSemesterConfig;
 use App\Models\Config;
+use App\Models\CourseLog;
 use App\Models\File;
 use App\Models\PaymentItem;
 use App\Models\Payments;
+use App\Models\Period;
 use App\Models\PlatformCharge;
 use App\Models\Resit;
 use App\Models\SchoolContact;
@@ -602,5 +605,71 @@ class HomeController  extends Controller
             $user->update($update);
         }
         return back()->with('success', __('text.word_Done'));
+    }
+
+    public function course_periods()
+    {
+        # code...
+        $data['title'] = "All Periods";
+        $data['periods'] = Period::orderyBy('id', 'DESC')->get();
+        return view('admin.periods.index', $data);
+    }
+
+    public function save_course_periods(Request $request)
+    {
+        # code...
+        $validity = Validator::make($request->all(), ['starts_at'=>'required', 'ends_at'=>'required']);
+        if($validity->fails()){
+            session()->flash('error', $validity->errors()->first());
+            return back()->withInput();
+        }
+
+        $data = $request->only(['starts_at', 'ends_at']);
+        if(Period::where($data)->count() > 0){
+            session()->flash('error', 'A period with the same start and end time already exist');
+            return back()->withInput();
+        }
+        (new Period($data))->save();
+        return back()->with('success', 'Period successfully created');
+    }
+
+    public function edit_course_periods($period_id)
+    {
+        # code...
+        $data['title'] = "All Periods";
+        $data['period'] = Period::find($period_id);
+        $data['periods'] = Period::orderyBy('id', 'DESC')->get();
+        return view('admin.periods.edit', $data);
+    }
+
+    public function update_course_period(Request $request, $period_id)
+    {
+        $validity = Validator::make($request->all(), ['starts_at'=>'required', 'ends_at'=>'required']);
+        if($validity->fails()){
+            session()->flash('error', $validity->errors()->first());
+            return back()->withInput();
+        }
+
+        $period = Period::find($period_id);
+        $data = $request->only(['starts_at', 'ends_at']);
+        if(Period::where($data)->count() > 0 && Period::where($data)->where('id', $period_id)->count() == 0){
+            session()->flash('error', 'Another period with the same start and end time already exist');
+            return back()->withInput();
+        }
+
+        $period->fill($data);
+        $period->save();
+        return back()->with('success', 'Period successfully updated');
+    }
+
+    public function delete_course_period($period_id)
+    {
+        # code...
+        if(CourseLog::where('period_id', $period_id)->count() > 0 || Attendance::where('period_id', $period_id)->count() > 0){
+            return back()->with('error', 'Period is already has a course log or attendance record');
+        }
+        $period = Period::find($period_id);
+        $period->delete();
+        return back()->with('success', 'Record successfully deleted');
     }
 }

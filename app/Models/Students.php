@@ -297,9 +297,10 @@ class Students extends Authenticatable
         $fee_items = [];
          foreach (Batch::where('id', '<', $year+1)->get() as $key => $batch) {
             # code...
-            $fee_items[] = $this->_class($batch->id)->campus_programs($this->campus_id)->payment_item()->where('year_id', $batch->id)->first();
-         }
-         $fee_items = collect($fee_items);
+            if(($class = $this->_class($batch->id))== null)continue;
+            $fee_items[] = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->first();
+        }
+        $fee_items = collect($fee_items);
 
         $extra_fees = ExtraFee::where('year_id', '<', $year+1)->where('student_id', $this->id)->sum('amount');
         $payments = Payments::where('student_id', $this->id)->where('payment_year_id', '<', $year+1)->whereIn('payment_id', $fee_items->pluck('id')->toArray())->sum(DB::raw('amount - debt'));
