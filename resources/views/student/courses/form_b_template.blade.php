@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="py-1 h4 row">
                                     <span class="col-md-3 text-capitalize">{{__('text.word_faculty')}}:</span>
-                                    <span class="col-md-9 pl-2 text-uppercase">{{$faculty->name}}</span>
+                                    <span class="col-md-9 pl-2 text-uppercase">{{$faculty->name??''}}</span>
                                 </div>
                             </div>
                         </div>
