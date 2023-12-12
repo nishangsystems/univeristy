@@ -952,7 +952,7 @@ class ProgramController extends Controller
                 $next_matric = null;
                 if(($prefix = ($program->prefix == null) ? $program->parent->prefix : $program->prefix) != null){
                     $template = $prefix.'/'.substr(Batch::find($this->current_accademic_year)->name, 2, 2).'/';
-                    $last_matric = Students::where('matric', 'LIKE', '%'.$prefix.'%')->orderBy('matric', 'DESC')->first()->matric;
+                    $last_matric = Students::where('matric', 'LIKE', "%{$template}%")->orderBy('matric', 'DESC')->first()->matric;
                     // dd($template);
                     if($last_matric == null){
                         $next_matric = $template.'0001';
