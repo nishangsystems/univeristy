@@ -50,7 +50,7 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-                {{$subjects->links() ?? ''}}
+                {{-- {{$subjects->links() ?? ''}} --}}
             </div>
         </div>
     </div>

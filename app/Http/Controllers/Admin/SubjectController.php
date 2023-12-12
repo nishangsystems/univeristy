@@ -113,7 +113,7 @@ class SubjectController extends Controller
      */
     public function destroy($id)
     {
-        $subject = \App\Models\Subjects::find($id);
+        $subject = Subjects::find($id);
         if ($subject->units->count() > 0) {
             return redirect()->to(route('admin.subjects.index'))->with('error', "Subject cant be deleted");
         }
@@ -124,7 +124,7 @@ class SubjectController extends Controller
     public function index(Request $request)
     {
         $data['title'] = "List of all Subjects";
-        $data['subjects'] = \App\Models\Subjects::orderBy('name')->paginate(100);
+        $data['subjects'] = Subjects::orderBy('name')->get();
         return view('admin.subject.index')->with($data);
     }
 
