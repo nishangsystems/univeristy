@@ -407,7 +407,7 @@ class HomeController extends Controller
         // dd($st_classes);
 
         $data = [];
-        foreach ($class->students($year)->get() as $key => $student) {
+        foreach ($class->_students($year)->get() as $key => $student) {
             $items = [];
             foreach ($student->classes as $key => $_class) {
                 if(($it = $_class->class->single_payment_item($student->campus_id, $_class->year_id)->get()->first()) != null){
