@@ -43,11 +43,12 @@ class Students extends Authenticatable
     
     public function _class($year=null)
     {
-        return $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id')->where(function($q)use($year){
-            $year == null  ?
-                $q->where('year_id', '<=', Helpers::instance()->getCurrentAccademicYear()) :
-                $q->where('year_id', '=', $year);
-        })->orderByDesc('year_id')->first();
+        
+        $data =  $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id');
+        if($year == null)
+            return $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id')->where('student_classes.year_id', '<=', Helpers::instance()->getCurrentAccademicYear())->orderByDesc('student_classes.year_id')->first();
+        else
+            return  $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id')->where('student_classes.year_id', '=', $year)->orderByDesc('student_classes.year_id')->first();
     }
 
     public function class($year)
