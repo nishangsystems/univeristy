@@ -139,7 +139,7 @@ class HomeController extends Controller
     public function  edit_class_course($program_level_id, $id)
     {
         $data['parent'] = SchoolUnits::find($program_level_id);
-        $data['subject'] = DB::table('class_subjects')
+        $data['subject'] = DB::table('class_subjects')->whereNull('class_subjects.deleted_at')
             ->join('school_units', ['school_units.id' => 'class_subjects.class_id'])
             ->join('subjects', ['subjects.id' => 'class_subjects.subject_id'])
             ->where('class_subjects.class_id', $program_level_id)

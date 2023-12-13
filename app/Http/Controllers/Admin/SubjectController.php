@@ -88,10 +88,10 @@ class SubjectController extends Controller
             'semester'=>'required',
             'status'=>'required',
         ]);
-        if(\App\Models\Subjects::where('code', $request->input('code'))->count()>0 && \App\Models\Subjects::find($id)->code != $request->input('code')){
+        if(Subjects::where('code', $request->input('code'))->count()>0 && Subjects::find($id)->code != $request->input('code')){
             return back()->with('error', "Course code ".$request->input('code').' already exist');
         }
-        $subject = \App\Models\Subjects::find($id);
+        $subject = Subjects::find($id);
         $subject->name = $request->input('name');
         $subject->coef = $request->input('coef');
         $subject->code = $request->input('code');

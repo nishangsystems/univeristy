@@ -107,7 +107,7 @@ class AttendanceController extends Controller
             // Attendance uses subject_id from subjects table
             // 
 
-            $data['report'] = ClassSubject::join('teachers_subjects', ['teachers_subjects.subject_id'=>'class_subjects.id'])->where(['teachers_subjects.batch_id'=>$year, 'teachers_subjects.campus_id'=>$campus])
+            $data['report'] = ClassSubject::join('teachers_subjects', ['teachers_subjects.subject_id'=>'class_subjects.id'])->whereNull('class_subjects.deleted_at')->where(['teachers_subjects.batch_id'=>$year, 'teachers_subjects.campus_id'=>$campus])
                     ->join('users', ['users.id'=>'teachers_subjects.teacher_id'])->where('users.type', '=', 'teacher')
                     ->join('attendance', ['attendance.teacher_id'=>'teachers_subjects.teacher_id'])->where(['attendance.year_id'=>$year, 'attendance.campus_id'=>$campus])->whereNotNull('attendance.check_out')
                     ->whereMonth('check_in', $date)->whereYear('check_in', $date)
@@ -115,7 +115,7 @@ class AttendanceController extends Controller
 
             // $data['report'] = User::where(['users.type'=>'teacher'])
             //         ->join('teachers_subjects', ['teachers_subjects.teacher_id'=>'users.id'])->where(['teachers_subjects.batch_id'=>$year, 'teachers_subjects.campus_id'=>$campus])
-            //         ->join('class_subjects', ['class_subjects.id'=>'teachers_subjects.subject_id'])
+            //         ->join('', ['class_subjects.id'=>'teachers_subjects.subject_id'])
             //         ->join('attendance', ['attendance.teacher_id'=>'users.id'])->where(['attendance.year_id'=>$year, 'attendance.campus_id'=>$campus])->whereNotNull('attendance.check_out')
             //         ->whereMonth('check_in', $date)->whereYear('check_in', $date)
             //         ->select(['users.id as teacher_id', 'users.name', 'attendance.*'])->distinct()->get()->groupBy(['teacher_id']);

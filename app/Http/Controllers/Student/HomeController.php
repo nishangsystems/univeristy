@@ -453,8 +453,9 @@ class HomeController extends Controller
     public function subjectNotes($id)
     {
         // dd($id);
-        $class_subject_id = DB::table('class_subjects')
+        $class_subject_id = DB::table('class_subjects')->whereNull('class_subjects.deleted_at')
             ->join('subjects', 'subjects.id', '=', 'class_subjects.subject_id')
+            ->whereNull('class_subjects.deleted_at')
             ->where('subjects.id', $id)
             ->pluck('class_subjects.id')->first();
         $data['notes'] = $this->getSubjectNotes($id);
@@ -471,6 +472,7 @@ class HomeController extends Controller
         $batch_id = Batch::find(Helpers::instance()->getCurrentAccademicYear())->id;
         $notes = DB::table('subject_notes')
             ->join('class_subjects', 'class_subjects.id', '=', 'subject_notes.class_subject_id')
+            ->whereNull('class_subjects.deleted_at')
             ->where('subject_notes.class_subject_id', $id)
             ->where('subject_notes.status', 1)
             ->where('subject_notes.batch_id', $batch_id)
@@ -801,7 +803,8 @@ class HomeController extends Controller
             # code...
             $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year])
                     ->join('subjects', ['subjects.id'=>'student_courses.course_id'])->where(['subjects.semester_id'=>$_semester])
-                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
+                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->whereNull('class_subjects.deleted_at')
+                    ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
             return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -837,8 +840,9 @@ class HomeController extends Controller
             $pl = Students::find(auth('student')->id())->classes()->where('year_id', '=', Helpers::instance()->getCurrentAccademicYear())->first()->class_id;
             $program_id = ProgramLevel::find($pl)->program_id;
             $subjects = ProgramLevel::where(['program_levels.program_id'=>$program_id])->where(['program_levels.level_id'=>$level])
-                        ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
-                        ->where(['subjects.semester_id'=>Helpers::instance()->getSemester($pl)->id])
+                        ->join('class_subjects', ['class_subjects.class_id'=>'program_levels.id'])->whereNull('class_subjects.deleted_at')
+                        ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
+                        ->where(['subjects.semester_id'=>Helpers::instance()->getSemester($pl)->id])->WhereNull('class_subjects.deleted_at')
                         ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->toArray();
             return $subjects;
         }

@@ -16,7 +16,7 @@ class ClassSubjectController extends Controller
     public function  edit($section_id, $id)
     {
         $data['parent'] = SchoolUnits::find($section_id);
-        $data['subject'] = DB::table('class_subjects')
+        $data['subject'] = DB::table('class_subjects')->whereNull('.deleted_at')
             ->join('school_units', ['school_units.id' => 'class_subjects.class_id'])
             ->join('subjects', ['subjects.id' => 'class_subjects.subject_id'])
             ->where('class_subjects.class_id', $section_id)

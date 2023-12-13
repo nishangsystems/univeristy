@@ -15,7 +15,7 @@ class Subjects extends Model
     protected $connection = 'mysql';
     public function units()
     {
-        return  $this->belongsToMany(SchoolUnits::class, 'class_subjects', 'subject_id', 'class_id');
+        return  $this->belongsToMany(SchoolUnits::class, 'class_subjects', 'subject_id', 'class_id')->whereNull('class_subjects.deleted_at');
     }
 
     

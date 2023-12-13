@@ -69,7 +69,7 @@ class HomeController extends Controller
 
     public function  subjects($parent)
     {
-        $subjects = \App\Models\ClassSubject::where(['class_id' => $parent])
+        $subjects = \App\Models\ClassSubject::where(['class_id' => $parent])->whereNull('class_subjects.deleted_at')
                     ->join('subjects', ['subjects.id' => 'class_subjects.subject_id'])
                     ->get(['subjects.id', 'subjects.name', 'subjects.code', 'class_subjects.class_id']);
         return response()->json([
@@ -223,9 +223,9 @@ class HomeController extends Controller
             $scholarship = StudentScholarship::where('student_id', $student->id)->where('batch_id', $year)->sum('amount');
             $student->link = route('admin.fee.student.payments.index', [$student->id]);
             $student->class = $class->name();
-            $student->fee = $fee->amount + $extra_fee;
+            $student->fee = ($fee != null ? $fee->amount : 0) + $extra_fee;
             $student->total = $cash_paid + $scholarship;
-            $student->owed = $fee->amount + $extra_fee - $cash_paid - $scholarship;
+            $student->owed = ($fee != null ? $fee->amount : 0) + $extra_fee - $cash_paid - $scholarship;
             return $student;
         });
 

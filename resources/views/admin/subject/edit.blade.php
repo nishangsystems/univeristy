@@ -7,7 +7,6 @@
             <form class="cmxform form-horizontal style-form text-capitalize" method="post" action="{{route('admin.subjects.update', $subject->id)}}">
                 {{csrf_field()}}
                 <input type="hidden" name="_method" value="put" id="">
-                <input type="hidden" name="semester" id="" value="{{$subject->semester_id}}}">
                 <div class="text-center fw-bolder fs-2 text-secondary my-3 text-uppercase">{{\App\Models\Semester::find($subject->semester_id)->name ?? null}} {{__('text.word_course')}}</div>
                 <div class="row my-2">
                     <label for="" class="col-md-3">{{__('text.word_title')}}</label>
@@ -34,6 +33,17 @@
                             <option value="">{{__('text.select_level')}}</option>
                             @foreach(\App\Models\Level::all() as $level)
                             <option value="{{$level->id}}" {{$level->id == $subject->level_id ? 'selected' : ''}}>{{$level->level}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <label for="" class="col-md-3">{{__('text.word_semester')}}</label>
+                    <div class="col-md-9 col-lg-9">
+                        <select name="semester" id="" required class="form-control" required>
+                            <option value="">{{__('text.select_level')}}</option>
+                            @foreach(\App\Models\Semester::all() as $semester)
+                            <option value="{{$semester->id}}" {{$semester->id == $subject->semester_id ? 'selected' : ''}}>{{$semester->name}}</option>
                             @endforeach
                         </select>
                     </div>
