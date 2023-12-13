@@ -51,6 +51,14 @@ class CourseController extends Controller
                         ->join('subjects', 'subjects.id', '=', 'class_subjects.subject_id')
                         // ->where('subjects.semester_id', '=', Helpers::instance()->getSemester($pl->id)->id)
                         ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->toArray();
+// <<<<<<< HEAD
+// =======
+// //             return $subjects;
+// //             $subjects = Subjects::select('subjects.*')->join('class_subjects', 'subjects.id', '=', 'class_subjects.subject_id')
+// //                 ->join('program_levels', 'program_levels.id', '=', 'class_subjects.class_id')
+// //                 ->where('program_levels.level_id',$level_id)
+// //                 ->where('program_levels.program_id', $program_id)->get();
+// >>>>>>> 5f466bbc50d205f4cd44fdd0ea62e0051b3c5cba
 
             return response()->json(['success'=>200, 'courses'=>CourseResource::collection($subjects)]);
         }
