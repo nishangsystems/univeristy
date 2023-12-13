@@ -731,8 +731,12 @@ class HomeController extends Controller
     public function form_b()
     {
         # code...
-        $data['title'] = "Registered Courses ".Helpers::instance()->getSemester(auth('student')->user()->_class($this->current_accademic_year)->id)->name." ".\App\Models\Batch::find($this->current_accademic_year)->name;
-        $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth('student')->id()])->where(['year_id'=>Helpers::instance()->getYear()])->first()->class_id);
+        $class = auth('student')->user()->_class($this->current_accademic_year);
+        if($class != null){
+            return back()->with('error', 'Class detection error');
+        }
+        $data['title'] = "Registered Courses ".(Helpers::instance()->getSemester($class->id)->name ?? "??? SEMESTER")." ".(Batch::find($this->current_accademic_year)->name ?? "??? YEAR");
+        $data['student_class'] = ProgramLevel::find(StudentClass::where(['student_id'=>auth('student')->id()])->where(['year_id'=>Helpers::instance()->getYear()])->first()->class_id);
         $data['cv_total'] = ProgramLevel::find(auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id)->program()->first()->max_credit;        
         
         $student = auth('student')->id();
