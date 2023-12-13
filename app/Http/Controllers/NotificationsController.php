@@ -84,7 +84,7 @@ class NotificationsController extends Controller
                 $data['title'] = "Level ".Level::find($layer_id)->level.' Notifications '.$campus??null;
                 $level_ids = Level::join('program_levels', ['program_levels.level_id'=>'levels.id'])
                             ->join('school_units', ['school_units.id'=>'program_levels.program_id'])
-                            ->where(['school_units.uint_id'=>4])
+                            ->where(['school_units.unit_id'=>4])
                             ->whereIn('school_units.id', $program_ids)
                             ->distinct()->pluck('levels.id')->toArray();
 
@@ -212,7 +212,7 @@ class NotificationsController extends Controller
         ]);
         // dd($request->all());
         try {
-            $app_title = $request->title.'/'.$request->visibility.'_';
+            $app_title = '';
             $data = $request->all();
             $data['campus_id'] = $campus_id;
             $data['user_id'] = auth()->id();
@@ -225,33 +225,33 @@ class NotificationsController extends Controller
                     break;
                 case 'F': case 'FACULTY':
                     # code...
-                    $app_title .= 'faculty_'.$request->school_unit_id;
+                    $app_title = 'faculty_'.$request->school_unit_id;
                     $data['unit_id'] = 2;
                     $data['school_unit_id'] = $layer_id;
                     break;
                 case 'D': case 'DEPARTMENT':
                     # code...
-                    $app_title .= 'department_'.$request->school_unit_id;
+                    $app_title = 'department_'.$request->school_unit_id;
                     $data['unit_id'] = 3;
                     $data['school_unit_id'] = $layer_id;
                     break;
                 case 'P': case 'PROGRAM':
                     # code...
-                    $app_title .= 'program_'.$request->school_unit_id;
+                    $app_title = 'program_'.$request->school_unit_id;
                     $data['unit_id'] = 4;
                     $data['school_unit_id'] = $layer_id;
                     break;
                 case 'C': case 'CLASS':
                     # code...
                     $class = ProgramLevel::find($layer_id == 0 ? $request->program_level_id : $layer_id);
-                    $app_title .= 'class_'.$class->id;
+                    $app_title = 'class_'.$class->id;
                     $data['unit_id'] = 4;
                     $data['school_unit_id'] = $class->program_id;
                     $data['level_id'] = $class->level_id;
                     break;
                 case 'L': case 'LEVEL':
                     # code...
-                    $app_title .= 'level_'.$request->level_id;
+                    $app_title = 'level_'.$request->level_id;
                     $data['unit_id'] = 4;
                     $data['level_id'] = $layer_id;
                     break;

@@ -22,7 +22,7 @@ class CourseResource extends JsonResource
             'code' => $this->code,
             'date' => $this->created_at->format('Y-m-d'),
             'semester' => $this->semester->name,
-            'level' => $this->level->level
+            'level' => isset($this->level)?$this->level->level:''
         ];
     }
 }
