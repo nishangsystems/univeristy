@@ -43,7 +43,7 @@ Route::group([ 'prefix' => 'student', 'as' => 'student.'], function() {
     //Get courses for registration - ('api/student/class_courses/optional_level_id'):: optional level_id to get the courses for another level 
     Route::get('class_courses/{level_id?}', [App\Http\Controllers\API\Student\CourseController::class, 'class_courses']);
     //Register Courses - ('api/student/register_courses'):: expected data: courses: array of selected course_ids to be registered
-    Route::post('register_courses', [App\Http\Controllers\API\Student\CourseController::class, 'register']);
+    Route::get('register_courses', [App\Http\Controllers\API\Student\CourseController::class, 'register']);
 
 
     Route::get('results/ca', [App\Http\Controllers\API\Student\ResultController::class, 'ca']);

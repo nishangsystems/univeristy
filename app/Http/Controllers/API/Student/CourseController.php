@@ -11,6 +11,7 @@ use App\Http\Resources\StudentResource3;
 use App\Models\ProgramLevel;
 use App\Models\Students;
 use App\Models\StudentSubject;
+use App\Models\Subjects;
 use Illuminate\Http\Request;
 use Throwable;
 
@@ -50,7 +51,13 @@ class CourseController extends Controller
                         ->join('subjects', 'subjects.id', '=', 'class_subjects.subject_id')
                         // ->where('subjects.semester_id', '=', Helpers::instance()->getSemester($pl->id)->id)
                         ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->toArray();
-            return $subjects;
+//             return $subjects;
+//             $subjects = Subjects::select('subjects.*')->join('class_subjects', 'subjects.id', '=', 'class_subjects.subject_id')
+//                 ->join('program_levels', 'program_levels.id', '=', 'class_subjects.class_id')
+//                 ->where('program_levels.level_id',$level_id)
+//                 ->where('program_levels.program_id', $program_id)->get();
+
+            return response()->json(['success'=>200, 'courses'=>CourseResource::collection($subjects)]);
         }
         catch(Throwable $th){
             throw $th;
@@ -60,9 +67,6 @@ class CourseController extends Controller
 
     public function register(Request $request)//takes courses=[course_ids]
     {
-        // return $request->all();
-        # code...
-        // first clear all registered courses for the year, semester, student then rewrite
 
         if($request->student_id){
             $student = Students::find($request->student_id);
@@ -75,8 +79,7 @@ class CourseController extends Controller
         $_semester = Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
         try {
             if ($semester == $_semester) {
-                # code...
-                return back()->with('error', 'Resit registration can not be done here. Do that under \"Resit Registration\"');
+                return response()->json(['success'=>400, 'message'=>"Resit registration can not be done here. Do that under \"Resit Registration\""]);
             }
             if ($request->has('courses')) {
                 // DB::beginTransaction();
@@ -86,28 +89,18 @@ class CourseController extends Controller
                     StudentSubject::find($value)->delete();
                 }
                 # code...
-                foreach (array_unique($request->courses) as $key => $value) {
+                foreach (json_decode($request->courses, true) as $key => $value) {
                     # code...
                     StudentSubject::create(['year_id'=>$year, 'semester_id'=>$semester, 'student_id'=>$student->id, 'course_id'=>$value]);
                 }
             }
             // DB::commit();
-            return back()->with('success', "!Done");
+            return response()->json(['success'=>200, 'message'=>"Course Registered Successfully"]);
         } catch (\Throwable $th) {
             // DB::rollBack();
-            return back()->with('error', $th->getFile().' : '.$th->getLine().' :: '.$th->getMessage());
+            return response()->json(['success'=>400, 'message'=>"Something went wrong , try again"]);
         }
     }
 
-
-    // public function register(Request $request)
-    // {
-    //     // $student = $student;
-
-    //     // return response([
-    //     //     'status' => 200,
-    //     //     'student' => new StudentResource3($student)
-    //     // ]);
-    // }
 }
 
