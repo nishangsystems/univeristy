@@ -999,7 +999,7 @@ class StudentController extends Controller
     public function getSubjectsByClass($class_id)
     {
         # code...
-        return DB::table('class_subjects')
+        return DB::table('class_subjects')->whereNull('class_subjects.deleted_at')
                 ->where('class_id', '=', $class_id)
                 ->join('subjects', 'subjects.id','=', 'class_subjects.subject_id')
                 ->distinct()
@@ -1025,7 +1025,7 @@ class StudentController extends Controller
     public function getCoeficientsSumByClass($class_id)
     {
         # code...
-        $coefs = DB::table('class_subjects')
+        $coefs = DB::table('class_subjects')->whereNull('class_subjects.deleted_at')
                 ->where('class_id', '=', $class_id)
                 ->join('subjects', 'subjects.id','=', 'class_subjects.subject_id')
                 ->distinct()

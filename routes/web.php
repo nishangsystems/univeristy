@@ -823,6 +823,7 @@ Route::get('semesters/{background}', function(Request $request){
 Route::get('class_subjects/{program_level_id}', function($program_level_id){
     // return $program_level_id;
     $courses = \App\Models\ClassSubject::where(['class_subjects.class_id'=>$program_level_id])
+            ->whereNull('class_subjects.deleted_at')
             ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
             ->get('subjects.*');
             // return $courses;

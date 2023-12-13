@@ -94,7 +94,7 @@ class SubjectNotesController extends Controller
      */
     public function showSubject($class_id, $subject_id)
     {
-        $subject = DB::table('class_subjects')
+        $subject = DB::table('class_subjects')->whereNull('class_subjects.deleted_at')
             ->join('school_units', 'school_units.id', '=', 'class_subjects.class_id')
             ->join('subjects', 'subjects.id', '=', 'class_subjects.subject_id')
             ->where('school_units.id', $class_id)
@@ -117,7 +117,7 @@ class SubjectNotesController extends Controller
         $batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
         $notes = DB::table('subject_notes')
             ->join('class_subjects', 'class_subjects.id', '=', 'subject_notes.class_subject_id')
-            ->where('class_subjects.id', $id)
+            ->where('class_subjects.id', $id)->whereNull('class_subjects.deleted_at')
             ->where('subject_notes.batch_id', $batch_id)
             ->select(
                 'subject_notes.id as id',

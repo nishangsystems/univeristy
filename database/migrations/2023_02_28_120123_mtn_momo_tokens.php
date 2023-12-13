@@ -23,7 +23,7 @@ class CreateMtnMomoTokensTable extends Migration
             ]);
             $table->timestamps();
             $table->timestamp('expires_at')->nullable();
-            $table->softDeletes();
+            $table->SoftDeletes();
         });
     }
 

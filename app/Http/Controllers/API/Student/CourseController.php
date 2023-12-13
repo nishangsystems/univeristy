@@ -28,7 +28,8 @@ class CourseController extends Controller
         $_semester = $request->semester ?? Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
         $courses = StudentSubject::where(['student_courses.student_id'=>$student->id])->where(['student_courses.year_id'=>$_year])
             ->join('subjects', ['subjects.id'=>'student_courses.course_id'])->where(['subjects.semester_id'=>$_semester])
-            ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
+            ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->whereNull('class_subjects.deleted_at')
+            ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
         return response()->json(['cv_sum'=>collect($courses)->sum('cv'), 'courses'=> CourseResource::collection($courses)]);
     }
 
@@ -45,7 +46,8 @@ class CourseController extends Controller
             $program_id = $pl->program_id;
             // return $level_id;
             $subjects = ProgramLevel::where('program_levels.program_id', $program_id)->where('program_levels.level_id',$level_id)
-                        ->join('class_subjects', 'class_subjects.class_id', '=', 'program_levels.id')->join('subjects', 'subjects.id', '=', 'class_subjects.subject_id')
+                        ->join('class_subjects', 'class_subjects.class_id', '=', 'program_levels.id')->whereNull('class_subjects.deleted_at')
+                        ->join('subjects', 'subjects.id', '=', 'class_subjects.subject_id')
                         // ->where('subjects.semester_id', '=', Helpers::instance()->getSemester($pl->id)->id)
                         ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->toArray();
             return $subjects;
