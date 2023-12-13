@@ -223,9 +223,9 @@ class HomeController extends Controller
             $scholarship = StudentScholarship::where('student_id', $student->id)->where('batch_id', $year)->sum('amount');
             $student->link = route('admin.fee.student.payments.index', [$student->id]);
             $student->class = $class->name();
-            $student->fee = ($fee->amount??0) + $extra_fee;
+            $student->fee = ($fee != null ? $fee->amount : 0) + $extra_fee;
             $student->total = $cash_paid + $scholarship;
-            $student->owed = ($fee->amount??0) + $extra_fee - $cash_paid - $scholarship;
+            $student->owed = ($fee != null ? $fee->amount : 0) + $extra_fee - $cash_paid - $scholarship;
             return $student;
         });
 
