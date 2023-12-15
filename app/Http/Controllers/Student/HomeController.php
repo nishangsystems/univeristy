@@ -911,7 +911,7 @@ class HomeController extends Controller
         $data['user'] = $student;
 
         $pdf = PDF::loadView('student.courses.form_b_template',$data);
-        return $pdf->download($student.'_FORM_B.pdf');
+        return $pdf->download($student->matric.'_FORM_B.pdf');
         // return view('student.courses.form_b_template', $data);
     }
 
