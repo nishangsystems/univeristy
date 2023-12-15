@@ -900,6 +900,21 @@ class HomeController extends Controller
         return $pdf->download(auth('student')->user()->matric.'_FORM_B.pdf');
         // return view('student.courses.form_b_template', $data);
     }
+
+    public function download_courses_api(Request $request, $year, $semester)//takes class course id
+    {
+        $student = Students::find($request->student_id);
+        # code...
+        $reg = $this->registerd_courses($year, $semester)->getData();
+        $data['cv_sum'] = $reg->cv_sum;
+        $data['courses'] = $reg->courses;
+        $data['user'] = $student;
+
+        $pdf = PDF::loadView('student.courses.form_b_template',$data);
+        return $pdf->download($student.'_FORM_B.pdf');
+        // return view('student.courses.form_b_template', $data);
+    }
+
     public function add_course()//takes class course id
     {
         // add course to current auth user for current academic year
