@@ -104,7 +104,7 @@ class Students extends Authenticatable
     public function paid($year = null) // fee paid for current academic year
     {
         $year = $year == null ? Helpers::instance()->getYear() : $year;
-        $items = $this->payments()->selectRaw('COALESCE(sum(amount),0) total')->where('batch_id', $year)->get();
+        $items = $this->payments()->where('batch_id', $year)->selectRaw('COALESCE(sum(amount),0) total')->get();
         return $items->first()->total;
     }
 
@@ -112,7 +112,7 @@ class Students extends Authenticatable
     public function bal($student_id = null, $year = null)
     {
         $year = $year == null ? Helpers::instance()->getCurrentAccademicYear() : $year;
-        $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id, $year-1);
+        $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id, $year);
         // dd($scholarship);
         return $this->total() + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid() - ($scholarship);
     }
