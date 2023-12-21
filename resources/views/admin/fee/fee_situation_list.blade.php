@@ -94,8 +94,8 @@
                             <th>{{__('text.word_debt')}}</th>
                             <th>{{__('text.word_paid')}}</th>
                             <th>{{__('text.total_paid')}}</th>
-                            <th>{{__('text.amount_owing')}}</th>
                             <th>{{__('text.word_scholarship')}}</th>
+                            <th>{{__('text.amount_owing')}}</th>
                             <!-- <th></th> -->
                         </tr>
                     </thead>
@@ -110,8 +110,8 @@
                                 <td class="border-left border-right">{{$student['debt'] ?? ''}}</td>
                                 <td class="border-left border-right">{{number_format($student['current_paid'] ?? 0)}}</td>
                                 <td class="border-left border-right">{{number_format($student['paid'] ?? 0)}}</td>
-                                <td class="border-left border-right">{{number_format($student['owing'] ?? 0)}}</td>
                                 <td class="border-left border-right">{{number_format($student['scholarship'] ?? 0)}}</td>
+                                <td class="border-left border-right">{{number_format($student['owing'] ?? 0)}}</td>
                             </tr>
                         @endforeach
                     </tbody>
