@@ -44,13 +44,20 @@ Route::group([ 'prefix' => 'student', 'as' => 'student.'], function() {
     Route::get('class_courses/{level_id?}', [App\Http\Controllers\API\Student\CourseController::class, 'class_courses']);
     //Register Courses - ('api/student/register_courses'):: expected data: courses: array of selected course_ids to be registered
     Route::get('register_courses', [App\Http\Controllers\API\Student\CourseController::class, 'register']);
+    // Route::post('form_b', [App\Http\Controllers\API\Student\CourseController::class, 'form_b_init']);
 
 
     Route::get('results/ca', [App\Http\Controllers\API\Student\ResultController::class, 'ca']);
     Route::get('results/exam', [App\Http\Controllers\API\Student\ResultController::class, 'exam']);
+    Route::get('results/exam/download', [App\Http\Controllers\API\Student\ResultController::class, 'download_exam']);
 
 
     Route::get('fee', [App\Http\Controllers\API\Student\FeeController::class, 'index']);
+
+
+    Route::get('registration/eligible', [App\Http\Controllers\API\Student\CourseController::class, 'registration_eligible']);
+    Route::get('registered_courses', [App\Http\Controllers\API\Student\CourseController::class, 'registered_courses']);//request payload {year:int, semester:int}
+    Route::post('form_b/download', [App\Http\Controllers\API\Student\CourseController::class, 'form_b']);//request payload {year:int, semester:int}
 });
 
 Route::group(['prefix' => 'user', 'as' => 'user.'], function() {
