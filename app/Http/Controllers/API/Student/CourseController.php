@@ -40,26 +40,30 @@ class CourseController extends Controller
     {
         try{
 
-            return "1234567890";
             
             $student = Auth('student_api')->user();
+            // return "1234567890";
             
             $rCheck = $this->registration_check();
             $pl = Students::find($student->id)->_class($this->current_accademic_year)->select('program_levels.*')->first();
             $level_id = $level == null ? $pl->level_id : $level;
             $program_id = $pl->program_id;
             // return $level_id;
-            $subjects = ProgramLevel::where('program_levels.program_id', $program_id)->where('program_levels.level_id',$level_id)
-                        ->join('class_subjects', 'class_subjects.class_id', '=', 'program_levels.id')->whereNull('class_subjects.deleted_at')
-                        ->join('subjects', 'subjects.id', '=', 'class_subjects.subject_id')
-                        // ->where('subjects.semester_id', '=', Helpers::instance()->getSemester($pl->id)->id)
-                        ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->toArray();
+            // $subjects = ProgramLevel::where('program_levels.program_id', $program_id)->where('program_levels.level_id',$level_id)
+            //             ->join('class_subjects', 'class_subjects.class_id', '=', 'program_levels.id')->whereNull('class_subjects.deleted_at')
+            //             ->join('subjects', 'subjects.id', '=', 'class_subjects.subject_id')
+            //             // ->where('subjects.semester_id', '=', Helpers::instance()->getSemester($pl->id)->id)
+            //             ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->all();
 
+            $subjects = Subjects::join('class_subjects', 'class_subjects.subject_id', '=', 'subjects.id')->whereNull('class_subjects.deleted_at')
+                        ->join('program_levels', 'program_levels.id', '=', 'class_subjects.class_id')
+                        ->where('program_levels.level_id',$level_id)->where('program_levels.program_id', $program_id)
+                        ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->all();
             return response()->json(['success'=>200, 'courses'=>CourseResource::collection($subjects), 'can_register'=>$rCheck['can'], 'reason'=>$rCheck['reason']]);
         }
         catch(Throwable $th){
-            // throw $th;
-            return $th->getTrace();
+            throw $th;
+            // return $th->getTrace();
         }
     }
 
@@ -168,23 +172,24 @@ class CourseController extends Controller
             $data['semester'] = $semester;
             $data['year'] = $year;
             $data['class'] = $data['user']->_class($year);
+            $data['title'] = "Registered Courses";
             // return $data;
             
             $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('student.courses.form_b_template',$data);
             return $pdf->download($data['user']->matric.'_FORM_B.pdf');
         } catch (\Throwable $th) {
-            //throw $th;
-            return response()->json(['success'=>400, 'message'=>$th->getMessage()]);
+            throw $th;
+            // return response()->json(['success'=>400, 'message'=>$th->getMessage()]);
         }
     }
 
-    private static function _registerd_courses($year = null, $semester = null, $student = null )
+    private function _registerd_courses($year = null, $semester = null, $student = null )
     {
         try {
             //code...
             $user = auth('student_api')->user();
-            $_year = $year ?? Parent::$current_accademic_year;
-            $_semester = $semester ?? Helpers::instance()->getSemester($user->_class(Parent::$current_accademic_year)->id)->id;
+            $_year = $year ?? $this->current_accademic_year;
+            $_semester = $semester ?? Helpers::instance()->getSemester($user->_class($_year)->id)->id;
             $class = $user->_class($_year);
             $yr = \App\Models\Batch::find($_year);
             $sem = \App\Models\Semester::find($_semester);
@@ -205,6 +210,7 @@ class CourseController extends Controller
                 'class'=>$class == null ? "" : ['id'=>$class->id, 'name'=>$class->name()],
             ]);
         } catch (\Throwable $th) {
+            throw $th;
             return $th->getMessage();
             
         }
