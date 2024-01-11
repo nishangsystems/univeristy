@@ -22,12 +22,9 @@ class ResultController extends Controller
     public function ca(Request $request)
     {
         $current_year = \App\Helpers\Helpers::instance()->getYear();
-        if($request->student_id){
-            $student = Students::find($request->student_id);
-        }else{
-            $student = Auth('student_api')->user();
-        }
-
+        
+        $student = Auth('student_api')->user();
+        
         $year = Batch::find($request->year ?? Helpers::instance()->getCurrentAccademicYear());
         $class = $student->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
@@ -66,11 +63,9 @@ class ResultController extends Controller
     public function exam(Request $request)
     {
         $current_year = \App\Helpers\Helpers::instance()->getYear();
-        if($request->student_id != null){
-            $student = Students::find($request->student_id);
-        }else{
-            $student = Auth('student_api')->user();
-        }
+        
+        $student = Auth('student_api')->user();
+        
 
         // return $request->all();
         $year = Batch::find($request->year ?? $this->current_accademic_year);
@@ -197,11 +192,9 @@ class ResultController extends Controller
     {
         // return $request->all();
 
-        if($request->student_id != null){
-            $student = Students::find($request->student_id);
-        }else{
-            $student = Auth('student_api')->user();
-        }
+        
+        $student = Auth('student_api')->user();
+        
         $year = $request->year ?? $this->current_accademic_year;
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($student->_class($year)->id);
 

@@ -23,11 +23,9 @@ class CourseController extends Controller
 {
     public function courses(Request $request)
     {
-        if($request->student_id){
-            $student = Students::find($request->student_id);
-        }else{
-            $student = Auth('student_api')->user();
-        }
+        
+        $student = Auth('student_api')->user();
+        
 
         $_year = $request->year ?? Helpers::instance()->getYear();
         $_semester = $request->semester ?? Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
@@ -41,12 +39,12 @@ class CourseController extends Controller
     public function class_courses(Request $request, $level = null)
     {
         try{
+
+            return "1234567890";
+            
+            $student = Auth('student_api')->user();
+            
             $rCheck = $this->registration_check();
-            if($request->student_id){
-                $student = Students::find($request->student_id);
-            }else{
-                $student = Auth('student_api')->user();
-            }
             $pl = Students::find($student->id)->_class($this->current_accademic_year)->select('program_levels.*')->first();
             $level_id = $level == null ? $pl->level_id : $level;
             $program_id = $pl->program_id;
@@ -60,19 +58,16 @@ class CourseController extends Controller
             return response()->json(['success'=>200, 'courses'=>CourseResource::collection($subjects), 'can_register'=>$rCheck['can'], 'reason'=>$rCheck['reason']]);
         }
         catch(Throwable $th){
-            throw $th;
-            return $th->getLine() . '  '.$th->getMessage();
+            // throw $th;
+            return $th->getTrace();
         }
     }
 
     public function register(Request $request)//takes courses=[course_ids]
     {
 
-        if($request->student_id){
-            $student = Students::find($request->student_id);
-        }else{
-            $student = Auth('student_api')->user();
-        }
+        
+        $student = Auth('student_api')->user();
 
         $year = $this->current_accademic_year;
         $semester = Helpers::instance()->getSemester($student->_class($this->current_accademic_year)->id)->id;
@@ -104,11 +99,9 @@ class CourseController extends Controller
     }
 
     private function registration_check($student_id = null){
-        if($student_id != null){
-            $student = Students::find($student_id);
-        }else{
-            $student = auth('student_api')->user();
-        }
+        
+        $student = auth('student_api')->user();
+        
         $student_class = $student->_class($this->current_accademic_year);
         $semester = Helpers::instance()->getSemester($student_class->id);
         $_semester = Helpers::instance()->getSemester($student_class->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
@@ -161,12 +154,8 @@ class CourseController extends Controller
     {
         try {
             //code...
-            if($request->student_id != null){
-                $student = Students::find($request->student_id);
-            }else{
-                $student = auth('student_api')->user();
-            }
-
+            $student = auth('student_api')->user();
+            
             // return $request->all();
             $year = $request->year != null ? $request->year : $this->current_accademic_year;
             $semester = $request->semester != null ? $request->semester : Helpers::instance()->getSemester($student->_class($year)->id)->id;
@@ -193,17 +182,16 @@ class CourseController extends Controller
     {
         try {
             //code...
-            $_student = $student ?? auth('student_api')->id();
-            $user = Students::find($_student);
+            $user = auth('student_api')->user();
             $_year = $year ?? Parent::$current_accademic_year;
-            $_semester = $semester ?? Helpers::instance()->getSemester(Students::find($_student)->_class(Parent::$current_accademic_year)->id)->id;
+            $_semester = $semester ?? Helpers::instance()->getSemester($user->_class(Parent::$current_accademic_year)->id)->id;
             $class = $user->_class($_year);
             $yr = \App\Models\Batch::find($_year);
             $sem = \App\Models\Semester::find($_semester);
             # code...
 
             // return response()->json(['user'=>$_student, 'year'=>$year, 'semester'=>$semester]);
-            $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year, 'student_courses.semester_id'=>$semester])
+            $courses = StudentSubject::where(['student_courses.student_id'=>$user->id])->where(['student_courses.year_id'=>$_year, 'student_courses.semester_id'=>$semester])
                     ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
                     // ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])
                     ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->whereNull('class_subjects.deleted_at')
@@ -225,11 +213,8 @@ class CourseController extends Controller
     public function registered_courses(Request $request)
     {
         # code...
-        if($request->student_id != null){
-            $student = Students::find($request->student_id);
-        }else{
-            $student = auth('student_api')->user();
-        }
-        return $this->_registerd_courses($request->year, $request->semester, $student->id);
+        
+        // $student = auth('student_api')->user();
+        return $this->_registerd_courses($request->year, $request->semester);
     }
 }
