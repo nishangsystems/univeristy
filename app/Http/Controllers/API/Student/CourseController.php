@@ -39,10 +39,12 @@ class CourseController extends Controller
     public function class_courses(Request $request, $level = null)
     {
         try{
-            $rCheck = $this->registration_check();
+
+            return "1234567890";
             
             $student = Auth('student_api')->user();
             
+            $rCheck = $this->registration_check();
             $pl = Students::find($student->id)->_class($this->current_accademic_year)->select('program_levels.*')->first();
             $level_id = $level == null ? $pl->level_id : $level;
             $program_id = $pl->program_id;
