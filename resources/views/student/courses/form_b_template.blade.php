@@ -81,11 +81,12 @@
 </head>
 <body>
     @php
-        $program_name = \App\Models\ProgramLevel::find($user->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->name;
-        $faculty = \App\Models\ProgramLevel::find($user->_class(\App\Helpers\Helpers::instance()->getYear())->id)->program()->first()->parent->parent;
-        $current_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
-        $current_semester = \App\Helpers\Helpers::instance()->getSemester($user->_class(\App\Helpers\Helpers::instance()->getYear())->id)->id;
-        $current_semester_name = \App\Helpers\Helpers::instance()->getSemester($user->_class(\App\Helpers\Helpers::instance()->getYear())->id)->name;
+        $program_name = $class->program->name;
+        $faculty = $class->program()->first()->parent->parent;
+        $current_year_name = \App\Models\Batch::find($year)->name;
+        $current_semester = $semester;
+        $current_semester_name = \App\Models\Semester::find($semester)->name;
+
         $flag = true;
     @endphp
             <div class="" id="table_____">

@@ -14,6 +14,7 @@ use App\Models\PlatformCharge;
 use App\Models\Semester;
 use App\Models\Students;
 use App\Models\Subjects;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class ResultController extends Controller
@@ -34,6 +35,8 @@ class ResultController extends Controller
         if($class == null){
             return view('api.error')->with('error', "No result found. Make sure you were admitted to this institution by or before the selected academic year");
         }
+
+        $registered_courses = $student->registered_courses($year)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
         $data['title'] = "My CA Result";
         $data['user'] = $student;
         $data['year'] = $year;
@@ -42,7 +45,7 @@ class ResultController extends Controller
         $data['semester'] = $semester;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
         $res = $student->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->toArray();
-        $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
+        // $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
         $results = array_map(function($subject_id)use($data, $year, $semester, $student){
             return [
                 'id'=>$subject_id,
@@ -52,7 +55,8 @@ class ResultController extends Controller
                 'coef'=>Subjects::find($subject_id)->coef ?? '',
                 'ca_mark'=>$student->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? '',
             ];
-        }, $res);
+        // }, $res);
+        }, $registered_courses);
         // dd($data['results']);
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
         return view('api.ca_result')->with($data);
@@ -62,19 +66,20 @@ class ResultController extends Controller
     public function exam(Request $request)
     {
         $current_year = \App\Helpers\Helpers::instance()->getYear();
-        if($request->student_id){
+        if($request->student_id != null){
             $student = Students::find($request->student_id);
         }else{
             $student = Auth('student_api')->user();
         }
 
         // return $request->all();
-        $year = Batch::find($request->year ?? Helpers::instance()->getCurrentAccademicYear());
+        $year = Batch::find($request->year ?? $this->current_accademic_year);
         $class = $student->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
 
+        // return ['year'=>$year, 'semester'=>$semester];
         // check if results are published
-        if(!$semester->result_is_published($year->id)){
+        if(!$semester->result_is_published($year->id, $student->id)){
             return view('api.error')->with('error', 'Results Not Yet Published For This Semester.');
         }
 
@@ -99,6 +104,8 @@ class ResultController extends Controller
 
         // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
 
+        $registered_courses = $student->registered_courses($year)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
+
         $data['title'] = "My Exam Result";
         $data['user'] = $student;
         $data['semester'] = $semester;
@@ -108,7 +115,7 @@ class ResultController extends Controller
         $data['exam_total'] = $class->program()->first()->exam_total;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
         $res = $student->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
-        $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
+        // $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
         $non_gpa_courses = Subjects::whereIn('code', NonGPACourse::pluck('course_code')->toArray())->pluck('id')->toArray();
         // $non_gpa_courses = [];
         // return $non_gpa_courses;
@@ -144,9 +151,10 @@ class ResultController extends Controller
             return $rol;
 
             // dd($grade);
-        }, $res);
-        // dd($res);
+        // }, $res);
+        }, $registered_courses);
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
+        // return ($registered_courses);
         $sum_cv = $data['results']->sum('coef');
         $sum_earned_cv = collect($results)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
         $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->sum('coef');
@@ -154,7 +162,7 @@ class ResultController extends Controller
         $sum_gpts = $data['results']->whereNotIn('id', $non_gpa_courses)->sum(function($item){
             return $item['coef'] * $item['weight'];
         });
-        $gpa = $sum_gpts/$gpa_cv;
+        $gpa = $sum_gpts/($gpa_cv==0?1:$gpa_cv);
         // dd($sum_gpts);
         $gpa_data['sum_cv'] = $sum_cv;
         $gpa_data['gpa_cv'] = $gpa_cv;
@@ -175,6 +183,7 @@ class ResultController extends Controller
         $data['min_fee'] = $fee['total']*$fee['fraction'];
         $data['access'] = ($fee['total'] - $fee['balance']) >= $data['min_fee'] || $student->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
         // dd($data);
+        // return $data;
         if ($class->program->background->background_name == "PUBLIC HEALTH") {
             # code...
             return view('api.public_health_exam_result')->with($data);
@@ -182,4 +191,99 @@ class ResultController extends Controller
         return view('api.exam_result')->with($data);
 
     }
+
+    
+    public function download_exam(Request $request)
+    {
+        // return $request->all();
+
+        if($request->student_id != null){
+            $student = Students::find($request->student_id);
+        }else{
+            $student = Auth('student_api')->user();
+        }
+        $year = $request->year ?? $this->current_accademic_year;
+        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($student->_class($year)->id);
+
+        $registered_courses = $student->registered_courses($year)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
+
+        $data['title'] = "";
+        $data['user'] = $student;
+        $data['class'] = $data['user']->_class($year);
+        $data['year'] = $year;
+        $data['semester'] = $semester;
+        $data['ca_total'] = $student->_class($year)->program()->first()->ca_total;
+        $data['exam_total'] = $student->_class($year)->program()->first()->exam_total;
+        $data['grading'] = $student->_class($year)->program()->first()->gradingType->grading()->get() ?? [];
+        $non_gpa_courses = NonGPACourse::pluck('id')->toArray();
+        $res = $student->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
+        $data['subjects'] = $student->_class($year)->subjects()->whereIn('subjects.id', $res)->get();
+        $results = array_map(function($subject_id)use($data, $year, $semester, $student){
+            $ca_mark = $student->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
+            $exam_mark = $student->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
+            $total = $ca_mark + $exam_mark;
+            $rol = [
+                'id'=>$subject_id,
+                'code'=>Subjects::find($subject_id)->code ?? '',
+                'name'=>Subjects::find($subject_id)->name ?? '',
+                'status'=>Subjects::find($subject_id)->status ?? '',
+                'coef'=>Subjects::find($subject_id)->coef ?? '',
+                'ca_mark'=>$ca_mark,
+                'exam_mark'=>$exam_mark,
+                'total'=>$total
+            ];
+            foreach ($data['grading'] as $key => $value) {
+                # code...
+                if ($total >= $value->lower && $total <= $value->upper) {
+                    # code...
+                    $grade = $value;
+                    $rol['grade'] = $grade->grade;
+                    $rol['remark'] = $grade->remark;
+                    $rol['weight'] = $grade->weight;
+                }
+            }
+            if(!array_key_exists('grade', $rol)){
+                $rol['grade'] = null;
+                $rol['remark'] = null;
+                $rol['weight'] = null;
+
+            }
+            return $rol;
+            
+            // dd($grade);
+        // }, $res);
+        }, $registered_courses);
+
+        $data['results'] = collect($results)->filter(function($el){return $el != null;});
+        $sum_cv = $data['results']->sum('coef');
+        $sum_earned_cv = collect($results)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
+        $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->sum('coef');
+        $gpa_cv_earned = $data['results']->whereNotIn('id', $non_gpa_courses)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
+        $sum_gpts = $data['results']->whereNotIn('id', $non_gpa_courses)->sum(function($item){
+            return $item['coef'] * $item['weight'];
+        });
+        $gpa = $sum_gpts/($gpa_cv==0?1:$gpa_cv);
+        // dd($gpa);
+        $gpa_data['sum_cv'] = $sum_cv;
+        $gpa_data['gpa_cv'] = $gpa_cv;
+        $gpa_data['sum_cv_earned'] = $sum_earned_cv;
+        $gpa_data['gpa_cv_earned'] = $gpa_cv_earned;
+        $gpa_data['gpa'] = $gpa;
+
+        $data['gpa_data'] = $gpa_data;
+
+
+        $data['results'] = collect($results)->filter(function($el){return $el != null;});
+
+        // dd($data);
+        if ($data['class']->program->background->background_name == "PUBLIC HEALTH") {
+            # code...
+            $pdf = Pdf::loadView('student.templates.public_health_exam_result',$data);
+        }else{
+            $pdf = Pdf::loadView('student.templates.exam-result-template',$data);
+        }
+        return $pdf->download($student->matric.'_'.$semester->name.'_EXAM_RESULTS.pdf');
+        // return view('student.templates.exam-result-template')->with($data);
+    }
+
 }

@@ -805,8 +805,8 @@ class HomeController extends Controller
             $_year = $year ?? Helpers::instance()->getYear();
             $_semester = $semester ?? Helpers::instance()->getSemester(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
             # code...
-            $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year])
-                    ->join('subjects', ['subjects.id'=>'student_courses.course_id'])->where(['subjects.semester_id'=>$_semester])
+            $courses = StudentSubject::where(['student_courses.student_id'=>$_student])->where(['student_courses.year_id'=>$_year, 'student_courses.semester_id'=>$_semester])
+                    ->join('subjects', ['subjects.id'=>'student_courses.course_id']) 
                     ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->whereNull('class_subjects.deleted_at')
                     ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
             return response()->json(['ids'=>$courses->pluck('id'), 'cv_sum'=>collect($courses)->sum('cv'), 'courses'=>$courses]);
@@ -895,6 +895,12 @@ class HomeController extends Controller
         $data['cv_sum'] = $reg->cv_sum;
         $data['courses'] = $reg->courses;
         $data['user'] = auth('student')->user();
+        $data['semester'] = $semester;
+        $data['year'] = $year;
+        $data['class'] = $data['user']->_class($year);
+        if($data['class'] == null){
+            return 'trouble dey';
+        }
         
         $pdf = PDF::loadView('student.courses.form_b_template',$data);
         return $pdf->download(auth('student')->user()->matric.'_FORM_B.pdf');
