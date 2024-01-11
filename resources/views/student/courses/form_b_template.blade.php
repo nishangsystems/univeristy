@@ -86,6 +86,7 @@
         $current_year_name = \App\Models\Batch::find($year)->name;
         $current_semester = $semester;
         $current_semester_name = \App\Models\Semester::find($semester)->name;
+
         $flag = true;
     @endphp
             <div class="" id="table_____">

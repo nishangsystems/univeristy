@@ -711,6 +711,9 @@ Route::prefix('student')->name('student.')->middleware(['isStudent'])->group(fun
     });
 });
 
+Route::get('download_form_b/{year}/{semester}', 'Student\HomeController@download_courses_api');
+
+
 Route::prefix('parents')->name('parents.')->middleware(['parents', 'parent.charges'])->group(function(){
     Route::get('home', [ParentsHomeController::class, 'index'])->name('home');
     Route::get('results/{child_id}', [ParentsHomeController::class, 'results_index'])->name('results');
