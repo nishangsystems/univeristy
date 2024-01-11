@@ -14,11 +14,9 @@ class FeeController extends Controller
     public function index(Request $request)
     {
         $current_year = \App\Helpers\Helpers::instance()->getYear();
-        if($request->student_id){
-            $student = Students::find($request->student_id);
-        }else{
+        
             $student = Auth('student_api')->user();
-        }
+        
 
         return view('api.fee', compact('student'));
     }
