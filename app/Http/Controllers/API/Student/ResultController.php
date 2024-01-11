@@ -33,7 +33,8 @@ class ResultController extends Controller
             return view('api.error')->with('error', "No result found. Make sure you were admitted to this institution by or before the selected academic year");
         }
 
-        $registered_courses = $student->registered_courses($year)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
+        $registered_courses = $student->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
+
         $data['title'] = "My CA Result";
         $data['user'] = $student;
         $data['year'] = $year;
@@ -99,7 +100,7 @@ class ResultController extends Controller
 
         // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
 
-        $registered_courses = $student->registered_courses($year)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
+        $registered_courses = $student->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
 
         $data['title'] = "My Exam Result";
         $data['user'] = $student;
@@ -171,12 +172,18 @@ class ResultController extends Controller
             'total_debt'=>$student->total_debts($year->id),
             'total_paid'=>$student->total_paid($year->id),
             'total' => $student->total($year->id),
-            'balance' => $student->bal($year->id),
+            'balance' => $student->bal(null, $year->id),
+            'total_balance' => $student->total_balance(null, $year->id),
             'fraction' => $semester->semester_min_fee
         ];
+        $data['fee_data'] = $fee;
         // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
+        // $data['min_fee'] = $fee['total']*$fee['fraction'];
+        // $data['access'] = ($fee['total'] - $fee['balance']) >= $data['min_fee'] || $student->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+
         $data['min_fee'] = $fee['total']*$fee['fraction'];
-        $data['access'] = ($fee['total'] - $fee['balance']) >= $data['min_fee'] || $student->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        $data['total_balance'] = $student->total_balance($student->id, $year->id);
+        $data['access'] = ($fee['total'] - $fee['total_balance']) >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
         // dd($data);
         // return $data;
         if ($class->program->background->background_name == "PUBLIC HEALTH") {
