@@ -282,7 +282,11 @@ class ResultController extends Controller
         }else{
             $pdf = Pdf::loadView('student.templates.exam-result-template',$data);
         }
-        return $pdf->download($student->matric.'_'.$semester->name.'_EXAM_RESULTS.pdf');
+        $fname = 'files/'.str_replace('/', '_', $data['user']->matric).'_'.time().'_'.$semester->name.'_EXAM_RESULTS.pdf';
+        $fpath = public_path($fname);
+        $pdf->save($fpath);
+        return response()->json(['status'=>'success', 'url'=>asset($fname)]);
+        // return $pdf->download($student->matric.'_'.$semester->name.'_EXAM_RESULTS.pdf');
         // return view('student.templates.exam-result-template')->with($data);
     }
 
