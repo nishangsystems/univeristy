@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\Admin\BioDataDownloadController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\ResultsAndTranscriptsController;
 use App\Http\Controllers\admin\StockController;
@@ -531,6 +532,11 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         // Attendance reporting
         Route::get('teachers/report/{type}/{campus_id?}/{teacher_id?}', [AttendanceController::class, 'attendance_report'])->name('report');
         Route::get('teachers/report/{type}/{campus_id}/{teacher_id}/print', [AttendanceController::class, 'attendance_report'])->name('report.print');
+    });
+
+    Route::prefix('bio_data')->name('bio_data.')->group(function(){
+        Route::get("download", [BioDataDownloadController::class, 'initialize'])->name('download');
+        Route::post("download", [BioDataDownloadController::class, 'download']);
     });
 });
 

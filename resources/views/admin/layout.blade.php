@@ -598,6 +598,13 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
+                        <li>
+                            <a href="{{route('admin.bio_data.download')}}" class="text-capitalize">
+                                <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
+                                @lang('text.student_data')
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
                     </ul>
                 </li>
             @endif
