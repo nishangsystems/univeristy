@@ -873,5 +873,6 @@ return [
     'starts_at'=>'starts at',
     'ends_at'=>'ends at',
     'word_periods'=>'periods',
+    'student_data'=>'student data',
     ''
 ];
