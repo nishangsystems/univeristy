@@ -43,7 +43,7 @@ class BioDataDownloadController extends Controller
                 $class=ProgramLevel::find($request->class_id);
                 $year = Batch::find($request->year_id);
                 
-                $file = public_path('files/bio_download_'.time().'csv');
+                $file = str_replace( [' ', '/'], '-', public_path('files/_'.$year->name.'_'.$class->name().'_BIO_DATA_'.time().'csv'));
                 $filewriter = fopen($file, 'w');
                 $headings = ['Name', 'Matricule', 'Sex', 'Date of Birth', 'Place of Birth'];
                 fputcsv($filewriter, $headings);
