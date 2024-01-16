@@ -174,9 +174,11 @@ class CourseController extends Controller
             $data['class'] = $data['user']->_class($year);
             $data['title'] = "Registered Courses";
             // return $data;
-            
+            $fname = 'files/'.str_replace('/', '_', $data['user']->matric).'_'.time().'_FORM_B.pdf';
+            $fpath = public_path($fname);
             $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('student.courses.form_b_template',$data);
-            return $pdf->download($data['user']->matric.'_FORM_B.pdf');
+            $pdf->save($fpath);
+            return response()->json(['status'=>'success', 'url'=>asset($fname)]);
         } catch (\Throwable $th) {
             throw $th;
             // return response()->json(['success'=>400, 'message'=>$th->getMessage()]);
