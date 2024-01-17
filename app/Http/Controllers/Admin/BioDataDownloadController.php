@@ -37,6 +37,12 @@ class BioDataDownloadController extends Controller
                 ->join('students', 'students.id', '=', 'student_classes.student_id')->where('students.active', 1)
                 ->select(['students.name', 'students.matric', 'students.gender', 'students.dob', 'students.pob'])
                 ->get();
+            $campus_id = auth('admin')->user()->campus_id;
+            if($campus_id != null && $campus_id > 0){
+                $students = $students->filter(function($row)use($campus_id){
+                    return $row->campus_id == $campus_id;
+                });
+            }
     
             if($students->count() > 0){
             
