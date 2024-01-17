@@ -33,17 +33,21 @@ class BioDataDownloadController extends Controller
 
         try{
             // Get students per class per accademic year
-            $students = StudentClass::where(['student_classes.year_id'=>$request->year_id, 'student_classes.class_id'=>$request->class_id])
-                ->join('students', 'students.id', '=', 'student_classes.student_id')->where('students.active', 1)
-                ->select(['students.name', 'students.matric', 'students.gender', 'students.dob', 'students.pob'])
-                ->get();
-            $campus_id = auth('admin')->user()->campus_id;
+            $campus_id = auth()->user()->campus_id;
             if($campus_id != null && $campus_id > 0){
-                $students = $students->filter(function($row)use($campus_id){
-                    return $row->campus_id == $campus_id;
-                });
+                $students = StudentClass::where(['student_classes.year_id'=>$request->year_id, 'student_classes.class_id'=>$request->class_id])
+                    ->join('students', 'students.id', '=', 'student_classes.student_id')->where('students.active', 1)->where('students.campus_id', $campus_id)
+                    ->select(['students.name', 'students.matric', 'students.gender', 'students.dob', 'students.pob'])
+                    ->get();
+                    
+            }else {
+                # code...
+                $students = StudentClass::where(['student_classes.year_id'=>$request->year_id, 'student_classes.class_id'=>$request->class_id])
+                    ->join('students', 'students.id', '=', 'student_classes.student_id')->where('students.active', 1)
+                    ->select(['students.name', 'students.matric', 'students.gender', 'students.dob', 'students.pob'])
+                    ->get();
             }
-    
+            
             if($students->count() > 0){
             
                 $class=ProgramLevel::find($request->class_id);
@@ -63,7 +67,7 @@ class BioDataDownloadController extends Controller
             }
         }
         catch(Throwable $th){
-            return back()->with('error', "Operation failed. ".$th->getMessage());
+            return back()->with('error', "Operation failed. {$th->getLine()} ".$th->getMessage());
         }
         
     }
