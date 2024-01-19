@@ -37,14 +37,14 @@ class BioDataDownloadController extends Controller
             if($campus_id != null && $campus_id > 0){
                 $students = StudentClass::where(['student_classes.year_id'=>$request->year_id, 'student_classes.class_id'=>$request->class_id])
                     ->join('students', 'students.id', '=', 'student_classes.student_id')->where('students.active', 1)->where('students.campus_id', $campus_id)
-                    ->select(['students.name', 'students.matric', 'students.gender', 'students.dob', 'students.pob'])
+                    ->select(['students.name', 'students.matric', 'students.gender', 'students.dob', 'students.pob', 'students.email', 'students.phone'])
                     ->get();
                     
             }else {
                 # code...
                 $students = StudentClass::where(['student_classes.year_id'=>$request->year_id, 'student_classes.class_id'=>$request->class_id])
                     ->join('students', 'students.id', '=', 'student_classes.student_id')->where('students.active', 1)
-                    ->select(['students.name', 'students.matric', 'students.gender', 'students.dob', 'students.pob'])
+                    ->select(['students.name', 'students.matric', 'students.gender', 'students.dob', 'students.pob', 'students.email', 'students.phone'])
                     ->get();
             }
             
@@ -56,11 +56,11 @@ class BioDataDownloadController extends Controller
                 $fname = str_replace( [' ', '/', ':', '---', '--'], '-', $year->name.'_'.$class->name().'_BIO_DATA_'.time().'.csv');
                 $file = public_path('files/_'.$fname);
                 $filewriter = fopen($file, 'w');
-                $headings = ['Name', 'Matricule', 'Sex', 'Date of Birth', 'Place of Birth'];
+                $headings = ['Name', 'Matricule', 'Sex', 'Date of Birth', 'Place of Birth', 'Email', 'Phone Number'];
                 fputcsv($filewriter, $headings);
                 foreach ($students as $key => $student) {
                     # code...
-                    fputcsv($filewriter, [$student->name, $student->matric, $student->gender, $student->dob, $student->pob]);
+                    fputcsv($filewriter, [$student->name, $student->matric, $student->gender, $student->dob, $student->pob, $student->email, $student->phone]);
                 }
                 fclose($filewriter);
                 return response()->download($file, $fname);
