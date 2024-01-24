@@ -579,11 +579,12 @@ class StatisticsController extends Controller
     //
     public function expenditure(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
-            'filter'=>'string',
-            '$value'=>'month',
-            'start_date'=>'date',
-            'end_date'=>'date'
+            'filter'=>'string|nullable',
+            'value'=>'nullable',
+            'start_date'=>'date|nullable',
+            'end_date'=>'date|nullable'
         ]);
         $data['title'] = __('text.expenditure_statistics');
         try {
@@ -594,22 +595,25 @@ class StatisticsController extends Controller
             }
             $expenditureItems = null;
             if($validator->fails())
-            {return back()->with('error', json_encode($validator->getMessageBag()->getMessages()));}
+            {return back()->with('error', $validator->errors()->first());}
             $data['filter'] = $request->filter == 'year' 
                         ? 'year ' . $request->value 
                         : ($request->filter == 'month' 
                             ? DateTime::createFromFormat('!m', (int)date('m', strtotime($request->value)))->format('F') . ' ' . date('Y', strtotime($request->value)) 
                             : 'period ' . $request->start_date . ' to '. $request->end_date
                             ) ;
+
             switch ($request->filter) {
                 case 'month': #having $value
                     # code...
+                    $date = Date::parse($request->value);
+                    // dd($date->month);
                     $data['data'] = DB::table('expenses')
-                        ->whereYear('date', '=', date('Y', strtotime($request->value)))
-                        ->whereMonth('date', '=', date('m', strtotime($request->value)))
+                        ->whereYear('date', $date->year)
+                        ->whereMonth('date', $date->month)
                         ->join('users', ['users.id'=>'expenses.user_id'])
                         ->where(function($q)use($campus_id){
-                            $campus_id == null ? null : $q->where(['.campus_id'=>$campus_id]);
+                            $campus_id == null ? null : $q->where(['users.campus_id'=>$campus_id]);
                         })
                         ->get(['expenses.*']);
                         // $names = array_unique($expenditureItems->pluck('name')->toArray());
@@ -624,15 +628,17 @@ class StatisticsController extends Controller
                         'name'=>__('text.word_total'),
                         'cost'=>array_sum($data['data']->pluck('amount_spend')->toArray())
                     ];
+                    // dd($data);
                     return view('admin.statistics.expenditure')->with($data);
                     break;
+
                 case 'year':
                     # code...
                     $data['data'] = DB::table('expenses')
-                        ->whereYear('date', '=', date('Y',strtotime($request->value)))
+                        ->whereYear('date', $request->value)
                         ->join('users', ['users.id'=>'expenses.user_id'])
                         ->where(function($q)use($campus_id){
-                            $campus_id == null ? null : $q->where(['.campus_id'=>$campus_id]);
+                            $campus_id == null ? null : $q->where(['users.campus_id'=>$campus_id]);
                         })
                         ->get(['expenses.*']);
                     // $names = array_unique($expenditureItems->pluck('name')->toArray());
@@ -647,6 +653,7 @@ class StatisticsController extends Controller
                         'name'=>__('text.word_total'),
                         'cost'=>array_sum($data['data']->pluck('amount_spend')->toArray())
                     ];
+                    // dd($data);
                     return view('admin.statistics.expenditure')->with($data);
                     break;
                 case 'range':
@@ -656,7 +663,7 @@ class StatisticsController extends Controller
                     ->whereDate('date', '<=', date('Y-m-d', strtotime($request->end_date)))
                     ->join('users', ['users.id'=>'expenses.user_id'])
                     ->where(function($q)use($campus_id){
-                        $campus_id == null ? null : $q->where(['.campus_id'=>$campus_id]);
+                        $campus_id == null ? null : $q->where(['users.campus_id'=>$campus_id]);
                     })
                     ->get(['expenses.*']);
                     // $names = array_unique($expenditureItems->pluck('name')->toArray());
