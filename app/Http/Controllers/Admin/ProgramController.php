@@ -913,6 +913,7 @@ class ProgramController extends Controller
             $class = $student->_class();
             $data['title'] = "Change Department/Program/Level For ".($student->name??'').' - ( Matric: '.($student->matric??'').')';
             $data['program'] = $class->program;
+            $data['programs'] = SchoolUnits::where('unit_id', '=', '4')->orderBy('name')->get();
             $data['department'] = $class->program->parent;
             $data['level'] = $class->level;
             $data['sections'] = SchoolUnits::where('unit_id', '!=', '1')->get();
@@ -927,7 +928,7 @@ class ProgramController extends Controller
     {
         # code...
 
-        $validity = Validator::make($request->all(), ['program'=>'required', 'department'=>'required', 'level'=>'required']);
+        $validity = Validator::make($request->all(), ['program'=>'required', 'level'=>'required']);
         if($validity->fails()){
             session()->flash('error', $validity->errors()->first());
             return back()->withInput();
