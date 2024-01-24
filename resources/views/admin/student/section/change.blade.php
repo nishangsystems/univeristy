@@ -23,7 +23,7 @@
             <div class="">
                 <form method="post">
                     @csrf
-                    <div class=" my-2 container">
+                    {{-- <div class=" my-2 container">
                         <div class="row"> 
                             <i class="text-info col-md-3">Department</i> : 
                             <div class="col-md-9">
@@ -35,14 +35,14 @@
                                 </select>
                             </div>
                         <div>
-                    </div>
+                    </div> --}}
                     <div class="my-2 container">
                         <div class="row"> 
                             <i class="text-info col-md-3">Program</i> : 
                             <div class="col-md-9" id="__programs">
                                 <select class="form-control" name="program" required onchange="loadLevels(event)">
                                     <option></option>
-                                    @foreach ($sections->where('parent_id', $department->id)->sortBy('name') as $prog)
+                                    @foreach ($programs as $prog)
                                         <option value="{{ $prog->id }}" {{ old('program', $prog->id) == $program->id ? 'selected' : '' }}>{{ $prog->name??'' }}</option>
                                     @endforeach
                                 </select>
