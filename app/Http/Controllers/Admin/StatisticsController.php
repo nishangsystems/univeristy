@@ -582,10 +582,10 @@ class StatisticsController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'filter'=>'string|nullable',
-            'value'=>'nullable',
-            'start_date'=>'date|nullable',
-            'end_date'=>'date|nullable'
+            'filter'=>'string|required',
+            'value'=>'required_unless:filter,range',
+            'start_date'=>'required_if:filter,range',
+            'end_date'=>'required_if:filter,range'
         ]);
         $data['title'] = __('text.expenditure_statistics');
         try {
@@ -605,7 +605,7 @@ class StatisticsController extends Controller
                             ) ;
 
             
-            $expenses = Expenses::join('users', ['users.id'=>'expenses.user_id'])->select(['expenses.*', 'users.campus_id'])->get();
+            $expenses = Expenses::all();
             // dd($expenses);
             switch ($request->filter) {
                 case 'month': #having $value
@@ -616,8 +616,6 @@ class StatisticsController extends Controller
                         $dateCheck = 
                             ($expense->date->year == $date->year) 
                             && ($expense->date->month == $date->month);
-                        if($campus_id != null)
-                            return $dateCheck and ($expense->campus_id == $campus_id);
                         return $dateCheck;
                     });
                     // dd($data);
@@ -632,21 +630,11 @@ class StatisticsController extends Controller
 
                 case 'year':
                     # code...
-                    $data['data'] = DB::table('expenses')
-                        ->whereYear('date', $request->value)
-                        ->join('users', ['users.id'=>'expenses.user_id'])
-                        ->where(function($q)use($campus_id){
-                            $campus_id == null ? null : $q->where(['users.campus_id'=>$campus_id]);
-                        })
-                        ->get(['expenses.*']);
-                    // $names = array_unique($expenditureItems->pluck('name')->toArray());
-                    // $data['data'] = array_map(function($val) use ($expenditureItems){
-                    //     return [
-                    //         'name'=>$val,
-                    //         'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
-                    //         'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
-                    //     ];
-                    // }, $names);
+                    $value = $request->value;
+                    $data['data'] = $expenses->filter(function($record)use($value){
+                        return $record->date->year == $value;
+                    });
+                    
                     $data['totals'] = [
                         'name'=>__('text.word_total'),
                         'cost'=>array_sum($data['data']->pluck('amount_spend')->toArray())
@@ -656,22 +644,10 @@ class StatisticsController extends Controller
                     break;
                 case 'range':
                     # has $from&$to or $start_date & $end_date
-                    $data['data'] = DB::table('expenses')
-                    ->whereDate('date', '>=', date('Y-m-d', strtotime($request->start_date)))
-                    ->whereDate('date', '<=', date('Y-m-d', strtotime($request->end_date)))
-                    ->join('users', ['users.id'=>'expenses.user_id'])
-                    ->where(function($q)use($campus_id){
-                        $campus_id == null ? null : $q->where(['users.campus_id'=>$campus_id]);
-                    })
-                    ->get(['expenses.*']);
-                    // $names = array_unique($expenditureItems->pluck('name')->toArray());
-                    // $data['data'] = array_map(function($val) use ($expenditureItems){
-                    //     return [
-                    //         'name'=>$val,
-                    //         'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
-                    //         'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
-                    //     ];
-                    // }, $names);
+                    $data['data'] = $expenses->filter(function($rec)use($request){
+                        return $rec->date->between(Date::parse($request->start_date), Date::parse($request->end_date));
+                    });
+                    
                     $data['totals'] = [
                         'name'=>__('text.word_total'),
                         'cost'=>array_sum($data['data']->pluck('amount_spend')->toArray())
