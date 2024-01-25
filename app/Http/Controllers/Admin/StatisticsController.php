@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\Campus;
+use App\Models\Expenses;
 use App\Models\Level;
 use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
@@ -603,27 +604,24 @@ class StatisticsController extends Controller
                             : 'period ' . $request->start_date . ' to '. $request->end_date
                             ) ;
 
+            
+            $expenses = Expenses::join('users', ['users.id'=>'expenses.user_id'])->select(['expenses.*', 'users.campus_id'])->get();
+            // dd($expenses);
             switch ($request->filter) {
                 case 'month': #having $value
                     # code...
                     $date = Date::parse($request->value);
                     // dd($date->month);
-                    $data['data'] = DB::table('expenses')
-                        ->whereYear('date', $date->year)
-                        ->whereMonth('date', $date->month)
-                        ->join('users', ['users.id'=>'expenses.user_id'])
-                        ->where(function($q)use($campus_id){
-                            $campus_id == null ? null : $q->where(['users.campus_id'=>$campus_id]);
-                        })
-                        ->get(['expenses.*']);
-                        // $names = array_unique($expenditureItems->pluck('name')->toArray());
-                    // $data['data'] = array_map(function($val) use ($expenditureItems){
-                    //     return [
-                    //         'name'=>$val,
-                    //         'count'=>count($expenditureItems->where('name', '=', $val)->toArray()),
-                    //         'cost'=>array_sum($expenditureItems->where('name', '=', $val)->pluck('amount_spend')->toArray())
-                    //     ];
-                    // }, $names);
+                    $data['data'] = $expenses->filter(function($expense)use($date, $campus_id){
+                        $dateCheck = 
+                            ($expense->date->year == $date->year) 
+                            && ($expense->date->month == $date->month);
+                        if($campus_id != null)
+                            return $dateCheck and ($expense->campus_id == $campus_id);
+                        return $dateCheck;
+                    });
+                    // dd($data);
+                        
                     $data['totals'] = [
                         'name'=>__('text.word_total'),
                         'cost'=>array_sum($data['data']->pluck('amount_spend')->toArray())

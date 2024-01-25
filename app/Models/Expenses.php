@@ -14,4 +14,6 @@ class Expenses extends Model
         'date'
     ];
     protected $connection = 'mysql';
+
+    protected $dates = ['date', 'created_at', 'updated_at'];
 }
