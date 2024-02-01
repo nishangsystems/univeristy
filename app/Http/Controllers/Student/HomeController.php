@@ -296,7 +296,7 @@ class HomeController extends Controller
         $sum_gpts = $data['results']->whereNotIn('id', $non_gpa_courses)->sum(function($item){
             return $item['coef'] * $item['weight'];
         });
-        $gpa = $sum_gpts/$gpa_cv;
+        $gpa = $gpa_cv == 0 ? 0 : $sum_gpts/$gpa_cv;
         // dd($sum_gpts);
         $gpa_data['sum_cv'] = $sum_cv;
         $gpa_data['gpa_cv'] = $gpa_cv;

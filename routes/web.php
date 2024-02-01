@@ -231,9 +231,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     
     
     
-    Route::get('results/date_line', 'Admin\ResultController@date_line')->name('results.date_line');
-    Route::post('results/date_line', 'Admin\ResultController@date_line_save')->name('results.date_line');
     Route::prefix('result')->name('result.')->group(function(){
+        Route::get('settings', 'Admin\ResultSettingsController@index')->name('settings');
         Route::get('import', 'Admin\ResultController@import')->name('import');
         Route::post('import', 'Admin\ResultController@importPost')->name('import');
         Route::get('export', 'Admin\ResultController@export')->name('export');
@@ -248,6 +247,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('publishing', 'Admin\ResultController@result_publishing')->name('publishing');
         Route::get('publish/{year}/{semester}', 'Admin\ResultController@publish_results')->name('publish');
         Route::get('unpublish/{year}/{semester}', 'Admin\ResultController@unpublish_results')->name('unpublish');
+
+        Route::post('store_results', 'Admin\ResultController@store_results')->name('store_result');
     
     
         // ADDED RESULT ROUTES FOR OFFLINE SYSTEM
@@ -257,8 +258,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@ca_import_save')->name('import.save');
             Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@ca_fill')->name('fill');
             Route::post('{class_id}/{course_id}/fill', 'Admin\ResultController@ca_fill_save')->name('fill');
-            Route::get('set_dateline', 'Admin\ResultController@ca_set_dateline')->name('dateline.set');
-            Route::post('set_dateline', 'Admin\ResultController@ca_save_dateline')->name('dateline.set');
+            Route::get('set_dateline/{background_id?}', 'Admin\ResultSettingsController@setCaUploadLatestDate')->name('dateline.set');
+            Route::post('set_dateline/{background_id?}', 'Admin\ResultSettingsController@saveCaUploadLatestDate')->name('dateline.set');
         });
 
         Route::prefix('exam')->name('exam.')->group(function(){
@@ -267,8 +268,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import_save')->name('import');
             Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill')->name('fill');
             Route::post('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill_save')->name('fill');
-            Route::get('set_dateline', 'Admin\ResultController@exam_set_dateline')->name('dateline.set');
-            Route::post('set_dateline', 'Admin\ResultController@exam_save_dateline')->name('dateline.set');
+            Route::get('set_dateline/{background_id?}', 'Admin\ResultSettingsController@setExamUploadLatestDate')->name('dateline.set');
+            Route::post('set_dateline/{background_id?}', 'Admin\ResultSettingsController@saveExamUploadLatestDate')->name('dateline.set');
         });
         Route::get('imports', 'Admin\ResultController@imports_index')->name('imports');
         // END OF ADDED RESULT ROUTES FOR OFFLINE SYSTEM

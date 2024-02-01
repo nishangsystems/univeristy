@@ -283,10 +283,9 @@ class ProgramController extends Controller
     $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
     $subUnits = $this->subunitsOf($id);
 
-    $students = DB::table('student_classes')
-            ->whereIn('class_id', $subUnits)
-            ->join('students', 'students.id', '=', 'student_classes.student_id')
-            ->get();
+    $students = Students::join('student_classes', 'students.id', '=', 'student_classes.student_id')
+        ->whereIn('student_classes.class_id', $subUnits)
+        ->get(['students.*']);
     $parent = ProgramLevel::find($id);
     $data['parent'] = $parent;
     $data['students'] = $students;
