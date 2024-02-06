@@ -31,8 +31,8 @@
                 <tbody>
                     @foreach($students as $student)
                     @php
-                        $student_results = $student->offline_result();
-                        dd($student_results->select(DB::raw('sum(ca_score + exam_score) as total'))->having('total  >= 100')->count());
+                        $student_results = $student->result();
+                        // dd($student_results->select(DB::raw('sum(ca_score + exam_score) as total'))->having('total  >= 100')->count());
                     @endphp
                         <tr class="border-top border-bottom border-secondary">
                             <td class="border-left border-right border-secondary">{{$k++}}</td>

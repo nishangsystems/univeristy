@@ -166,7 +166,7 @@ class ProgramController extends Controller
     public function edit(Request $request, $id)
     {
         $lang = !$request->lang ? 'en' : $request->lang;
-        \App::setLocale($lang);
+        app()->setLocale($lang);
         $data['id'] = $id;
         $data['degrees'] = Degree::all();
         $data['backgrounds'] = Background::all();
@@ -195,7 +195,6 @@ class ProgramController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
@@ -543,7 +542,7 @@ class ProgramController extends Controller
                         $data['items'][] = ['id'=>$value->id, 'name'=>$value->name];
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                     
                 case 'FACULTY':
                     # code...
@@ -553,7 +552,7 @@ class ProgramController extends Controller
                         $data['items'][] = ['id'=>$value->id, 'name'=>$value->name];
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                         
                 case 'DEPARTMENT':
                     # code...
@@ -563,7 +562,7 @@ class ProgramController extends Controller
                         # code...
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                 
                 case 'PROGRAM':
                     # code...
@@ -574,7 +573,7 @@ class ProgramController extends Controller
                         # code...
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                 
                 case 'CLASS':
                     # code...
@@ -584,7 +583,7 @@ class ProgramController extends Controller
                         # code...
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                 
                 case 'LEVEL':
                     # code...
@@ -594,7 +593,7 @@ class ProgramController extends Controller
                         # code...
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                     
                     default:
                     # code...
@@ -626,7 +625,7 @@ class ProgramController extends Controller
                 // dd($students);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
             
             case 'FACULTY' :
                 $data['title'] = __('text.students_for_faculty_of', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
@@ -644,7 +643,7 @@ class ProgramController extends Controller
                 // dd($students);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
 
             case 'DEPARTMENT':
                 $data['title'] = __('text.students_for_department_of', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
@@ -662,7 +661,7 @@ class ProgramController extends Controller
                 // dd($students);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
 
             case 'PROGRAM':
                 $data['title'] = __('text.students_for', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
@@ -675,7 +674,7 @@ class ProgramController extends Controller
                 // dd($students);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
                 
 
             case 'CLASS':
@@ -688,7 +687,7 @@ class ProgramController extends Controller
                             ->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
 
             case 'LEVEL':
                 $level = Level::find($request->item_id);
@@ -702,7 +701,7 @@ class ProgramController extends Controller
                             ->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id']);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
             
         }
     }

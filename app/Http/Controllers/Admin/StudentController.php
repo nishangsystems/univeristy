@@ -316,7 +316,6 @@ class StudentController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
@@ -350,7 +349,6 @@ class StudentController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
@@ -411,11 +409,8 @@ class StudentController extends Controller
 
     public  function matricPost(Request  $request)
     {
-        return $request->all();
-        $this->validate($request, [
-            'batch' => 'required',
-            'section' => 'required',
-        ]);
+        // return $request->all();
+        $this->validate($request, ['batch' => 'required','section' => 'required']);
         $sec = $request->section;
         $id = $sec[count($request->section) - 1];
         $students = Students::join('student_classes', ['students.admission_batch_id' => 'student_classes.id'])->where(['student_classes.year_id' => $request->batch, 'student_classes.class_id' => $id])->orderBy('name')->get();
@@ -1075,28 +1070,28 @@ class StudentController extends Controller
                 ->where('sequence', '=', 2)
                 ->pluck('score')
                 ->toArray());
-                break;
+                // break;
             case '2':
                 # code...
                 return array_sum($builder->where('sequence', '=', 3)
                     ->where('sequence', '=', 4)
                     ->pluck('score')
                     ->toArray());
-                break;
+                // break;
             case '3':
                 # code...
                 return array_sum($builder->where('sequence', '=', 5)
                     ->where('sequence', '=', 6)
                     ->pluck('score')
                     ->toArray());
-                break;
+                // break;
 
             default:
                 # code...
                 return array_sum($builder
                     ->pluck('score')
                     ->toArray());
-                break;
+                // break;
         }
     }
 

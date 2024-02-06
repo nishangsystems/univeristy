@@ -7,6 +7,7 @@ use App\Models\Grading;
 use App\Models\Result;
 use App\Models\Students;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ResultsController extends Controller
 {

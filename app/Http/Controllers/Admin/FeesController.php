@@ -28,7 +28,7 @@ class FeesController extends Controller
     {
 
         $title = __('text.word_classes');
-        $classes = \App\Models\SchoolUnits::where('parent_id', $request->get('parent_id', '0'))->get();
+        $classes = SchoolUnits::where('parent_id', $request->get('parent_id', '0'))->get();
 
         return view('admin.fee.classes', compact('classes', 'title'));
     }
@@ -37,7 +37,7 @@ class FeesController extends Controller
     {
         $class = SchoolUnits::find($class_id);
         $title = $class->name . " ".__('text.word_students');
-        $students = $class->students(Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(20);
+        $students = $class->students(session()->get('mode', Helpers::instance()->getCurrentAccademicYear()))->paginate(20);
         return view('admin.fee.students', compact('students', 'title'));
     }
 
@@ -131,7 +131,7 @@ class FeesController extends Controller
     public function delete(Request  $request, $id)
     {
         Payments::find($id)->delete();
-        Session::flash('success', __('text.word_done'));
+        session()->flash('success', __('text.word_done'));
         return redirect()->back();
     }
 

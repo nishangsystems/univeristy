@@ -63,7 +63,7 @@ class CollectBoardingFeeController extends Controller
             ->join('boarding_amounts', 'collect_boarding_fees.id', '=', 'boarding_amounts.collect_boarding_fee_id')
             ->where('batches.id', $this->batch_id)
             ->select(
-                \DB::raw("students.id as student_id,
+                DB::raw("students.id as student_id,
                 students.name,
                 students.matric,
                 school_units.name as class_name,
@@ -157,7 +157,6 @@ class CollectBoardingFeeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      * @param int $student_id
      * @param int $class_id
      *
@@ -214,7 +213,6 @@ class CollectBoardingFeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @param  int  $student_id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id, $student_id)
     {
@@ -467,7 +465,7 @@ class CollectBoardingFeeController extends Controller
             ->where('boarding_amounts.status', $request->status)
             ->where('collect_boarding_fees.class_id', $request->class_id)
             ->select(
-                \DB::raw("students.id as student_id,
+                DB::raw("students.id as student_id,
                 students.name,
                 students.matric,
                 school_units.name as class_name,
@@ -530,7 +528,6 @@ class CollectBoardingFeeController extends Controller
         return view('admin.collect_boarding_fee.show')->with($data);
     }
 
-
     public function printBoardingFee($student_id, $id)
     {
         $student  = Students::findOrFail($student_id);
@@ -538,8 +535,5 @@ class CollectBoardingFeeController extends Controller
         $year = $this->year;
         return view("admin.collect_boarding_fee.print_receipt", compact(['student', 'boarding_fee', 'year']));
     }
-
-
-
 
 }

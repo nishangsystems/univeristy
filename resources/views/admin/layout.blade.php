@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- bootstrap & fontawesome -->
-    <link rel="stylesheet" href="{{url('/')}}/public/assets/css/*.css" />
+    {{-- <link rel="stylesheet" href="{{url('/')}}/public/assets/css/*.css" /> --}}
 
     <link rel="stylesheet" href="{{asset('css/app.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}" />
@@ -877,7 +877,7 @@
             </li>
             @endif
 
-            @if (\Auth::user()->hasPermissionTo('manage_transcripts_and_results'))
+            {{-- @if (\Auth::user()->hasPermissionTo('manage_transcripts_and_results'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
@@ -907,7 +907,7 @@
                     </li>
                 </ul>
             </li>
-            @endif
+            @endif --}}
 
             @if (\Auth::user()->hasPermissionTo('manage_importation'))
             <li>
@@ -1720,7 +1720,7 @@
                     <a class="btn btn-lg col-sm-4 rounded btn-primary text-center" href="{{route('admin.reset_password')}}">{{__('text.word_proceed')}}</a>
                 </div>
             @else
-                <div class="">
+                <div class="container-fluid">
                     @yield('section')
                 </div>
             @endif

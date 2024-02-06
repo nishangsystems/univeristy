@@ -58,7 +58,7 @@
                 {{\App\Models\ProgramLevel::find(request('class_id'))->name().' '.\App\Models\Semester::find(request('semester_id'))->name.' '.$title.' FOR '.\App\Models\Batch::find(request('year_id'))->name.' '.__('text.academic_year')}}
             </b></h4>
             <div class="d-flex overflow-auto"></div>
-
+            <table>
                 <thead class="text-capitalize">
                     <tr class="border-top border-bottom border-secondary">
                         <th class="border-left border-right border-secondary" colspan="6"></th>

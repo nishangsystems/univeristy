@@ -182,7 +182,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = \App\Models\User::find($id);
-        if (\Auth::user()->id == $id || \Auth::user()->id != 1) {
+        if (auth()->user()->id == $id || auth()->user()->id != 1) {
             return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('error', "User can't be deleted");
         }
         $user->delete();
@@ -269,9 +269,9 @@ class UserController extends Controller
                 'campus_id' => $request->campus,
                 'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
             ]);
-            Session::flash('success', "Subject assigned successfully!");
+            session()->flash('success', "Subject assigned successfully!");
         } else {
-            Session::flash('error', "Subject assigned already");
+            session()->flash('error', "Subject assigned already");
         }
 
         return redirect()->to(route('admin.users.show', $id));
