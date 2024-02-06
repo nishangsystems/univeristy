@@ -46,4 +46,19 @@ class Subjects extends Model
         # code...
         return $this->belongsTo(Semester::class, 'semester_id');
     }
+
+    public function class_subject()
+    {
+        return  $this->hasMany(ClassSubject::class, 'subject_id');
+    }
+
+    public function _class_subject($class_id)
+    {
+        return  $this->hasMany(ClassSubject::class, 'subject_id')->where(['class_id'=>$class_id])->first();
+    }
+
+    public function student_subjects()
+    {
+        return $this->hasMany(StudentSubject::class, 'course_id');
+    }
 }

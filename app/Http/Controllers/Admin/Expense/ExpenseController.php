@@ -31,6 +31,7 @@ class ExpenseController extends Controller
         })
         ->orderBy('expenses.id', 'DESC')
         ->select('expenses.*')->get();
+        
         $data['title'] = __('text.school_expenses');
 
         return view('admin.expense.index')->with($data);

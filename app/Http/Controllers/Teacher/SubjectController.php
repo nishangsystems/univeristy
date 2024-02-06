@@ -137,30 +137,40 @@ class SubjectController extends Controller
         return view('teacher.result')->with($data);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $subject)
     {
-        $result = OfflineResult::where([
-            'student_id' => $request->student,
-            'class_id' => $request->class_id,
-            'sequence' => $request->sequence,
-            'subject_id' => $request->subject,
-            'batch_id' => $request->year
-        ])->first();
 
-        if ($result == null) {
-            $result = new OfflineResult();
+        // return $request->all();
+        try {
+            //code...
+            $result = Result::where([
+                'student_id' => $request->student,
+                'class_id' => $request->class_id,
+                'semester_id' => $request->semester_id,
+                'subject_id' => $subject,
+                'batch_id' => $request->year
+            ])->first() ?? null;
+
+            // return $result;
+            if ($result == null) {
+                $result = new Result();
+            }
+
+            $result->batch_id = $request->year;
+            $result->student_id =  $request->student;
+            $result->class_id =  $request->class_id;
+            $result->semester_id =  $request->semester_id;
+            $result->subject_id =  $request->subject;
+            $result->ca_score =  $request->ca_score;
+            $result->exam_score =  $request->exam_score ?? null;
+            $result->coef =  $request->coef;
+            $result->remark = "";
+            $result->class_subject_id =  $request->class_subject_id;
+            $result->save();
+            return response(['message'=>'success']);
+        } catch (\Throwable $th) {
+            return $th;
         }
-
-        $result->batch_id = $request->year;
-        $result->student_id =  $request->student;
-        $result->class_id =  $request->class_id;
-        $result->sequence =  $request->sequence;
-        $result->subject_id =  $request->subject;
-        $result->score =  $request->score;
-        $result->coef =  $request->coef;
-        $result->remark = "";
-        $result->class_subject_id =  $request->class_subject_id;
-        $result->save();
     }
 
 

@@ -11,6 +11,7 @@
                 <input type="hidden" name="semester" value="{{request('semester')}}">
                 <button type="submit" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_download')}}</button>
             </form>
+
         </div>
         <div class="card-body">
             <div id="table table-responsive" class="table-editable">

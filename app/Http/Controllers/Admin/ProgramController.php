@@ -20,6 +20,7 @@ use App\Models\StudentClass;
 use App\Models\Students;
 use App\Models\Subjects;
 use App\Models\Topic;
+use App\Models\Semester;
 use App\Session;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -280,19 +281,19 @@ class ProgramController extends Controller
     {
     # code...
     // get array of ids of all sub units
-    $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-    $subUnits = $this->subunitsOf($id);
+        $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+        $subUnits = $this->subunitsOf($id);
 
-    $students = Students::join('student_classes', 'students.id', '=', 'student_classes.student_id')
-        ->whereIn('student_classes.class_id', $subUnits)
-        ->get(['students.*']);
-    $parent = ProgramLevel::find($id);
-    $data['parent'] = $parent;
-    $data['students'] = $students;
-    // dd($parent);
-    $data['classes'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
-    $data['title'] = __('text.manage_students_under', ['unit'=>$parent->program()->first()->name]);
-    return view('admin.units.student-listing')->with($data);
+        $students = Students::join('student_classes', 'students.id', '=', 'student_classes.student_id')
+            ->whereIn('student_classes.class_id', $subUnits)
+            ->get(['students.*']);
+        $parent = ProgramLevel::find($id);
+        $data['parent'] = $parent;
+        $data['students'] = $students;
+        // dd($parent);
+        $data['classes'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
+        $data['title'] = __('text.manage_students_under', ['unit'=>$parent->program()->first()->name]);
+        return view('admin.units.student-listing')->with($data);
     }
 
     public function saveSubjects(Request  $request, $id)
@@ -1004,5 +1005,26 @@ class ProgramController extends Controller
             $data['subject_id'] = $request->subject_id??0;
             return view('teacher.course.content', $data);
         }
+    }
+    
+    public function set_result_datelines(Request $request){
+        $semester = Semester::find($request->semester_id);
+        $data['title'] = 'Set Result Datelines For '.$semester->background->background_name.' '.$semester->name??'';
+        $data['semester'] = $semester;
+        return view('admin.setting.set-result-datelines', $data);
+    }
+
+    public function set_result_datelines_save(Request $request){
+        if($request->has('ca_dateline') || $request->has('exam_dateline')){
+            $semester = Semester::find($request->semester_id);
+            if($request->has('ca_dateline'))
+                $semester->ca_latest_date = $request->ca_dateline;
+            if($request->has('exam_dateline'))
+                $semester->exam_latest_date = $request->exam_dateline;
+
+            $semester->save();
+            return back()->with('success', 'Done');
+        }
+        return back();
     }
 }

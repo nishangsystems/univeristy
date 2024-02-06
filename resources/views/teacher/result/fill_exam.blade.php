@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('teacher.layout')
 
 @section('style')
    <style>
@@ -91,8 +91,7 @@
                 event.target.style.color = 'black';
             }
 
-            let subject_url = "{{route('admin.result.store_result')}}";
-
+            let subject_url = "{{route('user.store_result',$subject->id)}}";
             // $(".pre-loader").css("display", "block");
 
             if( ($(this).attr('data-score-type') == 'ca' && $(this).val() > parseFloat('{{$ca_total}}')) || ($(this).attr('data-score-type') == 'exam' && $(this).val() > parseFloat('{{$exam_total}}'))){

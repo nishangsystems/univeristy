@@ -296,5 +296,6 @@ class FeesController extends Controller
         // });
         // dd($_data);
         return view('admin.fee.payments.history', $data);
+
     }
 }

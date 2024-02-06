@@ -19,7 +19,7 @@
                                 <i class="ace-icon fa fa-circle light-green"></i>
                                 &nbsp
                                 <span
-                                    class="white">{{$user->name}}</span>
+                                    class="white">{{$user->name ?? ''}}</span>
                             </a>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                 <div class="space-12"></div>
 
                 <h3>
-                    <b>{{$user->name}}</b>
+                    <b>{{$user->name ?? ''}}</b>
                 </h3>
 
 
@@ -123,6 +123,7 @@
                                 <a onclick="event.preventDefault();
                                             $('#delete{{$subject->id}}').submit();" class=" btn btn-danger btn-xs m-2">DROP</a>
                                 <form id="delete{{$subject->id}}" action="{{route('admin.users.subjects.drop',$subject->teacher_subject_id)}}" method="POST" style="display: none;">
+
                                     @method('DELETE')
                                     @csrf
                                 </form>

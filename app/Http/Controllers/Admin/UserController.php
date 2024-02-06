@@ -117,6 +117,7 @@ class UserController extends Controller
             'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear(),
         ])->join('subjects', ['subjects.id'=>'teachers_subjects.subject_id'])
         ->distinct()->select(['subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id', 'teachers_subjects.id as teacher_subject_id'])->get();
+
         // dd($data);
         return view('admin.user.show')->with($data);
     }

@@ -39,6 +39,7 @@ class ProgramLevel extends Model
     public function class_subjects()
     {
         return $this->hasMany(ClassSubject::class, 'class_id')->whereNull('deleted_at');
+
     }
     
 
@@ -94,4 +95,6 @@ class ProgramLevel extends Model
     {
         return $this->hasMany(StudentClass::class, 'class_id');
     }
+
+
 }

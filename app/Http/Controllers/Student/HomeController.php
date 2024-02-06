@@ -256,6 +256,7 @@ class HomeController extends Controller
         $results = array_map(function($subject_id)use($data, $year, $semester){
             $ca_mark = $data['user']->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = $data['user']->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
+
             $total = $ca_mark + $exam_mark;
             $rol = [
                 'id'=>$subject_id,
@@ -324,6 +325,7 @@ class HomeController extends Controller
             # code...
             return view('student.public_health_exam_result')->with($data);
         }
+
         return view('student.exam-result')->with($data);
     }
 
