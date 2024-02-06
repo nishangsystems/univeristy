@@ -605,12 +605,19 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::get('drop/{log_id}', [TeacherHomeController::class, 'delete_course_log'])->name('drop');
     });
 
+    Route::prefix('results')->name('results.')->group(function(){
+        Route::get('index', 'Teacher\ResultsController@index')->name('index');
+        Route::get('fill_ca', 'Teacher\ResultsController@fill_ca')->name('fill_ca');
+        Route::post('store_ca', 'Teacher\ResultsController@store_result')->name('store_result');
+    });
+
     Route::name('attendance.')->prefix('attendance')->group(function(){
         Route::get('bycourse/index', [TeacherHomeController::class, 'attendance_bycourse_index'])->name('by_course.index');
         Route::get('bycourse/{subject_id}/show', [TeacherHomeController::class, 'attendance_bycourse'])->name('by_course');
         Route::get('bymonth/index', [TeacherHomeController::class, 'attendance_bymonth_index'])->name('by_month.index');
         Route::get('bymonth/{month}/show', [TeacherHomeController::class, 'attendance_bymonth'])->name('by_month');
     });
+
     Route::name('course.attendance.')->prefix('course/attendance')->group(function(){
         Route::get('', [ClassController::class, 'attendannce_index'])->name('index');
         Route::get('setup/{teacher_course_id}', [ClassController::class, 'setup_attendance_course'])->name('setup');

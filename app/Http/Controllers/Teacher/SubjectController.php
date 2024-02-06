@@ -29,7 +29,7 @@ class SubjectController extends Controller
     {
         if ($request->class) {
            $unit = ProgramLevel::find($request->class);
-           $data['title'] = 'My '.$unit->program()->first()->name.' : LEVEL '.$unit->level()->first()->level;
+           $data['title'] = 'My '.$unit->name();
            $data['subjects'] = \App\Models\Subjects::join('teachers_subjects', ['teachers_subjects.subject_id'=>'subjects.id'])
                         ->where(['teachers_subjects.class_id'=>$request->class])
                         ->where(function($q)use ($request){
