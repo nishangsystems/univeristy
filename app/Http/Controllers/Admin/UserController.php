@@ -105,7 +105,7 @@ class UserController extends Controller
             'teacher_id' => $id,
             'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear(),
         ])->join('subjects', ['subjects.id'=>'teachers_subjects.subject_id'])
-        ->distinct()->select('subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id')->get();
+        ->distinct()->select('subjects.*', 'teachers_subjects.class_id as class', 'teachers_subjects.campus_id', 'teachers_subjects.id as ts_id')->get();
         // dd($data);
         return view('admin.user.show')->with($data);
     }
@@ -225,7 +225,7 @@ class UserController extends Controller
         if ($s) {
             $s->delete();
         }
-        return redirect()->to(route('admin.users.show', $id))->with('success', "Subject deleted successfully!");
+        return back()->with('success', "Subject deleted successfully!");
     }
 
     public function saveSubject(Request $request, $id)

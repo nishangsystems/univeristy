@@ -1,11 +1,25 @@
 @extends('admin.layout')
 
 @section('section')
+@php
+    $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+@endphp
 <div class="py-3">
 
     @if(!request('student_id') == null)
 
         <form action="{{Request::url()}}/set" method="get">
+            <div class="row my-2">
+                <label for="" class="text-capitalize col-md-3">{{__('text.word_semester')}}</label>
+                <div class="col-sm-9">
+                    <select name="semester" class="form-control">
+                        <option value=""></option>
+                        @foreach (\App\Models\Students::find(request('student_id'))->_class($year)->program->background->semesters as $sem)
+                            <option value="{{$sem->id}}">{{$sem->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <div class="row my-2">
                 <label for="" class="text-capitalize col-md-3">{{__('text.word_reason')}}</label>
                 <div class="col-sm-9">

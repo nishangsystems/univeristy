@@ -72,25 +72,31 @@ class Students extends Authenticatable
         return $this->belongsTo(Campus::class);
     }
 
+    // public function total()
+    // {
+    //     if ($this->classes()->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first() != null) {
+    //         # code...
+    //         return $this->campus()->first()->campus_programs()->where('program_level_id', $this->_class(Helpers::instance()->getCurrentAccademicYear())->id ?? 0)->first()->payment_items()->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first()->amount ?? -1;
+    //     }
+    //     return 0;
+    // }
+
+ 
     public function total()
     {
         if ($this->classes()->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first() != null) {
             # code...
-            return $this->campus()->first()->campus_programs()->where('program_level_id', $this->classes()->where('year_id', Helpers::instance()->getCurrentAccademicYear())->first()->class_id ?? 0)->first()->payment_items()->first()->amount ?? -1;
+            // return $this->campus()->first()->campus_programs()->where(['program_level_id' => $this->_class(Helpers::instance()->getCurrentAccademicYear())->id ?? 0, 'campus_id'=>$this->campus_id])->first()->payment_items()->first()->amount ?? -1;
+            return $this->_class(Helpers::instance()->getCurrentAccademicYear())->campus_programs($this->campus_id)->first()->payment_items->first()->amount;
         }
         return 0;
     }
 
-    public function paid()
+    public function bal($student_id = null, $year = null)
     {
-        $items = $this->payments()->selectRaw('COALESCE(sum(amount),0) total')->where('batch_id', Helpers::instance()->getYear())->get();
-        return $items->first()->total;
-    }
-
-    public function bal($student_id)
-    {
-        $scholarship = Helpers::instance()->getStudentScholarshipAmount($student_id);
-        return $this->total() + ($this->extraFee(Helpers::instance()->getCurrentAccademicYear()) == null ? 0 : $this->extraFee(Helpers::instance()->getCurrentAccademicYear())->amount) - $this->paid() - ($scholarship);
+        $year = $year == null ? Helpers::instance()->getCurrentAccademicYear() : $year;
+        $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id);
+        return $this->total() + $this->total_debts($year) + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid() - ($scholarship);
     }
 
     public function totalScore($sequence, $year)
@@ -196,6 +202,43 @@ class Students extends Authenticatable
             }
         }
         return '';
+    } 
+
+
+    public function total_debts($year)
+    {
+        # code...
+        $student = Students::find($this->id);
+
+        $student_class_instances = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)->get();
+        $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<', $year)->distinct()
+            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->where('campus_programs.campus_id', $this->campus_id)->get();
+        // fee amounts
+        $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels->pluck('id'))->get();
+        $fee_items_sum = $fee_items->sum('amount');
+        
+        $fee_payments_sum = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $this->id])->where('batch_id', '<', $year)->sum('amount');
+        $fee_debts_sum = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $this->id])->where('batch_id', '<', $year)->sum('debt');
+        $next_debt = $fee_items_sum + $fee_debts_sum - $fee_payments_sum;
+
+        return $next_debt;
     }
+
+
+    public function total_paid($year)
+    {
+        # code...
+
+        $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<=', $year)->distinct()
+            ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->get();
+        // fee amounts
+        $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels->pluck('id'))->get();
+        
+        $fee_payments_sum = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $this->id])->where('batch_id', '<=', $year)->sum('amount');
+        $debt_payments_sum = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $this->id])->where('batch_id', '<=', $year)->sum('debt');
+        
+        return $fee_payments_sum - $debt_payments_sum;
+    }
+
 
 }

@@ -44,18 +44,18 @@ class StudentController extends Controller
 
     public function __construct()
     {
-        $this->year = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->name;
+        $this->year = Batch::find(Helpers::instance()->getCurrentAccademicYear())->name;
         $this->years = Batch::all();
         // $this->batch_id = Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->id;
     }
-    public function index()
+    public function index(Request $request)
     {
-        $curent_year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-        $data['title'] = 'Manage Students';
+        $curent_year = Helpers::instance()->getCurrentAccademicYear();
+        $data['title'] = 'Manage Students For '.Batch::find($request->year ?? $curent_year)->name;
         $data['school_units'] = DB::table('school_units')->where('parent_id', 0)->get()->toArray();
         $data['years'] = $this->years;
         // $data['students'] = DB::table('students')->whereYear('students.created_at', $curent_year)->get()->toArray();
-        $data['students'] = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')->where('student_classes.year_id', '=', $curent_year)->get(['students.*', 'student_classes.class_id']);
+        $data['students'] = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')->where('student_classes.year_id', '=', $request->year ?? $curent_year)->get(['students.*', 'student_classes.class_id']);
         return view('admin.student.index')->with($data);
     }
     public function getStudentsPerClass(Request $request)
@@ -827,88 +827,88 @@ class StudentController extends Controller
                     DB::table('students')->whereIn('id', $request->students)->update(['program_id'=>$request->class_to]);
 
                     // transfer student debts
-                    foreach ($request->students as $value) {
-                        # code...
-                            // return $request->students;
-                            $student = Students::find($value);
-                            $balance = $student->bal($value);
-                            $next_debt = $balance - $student->debt(Helpers::instance()->getCurrentAccademicYear());
-                            if ($next_debt == 0) {
-                                continue;
-                            }else {
-                                $campus_program = CampusProgram::where('campus_id', $student->campus_id)->where('program_level_id', $student->_class(Helpers::instance()->getCurrentAccademicYear())->id ?? 0);
-                                if($campus_program->count() == 0 || PaymentItem::where('campus_program_id', $campus_program->first()->id)->count() == 0){
-                                    continue;
-                                }
-                                else {
-                                    # code...
-                                    $payment_items = PaymentItem::where('campus_program_id', $campus_program->first()->id)->get();
-                                    // return $payment_items;
-                                    foreach ($payment_items as $item) {
-                                        # code...
-                                        // return $item;   
-                                        if($next_debt <= 0){
-                                            Payments::create([
-                                                "payment_id" => $item->id,
-                                                "student_id" => $student->id,
-                                                "unit_id" => $student->class(Helpers::instance()->getYear())->id,
-                                                "batch_id" => Helpers::instance()->nextAccademicYear(Helpers::instance()->getCurrentAccademicYear()),
-                                                "amount" => 0,
-                                                "date" => date('Y/m/d'),
-                                                'reference_number' => time().random_int(100000, 999999),
-                                                'user_id' => auth()->user()->id,
-                                                'debt' => $next_debt,
-                                            ]);
-                                            break;
-                                        }
-                                        if ($item->amount <= $next_debt) {
-                                            Payments::create([
-                                                "payment_id" => $item->id,
-                                                "student_id" => $student->id,
-                                                "unit_id" => $student->class(Helpers::instance()->getYear())->id,
-                                                "batch_id" => Helpers::instance()->nextAccademicYear(Helpers::instance()->getCurrentAccademicYear()),
-                                                "amount" => $item->amount,
-                                                "date" => date('Y/m/d'),
-                                                'reference_number' => time().random_int(100000, 999999),
-                                                'user_id' => auth()->user()->id,
-                                                'debt' => 0,
-                                            ]);
+                    // foreach ($request->students as $value) {
+                    //     # code...
+                    //         // return $request->students;
+                    //         $student = Students::find($value);
+                    //         $balance = $student->bal($value);
+                    //         $next_debt = $balance - $student->debt(Helpers::instance()->getCurrentAccademicYear());
+                    //         if ($next_debt == 0) {
+                    //             continue;
+                    //         }else {
+                    //             $campus_program = CampusProgram::where('campus_id', $student->campus_id)->where('program_level_id', $student->_class(Helpers::instance()->getCurrentAccademicYear())->id ?? 0);
+                    //             if($campus_program->count() == 0 || PaymentItem::where('campus_program_id', $campus_program->first()->id)->count() == 0){
+                    //                 continue;
+                    //             }
+                    //             else {
+                    //                 # code...
+                    //                 $payment_items = PaymentItem::where('campus_program_id', $campus_program->first()->id)->get();
+                    //                 // return $payment_items;
+                    //                 foreach ($payment_items as $item) {
+                    //                     # code...
+                    //                     // return $item;   
+                    //                     if($next_debt <= 0){
+                    //                         Payments::create([
+                    //                             "payment_id" => $item->id,
+                    //                             "student_id" => $student->id,
+                    //                             "unit_id" => $student->class(Helpers::instance()->getYear())->id,
+                    //                             "batch_id" => Helpers::instance()->nextAccademicYear(Helpers::instance()->getCurrentAccademicYear()),
+                    //                             "amount" => 0,
+                    //                             "date" => date('Y/m/d'),
+                    //                             'reference_number' => time().random_int(100000, 999999),
+                    //                             'user_id' => auth()->user()->id,
+                    //                             'debt' => $next_debt,
+                    //                         ]);
+                    //                         break;
+                    //                     }
+                    //                     if ($item->amount <= $next_debt) {
+                    //                         Payments::create([
+                    //                             "payment_id" => $item->id,
+                    //                             "student_id" => $student->id,
+                    //                             "unit_id" => $student->class(Helpers::instance()->getYear())->id,
+                    //                             "batch_id" => Helpers::instance()->nextAccademicYear(Helpers::instance()->getCurrentAccademicYear()),
+                    //                             "amount" => $item->amount,
+                    //                             "date" => date('Y/m/d'),
+                    //                             'reference_number' => time().random_int(100000, 999999),
+                    //                             'user_id' => auth()->user()->id,
+                    //                             'debt' => 0,
+                    //                         ]);
                                             
-                                            $next_debt -= $item->amount;
-                                            # code...
-                                        }
-                                        else {
-                                            Payments::create([
-                                                "payment_id" => $item->id,
-                                                "student_id" => $student->id,
-                                                "unit_id" => $student->class(Helpers::instance()->getYear())->id,
-                                                "batch_id" => Helpers::instance()->nextAccademicYear(Helpers::instance()->getCurrentAccademicYear()),
-                                                "amount" => $next_debt,
-                                                "date" => date('Y/m/d'),
-                                                'reference_number' => time().random_int(100000, 999999),
-                                                'user_id' => auth()->user()->id,
-                                                'debt' => 0,
-                                            ]);
-                                            # code...
-                                            $next_debt = 0;
-                                        }
-                                    }
-                                    if ($next_debt > 0) {
-                                        Payments::create([
-                                            "payment_id" => $item->id,
-                                            "student_id" => $student->id,
-                                            "unit_id" => $student->class(Helpers::instance()->getYear())->id,
-                                            "batch_id" => Helpers::instance()->nextAccademicYear(Helpers::instance()->getCurrentAccademicYear()),
-                                            "amount" => 0,
-                                            "date" => date('Y/m/d'),
-                                            'reference_number' => time().random_int(100000, 999999),
-                                            'user_id' => auth()->user()->id,
-                                            'debt' => 0,
-                                        ]);
-                                    }
-                                }
-                            }
-                    }
+                    //                         $next_debt -= $item->amount;
+                    //                         # code...
+                    //                     }
+                    //                     else {
+                    //                         Payments::create([
+                    //                             "payment_id" => $item->id,
+                    //                             "student_id" => $student->id,
+                    //                             "unit_id" => $student->class(Helpers::instance()->getYear())->id,
+                    //                             "batch_id" => Helpers::instance()->nextAccademicYear(Helpers::instance()->getCurrentAccademicYear()),
+                    //                             "amount" => $next_debt,
+                    //                             "date" => date('Y/m/d'),
+                    //                             'reference_number' => time().random_int(100000, 999999),
+                    //                             'user_id' => auth()->user()->id,
+                    //                             'debt' => 0,
+                    //                         ]);
+                    //                         # code...
+                    //                         $next_debt = 0;
+                    //                     }
+                    //                 }
+                    //                 if ($next_debt > 0) {
+                    //                     Payments::create([
+                    //                         "payment_id" => $item->id,
+                    //                         "student_id" => $student->id,
+                    //                         "unit_id" => $student->class(Helpers::instance()->getYear())->id,
+                    //                         "batch_id" => Helpers::instance()->nextAccademicYear(Helpers::instance()->getCurrentAccademicYear()),
+                    //                         "amount" => 0,
+                    //                         "date" => date('Y/m/d'),
+                    //                         'reference_number' => time().random_int(100000, 999999),
+                    //                         'user_id' => auth()->user()->id,
+                    //                         'debt' => 0,
+                    //                     ]);
+                    //                 }
+                    //             }
+                    //         }
+                    // }
                     
                     // delete pending_promotion_students
                     // DB::table('pending_promotion_students')
@@ -1180,14 +1180,14 @@ class StudentController extends Controller
 
     public function setStudentResultBypass(Request $request)
     {
-        $check = Validator::make($request->all(), ['bypass_result_reason'=>'required']);
+        $check = Validator::make($request->all(), ['bypass_result_reason'=>'required', 'semester'=>'required']);
         if($check->fails()){
             return back()->with('error', 'A reason must be specified');
         }
         # code...
         $student_class = StudentClass::where(['student_id'=>$request->student_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear()]);
         if(!$student_class == null){
-            $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason]);
+            $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason, 'result_bypass_semester'=>$request->semester]);
             return back()->with('success', 'Done');
         }
         else{return back()-with('error', 'Student could not be resolved.');}

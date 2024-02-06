@@ -230,9 +230,9 @@ class ResultController extends Controller
             return back()->with('error', 'CA total not set for this program.');
         }
 
-        $class_subject = ClassSubject::find(request('course_id'));
+        $subject = Subjects::find(request('course_id'));
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
-        $data['title'] = "Fill CA Results For [ ".$class_subject->subject->code." ] ".$class_subject->subject->name." / ".ProgramLevel::find(request('class_id'))->name();
+        $data['title'] = "Fill CA Results For [ ".$subject->code." ] ".$subject->name." / ".ProgramLevel::find(request('class_id'))->name();
         return view('admin.result.fill_ca', $data);
     }
 
@@ -243,8 +243,8 @@ class ResultController extends Controller
             return back()->with('error', 'CA total not set for this program.');
         }
 
-        $class_subject = ClassSubject::find(request('course_id'));
-        $data['title'] = "Import CA Results For [ ".$class_subject->subject->code." ] ".$class_subject->subject->name." / ".ProgramLevel::find(request('class_id'))->name();
+        $subject = Subjects::find(request('course_id'));
+        $data['title'] = "Import CA Results For [ ".$subject->code." ] ".$subject->name." / ".ProgramLevel::find(request('class_id'))->name();
         return view('admin.result.import_ca', $data);
     }
 
@@ -320,10 +320,10 @@ class ResultController extends Controller
             return back()->with('error', 'CA or Exam total not set for this program.');
         }
 
-        $class_subject = ClassSubject::find(request('course_id'));
+        $subject = ClassSubject::find(request('course_id'));
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
         $data['exam_total'] = Helpers::instance()->exam_total(request('class_id'));
-        $data['title'] = "Fill Exam Results For [ ".$class_subject->subject->code." ] ".$class_subject->subject->name." / ".ProgramLevel::find(request('class_id'))->name();
+        $data['title'] = "Fill Exam Results For [ ".$subject->code." ] ".$subject->name." / ".ProgramLevel::find(request('class_id'))->name();
         return view('admin.result.fill_exam', $data);
     }
 
@@ -334,8 +334,8 @@ class ResultController extends Controller
             return back()->with('error', 'CA total not set for this program.');
         }
 
-        $class_subject = ClassSubject::find(request('course_id'));
-        $data['title'] = "Import Exam Results For [ ".$class_subject->subject->code." ] ".$class_subject->subject->name." / ".ProgramLevel::find(request('class_id'))->name();
+        $subject = ClassSubject::find(request('course_id'));
+        $data['title'] = "Import Exam Results For [ ".$subject->code." ] ".$subject->name." / ".ProgramLevel::find(request('class_id'))->name();
         return view('admin.result.import_exam', $data);
     }
 
@@ -404,5 +404,37 @@ class ResultController extends Controller
         # code...
         $data['title'] = "Result Imports";
         return view('admin.result.imports_index', $data);
+    }
+
+    public function individual_results()
+    {
+        $data['title'] = "Individual Results";
+        return view('admin.result.individual_result', $data);
+    }
+
+    public function class_results()
+    {
+        $data['title'] = "Class Results";
+        return view('admin.result.class_result', $data);
+    }
+
+    public function individual_instances(Request $request)
+    {
+        // $request->validate(['searchValue'=>'required']);
+
+        // return $request->searchValue;
+        try {
+            //code...
+            $instances = Students::where(function ($blda) use ($request) {
+                $blda->where('name', 'like', "%{$request->searchValue}%")
+                    ->orWhere('matric', 'like', "%{$request->searchValue}%");
+            })->join('student_classes', ['student_classes.student_id' => 'students.id'])
+                ->get(['student_classes.id', 'student_classes.year_id', 'student_classes.class_id', 'students.name', 'students.matric']);
+    
+            return $instances;
+            
+        } catch (\Throwable $th) {
+            return $th;
+        }
     }
 }

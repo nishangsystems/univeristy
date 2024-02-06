@@ -165,6 +165,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('export', 'Admin\ResultController@exportPost')->name('export');
         Route::get('report', 'Admin\ResultController@report')->name('report');
         Route::post('report', 'Admin\ResultController@report_show')->name('report.show');
+        Route::get('individual_results', 'Admin\ResultController@individual_results')->name('individual_results');
+        Route::get('class_results', 'Admin\ResultController@class_results')->name('class_results');
+        Route::get('individual_results/instances/{searchValue}', 'Admin\ResultController@individual_instances')->name('individual.instances');
     
     
         // ADDED RESULT ROUTES FOR OFFLINE SYSTEM

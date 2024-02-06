@@ -51,4 +51,15 @@ class ProgramLevel extends Model
 
         return SchoolUnits::find($this->program_id)->name.' : Level '.Level::find($this->level_id)->level;
     }
+
+    
+
+    public function campus_programs($campus_id = null)
+    {
+        # code...
+        return $this->hasMany(CampusProgram::class, 'program_level_id')
+            ->where(function ($qr) use ($campus_id) {
+                $campus_id == null ? null : $qr->where(['campus_id' => $campus_id]);
+                });
+    }
 }

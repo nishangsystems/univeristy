@@ -72,9 +72,9 @@ class HomeController extends Controller
 
     public function student($name)
     {
-        $students = \App\Models\Students::join('student_classes', ['students.id' => 'student_classes.student_id'])
+        $students = Students::join('student_classes', ['students.id' => 'student_classes.student_id'])
             ->join('campuses', ['students.campus_id' => 'campuses.id'])
-            ->where('student_classes.year_id', \App\Helpers\Helpers::instance()->getYear())
+            ->where('student_classes.year_id', Helpers::instance()->getYear())
             ->join('program_levels', ['students.program_id' => 'program_levels.id'])
             ->join('school_units', ['program_levels.program_id' => 'school_units.id'])
             ->join('levels', ['program_levels.level_id' => 'levels.id'])
@@ -88,9 +88,9 @@ class HomeController extends Controller
     public function student_get()
     {
         $name = request('name');
-        $students = \App\Models\Students::join('student_classes', ['student_classes.student_id' => 'students.id'])
+        $students = Students::join('student_classes', ['student_classes.student_id' => 'students.id'])
             ->join('campuses', ['students.campus_id' => 'campuses.id'])
-            ->where('student_classes.year_id', \App\Helpers\Helpers::instance()->getYear())
+            ->where('student_classes.year_id', Helpers::instance()->getYear())
             ->join('program_levels', ['student_classes.class_id' => 'program_levels.id'])
             ->join('school_units', ['program_levels.program_id' => 'school_units.id'])
             ->join('levels', ['program_levels.level_id' => 'levels.id'])
@@ -160,7 +160,7 @@ class HomeController extends Controller
     public static function _fee(Request  $request)
     {
         $type = request('type', 'completed');
-        $year = request('year', \App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+        $year = request('year', Helpers::instance()->getCurrentAccademicYear());
         $class = ProgramLevel::find(\request('class'));
 
         $title = $type . " fee " . ($class != null ? "for " . $class->program()->first()->name .' : LEVEL '.$class->level()->first()->level : '').(auth()->user()->campus_id != null ? ' - '.Campus::find(auth()->user()->campus_id)->name : '');
@@ -210,8 +210,8 @@ class HomeController extends Controller
                     'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }
-            if($request->has('amount') && $request->amount <= $value['amount']){continue;}
-            if(($value['amount'] < $value['total'] || $value['total'] == 0) && $type == 'uncompleted'){
+            if($request->has('amount') && $request->amount >= $value['amount']){continue;}
+            if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
@@ -272,16 +272,18 @@ class HomeController extends Controller
         foreach ($fees as $key => $value) {
             # code...
             $stdt = Students::find($value['stud']);
-            if(($value['total'] > 0 && $value['amount'] == $value['total']) && $type == 'completed'){
+            if(($value['total'] > 0 && $value['amount'] >= $value['total']) && $type == 'completed'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
+                    'matric'=>$stdt->matric,
                     'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
                     'total'=> $value['amount'],
                     'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
                 ];
             }
-            if(($value['amount'] < $value['total'] || $value['total'] == 0) && $type == 'uncompleted'){
+            if($request->has('amount') && $request->amount >= $value['amount']){continue;}
+            if(($value['amount'] < $value['total'] || $value['total'] == 0 ) && $type == 'uncompleted'){
                 $students[] = [
                     'id'=> $stdt->id,
                     'name'=> $stdt->name,
@@ -292,7 +294,6 @@ class HomeController extends Controller
                 ];
             }
         }
-
         $students = collect($students)->sortBy('name')->toArray();
 
         return response()->json(['title' => $title, 'students' => $students]);

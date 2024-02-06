@@ -29,17 +29,17 @@ class UserController extends Controller
                     ->join('users', 'users.id', '=', 'users_roles.user_id')
                     ->get('users.*');
             }else{
-                $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
+                $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->get();
             }
             return view('teacher.user.index')->with($data);
         }else if(\request('permission')){
             $data['type'] = \App\Models\Permission::whereSlug(\request('permission'))->first()->name;
             $data['title'] = "Permission ".($data['type'] ?? "Users");
-            $data['users'] =\App\Models\Permission::whereSlug(\request('permission'))->first()->users()->paginate(15);
+            $data['users'] =\App\Models\Permission::whereSlug(\request('permission'))->first()->users()->get();
             return view('teacher.user.index')->with($data);
         }else{
             $data['type'] = request('teacher', 'user');
-            $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->paginate(15);
+            $data['users'] = \App\Models\User::where('type', request('type', 'teacher'))->get();
             $data['title'] = "Manage " . $data['type']. 's';
             return view('teacher.user.index')->with($data);
         }
