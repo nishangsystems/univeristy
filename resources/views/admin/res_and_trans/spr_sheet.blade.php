@@ -11,6 +11,7 @@
                         <option value=""></option>
                         @foreach(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
                             <option value="{{$pl['id']}}">{{$pl['name']}}</option>
+
                         @endforeach
                     </select>
                 </div>
@@ -46,6 +47,7 @@
         $students = \App\Models\ProgramLevel::find(request('class_id'))->_students($year)->get();
         $grades = \App\Models\ProgramLevel::find(request('class_id'))->program->gradingType->grading->sortBy('grade') ?? [];
         $courses = \App\Models\ProgramLevel::find(request('class_id'))->class_subjects_by_semester(request('semester_id')) ?? [];
+
         $base_pass = (\App\Models\ProgramLevel::find(request('class_id'))->program->ca_total ?? 0 + \App\Models\ProgramLevel::find(request('class_id'))->program->exam_total ?? 0)*0.5;
         // dd($grades);
         $k = 1;

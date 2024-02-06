@@ -98,6 +98,7 @@
 			#login-box{
 				border-radius: 24px;
 				margin-block: 3rem;
+
 			}
 		</style>
 	</head>

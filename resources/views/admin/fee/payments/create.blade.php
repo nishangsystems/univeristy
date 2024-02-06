@@ -40,13 +40,19 @@
                     <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year-1) }} CFA" disabled>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
+                <div class="col-lg-10">
+                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)}} CFA" disabled></input>
+                </div>
+            </div>
             <div class="form-group @error('item') has-error @enderror">
                 <label class="control-label col-lg-2 text-capitalize">{{__('text.word_item')}} <span style="color:red">*</span></label>
                 <div class="col-lg-10">
                     <select class="form-control" name="item">
                         <option value="" disabled class="text-capitalize">{{__('text.select_item')}}</option>
                         @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->payment_items()->where(['year_id'=>$c_year])->get() ?? [] as $item)
-                        <option value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
+                            <option value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
                         @endforeach
                     </select>
                     @error('item')
@@ -103,28 +109,29 @@
                     <tbody>
                         @php($k=1)
                         @forelse($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->whereNull('transaction_id')->where('user_id', auth()->id())->orderBy('id', 'DESC')->get() as $item)
+
                         <!-- <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end"> -->
-                        <tr>
-                            <td>{{$k++}}</td>
-                            <td>{{($item->item)?$item->item->name:$item->created_at->format('d/m/Y')}}</td>
-                            <td class="font-weight-bold">{{$item->amount}} {{__('text.currency_cfa')}}</td>
-                            <td class="font-weight-bold">{{$item->debt}} {{__('text.currency_cfa')}}</td>
-                            <td>{{$item->created_at->format('l d/m/Y')}}</td>
-                            <td class="d-inline-flex">
-                                <!-- <a href="{{route('admin.fee.student.payments.edit', [ $student->id, $item->id])}}" class="btn m-2 btn-sm btn-primary text-white text-capitalize">{{__('text.word_edit')}}</a> -->
-        
-                                <a onclick="event.preventDefault();
-                                                    document.getElementById('delete-{{$item->id}}').submit();" class=" btn btn-danger btn-sm m-2 text-capitalize">{{__('text.word_delete')}}</a>
-                                <form id="delete-{{$item->id}}" action="{{route('admin.fee.student.payments.destroy',[$student->id,$item->id])}}" method="POST" style="display: none;">
-                                    @method('DELETE')
-                                    {{ csrf_field() }}
-                                </form>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>{{$k++}}</td>
+                                <td>{{($item->item)?$item->item->name:$item->created_at->format('d/m/Y')}}</td>
+                                <td class="font-weight-bold">{{$item->amount}} {{__('text.currency_cfa')}}</td>
+                                <td class="font-weight-bold">{{$item->debt}} {{__('text.currency_cfa')}}</td>
+                                <td>{{$item->created_at->format('l d/m/Y')}}</td>
+                                <td class="d-inline-flex">
+                                    <!-- <a href="{{route('admin.fee.student.payments.edit', [ $student->id, $item->id])}}" class="btn m-2 btn-sm btn-primary text-white text-capitalize">{{__('text.word_edit')}}</a> -->
+            
+                                    <a onclick="event.preventDefault();
+                                                        document.getElementById('delete-{{$item->id}}').submit();" class=" btn btn-danger btn-sm m-2 text-capitalize">{{__('text.word_delete')}}</a>
+                                    <form id="delete-{{$item->id}}" action="{{route('admin.fee.student.payments.destroy',[$student->id,$item->id])}}" method="POST" style="display: none;">
+                                        @method('DELETE')
+                                        {{ csrf_field() }}
+                                    </form>
+                                </td>
+                            </tr>
                         @empty
-                        <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
-                            <p>{{__('text.phrase_2', ['in_bold'=>__('text.collect_fee')])}}</p>
-                        </div>
+                            <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
+                                <p>{{__('text.phrase_2', ['in_bold'=>__('text.collect_fee')])}}</p>
+                            </div>
                         @endforelse
                         
                     </tbody>
@@ -163,6 +170,7 @@
                         </div>
                     </div>
                 @endif
+
             </div>
             <div class="py-2 mb-5 px-3"><a class="btn btn-primary rounded" href="{{ route('admin.fee.history', $student->id) }}">Detail payment history</a></div>
         </div>

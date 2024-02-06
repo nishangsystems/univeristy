@@ -106,36 +106,6 @@ class HomeController  extends Controller
         return back()->with('error', __('text.error_reading_file'));
     }
 
-    public function set_background_image()
-    {
-        # code...
-        $data['title'] = __('text.set_background_image');
-        return view('admin.setting.bg_image', $data);
-    }
-
-    public function save_background_image(Request $request)
-    {
-        # code...
-        # code...
-        $check = Validator::make($request->all(), ['file'=>'required|file|mimes:jpeg']);
-        if ($check->fails()) {
-            # code...
-            return back()->with('error', $check->errors()->first());
-        }
-        $file = $request->file('file');
-        // return $file->getClientOriginalName();
-        if(!($file == null)){
-            $ext = $file->getClientOriginalExtension();
-            $filename = 'background_image.jpeg';
-            // $path = $filename;
-            if(!file_exists(url('/storage/app/bg_image'))){
-                mkdir(url('/storage/app/bg_image'));
-            }
-            $file->move(url('/storage/app/bg_image'), $filename);
-            return back()->with('success', __('text.word_done'));
-        }
-        return back()->with('error', __('text.error_reading_file'));
-    }
 
     
     public function set_watermark()
@@ -167,6 +137,40 @@ class HomeController  extends Controller
             return back()->with('success', __('text.word_done'));
         }
         return back()->with('error', __('text.error_reading_file'));
+    }
+
+
+    public function set_background_image()
+    {
+        # code...
+        $data['title'] = 'Set Background Image';
+        return view('admin.setting.bg_image', $data);
+    }
+    public function save_background_image(Request $request)
+    {
+        # code...
+        # code...
+        $check = Validator::make($request->all(), ['file'=>'required|file|mimes:png,jpg,jpeg,gif,tif']);
+        if ($check->fails()) {
+            # code...
+            return back()->with('error', $check->errors()->first());
+        }
+        
+        $file = $request->file('file');
+        // return $file->getClientOriginalName();
+        if(!($file == null)){
+            $ext = $file->getClientOriginalExtension();
+            $filename = '_'.random_int(100000, 999999).'_'.time().'.'.$ext;
+            $path = $filename;
+            $file->storeAs('/files', $filename);
+            if(File::where(['name'=>'background-image', 'campus_id'=>auth()->user()->campus_id??0])->count() == 0){
+                File::create(['name'=>'background-image', 'campus_id'=>auth()->user()->campus_id??0, 'path'=>$path]);
+            }else {
+                File::where(['name'=>'background-image', 'campus_id'=>auth()->user()->campus_id??0])->update(['path'=>$path]);
+            }
+            return back()->with('success', 'Done');
+        }
+        return back()->with('error', 'Error reading file');
     }
 
     public function setayear()
@@ -672,4 +676,5 @@ class HomeController  extends Controller
         $period->delete();
         return back()->with('success', 'Record successfully deleted');
     }
+
 }

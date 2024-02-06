@@ -46,6 +46,7 @@
         $students = \App\Models\ProgramLevel::find(request('class_id'))->_students($year)->get();
         $grades = \App\Models\ProgramLevel::find(request('class_id'))->program->gradingType->grading->sortBy('grade') ?? [];
         $courses = \App\Models\ProgramLevel::find(request('class_id'))->class_subjects_by_semester(request('semester_id')) ?? [];
+
         $base_pass = (\App\Models\ProgramLevel::find(request('class_id'))->program->ca_total ?? 0 + \App\Models\ProgramLevel::find(request('class_id'))->program->exam_total ?? 0)*0.5;
         // dd($grades);
         $k = 1;
@@ -104,6 +105,7 @@
                             }}</td>
                             @foreach($grades as $grade)
                                 <td class="border-left border-right border-secondary">{{$course->offline_passed_with_grade($grade->grade, $year, request('semester_id'))}}</td>
+
                             @endforeach
                         </tr>
                     @endforeach

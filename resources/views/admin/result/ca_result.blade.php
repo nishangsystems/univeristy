@@ -66,13 +66,14 @@
                                 <td class="border-right border-light">`+element.code+`</td>
                                 <td class="border-right border-light">`+element.name+`</td>
                                 <td class="border-right border-light">`+element.semester+`</td>
+
                                 <td class="border-right border-light">
                                     <button onclick="_fill(`+_class+`, `+element.id+`)" class="btn btn-sm btn-success"">{{__('text.word_fill')}}</button>|
                                     <button onclick="_import(`+_class+`, `+element.id+`)" class="btn btn-sm btn-primary">{{__('text.word_import')}}</button>
                                 </td>
                             </tr>`;
                 }
-                // console.log(html);
+
                 $('#courses').html(html);
 
             }

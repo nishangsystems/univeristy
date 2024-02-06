@@ -38,6 +38,9 @@
                             <button type="submit" class="btn {{$sem->status == 1 ? 'btn-warning' :'btn-primary'}} btn-md">{{$sem->status == 1 ? __('text.current_semester') :__('text.set_semester')}}</button>
                             <input type="hidden" name="background" id="" value="{{$sem->background_id}}">
                         </form>
+                        @if($sem->status == 1)
+                            <a href="{{route('admin.semesters.result.set_datelines', $sem->id)}}" class="btn btn-success btn-md">{{ __('text.result_datelines')}}</a>
+                        @endif
                     </td>
                 </tr>
             @endforeach

@@ -24,6 +24,7 @@ class ResultsAndTranscriptsController extends Controller{
     {
         # code...
         $data['title'] = __('text.frequency_distribution');
+
         return view('admin.res_and_trans.fre_dis', $data);
     }
 
