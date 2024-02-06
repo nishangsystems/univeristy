@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ClassMaster;
 use App\Models\TeachersSubject;
 use App\Option;
+use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -55,7 +56,6 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -128,7 +128,6 @@ class UserController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
@@ -141,7 +140,7 @@ class UserController extends Controller
             'type' => 'required',
         ]);
         $user = \App\Models\User::find($id);
-        if (\Auth::user()->id == $id || \Auth::user()->id == 1) {
+        if (auth()->user()->id == $id || auth()->user()->id == 1) {
             return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('error', "User can't be updated");
         }
 
@@ -154,12 +153,11 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $user = \App\Models\User::find($id);
-        if (\Auth::user()->id == $id || \Auth::user()->id != 1) {
+        if (auth()->user()->id == $id || auth()->user()->id != 1) {
             return redirect()->to(route('admin.users.index', ['type' => $user->type]))->with('error', "User can't be deleted");
         }
         $user->delete();
@@ -201,9 +199,9 @@ class UserController extends Controller
                 'campus_id' => $request->campus,
                 'batch_id' => \App\Helpers\Helpers::instance()->getCurrentAccademicYear()
             ]);
-            Session::flash('success', "Subject assigned successfully!");
+            session()->flash('success', "Subject assigned successfully!");
         } else {
-            Session::flash('error', "Subject assigned already");
+            session()->flash('error', "Subject assigned already");
         }
 
         return redirect()->to(route('user.teacher.show', $id));

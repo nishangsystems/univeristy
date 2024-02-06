@@ -302,7 +302,7 @@ return [
     'percentage_amount_recieved'=>'% amount recieved',
     'csv_file'=> 'csv file',
     'import_fees'=>'import fees',
-    'file_format_csv' => 'file format (csv)',
+    'file_format_csv' => 'file format (CSV)',
     'reference_number' => 'reference number',
     'importation_center' =>'online importation',
     'import_ca' =>'import CA',
@@ -471,6 +471,7 @@ return [
     'payment_details'=>'payment details',
     'payment_details_statement'=>'You are about to register for :qnty resit courses. This will cost you :amnt CFA. Click "Proceed" to make payment.',
     'reset_password'=>'reset password',
+
     'word_import'=>'import',
     'word_fill'=>'fill',
     'word_score'=>'score',

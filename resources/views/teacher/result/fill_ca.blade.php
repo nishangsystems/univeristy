@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('teacher.layout')
 
 @section('style')
    <style>
@@ -24,6 +24,10 @@
 
     @csrf
     <div class="card">
+        <div class="d-flex justify-content-between my-3 px-3">
+            <a href="{{route('user.class_course.exam.result', [request('class_id'), request('course_id')])}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.exam_results')}}</a>
+            <a href="{{route('user.class_course.ca.import', [request('class_id'), request('course_id')])}}" class="btn btn-sm btn-primary">{{__('text.word_import')}}</a>
+        </div>
        <div class="d-flex justify-content-between">
            <div class="card-header d-flex justify-content-between align-items-center w-100">
                <h3 class=" font-weight-bold text-uppercase py-4 flex-grow-1">
@@ -58,9 +62,9 @@
                                 <td>{{$k++}}</td>
                                 <td class="name" style="width: 200px; text-align: left">{{$student->name}}</td>
                                 <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
-                                <td class="pt-3-half {{$ca_total/2 > $student->ca_score($subject->id, request('class_id'), $year) ? 'text-danger' : ''}}">
+                                <td class="pt-3-half">
                                     @if($semester->ca_is_late() == false)
-                                        <input class="score form-control bg-white border-0" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->id}}" value="{{$student->ca_score($subject->id, request('class_id'), $year, $semester->id)}}">
+                                        <input class="score form-control bg-white border-0" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->id}}" value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
                                     @else
                                         <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
                                     @endif
@@ -76,17 +80,17 @@
 @section('script')
     <script>
         $('.score').on('change', function (){
-            if(event.target.value < parseFloat('{{$ca_total/2}}')){
+            if(event.target.value < 10){
                 event.target.style.color = 'red';
             }
             else{
                 event.target.style.color = 'black';
             }
 
-            let subject_url = "{{route('admin.result.store_result')}}";
+            let subject_url = "{{route('user.store_result',$subject->id)}}";
             // $(".pre-loader").css("display", "block");
 
-            if($(this).val() > parseFloat('{{$ca_total}}')){
+            if( $(this).val() > 20){
 
             }else{
                 $.ajax({
@@ -107,7 +111,6 @@
                         console.log(data);
                         $(".pre-loader").css("display", "none");
                     }, error: function (e) {
-                        console.log(e);
                         $(".pre-loader").css("display", "none");
                     }
                 });

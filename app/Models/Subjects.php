@@ -46,4 +46,5 @@ class Subjects extends Model
         # code...
         return $this->belongsTo(Semester::class, 'semester_id');
     }
+
 }
