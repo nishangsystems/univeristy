@@ -56,6 +56,7 @@ class StudentController extends Controller
         $data['years'] = $this->years;
         // $data['students'] = DB::table('students')->whereYear('students.created_at', $curent_year)->get()->toArray();
         $data['students'] = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')->get(['students.*', 'student_classes.class_id']);
+
         return view('admin.student.index')->with($data);
     }
     public function getStudentsPerClass(Request $request)
@@ -315,7 +316,6 @@ class StudentController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
@@ -349,7 +349,6 @@ class StudentController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
@@ -410,11 +409,8 @@ class StudentController extends Controller
 
     public  function matricPost(Request  $request)
     {
-        return $request->all();
-        $this->validate($request, [
-            'batch' => 'required',
-            'section' => 'required',
-        ]);
+        // return $request->all();
+        $this->validate($request, ['batch' => 'required','section' => 'required']);
         $sec = $request->section;
         $id = $sec[count($request->section) - 1];
         $students = Students::join('student_classes', ['students.admission_batch_id' => 'student_classes.id'])->where(['student_classes.year_id' => $request->batch, 'student_classes.class_id' => $id])->orderBy('name')->get();
@@ -832,6 +828,7 @@ class StudentController extends Controller
                     }
                     DB::table('student_classes')->whereIn('student_id', $request->students)->where(['class_id' => $request->class_from, 'year_id' => $request->year_from])->update(['current' => false]);
                     // DB::table('student_classes')->whereIn('student_id', $request->students)->where('year_id', '=', $request->year_to)->update(['current'=>1]);
+
     
                     // update student program_id
                     DB::table('students')->whereIn('id', $request->students)->update(['program_id'=>$request->class_to]);
@@ -855,6 +852,7 @@ class StudentController extends Controller
                         // $fee_payments_sum = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $value])->where('batch_id', '!=', $request->year_to)->sum('amount');
                         // $fee_debts_sum = Payments::whereIn('payment_id', $fee_items->pluck('id'))->where(['student_id' => $value])->where('batch_id', '!=', $request->year_to)->sum('debt');
                         // $next_debt = $fee_items_sum + $fee_debts_sum - $fee_payments_sum;
+
 
                     // }
                     
@@ -907,7 +905,7 @@ class StudentController extends Controller
                  
                  // update students' class and academic year
                  DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students) ?? [])->where('year_id', '=', $promotion->year_to)->delete();
-                //  DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students) ?? [])->where('year_id', '=', $promotion->year_from)->updateOrInsert(['current'=>1]);
+
                  // DB::table('student_classes')->whereIn('student_id', json_decode($promotion->students))->where('year_id', '=', $promotion->year_to)->distinct()->get()->each(function($rec)use($promotion){
                 
                  
@@ -1072,28 +1070,28 @@ class StudentController extends Controller
                 ->where('sequence', '=', 2)
                 ->pluck('score')
                 ->toArray());
-                break;
+                // break;
             case '2':
                 # code...
                 return array_sum($builder->where('sequence', '=', 3)
                     ->where('sequence', '=', 4)
                     ->pluck('score')
                     ->toArray());
-                break;
+                // break;
             case '3':
                 # code...
                 return array_sum($builder->where('sequence', '=', 5)
                     ->where('sequence', '=', 6)
                     ->pluck('score')
                     ->toArray());
-                break;
+                // break;
 
             default:
                 # code...
                 return array_sum($builder
                     ->pluck('score')
                     ->toArray());
-                break;
+                // break;
         }
     }
 
@@ -1136,6 +1134,7 @@ class StudentController extends Controller
         $student_class = StudentClass::where(['student_id'=>$request->student_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear()]);
         if(!$student_class == null){
             $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason, 'result_bypass_semester'=>$request->semester ?? Helpers::instance()->getSemester($student_class->first()->class_id)->id]);
+
             return back()->with('success', 'Done');
         }
         else{return back()-with('error', 'Student has no class.');}

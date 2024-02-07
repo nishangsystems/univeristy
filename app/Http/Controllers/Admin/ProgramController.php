@@ -20,6 +20,7 @@ use App\Models\StudentClass;
 use App\Models\Students;
 use App\Models\Subjects;
 use App\Models\Topic;
+use App\Models\Semester;
 use App\Session;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -165,7 +166,7 @@ class ProgramController extends Controller
     public function edit(Request $request, $id)
     {
         $lang = !$request->lang ? 'en' : $request->lang;
-        \App::setLocale($lang);
+        app()->setLocale($lang);
         $data['id'] = $id;
         $data['degrees'] = Degree::all();
         $data['backgrounds'] = Background::all();
@@ -194,7 +195,6 @@ class ProgramController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
@@ -280,19 +280,19 @@ class ProgramController extends Controller
     {
     # code...
     // get array of ids of all sub units
-    $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-    $subUnits = $this->subunitsOf($id);
+        $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+        $subUnits = $this->subunitsOf($id);
 
-    $students = Students::join('student_classes', 'students.id', '=', 'student_classes.student_id')
-        ->whereIn('student_classes.class_id', $subUnits)
-        ->get(['students.*']);
-    $parent = ProgramLevel::find($id);
-    $data['parent'] = $parent;
-    $data['students'] = $students;
-    // dd($parent);
-    $data['classes'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
-    $data['title'] = __('text.manage_students_under', ['unit'=>$parent->program()->first()->name]);
-    return view('admin.units.student-listing')->with($data);
+        $students = Students::join('student_classes', 'students.id', '=', 'student_classes.student_id')
+            ->whereIn('student_classes.class_id', $subUnits)
+            ->get(['students.*']);
+        $parent = ProgramLevel::find($id);
+        $data['parent'] = $parent;
+        $data['students'] = $students;
+        // dd($parent);
+        $data['classes'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
+        $data['title'] = __('text.manage_students_under', ['unit'=>$parent->program()->first()->name]);
+        return view('admin.units.student-listing')->with($data);
     }
 
     public function saveSubjects(Request  $request, $id)
@@ -542,7 +542,7 @@ class ProgramController extends Controller
                         $data['items'][] = ['id'=>$value->id, 'name'=>$value->name];
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                     
                 case 'FACULTY':
                     # code...
@@ -552,7 +552,7 @@ class ProgramController extends Controller
                         $data['items'][] = ['id'=>$value->id, 'name'=>$value->name];
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                         
                 case 'DEPARTMENT':
                     # code...
@@ -562,7 +562,7 @@ class ProgramController extends Controller
                         # code...
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                 
                 case 'PROGRAM':
                     # code...
@@ -573,7 +573,7 @@ class ProgramController extends Controller
                         # code...
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                 
                 case 'CLASS':
                     # code...
@@ -583,7 +583,7 @@ class ProgramController extends Controller
                         # code...
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                 
                 case 'LEVEL':
                     # code...
@@ -593,7 +593,7 @@ class ProgramController extends Controller
                         # code...
                     }
                     return view('admin.student.student_list_index', $data);
-                    break;
+                    // break;
                     
                     default:
                     # code...
@@ -625,7 +625,7 @@ class ProgramController extends Controller
                 // dd($students);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
             
             case 'FACULTY' :
                 $data['title'] = __('text.students_for_faculty_of', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
@@ -643,7 +643,7 @@ class ProgramController extends Controller
                 // dd($students);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
 
             case 'DEPARTMENT':
                 $data['title'] = __('text.students_for_department_of', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
@@ -661,7 +661,7 @@ class ProgramController extends Controller
                 // dd($students);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
 
             case 'PROGRAM':
                 $data['title'] = __('text.students_for', ['unit'=>SchoolUnits::find($request->item_id)->name ?? null]);
@@ -674,7 +674,7 @@ class ProgramController extends Controller
                 // dd($students);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
                 
 
             case 'CLASS':
@@ -687,7 +687,7 @@ class ProgramController extends Controller
                             ->distinct()->get(['students.*', 'student_classes.class_id as class_id']);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
 
             case 'LEVEL':
                 $level = Level::find($request->item_id);
@@ -701,7 +701,7 @@ class ProgramController extends Controller
                             ->orderBy('students.name')->distinct()->get(['students.*', 'student_classes.class_id']);
                 $data['students'] = $students;
                 return view('admin.student.bulk_list', $data);
-                break;
+                // break;
             
         }
     }
@@ -1004,5 +1004,26 @@ class ProgramController extends Controller
             $data['subject_id'] = $request->subject_id??0;
             return view('teacher.course.content', $data);
         }
+    }
+    
+    public function set_result_datelines(Request $request){
+        $semester = Semester::find($request->semester_id);
+        $data['title'] = 'Set Result Datelines For '.$semester->background->background_name.' '.$semester->name??'';
+        $data['semester'] = $semester;
+        return view('admin.setting.set-result-datelines', $data);
+    }
+
+    public function set_result_datelines_save(Request $request){
+        if($request->has('ca_dateline') || $request->has('exam_dateline')){
+            $semester = Semester::find($request->semester_id);
+            if($request->has('ca_dateline'))
+                $semester->ca_latest_date = $request->ca_dateline;
+            if($request->has('exam_dateline'))
+                $semester->exam_latest_date = $request->exam_dateline;
+
+            $semester->save();
+            return back()->with('success', 'Done');
+        }
+        return back();
     }
 }

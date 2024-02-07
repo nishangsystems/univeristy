@@ -218,6 +218,7 @@
 
                     </div>
                 @endif
+
                 @if($item->debt != 0 && $item->debt != null)
                     <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
                         <div>

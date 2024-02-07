@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\ClassSubject;
 use App\Models\ProgramLevel;
+use App\Models\Result;
 use App\Models\SchoolUnits;
 use App\Models\Subjects;
 use App\Models\Topic;
@@ -14,6 +15,7 @@ use App\Models\Campus;
 use App\Models\CourseLog;
 use App\Models\Notification;
 use App\Models\Period;
+use App\Models\Students;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -125,6 +127,7 @@ class HomeController extends Controller
         $data['title'] = "Manage subjects under " . $parent->name();
         return redirect()->back()->with('success', "Subjects Saved Successfully");
     }
+
 
     public function unit_courses($program_level_id)
     {
@@ -352,5 +355,161 @@ class HomeController extends Controller
         $data['can_create'] = false;
         // dd($data);
         return view('teacher.notification.my_index', $data);
+    }
+
+    // HANDLING COURSE RESULT INPUT
+
+    
+    public function course_ca_fill(Request $request, $class_id, $course_id)
+    {
+        # code...
+        
+                $data['title'] = "Fill CA Results";
+                return view('teacher.result.fill_ca', $data);
+    }
+
+    public function course_ca_import(){
+
+        // check if CA total is set forthis program
+
+        $data['title'] = "Import CA Results";
+        return view('teacher.result.import_ca', $data);
+    }
+
+    public function course_ca_import_save(Request $request, $class_id, $course_id){
+        // return $request->all();
+        $check = Validator::make($request->all(), [
+            'reference'=>'required',
+            'file'=>'required|file'
+        ]);
+
+        $ca_total = Helpers::instance()->ca_total(request('class_id'));
+        if($check->fails()){
+            return back()->with('error', $check->errors()->first());
+        }
+        $file = $request->file('file');
+        if($file != null &&$file->getClientOriginalExtension() == 'csv'){
+            $filename = 'ca_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
+            $file->storeAs('/files', $filename);
+
+            $file_pointer = fopen(storage_path('app/files').'/'.$filename, 'r');
+
+            $imported_data = [];
+            $course = Subjects::find($request->course_id);
+            $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+            $semester = \App\Helpers\Helpers::instance()->getSemester($request->class_id);
+            
+            while(($row = fgetcsv($file_pointer, 100, ',')) != null){
+                if(is_numeric($row[1]))
+                $imported_data[] = [$row[0], $row[1]];
+            }
+            if(count($imported_data)==0){
+                return back()->with('error', 'No data or wrong data format.');
+            }
+
+            $bad_results = 0;
+            foreach($imported_data as $data){
+                if ($data[1] > $ca_total) {
+                    # code...
+                    $bad_results++;
+                    continue;
+                }
+                $student = Students::where(['matric'=>$data[0]])->first() ?? null;
+                if($student != null){
+                    $base=[
+                        'batch_id' => $year, 
+                        'subject_id' => $request->course_id,
+                        'student_id' => $student->id,
+                        'class_id' => $request->class_id,
+                        'semester_id' => $semester->id
+                    ];
+                    Result::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
+                }
+            }
+            if($bad_results > 1){
+                return back()->with('success', 'Done. ' . $bad_results . ' records not imported. Unsupported values supplied.');
+            }
+            return back()->with('success', 'Done');
+        }else{
+            return back()->with('error', 'Empty or bad file type. CSV files only are accepted.');
+        }
+        
+    }
+
+    public function course_exam_fill(){
+
+        // check if exam total is set for this program
+
+        $data['title'] = "Fill Exam Results";
+        return view('teacher.result.fill_exam', $data);
+    }
+
+
+    public function course_exam_import(){
+
+        // check if exam total is set for this program
+
+        $data['title'] = "Import Exam Results";
+        return view('teacher.result.import_exam', $data);
+    }
+
+    public function course_exam_import_save(Request $request){
+        $check = Validator::make($request->all(), [
+            'reference'=>'required',
+            'file'=>'required|file'
+        ]);
+        if($check->fails()){
+            return back()->with('error', $check->errors()->first());
+        }
+
+        $ca_total = Helpers::instance()->ca_total(request('class_id'));
+        $exam_total = Helpers::instance()->exam_total(request('class_id'));
+
+        $file = $request->file('file');
+        if($file != null &&$file->getClientOriginalExtension() == 'csv'){
+            $filename = 'ca_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
+            $file->storeAs('/files', $filename);
+
+            $file_pointer = fopen(storage_path('app/files').'/'.$filename, 'r');
+
+            $imported_data = [];
+            $course = Subjects::find($request->course_id);
+            $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+            $semester = \App\Helpers\Helpers::instance()->getSemester($request->class_id);
+            
+            while(($row = fgetcsv($file_pointer, 100, ',')) != null){
+                if(is_numeric($row[1]))
+                $imported_data[] = [$row[0], $row[1], $row[2]];
+            }
+            if(count($imported_data)==0){
+                return back()->with('error', 'No data or wrong data format.');
+            }
+
+            $bad_results = 0;
+            foreach($imported_data as $data){
+                if ($data[1] > $ca_total || $data[2] > $exam_total) {
+                    # code...
+                    $bad_results++;
+                    continue;
+                }
+                $student = Students::where(['matric'=>$data[0]])->first() ?? null;
+                if($student != null){
+                    $base=[
+                        'batch_id' => $year, 
+                        'subject_id' => $request->course_id,
+                        'student_id' => $student->id,
+                        'class_id' => $request->class_id,
+                        'semester_id' => $semester->id
+                    ];
+                    Result::updateOrCreate($base, ['ca_score'=>$data[1], 'exam_score'=>$data[2], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
+                }
+            }
+            if($bad_results > 1){
+                return back()->with('success', 'Done. ' . $bad_results . ' records not imported. Unsupported values supplied.');
+            }
+            return back()->with('success', 'Done');
+        }else{
+            return back()->with('error', 'Empty or bad file type. CSV files only are accepted.');
+        }
     }
 }

@@ -42,6 +42,7 @@
     </form>
 @else
     @php
+
         // dd($grades);
         $k = 1;
     @endphp
@@ -99,6 +100,7 @@
                             }}</td>
                             @foreach($grades as $grade)
                                 <td class="border-left border-right border-secondary">{{$course->passed_with_grade($grade->grade, $year, request('semester_id'))}}</td>
+
                             @endforeach
                         </tr>
                     @endforeach

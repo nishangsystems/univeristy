@@ -11,6 +11,7 @@
                         <option value=""></option>
                         @foreach(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
                             <option value="{{$pl['id']}}">{{$pl['name']}}</option>
+
                         @endforeach
                     </select>
                 </div>
@@ -42,6 +43,7 @@
     </form>
 @else
     @php
+
         // dd($grades);
         $k = 1;
         // dd($students);

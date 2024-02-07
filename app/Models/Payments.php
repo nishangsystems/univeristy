@@ -13,6 +13,7 @@ class Payments extends Model
     protected $table = 'payments';
     protected $fillable = [	"payment_id","student_id","batch_id",'unit_id',"amount","reference_number","import_reference", 'user_id', 'debt', 'paid_by', 'transaction_id', 'payment_year_id'];
 
+
     public function item(){
         return $this->belongsTo(PaymentItem::class, 'payment_id');
     }

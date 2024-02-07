@@ -8,6 +8,7 @@
                 <option value=""></option>
                 @foreach(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
                     <option value="{{$pl['id']}}">{{$pl['name']}}</option>
+
                 @endforeach
             </select>
             <button class="btn btn-sm btn-dark" onclick="subjects()">{{__('text.word_courses')}}</button>
@@ -18,6 +19,7 @@
                 <th>{{__('text.word_code')}}</th>
                 <th>{{__('text.word_course')}}</th>
                 <th>{{__('text.word_semester')}}</th>
+
                 <th>{{__('text.word_action')}}</th>
             </thead>
             <tbody id="courses"></tbody>
@@ -66,6 +68,7 @@
                                 <td class="border-right border-light">`+element.code+`</td>
                                 <td class="border-right border-light">` +element.name+`</td>
                                 <td class="border-right border-light">` +element.semester+`</td>
+
                                 <td class="border-right border-light">
                                     <button onclick="_fill(`+_class+`, `+element.id+`)" class="btn btn-sm btn-success"">{{__('text.word_fill')}}</button>|
                                     <button onclick="_import(`+_class+`, `+element.id+`)" class="btn btn-sm btn-primary">{{__('text.word_import')}}</button>

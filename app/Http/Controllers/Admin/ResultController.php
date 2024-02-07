@@ -226,6 +226,7 @@ class ResultController extends Controller
     
     public function ca_result(){
         $data['title'] = __('text.student_CA_results');
+
         return view('admin.result.ca_result', $data);
     }
 
@@ -234,11 +235,13 @@ class ResultController extends Controller
         if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
             # code...
             return back()->with('error', __('text.CA_total_not_set_for', ['program'=>__('text.word_program')]));
+
         }
 
         $subject = Subjects::find(request('course_id'));
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
         $data['title'] = __('text.fill_CA_results_for', ['course'=>'[ '.$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+
         return view('admin.result.fill_ca', $data);
     }
 
@@ -251,6 +254,7 @@ class ResultController extends Controller
 
         $subject = Subjects::find(request('course_id'));
         $data['title'] = __('text.import_CA_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+
         return view('admin.result.import_ca', $data);
     }
 
@@ -276,6 +280,7 @@ class ResultController extends Controller
             $course = Subjects::find($request->course_id);
             $year = Helpers::instance()->getCurrentAccademicYear();
             $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester($request->class_id);
+
             
             while(($row = fgetcsv($file_pointer, 100, ',')) != null){
                 if(is_numeric($row[1]))
@@ -287,6 +292,7 @@ class ResultController extends Controller
 
             $bad_results = 0;
             $null_students = '';
+
             foreach($imported_data as $data){
                 if ($data[1] > $ca_total) {
                     # code...
@@ -317,6 +323,7 @@ class ResultController extends Controller
             return back()->with('success', __('text.word_done'));
         }else{
             return back()->with('error', __('text.file_type_constraint', ['type'=>'.csv']));
+
         }
         
     }
@@ -339,7 +346,7 @@ class ResultController extends Controller
         $data['title'] = __('text.fill_exam_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
         return view('admin.result.fill_exam', $data);
     }
-    
+
     public function exam_import(){
         // check if exam total is set for this program
         if (!Helpers::instance()->exam_total_isset(request('class_id'))) {
@@ -349,6 +356,7 @@ class ResultController extends Controller
         
         $subject = Subjects::find(request('course_id'));
         $data['title'] = __('text.import_exam_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+
         return view('admin.result.import_exam', $data);
     }
 
@@ -369,12 +377,14 @@ class ResultController extends Controller
             $filename = 'ca_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
             $file->move(storage_path('app/files'), $filename);
 
+
             $file_pointer = fopen(storage_path('app/files').'/'.$filename, 'r');
 
             $imported_data = [];
             $course = Subjects::find($request->course_id);
             $year = Helpers::instance()->getCurrentAccademicYear();
             $semester = $request->has('semester_id') ? Semester::find($request->semester_id) : Helpers::instance()->getSemester($request->class_id);
+
             
             while(($row = fgetcsv($file_pointer, 100, ',')) != null){
                 if(is_numeric($row[1]))
@@ -387,6 +397,7 @@ class ResultController extends Controller
             $bad_results = 0;
             $null_students = '';
             $existing_results = '';
+
             foreach($imported_data as $data){
                 if ($data[1] > $ca_total || $data[2] > $exam_total) {
                     # code...
@@ -427,6 +438,7 @@ class ResultController extends Controller
             return back()->with('success', __('text.word_done'));
         }else{
             return back()->with('error', __('text.file_type_constraint', ['type'=>'.csv']));
+
         }
     }
 
@@ -434,6 +446,7 @@ class ResultController extends Controller
     {
         # code...
         $data['title'] = __('text.result_imports');
+
         return view('admin.result.imports_index', $data);
     }
 
@@ -470,6 +483,7 @@ class ResultController extends Controller
             return view('admin.res_and_trans.index', $data);
         }
         
+
     }
 
     public function individual_instances(Request $request)
@@ -486,6 +500,7 @@ class ResultController extends Controller
                 ->get(['student_classes.id', 'student_classes.year_id', 'student_classes.class_id', 'students.name', 'students.id as student_id', 'students.matric']);
     
             return \response()->json(ResultResource::collection($instances));
+
             
         } catch (\Throwable $th) {
             return $th;

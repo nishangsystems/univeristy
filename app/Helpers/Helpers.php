@@ -259,6 +259,7 @@ class Helpers
         if ($lt->count() > 0) {
             # code...
             return asset('assets/images/avatars').'/'.$lt->first()->path;
+
         }
         return '';
     }
@@ -270,6 +271,7 @@ class Helpers
 
 
     
+
     public function ca_total_isset($class_id)
     {
         # code...

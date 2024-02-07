@@ -36,6 +36,7 @@ class ResultsAndTranscriptsController extends Controller{
             $data['base_pass'] = ($class->program->ca_total ?? 0 + $class->program->exam_total ?? 0)*0.5;
             $data['_title'] = $class->name().' '.$semester->name.' '.__('text.frequency_distribution').' FOR '.$year->name.' '.__('text.academic_year');    
         }
+
         return view('admin.res_and_trans.fre_dis', $data);
     }
 

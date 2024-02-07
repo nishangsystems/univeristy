@@ -36,8 +36,11 @@
                         <td>{{ $subject->status }}</td>
                         <td>{{ \App\Models\ClassSubject::where(['class_id'=>request('program_level_id'), 'subject_id'=>$subject->id])->first()->hours??null }}</td>
                         <td class="d-flex justify-content-end">
-                            <a class="btn btn-sm btn-primary" href="{{route('user.edit.class_courses',[request('program_level_id'), $subject->id])}}">
-                                <i class="fa fa-edit"> Edit</i>
+                            <a class="btn btn-sm btn-primary" href="{{route('user.class_course.ca.result',[request('program_level_id'), $subject->id])}}">
+                                <i class="fa fa-tick"> {{__('text.word_results')}}</i>
+                            </a>|
+                            <a class="btn btn-sm btn-info" href="{{route('user.edit.class_courses',[request('program_level_id'), $subject->id])}}">
+                                <i class="fa fa-edit"> {{__('text.word_edit')}}</i>
                             </a>
                         </td>
                     </tr>

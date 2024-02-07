@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Helpers\Helpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use \App\Helpers\Helpers;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class ClassSubject extends Model
 {
@@ -49,6 +50,7 @@ class ClassSubject extends Model
         // return $this->hasMany(OfflineResult::class, 'class_subject_id');
     }
 
+
     public function results()
     {
         return $this->hasMany(Result::class, 'class_subject_id');
@@ -58,6 +60,7 @@ class ClassSubject extends Model
     {
         return $this->passed_with_grade($grade, $year_id, $semester_id);
     }
+
     public function passed_with_grade($grade, $year_id, $semester_id = null)
     {
         $grade = \App\Models\ProgramLevel::find($this->class_id)->program->gradingType->grading->where('grade', $grade)->first() ?? null;
@@ -88,4 +91,5 @@ class ClassSubject extends Model
         }
         return $count;
     }
+
 }
