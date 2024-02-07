@@ -12,7 +12,8 @@ class Income extends Model
     protected $fillable = [
         'name',
         'amount',
-        'pay_online'
+        'pay_online',
+        'year_id'
     ];
     protected $connection = 'mysql';
 
@@ -30,5 +31,11 @@ class Income extends Model
     public function payIncomes()
     {
         return $this->hasMany(PayIncome::class, 'income_id');
+    }
+
+    public function year()
+    {
+        # code...
+        return $this->belongsTo(Batch::class, 'year_id');
     }
 }

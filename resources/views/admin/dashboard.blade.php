@@ -119,6 +119,17 @@ $total_fee_owed = 1;
                 </div>
 
             </div>
+            <div class="infobox border border-dark mx-2 my-1 rounded infobox-purple">
+                <div class="infobox-icon">
+                    <a class="ace-icon fa fa-money"></a>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">{{ number_format($other_incomes) }}</span>
+                    <div class="infobox-content">{{ __('text.other_incomes') }}</div>
+                </div>
+
+            </div>
         </div>
 
         {{-- FINANCIAL STATISTICS --}}

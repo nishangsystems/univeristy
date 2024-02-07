@@ -165,6 +165,7 @@ class PayIncomeController extends Controller
     public function create_cash()
     {
         $data['title'] = __('text.collect_income');
+        $data['years'] = Batch::all();
         return view('admin.payIncome.create_cash')->with($data);
     }
 
@@ -178,7 +179,8 @@ class PayIncomeController extends Controller
             'user_id'=>auth()->id(),
             'cash'=>1,
             'description'=>$request->description,
-            'date'=>$request->date
+            'date'=>$request->date,
+            'year_id'=>$request->year_id
         ];
         $income_id = DB::table('incomes')->insertGetId($income);
 
@@ -335,14 +337,16 @@ class PayIncomeController extends Controller
 
         $validate_data = $request->validate([
             'income_id' => 'required|numeric',
-            'batch_id' => 'required|numeric'
+            'batch_id' => 'required|numeric',
+            'amount' => 'required|numeric',
         ]);
         $created = PayIncome::create([
             'income_id' => $validate_data['income_id'],
             'batch_id' => $validate_data['batch_id'],
             'class_id' => $class_id,
             'student_id' => $student_id,
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
+            'amount' => $request->amount
         ]);
         return redirect()->route('admin.pay_income.index')->with('success', __('text.word_done'));
     }

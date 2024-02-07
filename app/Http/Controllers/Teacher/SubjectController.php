@@ -139,7 +139,7 @@ class SubjectController extends Controller
 
     public function store(Request $request)
     {
-        $result = OfflineResult::where([
+        $result = Result::where([
             'student_id' => $request->student,
             'class_id' => $request->class_id,
             'sequence' => $request->sequence,
@@ -148,7 +148,7 @@ class SubjectController extends Controller
         ])->first();
 
         if ($result == null) {
-            $result = new OfflineResult();
+            $result = new Result();
         }
 
         $result->batch_id = $request->year;

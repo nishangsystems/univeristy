@@ -15,6 +15,7 @@ class IncomeController extends Controller
         'amount',
         'user_id',
         'pay_online',
+        'year_id',
         'id',
     ];
     /**
@@ -53,6 +54,7 @@ class IncomeController extends Controller
         $income->amount = $request->amount;
         $income->pay_online = $request->pay_online;
         $income->user_id = Auth::id();
+        $income->year_id = $request->year_id;
         $income->save();
         return redirect()->back()->with('success', __('text.word_done'));
     }
@@ -66,6 +68,8 @@ class IncomeController extends Controller
         return $request->validate([
             'name' => 'required|max:255|string',
             'amount' => 'required|numeric',
+            'pay_online' => 'required',
+            'year_id' => 'required'
         ]);
     }
 
@@ -93,7 +97,7 @@ class IncomeController extends Controller
             'amount' => 'required|numeric',
         ]);
         $updated_income = Income::findOrFail($id)->update($request->all());
-        return  redirect()->route('admin.income.index')->with('success', __('text.word_done'));
+        return  redirect()->route('admin.Income.index')->with('success', __('text.word_done'));
     }
 
     /**
@@ -117,5 +121,17 @@ class IncomeController extends Controller
         $data['income'] = Income::findOrFail($id);
         $data['title'] = __('text.income_details');
         return view('admin.Income.show')->with($data);
+    }
+    
+
+    public function report($income_id)
+    {
+        # code...
+        $income = Income::find($income_id);
+        $data['income'] = $income;
+        $data['payments'] = $income->payIncomes;
+        $data['title'] = $income->name." Report";
+        // dd($data);
+        return view('admin.Income.report', $data);
     }
 }

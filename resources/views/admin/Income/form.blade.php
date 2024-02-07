@@ -17,7 +17,7 @@
             @enderror
         </div>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <label for="cname" class="control-label text-capitalize">{{__('text.pay_online')}} <span style="color:red">*</span></label>
         <div class="form-group text-uppercase @error('pay_online') has-error @enderror">
             <select class=" form-control text-uppercase" name="pay_online" required >
@@ -25,7 +25,21 @@
                 <option value="1" {{old('pay_online') == 1 ? 'selected' : ''}}>{{__('text.word_yes')}}</option>
                 <option value="0" {{old('pay_online') == 0 ? 'selected' : ''}}>{{__('text.word_no')}}</option>
             </select>
-            @error('amount')
+            @error('pay_online')
+            <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <label for="cname" class="control-label text-capitalize">{{__('text.word_year')}} <span style="color:red">*</span></label>
+        <div class="form-group text-uppercase @error('year_id') has-error @enderror">
+            <select class=" form-control text-uppercase" name="year_id" required >
+                <option value=""></option>
+                @foreach (\App\Models\Batch::all() as $year)
+                    <option value="{{ $year->id }}" {{ old('year_id') == $year->id ? 'selected' : '' }}>{{ $year->name }}</option>
+                @endforeach
+            </select>
+            @error('year_id')
             <span class="invalid-feedback">{{ $message }}</span>
             @enderror
         </div>
@@ -33,7 +47,6 @@
     <div class="form-group col-sm-2">
         <div class="d-flex justify-content-end  ">
             <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">{{__('text.word_save')}}</button>
-
         </div>
     </div>
 </div>

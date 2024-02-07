@@ -7,7 +7,7 @@
         <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
             <div>
                 <div>
-                    <h5 class="font-weight-bold text-capitalize">{{__('text.word_name')}} : <span><label>{{$income->name}}</label></span></h5>
+                    <h5 class="font-weight-bold text-capitalize">{{__('text.word_name')}} : <span><label>{{$income->name}}</label></span> <i>{{ $income->year->name??'' }}</i></h5>
                 </div>
                 <div>
                     <h5 class="font-weight-bold text-capitalize">{{__('text.word_amount')}} : <span>
