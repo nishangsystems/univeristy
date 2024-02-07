@@ -15,6 +15,14 @@ class CreateIncomesTable extends Migration
     {
         Schema::create('incomes', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->integer('year_id');
+            $table->integer('amount');
+            $table->integer('user_id');
+            $table->boolean('cash')->default(0);
+            $table->text('description');
+            $table->boolean('pay_online')->default(0);
+            $table->date('date');
             $table->timestamps();
         });
     }

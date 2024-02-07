@@ -29,6 +29,20 @@
         @enderror
     </div>
 </div>
+<div class="form-group @error('year_id') has-error @enderror">
+    <label for="cname" class="control-label col-lg-2">{{__('text.word_year')}} <span style="color:red">*</span></label>
+    <div class="col-lg-10">
+        <select class=" form-control text-uppercase" name="year_id" required >
+            <option value=""></option>
+            @foreach (\App\Models\Batch::all() as $year)
+                <option value="{{ $year->id }}" {{ old('year_id', $income->year_id) == $year->id ? 'selected' : '' }}>{{ $year->name }}</option>
+            @endforeach
+        </select>
+        @error('year_id')
+        <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
 <div class="form-group">
     <div class="d-flex justify-content-end col-lg-12">
         <button id="save" class="btn btn-xs btn-primary mx-3" type="submit">{{__('text.word_save')}}</button>

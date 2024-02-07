@@ -24,6 +24,17 @@
                 </div>
             </div>
             <div class="row my-2">
+                <label for="" class="col-md-3 col-lg-3 text-capitalize">{{__('text.word_year')}}</label>
+                <div class="col-md-9 col-lg-9">
+                    <select name="year_id" class="form-control">
+                        <option value="">{{__('text.select_year')}}</option>
+                        @foreach($years as $key => $year)
+                            <option value="{{$year->id}}">{{$year->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="row my-2">
                 <label for="" class="col-md-3 col-lg-3 text-capitalize">{{__('text.word_description')}}</label>
                 <div class="col-md-9 col-lg-9">
                     <textarea rows="3" name="description" class="form-control"></textarea>

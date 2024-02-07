@@ -43,12 +43,7 @@
     </form>
 @else
     @php
-        $year = request('year_id');
-        $students = \App\Models\ProgramLevel::find(request('class_id'))->_students($year)->get();
-        $grades = \App\Models\ProgramLevel::find(request('class_id'))->program->gradingType->grading->sortBy('grade') ?? [];
-        $courses = \App\Models\ProgramLevel::find(request('class_id'))->class_subjects_by_semester(request('semester_id')) ?? [];
 
-        $base_pass = (\App\Models\ProgramLevel::find(request('class_id'))->program->ca_total ?? 0 + \App\Models\ProgramLevel::find(request('class_id'))->program->exam_total ?? 0)*0.5;
         // dd($grades);
         $k = 1;
         // dd($students);
@@ -57,7 +52,7 @@
         <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100">
         <div class="text-center py-2">
             <h4 class="text-decoration text-capitalize"><b>
-                {{\App\Models\ProgramLevel::find(request('class_id'))->name().' '.\App\Models\Semester::find(request('semester_id'))->name.' '.$title.' FOR '.\App\Models\Batch::find(request('year_id'))->name.' '.__('text.academic_year')}}
+                {{ $_title }}
             </b></h4>
             <div class="d-flex overflow-auto">
                 <table>
@@ -89,10 +84,10 @@
                                 <td class="border-left border-right border-secondary">{{$k++}}</td>
                                 <td class="border-left border-right border-secondary">{{$student->matric}}</td>
                                 @foreach ($courses as $course)
-                                    <td class="border-left border-secondary">{{$student->offline_ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                    <td class="border-left border-right border-info">{{$student->offline_exam_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                    <td class="border-left border-right border-info">{{$student->offline_total_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                    <th class="border-right border-secondary {{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id')) >= 50 ? 'text-success':'text-danger'}}">{{$student->offline_grade($course->subject->id, request('class_id'), $year, request('semester_id'))}}</th>
+                                    <td class="border-left border-secondary">{{$student->ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                    <td class="border-left border-right border-info">{{$student->exam_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                    <td class="border-left border-right border-info">{{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                    <th class="border-right border-secondary {{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id')) >= 50 ? 'text-success':'text-danger'}}">{{$student->grade($course->subject->id, request('class_id'), $year, request('semester_id'))}}</th>
                                 @endforeach
                             </tr>
                         @endforeach

@@ -42,12 +42,7 @@
     </form>
 @else
     @php
-        $year = request('year_id');
-        $students = \App\Models\ProgramLevel::find(request('class_id'))->_students($year)->get();
-        $grades = \App\Models\ProgramLevel::find(request('class_id'))->program->gradingType->grading->sortBy('grade') ?? [];
-        $courses = \App\Models\ProgramLevel::find(request('class_id'))->class_subjects_by_semester(request('semester_id')) ?? [];
 
-        $base_pass = (\App\Models\ProgramLevel::find(request('class_id'))->program->ca_total ?? 0 + \App\Models\ProgramLevel::find(request('class_id'))->program->exam_total ?? 0)*0.5;
         // dd($grades);
         $k = 1;
     @endphp
@@ -55,7 +50,7 @@
         <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100">
         <div class="text-center py-2">
             <h4 class="text-decoration text-capitalize"><b>
-                {{\App\Models\ProgramLevel::find(request('class_id'))->name().' '.\App\Models\Semester::find(request('semester_id'))->name.' '.$title.' FOR '.\App\Models\Batch::find(request('year_id'))->name.' '.__('text.academic_year')}}
+                {{ $_title }}
             </b></h4>
             <div class="d-flex overflow-auto"></div>
             <table>
@@ -93,18 +88,18 @@
                             <td class="border-left border-right border-secondary">{{$course->status}}</td>
                             <td class="border-left border-right border-secondary">missing</td>
                             <td class="border-left border-right border-secondary">{{count($students)}}</td>
-                            <td class="border-left border-right border-secondary">{{$course->offline_results()->distinct()->count()}}</td>
-                            <td class="border-left border-right border-secondary">{{$course->offline_passed($year, request('semester_id'))}}</td>
-                            <td class="border-left border-right border-secondary">{{$course->offline_results()->distinct()->count() - $course->offline_passed($year, request('semester_id'))}}</td>
+                            <td class="border-left border-right border-secondary">{{$course->results()->distinct()->count()}}</td>
+                            <td class="border-left border-right border-secondary">{{$course->passed($year, request('semester_id'))}}</td>
+                            <td class="border-left border-right border-secondary">{{$course->results()->distinct()->count() - $course->passed($year, request('semester_id'))}}</td>
                             <td class="border-left border-right border-secondary">{{
                                 number_format(
-                                    100*$course->offline_passed($year, request('semester_id'))/
-                                    (($course->offline_results()->distinct()->count() == 0) ?
-                                    1 :($course->offline_results()->distinct()->count())) , 2
+                                    100*$course->passed($year, request('semester_id'))/
+                                    (($course->results()->distinct()->count() == 0) ?
+                                    1 :($course->results()->distinct()->count())) , 2
                                     )
                             }}</td>
                             @foreach($grades as $grade)
-                                <td class="border-left border-right border-secondary">{{$course->offline_passed_with_grade($grade->grade, $year, request('semester_id'))}}</td>
+                                <td class="border-left border-right border-secondary">{{$course->passed_with_grade($grade->grade, $year, request('semester_id'))}}</td>
 
                             @endforeach
                         </tr>

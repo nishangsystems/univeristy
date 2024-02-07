@@ -14,7 +14,8 @@ class PayIncome extends Model
         'batch_id',
         'class_id',
         'student_id',
-        'user_id', 'paid_by', 'transaction_id'
+        'user_id', 'paid_by', 
+        'transaction_id', 'amount'
     ];
     protected $connection = 'mysql';
 

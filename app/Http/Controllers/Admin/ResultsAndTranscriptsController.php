@@ -20,10 +20,22 @@ use Illuminate\Support\Facades\Validator;
 
 class ResultsAndTranscriptsController extends Controller{
 
-    public function frequency_distribution()
+    public function frequency_distribution(Request $request)
     {
         # code...
+        // $year = request('year_id');
         $data['title'] = __('text.frequency_distribution');
+        if($request->class_id != null){
+            $class = \App\Models\ProgramLevel::find(request('class_id'));
+            $semester = \App\Models\Semester::find(request('semester_id'));
+            $year = \App\Models\Batch::find(request('year_id'));
+            $data['year'] = request('year_id');
+            $data['students'] = $class->_students($year)->get();
+            $data['grades'] = $class->program->gradingType->grading->sortBy('grade') ?? [];
+            $data['courses'] = $class->class_subjects_by_semester(request('semester_id')) ?? [];
+            $data['base_pass'] = ($class->program->ca_total ?? 0 + $class->program->exam_total ?? 0)*0.5;
+            $data['_title'] = $class->name().' '.$semester->name.' '.__('text.frequency_distribution').' FOR '.$year->name.' '.__('text.academic_year');    
+        }
 
         return view('admin.res_and_trans.fre_dis', $data);
     }
@@ -32,6 +44,18 @@ class ResultsAndTranscriptsController extends Controller{
     {
         # code...
         $data['title'] = __('text.spread_sheet');
+        if($request->class_id != null){
+            $class = \App\Models\ProgramLevel::find(request('class_id'));
+            $semester = \App\Models\Semester::find(request('semester_id'));
+            $year = \App\Models\Batch::find(request('year_id'));
+            $data['year'] = request('year_id');
+            $data['students'] = $class->_students($year->id)->get();
+            $data['grades'] = $class->program->gradingType->grading->sortBy('grade') ?? [];
+            $data['courses'] = $class->class_subjects_by_semester(request('semester_id')) ?? [];
+            $data['base_pass'] = ($class->program->ca_total ?? 0 + $class->program->exam_total ?? 0)*0.5;
+            $data['_title'] = $class->name().' '.$semester->name.' '.$data['title'].' FOR '.$year->name.' '.__('text.academic_year');
+        }
+        // dd($data);
         return view('admin.res_and_trans.spr_sheet', $data);
     }
 

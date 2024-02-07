@@ -43,28 +43,24 @@
                         </tr>
                         @endforeach
                     @else
-
                         @foreach($courses as $k=>$subject)
-                            <tr>
-                                @php($class = \App\Models\ProgramLevel::find($subject->class))
-                                <td>{{ $k+1 }}</td>
-                                <td>{{ $subject->code }}</td>
-                                <td>{{ $subject->name }}</td>
-                                <td>{{$class->program()->first()->name.': LEVEL '.$class->level()->first()->level}}</td>
-                                <td>{{ \App\Models\Campus::find($subject->campus_id)->name ?? '----' }}</td>
-                                <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
-                                <?php /* <td style="float: right;">
-                                    <a class="btn btn-xs btn-primary" href="{{route('user.result', [$subject->id])}}">Result</a>
-                                </td> */
-                                ?>
-                                <td style="float: right;" class="d-flex">
-                                    <a class="btn btn-xs btn-success text-capitalize" href="{{route('course.notification.index', [$subject->id])}}">{{__('text.word_notifications')}}</a> |
-                                    <a class="btn btn-xs btn-primary text-capitalize" href="{{route('user.subject.students', [$subject->class, $subject->id])}}?campus_id={{$subject->campus_id}}">{{__('text.word_students')}}</a> |
-                                    <a class="btn btn-xs btn-success text-capitalize" href="{{route('user.subject.show', [$subject->class, $subject->id])}}">{{__('text.upload_material')}}</a>|
-                                    <a class="btn btn-sm btn-primary" href="{{route('user.class_course.ca.result', [$subject->class, $subject->id])}}"><i class="fa fa-tick"> {{__('text.word_results')}}</i></a>
-                                </td>
-                            </tr>
+                        <tr>
+                            @php($class = \App\Models\ProgramLevel::find($subject->class))
+                            <td>{{ $k+1 }}</td>
+                            <td>{{ $subject->code }}</td>
+                            <td>{{ $subject->name }}</td>
+                            <td>{{$class->program()->first()->name.': LEVEL '.$class->level()->first()->level}}</td>
+                            <td>{{ \App\Models\Campus::find($subject->campus_id)->name ?? '----' }}</td>
+                            <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
+                            <td style="float: right;" class="d-flex">
+                                <a class="btn btn-xs btn-success text-capitalize" href="{{route('course.notification.index', [$subject->id])}}">{{__('text.word_notifications')}}</a> |
+                                <a class="btn btn-xs btn-primary text-capitalize" href="{{route('user.subject.students', [$subject->class, $subject->id])}}?campus_id={{$subject->campus_id}}">{{__('text.word_students')}}</a> |
+                                <a class="btn btn-xs btn-success text-capitalize" href="{{route('user.subject.show', [$subject->class, $subject->id])}}">{{__('text.upload_material')}}</a> |
+                                <a class="btn btn-xs btn-primary" href="{{route('user.result', [$subject->id])}}">Result</a>
+                            </td>
+                        </tr>
                         @endforeach
+
                     @endif
                 </tbody>
             </table>
