@@ -119,17 +119,19 @@ $total_fee_owed = 1;
                 </div>
 
             </div>
-            <div class="infobox border border-dark mx-2 my-1 rounded infobox-purple">
-                <div class="infobox-icon">
-                    <a class="ace-icon fa fa-money"></a>
-                </div>
+            @foreach ($other_incomes as $income)
+                <div class="infobox border border-dark mx-2 my-1 rounded infobox-purple">
+                    <div class="infobox-icon">
+                        <a class="ace-icon fa fa-money"></a>
+                    </div>
 
-                <div class="infobox-data">
-                    <span class="infobox-data-number">{{ number_format($other_incomes) }}</span>
-                    <div class="infobox-content">{{ __('text.other_incomes') }}</div>
-                </div>
+                    <div class="infobox-data">
+                        <span class="infobox-data-number">{{ number_format($income->amount) }}</span>
+                        <div class="infobox-content">{{ $income->name }}</div>
+                    </div>
 
-            </div>
+                </div>
+            @endforeach
         </div>
 
         {{-- FINANCIAL STATISTICS --}}
@@ -199,11 +201,20 @@ $total_fee_owed = 1;
         <div class="">
             <table class="table-stripped table-light">
                 <thead class="border-top border-bottom border-dark bg-dark text-white text-capitalize" style="font-weight: semibold;">
-                    <th class="border-left border-right border-secondary">{{ __('text.sn') }}</th>
-                    <th class="border-left border-right border-secondary">{{ __('text.word_program') }}</th>
-                    <th class="border-left border-right border-secondary">{{ __('text.no_of_students') }}</th>
-                    <th class="border-left border-right border-secondary">{{ __('text.word_males') }}</th>
-                    <th class="border-left border-right border-secondary">{{ __('text.word_females') }}</th>
+                    <tr>
+                        <th colspan="5" class="border-left border-right border-secondary">{{ __('text.sn') }}</th>
+                        <th colspan="{{ count($levels) }}" class="border-left border-right border-secondary text-capitalize">{{ __('text.word_level') }}</th>
+                    </tr>
+                    <tr>
+                        <th class="border-left border-right border-secondary">{{ __('text.sn') }}</th>
+                        <th class="border-left border-right border-secondary">{{ __('text.word_program') }}</th>
+                        <th class="border-left border-right border-secondary">{{ __('text.no_of_students') }}</th>
+                        <th class="border-left border-right border-secondary">{{ __('text.word_males') }}</th>
+                        <th class="border-left border-right border-secondary">{{ __('text.word_females') }}</th>
+                        @foreach ($levels as $level)
+                            <th class="border-left border-right border-secondary">{{ $level->level }}</th>
+                        @endforeach
+                    </tr>
                 </thead>
                 <tbody>
                     @php
@@ -216,6 +227,9 @@ $total_fee_owed = 1;
                             <td class="border-left border-right border-secondary">{{ $program->count() }}</td>
                             <td class="border-left border-right border-secondary">{{ $program->where('gender', 'male')->count() }}</td>
                             <td class="border-left border-right border-secondary">{{ $program->where('gender', 'female')->count() }}</td>
+                            @foreach($program->levels as $key => $level)
+                                <td class="border-left border-right border-secondary">{{ $level }}</td>  
+                            @endforeach
                         </tr>
                     @endforeach
                 </tbody>

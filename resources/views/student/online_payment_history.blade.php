@@ -387,7 +387,7 @@
                             <h4 class="font-weight-bold">{{number_format($item->transaction->amount ?? $item->income->amount)}} FCFA</h4>
                             <span class="font-weight-bolder h5 text-uppercase">{{__('text.paid_on').' '.date('d/m/Y', strtotime($item->transaction->created_at ?? $item->created_at))}}</span>
                             <br>
-                            <span class="font-weight-bolder h6 text-capitalize text-secondary">{{__('text.word_ref').'. '.($item->transaction->financialTrancationId ?? $item->transaction->transaction_id)}}</span>
+                            <span class="font-weight-bolder h6 text-capitalize text-secondary">{{__('text.word_ref').'. '.($item->transaction->financialTrancationId ?? $item->transaction->transaction_id ?? '')}}</span>
                         </div>
                         <button class="btn btn-sm btn-primary" onclick="printDiv('other_printHERE{{$item->id}}')">{{__('text.word_print')}}</button>
                         <!-- create a hidden div for printable markup and print with js on request -->
