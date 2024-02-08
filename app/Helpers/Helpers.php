@@ -415,4 +415,22 @@ class Helpers
         return false;
     }
 
+
+    public function schoolUnitsGetChildrenAtUnitLevel($unit_ids, $unit_level)
+    {
+        # code...
+        $units = SchoolUnits::whereIn('id', $unit_ids);
+        return $this->schoolUnitsGetChildren($units, $unit_level);
+    }
+
+    public function schoolUnitsGetChildren($builder, $unit_level)
+    {
+        # code...
+        if($builder->where('unit_id', $unit_level)->count() > 0){
+            return $builder->get();
+        }
+        $nextStep = $builder->join('school_units as view_xyz', 'view_xyz.parent_id', '=', 'school_units.id')->select('view_xyz.*');
+        return $this->schoolUnitsGetChildren($nextStep, $unit_level);
+    }
+
 }
