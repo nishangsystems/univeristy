@@ -1636,6 +1636,31 @@
             </li>
             <!-- End attaendance management -->
             @endif
+
+            
+            @if (\Auth::user()->headOfSchoolFor()->count() > 0)
+            <!-- Attendance management -->
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                    <span class="menu-text">
+						{{__('text.head_of_school')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.headOfSchools.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_schools')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <!-- End attaendance management -->
+            @endif
         
             {{-- @if (\Auth::user()->hasPermissionTo('manage_documentation'))
             <li>

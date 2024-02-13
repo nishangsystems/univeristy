@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\BioDataDownloadController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
@@ -543,6 +544,18 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::prefix('bio_data')->name('bio_data.')->group(function(){
         Route::get("download", [BioDataDownloadController::class, 'initialize'])->name('download');
         Route::post("download", [BioDataDownloadController::class, 'download']);
+    });
+
+    Route::prefix('headOfSchools')->name('headOfSchools.')->group(function(){
+        Route::get('index', [Admin\HeadOfSchoolController::class, 'schools'])->name('index');
+        Route::get('departments/{school_id}', [Admin\HeadOfSchoolController::class, 'departments'])->name('departments');
+        Route::get('programs/{school_id}/{department_id?}', [Admin\HeadOfSchoolController::class, 'programs'])->name('programs');
+        Route::get('classes/{school_id}/{department_id?}/{program_id?}', [Admin\HeadOfSchoolController::class, 'classes'])->name('classes');
+        Route::get('students/{school_id}/{level_id?}', [Admin\HeadOfSchoolController::class, 'school_students'])->name('students');
+        Route::get('department/students/{department_id}/{level_id?}', [Admin\HeadOfSchoolController::class, 'department_students'])->name('department.students');
+        Route::get('program/students/{program_id}/{level_id?}', [Admin\HeadOfSchoolController::class, 'program_students'])->name('program.students');
+        Route::get('class/students/{class_id}', [Admin\HeadOfSchoolController::class, 'class_students'])->name('class.students');
+
     });
 });
 

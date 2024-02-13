@@ -66,23 +66,54 @@ class HomeController  extends Controller
         $data['paid_fee'] = $payments->sum('amount') - $payments->sum('debt');
         $data['owed_fee'] = $data['expected_fee'] - $data['paid_fee'];
         $data['levels'] = $levels;
-        /*$auth_user = auth()->user();
-        $schools = $auth_user->schools;
+
+        $user = \Auth()->user();
+        $campus = $user->campus_id;
+        $data['campus'] = $campus;
+        $data['user'] = $user;
+        $data['year'] = $year;
+        
+        $auth_user = auth()->user();
+        $schools = $auth_user->headOfSchoolFor(1)->get();
+        // $schools = SchoolUnits::where('id', '<=', '2')->get();
+        
         if($schools->count() > 0){
-            $programs = Helpers::instance()->schoolUnitsGetChildrenAtUnitLevel($schools->pluck('id')->toArray(), 4);
+            $data['is_head_of_school'] = true;
+            $programs = Helpers::instance()->schoolPrograms($schools->pluck('id')->toArray());
+            $program_students = SchoolUnits::whereIn('school_units.id', $programs->pluck('id')->toArray())->join('program_levels', 'program_levels.program_id', '=', 'school_units.id')
+                ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')->where('student_classes.year_id', $year)
+                ->join('students', 'students.id', '=', 'student_classes.student_id')
+                ->where(function($query)use($campus_id){
+                    $campus_id != null ? $query->where('students.campus_id', $campus_id) : null;
+                })->distinct()->get(['school_units.id', 'school_units.name as program_name', 'school_units.id as program', 'students.id as student_id', 'students.gender', 'program_levels.level_id'])->groupBy('program')->each(function($rec)use($levels){
+                    // return $rec;
+                    $rec->levels = $levels->map(function($level)use($rec){
+                        return $rec->where('level_id', $level->id)->count();
+                    });
+                });
+            
             $students = SchoolUnits::whereIn('school_units.id', $programs->pluck('id')->toArray())->join('program_levels', 'program_levels.program_id', '=', 'school_units.id')
                 ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')->where('student_classes.year_id', $year)
                 ->join('students', 'students.id', '=', 'student_classes.student_id')
                 ->where(function($query)use($campus_id){
                     $campus_id != null ? $query->where('students.campus_id', $campus_id) : null;
-                })->distinct()->get(['school_units.id', 'school_units.name as program_name', 'school_units.id as program', 'students.id as student_id', 'students.gender', 'program_levels.level_id'])->groupBy('program')->each(function($rec)use($levels){
-                    // return $rec;
-                    $rec->levels = $levels->map(function($level)use($rec){
-                        return $rec->where('level_id', $level->id)->count();
-                    });
-                });
-        }else{*/
-            $students = SchoolUnits::where('school_units.unit_id', 4)->join('program_levels', 'program_levels.program_id', '=', 'school_units.id')
+                })->distinct()->get(['students.*']);
+
+            
+            $data['n_programs'] = $programs->count();
+            $data['sms_total'] = Config::where('year_id', $year)->first()->sms_sent;
+            $data['n_teachers'] = User::where('type', 'teacher')
+                ->join('teachers_subjects', 'teachers_subjects.teacher_id',  '=', 'users.id')
+                ->where(function($query)use($campus_id){
+                    $campus_id != null ? $query->where('teachers_subjects.campus_id', $campus_id) : null;
+                })
+                ->join('program_levels', 'program_levels.id', '=', 'teachers_subjects.class_id')
+                ->whereIn('program_levels.program_id', $programs->pluck('id')->toArray())
+                ->select('users.*')->distinct()->count();
+
+            $data['n_teachers'] = User::where('type', 'teacher')->count(); 
+        }else{
+            $program_students = SchoolUnits::where('school_units.unit_id', 4)->join('program_levels', 'program_levels.program_id', '=', 'school_units.id')
                 ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')->where('student_classes.year_id', $year)
                 ->join('students', 'students.id', '=', 'student_classes.student_id')
                 ->where(function($query)use($campus_id){
@@ -93,9 +124,27 @@ class HomeController  extends Controller
                         return $rec->where('level_id', $level->id)->count();
                     });
                 });
-        /*}*/
+
+            $students = StudentClass::where('year_id', $year)->join('students', 'students.id', '=', 'student_classes.student_id')
+                ->where(function($query)use($campus){
+                    $campus != null ? $query->where('campus_id', $campus) : null;
+                })->distinct()->get(['students.*']);
+
+                
+            $data['n_programs'] = SchoolUnits::where('unit_id', 4)->count();
+            $data['sms_total'] = Config::where('year_id', $year)->first()->sms_sent;
+            $data['n_teachers'] = User::where('type', 'teacher')->count();
+
+        }
         // dd($students);
-        $data['programs'] = $students;
+        $data['active_students'] = $students->where('active', 1);
+        $data['inactive_students'] = $students->where('active', 0);
+        $data['total_fee_expected'] = 1;
+        $data['total_fee_paid'] = 1;
+        $data['total_fee_owed'] = 1;
+
+        $data['students'] = $students;
+        $data['programs'] = $program_students;
         $data['recovered_debt'] = Payments::where('batch_id', '!=', $year)->where('payment_year_id', $year)->sum('amount');
         return view('admin.dashboard', $data);
     }

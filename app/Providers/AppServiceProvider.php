@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Helpers\Helpers;
+use App\Services\HeadOfSchoolService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +17,9 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        app()->bind(HeadOfSchoolService::class, function($app){
+            return new HeadOfSchoolService(Helpers::instance()->getCurrentAccademicYear());
+        });
     }
 
     /**

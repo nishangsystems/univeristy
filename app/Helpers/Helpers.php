@@ -416,21 +416,41 @@ class Helpers
     }
 
 
-    public function schoolUnitsGetChildrenAtUnitLevel($unit_ids, $unit_level)
+    public function schoolPrograms($school_ids)
     {
-        # code...
-        $units = SchoolUnits::whereIn('id', $unit_ids);
-        return $this->schoolUnitsGetChildren($units, $unit_level);
+        try {
+            //code...
+            # code...
+            $units = SchoolUnits::whereIn('school_units.id', $school_ids)
+                ->join('school_units as school_units_level2', 'school_units_level2.parent_id', '=', 'school_units.id')
+                ->join('school_units as school_units_level3', 'school_units_level3.parent_id', '=', 'school_units_level2.id')
+                ->get(['school_units_level3.*']);
+            
+            // dd($units);
+            if($units->where('unit_id', 4)->count() > 0)
+                return $units;
+            else
+                 return SchoolUnits::whereIn('school_units.id', $school_ids)
+                 ->join('school_units as school_units_level2', 'school_units_level2.parent_id', '=', 'school_units.id')
+                 ->join('school_units as school_units_level3', 'school_units_level3.parent_id', '=', 'school_units_level2.id')
+                 ->join('school_units as school_units_level4', 'school_units_level4.parent_id', '=', 'school_units_level3.id')
+                 ->get(['school_units_level4.*']);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return null;
+            // dd($th->getMessage());
+        }
     }
 
-    public function schoolUnitsGetChildren($builder, $unit_level)
+    public function schoolUnitsGetChildren($builder, $unit_level, $view='school_units')
     {
         # code...
-        if($builder->where('unit_id', $unit_level)->count() > 0){
+        if($builder->where($view.'.unit_id', $unit_level)->count() > 0){
             return $builder->get();
         }
-        $nextStep = $builder->join('school_units as view_xyz', 'view_xyz.parent_id', '=', 'school_units.id')->select('view_xyz.*');
-        return $this->schoolUnitsGetChildren($nextStep, $unit_level);
+        $random_timed = 'view'.random_int(100, 200).'T'.round(sqrt((time()/10000)*random_int(3000,10000)));
+        $nextStep = $builder->join('school_units as '.$random_timed, $random_timed.'.parent_id', '=', 'school_units.id')->select($random_timed.'.*');
+        return $this->schoolUnitsGetChildren($nextStep, $unit_level, $random_timed);
     }
 
 }
