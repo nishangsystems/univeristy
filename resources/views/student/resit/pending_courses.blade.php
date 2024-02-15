@@ -9,16 +9,20 @@
             <th class=" border-left border-right border-light text-dark">{{__('text.course_title')}}</th>
             <th class=" border-left border-right border-light text-dark">{{__('text.credit_value')}}</th>
             <th class=" border-left border-right border-light text-dark">{{__('text.word_status')}}</th>
+            <th class=" border-left border-right border-light text-dark">{{__('text.ca_score')}}</th>
+            <th class=" border-left border-right border-light text-dark">{{__('text.exam_score')}}</th>
         </thead>
         <tbody>
             @php($k = 1)
             @foreach ($courses as $course)
                 <tr class="text-capitalize bg-light border-bottom border-white">
                     <td class="border-left border-right border-white">{{$k++}}</td>
-                    <td class="border-left border-right border-white">{{$course->subject->code}}</td>
-                    <td class="border-left border-right border-white">{{$course->subject->name}}</td>
-                    <td class="border-left border-right border-white">{{$course->subject->coef}}</td>
-                    <td class="border-left border-right border-white">{{$course->subject->status}}</td>
+                    <td class="border-left border-right border-white">{{$course->code}}</td>
+                    <td class="border-left border-right border-white">{{$course->name}}</td>
+                    <td class="border-left border-right border-white">{{$course->coef}}</td>
+                    <td class="border-left border-right border-white">{{$course->status}}</td>
+                    <td class="border-left border-right border-white">{{$course->ca_score}}</td>
+                    <td class="border-left border-right border-white">{{$course->exam_score}}</td>
                 </tr>
             @endforeach
         </tbody>
