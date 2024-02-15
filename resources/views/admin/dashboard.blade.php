@@ -1,23 +1,5 @@
 @extends('admin.layout')
 @section('section')
-@php
-$campus = auth()->user()->campus_id;
-$user = \Auth()->user();
-$year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-$students = \App\Models\StudentClass::where('year_id', $year)->join('students', 'students.id', '=', 'student_classes.student_id')
-    ->where(function($query)use($campus){
-        $campus != null ? $query->where('campus_id', $campus) : null;
-    })->distinct()->get(['students.*']);
-$active_students = $students->where('active', 1);
-$inactive_students = $students->where('active', 0);
-$n_programs = \App\Models\SchoolUnits::where('unit_id', 4)->count();
-$sms_total = \App\Models\Config::where('year_id', $year)->first()->sms_sent;
-$n_teachers = \App\Models\User::where('type', 'teacher')->count();
-$total_fee_expected = 1;
-$total_fee_paid = 1;
-$total_fee_owed = 1;
-// dd($n_teachers);
-@endphp
 <div>
     <div>
         {{-- <div class="space-6"></div> --}}
@@ -119,82 +101,87 @@ $total_fee_owed = 1;
                 </div>
 
             </div>
-            @foreach ($other_incomes as $income)
-                <div class="infobox border border-dark mx-2 my-1 rounded infobox-purple">
+            @if(!(isset($is_head_of_school) and $is_head_of_school == 1))
+                @foreach ($other_incomes as $income)
+                    <div class="infobox border border-dark mx-2 my-1 rounded infobox-purple">
+                        <div class="infobox-icon">
+                            <a class="ace-icon fa fa-money"></a>
+                        </div>
+
+                        <div class="infobox-data">
+                            <span class="infobox-data-number">{{ number_format($income->amount) }}</span>
+                            <div class="infobox-content">{{ $income->name }}</div>
+                        </div>
+
+                    </div>
+                @endforeach
+            @endif
+        </div>
+
+
+        @if(!(isset($is_head_of_school) and $is_head_of_school == 1))
+            {{-- FINANCIAL STATISTICS --}}
+            <div class="w-100 py-3 text-capitalize" style="font-size: larger; font-weight: bold; color: gray !important;">{{ __('text.fee_information') }}</div>
+            <div class=" text-capitalize">
+                <div class="infobox border border-dark mx-2 my-1 rounded infobox-blue2">
                     <div class="infobox-icon">
-                        <a class="ace-icon fa fa-money"></a>
+                        <a class="ace-icon fa fa-money fa-spin"></a>
+                    </div>
+                    <div class="infobox-data">
+                        <span class="infobox-text">{{ number_format($expected_fee??0) }}</span>
+
+                        <div class="infobox-content">
+                            {{ __('text.total_fee_expected') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="infobox border border-dark mx-2 my-1 rounded infobox-green">
+
+                    <div class="infobox-icon">
+                        <i class="ace-icon fa fa-money fa-spin"></i>
                     </div>
 
                     <div class="infobox-data">
-                        <span class="infobox-data-number">{{ number_format($income->amount) }}</span>
-                        <div class="infobox-content">{{ $income->name }}</div>
+                        <span class="infobox-text">{{ number_format($paid_fee??0) }}</span>
+
+                        <div class="infobox-content">
+                            {{ __('text.total_fee_paid') }}
+                        </div>
+                    </div>
+                    <div class="stat stat-success mt-3">{{ $expected_fee == 0 ? 0 : number_format(100*$paid_fee/$expected_fee, 2) }}%</div>
+                </div>
+
+                <div class="infobox border border-dark mx-2 my-1 text-danger rounded infobox-red">
+                    <div class="infobox-icon">
+                        <i class="ace-icon fa fa-money fa-spin"></i>
                     </div>
 
-                </div>
-            @endforeach
-        </div>
+                    <div class="infobox-data">
+                        <span class="infobox-text">{{ number_format($owed_fee) }}</span>
 
-        {{-- FINANCIAL STATISTICS --}}
-        <div class="w-100 py-3 text-capitalize" style="font-size: larger; font-weight: bold; color: gray !important;">{{ __('text.fee_information') }}</div>
-        <div class=" text-capitalize">
-            <div class="infobox border border-dark mx-2 my-1 rounded infobox-blue2">
-                <div class="infobox-icon">
-                    <a class="ace-icon fa fa-money fa-spin"></a>
+                        <div class="infobox-content">
+                            {{ __('text.total_fee_owed') }}
+                        </div>
+                    </div>
+                    <div class="stat stat-danger mt-3" style="color: red !important;">{{ $expected_fee == 0 ? 0 : number_format(100*$owed_fee/$expected_fee, 2) }}%</div>
                 </div>
-                <div class="infobox-data">
-                    <span class="infobox-text">{{ number_format($expected_fee??0) }}</span>
 
-                    <div class="infobox-content">
-                        {{ __('text.total_fee_expected') }}
+                <div class="infobox border border-dark mx-2 my-1 rounded infobox-blue2">
+                    <div class="infobox-icon">
+                        <a class="ace-icon fa fa-money fa-spin"></a>
+                    </div>
+                    <div class="infobox-data">
+                        <span class="infobox-text">{{ number_format($recovered_debt??0) }}</span>
+
+                        <div class="infobox-content">
+                            {{ __('text.debts_recovered') }}
+                        </div>
                     </div>
                 </div>
+            
             </div>
-
-            <div class="infobox border border-dark mx-2 my-1 rounded infobox-green">
-
-                <div class="infobox-icon">
-                    <i class="ace-icon fa fa-money fa-spin"></i>
-                </div>
-
-                <div class="infobox-data">
-                    <span class="infobox-text">{{ number_format($paid_fee??0) }}</span>
-
-                    <div class="infobox-content">
-                        {{ __('text.total_fee_paid') }}
-                    </div>
-                </div>
-                <div class="stat stat-success mt-3">{{ $expected_fee == 0 ? 0 : number_format(100*$paid_fee/$expected_fee, 2) }}%</div>
-            </div>
-
-            <div class="infobox border border-dark mx-2 my-1 text-danger rounded infobox-red">
-                <div class="infobox-icon">
-                    <i class="ace-icon fa fa-money fa-spin"></i>
-                </div>
-
-                <div class="infobox-data">
-                    <span class="infobox-text">{{ number_format($owed_fee) }}</span>
-
-                    <div class="infobox-content">
-                        {{ __('text.total_fee_owed') }}
-                    </div>
-                </div>
-                <div class="stat stat-danger mt-3" style="color: red !important;">{{ $expected_fee == 0 ? 0 : number_format(100*$owed_fee/$expected_fee, 2) }}%</div>
-            </div>
-
-            <div class="infobox border border-dark mx-2 my-1 rounded infobox-blue2">
-                <div class="infobox-icon">
-                    <a class="ace-icon fa fa-money fa-spin"></a>
-                </div>
-                <div class="infobox-data">
-                    <span class="infobox-text">{{ number_format($recovered_debt??0) }}</span>
-
-                    <div class="infobox-content">
-                        {{ __('text.debts_recovered') }}
-                    </div>
-                </div>
-            </div>
-           
-        </div>
+        @endif
 
         {{-- PROGRAM STATISTICS--}}
         <div class="w-100 py-3 text-capitalize" style="font-size: larger; font-weight: bold; color: gray !important;">{{ __('text.program_information') }}</div>

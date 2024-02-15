@@ -134,4 +134,10 @@ class SchoolUnits extends Model
     {
         return $this->resit_cost == null;
     }
+
+    public function schoolHeadedBy()
+    {
+        # code...
+        return $this->belongsToMany(User::class, HeadOfSchool::class, 'school_unit_id', 'user_id')->where('active', 1);
+    }
 }

@@ -93,4 +93,10 @@ class User extends Authenticatable
         ])->count() > 0;
     }
 
+    public function headOfSchoolFor($active = !null)
+    {
+        # code...
+        return $this->belongsToMany(SchoolUnits::class, HeadOfSchool::class, 'user_id', 'school_unit_id')->where('status', $active);
+    }
+
 }

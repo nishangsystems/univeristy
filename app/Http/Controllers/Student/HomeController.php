@@ -2280,4 +2280,28 @@ class HomeController extends Controller
         return view('student.momo.processing', $data);
     }
 
+    public function pending_courses(){
+
+        try{
+            $student = auth('student')->user();
+            // get max fail mark
+            $max_fail_score = $student->_class()->program->gradingType->grading()->where('status', 0)->orderBy('upper', 'desc')->first()->upper??50;
+            $results = $student->result()->groupBy('subject_id')->orderBy(DB::raw("`ca_score` + `exam_score`"), 'desc')->distinct()->get();
+            $failed_results = $results->map(function($result)use($max_fail_score){
+                $highest_result = $result->first();
+                return ($highest_result->ca_score + $highest_result->exam_score) <= $max_fail_score ? $highest_result : null;
+            });
+            $filtered_failed_results = $failed_results->filter(function($rec){
+                return $rec != null;
+            });
+            $failed_courses = Subjects::whereIn('id', $filtered_failed_results)->orderBy('name')->get();
+    
+            $data['title'] = "Pending Resit Courses";
+            $data['courses'] = $failed_courses;
+            return view('student.resit.pending_courses', $data);
+        }catch(Throwable $th){
+            return redirect(route('student.home'))->with('error', $th->getMessage());
+        }
+    }
+
 }

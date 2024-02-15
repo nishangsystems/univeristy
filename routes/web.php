@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\BioDataDownloadController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
@@ -276,7 +277,6 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     });
 
     Route::get('users/{user_id}/subjects', 'Admin\UserController@createSubject')->name('users.subjects.add');
-    Route::get('users/{user_id}/subjects', 'Admin\UserController@createSubject')->name('users.subjects.add');
     Route::delete('users/{user_id}/subjects', 'Admin\UserController@dropSubject')->name('users.subjects.drop');
     Route::post('users/{user_id}/subjects', 'Admin\UserController@saveSubject')->name('users.subjects.save');
 
@@ -293,6 +293,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('create/{teacher_id}', [AdminHomeController::class, 'save_wages']);
         Route::get('drop/{teacher_id}/{wage_id}/drop', [AdminHomeController::class, 'drop_wages'])->name('drop');
     });
+    Route::get('users/password/reset', [AdminHomeController::class, 'abs_password_reset'])->name('users.reset_password');
+    Route::post('users/password/reset', [AdminHomeController::class, 'abs_reset_password']);
 
 
     Route::resource('users', 'Admin\UserController');
@@ -544,6 +546,24 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get("download", [BioDataDownloadController::class, 'initialize'])->name('download');
         Route::post("download", [BioDataDownloadController::class, 'download']);
     });
+
+    Route::prefix('headOfSchools')->name('headOfSchools.')->group(function(){
+        Route::get('users', [Admin\HeadOfSchoolController::class, 'users'])->name('users');
+        Route::get('index', [Admin\HeadOfSchoolController::class, 'schools'])->name('index');
+        Route::get('departments/{school_id}', [Admin\HeadOfSchoolController::class, 'departments'])->name('departments');
+        Route::get('programs/{school_id}/{department_id?}', [Admin\HeadOfSchoolController::class, 'programs'])->name('programs');
+        Route::get('classes/{school_id}/{department_id?}/{program_id?}', [Admin\HeadOfSchoolController::class, 'classes'])->name('classes');
+        Route::get('students/{school_id}/{level_id?}', [Admin\HeadOfSchoolController::class, 'school_students'])->name('students');
+        Route::get('department/students/{department_id}/{level_id?}', [Admin\HeadOfSchoolController::class, 'department_students'])->name('department.students');
+        Route::get('program/students/{program_id}/{level_id?}', [Admin\HeadOfSchoolController::class, 'program_students'])->name('program.students');
+        Route::get('class/students/{class_id}', [Admin\HeadOfSchoolController::class, 'class_students'])->name('class.students');
+        Route::get('setStatus/{hos_id}/{status}', [Admin\HeadOfSchoolController::class, 'set_status'])->name('setStatus');
+        Route::get('delete/{hos_id}', [Admin\HeadOfSchoolController::class, 'delete'])->name('delete');
+        Route::get('create', [Admin\HeadOfSchoolController::class, 'create'])->name('create');
+        Route::post('create', [Admin\HeadOfSchoolController::class, 'save']);
+
+    });
+
 });
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {
@@ -718,6 +738,7 @@ Route::prefix('student')->name('student.')->middleware(['isStudent'])->group(fun
     Route::post('resit/registration/payment', 'Student\HomeController@resit_payment')->name('resit.registration.payment');
     Route::post('resit/registration/pay', 'Student\HomeController@resit_pay')->name('resit.registration.pay');
     Route::get('resit/registered_courses', 'Student\HomeController@registered_resit_courses')->name('resit.registered_courses');
+    Route::get('resit/pending_courses', 'Student\HomeController@pending_courses')->name('resit.pending_courses');
     Route::get('resit/index', 'Student\HomeController@resit_index')->name('resit.index');
     Route::get('resit/download/{resit_id}', 'Student\HomeController@resit_download')->name('resit.download_courses');
     Route::get('registered_courses/{year?}/{semester?}/{student?}', 'Student\HomeController@registerd_courses')->name('registered_courses');
