@@ -35,6 +35,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use MongoDB\Driver\Session;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Hash;
+
 // use Khill\Lavacharts\Laravel\LavachartsFacade as Lava;
 
 use function PHPUnit\Framework\returnSelf;
@@ -754,6 +756,25 @@ class HomeController  extends Controller
         $period = Period::find($period_id);
         $period->delete();
         return back()->with('success', 'Record successfully deleted');
+    }
+
+    public function abs_password_reset(Request $request){
+        $data['title'] = "Reset user password";
+        return view('admin.user.reset_password', $data);
+    }
+
+    public function abs_reset_password(Request $request){
+        $validity = Validator::make($request->all(), ['user_id'=>'required']);
+        if($validity->fails()){
+            return back()->with('error', $validity->errors()->first());
+        }
+
+        $user = User::find($request->user_id);
+        if($user != null){
+            $user->update(['password'=>Hash::make('12345678')]);
+            return back()->with('success', "User password reset to 12345678");
+        }
+        return back()->with('error', "User record not found");
     }
 
 }

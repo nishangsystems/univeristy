@@ -875,5 +875,10 @@ return [
     'ends_at'=>'ends at',
     'word_periods'=>'periods',
     'student_data'=>'student data',
+    'word_schools'=>'schools',
+    'head_of_school'=>'head of school',
+    'word_departments'=>'departments',
+    'new_head_of_school'=>'new head of school',
+    'pending_courses'=>'pending courses', 
     ''
 ];

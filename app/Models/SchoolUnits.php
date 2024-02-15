@@ -138,9 +138,6 @@ class SchoolUnits extends Model
     public function schoolHeadedBy()
     {
         # code...
-        if($this->uint_id == 1){
-            return $this->belongsToMany(User::class, HeadOfSchool::class, 'user_id', 'school_unit_id')->where('active', 1);
-        }
-        return null;
+        return $this->belongsToMany(User::class, HeadOfSchool::class, 'school_unit_id', 'user_id')->where('active', 1);
     }
 }

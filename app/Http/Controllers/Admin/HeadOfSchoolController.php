@@ -16,6 +16,14 @@ class HeadOfSchoolController extends Controller
         $this->headOfSchoolService = $headOfSchoolService;
     }
 
+    public function users()
+    {
+        # code...
+        $data['title'] = "Heads Of  Schools (HOSs)";
+        $data['users'] = $this->headOfSchoolService->users();
+        return view('admin.head_of_school.users', $data);
+    }
+
     public function schools()
     {
         # code...
@@ -138,10 +146,10 @@ class HeadOfSchoolController extends Controller
             $school = $this->headOfSchoolService->getSchoolUnitById($school_id);
             $data['school'] = $school;
     
-            if($program != null)
+            if(isset($program))
             $data['title'] = "Classes Under ".$program->name??'';
     
-            elseif($department != null)
+            elseif(isset($department))
             $data['title'] = "Classes Under Department of ".$department->name??'';
             else
             $data['title'] = "Classes Under School of ".$school->name??'';
@@ -168,5 +176,47 @@ class HeadOfSchoolController extends Controller
             return back()->with('error', $th->getMessage());
         }
 
+    }
+
+    public function set_status($hos_id, $status){
+        try{
+            $this->headOfSchoolService->update($hos_id, ['status'=>$status]);
+            return back()->with('success', 'Done');
+        }catch(\Throwable $th){
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function delete($hos_id){
+        try{
+            $this->headOfSchoolService->delete($hos_id);
+            return back()->with('success', 'Done');
+        }catch(\Throwable $th){
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function create(){
+        try{
+            $data['title'] = "Create Head of School";
+            $data['schools'] = $this->headOfSchoolService->allSchools();
+            if(request('school_unit_id') != null){
+                $school = $this->headOfSchoolService->getSchoolUnitById(request('school_unit_id'));
+                $data['hos'] = $school->schoolHeadedBy->first();
+            }
+                
+            return view('admin.head_of_school.create', $data);
+        }catch(\Throwable $th){
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function save(Request $request){
+        try{
+            $this->headOfSchoolService->save($request->all());
+            return back()->with('success', 'Done');
+        }catch(\Throwable $th){
+            return back()->with('error', $th->getMessage());
+        }
     }
 }
