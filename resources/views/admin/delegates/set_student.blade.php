@@ -15,26 +15,7 @@
                 <th></th>
             </thead>
             <tbody>
-                @php
-                    $k = 1;
-                @endphp
-                @foreach ($delegates as $delegate)
-                    <tr>
-                        <td>{{ $k++ }}</td>
-                        <td>{{ $delegate->year->name }}</td>
-                        <td>{{ $delegate->campus->name }}</td>
-                        <td>{{ $delegate->class->name }}</td>
-                        <td>{{ $delegate->student->name }}</td>
-                        <td>{{ $delegate->student->matric }}</td>
-                        <td>
-                            <form method="post" action="{{ route('admin.delegates.update', $delegate->id) }}">
-                                @csrf
-                                <input type="hidden" name="status", value="{{ $delegate->status == 1 ? 0 : 1 }}">
-                                <button type="submit" class="btn btn-sm rounded btn-warning">@lang('text.change_status')</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
+                
             </tbody>
         </table>
     </div>

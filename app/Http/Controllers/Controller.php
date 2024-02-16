@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use App\Http\Controllers\SMS\Helpers as SMSHelpers;
 use App\Models\Batch;
+use App\Models\Campus;
 use App\Services\FocusTargetSms;
 use App\Models\CampusProgram;
 use App\Models\Charge;
@@ -87,20 +88,14 @@ class Controller extends BaseController
     }
     public static function sorted_campus_program_levels($campus)
     {
-        $pls = [];
         # code...
-        $program_level_ids = CampusProgram::where(['campus_id'=>$campus])->pluck('program_level_id');
-        foreach (\App\Models\ProgramLevel::whereIn('id', $program_level_ids)->get() as $key => $value) {
-            # code...
-            $pls[] = [
-                'id' => $value->id,
-                'level_id'=>$value->level_id,
-                'program_id'=>$value->program_id,
-                'name' => $value->program()->first()->name.': LEVEL '.$value->level()->first()->level
-            ];
-        }
-        $pls = collect($pls)->sortBy('si');
-        return $pls;
+        $campus = Campus::find($campus);
+        $pls = $campus->programs()->get()
+        ->map(function($cl){
+            $cl->name = $cl->name();
+            return $cl;
+        })->sortBy('name');
+        return response($pls);
     }
 
     public function registration(){

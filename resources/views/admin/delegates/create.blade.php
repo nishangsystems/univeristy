@@ -28,12 +28,12 @@
             <div class="row my-3 py-1">
                 <label class="col-md-3 text-capitalize pl-4">@lang('text.word_class') :</label>
                 <div class="col-md-9">
-                    <select class="form-control rounded" name="class_id" required>
+                    <select class="form-control rounded" name="class_id" required id="class_selection_field">
                         <option></option>
                     </select>
                 </div>
             </div>
-            <div class="d-flex justify-content-end py-3 px-1">
+            <div class="d-flex justify-content-end py-3 px-1 hidden" id="submit_box">
                 <button class="btn btn-sm btn-primary rounded" type="submit">@lang('text.word_next')</button>
             <div>
         </form>
@@ -46,7 +46,16 @@
             let url = "{{ route('campus.program_levels', '__CID__') }}".replace('__CID__', campus);
             $.ajax({
                 method: 'get', url: url, success: function(data){
+                    let html = `<option></option>`;
                     console.log(data);
+                    for (const key in data) {
+                        let item = data[key];
+                        console.log(item);
+                        html += `<option value="${item.id}">${item.name}</option>`;
+                    }
+                    console.log(html);
+                    $('#class_selection_field').html(html);
+                    $('#submit_box').removeClass('hidden');
                 }
             });
         }

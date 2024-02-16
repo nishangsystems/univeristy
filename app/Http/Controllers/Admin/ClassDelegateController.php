@@ -31,25 +31,13 @@ class ClassDelegateController extends Controller
     }
         
 
-    public function getCampusClasses(Request $request)
-    {
-        # code...
-        $campus_id = $request->campus_id;
-        $campus = Campus::find('name');
-        if($campus != null){
-            return $campus->programs;
-        }
-        return collect();
-    }
-
-
     public function create(Request $request)
     {
         # code...
         try{
             $data['title'] = "Create Class Delegate";
-            $data['campus'] = Campus::orderBy('name')->get();
-            $data['year'] = Batch::all();
+            $data['campuses'] = Campus::orderBy('name')->get();
+            $data['years'] = Batch::all();
             return view('admin.delegates.create', $data);
         }catch(\Throwable $th){
             return back()->with('error', $th->getMessage());
@@ -62,7 +50,7 @@ class ClassDelegateController extends Controller
         # code...
         try{
             $delegate = $this->classDelegateService->store($request->all());
-            $data['title'] =  "Create Class Delegate for ".$delegate->class->name().', '.$delegate->campus->name.' | '.$delegate->year->name;
+            $data['title'] =  "Create Class Delegate for ".$delegate->class->name().', '.$delegate->campus->name??''.' | '.$delegate->year->name??'';
             return view('admin.delegates.set_student', $data);
         }catch(\Throwable $th){
             session()->flash('error', $th->getMessage());
