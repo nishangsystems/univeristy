@@ -201,9 +201,9 @@ class ProgramController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'type' => 'required',
-            'degree_id'=>'required',
-            'background_id'=>'required',
-            'grading_type_id'=>'required',
+            // 'degree_id'=>'required',
+            // 'background_id'=>'required',
+            // 'grading_type_id'=>'required',
         ]);
 
         DB::beginTransaction();
@@ -220,7 +220,7 @@ class ProgramController extends Controller
             $unit->save();
             DB::commit();
 
-            return redirect()->to(route('admin.units.index', [$unit->parent_id]))->with('success', __('text.word_done'));
+            return redirect()->to($unit->parent_id ? route('admin.units.index', [$unit->parent_id]) : route('admin.sections'))->with('success', __('text.word_done'));
         } catch (\Exception $e) {
             DB::rollback();
             echo ($e);

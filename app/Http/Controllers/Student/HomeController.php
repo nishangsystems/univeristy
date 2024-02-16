@@ -2285,17 +2285,26 @@ class HomeController extends Controller
         try{
             $student = auth('student')->user();
             // get max fail mark
-            $max_fail_score = $student->_class()->program->gradingType->grading()->where('status', 0)->orderBy('upper', 'desc')->first()->upper??50;
-            $results = $student->result()->groupBy('subject_id')->orderBy(DB::raw("`ca_score` + `exam_score`"), 'desc')->distinct()->get();
-            $failed_results = $results->map(function($result)use($max_fail_score){
-                $highest_result = $result->first();
-                return ($highest_result->ca_score + $highest_result->exam_score) <= $max_fail_score ? $highest_result : null;
+            $max_fail_score = intval($student->_class()->program->gradingType->grading()->where('status', 0)->orderBy('upper', 'desc')->first()->upper??49);
+            $results = $student->result()->get()
+                ->sortBy(function($item){ return $item->ca_score + $item->exam_score; }, SORT_REGULAR, true)
+                ->groupBy('subject_id')
+                ->map(function($coll){return $coll->first();})
+                ->filter(function($item)use($max_fail_score){ 
+                    return ($item->ca_score + $item->exam_score) <= $max_fail_score; 
+                });
+            // $results = $student->result()->groupBy('subject_id')->orderBy(DB::raw("`ca_score` + `exam_score`"), 'desc')->distinct()->get();
+            // dd($results);
+            
+           
+            $failed_courses = Subjects::whereIn('id', $results->pluck('subject_id')->toArray())->orderBy('name')->get()->map(function($record)use($results){
+                $result = $results->where('subject_id', $record->id)->first();
+                $record->ca_score = $result->ca_score;
+                $record->exam_score = $result->exam_score;
+                return $record;
             });
-            $filtered_failed_results = $failed_results->filter(function($rec){
-                return $rec != null;
-            });
-            $failed_courses = Subjects::whereIn('id', $filtered_failed_results)->orderBy('name')->get();
     
+            // dd($failed_courses);
             $data['title'] = "Pending Resit Courses";
             $data['courses'] = $failed_courses;
             return view('student.resit.pending_courses', $data);
