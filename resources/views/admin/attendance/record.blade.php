@@ -21,7 +21,8 @@
                         <input name="subject_id" value="{{$subject->id}}" hidden>
                         <input value="{{$subject->name}} [ {{$subject->code}} ]" type="text" class="form-control">
                     </div>
-                    <div class="py-1">
+
+                    <div class="py-1" id="instant-record">
                         <label class="text-capitalize pb-1">{{__('text.check_in')}}:</label>
                         <input value="{{$time}}" type="datetime-local" name="check_in" class="form-control">
                     </div>

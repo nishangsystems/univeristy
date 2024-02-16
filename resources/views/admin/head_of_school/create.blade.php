@@ -71,7 +71,7 @@
                     console.log(data);
                     let html = ''; 
                     let k = 1;
-                    data.users.foreach(user=>{
+                    data.users.forEach(user=>{
                         html += `
                             <tr>
                                 <td>${k++}</td>

@@ -48,19 +48,18 @@
                                         <a class="btn btn-xs btn-primary" href="{{route('admin.students.index', [$unit->id])}}">{{trans_choice('text.word_student', 2)}}</a> |
                                     @endif
 
-                                    @if($unit->unit()->count() == 0)
+                                    @if($unit->unit_id  != 4)
                                         @if($unit->subjects()->count() == 0)
                                             <a class="btn btn-xs btn-primary" href="{{route('admin.units.index', [$unit->id])}}">{{__('text.sub_unit')}}</a> |
                                         @endif
-                                        <?php //<a href="{{route('admin.units.subjects', [$unit->id])}}" class="btn btn-info btn-xs">{{trans_choice('text.word_subject', 2)}}</a> ?> |
                                     @else
                                         <a  class="btn btn-xs btn-primary" href="{{route('admin.units.index', [$unit->id])}}">{{__('text.sub_unit')}}</a> |
                                     @endif
                                     <a class="btn btn-xs btn-success" href="{{route('admin.units.edit',[$unit->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>
                                     @if($unit->unit->count() == 0)
                                         | <a onclick="event.preventDefault();
-                                        document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">{{__('text.word_delete')}}</a>
-                                        <form id="delete" action="{{route('admin.units.destroy',$unit->id)}}" method="POST" style="display: none;">
+                                        document.getElementById('delete_{{ $unit->id }}').submit();" class=" btn btn-danger btn-xs m-2">{{__('text.word_delete')}}</a>
+                                        <form id="delete_{{ $unit->id }}" action="{{route('admin.units.destroy',$unit->id)}}" method="POST" style="display: none;">
                                             @method('DELETE')
                                             {{ csrf_field() }}
                                         </form>
