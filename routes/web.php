@@ -13,6 +13,7 @@ use App\Http\Controllers\documentation\BaseController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Parents\HomeController as ParentsHomeController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\Student\ClassDelegateController;
 use App\Http\Controllers\Student\HomeController as StudentHomeController;
 use App\Http\Controllers\Teacher\ClassController;
 use App\Http\Controllers\Teacher\HomeController as TeacherHomeController;
@@ -562,6 +563,13 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('create', [Admin\HeadOfSchoolController::class, 'create'])->name('create');
         Route::post('create', [Admin\HeadOfSchoolController::class, 'save']);
 
+    });
+
+    Route::prefix('delegates')->name('delegates.')->group(function(){
+        Route::get('/', [Admin\ClassDelegateController::class, 'index'])->name('index');
+        Route::get('create', [Admin\ClassDelegateController::class, 'create'])->name('create');
+        Route::post('/create', [Admin\ClassDelegateController::class, 'store']);
+        Route::post('/update/{delegate_id}', [Admin\ClassDelegateController::class, 'update'])->name('update');
     });
 
 });

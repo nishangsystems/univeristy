@@ -880,5 +880,6 @@ return [
     'word_departments'=>'departments',
     'new_head_of_school'=>'new head of school',
     'pending_courses'=>'pending courses', 
+    'class_delegates'=>'class delegates',
     ''
 ];
