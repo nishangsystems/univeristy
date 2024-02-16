@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\Helpers;
 use App\Models\Attendance;
+use App\Models\ClassDelegate;
 use App\Models\Semester;
 use App\Models\Students;
 use Illuminate\Support\Facades\Validator;
@@ -15,6 +16,14 @@ class ClassDelegateService{
         $this->current_accademic_year = $helpers->getCurrentAccademicYear();
     }
 
+
+
+    public function getAll()
+    {
+        # code...
+        $delegates = ClassDelegate::orderBy('class_id')->get();
+        return $delegates;
+    }
     public function getMyCourses($student_id)
     {
         # code...
@@ -43,6 +52,29 @@ class ClassDelegateService{
         $attendance = Attendance::find($attendance_id);
         $attendance->update(['check_out'=>$time]);
         return $attendance;
+    }
+
+    public function store($data)
+    {
+        # code...
+        $validity = Validator::make($data, ['year_id'=>'required', 'campus_id'=>'required', 'class_id'=>'required']);
+        if($validity->fails()){
+            throw new \Exception($validity->errors()->first());
+        }
+        $instance = new ClassDelegate($data);
+        $instance->save();
+        return $instance;
+    }
+
+    public function update($delegate_id, $update)
+    {
+        # code...
+        $delegate = ClassDelegate::find($delegate_id);
+        if($delegate != null){
+            $delegate->update($update);
+            return $delegate;
+        }
+        throw new \Exception("Class delegate record not found");
     }
 
 }

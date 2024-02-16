@@ -1454,6 +1454,14 @@
                     </li>
 
                     <li>
+                        <a href="{{route('admin.users.classmaster')}}?type=teacher" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           {{trans_choice('text.word_HOD', 2)}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
                         <a href="{{route('admin.users.index')}}?type=teacher" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{trans_choice('text.word_teacher', 2)}}
@@ -1462,9 +1470,9 @@
                     </li>
 
                     <li>
-                        <a href="{{route('admin.users.classmaster')}}?type=teacher" class="text-capitalize">
+                        <a href="{{route('admin.delegates.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                           {{trans_choice('text.word_HOD', 2)}}
+                            {{__('text.class_delegates')}}
                         </a>
                         <b class="arrow"></b>
                     </li>

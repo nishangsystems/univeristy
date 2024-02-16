@@ -47,14 +47,8 @@
                                     @if($unit->students(Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->count()  > 0)
                                         <a class="btn btn-xs btn-primary" href="{{route('admin.students.index', [$unit->id])}}">{{trans_choice('text.word_student', 2)}}</a> |
                                     @endif
-
-                                    @if($unit->unit_id  != 4)
-                                        @if($unit->subjects()->count() == 0)
-                                            <a class="btn btn-xs btn-primary" href="{{route('admin.units.index', [$unit->id])}}">{{__('text.sub_unit')}}</a> |
-                                        @endif
-                                    @else
-                                        <a  class="btn btn-xs btn-primary" href="{{route('admin.units.index', [$unit->id])}}">{{__('text.sub_unit')}}</a> |
-                                    @endif
+                                    
+                                    <a  class="btn btn-xs btn-primary" href="{{route('admin.units.index', [$unit->id])}}">{{__('text.sub_unit')}}</a> |
                                     <a class="btn btn-xs btn-success" href="{{route('admin.units.edit',[$unit->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a>
                                     @if($unit->unit->count() == 0)
                                         | <a onclick="event.preventDefault();
