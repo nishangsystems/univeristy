@@ -93,6 +93,8 @@ class Controller extends BaseController
         $pls = $campus->programs()->get()
         ->map(function($cl){
             $cl->name = $cl->name();
+            $cl->program = $cl->program->name;
+            $cl->level = $cl->level->level;
             return $cl;
         })->sortBy('name');
         return response($pls);
