@@ -96,8 +96,8 @@
                                 @if(\Auth::user()->campus_id != null)
                                 <input type="hidden" name="campus" id="" value="{{\Auth::user()->campus_id}}">
                                 @endif
-                                <select name="campus" class="form-control" required onchange="loadPrograms(event.target, 'clear_program_id')" {{ \Auth::user()->campus_id != null ? 'disabled' : ''}}>
-                                    <option value="">select campus</option>
+                                <select name="campus" class="form-control" required onchange="loadPrograms(this, 'clear_program_id')" {{ \Auth::user()->campus_id != null ? 'disabled' : ''}}>
+                                    <option>select campus</option>
                                     @foreach(\App\Models\Campus::all() as $campus)
                                         <option value="{{$campus->id}}" {{ \Auth::user()->campus_id == $campus->id ? 'selected' : ''}}>{{$campus->name}}</option>
                                     @endforeach
@@ -161,22 +161,21 @@
 
     function loadPrograms(element, space_id){
         let val = element.value;
-        url = "{{route('campus.programs', ['__V__'])}}";
-        url =url.replace('__V__', val);
+        url = "{{route('campus.programs', '__V__')}}".replace('__V__', val);
+        console.log(url);
         $.ajax({
             method: 'get',
             url: url,
             success: function(data){
-                data.sort((a, b)=>{
-                    if (a.program > b.program) { return 1;}
-                    if (a.program < b.program) { return -1;}
-                    return 0;
-                })
-                let options = `<option value="">{{__('text.select_program')}}</option>`;
-                data.forEach(element => {
-                    console.log(element);
-                    options += `<option value="`+element.id+`">`+element.program+` : Level `+element.level+`</option>`;
-                });
+                console.log(data);
+                let options = `<option>{{__('text.select_program')}}</option>`;
+                for (const key in data) {
+                    if (data.hasOwnProperty.call(data, key)) {
+                        const element = data[key];
+                        console.log(element);
+                        options += `<option value="`+element.id+`">`+element.name+`</option>`;
+                    }
+                }
                 $('#'+space_id).html(options);
             }
         })

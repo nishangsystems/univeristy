@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="infobox-data">
-                    <span class="infobox-data-number">{{ $n_programs }}</span>
+                    <span class="infobox-data-number">{{ $_programs->count() }}</span>
                     <div class="infobox-content">{{ __('text.word_programs') }}</div>
                 </div>
             </div>

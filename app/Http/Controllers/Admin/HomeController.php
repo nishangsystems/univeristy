@@ -115,6 +115,7 @@ class HomeController  extends Controller
 
             $data['n_teachers'] = User::where('type', 'teacher')->count(); 
         }else{
+            $programs = SchoolUnits::where('school_units.unit_id', 4);
             $program_students = SchoolUnits::where('school_units.unit_id', 4)->join('program_levels', 'program_levels.program_id', '=', 'school_units.id')
                 ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')->where('student_classes.year_id', $year)
                 ->join('students', 'students.id', '=', 'student_classes.student_id')
@@ -148,6 +149,7 @@ class HomeController  extends Controller
         $data['students'] = $students;
         $data['programs'] = $program_students;
         $data['recovered_debt'] = Payments::where('batch_id', '!=', $year)->where('payment_year_id', $year)->sum('amount');
+        $data['_programs'] = $programs;
         return view('admin.dashboard', $data);
     }
 
