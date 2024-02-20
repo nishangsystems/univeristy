@@ -76,7 +76,6 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
             [export GIT_TRACE_PACKET=1]
             [export GIT_TRACE=1]
             [export GIT_CURL_VERBOSE=1]
-        in the
             [git clone --depth 1 https://github.com/nishangsystems/univeristy.git]
             [git clone -b <branch-name> --single-branch --depth 1 https://github.com/nishangsystems/univeristy.git](tp clone a particular branch only)
 

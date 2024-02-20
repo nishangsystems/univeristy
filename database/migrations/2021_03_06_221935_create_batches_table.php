@@ -16,6 +16,8 @@ class CreateBatchesTable extends Migration
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('pay_channel', ['momo', 'tranzak'])->nullable();
+            $table->boolean('pay_charges')->default(0);
             $table->timestamps();
         });
     }

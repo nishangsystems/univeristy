@@ -61,8 +61,14 @@ class ClassDelegateService{
         if($validity->fails()){
             throw new \Exception($validity->errors()->first());
         }
-        $instance = new ClassDelegate($data);
-        $instance->save();
+
+
+        if(ClassDelegate::where(['year_id'=>$data['year_id'], 'campus_id'=>$data['campus_id']])->count() > 0)
+            $instance = ClassDelegate::where(['year_id'=>$data['year_id'], 'campus_id'=>$data['campus_id'], 'class_id'=>$data['class_id']])->first();
+        else{
+            $instance = new ClassDelegate($data);
+            $instance->save();
+        }
         return $instance;
     }
 

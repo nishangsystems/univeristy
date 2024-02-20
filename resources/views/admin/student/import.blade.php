@@ -126,13 +126,17 @@
                 <div class="text-center text-capitalize text-primary py-3">{{__('text.file_format_csv')}}</div>
                 <table class="bg-light">
                     <thead class="text-capitalize bg-dark text-light fs-6">
-                        <th>name <span class="text-danger">*</span></th>
-                        <th>matric <span class="text-danger">*</span></th>
-                        <th>gender</th>
+                        <th>@lang('text.word_name') <span class="text-danger">*</span></th>
+                        <th>@lang('text.word_matricule') <span class="text-danger">*</span></th>
+                        <th>@lang('text.word_gender')</th>
+                        <th>@lang('text.place_of_birth')</th>
+                        <th>@lang('text.date_of_birth')</th>
                     </thead>
                     <tbody>
                         @for($i=0; $i < 4; $i++)
                         <tr class="border-bottom">
+                            <td>---</td>
+                            <td>---</td>
                             <td>---</td>
                             <td>---</td>
                             <td>---</td>

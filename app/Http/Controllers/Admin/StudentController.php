@@ -479,6 +479,8 @@ class StudentController extends Controller
                             'matric' => $importData[1],
                             // 'email' => explode(' ', str_replace('’', "'", $importData[2]))[0],
                             'gender' => $importData[2] ?? null,
+                            'pob' => $importData[3] ?? null,
+                            'dob' => $importData[4] ?? null,
                             // 'password' => Hash::make('12345678'),
                             'campus_id'=> $request->campus_id ?? null,
                             'program_id' => $request->program_id ?? null,

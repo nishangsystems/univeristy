@@ -1,8 +1,8 @@
 @extends('admin.layout')
 @section('section')
     <div class="py-3">
-        <div class="d-flex justify-content-end py-2">
-            <a class="btn btn-sm btn-primary rounded text-capitalize" href="{{ route('admin.delegates.create') }}">@lang('text.add_class_delegate')</a>
+        <div class="py-2">
+            <input class="form-control" type="text" oninput="searchstudent(this)">
         </div>
         <table class="table">
             <thead class="text-capitalize">
@@ -10,7 +10,7 @@
                 <th>@lang('text.word_year')</th>
                 <th>@lang('text.word_campus')</th>
                 <th>@lang('text.word_class')</th>
-                <th>@lang('text.word_student')</th>
+                <th>@lang('text.word_student', 1)</th>
                 <th>@lang('text.word_matricule')</th>
                 <th></th>
             </thead>
@@ -19,4 +19,17 @@
             </tbody>
         </table>
     </div>
+@endsection
+@section('script')
+    <script>
+        let searchstudent = function(inputElement){
+            let searchKey = $(inputElement).val();
+            let url = "{{ route('search_students') }}";
+            $.ajax({
+                method: 'get', url: url, data: {'key': searchKey}, success: function(data){
+                    console.log(data);
+                }
+            })
+        }
+    </script>
 @endsection
