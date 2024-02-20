@@ -17,6 +17,12 @@ class ClassDelegateService{
     }
 
 
+    public function getById($delegate_id)
+    {
+        # code...
+        return ClassDelegate::find($delegate_id);
+    }
+
 
     public function getAll()
     {
@@ -62,14 +68,12 @@ class ClassDelegateService{
             throw new \Exception($validity->errors()->first());
         }
 
-
-        if(ClassDelegate::where(['year_id'=>$data['year_id'], 'campus_id'=>$data['campus_id']])->count() > 0)
-            $instance = ClassDelegate::where(['year_id'=>$data['year_id'], 'campus_id'=>$data['campus_id'], 'class_id'=>$data['class_id']])->first();
-        else{
-            $instance = new ClassDelegate($data);
+        if(ClassDelegate::where(['year_id'=>$data['year_id'], 'campus_id'=>$data['campus_id'], 'class_id'=>$data['class_id']])->count() < 2){
+            $instance = new ClassDelegate(['year_id'=>$data['year_id'], 'campus_id'=>$data['campus_id'], 'class_id'=>$data['class_id'], 'status'=>0]);
             $instance->save();
+            return $instance;
         }
-        return $instance;
+        throw new \Exception('Not more than two class delegates are allowed');
     }
 
     public function update($delegate_id, $update)

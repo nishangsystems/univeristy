@@ -52,5 +52,20 @@ class ClassDelegateController extends Controller
         }
     }
 
+    public function record_attendance(Request $request, $course_id)
+    {
+        # code...
+        $student = auth('student')->user();
+        $class = $student->_class($this->current_accademic_year);
+        if($class != null){
+            $course = \App\Models\Subjects::find($course_id);
+            $class_course = \App\Models\ClassSubject::where('class_id', $class->id)->where('subject_id', $course_id)->first();
+            $teachers = \App\Models\TeachersSubject::where('class_id', $class->id)->where('subject_id', $course_id)->where('batch_id', $this->current_accademic_year)->where('campus_id', $student->campus_id)->get();
+            $data['course'] = $course;
+            $data['class_course'] = $class_course;
+            $data['teachers'] = $teachers;
+            return view('student.delegate.lecturers', $data);
+        }
+    }
     
 }

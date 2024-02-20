@@ -43,6 +43,20 @@ class ClassDelegateController extends Controller
             return back()->with('error', $th->getMessage());
         }
     }
+        
+
+    public function change_student(Request $request, $delegate_id)
+    {
+        # code...
+        try{
+            $delegate = $this->classDelegateService->getById($delegate_id);
+            $data['delegate'] = $delegate;
+            $data['title'] =  "Change Class Delegate for ".$delegate->class->name().', '.($delegate->campus->name??'').' | '.($delegate->year->name??'');
+            return view('admin.delegates.set_student', $data);
+        }catch(\Throwable $th){
+            return back()->with('error', $th->getMessage());
+        }
+    }
 
 
     public function store(Request $request)
@@ -50,7 +64,8 @@ class ClassDelegateController extends Controller
         # code...
         try{
             $delegate = $this->classDelegateService->store($request->all());
-            $data['title'] =  "Create Class Delegate for ".$delegate->class->name().', '.$delegate->campus->name??''.' | '.$delegate->year->name??'';
+            $data['delegate'] = $delegate;
+            $data['title'] =  "Create Class Delegate for ".$delegate->class->name().', '.($delegate->campus->name??'').' | '.($delegate->year->name??'');
             return view('admin.delegates.set_student', $data);
         }catch(\Throwable $th){
             session()->flash('error', $th->getMessage());

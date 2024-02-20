@@ -492,6 +492,27 @@
                 </ul>
             </li>
 
+            @if(auth('student')->user()->classDelegateOf->count() > 0)
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-circle menu-icon   "></i>
+                    <span class="menu-text">{{__('text.delegate_center')}}</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('student.delegate.index')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_courses')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            @endif
+
             @if ('XYZ'==='123')
                 <li>
                     <a href="{{route('student.notification.home')}}" class="text-capitalize">
@@ -601,6 +622,7 @@
                 <div class="mb-4 mx-3">
                     <h4 class="font-weight-bold">{{ $title ?? '' }}</h4>
                 </div>
+                {{-- @dd(auth('student')->user()->classDelegateOf) --}}
                 @yield('section')
             </div>
         </div>

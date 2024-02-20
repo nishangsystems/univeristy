@@ -197,6 +197,29 @@ class HomeController extends Controller
         }
     }
 
+    public function search_students_per_cammpus_class_per_year(Request $request){
+        // expects year_id, campus_id, class_id, key
+        try {
+            //code...
+            $class = ProgramLevel::find($request->class_id);
+            if($class != null){
+                $students = $class->_students($request->year_id)->where('students.campus_id', $request->campus_id)
+                    ->where(function($query)use($request){
+                        $query->where('name', 'LIKE', '%'.$request->key.'%')
+                        ->orWhere('matric', 'LIKE', '%'.$request->key.'%')
+                        ->orWhere('email', 'LIKE', '%'.$request->key.'%');
+                    })
+                    ->distinct()->get();
+                    
+                return response($students);
+            }
+            return response([], 400);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response($th->getMessage(), 500);
+        }
+    }
+
     /* response payload: {
             name:string, gender:string,
             students.id:string, matric:string, 

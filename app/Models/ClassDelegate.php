@@ -22,4 +22,7 @@ class ClassDelegate extends Model
     public function student(){
         return $this->belongsTo(Students::class, 'student_id');
     }
+    public function year(){
+        return $this->belongsTo(Batch::class, 'year_id');
+    }
 }

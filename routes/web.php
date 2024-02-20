@@ -570,6 +570,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('create', [Admin\ClassDelegateController::class, 'create'])->name('create');
         Route::post('/create', [Admin\ClassDelegateController::class, 'store']);
         Route::post('/update/{delegate_id}', [Admin\ClassDelegateController::class, 'update'])->name('update');
+        Route::post('/change_student/{delegate_id}', [Admin\ClassDelegateController::class, 'change_student'])->name('change_student');
     });
 
 });
@@ -768,6 +769,13 @@ Route::prefix('student')->name('student.')->middleware(['isStudent'])->group(fun
         Route::get('processing/{type}', [StudentHomeController::class, 'tranzak_processing'])->name('processing');
         Route::get('complete/{type}', [StudentHomeController::class, 'tranzak_complete'])->name('complete');
     });
+
+    Route::prefix('delegate')->name('delegate.')->group(function(){
+        Route::get('courses', 'Student\ClassDelegateController@index')->name('index');
+        Route::get('record_attendance/{course_id}', 'Student\ClassDelegateController@record_attendance')->name('record_attendance');
+        Route::get('check_in/{teacher_id}/{subject_id}', 'Student\ClassDelegateController@check_in')->name('check_in');
+        Route::get('check_out/{teacher_id}/{subject_id}', 'Student\ClassDelegateController@check_out')->name('check_out');
+    });
 });
 
 Route::get('download_form_b/{year}/{semester}', 'Student\HomeController@download_courses_api');
@@ -803,6 +811,7 @@ Route::get('student-search', 'HomeController@student_get')->name('student-search
 Route::get('search-all-students/{name}', 'HomeController@searchStudents')->name('search-all-students');
 Route::get('search-all-students', 'HomeController@searchStudents_get')->name('get-search-all-students');
 Route::get('search-students', 'HomeController@search_students')->name('search_students');
+Route::get('search-students/per_campus_class_per_year', 'HomeController@search_students_per_cammpus_class_per_year')->name('search_students.per_campus_class_per_year');
 Route::get('student-fee-search', 'HomeController@fee')->name('student-fee-search');
 Route::get('student_rank', 'HomeController@rank')->name('student_rank');
 Route::post('student_rank', 'HomeController@rankPost')->name('student_rank');

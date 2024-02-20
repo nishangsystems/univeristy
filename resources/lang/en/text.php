@@ -881,5 +881,12 @@ return [
     'new_head_of_school'=>'new head of school',
     'pending_courses'=>'pending courses', 
     'class_delegates'=>'class delegates',
+    'add_class_delegate'=>'add class delegate',
+    'word_assign'=>'assign',
+    'change_status'=>'change status',
+    'change_student'=>'change student',
+    'delegate_center'=>'delegate center',
+    'record_hours'=>'record hours',
+    'word_lecturers'=>'lecturers',
     ''
 ];

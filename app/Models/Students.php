@@ -346,5 +346,9 @@ class Students extends Authenticatable
         return $this->hasMany(Transaction::class, 'student_id');
     }
 
-    
+    public function classDelegateOf()
+    {
+        # code...
+        return $this->belongsToMany(ProgramLevel::class, ClassDelegate::class,'student_id', 'class_id');
+    }
 }
