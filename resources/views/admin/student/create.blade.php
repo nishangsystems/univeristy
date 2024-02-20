@@ -166,19 +166,24 @@
             method: 'get',
             url: url,
             success: function(data){
-                data.sort((a, b)=>{
-                    if (a.program > b.program) { return 1;}
-                    if (a.program < b.program) { return -1;}
-                    return 0;
-                })
+                console.log(data);
                 let options = `<option value="">{{__('text.select_program')}}</option>`;
-                data.forEach(element => {
-                    console.log(element);
-                    options += `<option value="`+element.id+`">`+element.program+` : Level `+element.level+`</option>`;
-                });
+                for (const key in data) {
+                    if (Object.hasOwnProperty.call(data, key)) {
+                        const element = data[key];
+                        // console.log(element);
+                        options += `<option value="`+element.id+`">`+element.name+`</option>`;
+                        
+                    }
+                }
+                // data.forEach(element => {
+                // });
                 $('#program_id').html(options);
+            },
+            error: function(error){
+                console.error(error);
             }
-        })
+        });
     }
 </script>
 @endsection

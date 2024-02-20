@@ -60,3 +60,31 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+## SETUP GUIDE
+-install a server alongside a database (xampp&mysql for example)
+-clone the project into the web root-folder of your web server
+        run :
+            For Windows users;
+            [set GIT_TRACE_PACKET=1]
+            [set GIT_TRACE=1]
+            [set GIT_CURL_VERBOSE=1]
+            [git config --global core.compression 0]
+            For Linux users;
+            [export GIT_TRACE_PACKET=1]
+            [export GIT_TRACE=1]
+            [export GIT_CURL_VERBOSE=1]
+        in the
+            [git clone --depth 1 https://github.com/nishangsystems/univeristy.git]
+            [git clone -b <branch-name> --single-branch --depth 1 https://github.com/nishangsystems/univeristy.git](tp clone a particular branch only)
+
+-install the composer packages by running [composer install] on the project root folder
+-install the node packages with [npm install] on the project root folder
+-add the [.env] file to the project root
+-create project database(s) add your database(s) to the [.env] file
+-generate the app-key by running [php artisan key:generate] on the project root
+-run the migrations with [php artisan migrate or migrate:fresh]
+-run the seeders to seed any necessary initialisation data to the database with [php artisan db:seed]
+## -- the setup is done. you can then access the project from your browser

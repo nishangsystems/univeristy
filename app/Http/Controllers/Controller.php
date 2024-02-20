@@ -89,15 +89,22 @@ class Controller extends BaseController
     public static function sorted_campus_program_levels($campus)
     {
         # code...
-        $campus = Campus::find($campus);
-        $pls = $campus->programs()->get()
-        ->map(function($cl){
-            $cl->name = $cl->name();
-            $cl->program = $cl->program->name;
-            $cl->level = $cl->level->level;
-            return $cl;
-        })->sortBy('name');
-        return response($pls);
+        try {
+            //code...
+            // return collect();
+            $campus = Campus::find($campus);
+            $pls = $campus->programs()->get()->map(function($cl){
+                $cl->name = $cl->name();
+                $cl->program = $cl->program->name??'';
+                $cl->level = $cl->level->level??'';
+                return $cl;
+            })->sortBy('name');
+            
+            return response($pls);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response( $th->getMessage().'\n Line: '.$th->getLine().'\n File: '.$th->getFile(), 500);
+        }
     }
 
     public function registration(){
