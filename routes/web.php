@@ -930,7 +930,7 @@ Route::get('getProgLevels/{prog_id}', function($prog_id){
 
 
 Route::get('dump_resits', function(){
-    $resits = \App\Models\Resit::where('year_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->get();
+    $resits = \App\Models\Resit::orderBy('id', 'DESC')->get();
     dd($resits);
 });
 

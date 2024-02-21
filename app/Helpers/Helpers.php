@@ -462,10 +462,9 @@ class Helpers
     public function campusSemesterConfig($semester_id, $campus_id = null)
     {
         # code...
-        return \App\Models\CampusSemesterConfig::where(['semester_id'=>$semester->id])->where(function($query)use($campus_id){
-            $query->where(['campus_id'=>auth('student')->user()->campus_id])
-                ->orWhere(['campus_id'=>auth('student')->user()->campus_id]);
-        })->get();
+        return \App\Models\CampusSemesterConfig::where(['semester_id'=>$semester->id])
+            ->where('campus_id', null)
+            ->get();
     }
 
 }
