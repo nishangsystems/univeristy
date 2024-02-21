@@ -315,7 +315,13 @@ class Helpers
         $class = ProgramLevel::find($class_id);
         $campus = $campus_id == null ? auth('student')->user()->campus_id : $campus_id;
         // dd($class);
-        $resits = $class->program->background->resits()->where(['year_id' => Helpers::instance()->getCurrentAccademicYear(), 'campus_id'=>$campus, 'background_id'=>$class->program->background->id])->get();
+        $resits = $class->program->background->resits()
+            ->where(['year_id' => $this->getCurrentAccademicYear(), 'background_id'=>$class->program->background->id])
+            ->where(function($query)use($campus){
+                $query->where('campus_id', $campus)
+                    ->orWhere('campus_id', null);
+            })
+            ->get();
         foreach ($resits as $key => $resit) {
             # code...
             if(now()->between(Carbon::createFromDate($resit->start_date), Carbon::createFromDate($resit->end_date)))
@@ -329,7 +335,13 @@ class Helpers
         # code...
         $class = ProgramLevel::find($class_id);
         $campus = $campus_id == null ? auth('student')->user()->campus_id : $campus_id;
-        $resits = $class->program->background->resits()->where(['year_id' => Helpers::instance()->getCurrentAccademicYear(), 'campus_id'=>$campus, 'background_id'=>$class->program->background->id])->get();
+        $resits = $class->program->background->resits()
+            ->where(['year_id' => $this->getCurrentAccademicYear(), 'background_id'=>$class->program->background->id])
+            ->where(function($query)use($campus){
+                $query->where('campus_id', $campus)
+                    ->orWhere('campus_id', null);
+            })
+            ->get();
         // dd($resits);
         foreach ($resits as $key => $resit) {
             # code...
@@ -451,6 +463,15 @@ class Helpers
         $random_timed = 'view'.random_int(100, 200).'T'.round(sqrt((time()/10000)*random_int(3000,10000)));
         $nextStep = $builder->join('school_units as '.$random_timed, $random_timed.'.parent_id', '=', 'school_units.id')->select($random_timed.'.*');
         return $this->schoolUnitsGetChildren($nextStep, $unit_level, $random_timed);
+    }
+
+    public function campusSemesterConfig($semester_id, $campus_id = null)
+    {
+        # code...
+        return \App\Models\CampusSemesterConfig::where(['semester_id'=>$semester->id])->where(function($query)use($campus_id){
+            $query->where(['campus_id'=>auth('student')->user()->campus_id])
+                ->orWhere(['campus_id'=>auth('student')->user()->campus_id]);
+        })->get();
     }
 
 }

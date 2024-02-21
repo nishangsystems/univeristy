@@ -309,15 +309,13 @@ class HomeController  extends Controller
     public function course_date_line(Request $request, $campus, $semester)
     {
         # code...
-        $conf = CampusSemesterConfig::where([
-            'campus_id'=>$campus, 'semester_id'=>$semester
-            ])->count();
-            if ($conf == 0) {
+        $conf = Helpers::instance()->campusSemesterConfig($semester, $campus);
+            if ($conf->count() == 0) {
                 # code...
                 return ['semester'=>Semester::find($semester)->name, 'date_line'=>__('text.DATELINE_NOT_SET')];
             }
             // return __DIR__;
-            return ['semester'=>Semester::find($semester)->name, 'date_line'=>date('l d-m-Y', strtotime(CampusSemesterConfig::where(['campus_id'=>$campus, 'semester_id'=>$semester])->first()->courses_date_line)), 'date'=>CampusSemesterConfig::where(['campus_id'=>$campus, 'semester_id'=>$semester])->first()->courses_date_line];
+            return ['semester'=>Semester::find($semester)->name, 'date_line'=>date('l d-m-Y', strtotime($config->first()->courses_date_line)), 'date'=>$config->first()->courses_date_line];
     }
 
     public function program_settings(Request $request)

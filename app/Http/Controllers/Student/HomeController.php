@@ -604,7 +604,7 @@ class HomeController extends Controller
                         ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
                 'fraction' => $semester->courses_min_fee
             ];
-            $conf = CampusSemesterConfig::where(['campus_id'=>auth('student')->user()->campus_id])->where(['semester_id'=>$semester->id])->first();
+            $conf = Helpers::instance()->campusSemesterConfig($semester->id, $_student->campus_id)->first();
             if ($conf != null) {
                 # code...
                 $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y'));
@@ -626,8 +626,9 @@ class HomeController extends Controller
     {
         # code...
         $c_year = Helpers::instance()->getCurrentAccademicYear();
-        $is_current_student = !(auth('student')->user()->_class($c_year) == null);
-        $resit = Helpers::instance()->available_resit(auth('student')->user()->_class($c_year)->id ?? auth('student')->user()->_class()->id);
+        $_student = auth('student')->user();
+        $is_current_student = !($_student->_class($c_year) == null);
+        $resit = Helpers::instance()->available_resit($_student->_class($c_year)->id ?? $_student->_class()->id);
         if($resit == null){
             return back()->with('error', 'Resit not open');
         }
@@ -635,15 +636,15 @@ class HomeController extends Controller
         if(!$is_current_student){
             return back()->with('error', 'You are not a current student');
         }
-        $data['title'] = "Resit Registration For " .$resit->name??(Helpers::instance()->getSemester(auth('student')->user()->_class()->id)->name." ".Batch::find(Helpers::instance()->getCurrentAccademicYear())->name);
-        $data['student_class'] =  auth('student')->user()->_class($is_current_student ? $c_year : null);
-        $data['cv_total'] = auth('student')->user()->_class($is_current_student ? $c_year : null)->program()->first()->max_credit;
+        $data['title'] = "Resit Registration For " .$resit->name??(Helpers::instance()->getSemester($_student->_class()->id)->name." ".Batch::find(Helpers::instance()->getCurrentAccademicYear())->name);
+        $data['student_class'] =  $_student->_class($is_current_student ? $c_year : null);
+        $data['cv_total'] = $_student->_class($is_current_student ? $c_year : null)->program()->first()->max_credit;
         // resit course price is set in campus_programs table //
-        // campus_class = $data['student_class']->campus_programs()->where('campus_id', '=', auth('student')->user()->campus_id)
+        // campus_class = $data['student_class']->campus_programs()->where('campus_id', '=', $_student->campus_id)
         
         $student = auth('student')->id();
         $year = Helpers::instance()->getYear();
-        $data['unit_cost'] = auth('student')->user()->_class($year)->program->resit_cost ?? null;
+        $data['unit_cost'] = $_student->_class($year)->program->resit_cost ?? null;
         if($data['unit_cost'] == null){
             return back()->with('error', "Resit price not set. Contact administration");
         }
@@ -663,9 +664,9 @@ class HomeController extends Controller
                     ->whereNotNull('payment_items.amount')
                     ->join('students', 'students.program_id', '=', 'program_levels.id')
                     ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
-            'fraction' => Helpers::instance()->getSemester(auth('student')->user()->_class($c_year)->id)->courses_min_fee
+            'fraction' => Helpers::instance()->getSemester($_student->_class($c_year)->id)->courses_min_fee
         ];
-        // $conf = CampusSemesterConfig::where(['campus_id'=>auth('student')->user()->campus_id])->where(['semester_id'=>Helpers::instance()->getSemester(auth('student')->user()->_class($c_year)->id)->id])->first();
+        // $conf = CampusSemesterConfig::where(['campus_id'=>$_student->campus_id])->where(['semester_id'=>Helpers::instance()->getSemester($_student->_class($c_year)->id)->id])->first();
         // if ($conf != null) {
         //     # code...
         //     $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y', time()));
@@ -673,7 +674,7 @@ class HomeController extends Controller
         //     return redirect(route('student.home'))->with('error', 'Can not sign courses for this program at the moment. Date limit not set. Contact registry.');
         // }
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] =  Helpers::instance()->resit_available(auth('student')->user()->_class($c_year)->id);
+        $data['access'] =  Helpers::instance()->resit_available($_student->_class($c_year)->id);
         $data['unpaid'] = StudentSubject::where(['resit_id'=>$resit->id, 'student_id'=>auth('student')->id(), 'year_id'=>$c_year])->whereNull('paid')->join('subjects', 'subjects.id', '=', 'student_courses.course_id')->distinct()->get(['subjects.*'])->count();
         if($data['access']){
             $data['resit_id'] =  $resit->id;
