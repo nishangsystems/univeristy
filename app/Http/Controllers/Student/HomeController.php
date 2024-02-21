@@ -618,7 +618,7 @@ class HomeController extends Controller
             return view('student.courses.register', $data);
         } catch (\Throwable $th) {
             // throw $th;
-            return back()->with('error', '----Message:----'.$th->getMessage());
+            return back()->with('error', 'F:__'.$th->getFile().'__Line:____'.$th->getLine().'----Message:----'.$th->getMessage());
         }
     }
 
