@@ -9,6 +9,8 @@
                 <tr>
                     <th>###</th>
                     <th>@lang('text.word_name')</th>
+                    <th>@lang('text.word_class')</th>
+                    <th>@lang('text.word_subject')</th>
                     <th></th>
                 </tr>
             </thead>
@@ -19,9 +21,11 @@
                 @foreach($teachers as $key => $tcha)
                     <tr>
                         <td>{{ $k++ }}</td>
-                        <td>{{ $tcha->name }}</td>
+                        <td>{{ $tcha->user->name }}</td>
+                        <td>{{ $tcha->class->name() }}</td>
+                        <td>{{ $tcha->subject->name }}</td>
                         <td>
-                            <a href="{{ route('student.delegate.check_in', [$tcha->id, $course->id]) }}" class="btn btn-primary rounded">@lang('text.check_in')</a>
+                            <a href="{{ route('student.delegate.check_in', [$tcha->id]) }}" class="btn btn-primary rounded">@lang('text.take_record')</a>
                         </td>
                     </tr>
                 @endforeach

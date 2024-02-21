@@ -773,8 +773,15 @@ Route::prefix('student')->name('student.')->middleware(['isStudent'])->group(fun
     Route::prefix('delegate')->name('delegate.')->group(function(){
         Route::get('courses', 'Student\ClassDelegateController@index')->name('index');
         Route::get('record_attendance/{course_id}', 'Student\ClassDelegateController@record_attendance')->name('record_attendance');
-        Route::get('check_in/{teacher_id}/{subject_id}', 'Student\ClassDelegateController@check_in')->name('check_in');
-        Route::get('check_out/{teacher_id}/{subject_id}', 'Student\ClassDelegateController@check_out')->name('check_out');
+        Route::get('check_in/{teacher_subject_id}', 'Student\ClassDelegateController@check_in')->name('check_in');
+        Route::post('check_in/{teacher_subject_id}', 'Student\ClassDelegateController@check_in_save');
+        Route::get('check_out/{attendance_id}', 'Student\ClassDelegateController@check_out')->name('check_out');
+        Route::post('check_out/{attendance_id}', 'Student\ClassDelegateController@check_out_save');
+        Route::post('attendance.delete/{attendance_id}', 'Student\ClassDelegateController@drop_attendance')->name('attendance.drop');
+        
+        Route::get('course/log/{attendance_id}/init', 'Student\ClassDelegateController@course_log_init')->name('course.log.init');
+        Route::get('course/log/{attendance_id}', 'Student\ClassDelegateController@course_log')->name('course.log');
+        Route::post('course/log/{attendance_id}', 'Student\ClassDelegateController@course_log_save');
     });
 });
 
@@ -929,9 +936,9 @@ Route::get('getProgLevels/{prog_id}', function($prog_id){
 })->name('program.levels');
 
 
-Route::get('dump_resits', function(){
-    $resits = \App\Models\Resit::orderBy('id', 'DESC')->get();
-    dd($resits);
-});
+// Route::get('dump_resits', function(){
+//     $resits = \App\Models\Resit::orderBy('id', 'DESC')->get();
+//     dd($resits);
+// });
 
 Route::any('{any?}', [CustomLoginController::class, 'login']);

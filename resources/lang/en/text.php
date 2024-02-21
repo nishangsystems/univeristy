@@ -888,5 +888,6 @@ return [
     'delegate_center'=>'delegate center',
     'record_hours'=>'record hours',
     'word_lecturers'=>'lecturers',
+    'take_record'=>'take record',
     ''
 ];

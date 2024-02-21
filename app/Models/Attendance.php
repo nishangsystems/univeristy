@@ -20,6 +20,12 @@ class Attendance extends Model
         return $this->belongsTo(Campus::class, 'campus_id');
     }
 
+    public function year()
+    {
+        # code...
+        return $this->belongsTo(Batch::class, 'year_id');
+    }
+
     public function teacher()
     {
         # code...
@@ -30,5 +36,11 @@ class Attendance extends Model
     {
         # code...
         return $this->belongsTo(Subjects::class, 'subject_id');
+    }
+
+    public function courseLog()
+    {
+        # code...
+        return $this->hasMany(CourseLog::class, 'attendance_id');
     }
 }

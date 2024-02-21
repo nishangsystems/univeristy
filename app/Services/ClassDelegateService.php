@@ -42,11 +42,10 @@ class ClassDelegateService{
     public function check_in($data)
     {
         # code...
-        $validity = Validator::make($data, ['campus_id'=>'required', 'teacher_id'=>'required', 'subject_id'=>'required', 'check_in'=>'required']);
+        $validity = Validator::make($data, ['year_id'=>'required', 'campus_id'=>'required', 'teacher_id'=>'required', 'subject_id'=>'required', 'check_in'=>'required']);
         if($validity->fails()){
             throw new \Exception($validity->errors()->first());
         }
-        $data['year_id'] = $this->current_accademic_year;
         $instance = new Attendance($data);
         $instance->save();
         return $instance;
