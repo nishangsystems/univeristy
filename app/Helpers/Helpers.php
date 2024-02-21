@@ -462,7 +462,7 @@ class Helpers
     public function campusSemesterConfig($semester_id, $campus_id = null)
     {
         # code...
-        return \App\Models\CampusSemesterConfig::where(['semester_id'=>$semester->id])
+        return \App\Models\CampusSemesterConfig::where(['semester_id'=>$semester_id])
             ->where('campus_id', null)
             ->get();
     }
