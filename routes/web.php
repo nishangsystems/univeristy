@@ -929,4 +929,9 @@ Route::get('getProgLevels/{prog_id}', function($prog_id){
 })->name('program.levels');
 
 
+Route::get('dump_resits', function(){
+    $resits = \App\Models\Resit::where('year_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->get();
+    dd($resits);
+});
+
 Route::any('{any?}', [CustomLoginController::class, 'login']);

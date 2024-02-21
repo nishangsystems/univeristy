@@ -317,10 +317,7 @@ class Helpers
         // dd($class);
         $resits = $class->program->background->resits()
             ->where(['year_id' => $this->getCurrentAccademicYear(), 'background_id'=>$class->program->background->id])
-            ->where(function($query)use($campus){
-                $query->where('campus_id', $campus)
-                    ->orWhere('campus_id', null);
-            })
+            ->where('campus_id', null)
             ->get();
         foreach ($resits as $key => $resit) {
             # code...
@@ -337,10 +334,7 @@ class Helpers
         $campus = $campus_id == null ? auth('student')->user()->campus_id : $campus_id;
         $resits = $class->program->background->resits()
             ->where(['year_id' => $this->getCurrentAccademicYear(), 'background_id'=>$class->program->background->id])
-            ->where(function($query)use($campus){
-                $query->where('campus_id', $campus)
-                    ->orWhere('campus_id', null);
-            })
+            ->where('campus_id', null)
             ->get();
         // dd($resits);
         foreach ($resits as $key => $resit) {
