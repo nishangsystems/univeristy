@@ -138,35 +138,46 @@ class ClassDelegateController extends Controller
         $data['attendance'] = $attendance;
         $data['content'] = \App\Models\Topic::where(['subject_id'=>$subject->id, 'level'=>2, 'teacher_id'=>$teacher->id])->where('campus_id', $attendance->campus_id)->get();
 
+        // dd($data);
         return view('student.delegate.log.init', $data);
 
     }
     
-    public function course_log(Request $request, $attendance_id)
+    public function course_log(Request $request, $attendance_id, $topic_id)
     {
         
         # code...
-        $topic = Topic::find($request->topic_id);
-        $attendance = Attendance::find($request->attendance_id);
+        $topic = \App\Models\Topic::find($request->topic_id);
+        $attendance = \App\Models\Attendance::find($request->attendance_id);
         $subject = $attendance->subject;
         $campus = $attendance->campus;
         $year = $attendance->year;
-        $data['title'] = "Sign Course Log For {$subject->name} [ {$subject->code} ] | {$attendance->teacher->name} [from {$attendance->check_in} to {$attendance->check_out}]";
+        $sub_topics = \App\Models\Topic::where(['subject_id'=> $subject->id, 'level'=>2, 'campus_id'=>$campus->id, 'teacher_id'=>$attendance->teacher_id])->pluck('id')->toArray();
+        $data['title'] = $topic ?
+            "Sign Course Log For { $topic->title } | {$subject->name} [ {$subject->code} ] | {$attendance->teacher->name}" :
+            "Course Log For {$subject->name} [ {$subject->code} ] | {$attendance->teacher->name}";
         $data['subject'] = $subject;
         $data['campus'] = $campus;
         $data['topic'] = $topic;
-        $data['periods'] = Period::orderBy('starts_at')->get();
+        $data['period'] = "From {$attendance->check_in->format('Y-m-d H:i')} To {$attendance->check_out->format('Y-m-d H:i')}";
         $data['attendance_record'] = $attendance;
-        $data['log_history'] = CourseLog::where(['year_id'=>$this->current_accademic_year])->join('topics', ['topics.id'=>'course_log.topic_id'])
-                                ->where(['topics.subject_id'=>$subject->id, 'topics.teacher_id'=>auth()->id()])->orderBy('course_log.id', 'DESC')->distinct()
-                                ->select(['course_log.*'])->get();
+        $data['log_history'] = \App\Models\CourseLog::whereIn('topic_id', $sub_topics)->get();
         
-        return view('teacher.log.sign', $data);
+        return view('student.delegate.log.course_log', $data);
     }
 
-    public function course_log_save(Request $request, $attendance)
+    public function course_log_save(Request $request, $attendance_id, $topic_id)
     {
         # code...
+        try {
+            //code...
+            $this->classDelegateService->log_course($request->all());
+            return back()->with('success', 'Done');
+        } catch (\Throwable $th) {
+            //throw $th;
+            session()->flash('error', "M____{$th->getMessage()} ____F____{$th->getFile()}____L____{$th->getLine()}");
+            return back()->withInput();
+        }
     }
     
 }

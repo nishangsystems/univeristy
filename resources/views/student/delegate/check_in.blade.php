@@ -67,6 +67,9 @@
                                         </form>
                                     @else
                                         <a href="{{ route('student.delegate.course.log.init', $row->id) }}" class="btn btn-primary btn-sm">{{ __('text.course_log') }}</a>
+                                        @if($row->courseLog()->count() > 0)
+                                            <a href="{{ route('student.delegate.course.log', [$row->id, 0]) }}" class="btn btn-primary btn-sm">{{ __('text.log_history') }}</a>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>

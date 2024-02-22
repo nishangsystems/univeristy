@@ -2,45 +2,43 @@
 @section('section')
     <div class="row py-2">
         <div class="col-md-5 col-lg-5 px-2">
-            <div class="shadow-lg px-2">
-                <div class="py-4">
-                    <form method="post" class="form py-4 px-3 bg-light">
-                        @csrf
-                        <input type="hidden" name="campus_id" value="{{$campus->id}}">
-                        <!-- <div class="py-2">
-                            <input class="form-control" value="{{$campus->name}}" readonly>
-                        </div> -->
-                        <input type="hidden" name="subject_id" value="{{$subject->id}}">
-                        <!-- <div class="py-2">
-                            <input class="form-control" value="{{$subject->name}}" readonly>
-                        </div> -->
-                        <div class="py-2">
-                            <input type="hidden" name="topic_id" value="{{$topic->id}}">
-                            <div class="py-2 px-2 rounded border-top border-bottom" readonly>{!! $topic->title !!}</div>
-                        </div>
-                        <input type="hidden" name="attendance_id" value="{{$attendance_record->id}}">
-                        <!-- <div class="py-2">
-                            <input class="form-control" value="{{$attendance_record->check_in.'  -  '.$attendance_record->check_out}}" readonly>
-                        </div> -->
-                        <div class="py-2">
-                            <label class="text-capitalize pb-1">@lang('text.word_period'):</label>
-                            <select class="form-control w-100" name="period_id" required>
-                                <option></option>
-                                @foreach ($periods as $period)
-                                    <option value="{{ $period->id }}" {{ old('period_id') == $period->id ? 'selected' : '' }}>FROM {{ $period->starts_at }} TO {{ $period->ends_at }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="py-2">
-                            <label class="text-capitalize pb-1">{{__('text.course_log')}}:</label>
-                            <textarea class="form-control w-100" name="details" id="course_log" rows="4"></textarea>
-                        </div>
-                        <div class="d-flex justify-content-end py-2">
-                            <input class="btn btn-sm btn-primary" type="submit" value="{{__('text.word_save')}}">
-                        </div>
-                    </form>
+            @if($topic != null)
+                <div class="shadow-lg px-2">
+                    <div class="py-4">
+                        <form method="post" class="form py-4 px-3 bg-light">
+                            @csrf
+                            <input type="hidden" name="campus_id" value="{{$campus->id}}">
+                            <!-- <div class="py-2">
+                                <input class="form-control" value="{{$campus->name}}" readonly>
+                            </div> -->
+                            <input type="hidden" name="subject_id" value="{{$subject->id}}">
+                            <!-- <div class="py-2">
+                                <input class="form-control" value="{{$subject->name}}" readonly>
+                            </div> -->
+                            <div class="py-2">
+                                <input type="hidden" name="topic_id" value="{{$topic->id}}">
+                                <div class="py-2 px-2 rounded border-top border-bottom" readonly>{!! $topic->title !!}</div>
+                            </div>
+                            <input type="hidden" name="attendance_id" value="{{$attendance_record->id}}">
+                            <!-- <div class="py-2">
+                                <input class="form-control" value="{{$attendance_record->check_in.'  -  '.$attendance_record->check_out}}" readonly>
+                            </div> -->
+                            <div class="py-2">
+                                <label class="text-capitalize pb-1">@lang('text.word_period'):</label>
+                                <label class="form-control w-100">{{ $period }}</label>
+                                </select>
+                            </div>
+                            <div class="py-2">
+                                <label class="text-capitalize pb-1">{{__('text.course_log')}}:</label>
+                                <textarea class="form-control w-100" name="details" id="course_log" rows="4"></textarea>
+                            </div>
+                            <div class="d-flex justify-content-end py-2">
+                                <input class="btn btn-sm btn-primary" type="submit" value="{{__('text.word_save')}}">
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
         <div class="col-md-7 col-lg-7 px-2">
             <table class="table table-primary rounded shadow-lg">

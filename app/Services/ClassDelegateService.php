@@ -86,4 +86,16 @@ class ClassDelegateService{
         throw new \Exception("Class delegate record not found");
     }
 
+    public function log_course($data)
+    {
+        # code...
+        $validity = Validator::make($data, ['topic_id'=>'required', 'attendance_id'=>'required', 'campus_id'=>'required', 'details'=>'required']);
+        if($validity->fails()){
+            throw new \Exception($validity->errors->first());
+        }
+        $log = new \App\Models\CourseLog($data);
+        $log->save();
+        return $log;
+    }
+
 }

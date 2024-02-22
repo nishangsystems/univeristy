@@ -780,8 +780,8 @@ Route::prefix('student')->name('student.')->middleware(['isStudent'])->group(fun
         Route::post('attendance.delete/{attendance_id}', 'Student\ClassDelegateController@drop_attendance')->name('attendance.drop');
         
         Route::get('course/log/{attendance_id}/init', 'Student\ClassDelegateController@course_log_init')->name('course.log.init');
-        Route::get('course/log/{attendance_id}', 'Student\ClassDelegateController@course_log')->name('course.log');
-        Route::post('course/log/{attendance_id}', 'Student\ClassDelegateController@course_log_save');
+        Route::get('course/log/{attendance_id}/{topic_id}', 'Student\ClassDelegateController@course_log')->name('course.log');
+        Route::post('course/log/{attendance_id}/{topic_id}', 'Student\ClassDelegateController@course_log_save');
     });
 });
 

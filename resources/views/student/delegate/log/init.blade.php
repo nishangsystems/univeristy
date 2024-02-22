@@ -5,42 +5,17 @@
 @endphp
 
     <div class="row py-2">
-        {{-- <div class="col-md-6 col-lg-6 px-2">
-            <div class="shadow-lg px-2">
-                <div class="py-4">
-                    <table class="table table-light">
-                        <thead class="text-primary">
-                            <th class="border-left border-right border-light">{{__('text.sn')}}</th>
-                            <th class="border-left border-right border-light">{{__('text.checked_in')}}</th>
-                            <th class="border-left border-right border-light">{{__('text.checked_out')}}</th>
-                            <th></th>
-                        </thead>
-                        <tbody>
-                            @php($k = 1)
-                            @foreach ($attendance as $record)
-                                <tr class="border-bottom border-light">
-                                    <td class="border-left border-right border-light">{{$k++}}</td>
-                                    <td class="border-left border-right border-light">{{Date::parse($record->check_in)->format('d/m/Y')}}</td>
-                                    <td class="border-left border-right border-light">{{Date::parse($record->check_out)->format('d/m/Y')}}</td>
-                                    <td class="border-left border-right border-light">
-                                        <a class="btn btn-sm btn-primary" id="attendance_{{$record->id}}" data={{$record}} onclick="__loadContent('{{$record->id}}')">{{__('text.sign_course_log')}}</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div> --}}
+        
         <div class="col-md-6 col-lg-6 px-2">
-            @if (isset($content))
-                <div class="shadow-lg px-4 py-5 hidden" id="content">
+            @isset($content)
+                {{-- @dd($attendance) --}}
+                <div class="shadow-lg px-4 py-5" id="content">
                     <div class="py-2 border-bottom">
                         <label class="text-capitalize mb-2">{{__('text.word_attendance')}}</label>
                         <div class="d-flex flex-wrap justify-content-between text-capitalize rounded border bg-white py-3 px-3">
-                            <span class="text-primary">{{__('text.word_from')}} : <span id="check_in"></span></span>
-                            <span class="text-primary">{{__('text.word_to')}} : <span id="check_out"></span></span>
-                            <input type="hidden" id="attendance_id_field">
+                            <span class="text-primary">{{__('text.word_from')}} : <span id="check_in">{{ $attendance->check_in }}</span></span>
+                            <span class="text-primary">{{__('text.word_to')}} : <span id="check_out">{{ $attendance->check_in }}</span></span>
+                            <input type="hidden" id="attendance_id_field" value="{{ $attendance->id }}">
                         </div>
                     </div>
                     <div class="py-2 border-bottom">
@@ -61,14 +36,14 @@
                                                     @if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->count() > 0)
                                                         <div class="time">
                                                             <i class="ace-icon fa fa-clock-o"></i>
-                                                            <span class="green">{{date('l d-m-Y', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->first()->attendance->check_in))}}</span>
+                                                            <span class="green">{{date('l d-m-Y', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->first()->attendance->check_in))}}</span>
                                                         </div>
 
                                                         <div class="name">
                                                             <a href="#">{{$sub_topic->teacher->name??null}}</a>
                                                             <span class="label label-success arrowed arrowed-in-right text-uppercase">{{__('text.word_taught')}}</span>
-                                                            <span class="label label-danger arrowed arrowed-in-right text-capitalize">{{__('text.word_from')}} : {{date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->first()->attendance->check_in))}}</span>
-                                                            <span class="label label-danger arrowed arrowed-in-right text-capitalize">{{__('text.word_to')}} : {{date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->first()->attendance->check_out))}}</span>
+                                                            <span class="label label-danger arrowed arrowed-in-right text-capitalize">{{__('text.word_from')}} : {{date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'attendance_id'=>$attendance->id])->first()->attendance->check_in))}}</span>
+                                                            <span class="label label-danger arrowed arrowed-in-right text-capitalize">{{__('text.word_to')}} : {{date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id,'attendance_id'=>$attendance->id])->first()->attendance->check_out))}}</span>
                                                         </div>
                                                     
                                                     @else
@@ -86,7 +61,7 @@
                                                     <div class="text fle flex-wrap">{!! $sub_topic->title !!}</div>
 
                                                     <div class="tools">
-                                                        <a class="btn btn-xs btn-primary" onclick="window.location=`{{route('user.course.log.sign', ['subject_id'=>$sub_topic->subject_id, 'attendance_id'=>'__AT_ID__', 'campus_id'=>$sub_topic->campus_id, 'topic_id'=>$sub_topic->id])}}`.replace('__AT_ID__', $('#attendance_id_field').val())">
+                                                        <a class="btn btn-xs btn-primary" href="{{ route('student.delegate.course.log', [$attendance->id, $sub_topic->id]) }}">
                                                             {{__('text.word_sign')}}
                                                             <i class="ml-2 text-white icon-only ace-icon fa fa-share"></i>
                                                         </a>
@@ -113,7 +88,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endisset
         </div>
     </div>
 @endsection

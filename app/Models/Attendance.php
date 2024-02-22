@@ -12,7 +12,7 @@ class Attendance extends Model
     protected $connection = 'mysql';
     protected $table = 'attendance';
     protected $fillable = ['year_id', 'campus_id', 'teacher_id', 'subject_id', 'check_in', 'check_out', 'period_id'];
-    
+    protected $dates = ['check_in', 'check_out'];
 
     public function campus()
     {

@@ -175,7 +175,7 @@ class HomeController extends Controller
         $data['content'] = collect([]);
         if ($request->has('campus') && $request->campus != null) {
             # code...
-            $data['attendance'] = Attendance::where(['year_id'=>$year, 'campus_id'=>$request->campus??null, 'teacher_id'=>$teacher->id, 'subject_id'=>$subject->id])->orderBy('id', 'DESC')->get();
+            $data['attendance'] = Attendance::where(['campus_id'=>$request->campus??null, 'teacher_id'=>$teacher->id, 'subject_id'=>$subject->id])->orderBy('id', 'DESC')->get();
             // dd($data);
             $data['content'] = Topic::where(['subject_id'=>$subject->id, 'level'=>2, 'teacher_id'=>$teacher->id])->where('campus_id', $request->campus)->get();
         }
@@ -189,15 +189,14 @@ class HomeController extends Controller
         $campus = Campus::find($request->campus_id);
         $topic = Topic::find($request->topic_id);
         $attendance_record = Attendance::find($request->attendance_id);
+        $sub_topics = \App\Models\Topic::where(['subject_id'=> $subject->id, 'level'=>2, 'campus_id'=>$campus->id, 'teacher_id'=>$attendance->teacher_id])->pluck('id')->toArray();
         $data['title'] = "Sign Course Log For ".$subject->name.'['.$subject->code.'] <br><b class="text-primary pt-3 d-block">'.date('d/m/Y H:i', strtotime($attendance_record->check_in)).' - '.date('d/m/Y H:i', strtotime($attendance_record->check_out)).'</b>';
         $data['subject'] = $subject;
         $data['campus'] = $campus;
         $data['topic'] = $topic;
         $data['periods'] = Period::orderBy('starts_at')->get();
         $data['attendance_record'] = $attendance_record;
-        $data['log_history'] = CourseLog::where(['year_id'=>$this->current_accademic_year])->join('topics', ['topics.id'=>'course_log.topic_id'])
-                                ->where(['topics.subject_id'=>$subject->id, 'topics.teacher_id'=>auth()->id()])->orderBy('course_log.id', 'DESC')->distinct()
-                                ->select(['course_log.*'])->get();
+        $data['log_history'] = CourseLog::whereIn('topic_id', $sub_topics)->get();
         
         return view('teacher.log.sign', $data);
     }

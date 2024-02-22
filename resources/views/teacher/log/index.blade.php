@@ -78,14 +78,14 @@
                                                     @if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->count() > 0)
                                                         <div class="time">
                                                             <i class="ace-icon fa fa-clock-o"></i>
-                                                            <span class="green">{{date('l d-m-Y', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->first()->attendance->check_in))}}</span>
+                                                            <span class="green">{{date('l d-m-Y', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->first()->attendance->check_in??''))}}</span>
                                                         </div>
 
                                                         <div class="name">
                                                             <a href="#">{{$sub_topic->teacher->name??null}}</a>
                                                             <span class="label label-success arrowed arrowed-in-right text-uppercase">{{__('text.word_taught')}}</span>
-                                                            <span class="label label-danger arrowed arrowed-in-right text-capitalize">{{__('text.word_from')}} : {{date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->first()->attendance->check_in))}}</span>
-                                                            <span class="label label-danger arrowed arrowed-in-right text-capitalize">{{__('text.word_to')}} : {{date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id, 'year_id'=>$year])->first()->attendance->check_out))}}</span>
+                                                            <span class="label label-danger arrowed arrowed-in-right text-capitalize">{{__('text.word_from')}} : {{date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->first()->attendance->check_in))}}</span>
+                                                            <span class="label label-danger arrowed arrowed-in-right text-capitalize">{{__('text.word_to')}} : {{date('H:i', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->first()->attendance->check_out))}}</span>
                                                         </div>
                                                     
                                                     @else
