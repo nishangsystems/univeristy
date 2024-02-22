@@ -2,7 +2,7 @@
 @section('section')
     <div class="py-3">
         <div class="py-2">
-            <input class="form-control" type="text" oninput="searchstudent(this)">
+            <input class="form-control" type="text" placeholder="search student by matric or name" oninput="searchstudent(this)">
         </div>
         <table class="table">
             <thead class="text-capitalize">
