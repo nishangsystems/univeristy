@@ -22,6 +22,9 @@ class Promotions extends Migration
             $table->string('to_year');
             $table->string('from_class');
             $table->string('to_class');
+            $table->integer('user_id');
+            $table->enum('type', ['promotion', 'demotion']);
+            $table->json('students')->nullable();
             $table->timestamps();
         });
     }

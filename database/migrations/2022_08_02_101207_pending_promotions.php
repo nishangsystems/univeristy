@@ -24,7 +24,7 @@ class PendingPromotions extends Migration
             $table->unsignedBigInteger('from_class');
             $table->unsignedBigInteger('to_class');
             $table->enum('type', ['promotion', 'demotion']);
-            $table->string('students');
+            $table->json('students');
             $table->timestamp('created_at')->default(now());
         });
     }

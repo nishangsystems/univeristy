@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConfigsTable extends Migration
+class CreateDocumentationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateConfigsTable extends Migration
      */
     public function up()
     {
-        Schema::create('configs', function (Blueprint $table) {
+        Schema::create('documentations', function (Blueprint $table) {
             $table->id();
-            $table->integer('year_id');
-            $table->integer('seq_id')->nullable();
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->integer('sms_sent')->nullable();
+            $table->string('role');
+            $table->string('permission', 64)->nullable();
+            $table->integer('parent_id');
+            $table->string('title', 128);
+            $table->text('content')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateConfigsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('configs');
+        Schema::dropIfExists('documentations');
     }
 }

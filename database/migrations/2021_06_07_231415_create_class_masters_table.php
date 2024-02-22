@@ -15,7 +15,8 @@ class CreateClassMastersTable extends Migration
     {
         Schema::create('class_masters', function (Blueprint $table) {
             $table->id();
-            $table->integer('class_id');
+            $table->integer('department_id');
+            $table->integer('campus_id');
             $table->integer('batch_id');
             $table->integer('user_id');
             $table->timestamps();

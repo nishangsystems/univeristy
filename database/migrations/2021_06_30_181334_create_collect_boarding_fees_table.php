@@ -17,8 +17,8 @@ class CreateCollectBoardingFeesTable extends Migration
             $table->id();
             $table->integer('student_id')->unsigned();
             $table->integer('batch_id')->unsigned();
-            $table->integer('amount_payable');
-            $table->tinyInteger('status');
+            $table->integer('amount_payable')->nullable();
+            $table->tinyInteger('status')->nullable();
             $table->integer('class_id');
             $table->timestamps();
         });

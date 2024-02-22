@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Expenses extends Migration
+class CreateCourseNotificationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,15 @@ class Expenses extends Migration
      */
     public function up()
     {
-        Schema::create('expenses', function (Blueprint $table) {
+        Schema::create('course_notifications', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unsigned();
-            $table->string('name');
-            $table->decimal('amount_spend', 8, 2);
+            $table->integer('campus_id')->nullable();
+            $table->integer('user_id');
+            $table->integer('course_id');
+            $table->string('title');
+            $table->text('message');
             $table->date('date');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }
@@ -30,6 +33,6 @@ class Expenses extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('expenses');
+        Schema::dropIfExists('course_notifications');
     }
 }

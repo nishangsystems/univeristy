@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConfigsTable extends Migration
+class CreateFaqsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateConfigsTable extends Migration
      */
     public function up()
     {
-        Schema::create('configs', function (Blueprint $table) {
+        Schema::create('faqs', function (Blueprint $table) {
             $table->id();
-            $table->integer('year_id');
-            $table->integer('seq_id')->nullable();
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->integer('sms_sent')->nullable();
+            $table->text('question');
+            $table->text('answer');
+            $table->boolean('status')->default(0);
+            $table->integer('user_id');
+            $table->integer('campus_id')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateConfigsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('configs');
+        Schema::dropIfExists('faqs');
     }
 }

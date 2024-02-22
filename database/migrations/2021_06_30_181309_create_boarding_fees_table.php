@@ -17,6 +17,8 @@ class CreateBoardingFeesTable extends Migration
             $table->id();
             $table->integer('amount_new_student');
             $table->integer('amount_old_student');
+            $table->integer('boarding_typw');
+            $table->integer('parent_id');
             $table->timestamps();
         });
     }

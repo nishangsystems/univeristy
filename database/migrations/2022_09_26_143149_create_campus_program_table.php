@@ -13,10 +13,12 @@ class CreateCampusProgramTable extends Migration
      */
     public function up()
     {
-        Schema::create('campus_program', function (Blueprint $table) {
+        Schema::create('campus_programs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('campus_id');
             $table->unsignedBigInteger('program_level_id');
+            $table->integer('fees')->nullable();
+            $table->integer('max_credit')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateCampusProgramTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('campus_program');
+        Schema::dropIfExists('campus_programs');
     }
 }

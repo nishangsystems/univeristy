@@ -20,6 +20,11 @@ class CreatePaymentItemsTable extends Migration
             $table->integer('unit');
             $table->string('slug');
             $table->integer('year_id');
+            $table->integer('campus_program_id')->default(0);
+            $table->integer('formb_min_amt')->default(0);
+            $table->integer('charges')->default(0);
+            $table->integer('exam_min_amt')->default(0);
+            $table->integer('ca_min_amt')->default(0);
             $table->timestamps();
         });
     }

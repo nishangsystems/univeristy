@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConfigsTable extends Migration
+class CreateCourseLogTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateConfigsTable extends Migration
      */
     public function up()
     {
-        Schema::create('configs', function (Blueprint $table) {
+        Schema::create('course_log', function (Blueprint $table) {
             $table->id();
-            $table->integer('year_id');
-            $table->integer('seq_id')->nullable();
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->integer('sms_sent')->nullable();
+            $table->integer('topic_id');
+            $table->integer('attendance_id');
+            $table->integer('campus_id');
+            $table->text('details');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateConfigsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('configs');
+        Schema::dropIfExists('course_log');
     }
 }

@@ -15,10 +15,16 @@ class PayIncomes extends Migration
     {
         Schema::create('pay_incomes', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount_payable', 8, 2);
             $table->integer('income_id')->unsigned();
             $table->integer('student_id')->unsigned();
             $table->integer('amount')->nullable();
+            $table->integer('batch_id');
+            $table->integer('class_id');
+            $table->integer('user_id')->nullable();
+            $table->integer('payed_by');
+            $table->integer('paid_by')->nullable();
+            $table->integer('transaction_id')->nullable();
+            $table->boolean('cash')->default(0);
             $table->timestamps();
         });
     }
