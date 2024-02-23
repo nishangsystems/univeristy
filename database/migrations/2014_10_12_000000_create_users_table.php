@@ -18,12 +18,18 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('username')->unique();
+            $table->string('matric')->nullable();
             $table->enum('type', ['admin','teacher'])->default('teacher');
+            $table->string('campus_id')->nullable();
             $table->enum('gender', ['female','male']);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
+            $table->boolean('password_reset')->default(0);
+            $table->boolean('active')->default(1);
+            $table->integer('activity_changed_by')->nullable();
+            $table->timestamp('activity_changed_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

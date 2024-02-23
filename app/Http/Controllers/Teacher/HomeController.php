@@ -386,6 +386,10 @@ class HomeController extends Controller
         if($check->fails()){
             return back()->with('error', $check->errors()->first());
         }
+        if(!($ca_total > 0)){
+            session()->flash('error', 'CA & Exam totals not set');
+            return back()->withInput();
+        }
         $file = $request->file('file');
         if($file != null &&$file->getClientOriginalExtension() == 'csv'){
             $filename = 'ca_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
@@ -422,7 +426,7 @@ class HomeController extends Controller
                         'class_id' => $request->class_id,
                         'semester_id' => $semester->id
                     ];
-                    Result::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
+                    Result::updateOrCreate($base, ['ca_score'=>$data[1] == null ? 0 : $data[1], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
                 }
             }
             if($bad_results > 1){

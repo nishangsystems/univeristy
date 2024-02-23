@@ -15,7 +15,11 @@ class CreateTranscriptRatingsTable extends Migration
     {
         Schema::create('transcript_ratings', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', []);
+            $table->enum('type', ['SUPER FAST MODE', 'FAST MODE', 'NORMAL MODE']);
+            $table->integer('duration');
+            $table->integer('current_price');
+            $table->integer('former_price');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

@@ -21,7 +21,7 @@ class CreateResultsTable extends Migration
             $table->integer('semester_id');
             $table->string('sequence');
             $table->integer('subject_id');
-            $table->double('ca_score');
+            $table->double('ca_score')->default(0);
             $table->double('exam_score')->nullable();
             $table->double('coef');
             $table->string('remark');
