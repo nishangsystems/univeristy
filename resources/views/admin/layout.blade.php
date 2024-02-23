@@ -257,6 +257,13 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    <li>
+                        <a href="{{route('admin.dep_courses.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.departmental_courses')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
 
                 </ul>

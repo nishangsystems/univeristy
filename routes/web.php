@@ -573,6 +573,14 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('/change_student/{delegate_id}', [Admin\ClassDelegateController::class, 'change_student'])->name('change_student');
     });
 
+    Route::name('dep_courses.')->prefix('dep_courses')->group(function(){
+        Route::get('', [Admin\DepartmentalCourseController::class, 'index'])->name('index');
+        Route::get('{dep_id}', [Admin\DepartmentalCourseController::class, 'courses'])->name('courses');
+        Route::get('{dep_id}/create', [Admin\DepartmentalCourseController::class, 'create'])->name('create');
+        Route::post('{dep_id}/create', [Admin\DepartmentalCourseController::class, 'store']);
+        Route::get('{dep_course_id}/drop', [Admin\DepartmentalCourseController::class, 'drop'])->name('drop');
+    });
+
 });
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {
@@ -907,6 +915,18 @@ Route::get('search_subjects', function (Request $request) {
         ->orWhere('name', 'LIKE', '%' . $data . '%')->orderBy('name')->paginate(20);
     return $subjects;
 })->name('search_subjects');
+
+Route::get('search_courses', function (Request $request) {
+    $data = $request->name;
+    $subjects = Subjects::where('code', 'LIKE', '%' . $data . '%')
+        ->orWhere('name', 'LIKE', '%' . $data . '%')->orderBy('name')->take(20)->get()
+        ->map(function($row){
+            $row->_semester = $row->semester->name;
+            $row->_level = $row->level->level;
+            return $row;
+        });
+    return $subjects;
+})->name('search_courses');
 
 Route::get('get-income-item/{income_id}', function(Request $request, $income_id){
     return \App\Models\Income::find($income_id);

@@ -47,4 +47,10 @@ class Subjects extends Model
         return $this->belongsTo(Semester::class, 'semester_id');
     }
 
+    public function level()
+    {
+        # code...
+        return $this->belongsTo(Level::class, 'level_id');
+    }
+
 }

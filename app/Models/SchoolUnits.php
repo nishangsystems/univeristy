@@ -140,4 +140,10 @@ class SchoolUnits extends Model
         # code...
         return $this->belongsToMany(User::class, HeadOfSchool::class, 'school_unit_id', 'user_id')->where('active', 1);
     }
+
+    public function departmentalCourses()
+    {
+        # code...
+        return $this->belongsToMany(Subjects::class, DepartmentalCourse::class, 'school_unit_id', 'subject_id');
+    }
 }
