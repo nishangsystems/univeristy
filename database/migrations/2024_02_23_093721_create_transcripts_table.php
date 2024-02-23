@@ -21,6 +21,14 @@ class CreateTranscriptsTable extends Migration
             $table->integer('year_id')->nullable();
             $table->enum('delivery_format', ['HARD COPY', 'SOFT COPY']);
             $table->string('tel', 32)->nullable();
+            $table->text('description')->nullable();
+            $table->timestamp('done')->nullable();
+            $table->integer('user_id')->nullable();
+            $table->timestamp('collected')->nullable();
+            $table->integer('giver_id')->nullable();
+            $table->string('paid', 16);
+            $table->integer('paid_by')->nullable();
+            $table->integer('transaction_id')->nullable();
             $table->timestamps();
         });
     }

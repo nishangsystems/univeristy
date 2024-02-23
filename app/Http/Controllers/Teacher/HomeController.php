@@ -389,9 +389,9 @@ class HomeController extends Controller
         $file = $request->file('file');
         if($file != null &&$file->getClientOriginalExtension() == 'csv'){
             $filename = 'ca_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
-            $file->storeAs('/files', $filename);
+            $file->move(public_path('uploads/files'), $filename);
 
-            $file_pointer = fopen(storage_path('app/files').'/'.$filename, 'r');
+            $file_pointer = fopen(asset('uploads/files').'/'.$filename, 'r');
 
             $imported_data = [];
             $course = Subjects::find($request->course_id);
