@@ -35,8 +35,10 @@
                                                 <div class="body">
                                                     @if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->count() > 0)
                                                         <div class="time">
-                                                            <i class="ace-icon fa fa-clock-o"></i>
-                                                            <span class="green">{{date('l d-m-Y', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->first()->attendance->check_in))}}</span>
+                                                            <a class="btn btn-xs btn-primary" href="{{ route('student.delegate.course.log', [$attendance->id, $sub_topic->id]) }}">
+                                                                {{__('text.word_sign')}}
+                                                                <i class="ml-2 text-white icon-only ace-icon fa fa-share"></i>
+                                                            </a>
                                                         </div>
 
                                                         <div class="name">
@@ -48,8 +50,10 @@
                                                     
                                                     @else
                                                         <div class="time">
-                                                            <i class="ace-icon fa fa-clock-o"></i>
-                                                            <span class="green">4 sec</span>
+                                                            <a class="btn btn-xs btn-primary" href="{{ route('student.delegate.course.log', [$attendance->id, $sub_topic->id]) }}">
+                                                                {{__('text.word_sign')}}
+                                                                <i class="ml-2 text-white icon-only ace-icon fa fa-share"></i>
+                                                            </a>
                                                         </div>
 
                                                         <div class="name">
@@ -61,10 +65,12 @@
                                                     <div class="text fle flex-wrap">{!! $sub_topic->title !!}</div>
 
                                                     <div class="tools">
-                                                        <a class="btn btn-xs btn-primary" href="{{ route('student.delegate.course.log', [$attendance->id, $sub_topic->id]) }}">
-                                                            {{__('text.word_sign')}}
-                                                            <i class="ml-2 text-white icon-only ace-icon fa fa-share"></i>
-                                                        </a>
+                                                        <i class="ace-icon fa fa-clock-o"></i>
+                                                        @if (\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->count() > 0)
+                                                            <span class="green">{{date('l d-m-Y', strtotime(\App\Models\CourseLog::where(['topic_id'=>$sub_topic->id])->first()->attendance->check_in))}}</span>
+                                                        @else
+                                                            <span class="green">4 sec</span>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>

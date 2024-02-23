@@ -15,12 +15,21 @@ class AlterTransactionsTable extends Migration
     {
         Schema::table('transactions', function (Blueprint $table) {
             //
-            $table->enum('status',[
-                    'failed','successful','pending']
-            );
-            $table->text('payment_method')->nullable();
+            $table->id();
+            $table->integer('student_id');
+            $table->integer('semester_id')->nullable();
+            $table->integer('amount');
+            $table->integer('year_id');
+            $table->string('reference');
+            $table->enum('status',['pending', 'completed', 'failed']);
+            $table->string('tel', 12);
+            $table->string('payment_method')->nullable();
             $table->text('payment_purpose')->nullable();
-            $table->text('transaction_id')->nullable();
+            $table->integer('transaction_id');
+            $table->integer('payment_id');
+            $table->string('financialTransactionId', 64);
+            $table->boolean('is_charges')->default(0);
+            $table->timestamps();
         });
     }
 
