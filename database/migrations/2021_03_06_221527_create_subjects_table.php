@@ -18,7 +18,10 @@ class CreateSubjectsTable extends Migration
             $table->string('name');
             $table->integer('coef')->default(2);
             $table->string('code')->nullable();
-            $table->unsignedBigInteger('semester_id')->nullable();
+            $table->text('objective')->nullable();
+            $table->text('outcomes')->nullable();
+            $table->integer('semester_id');
+            $table->integer('level_id');
             $table->enum('status', ['general', 'required', 'compulsery']);
             $table->timestamps();
         });

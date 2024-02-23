@@ -15,15 +15,21 @@ class CreateResultsTable extends Migration
     {
         Schema::create('results', function (Blueprint $table) {
             $table->id();
-            $table->string('batch_id');
-            $table->string('student_id');
-            $table->string('class_id');
+            $table->integer('batch_id');
+            $table->integer('student_id');
+            $table->integer('class_id');
+            $table->integer('semester_id');
             $table->string('sequence');
             $table->integer('subject_id');
-            $table->double('score');
+            $table->double('ca_score');
+            $table->double('exam_score')->nullable();
             $table->double('coef');
             $table->string('remark');
-            $table->integer('class_subject_id');
+            $table->string('reference');
+            $table->integer('class_subject_id')->nullable();
+            $table->integer('user_id')->nullable();
+            $table->integer('campus_id');
+            $table->boolean('published')->default(1);
             $table->timestamps();
         });
     }

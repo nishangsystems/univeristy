@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Scholarships extends Migration
+class CreateResitsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class Scholarships extends Migration
      */
     public function up()
     {
-        Schema::create('scholarships', function (Blueprint $table) {
+        Schema::create('resits', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('amount', 8, 2);
-            $table->string('type'); //they type of scholarship(tuition, full-time, PTA, Partial)
-            $table->string('description')->nullable();
-            $table->tinyInteger('status');
+            $table->integer('year_id');
+            $table->integer('background_id');
+            $table->integer('campus_id')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class Scholarships extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scholarships');
+        Schema::dropIfExists('resits');
     }
 }

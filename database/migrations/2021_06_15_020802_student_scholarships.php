@@ -16,11 +16,12 @@ class StudentScholarships extends Migration
         Schema::create('student_scholarships', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('student_id');
-            $table->unsignedBigInteger('scholarship_id');
             $table->string('batch_id');
-            $table->timestamps();
+            $table->integer('amount');
+            $table->integer('user_id')->nullable();
+            $table->text('reason');
             $table->foreign('student_id')->references('id')->on('students');
-            $table->foreign('scholarship_id')->references('id')->on('scholarships');
+            $table->timestamps();
         });
     }
 

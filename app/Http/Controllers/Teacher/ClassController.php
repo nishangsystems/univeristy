@@ -44,7 +44,7 @@ class ClassController extends Controller
     {
         $data['options'] = \App\Http\Controllers\Admin\StudentController::baseClasses();
         if (\request('type') == 'master') {
-            $data['classes'] = ClassMaster::where('batch_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->where('user_id', Auth::user()->id)->get();
+            $data['classes'] = ClassMaster::where('user_id', Auth::user()->id)->get();
             // dd($data);
             $data['title'] = "Your Departments";
             return view('teacher.class_master')->with($data);

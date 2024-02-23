@@ -14,7 +14,7 @@
                     <div class="col-lg-10">
                         <select required  class="form-control" name="user_id">
                             <option selected disabled>{{__('text.select_teacher')}}</option>
-                          @foreach(\App\Models\User::where('type','teacher')->get() as $user)
+                          @foreach(\App\Models\User::where('type','teacher')->orderBy('name')->get() as $user)
                                 <option {{old('user_id') == $user->id?'selected':''}} value="{{$user->id}}">{{$user->name}}</option>
                           @endforeach
                         </select>
@@ -48,7 +48,7 @@
                             <div>
                                 <select class="form-control section" name="section" id="section0">
                                     <option selected disabled>Select Section</option>
-                                    @forelse(\App\Models\SchoolUnits::where(['unit_id'=>3])->get() as $id => $section)
+                                    @forelse(\App\Models\SchoolUnits::where(['unit_id'=>3])->orderBy('name')->get() as $id => $section)
                                         <option value="{{$section->id}}">{{$section->name}}</option>
                                     @empty
                                         <option>No Sections Created</option>

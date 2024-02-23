@@ -26,8 +26,6 @@ class CreateSemesterTable extends Migration
             $table->float('courses_min_fee')->nullable();
             $table->float('exam_min_fee')->nullable();
             $table->timestamps();
-
-            $table->foreign('background_id')->references('id')->on('school_units');
         });
     }
 

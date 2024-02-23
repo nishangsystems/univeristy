@@ -15,10 +15,11 @@ class CreateTeachersSubjectsTable extends Migration
     {
         Schema::create('teachers_subjects', function (Blueprint $table) {
             $table->id();
-            $table->string('teacher_id');
-            $table->string('subject_id');
-            $table->string('batch_id');
-            $table->string('class_id');
+            $table->integer('teacher_id');
+            $table->integer('subject_id');
+            $table->integer('batch_id');
+            $table->integer('class_id');
+            $table->integer('campus_id');
             $table->timestamps();
         });
     }

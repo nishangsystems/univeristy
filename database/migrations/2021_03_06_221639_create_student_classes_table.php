@@ -18,6 +18,10 @@ class CreateStudentClassesTable extends Migration
             $table->string('student_id');
             $table->string('class_id');
             $table->string('year_id');
+            $table->integer('bypass_result')->default(0);
+            $table->text('bypass_result_reason');
+            $table->integer('bypass_result_semester')->nullable();
+            $table->boolean('current')->default(0);
             $table->timestamps();
         });
     }

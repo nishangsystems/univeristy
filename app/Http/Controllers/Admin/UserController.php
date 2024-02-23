@@ -220,7 +220,8 @@ class UserController extends Controller
             'campus_id' => 'required',
             'section' => 'required',
         ]);
-        if (ClassMaster::where('user_id', $request->user_id)->where('department_id',  $request->section)->where('campus_id',  $request->campus_id)->count() > 0) {
+        $batch_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+        if (ClassMaster::where(['user_id'=> $request->user_id, 'department_id'=>  $request->section, 'campus_id'=>  $request->campus_id])->count() > 0) {
             return redirect()->back()->with('error', "User already assigned to this class !");
         }
 
@@ -228,7 +229,7 @@ class UserController extends Controller
         $master->user_id = $request->user_id;
         $master->campus_id = $request->campus_id;
         $master->department_id = $request->section;
-        $master->batch_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+        $master->batch_id = $batch_id;
         $master->save();
 
         return redirect()->to(route('admin.users.classmaster'))->with('success', "User updated Successfully !");
