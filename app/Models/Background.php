@@ -16,10 +16,8 @@ class Background extends Model
     {
         # code...
         if(str_contains($this->background_name, 'masters') ){
-            return Semester::where('background_name', 'LIKE', '%master%')
-            ->where(['semesters.status'=>1])
-            ->join('backgrounds', 'backgrounds.id', '=', 'semesters.background_id')
-            ->where('background_name', 'LIKE', '%master%')->select('semesters');
+            return Semester::join('backgrounds', 'backgrounds.id', '=', 'semesters.background_id')
+            ->where('background_name', 'LIKE', '%masters%')->select('semesters');
         }
         return $this->hasMany(Semester::class, 'background_id');
     }
@@ -27,8 +25,7 @@ class Background extends Model
     {
         # code....
         if(str_contains($this->background_name, 'masters') ){
-            return Semester::where('background_name', 'LIKE', '%master%')
-                ->where(['semesters.status'=>1])
+            return Semester::where(['semesters.status'=>1])
                 ->join('backgrounds', 'backgrounds.id', '=', 'semesters.background_id')
                 ->where('background_name', 'LIKE', '%master%')->select('semesters');
         }
