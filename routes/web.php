@@ -47,6 +47,11 @@ Route::get('/clear', function () {
 });
 
 
+Route::get('publish_all', function(){
+    DB::table('results')->update(['published'=>1]);
+    return;
+});
+
 Route::get('promotion/class_target/{class_id}', [Homecontroller::class, 'class_target'])->name('promotion.class.target');
 Route::get('set_local/{lang}', [Controller::class, 'set_local'])->name('lang.switch');
 
