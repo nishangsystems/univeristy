@@ -299,7 +299,8 @@ class Students extends Authenticatable
         $fee_items = [];
          foreach (Batch::where('id', '<', $year+1)->get() as $key => $batch) {
             # code...
-            if(($class = $this->_class($batch->id))== null)continue;
+            $class = $this->_class($batch->id);
+            if($class== null or $class->campus_programs($this->campus_id)->first() == null )continue;
             $fee_items[] = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->first();
         }
         $fee_items = collect($fee_items);
