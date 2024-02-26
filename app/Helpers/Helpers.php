@@ -81,9 +81,26 @@ class Helpers
         return $config->semester_id;
     }
 
+    public function getSemesters($class_id)
+    {
+        $class = ProgramLevel::find($class_id);
+        $background =  stripos($class->name(), 'masters 2') == false ? 
+        $class->program()->first()->background()->first() :
+        \App\Models\Background::where('background_name', 'LIKE', "%masters 2%")->first();
+        
+        // dd($background);
+        return $background->semesters;
+    }
+
     public function getSemester($program_level_id)
     {
-        return ProgramLevel::find($program_level_id)->program()->first()->background()->first()->currentSemesters()->first();
+        $class = ProgramLevel::find($program_level_id);
+        $background =  stripos($class->name(), 'masters 2') == false ? 
+        $class->program()->first()->background()->first() :
+        \App\Models\Background::where('background_name', 'LIKE', "%masters 2%")->first();
+        
+        // dd($background);
+        return $background->currentSemesters()->first();
     }
 
     public static function instance()

@@ -15,7 +15,7 @@
                 </select>
                 <select name="semester" class="form-control border-0 border-left border-right rounded-left" id="" required>
                     <option value="">{{__('text.word_semester')}}</option>
-                    @foreach(auth('student')->user()->_class()->program()->first()->background()->first()->semesters()->get() as $sem)
+                    @foreach($semesters as $sem)
                         <option value="{{$sem->id}}">{{$sem->name}}</option>
                     @endforeach
                 </select>

@@ -96,7 +96,11 @@ class HomeController extends Controller
     public function result(Request $request)
     {
         # code...
+        $student = auth('student')->user();
+        $class = $student->_class($this->current_accademic_year);
         $data['title'] = "My Result";
+        $data['semesters'] = Helpers::instance()->getSemesters($class->id);
+
         return view('student.result')->with($data);
     }
 
@@ -207,7 +211,6 @@ class HomeController extends Controller
     public function exam_result(Request $request)
     {
         
-        // return $request->all();
         $year = Batch::find($request->year ?? Helpers::instance()->getCurrentAccademicYear());
         $class = auth('student')->user()->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
@@ -216,7 +219,7 @@ class HomeController extends Controller
         if(!$semester->result_is_published($year->id)){
             return back()->with('error', 'Results Not Yet Published For This Semester.');
         }
-
+        
         // check if semester result fee is set && that student has payed 
         $plcharge = PlatformCharge::where(['year_id'=>$year->id])->first();
         $amount = $plcharge->result_amount ?? null;
@@ -226,37 +229,38 @@ class HomeController extends Controller
                 return redirect(route('student.result.pay'))->with('error', 'Pay Semester Result Charges to continue');
             }
         }
-
+        
         if($class == null){
             return back()->with('error', "No result found. Make sure you were admitted to this institution by or before the selected academic year");
         }
-
+        
         // CODE TO CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS; WILL BE COMMENTED OUT TILL IT SHOULD TAKE EFFECT
         // if(){
-        //     return back()->with('error', "You have not paid plaftorm or semester result charges for the selected semester");
-        // }
-
-        // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
-        
-        $data['title'] = "My Exam Result";
-        $data['user'] = auth('student')->user();
-        $data['semester'] = $semester;
-        $data['class'] = $class;
-        $data['year'] = $year;
+            //     return back()->with('error', "You have not paid plaftorm or semester result charges for the selected semester");
+            // }
+            
+            // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
+            
+            $data['title'] = "My Exam Result";
+            $data['user'] = auth('student')->user();
+            $data['semester'] = $semester;
+            $data['class'] = $class;
+            $data['year'] = $year;
         $data['ca_total'] = $class->program()->first()->ca_total;
         $data['exam_total'] = $class->program()->first()->exam_total;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
         $res = $data['user']->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
         $registered_courses = $data['user']->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
-
+        
         $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
         $non_gpa_courses = Subjects::whereIn('code', NonGPACourse::pluck('course_code')->toArray())->pluck('id')->toArray();
         // $non_gpa_courses = [];
         // return $non_gpa_courses;
+        // dd($registered_courses);
         $results = array_map(function($subject_id)use($data, $year, $semester){
             $ca_mark = $data['user']->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = $data['user']->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
-
+            
             $total = $ca_mark + $exam_mark;
             $rol = [
                 'id'=>$subject_id,
@@ -286,7 +290,7 @@ class HomeController extends Controller
             return $rol; 
             
             // dd($grade);
-        // }, $res);
+            // }, $res);
         }, $registered_courses);
         // dd($res);
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
@@ -304,7 +308,8 @@ class HomeController extends Controller
         $gpa_data['sum_cv_earned'] = $sum_earned_cv;
         $gpa_data['gpa_cv_earned'] = $gpa_cv_earned;
         $gpa_data['gpa'] = $gpa;
-
+        
+        // dd($request->all());
         $data['gpa_data'] = $gpa_data;
 
         $student = auth('student')->id();
@@ -320,7 +325,6 @@ class HomeController extends Controller
         $data['min_fee'] = $fee['total']*$fee['fraction'];
         $data['total_balance'] = $data['user']->total_balance($student, $year->id);
         $data['access'] = ($fee['total'] - $fee['total_balance']) >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
-        // dd($data);
         if ($class->program->background->background_name == "PUBLIC HEALTH") {
             # code...
             return view('student.public_health_exam_result')->with($data);
@@ -572,13 +576,14 @@ class HomeController extends Controller
             if($student_class == null){
                 return redirect()->route('student.home')->with('error', "Student does not belong to any class within the current accademic year");
             }
-            $data['title'] = "Course Registration For " .Helpers::instance()->getSemester($student_class->id)->name ?? ''." ".Batch::find($this->current_accademic_year)->name;
+            $semester = Helpers::instance()->getSemester($student_class->id);
+            $data['title'] = "Course Registration For " .$semester->name ?? ''." ".Batch::find($this->current_accademic_year)->name;
             $data['student_class'] = $student_class;
             $data['cv_total'] = $student_class->program->max_credit??'';        
             
+            // dd($semester);
             $student = $_student->id;
             $year = $this->current_accademic_year;
-            $semester = Helpers::instance()->getSemester($student_class->id);
             $_semester = Helpers::instance()->getSemester($student_class->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
             if ($semester->id == $_semester) {
                 # code...
@@ -605,6 +610,7 @@ class HomeController extends Controller
                 'fraction' => $semester->courses_min_fee
             ];
             $conf = Helpers::instance()->campusSemesterConfig($semester->id, $_student->campus_id)->first();
+            // dd($conf);
             if ($conf != null) {
                 # code...
                 $data['on_time'] = strtotime($conf->courses_date_line) >= strtotime(date('d-m-Y'));

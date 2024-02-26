@@ -287,17 +287,8 @@ class HomeController  extends Controller
 
         try {
             //code...
-            $conf = \App\Models\CampusSemesterConfig::where(['semester_id'=>$request->semester, 'campus_id'=>auth()->user()->campus_id ?? ''])->first() ?? null;
-            if ($conf != null) {
-                # code...
-                $conf->courses_date_line = $request->date;
-                $conf->save();
-            }
-            else {
-                CampusSemesterConfig::create([
-                    'semester_id'=>$request->semester, 'campus_id'=>auth()->user()->campus_id ?? null, 'courses_date_line'=>$request->date
-                ]);
-            }
+            \App\Models\CampusSemesterConfig::updateOrInsert(['semester_id'=>$request->semester, 'campus_id'=>auth()->user()->campus_id ?? NULL], ['courses_date_line'=>$request->date]);
+
             return back()->with('success', __('text.word_done'));
         } catch (\Throwable $th) {
             //throw $th;
