@@ -98,25 +98,24 @@ class SubjectController extends Controller
         # code...
 
         $switch = $request->switch ?? null;
-        if ($switch == 'true') {
+        $course = Subjects::find($course_id);
+        $class = ProgramLevel::find($class_id);
+        $campus = \App\Models\Campus::find(request('campus_id'));
+        if ($switch == true) {
             # code...
-            $class = ProgramLevel::find($class_id);
-            $data['title'] = "Course List For ".Subjects::find($course_id)->name.' [ '.Subjects::find($course_id)->code.' ] : '.\App\Models\Campus::find(request('campus_id'))->name;
+            $data['title'] = "Course List For ".$course->name.' [ '.$course->code.' ] : '.$campus->name;
             $data['students'] = StudentClass::where(['student_classes.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
                         ->join('students', ['students.id'=>'student_classes.student_id'])
-                        ->where(['students.campus_id'=>$request->campus_id])
+                        ->where(['students.campus_id'=>$request->campus_id, 'students.active'=>1])
                         ->join('student_courses', ['student_courses.student_id'=>'students.id'])
                         ->where(['student_courses.course_id'=>$course_id])
                         ->groupBy('student_classes.class_id', 'students.name')
                         ->select(['students.*', 'student_classes.class_id as class_id'])->get();
         } else {
             # code...
-            $class = ProgramLevel::find($class_id);
-            $data['title'] = "Class List For ".$class->program()->first()->name.': LEVEL '.$class->level()->first()->level.' ('.Subjects::find($course_id)->name.') : '.\App\Models\Campus::find(request('campus_id'))->name;
-            $data['students'] = StudentClass::where(['student_classes.class_id'=>$class_id])
-                        ->where(['student_classes.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
-                        ->join('students', ['students.id'=>'student_classes.student_id'])
-                        ->where(['students.campus_id'=>$request->campus_id])
+            $data['title'] = "Class List For ".$class->name().' ('.$course->name.') : '.$campus->name;
+            $data['students'] = $class->_students($this->current_accademic_year)
+                        ->where(['students.campus_id'=>$request->campus_id, 'students.active'=>1])
                         ->join('student_courses', ['student_courses.student_id'=>'students.id'])
                         ->where(['student_courses.course_id'=>$course_id])
                         ->select(['students.*'])->get();

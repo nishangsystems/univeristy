@@ -19,7 +19,7 @@ class ProgramLevel extends Model
     }
     public function _students($year)
     {
-        return $this->belongsToMany(Students::class, 'student_classes', 'class_id', 'student_id')->where('year_id', '=', $year);
+        return $this->belongsToMany(Students::class, 'student_classes', 'class_id', 'student_id')->where('student_classes.year_id', '=', $year);
     }
     public function program()
     {
@@ -50,7 +50,7 @@ class ProgramLevel extends Model
 
     public function subjects()
     {
-        return $this->belongsToMany( Subjects::class, ClassSubject::class, 'class_id', 'subject_id');
+        return $this->belongsToMany( Subjects::class, ClassSubject::class, 'class_id', 'subject_id')->whereNull('deleted_at');
     }
 
     public function name()

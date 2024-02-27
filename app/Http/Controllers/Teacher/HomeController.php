@@ -86,6 +86,18 @@ class HomeController extends Controller
         return back();
     }
 
+    public function delete_course($class_id, $subject_id)
+    {
+        # code...
+        try {
+            \App\Models\ClassSubject::updateOrInsert(['class_id'=>$class_id, 'subject_id'=>$subject_id], ['deleted_at'=>now()]);
+            return back()->with('success', 'Done');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', "F:{$th->getFile()} | L{$th->getLine()} | {$th->getMessage()}");
+        }
+    }
+
     
     public function save_courses(Request  $request, $program_level_id)
     {
