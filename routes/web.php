@@ -673,7 +673,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::get('drop/{student_attendance_id}', [ClassController::class, 'drop_student_attendance'])->name('drop');
     });
 
-    Route::get('{program_level_id}/class_courses', 'Teacher\HomeController@manage_courses')->name('edit.class_courses');
+    // Route::get('{program_level_id}/class_courses', 'Teacher\HomeController@manage_courses')->name('edit.class_courses');
     Route::prefix('{class_id}/course/{course_id}')->name('class_course.')->group(function () {
         Route::get('ca/fill', 'Teacher\HomeController@course_ca_fill')->name('ca.result');
         Route::get('ca/import', 'Teacher\HomeController@course_ca_import')->name('ca.import');

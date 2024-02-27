@@ -13,7 +13,6 @@
                 <th>###</th>
                 <th>{{__('text.word_name')}}</th>
                 <th>{{__('text.word_matricule')}}</th>
-                <th>{{__('text.academic_year')}}</th>
             </thead>
             <tbody>
                 @php($k = 1)
@@ -22,7 +21,6 @@
                         <td>{{$k++}}</td>
                         <td>{{$stud->name}}</td>
                         <td>{{$stud->matric}}</td>
-                        <td>{{\App\Models\Batch::find($stud->admission_batch_id)->name ?? '----'}}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -36,7 +34,7 @@
                 </thead>
                 <tbody>
                     @php($k = 1)
-                    @foreach(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                    @foreach($classes as $pl)
                         @if($pl['department'] != request('department_id'))
                             @continue
                         @endif
