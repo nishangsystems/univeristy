@@ -272,10 +272,10 @@ class Helpers
     public function getHeader()
     {
         # code...
-        $lt = 'save_letter_head';
-        if (file_exists(asset('assets/images/avatars/letter_head_file.png'))) {
+        $lt = 'lhead';
+        if (file_exists(asset('assets/images/avatars/lhead.png'))) {
             # code...
-            return asset('assets/images/avatars/letter_head_file.png');
+            return asset('assets/images/avatars/lhead.png');
         }
         return '';
     }

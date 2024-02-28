@@ -174,7 +174,7 @@ class HomeController  extends Controller
         // return $file->getClientOriginalName();
         if(!($file == null)){
             $ext = $file->getClientOriginalExtension();
-            $filename = 'letter_head_file.png';
+            $filename = 'lhead.png';
             $path = 'assets/images/avatars';
             if(!file_exists(url($path))){mkdir(url($path));}
             // $file->move(url($path), $filename);
