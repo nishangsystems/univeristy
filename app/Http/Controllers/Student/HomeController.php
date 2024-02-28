@@ -1278,7 +1278,7 @@ class HomeController extends Controller
         }else{
             $data['total_cost'] = number_format((float)$unit_cost * $data['courses']->count()).' '.__('text.currency_cfa');
         }
-        $data['amount_paid'] = $data['courses']->first()->transaction->amount??0;
+        $data['amount_paid'] = number_format($data['courses']->first()->transaction->amount??0).' '.__('text.currency_cfa');
         // dd($data);
         return view('student.resit.courses', $data); // <--- load your view into theDOM wrapper;
         $pdf = PDF::loadView('student.resit.courses', $data); // <--- load your view into theDOM wrapper;
