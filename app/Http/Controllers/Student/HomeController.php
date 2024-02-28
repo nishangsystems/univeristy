@@ -2206,10 +2206,17 @@ class HomeController extends Controller
 
         }
         // $tranzak_credentials = TranzakCredential::where('campus_id', $student->campus_id)->first();
-        if(cache($cache_token_key) == null or Carbon::parse(cache($cache_token_key.'_expiry'))->isAfter(now())){
+        if(!(\Cache::has($cache_token_key)) or (\Cache::has($cache_token_key.'_expiry') and Carbon::parse(cache($cache_token_key.'_expiry'))->isAfter(now()))){
             // get and cache different token
             GEN_TOKEN:
-            $response = Http::post(config('tranzak.tranzak.base').config('tranzak.tranzak.token'), ['appId'=>$tranzak_app_id, 'appKey'=>$tranzak_api_key]);
+            // dd(config('tranzak.tranzak.base').config('tranzak.tranzak.token'));
+            $response = Http::post(
+                config('tranzak.tranzak.base').config('tranzak.tranzak.token'), 
+                [
+                    'appId'=>$tranzak_app_id, 
+                    'appKey'=>$tranzak_api_key
+                ]
+            );
             if($response->status() == 200){
                 // cache token and token expirationtot session
                 cache([$cache_token_key => json_decode($response->body())->data->token]);
