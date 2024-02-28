@@ -8,8 +8,8 @@
 
     <div class="col-sm-12">
         <div class="bg-secondary">
-            <div class="bg-light py-2 border-top border-bottom border-dark text-uppercase text-center">
-                {{ __('text.word_tution') }}
+            <div class="bg-light py-2 border-top border-bottom border-dark text-uppercase text-center text-dark">
+                <b>{{ __('text.word_tution') }}</b>
             </div>
             <div class="content-panel">
                 @forelse($fees as $item)
@@ -207,8 +207,8 @@
             </div>
         </div>
         <div class="bg-secondary">
-            <div class="bg-light py-2 border-top border-bottom border-dark text-uppercase text-center">
-                {{ trans_choice('text.word_transcript', 2) }}
+            <div class="bg-light py-2 border-top border-bottom border-dark text-uppercase text-center text-dark">
+                <b>{{ trans_choice('text.word_transcript', 2) }}</b>
             </div>
             <div class="content-panel">
                 @forelse($transcripts as $item)
@@ -376,8 +376,8 @@
             </div>
         </div>
         <div class="bg-secondary">
-            <div class="bg-light py-2 border-top border-bottom border-dark text-uppercase text-center">
-                {{ __('text.other_payments') }}
+            <div class="bg-light py-2 border-top border-bottom border-dark text-uppercase text-center text-dark">
+                <b>{{ __('text.other_payments') }}</b>
             </div>
             <div class="content-panel">
                 @forelse($other_payments as $item)
@@ -547,8 +547,8 @@
             </div>
         </div>
         <div class="bg-secondary">
-            <div class="bg-light py-2 border-top border-bottom border-dark text-uppercase text-center">
-                {{ __('text.word_charges') }}
+            <div class="bg-light py-2 border-top border-bottom border-dark text-uppercase text-center text-dark">
+                <b>{{ __('text.word_charges') }}</b>
             </div>
             <div class="content-panel">
                 @forelse($charges as $item)
@@ -701,6 +701,178 @@
                                             </div>
                                         </div>
                                     </div> 
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ------------------------------- -->
+
+
+                    </div>
+                @empty
+                    <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
+                        <p>No Payments where found </p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+        <div class="bg-secondary">
+            <div class="bg-light py-2 border-top border-bottom border-dark text-uppercase text-center text-dark">
+                <b>{{ __('text.word_resits') }}</b>
+            </div>
+            <div class="content-panel">
+                @forelse($resits as $item)
+                    <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end">
+                        <div>
+                            <div class="text-uppercase">{{$item->name.' | '.$item->year->name}}</div>
+                            <h4 class="font-weight-bold">{{number_format($item->amount??0)}} FCFA</h4>
+                            <span class="font-weight-bolder h5 text-uppercase">{{__('text.paid_on').' '.date('d/m/Y', strtotime($item->transaction_date))}}</span>
+                            <br>
+                            <span class="font-weight-bolder h6 text-capitalize text-secondary">{{__('text.word_ref').'. '.($item->transaction_id)}}</span>
+                        </div>
+                        <button class="btn btn-sm btn-primary" onclick="printDiv('printHERE{{$item->id}}')">{{__('text.word_print')}}</button>
+                        <!-- create a hidden div for printable markup and print with js on request -->
+                        <div class="d-none">
+                            <div id="printHERE{{$item->id}}" class="eachrec">
+                                
+                                <div class="mb-5">
+                                    <div style="height:120px; width:95% ; ">
+                                            <img width="100%" src="{{$header}}" />
+                                        </div>
+                                        <div style=" float:left; width:100%; margin-top:100px;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; margin-bottom:10px; text-transform: uppercase;">
+                                            {{__('text.cash_reciept')}} N<SUP>0</SUP> 00{{$item->id}}
+                                        </div>
+                                        <div style=" float:left; width:900px; margin-top:0px;TEXT-ALIGN:CENTER; font-family:arial; height:300px;font-size:13px; ">
+                                            <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.word_name')}} :</div>
+                                            <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
+                                                <div style=" text-align:center; width:80%; margin-top:3px;">
+                                                    {{$student->name}}
+                                                </div>
+                                            </div>
+                                            <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.word_purpose')}} :</div>
+                                            <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
+                                                <div style=" float:left; width:500px;margin-top:3px; text-transform: uppercase;">
+                                                    RESIT PAYMENT : {{ $item->name??'' }}
+                                                </div>
+                                                <div style=" float:left; width:200px;  height:25px;margin-top:15px;"></div>
+                                            </div>
+
+                                            <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform: capitalize"> {{__('text.academic_year')}}:</div>
+                                            <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
+                                                <div style=" float:left; width:300px;margin-top:3px;">
+                                                    {{ $item->year->name }}
+                                                </div>
+                                                <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
+                                            </div>
+
+                                            <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform: capitalize"> {{__('text.word-reference')}}:</div>
+                                            <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
+                                                <div style=" float:left; width:300px;margin-top:3px;">
+                                                    {{$item->transaction_id}}
+                                                </div>
+                                                <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
+                                            </div>
+                                            <div style=" float:left; width:200px;  height:25px;margin-top:15px;"></div>
+                                            <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:300px; font-size:13px; ">
+                                                <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.amount_in_figures')}}</div>
+                                                <div style=" float:left; width:700px; height:25px;font-size:17px;">
+                                                    <div style=" float:left; width:400px;border:1px solid #000;margin-top:3px;">
+                                                        {{__('text.currency_cfa')}} {{$item->amount}}
+                                                    </div>
+                                                    <div style=" float:left; width:100px;margin-top:5px; text-transform:uppercase">
+                                                        {{__('text.word_date')}}
+                                                    </div>
+                                                    <div style=" float:left; border-bottom:1px solid #000;">
+                                                        {{date('d/m/Y', strtotime($item->transaction_date))}}
+                                                    </div>
+                                                </div>
+                                                <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
+                                                <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
+                                                    <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> <i>{{__('text.amount_in_words')}}</i></div>
+                                                    <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{\App\Helpers\Helpers::instance()->numToWord($item->amount)}}</i></div>
+                                                </div>
+                                                <div style=" clear:both; height:30px"></div>
+
+                                                <div style="float:left; margin:30px 30px; height:30px; text-transform:capitalize">
+                                                    ___________________<br /><br />{{__('text.burser_signature')}}
+                                                </div>
+
+                                                <div style="float:right; margin:10px 10px; height:30px; text-transform:capitalize">
+                                                    ___________________<br /><br />{{__('text.student_signature')}}
+                                                </div>
+                                            </div>
+                                            
+                                        </div> 
+                                    </div>
+                                    <div>
+                                        <div style="height:120px; width:95% ; margin-top: 65rem;">
+                                                <img width="100%" src="{{$header}}" />
+                                            </div>
+                                            <div style=" float:left; width:100%; margin-top:100px;TEXT-ALIGN:CENTER;  height:34px;font-size:24px; margin-bottom:10px; text-transform: uppercase;">
+                                                {{__('text.cash_reciept')}} N<SUP>0</SUP> 00{{$item->id}}
+                                            </div>
+                                            <div style=" float:left; width:900px; margin-top:0px;TEXT-ALIGN:CENTER; font-family:arial; height:300px;font-size:13px; ">
+                                                <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.word_name')}} :</div>
+                                                <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
+                                                    <div style=" text-align:center; width:80%; margin-top:3px;">
+                                                        {{$student->name}}
+                                                    </div>
+                                                </div>
+                                                <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.word_purpose')}} :</div>
+                                                <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
+                                                    <div style=" float:left; width:500px;margin-top:3px; text-transform: uppercase;">
+                                                        RESIT PAYMENT : {{ $item->name??'' }}
+                                                    </div>
+                                                    <div style=" float:left; width:200px;  height:25px;margin-top:15px;"></div>
+                                                </div>
+    
+                                                <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform: capitalize"> {{__('text.academic_year')}}:</div>
+                                                <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
+                                                    <div style=" float:left; width:300px;margin-top:3px;">
+                                                        {{ $item->year->name }}
+                                                    </div>
+                                                    <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
+                                                </div>
+    
+                                                <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform: capitalize"> {{__('text.word-reference')}}:</div>
+                                                <div style=" float:left; width:700px;border-bottom:1px solid #000;font-weight:normal; height:25px;font-size:17px;">
+                                                    <div style=" float:left; width:300px;margin-top:3px;">
+                                                        {{$item->transaction_id}}
+                                                    </div>
+                                                    <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
+                                                </div>
+                                                <div style=" float:left; width:200px;  height:25px;margin-top:15px;"></div>
+                                                <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:300px; font-size:13px; ">
+                                                    <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> {{__('text.amount_in_figures')}}</div>
+                                                    <div style=" float:left; width:700px; height:25px;font-size:17px;">
+                                                        <div style=" float:left; width:400px;border:1px solid #000;margin-top:3px;">
+                                                            {{__('text.currency_cfa')}} {{$item->amount}}
+                                                        </div>
+                                                        <div style=" float:left; width:100px;margin-top:5px; text-transform:uppercase">
+                                                            {{__('text.word_date')}}
+                                                        </div>
+                                                        <div style=" float:left; border-bottom:1px solid #000;">
+                                                            {{date('d/m/Y', strtotime($item->transaction_date))}}
+                                                        </div>
+                                                    </div>
+                                                    <div style=" float:left; width:200px;  height:25px;margin-top:7px;"></div>
+                                                    <div style=" float:left; width:900px;margin-top:3px;TEXT-ALIGN:CENTER; font-family:arial; height:30px; BORDER-BOTTOM:none; font-size:13px; ">
+                                                        <div style=" float:left; width:200px; height:25px;font-size:17px; text-transform:capitalize"> <i>{{__('text.amount_in_words')}}</i></div>
+                                                        <div style=" float:left; width:700px; height:25px; border-bottom:none; font-size:16px; font-family:Chaparral Pro Light; border-bottom:1PX dashed#000"><i>{{\App\Helpers\Helpers::instance()->numToWord($item->amount)}}</i></div>
+                                                    </div>
+                                                    <div style=" clear:both; height:30px"></div>
+    
+                                                    <div style="float:left; margin:30px 30px; height:30px; text-transform:capitalize">
+                                                        ___________________<br /><br />{{__('text.burser_signature')}}
+                                                    </div>
+    
+                                                    <div style="float:right; margin:10px 10px; height:30px; text-transform:capitalize">
+                                                        ___________________<br /><br />{{__('text.student_signature')}}
+                                                    </div>
+                                                </div>
+                                                
+                                            </div> 
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

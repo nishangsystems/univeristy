@@ -35,4 +35,10 @@ class StudentSubject extends Model
     {
         return $this->belongsTo(Level::class, 'level_id');
     }
+
+    public function transaction()
+    {
+        # code...
+        return $this->belongsTo(TranzakTransaction::class, 'paid');
+    }
 }
