@@ -22,12 +22,33 @@
                     <td class="border-left border-right border-white">{{$course->subject->status}}</td>
                 </tr>
             @endforeach
+            <tr class="border-top border-2 border-success text-capitalize" style="text-align:left; text-transform:capitalize; border: 0.5rem 0 solid black; margin-block: 1rem;">
+                <td colspan="3">{{__('text.word_course').' '.__('text.word_total')}}</td>
+                <th colspan="2">{{$courses->count()}}</th>
+            </tr>
+            <tr class="border-top border-2 border-success text-capitalize" style="text-align:left; text-transform:capitalize; border: 0.5rem 0 solid black; margin-block: 1rem;">
+                <td colspan="3">{{__('text.unit_cost')}}</td>
+                <th colspan="2">{{$unit_cost}}</th>
+            </tr>
+            <tr class="border-top border-2 border-success text-capitalize" style="text-align:left; text-transform:capitalize; border: 0.5rem 0 solid black; margin-block: 1rem;">
+                <td colspan="3">{{__('text.total_cost')}}</td>
+                <th colspan="2">{{$total_cost}}</th>
+            </tr>
+            <tr class="border-top border-2 border-success text-capitalize" style="text-align:left; text-transform:capitalize; border: 0.5rem 0 solid black; margin-block: 1rem;">
+                <td colspan="3">{{__('text.amount_paid')}}</td>
+                <th colspan="2">{{$amount_paid}}</th>
+            </tr>
         </tbody>
-        <tfoot class="bg-light text-capitalize">
-            <th class=" border-left border-right border-light text-dark">{{__('text.word_course').' '.__('text.word_total')}} : {{$courses->count()}}</th>
-            <th class=" border-left border-right border-light text-dark">{{__('text.unit_cost')}} : {{$unit_cost}}</th>
-            <th class=" border-left border-right border-light text-dark">{{__('text.total_cost')}} : {{$total_cost}}</th>
+        <tfoot class="bg-light py-3">
+            <th class=" border-top text-dark" colspan="5"> RESIT FORM | {{ $resit->name??'' }} | {{ $resit->year->name??'' }} </th>
         </tfoot>
     </table>
 </div>
+@endsection
+@section('script')
+    <script>
+        $(window).on('load', function(){
+            window.print();
+        })
+    </script>
 @endsection

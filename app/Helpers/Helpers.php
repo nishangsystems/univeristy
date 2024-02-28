@@ -67,7 +67,7 @@ class Helpers
 
     public function letterHead()
     {
-        return File::where('name', 'letter-head')->first()->path ?? '';
+        return $this->getHeader();
     }
 
     public function bgImage()
@@ -272,13 +272,12 @@ class Helpers
     public function getHeader()
     {
         # code...
-        $lt = File::where('name','=', 'letter-head');
-        if ($lt->count() > 0) {
-            # code...
-            return asset('assets/images/avatars').'/'.$lt->first()->path;
-
-        }
-        return '';
+        return asset('assets/images/avatars/lhead.png');
+        // $lt = 'lhead';
+        // if (file_exists(asset('assets/images/avatars/lhead.png'))) {
+        //     # code...
+        // }
+        // return '';
     }
 
     public function getBackground()

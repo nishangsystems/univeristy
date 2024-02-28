@@ -642,6 +642,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     });
     Route::get('edit/{program_level_id}/{subject_id}/class_courses', 'Teacher\HomeController@edit_course')->name('edit.class_courses');
     Route::post('edit/{program_level_id}/{subject_id}/class_courses', 'Teacher\HomeController@update_course');
+    Route::post('delete/{program_level_id}/{subject_id}/class_courses', 'Teacher\HomeController@delete_course')->name('delete.class_courses');
     Route::get('reset_password', 'Controller@reset_password')->name('reset_password');
     Route::post('reset_password', 'Controller@reset_password_save')->name('reset_password');
 
@@ -673,7 +674,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::get('drop/{student_attendance_id}', [ClassController::class, 'drop_student_attendance'])->name('drop');
     });
 
-    Route::get('{program_level_id}/class_courses', 'Teacher\HomeController@manage_courses')->name('edit.class_courses');
+    // Route::get('{program_level_id}/class_courses', 'Teacher\HomeController@manage_courses')->name('edit.class_courses');
     Route::prefix('{class_id}/course/{course_id}')->name('class_course.')->group(function () {
         Route::get('ca/fill', 'Teacher\HomeController@course_ca_fill')->name('ca.result');
         Route::get('ca/import', 'Teacher\HomeController@course_ca_import')->name('ca.import');

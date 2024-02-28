@@ -1258,7 +1258,9 @@ class HomeController extends Controller
     public function resit_index()
     {
         # code...
+        $user = auth('student')->user();
         $data['title'] = "My Resits";
+        $data['resits'] = Resit::join('student_courses', 'student_courses.resit_id', '=', 'resits.id')->where('student_courses.student_id', $user->id)->distinct()->get(['resits.*']);
         return view('student.resit.forms', $data);
     }
 
@@ -1267,6 +1269,7 @@ class HomeController extends Controller
         # code...
         $resit = Resit::find($id);
         $unit_cost = auth('student')->user()->_class($resit->year_id)->program->resit_cost;
+        $data['resit'] = $resit;
         $data['title'] = $resit->year->name.' - '.'RESIT FOR '.$resit->background->background_name.' [ FROM '.date('d-m-Y', strtotime($resit->start_date)).' TO '.date('d-m-Y', strtotime($resit->end_date)).' ]';
         $data['courses'] = $resit->courses(auth('student')->id())->get();
         $data['unit_cost'] = number_format($unit_cost ?? 0).' '.__('text.currency_cfa');
@@ -1275,8 +1278,9 @@ class HomeController extends Controller
         }else{
             $data['total_cost'] = number_format((float)$unit_cost * $data['courses']->count()).' '.__('text.currency_cfa');
         }
+        $data['amount_paid'] = number_format($data['courses']->first()->transaction->amount??0).' '.__('text.currency_cfa');
         // dd($data);
-        // return view('student.resit.courses', $data); // <--- load your view into theDOM wrapper;
+        return view('student.resit.courses', $data); // <--- load your view into theDOM wrapper;
         $pdf = PDF::loadView('student.resit.courses', $data); // <--- load your view into theDOM wrapper;
         $fileName =  $data['title'].'_'.time().'.'. 'pdf' ; // <--giving the random filename,
         return $pdf->download($fileName);
@@ -1760,6 +1764,7 @@ class HomeController extends Controller
         $year = $request->year ?? null;
         $filter = $request->fiilter ?? null;
         $user = auth('student')->user();
+        $data['user'] = $user;
         $data['title'] = "My Transactions";
         $data['transactions'] = $user->transactions()->where(function($row){
             $row->where('payment_purpose', '=', 'PLATFORM')
@@ -1772,7 +1777,12 @@ class HomeController extends Controller
         $data['other_payments'] = PayIncome::where('student_id', auth('student')->id())->whereNotNull('transaction_id')->get();
         $data['transcripts'] = Transcript::where('student_id', auth('student')->id())->whereNotNull('transaction_id')->get();
         $data['charges'] = Charge::where('student_id', auth('student')->id())->whereNotNull('financialTransactionId')->get();
-        // return $data;
+        $data['resits'] = \App\Models\Resit::join('student_courses', 'student_courses.resit_id', '=', 'resits.id')
+            ->whereNotNull('student_courses.paid')->where('student_courses.student_id', $user->id)
+            ->join('tranzak_transactions', 'tranzak_transactions.id', '=', 'student_courses.paid')
+            ->groupBy('resits.id')
+            ->select(['resits.*', 'tranzak_transactions.amount', 'tranzak_transactions.created_at as transaction_date', 'tranzak_transactions.transaction_id',])->distinct()->get();
+        // dd($data);
         return view('student.online_payment_history', $data);
     }
 
@@ -1938,52 +1948,6 @@ class HomeController extends Controller
                             
                             $__amount = $transaction['amount'];
                             
-                            // foreach (Batch::orderBy('name')->distinct()->pluck('id')->toArray() as $key => $year_id) {
-                            //     # code...
-                            //     if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
-                            //     $class = $student->_class($year_id);
-                            //     if($class != null){
-                            //         $cpid = $class->campus_programs->where('campus_id', $student->campus_id)->first();
-                            //         if($cpid != null){
-                            //             $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $trans['payment_id'] : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
-                            //             $total_balance = $student->total_balance($student->id, $year_id);
-                            //             if($total_balance > 0){
-                            //                 $amount = 0; $debt = 0;
-                            //                 if($__amount >= $total_balance){
-                            //                     $__amount -= $total_balance;
-                            //                     $amount = $total_balance;
-                            //                 }else{
-                            //                     $amount = $__amount;
-                            //                     $__amount = 0;
-                            //                 }
-                            //                 if($year_id == Helpers::instance()->getCurrentAccademicYear()){
-                            //                     $debt = $__amount > 0 ? -$__amount : 0;
-                            //                 }else{$debt = 0;}
-                
-                            //                 $data = [
-                            //                     "payment_id" => $payment_id,
-                            //                     "student_id" => $student->id,
-                            //                     "unit_id" => $class->id,
-                            //                     "batch_id" => $year_id,
-                            //                     "amount" => $amount,
-                            //                     // "date" => $request->date,
-                            //                     'reference_number' => $request->reference_number.time().'_'.random_int(1000000, 99999999),
-                            //                     'user_id' => auth('student')->id(),
-                            //                     'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
-                            //                     'debt' => $debt,
-                            //                     'transaction_id'=>$transaction_instance->id,
-                            //                     'paid_by' => auth('student')->id(),
-                            //                     'created_at'=>date(DATE_ATOM, time()),
-                            //                     'updated_at'=>date(DATE_ATOM, time())
-                            //                 ];
-                            //                 if ($data['reference_number'] == null || (Payments::where(['reference_number' => $data['reference_number']])->count() == 0)) {
-                            //                     $_data[] = $data;
-                            //                 }else{return back()->with('error', __('text.reference_already_exist'));}
-                            //             };
-                            //         }
-                            //     }
-                            // }
-
                             foreach (Batch::orderBy('name')->pluck('id')->toArray() as $key => $year_id) {
                                 # code...
                                 if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;

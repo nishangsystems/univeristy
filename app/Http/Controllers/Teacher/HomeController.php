@@ -54,9 +54,14 @@ class HomeController extends Controller
         return view('teacher.units.manage_subjects')->with($data);
     }
 
-    public function edit_course(Request $request)
+    public function edit_course(Request $request, $class_id, $subject_id)
     {
-        $class_subject = ClassSubject::where(['class_id'=>$request->program_level_id, 'subject_id'=>$request->subject_id])->first();
+        $class_subject = ClassSubject::where(['class_id'=>$class_id, 'subject_id'=>$subject_id])->first();
+        if($class_subject ==  null){
+            $subject = Subjects::find($subject_id);
+            $class_subject = new ClassSubject(['class_id'=>$class_id, 'coef'=>$subject->coef, 'status'=>$subject->status, 'subject_id'=>$subject_id]);
+            $class_subject->save();
+        }
         // return $parent;
         $data['class_subject'] = $class_subject;
         $data['title'] = "Edit course: ".$class_subject->class->name().'; ' . $class_subject->subject->name .' [ '.$class_subject->subject->code.' ] ';
@@ -79,6 +84,18 @@ class HomeController extends Controller
             return redirect(route('user.programs.courses', ['program_level_id'=>$request->program_level_id]))->with('success', __('text.word_done'));
         }
         return back();
+    }
+
+    public function delete_course($class_id, $subject_id)
+    {
+        # code...
+        try {
+            \App\Models\ClassSubject::updateOrInsert(['class_id'=>$class_id, 'subject_id'=>$subject_id], ['deleted_at'=>now()]);
+            return back()->with('success', 'Done');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', "F:{$th->getFile()} | L{$th->getLine()} | {$th->getMessage()}");
+        }
     }
 
     
@@ -367,11 +384,13 @@ class HomeController extends Controller
                 return view('teacher.result.fill_ca', $data);
     }
 
-    public function course_ca_import(){
+    public function course_ca_import($class_id, $course_id){
 
         // check if CA total is set forthis program
 
-        $data['title'] = "Import CA Results";
+        $class = ProgramLevel::find($class_id);
+        $course = Subjects::find($course_id);
+        $data['title'] = "Import CA Results For {$course->name} | {$class->name()}";
         return view('teacher.result.import_ca', $data);
     }
 

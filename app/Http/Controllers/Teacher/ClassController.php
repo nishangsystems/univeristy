@@ -29,13 +29,24 @@ class ClassController extends Controller
         // $data['courses'] = 
     }
 
-    public function program_levels_list(Request $request, $department_id)
+    public function program_levels_list(Request $request, $department_id, $campus_id=null)
     {
         # code...
+        $campus_id = intval($campus_id);
         if(!$request->has('id')){
-            $data['title'] = "Classes ".($request->campus_id != null ? ' Under '.\App\Models\Campus::find($request->campus_id)->first()->name : '').' - '.SchoolUnits::find($department_id)->name;
+            $campus = $request->campus_id != null ? \App\Models\Campus::find($request->campus_id)->first()->name : '';
+            $dept = SchoolUnits::find($department_id)->name;
+            $data['classes'] = \App\Http\Controllers\Controller::sorted_program_levels();
+            $data['title'] = "Classes Under {$dept} | {$campus}";
+            
         }else{
-            $data['title'] = "Class List ".($request->campus_id != null ? ' For '.\App\Models\Campus::find($request->campus_id)->first()->name : '').' - '.ProgramLevel::find($request->id)->name();
+            $campus = $campus_id != null ? \App\Models\Campus::find($request->campus_id)->first() : null;
+            $class = ProgramLevel::find($request->id);
+            $year = Batch::find($this->current_accademic_year);
+            $data['title'] = "Class List  For {$class->name()} | {$campus->name} | {$year->name}";
+            $data['students'] = $campus_id != null ?
+                $class->_students($this->current_accademic_year)->where('active', 1)->where('campus_id', $campus_id)->get() :
+                $class->_students($this->current_accademic_year)->where('active', 1)->where('campus_id', auth()->user()->campus_id)->get();
         }
         return view('teacher.class_list', $data);
     }
@@ -76,13 +87,11 @@ class ClassController extends Controller
         $data['class'] = $class;
 
         // $data['students'] = $class->students(\Session::get('mode', \App\Helpers\Helpers::instance()->getCurrentAccademicYear()))->paginate(15);
-        $data['students'] = StudentClass::where('class_id', '=', $class_id)
-                ->where('year_id', '=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
-                ->join('students', ['students.id'=>'student_classes.student_id'])
+        $data['students'] = $class->_students($this->current_accademic_year)
                 ->where(function($q){
                     request()->has('campus') ? $q->where(['students.campus_id'=>request('campus')]) : null;
                 })
-                ->orderBy('students.name', 'ASC')->get('students.*');
+                ->orderBy('students.name', 'ASC')->get(['students.*']);
         return view('teacher.student')->with($data);
     }
 

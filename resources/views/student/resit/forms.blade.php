@@ -13,7 +13,7 @@
         </thead>
         <tbody>
             @php($k = 1)
-            @foreach (\App\Models\Resit::where(['campus_id'=>auth('student')->user()->campus_id, 'background_id'=>auth('student')->user()->_class()->program->background->id])->get() as $resit)
+            @foreach ($resits as $resit)
                 <tr class="text-capitalize bg-light border-bottom border-white">
                     <td class="border-left border-right border-white">{{$k++}}</td>
                     <td class="border-left border-right border-white">{{$resit->year->name}}</td>
