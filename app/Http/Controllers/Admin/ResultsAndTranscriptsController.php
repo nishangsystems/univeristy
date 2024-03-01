@@ -50,7 +50,10 @@ class ResultsAndTranscriptsController extends Controller{
             $year = \App\Models\Batch::find(request('year_id'));
             $data['year'] = request('year_id');
             $data['students'] = $class->_students($year->id)->get();
-            $data['grades'] = $class->program->gradingType->grading->sortBy('grade') ?? [];
+            $data['grades'] = \Cache::remember('grading_scale', 86400, function () use ($class) {
+                return $class->program->gradingType->grading->sortBy('grade') ?? [];
+            });
+            
             $data['courses'] = $class->class_subjects_by_semester(request('semester_id')) ?? [];
             $data['base_pass'] = ($class->program->ca_total ?? 0 + $class->program->exam_total ?? 0)*0.5;
             $data['_title'] = $class->name().' '.$semester->name.' '.$data['title'].' FOR '.$year->name.' '.__('text.academic_year');

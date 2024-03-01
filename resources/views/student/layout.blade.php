@@ -451,15 +451,18 @@
                         <b class="arrow"></b>
                     </li>
 
-                    <li>
-                        <a href="{{route('student.resit.pending_courses')}}" class="text-capitalize">
-                            <i  style="color: {{$bg1}};" class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.pending_courses')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
 
                 </ul>
+            </li>
+
+                
+                
+            <li>
+                <a href="{{route('student.resit.pending_courses')}}" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-stop menu-icon   "></i>
+                    <span class="menu-text">{{__('text.unvalidated_courses')}}</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
             </li>
 
             <li>

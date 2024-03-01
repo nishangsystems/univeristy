@@ -33,6 +33,7 @@ class StudentResource3 extends JsonResource
             'parent_phone' => $this->parent_phone_number,
             'campus' => \App\Models\Campus::find($this->campus_id)->name,
             'link' => route('admin.fee.student.payments.create', [$this->id]),
+            'reg_link' => route('admin.fee.student.payments.reg.create', [$this->id]),
             'rlink' => route('admin.print_fee.student', [$this->id]),
         ];
     }

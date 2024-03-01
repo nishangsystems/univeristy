@@ -47,6 +47,12 @@ class FeesController extends Controller
         return view('admin.fee.collect', compact('title'));
     }
 
+    public function collect_registration(Request  $request)
+    {
+        $title = __('text.collect_registration_fee');
+        return view('admin.fee.reg_collect', compact('title'));
+    }
+
     public function printFee(Request  $request)
     {
         $title = __('text.print_fee');
@@ -92,6 +98,15 @@ class FeesController extends Controller
         return view('admin.fee.fee_situation', $data);
     }
 
+    public function registration_fee_situation(Request $request)
+    {
+        # code...
+
+        $class = ProgramLevel::find($request->class);
+        $data['title'] = __('text.registration_fee_situation');
+        return view('admin.fee.rgfee_situation', $data);
+    }
+
     public function fee_situation_list(Request $request)
     {
         # code...
@@ -100,6 +115,16 @@ class FeesController extends Controller
         $data['data'] = HomeController::fee_situation($request);
         // return $data;
         return view('admin.fee.fee_situation_list', $data);
+    }
+
+    public function registration_fee_situation_list (Request $request)
+    {
+        # code...
+        $class = ProgramLevel::find($request->class);
+        $data['title'] = __('text.registration_fee_situation').' '.__('text.word_for').' '.$class->program->name.' : '.__('text.word_level').' '.$class->level->level.' - '.Batch::find($request->year)->name;
+        $data['data'] = HomeController::rgfee_situation($request);
+        // return $data;
+        return view('admin.fee.rgfee_situation_list', $data);
     }
 
     public function fee_list(Request  $request)

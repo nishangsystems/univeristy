@@ -241,8 +241,8 @@ class HomeController extends Controller
 
         $data = $students->map(function($student)use($campus, $year, $class){
             $extra_fee = ExtraFee::where('student_id', $student->id)->where('year_id', $year)->sum('amount');
-            $fee = $class->campus_programs($student->campus_id)->first()->payment_items->where('year_id', $year)->first();
-            $cash_paid = Payments::where('student_id', $student->id)->where('payment_year_id', $year)->sum(DB::raw('amount - debt'));
+            $fee = $class->campus_programs($student->campus_id)->first()->payment_items->where('name', 'TUTION')->where('year_id', $year)->first();
+            $cash_paid = Payments::where('student_id', $student->id)->where('payment_year_id', $year)->where('payment_id', $fee->id)->sum(DB::raw('amount - debt'));
             $scholarship = StudentScholarship::where('student_id', $student->id)->where('batch_id', $year)->sum('amount');
             $student->link = route('admin.fee.student.payments.index', [$student->id]);
             $student->class = $class->name();
@@ -288,21 +288,23 @@ class HomeController extends Controller
         $fields = ['payment_items.id', 'payment_items.amount', 'payment_items.campus_program_id', 'payment_items.year_id', 'campus_programs.campus_id'];
 
         if($campus != null){
-            $class_fees = $class->_campus_programs()->join('payment_items', 'campus_programs.id', '=', 'payment_items.campus_program_id')->where('campus_programs.campus_id', $campus->id)->where('year_id', '<=', $year)->distinct();
+            $class_fees = $class->_campus_programs()->join('payment_items', 'campus_programs.id', '=', 'payment_items.campus_program_id')->where('payment_items.name', 'TUTION')->where('campus_programs.campus_id', $campus->id)->where('year_id', '<=', $year)->distinct();
                 // ->join('students', 'students.campus_id', '=', 'campus_programs.campus_id');
         }else{
-            $class_fees = $class->_campus_programs()->join('payment_items', 'campus_programs.id', '=', 'payment_items.campus_program_id')->where('year_id', '<=', $year)->distinct();
+            $class_fees = $class->_campus_programs()->join('payment_items', 'campus_programs.id', '=', 'payment_items.campus_program_id')->where('payment_items.name', 'TUTION')->where('year_id', '<=', $year)->distinct();
         }
 
         $extra_fees = StudentClass::where(['class_id'=>$class->id, 'student_classes.year_id'=>$year])->join('extra_fees', 'extra_fees.student_id','=', 'student_classes.student_id')->where('extra_fees.year_id', $year)->get('extra_fees.*');
         $set_fees = $class_fees->distinct()->select($fields)->get();
         // $fee_payments = Payments::whereIn('payment_id', $class_fees->pluck('payment_items.id')->toArray())->where('batch_id', '<=', $year)->get(["id", "payment_id","student_id","batch_id","amount", 'debt']);
         if($campus == null){
-            $fee_payments = Payments::whereIn('payments.payment_id', $class_fees->pluck('payment_items.id')->toArray())->where('payments.batch_id', '<=', $year)
+            $fee_payments = Payments::whereIn('payments.payment_id', $class_fees->pluck('payment_items.id')->toArray())
+                ->where('payments.batch_id', '<=', $year)
                 ->join('students', 'students.id', '=', 'payments.student_id')
                 ->select("payments.id", "payments.payment_id","payments.student_id","payments.batch_id", DB::raw('SUM(payments.amount - payments.debt) as amount_sum'),  'students.name','students.gender','students.matric', 'students.admission_batch_id', 'campus_id')->groupBy('payments.student_id')->get();
         }else{
-            $fee_payments = Payments::whereIn('payment_id', $class_fees->pluck('payment_items.id')->toArray())->where('payments.batch_id', '<=', $year)
+            $fee_payments = Payments::whereIn('payment_id', $class_fees->pluck('payment_items.id')->toArray())
+                ->where('payments.batch_id', '<=', $year)
                 ->join('students', 'students.id', '=', 'payments.student_id')->where('students.campus_id', $campus->id)
                 ->select("payments.id", "payments.payment_id","payments.student_id","payments.batch_id", DB::raw('SUM(payments.amount - payments.debt) as amount_sum'), 'students.name','students.gender','students.matric', 'students.admission_batch_id', 'campus_id')->groupBy('payments.student_id')->get();
         }
@@ -434,7 +436,7 @@ class HomeController extends Controller
         foreach ($class->_students($year)->get() as $key => $student) {
             $items = [];
             foreach ($student->classes as $key => $_class) {
-                if(($it = $_class->class->single_payment_item($student->campus_id, $_class->year_id)->get()->first()) != null){
+                if(($it = $_class->class->single_payment_item($student->campus_id, $_class->year_id)->where('name', 'TUTION')->get()->first()) != null){
                     $items[] = $it;
                 };
             }
@@ -482,69 +484,44 @@ class HomeController extends Controller
 
     }
 
-    // public static function fee_situation(Request $request)
-    // {
-    //     # code...
-    //     $year = request('year', Helpers::instance()->getCurrentAccademicYear());
-    //     $class = ProgramLevel::find(\request('class'));
+    
+    public static function rgfee_situation(Request $request)
+    {
+        # code...
+        $year = request('year', Helpers::instance()->getCurrentAccademicYear());
+        $class = ProgramLevel::find(\request('class'));
 
-    //     $students = [];
- 
-    //     $studs = \App\Models\StudentClass::where('student_classes.class_id', '=', $request->class)->where('year_id', '=', $year)->join('students', 'students.id', '=', 'student_classes.student_id')
-    //         ->where(function($q) {
-    //             # code...
-    //             auth()->user()->campus_id != null ? $q->where('students.campus_id', '=', auth()->user()->campus_id) : null;
-    //         })->pluck('students.id')->toArray();
-        
-    //     // return $studs;
-    //     $fees = array_map(function($stud) use ($year){
-    //         return [
-    //             // amount paid
-    //             'amount' => array_sum(
-    //                 \App\Models\Payments::where('payments.student_id', '=', $stud)
-    //                 ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
-    //                 ->where('payment_items.name', '=', 'TUTION')
-    //                 ->where('payments.batch_id', '=', $year)
-    //                 ->pluck('payments.amount')
-    //                 ->toArray()
-    //             ),
-    //             'balance'=>Students::find($stud)->bal($stud, $year),
-    //             // total/expected fee amount
-    //             'total' => 
-    //                     \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-    //                     ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
-    //                     ->where('payment_items.name', '=', 'TUTION')
-    //                     ->whereNotNull('payment_items.amount')
-    //                     ->join('students', 'students.program_id', '=', 'program_levels.id')
-    //                     ->where('students.id', '=', $stud)->pluck('payment_items.amount')[0] ?? 0
-    //                 ,
-    //             // student scholarship amount
-    //             'scholarship' => array_sum(StudentScholarship::where('student_id', '=', $stud)->where('batch_id', '=', $year)->pluck('amount')->toArray() ?? []),
-    //             'stud' => $stud
-    //         ];
-    //     }, $studs);
+        // $st_classes = $class->student_classes()->join('students', 'students.id', '=', 'student_classes.student_id')->groupBy(['student_classes.year_id', 'students.campus_id'])->select(['students.campus_id', 'student_classes.id', 'student_classes.class_id', 'student_classes.id', 'student_classes.year_id'])->distinct()->get();
+        // dd($st_classes);
 
-        
-    //     foreach ($fees as $key => $value) {
-    //         # code...
-    //         $stdt = Students::find($value['stud']);
-    //             $students[] = [
-    //                 'id'=> $stdt->id,
-    //                 'name'=> $stdt->name,
-    //                 'matric'=>$stdt->matric,
-    //                 'link'=> route('admin.fee.student.payments.index', [$stdt->id]),
-    //                 'paid'=> ($value['total']-$value['balance']) < 0 ? 0 : ($value['total']-$value['balance']),
-    //                 'owing'=> $value['balance'],
-    //                 'scholarship'=>$value['scholarship'],
-    //                 'class'=>$class->program()->first()->name .' : LEVEL '.$class->level()->first()->level
-    //             ];
-    //     }
+        $data = [];
 
-    //     $_students = collect($students)
-    //                 ->sortBy('name')->toArray();
+        # code...
+        foreach ($class->_students($year)->get() as $key => $student) {
+            $fee_items = $class->single_payment_item($student->campus_id, $year)->where('name', 'REGISTRATION')->get();
+            
+            if ($fee_items->count() > 0) {
+    
+                $_payments = Payments::where('student_id', $student->id)->whereIn('payment_id', $fee_items->pluck('id')->toArray())->distinct()->get();
+                $payment = $_payments->sum('amount');
+    
+                
+                // dd($fee_items);
+                $data[] = [
+                    'id'=>$student->id, 'name'=>$student->name, 'matric'=>$student->matric,
+                    'link'=>route('admin.fee.student.payments.index', $student->id),
+                    'paid'=>$payment,  'total'=>$fee_items->sum('amount'),
+                    'class'=>$class->name()
+                ];
+            }
+    
+            // dd($data);
+        }
+        return ['students'=>collect($data)->sortBy('name')];
 
-    //     return ['students' => $_students];
-    // }
+    }
+
+    
 
     public static function getColor($label)
     {

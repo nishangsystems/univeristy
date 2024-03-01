@@ -668,6 +668,14 @@
                         <b class="arrow"></b>
                     </li>
                     
+                    <li>
+                        <a href="{{route('admin.fee.registration.collect')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.collect_registration_fee')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    
 
                     <li>
                         <a href="{{route('admin.print_fee')}}" class="text-capitalize">
@@ -722,6 +730,14 @@
                         <a href="{{route('admin.fee.situation')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.fee_situation')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    
+                    <li>
+                        <a href="{{route('admin.reg.fee.situation')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.registration_fee_situation')}}
                         </a>
                         <b class="arrow"></b>
                     </li>
@@ -788,67 +804,6 @@
                 </ul>
             </li>
             @endif
-
-            {{-- @if (\Auth::user()->hasPermissionTo('manage_importation'))
-            <li>
-                <a href="#" class="dropdown-toggle">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-rocket"></i>
-                    <span class="menu-text text-capitalize">
-						{{__('text.importation_center')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.imports.import_ca')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.import_ca')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.imports.clear_ca')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.clear_ca')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.imports.import_exam')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.import_exams')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.imports.clear_exam')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.clear_exams')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.import_fee')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.import_fees')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.imports.clear_fee')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.clear_fees')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif --}}
 
             @if (\Auth::user()->hasPermissionTo('manage_scholarship'))
             <li>
@@ -1166,10 +1121,19 @@
                     </li>
                     @endif
                     @if (\Auth::user()->hasPermissionTo('manage_finance_statistics'))
-                     <li>
+                    <li>
                         <a href="{{route('admin.stats.fees')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.fee_statistics')}}
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+                    
+                    <li>
+                        <a href="{{route('admin.stats.regfees')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.registration_fee_statistics')}}
                         </a>
 
                         <b class="arrow"></b>
@@ -1564,17 +1528,27 @@
             </li>
             <!-- End attaendance management -->
             @endif
-        
-            {{-- @if (\Auth::user()->hasPermissionTo('manage_documentation'))
-            <li>
-                <a href="{{route('documentation.index')}}" class="text-capitalize">
-                    <i  style="color: {{$bg1}};" class="fa fa-address-book-o menu-icon   "></i>
-                    {{__('text.word_documentation')}}
-                </a>
-                <b class="arrow"></b>
-            </li>
-            @endif --}}
             
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                    <span class="menu-text">
+						{{__('text.word_clearance')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.clearance.fee')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.fees_clearance')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+
             <li>
                 <a href="{{route('admin.reset_password')}}" class="text-capitalize">
                     <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>

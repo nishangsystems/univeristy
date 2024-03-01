@@ -4,8 +4,6 @@
     @php
         $current_year = \App\Helpers\Helpers::instance()->getYear();
         $current_year_name = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getYear())->name;
-        $current_semester = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->_class($current_year)->id)->id;
-        $current_semester_name = \App\Helpers\Helpers::instance()->getSemester(auth('student')->user()->_class($current_year)->id)->name;
     @endphp
     @if($access)
         <div class="form-group">
@@ -46,8 +44,8 @@
                         </select>
                         <select name="level" class="form-control border-0" id="modal-semester" required>
                             <option value="">{{__('text.word_semester')}}</option>
-                            @foreach(\App\Models\ProgramLevel::find(auth('student')->user()->_class($current_year)->id)->program()->first()->background()->first()->semesters()->get() as $semester)
-                                <option value="{{$semester->id}}" {{$semester->id == $current_semester ? 'selected': ''}}>{{$semester->name}}</option>
+                            @foreach($class->program()->first()->background()->first()->semesters()->get() as $semester)
+                                <option value="{{$semester->id}}" {{$semester->id == $current_semester->id ? 'selected': ''}}>{{$semester->name}}</option>
                             @endforeach
                         </select>
                         <button class="btn btn-sm btn-info text-capitalize border-0" onclick="load('#modal-year', '#modal-semester')">{{__('text.view_courses')}}</button>

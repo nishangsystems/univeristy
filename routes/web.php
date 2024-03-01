@@ -154,6 +154,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
     Route::get('fee/situation', 'Admin\FeesController@fee_situation')->name('fee.situation');
+    Route::get('rgfee/situation', 'Admin\FeesController@registration_fee_situation')->name('reg.fee.situation');
+    Route::get('rgfee/situation/list', 'Admin\FeesController@registration_fee_situation_list')->name('reg.fee.situation.list');
     Route::get('fee/history/{student_id}', 'Admin\FeesController@fee_history')->name('fee.history');
     Route::get('fee/situation/list', 'Admin\FeesController@fee_situation_list')->name('fee.situation.list');
     Route::get('fee/fee_list', 'Admin\FeesController@fee_list');
@@ -163,6 +165,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('fee/drive', 'Admin\FeesController@drive')->name('fee.drive');
     Route::get('fee/drive/listing', 'Admin\FeesController@drive_listing')->name('fee.drive_listing');
     Route::get('fee/collect', 'Admin\FeesController@collect')->name('fee.collect');
+    Route::get('fee/reg/collect', 'Admin\FeesController@collect_registration')->name('fee.registration.collect');
     Route::get('fee/daily_report', 'Admin\FeesController@daily_report')->name('fee.daily_report');
     Route::get('fee/{id}', 'Admin\FeesController@fee')->name('fee.list');
     Route::delete('fee/{id}', 'Admin\FeesController@delete')->name('fee.destroy');
@@ -226,6 +229,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::prefix("fee/{student_id}")->name('fee.student.')->group(function () {
         Route::resource('payments', 'Admin\PaymentController');
         Route::get('payments/{item_id}/print', 'Admin\PaymentController@print')->name('payments.print');
+        Route::get('payments/reg/create', 'Admin\PaymentController@reg_create')->name('payments.reg.create');
+        Route::post('payments/reg/create', 'Admin\PaymentController@reg_store');
     });
 
 
@@ -396,6 +401,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::prefix('statistics')->name('stats.')->group(function(){
         Route::get('sudents', 'Admin\StatisticsController@students')->name('students');
         Route::get('fees', 'Admin\StatisticsController@fees')->name('fees');
+        Route::get('reg/fees', 'Admin\StatisticsController@registration_fees')->name('regfees');
         Route::get('results', 'Admin\StatisticsController@results')->name('results');
         Route::get('income', 'Admin\StatisticsController@income')->name('income');
         Route::get('expenditure', 'Admin\StatisticsController@expenditure')->name('expenditure');
@@ -584,6 +590,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('{dep_id}/create', [Admin\DepartmentalCourseController::class, 'create'])->name('create');
         Route::post('{dep_id}/create', [Admin\DepartmentalCourseController::class, 'store']);
         Route::get('{dep_course_id}/drop', [Admin\DepartmentalCourseController::class, 'drop'])->name('drop');
+    });
+
+    Route::prefix('clearance')->name('clearance.')->group(function(){
+        Route::get('fee', [Admin\ClearanceController::class, 'fee_clearance'])->name('fee');
     });
 
 });

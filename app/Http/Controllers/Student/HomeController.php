@@ -787,9 +787,18 @@ class HomeController extends Controller
     public function registered_courses(Request $request)
     {
         # code...
-        $data['title'] = "Registered Courses ".Helpers::instance()->getSemester(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->name." ".\App\Models\Batch::find(Helpers::instance()->getYear())->name;
-        $data['student_class'] = ProgramLevel::find(\App\Models\StudentClass::where(['student_id'=>auth('student')->id()])->where(['year_id'=>Helpers::instance()->getYear()])->first()->class_id);
-        $data['cv_total'] = ProgramLevel::find(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->program()->first()->max_credit;        
+        $c_year = intval(Helpers::instance()->getCurrentAccademicYear());
+        $class = auth('student')->user()->_class($c_year);
+        if ($class == null) {
+            # code...
+            $class = auth('student')->user()->_class();
+        }
+        $data['class'] = $class;
+        $data['current_semester'] = Helpers::instance()->getSemester($class->id);
+        $data['current_semester_name'] = $data['current_semester']->name;
+        $data['title'] = "Registered Courses ".Helpers::instance()->getSemester($class->id)->name??'NO CLASS'." ".\App\Models\Batch::find($c_year)->name;
+        $data['student_class'] = $class;
+        $data['cv_total'] = $class->program()->first()->max_credit;        
         
         $student = auth('student')->id();
         $year = Helpers::instance()->getYear();
@@ -809,7 +818,7 @@ class HomeController extends Controller
                     ->whereNotNull('payment_items.amount')
                     ->join('students', 'students.program_id', '=', 'program_levels.id')
                     ->where('students.id', '=', $student)->pluck('payment_items.amount')[0] ?? 0,
-            'fraction' => Helpers::instance()->getSemester(Students::find(auth('student')->id())->_class(Helpers::instance()->getCurrentAccademicYear())->id)->courses_min_fee
+            'fraction' => Helpers::instance()->getSemester($class->id)->courses_min_fee
         ];
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
         $data['access'] = (($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']) || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;

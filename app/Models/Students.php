@@ -67,10 +67,6 @@ class Students extends Authenticatable
         return $this->hasMany(Result::class, 'student_id');
     }
 
-    public function offline_result()
-    {
-        return $this->hasMany(OfflineResult::class, 'student_id');
-    }
 
     public function payments()
     {
@@ -101,11 +97,43 @@ class Students extends Authenticatable
         return 0;
     }
 
+    public function registration_total($year_id = null)
+    {
+        $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
+        if ($this->classes()->where('year_id', $year)->first() != null) {
+            # code...
+            // return $this->campus()->first()->campus_programs()->where(['program_level_id' => $this->_class(Helpers::instance()->getCurrentAccademicYear())->id ?? 0, 'campus_id'=>$this->campus_id])->first()->payment_items()->first()->amount ?? -1;
+            $rec = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year, 'name'=>'REGISTRATION'])->first();
+            return $rec ? $rec->amount : 0;
+        }
+        
+        return 0;
+    }
+
+    public function payment_items($year_id = null)
+    {
+        $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
+        if ($this->classes()->where('year_id', $year)->first() != null) {
+            # code...
+            return $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items;
+        }
+        return collect();
+    }
+
     public function paid($year = null) // fee paid for current academic year
     {
         $year = $year == null ? Helpers::instance()->getYear() : $year;
-        $items = $this->payments()->where('batch_id', $year)->selectRaw('COALESCE(sum(amount),0) total')->get();
+        $item_id = $this->payment_items()->where('name', 'TUTION')->first()->id??0;
+        $items = $this->payments()->where('batch_id', $year)->where('payment_id', $item_id)->selectRaw('COALESCE(sum(amount),0) total')->get();
         return $items->first()->total;
+    }
+
+    public function registration_paid($year = null) // fee paid for current academic year
+    {
+        $year = $year == null ? Helpers::instance()->getYear() : $year;
+        $item_id = $this->payment_items()->where('name', 'REGISTRATION')->first()->id??0;
+        $items = $this->payments()->where('batch_id', $year)->where('payment_id', $item_id)->selectRaw('COALESCE(sum(amount),0) total')->get();
+        return $items->first()->total??0;
     }
 
     // current year's unpaid fee
@@ -115,7 +143,15 @@ class Students extends Authenticatable
         $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id, $year);
         // dd($scholarship);
         return $this->total() + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid() - ($scholarship);
+    }
 
+    // current year's unpaid fee
+    public function registration_bal($student_id = null, $year = null)
+    {
+        $year = $year == null ? Helpers::instance()->getCurrentAccademicYear() : $year;
+        $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id, $year);
+        // dd($scholarship);
+        return $this->registration_total()  - $this->registration_paid();
     }
 
     // current year's unpaid fee
@@ -177,100 +213,61 @@ class Students extends Authenticatable
 
         return $rank ? $rank->position : "NOT SET";
     }
+
+    public function results($class_id, $year_id, $semester_id = null){
+        return \Cache::remember("users_results_score_$this->id, $class_id, $year_id, $semester_id", 86400, function () use ($class_id, $year_id, $semester_id) {
+                 $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
+                    return collect(Result::where(['student_id' => $this->id,  'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->get() ?? [])->groupBy("subject_id");
+        });
+    }
+    
     
     public function ca_score($course_id, $class_id, $year_id, $semester_id = null)
     {
-        # code...
-        $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
-        $record = Result::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
-        if ($record != null) {
-            # code...
-            return $record->ca_score ?? '';
-        }
-        return '';
-    }
-    
-    public function offline_ca_score($course_id, $class_id, $year_id, $semester_id = null)
-    {
-        # code...
-        $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
-        $record = OfflineResult::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
-        if ($record != null) {
-            # code...
-            return $record->ca_score ?? '';
-        }
-        return '';
+        return \Cache::remember("users_ca_score_$this->id $course_id, $class_id, $year_id, $semester_id", 86400, function () use ($course_id, $class_id, $year_id, $semester_id) {
+            $result = $this->results($class_id, $year_id, $semester_id );
+             if (isset($result[$course_id][0]['ca_score'])) {
+                return $result[$course_id][0]['ca_score'];
+             }
+             return '';
+        });
     }
     
     public function exam_score($course_id, $class_id, $year_id, $semester_id = null)
     {
-        # code...
-        $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
-        $record = Result::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
-        if ($record != null) {
-            # code...
-            return $record->exam_score ?? '';
-        }
-        return '';
-    }
-    
-    public function offline_exam_score($course_id, $class_id, $year_id, $semester_id = null)
-    {
-        # code...
-        $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
-        $record = OfflineResult::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
-        if ($record != null) {
-            # code...
-            return $record->exam_score ?? '';
-        }
-        return '';
+       
+
+        return \Cache::remember("users_exam_score_$this->id $course_id, $class_id, $year_id, $semester_id", 86400, function () use ($course_id, $class_id, $year_id, $semester_id) {
+           
+             $result = $this->results($class_id, $year_id, $semester_id );
+        
+             if (isset($result[$course_id][0]['exam_score'])) {
+                return $result[$course_id][0]['exam_score'];
+             }
+
+             return '';
+        });
     }
 
     public function total_score($course_id, $class_id, $year_id, $semester_id = null)
     {
-        # code...
-        $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
-        $record = Result::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
-        if ($record != null) {
-            # code...
-            return ($record->ca_score ?? 0) + ($record->exam_score ?? 0);
-        }
-        return '';
-    }
-
-    public function offline_total_score($course_id, $class_id, $year_id, $semester_id = null)
-    {
-        # code...
-        $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
-        $record = OfflineResult::where(['student_id' => $this->id, 'subject_id' => $course_id, 'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->first() ?? null;
-        if ($record != null) {
-            # code...
-            return ($record->ca_score ?? 0) + ($record->exam_score ?? 0);
-        }
-        return '';
-    }
-
-    public function offline_grade($course_id, $class_id, $year_id, $semester_id = null)
-    {
-        # code...
-        $grades = \App\Models\ProgramLevel::find($class_id)->program->gradingType->grading->sortBy('grade') ?? [];
-
-        if(count($grades) == 0){return '-';}
-
-        $score = $this->offline_total_score($course_id, $class_id, $year_id, $semester_id);
-        if ($score != '') {
-            # code...
-            foreach ($grades as $key => $grade) {
-                if ($score >= $grade->lower && $score <= $grade->upper) {return $grade->grade;}
+        return \Cache::remember("users_total_score_$this->id $course_id, $class_id, $year_id, $semester_id", 86400, function () use ($course_id, $class_id, $year_id, $semester_id) {
+            $result = $this->results($class_id, $year_id, $semester_id );
+            if (isset($result[$course_id][0])) {
+                 return ($result[$course_id][0]['ca_score'] ?? 0) + ($result[$course_id][0]['exam_score'] ?? 0);
             }
-        }
-        return '';
-    } 
+             return '';
+        });
+    }
 
     public function grade($course_id, $class_id, $year_id, $semester_id = null)
     {
+
+        return \Cache::remember("users_grade_score_$this->id _ $course_id, $class_id, $year_id, $semester_id", 86400, function () use ($course_id, $class_id, $year_id, $semester_id) {
         # code...
-        $grades = \App\Models\ProgramLevel::find($class_id)->program->gradingType->grading->sortBy('grade') ?? [];
+        $grades = \Cache::remember('grading_scale', 86400, function () use ($class_id) {
+            return  \App\Models\ProgramLevel::find($class_id)->program->gradingType->grading->sortBy('grade') ?? [];
+        });
 
         if(count($grades) == 0){return '-';}
 
@@ -282,6 +279,8 @@ class Students extends Authenticatable
             }
         }
         return '';
+         });
+       
     } 
 
     // cumulative depts upto the current academic year
@@ -301,7 +300,7 @@ class Students extends Authenticatable
             # code...
             $class = $this->_class($batch->id);
             if($class== null or $class->campus_programs($this->campus_id)->first() == null )continue;
-            $fee_items[] = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->first();
+            $fee_items[] = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('name', 'TUTION')->where('year_id', $batch->id)->first();
         }
         $fee_items = collect($fee_items);
 
@@ -322,7 +321,7 @@ class Students extends Authenticatable
         $campus_program_levels = StudentClass::where('student_id', '=', $this->id)->where('year_id', '<=', $year)->distinct()
             ->join('campus_programs', ['campus_programs.program_level_id' => 'student_classes.class_id'])->pluck('campus_programs.id')->toArray();
         // fee amounts
-        $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels)->pluck('id')->toArray();
+        $fee_items = PaymentItem::whereIn('campus_program_id', $campus_program_levels)->where('name', 'TUTION')->pluck('id')->toArray();
         
         $payments = Payments::whereIn('payment_id', $fee_items)->where(['student_id' => $this->id])->where('batch_id', '<=', $year)->get();
         $fee_payments_sum = $payments->sum('amount');

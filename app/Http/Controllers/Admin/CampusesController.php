@@ -174,20 +174,42 @@ class CampusesController extends Controller
     {
         # code...
         $this->validate($request, [
-            'fees'=>'required|int'
+            'fees'=>'required|int',
+            'r_fees'=>'nullable|int'
         ]);
 
-        $cp_id = \App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->first()->id;
-
-
-        $inst = \App\Models\PaymentItem::where('campus_program_id', $cp_id)->where('name', 'TUTION')->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()])->first() ?? 
-                new \App\Models\PaymentItem();
-        $inst->campus_program_id = $cp_id;
-        $inst->name = 'TUTION';
-        $inst->year_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-        $inst->slug = Hash::make('TUTION');
-        $inst->amount = $request->fees;
-        $inst->save();
-        return redirect(route('admin.campuses.programs', $id))->with('success', __('text.word_done'));
+        try {
+            //code...
+            // dd($request->all());
+            $cp_id = \App\Models\CampusProgram::where('campus_id', $id)->where('program_level_id', $program_id)->first()->id;
+    
+            // save tution fee
+            $tution_inst = \App\Models\PaymentItem::where('campus_program_id', $cp_id)->where('name', 'TUTION')->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()])->first();
+            $tution_inst = $tution_inst == null ? new \App\Models\PaymentItem() : $tution_inst;
+            $tution_inst->campus_program_id = $cp_id;
+            $tution_inst->name = 'TUTION';
+            $tution_inst->year_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+            $tution_inst->slug = Hash::make('TUTION');
+            $tution_inst->amount = $request->fees;
+            $tution_inst->save();
+    
+            // save registration fee
+            if ($request->r_fees != null) {
+                # code...
+                $reg_inst = \App\Models\PaymentItem::where('campus_program_id', $cp_id)->where('name', 'REGISTRATION')->where(['year_id' => Helpers::instance()->getCurrentAccademicYear()])->first();
+                $reg_inst = $reg_inst == null ? new \App\Models\PaymentItem() : $reg_inst;
+                $reg_inst->campus_program_id = $cp_id;
+                $reg_inst->name = 'REGISTRATION';
+                $reg_inst->year_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+                $reg_inst->slug = Hash::make('REGISTRATION');
+                $reg_inst->amount = $request->r_fees;
+                $reg_inst->save();
+            }
+            return redirect(route('admin.campuses.programs', $id))->with('success', __('text.word_done'));
+        } catch (\Throwable $th) {
+            //throw $th;
+            session()->flash('error', "F:{$th->getFile()} | L:{$th->getLine()} | M:{$th->getMessage()}");
+            return back()->withInput();
+        }
     }
 }

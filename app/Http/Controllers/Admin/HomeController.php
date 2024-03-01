@@ -48,7 +48,7 @@ class HomeController  extends Controller
 
         $year = request()->has('year') ? request('year') : Helpers::instance()->getCurrentAccademicYear();
         $campus_id = auth()->user()->campus_id;
-        $expected_fees = PaymentItem::where('payment_items.year_id', $year)
+        $expected_fees = PaymentItem::where('payment_items.year_id', $year)->where('payment_items.name', 'TUTION')
             ->join('campus_programs', 'campus_programs.id', '=', 'payment_items.campus_program_id')
             ->where(function($query)use($campus_id){
                 $campus_id != null ? $query->where('campus_programs.campus_id', $campus_id) : null;

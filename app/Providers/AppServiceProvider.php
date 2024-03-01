@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use App\Services\HeadOfSchoolService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use \App\Http\Controllers\Controller;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
         //
         app()->bind(HeadOfSchoolService::class, function($app){
             return new HeadOfSchoolService(Helpers::instance()->getCurrentAccademicYear());
+        });
+        app()->bindif(Controller::class, function($app){
+            return new Controller(intval(Helpers::instance()->getCurrentAccademicYear()));
         });
     }
 

@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{{asset('assets/css/fonts.googleapis.com.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/css/ace.min.css')}}" class="ace-main-stylesheet" id="main-ace-style" />
     <link rel="stylesheet" href="{{asset('assets/css/ace-part2.min.css')}}" class="ace-main-stylesheet" />
+    <![endif]-->
     <link rel="stylesheet" href="{{asset('assets/css/ace-skins.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('assets/css/ace-rtl.min.css')}}"/>
     <script src="{{asset('assets/js/ace-extra.min.js')}}"></script>
@@ -88,13 +89,9 @@
                         <tr class="text-capitalize bg-light">
                             <th>#</th>
                             <th>{{__('text.word_name')}}</th>
-                            <th>{{__('text.word_fee')}}</th>
-                            <th>{{__('text.extra_fee')}}</th>
-                            <th>{{__('text.word_debt')}}</th>
-                            <th>{{__('text.word_paid')}}</th>
-                            <th>{{__('text.total_paid')}}</th>
-                            <th>{{__('text.word_scholarship')}}</th>
-                            <th>{{__('text.amount_owing')}}</th>
+                            <th>{{__('text.word_total')}} (@lang('text.currency_cfa'))</th>
+                            <th>{{__('text.word_paid')}} (@lang('text.currency_cfa'))</th>
+                            <th>{{__('text.amount_owing')}} (@lang('text.currency_cfa'))</th>
                             <!-- <th></th> -->
                         </tr>
                     </thead>
@@ -104,13 +101,9 @@
                             <tr class="border-bottom">
                                 <td class="border-left border-right">{{$k++}}</td>
                                 <td class="border-left border-right">{{$student['name'] ?? ''}}</td>
-                                <td class="border-left border-right">{{$student['current_fee'] ?? ''}}</td>
-                                <td class="border-left border-right">{{$student['extra_fee'] ?? ''}}</td>
-                                <td class="border-left border-right">{{$student['debt'] ?? ''}}</td>
-                                <td class="border-left border-right">{{number_format($student['current_paid'] ?? 0)}}</td>
+                                <td class="border-left border-right">{{number_format($student['total'] ?? 0)}} </td>
                                 <td class="border-left border-right">{{number_format($student['paid'] ?? 0)}}</td>
-                                <td class="border-left border-right">{{number_format($student['scholarship'] ?? 0)}}</td>
-                                <td class="border-left border-right">{{number_format($student['owing'] ?? 0)}}</td>
+                                <td class="border-left border-right">{{number_format(($student['total'] ?? 0) - ($student['paid'] ?? 0))}}</td>
                             </tr>
                         @endforeach
                     </tbody>

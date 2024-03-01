@@ -47,7 +47,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    var $current_accademic_year;
+    public $current_accademic_year;
     public function __construct()
     {
         # code...
