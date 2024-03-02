@@ -50,6 +50,11 @@ class ResultsAndTranscriptsController extends Controller{
             $year = \App\Models\Batch::find(request('year_id'));
             $data['year'] = request('year_id');
             $data['students'] = $class->_students($year->id)->get();
+            // $data['students'] = $class->_students($year->id)
+            //     ->join('results', 'results.student_id', '=', 'students.id')
+            //     ->where(['results.batch_id'=>$year->id, 'results.class_id'=>$class->id, 'results.semester_id'=>$semester->id])
+            //     ->whereNotNull('results.ca_score')
+            //     ->distinct()->get(['students.*']);
             $data['grades'] = \Cache::remember('grading_scale', 60, function () use ($class) {
                 return $class->program->gradingType->grading->sortBy('grade') ?? [];
             });

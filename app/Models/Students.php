@@ -215,7 +215,7 @@ class Students extends Authenticatable
     }
 
     public function results($class_id, $year_id, $semester_id = null){
-        return \Cache::remember("users_results_score_$this->id, $class_id, $year_id, $semester_id", 86400, function () use ($class_id, $year_id, $semester_id) {
+        return \Cache::remember("users_results_score_$this->id, $class_id, $year_id, $semester_id", 60, function () use ($class_id, $year_id, $semester_id) {
                  $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
                     return collect(Result::where(['student_id' => $this->id,  'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->get() ?? [])->groupBy("subject_id");
         });
@@ -224,7 +224,7 @@ class Students extends Authenticatable
     
     public function ca_score($course_id, $class_id, $year_id, $semester_id = null)
     {
-        return \Cache::remember("users_ca_score_$this->id $course_id, $class_id, $year_id, $semester_id", 86400, function () use ($course_id, $class_id, $year_id, $semester_id) {
+        return \Cache::remember("users_ca_score_$this->id $course_id, $class_id, $year_id, $semester_id", 60, function () use ($course_id, $class_id, $year_id, $semester_id) {
             $result = $this->results($class_id, $year_id, $semester_id );
              if (isset($result[$course_id][0]['ca_score'])) {
                 return $result[$course_id][0]['ca_score'];
@@ -237,7 +237,7 @@ class Students extends Authenticatable
     {
        
 
-        return \Cache::remember("users_exam_score_$this->id $course_id, $class_id, $year_id, $semester_id", 86400, function () use ($course_id, $class_id, $year_id, $semester_id) {
+        return \Cache::remember("users_exam_score_$this->id $course_id, $class_id, $year_id, $semester_id", 60, function () use ($course_id, $class_id, $year_id, $semester_id) {
            
              $result = $this->results($class_id, $year_id, $semester_id );
         
@@ -251,7 +251,7 @@ class Students extends Authenticatable
 
     public function total_score($course_id, $class_id, $year_id, $semester_id = null)
     {
-        return \Cache::remember("users_total_score_$this->id $course_id, $class_id, $year_id, $semester_id", 86400, function () use ($course_id, $class_id, $year_id, $semester_id) {
+        return \Cache::remember("users_total_score_$this->id $course_id, $class_id, $year_id, $semester_id", 60, function () use ($course_id, $class_id, $year_id, $semester_id) {
             $result = $this->results($class_id, $year_id, $semester_id );
             if (isset($result[$course_id][0])) {
                  return ($result[$course_id][0]['ca_score'] ?? 0) + ($result[$course_id][0]['exam_score'] ?? 0);
@@ -263,9 +263,9 @@ class Students extends Authenticatable
     public function grade($course_id, $class_id, $year_id, $semester_id = null)
     {
 
-        return \Cache::remember("users_grade_score_$this->id _ $course_id, $class_id, $year_id, $semester_id", 86400, function () use ($course_id, $class_id, $year_id, $semester_id) {
+        return \Cache::remember("users_grade_score_$this->id _ $course_id, $class_id, $year_id, $semester_id", 60, function () use ($course_id, $class_id, $year_id, $semester_id) {
         # code...
-        $grades = \Cache::remember('grading_scale', 86400, function () use ($class_id) {
+        $grades = \Cache::remember('grading_scale', 60, function () use ($class_id) {
             return  \App\Models\ProgramLevel::find($class_id)->program->gradingType->grading->sortBy('grade') ?? [];
         });
 
