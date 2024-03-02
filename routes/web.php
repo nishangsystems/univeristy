@@ -915,14 +915,14 @@ Route::get('class_subjects/{program_level_id}', function($program_level_id){
 })->name('class_subjects');
 Route::get('campus/{campus}/program_levels', [Controller::class, 'sorted_campus_program_levels'])->name('campus.program_levels');
 Route::get('program_levels', [Controller::class, 'sorted_program_levels'])->name('program_levels');
-Route::get('class_subjects/{program_level_id}', function($program_level_id){
-    // return $program_level_id;
-    $courses = \App\Models\ClassSubject::where(['class_subjects.class_id'=>$program_level_id])
-            ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
-            ->get('subjects.*');
-            return $courses;
-            // return response()->json(SubjectsResource::collection($courses));
-})->name('class_subjects');
+// Route::get('class_subjects/{program_level_id}', function($program_level_id){
+//     // return $program_level_id;
+//     $courses = \App\Models\ClassSubject::where(['class_subjects.class_id'=>$program_level_id])
+//             ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
+//             ->get('subjects.*');
+//             return $courses;
+//             // return response()->json(SubjectsResource::collection($courses));
+// })->name('class_subjects');
 Route::get('getColor/{label}', [HomeController::class, 'getColor'])->name('getColor');
 
 Route::get('search_subjects', function (Request $request) {

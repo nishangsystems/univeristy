@@ -50,7 +50,7 @@ class ResultsAndTranscriptsController extends Controller{
             $year = \App\Models\Batch::find(request('year_id'));
             $data['year'] = request('year_id');
             $data['students'] = $class->_students($year->id)->get();
-            $data['grades'] = \Cache::remember('grading_scale', 86400, function () use ($class) {
+            $data['grades'] = \Cache::remember('grading_scale', 60, function () use ($class) {
                 return $class->program->gradingType->grading->sortBy('grade') ?? [];
             });
             
