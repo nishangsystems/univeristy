@@ -236,16 +236,16 @@ class HomeController extends Controller
         
         // CODE TO CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS; WILL BE COMMENTED OUT TILL IT SHOULD TAKE EFFECT
         // if(){
-            //     return back()->with('error', "You have not paid plaftorm or semester result charges for the selected semester");
-            // }
-            
-            // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
-            
-            $data['title'] = "My Exam Result";
-            $data['user'] = auth('student')->user();
-            $data['semester'] = $semester;
-            $data['class'] = $class;
-            $data['year'] = $year;
+        //     return back()->with('error', "You have not paid plaftorm or semester result charges for the selected semester");
+        // }
+        
+        // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
+        
+        $data['title'] = "My Exam Result";
+        $data['user'] = auth('student')->user();
+        $data['semester'] = $semester;
+        $data['class'] = $class;
+        $data['year'] = $year;
         $data['ca_total'] = $class->program()->first()->ca_total;
         $data['exam_total'] = $class->program()->first()->exam_total;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
