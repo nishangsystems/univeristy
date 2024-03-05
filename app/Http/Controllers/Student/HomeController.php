@@ -620,7 +620,8 @@ class HomeController extends Controller
             // return __DIR__;
             // dd($data);
             $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-            $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+            $data['access'] = ($fee['total'] - Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+            // dd($data);
             return view('student.courses.register', $data);
         } catch (\Throwable $th) {
             // throw $th;

@@ -905,7 +905,7 @@ return [
     'department_of_finance'=>'DEPARTMENT OF FINANCE',
     'our_reference'=>'our reference',
     'to_whom_it_may_concern'=>'to whom it may concern',
-    'clearance_text'=>"We hereby attest that <b style=\"text-decoration: underline\"> :name</b> BUIB Matricule <b style=\"text-decoration: underline\"> :matric </b> <b> :program</b>, student in the <b> :school </b> admitted in the year <b style=\"text-decoration: underline\"> :adm_year</b>, has paid complete fees upto <b style=\"text-decoration: underline\"> :fin_year</b> as follows :",
+    'clearance_text'=>"We hereby attest that <b style=\"text-decoration: underline\"> :name</b> BUIB Matricule <b style=\"text-decoration: underline\"> :matric</b> <b> :program</b>, student in the <b>SHOOL OF :school </b> admitted in the year <b style=\"text-decoration: underline\"> :adm_year</b>, has paid complete fees upto <b style=\"text-decoration: underline\"> :fin_year</b> as follows :",
     'tution_fees_paid'=>'tution fees paid',
     'registration_fees_paid'=>'registration fees paid',
     ''

@@ -742,6 +742,14 @@
                         <b class="arrow"></b>
                     </li>
 
+                    <li>
+                        <a href="{{route('admin.clearance.fee')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.fees_clearance')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
                 </ul>
             </li>
             @endif
@@ -1528,26 +1536,6 @@
             </li>
             <!-- End attaendance management -->
             @endif
-            
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
-                    <span class="menu-text">
-						{{__('text.word_clearance')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.clearance.fee')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.fees_clearance')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
 
             <li>
                 <a href="{{route('admin.reset_password')}}" class="text-capitalize">

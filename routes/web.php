@@ -594,6 +594,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::prefix('clearance')->name('clearance.')->group(function(){
         Route::get('fee', [Admin\ClearanceController::class, 'fee_clearance'])->name('fee');
+        Route::get('fee/generate/{student_id}', [Admin\ClearanceController::class, 'generate_fee_clearance'])->name('fee.generate');
     });
 
 });

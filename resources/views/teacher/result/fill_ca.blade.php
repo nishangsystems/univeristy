@@ -25,7 +25,7 @@
     @csrf
     <div class="card">
         <div class="d-flex justify-content-between my-3 px-3">
-            <a href="{{route('user.class_course.exam.result', [request('class_id'), request('course_id')])}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.exam_results')}}</a>
+            {{-- <a href="{{route('user.class_course.exam.result', [request('class_id'), request('course_id')])}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.exam_results')}}</a> --}}
             <a href="{{route('user.class_course.ca.import', [request('class_id'), request('course_id')])}}" class="btn btn-sm btn-primary">{{__('text.word_import')}}</a>
         </div>
        <div class="d-flex justify-content-between">
@@ -63,11 +63,11 @@
                                 <td class="name" style="width: 200px; text-align: left">{{$student->name}}</td>
                                 <td class="matric" style="width: 100px; text-align: left">{{$student->matric}}</td>
                                 <td class="pt-3-half">
-                                    @if($semester->ca_is_late() == false)
+                                    {{-- @if($semester->ca_is_late() == false)
                                         <input class="score form-control bg-white border-0" data-sequence="{{$semester->id}}" type='number' data-student="{{$student->id}}" value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
-                                    @else
+                                    @else --}}
                                         <input class="score form-control bg-white border-0" readonly type='number'  value="{{$student->ca_score($subject->id, request('class_id'), $year)}}">
-                                    @endif
+                                    {{-- @endif --}}
                                 </td>
                             </tr>
                         @endforeach
