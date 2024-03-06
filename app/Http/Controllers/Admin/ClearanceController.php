@@ -36,4 +36,18 @@ class ClearanceController extends Controller
         }
         return view('admin.fee.clearance.fee', $data);
     }
+
+    public function save_fee_clearance (Request $request, $student_id)
+    {
+        # code...
+        try {
+            //code...
+            $record = $this->clearanceService->saveClearance($student_id);
+            return response()->json(['message'=>'Successfully recorded']);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response("Error saving record to database ".$th->getMessage(), 500);
+        }
+
+    }
 }

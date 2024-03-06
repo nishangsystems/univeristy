@@ -4,7 +4,7 @@
         <button class="btn btn-primary rounded btn-sm text-uppercase" onclick="printClearance()">print</button>
     </div>
     <div class="py-3 px-4 border" id="clearance_panel">
-        <div class="text-center h3 font-weight-bold my-4 text-underline">@lang('text.clearance_univ_name')</div>
+        <div class="text-center h3 font-weight-bold my-4 text-underline">{{ $data['institution']->name }}</div>
         <div class="d-flex justify-content-center py-2 my-4">
             <img src="{{ asset('assets/images/avatars/logo.png') }}" alt="" srcset="" style="width: 14rem; height: 14rem;">
         </div>
@@ -14,7 +14,11 @@
         </div>
         <div class="text-center h4 font-weight-bold my-4 text-uppercase text-underline">@lang('text.to_whom_it_may_concern')</div>
         <div class="h6 font-weight-bold my-2 text-uppercase text-underline">@lang('text.fees_clearance')</div>
-        <div>{!! __('text.clearance_text', ['name'=>$data['student']->name, 'matric'=>$data['student']->matric, 'program'=>$data['degree']->deg_name." IN ".$data['program']->parent->name, 'school'=>$data['school']->name, 'adm_year'=>$data['clearance']->first()->_year, 'fin_year'=>$data['clearance']->last()->_year]) !!}</div>
+        @if ($data['fee_cleared'])
+            <div>{!! __('text.clearance_text', ['name'=>$data['student']->name, 'matric'=>$data['student']->matric, 'program'=>$data['degree']->deg_name." IN ".$data['program']->parent->name, 'school'=>$data['school']->name, 'adm_year'=>$data['clearance']->first()->_year, 'fin_year'=>$data['clearance']->last()->_year]) !!}</div>
+        @else
+            <div>{!! __('text.clearance_text_debt', ['name'=>$data['student']->name, 'matric'=>$data['student']->matric, 'program'=>$data['degree']->deg_name." IN ".$data['program']->parent->name, 'school'=>$data['school']->name, 'adm_year'=>$data['clearance']->first()->_year, 'fin_year'=>$data['clearance']->last()->_year, 'debt'=>$data['debt']]) !!}</div>
+        @endif
         <table class="my-5 border">
             <thead class="text-uppercase border-top border-bottom">
                 <th class="border-left border-right">@lang('text.word_year')/@lang('text.word_level')</th>
@@ -75,11 +79,27 @@
 @section('script')
     <script>
         let printClearance = function(){
+
             let printable = $('#clearance_panel');
             let docBody = $(document.body).html();
             $(document.body).html(printable);
             window.print();
             $(document.body).html(docBody);
+            
+            // save clearance record to database
+            // let url = "{{ Request::url() }}";
+            // let token = "{{ csrf_token() }}";
+            // $({
+            //     method: 'POST', url: url, data: {'_token': token},
+            //     success: function(data){
+            //         console.log($data);
+            //         alert(data.message);
+            //     },
+            //     error: function(error){
+            //         console.log(error);
+            //         alert(err)
+            //     }
+            // });
 
         }
     </script>

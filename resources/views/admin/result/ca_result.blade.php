@@ -17,6 +17,7 @@
                 <th>{{__('text.sn')}}</th>
                 <th>{{__('text.word_code')}}</th>
                 <th>{{__('text.word_course')}}</th>
+                <th>{{__('text.credit_value')}}</th>
                 <th>{{__('text.word_semester')}}</th>
                 <th>{{__('text.word_action')}}</th>
             </thead>
@@ -65,6 +66,7 @@
                                 <td class="border-right border-light">`+ (1+index) +`</td>
                                 <td class="border-right border-light">`+element.code+`</td>
                                 <td class="border-right border-light">`+element.name+`</td>
+                                <td class="border-right border-light">`+(element.cv ?? element.coef) +`</td>
                                 <td class="border-right border-light">`+element.semester+`</td>
 
                                 <td class="border-right border-light">

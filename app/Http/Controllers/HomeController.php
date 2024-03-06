@@ -300,12 +300,12 @@ class HomeController extends Controller
         // $fee_payments = Payments::whereIn('payment_id', $class_fees->pluck('payment_items.id')->toArray())->where('batch_id', '<=', $year)->get(["id", "payment_id","student_id","batch_id","amount", 'debt']);
         if($campus == null){
             $fee_payments = Payments::whereIn('payments.payment_id', $class_fees->pluck('payment_items.id')->toArray())
-                ->where('payments.batch_id', '<=', $year)
+                ->where('payments.payment_year_id', '<=', $year)
                 ->join('students', 'students.id', '=', 'payments.student_id')
                 ->select("payments.id", "payments.payment_id","payments.student_id","payments.batch_id", DB::raw('SUM(payments.amount - payments.debt) as amount_sum'),  'students.name','students.gender','students.matric', 'students.admission_batch_id', 'campus_id')->groupBy('payments.student_id')->get();
         }else{
             $fee_payments = Payments::whereIn('payment_id', $class_fees->pluck('payment_items.id')->toArray())
-                ->where('payments.batch_id', '<=', $year)
+                ->where('payments.payment_year_id', '<=', $year)
                 ->join('students', 'students.id', '=', 'payments.student_id')->where('students.campus_id', $campus->id)
                 ->select("payments.id", "payments.payment_id","payments.student_id","payments.batch_id", DB::raw('SUM(payments.amount - payments.debt) as amount_sum'), 'students.name','students.gender','students.matric', 'students.admission_batch_id', 'campus_id')->groupBy('payments.student_id')->get();
         }

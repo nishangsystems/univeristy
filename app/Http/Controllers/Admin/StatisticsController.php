@@ -324,17 +324,13 @@ class StatisticsController extends Controller
             else{$return['incomplete'] += 1;}
             
         }
-        // $return['expected'] = (int)\App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-        //                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
-        //                         ->where('payment_items.name', '=', 'TUTION')
-        //                         ->whereNotNull('payment_items.amount')
-        //                         ->join('students', 'students.program_id', '=', 'program_levels.id')
-        //                         ->whereIn('students.id', $students)->sum('payment_items.amount');
+        
         $return['per_completed'] = $return['students'] == 0 ? 0 : $return['complete']*100/($return['students']);
         $return['per_uncompleted'] =$return['students'] == 0 ? 0 : 100 - ($return['complete']*100/($return['students']));
         $return['per_recieved'] = $return['expected'] == 0 ? 0 : ($return['recieved']*100/$return['expected']);
         return $return;
     }
+
     // for each class, get the total number of students, fee per person, number of completed, number of owing, %age paid, %age owing, details
     public function fees(Request $request)
     {
@@ -377,7 +373,6 @@ class StatisticsController extends Controller
             return view('admin.statistics.fees')->with($data);
         }
         catch(Throwable $th){
-            
             dd($th);
         }
     }

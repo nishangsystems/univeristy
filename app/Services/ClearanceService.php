@@ -9,6 +9,8 @@ use App\Models\Batch;
 use App\Models\Payments;
 use App\Models\PaymentItem;
 use App\Models\StudentClass;
+use App\Models\School;
+use App\Models\FeeClearance;
 
 
 class ClearanceService{
@@ -89,12 +91,27 @@ class ClearanceService{
             $data['total_expected'] = $ret->sum('amount');
             $data['fee_cleared'] = ($data['total_paid'] + $data['total_reg_paid']) >= $data['total_expected'];
             if(!$data['fee_cleared']){
-                $data['err_msg'] = "You still owe a sum of ".($data['total_expected'] - ($data['total_paid'] + $data['total_reg_paid']));
+                $data['debt'] = ($data['total_expected'] - ($data['total_paid'] + $data['total_reg_paid']));
+                $data['err_msg'] = "You still owe a sum of ".$data['debt'];
             }
+            $data['institution'] = School::first();
             // dd($data['total_expected']);
             return $data;
         }
         return collect();
+    }
+
+
+    public function saveClearance($student_id)
+    {
+        # code...
+        $student = Students::find($student_id);
+        if($student != null){
+            $classes = $student->classes()->orderBy('year_id')->get();
+            FeeClearance::updateOrInsert(['student_id'=>$student_id], ['admission_year_id'=>$classes->first()->year_id, 'final_year_id'=>$classes->last()->year_id, 'updated_at'=>now()]);
+            return 1;
+        }
+        throw new \Exception("Student instance not found");
     }
 
 

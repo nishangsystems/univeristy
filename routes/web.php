@@ -595,6 +595,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::prefix('clearance')->name('clearance.')->group(function(){
         Route::get('fee', [Admin\ClearanceController::class, 'fee_clearance'])->name('fee');
         Route::get('fee/generate/{student_id}', [Admin\ClearanceController::class, 'generate_fee_clearance'])->name('fee.generate');
+        Route::post('fee/generate/{student_id}', [Admin\ClearanceController::class, 'save_fee_clearance']);
     });
 
 });
@@ -910,7 +911,7 @@ Route::get('class_subjects/{program_level_id}', function($program_level_id){
     $courses = \App\Models\ClassSubject::where(['class_subjects.class_id'=>$program_level_id])
             ->whereNull('class_subjects.deleted_at')
             ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
-            ->get('subjects.*');
+            ->get(['subjects.*', 'class_subjects.coef as cv']);
             // return $courses;
             return response()->json(SubjectResource::collection($courses));
 })->name('class_subjects');
