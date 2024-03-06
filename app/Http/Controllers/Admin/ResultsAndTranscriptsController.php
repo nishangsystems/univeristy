@@ -59,16 +59,16 @@ class ResultsAndTranscriptsController extends Controller{
             $data['base_pass'] = ($class->program->ca_total ?? 0 + $class->program->exam_total ?? 0)*0.5;
             $data['_title'] = $class->name().' '.$semester->name.' '.$data['title'].' FOR '.$year->name.' '.__('text.academic_year');
         }
-        dd($data);
+        // dd($data);
 
-        if (($class = ProgramLevel::find($request->class_id??0)) != null) {
-            # code...
-            $data = $class->_students($request->year_id)
-                ->where('students.active', 1)
-                ->join('results', 'results.student_id', '=', 'students.id')
-                ->where('results.batch_id', $request->year_id)
-                ->where('results.semester_id', $request->semester_id);
-        }
+        // if (($class = ProgramLevel::find($request->class_id??0)) != null) {
+        //     # code...
+        //     $data = $class->_students($request->year_id)
+        //         ->where('students.active', 1)
+        //         ->join('results', 'results.student_id', '=', 'students.id')
+        //         ->where('results.batch_id', $request->year_id)
+        //         ->where('results.semester_id', $request->semester_id);
+        // }
         return view('admin.res_and_trans.spr_sheet', $data);
     }
 
