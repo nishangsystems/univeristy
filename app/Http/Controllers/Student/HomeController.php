@@ -234,12 +234,13 @@ class HomeController extends Controller
         // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
         $data['min_fee'] = $fee['total']*$fee['fraction'];
         $data['total_balance'] = $data['user']->total_balance($student, $year->id);
-        $data['access'] = ($fee['total'] - $fee['total_balance']) >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        $data['access'] = (($fee['total'] - $fee['total_debt']) >= $data['min_fee']) || (Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0);
+        dd($data['min_fee']);
         if($data['access'] == -11){
             // check if results are published
-            // if(!$semester->result_is_published($year->id)){
+            if(!$semester->result_is_published($year->id)){
                 return back()->with('error', 'Results Not Yet Published For This Semester.');
-            // }
+            }
             
             // check if semester result fee is set && that student has payed 
             $plcharge = PlatformCharge::where(['year_id'=>$year->id])->first();
