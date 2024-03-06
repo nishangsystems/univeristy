@@ -75,6 +75,21 @@
         .dropdown-toggle:after {
             display: none;
         }
+
+        .compressed-table{
+            padding: 0 !important;
+            font-size: 9px !important;
+            font-weight: 600 !important;
+            color: black;
+            border: 1px solid #ccc !important;
+        }
+        .compressed-table td, .compressed-table th{
+            padding: 1px !important;
+            border: 1px solid #ccc !important;
+        }
+        .compressed-table tr, .compressed-table thead, .compressed-table tbody{
+            padding: 0 !important;
+        }
         
     </STYLE>
 @php
