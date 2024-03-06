@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\PaymentItem;
+use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
 use App\Models\Transcript;
 use App\Models\TranscriptRating;
@@ -50,11 +51,6 @@ class ResultsAndTranscriptsController extends Controller{
             $year = \App\Models\Batch::find(request('year_id'));
             $data['year'] = request('year_id');
             $data['students'] = $class->_students($year->id)->get();
-            // $data['students'] = $class->_students($year->id)
-            //     ->join('results', 'results.student_id', '=', 'students.id')
-            //     ->where(['results.batch_id'=>$year->id, 'results.class_id'=>$class->id, 'results.semester_id'=>$semester->id])
-            //     ->whereNotNull('results.ca_score')
-            //     ->distinct()->get(['students.*']);
             $data['grades'] = \Cache::remember('grading_scale', 60, function () use ($class) {
                 return $class->program->gradingType->grading->sortBy('grade') ?? [];
             });
@@ -63,7 +59,16 @@ class ResultsAndTranscriptsController extends Controller{
             $data['base_pass'] = ($class->program->ca_total ?? 0 + $class->program->exam_total ?? 0)*0.5;
             $data['_title'] = $class->name().' '.$semester->name.' '.$data['title'].' FOR '.$year->name.' '.__('text.academic_year');
         }
-        // dd($data);
+        dd($data);
+
+        if (($class = ProgramLevel::find($request->class_id??0)) != null) {
+            # code...
+            $data = $class->_students($request->year_id)
+                ->where('students.active', 1)
+                ->join('results', 'results.student_id', '=', 'students.id')
+                ->where('results.batch_id', $request->year_id)
+                ->where('results.semester_id', $request->semester_id);
+        }
         return view('admin.res_and_trans.spr_sheet', $data);
     }
 

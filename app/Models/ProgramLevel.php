@@ -95,6 +95,5 @@ class ProgramLevel extends Model
     {
         return $this->hasMany(StudentClass::class, 'class_id');
     }
-
-
+    
 }
