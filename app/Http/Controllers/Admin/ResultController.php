@@ -239,13 +239,14 @@ class ResultController extends Controller
         }
 
         $subject = Subjects::find(request('course_id'));
+        $classSubject = $subject->_class_subject($request->class_id);
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
-        $data['title'] = __('text.fill_CA_results_for', ['course'=>'[ '.$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+        $data['title'] = __('text.fill_CA_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>ProgramLevel::find(request('class_id'))->name()]);
 
         return view('admin.result.fill_ca', $data);
     }
 
-    public function ca_import(){
+    public function ca_import(Request $request){
         // check if CA total is set forthis program
         if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
             # code...
@@ -253,7 +254,8 @@ class ResultController extends Controller
         }
 
         $subject = Subjects::find(request('course_id'));
-        $data['title'] = __('text.import_CA_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+        $classSubject = $subject->_class_subject($request->class_id);
+        $data['title'] = __('text.import_CA_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>ProgramLevel::find(request('class_id'))->name()]);
 
         return view('admin.result.import_ca', $data);
     }
@@ -284,7 +286,7 @@ class ResultController extends Controller
             
             while(($row = fgetcsv($file_pointer, 100, ',')) != null){
                 if(is_numeric($row[1]))
-                $imported_data[] = [$row[0], $row[1]];
+                $imported_data[] = $row;
             }
             if(count($imported_data)==0){
                 return back()->with('error', __('text.empty_or_wrong_data_format'));
@@ -333,7 +335,7 @@ class ResultController extends Controller
         return view('admin.result.exam_result', $data);
     }
 
-    public function exam_fill(){
+    public function exam_fill(Request $request){
         // check if exam total is set for this program
         if (!Helpers::instance()->exam_total_isset(request('class_id')) || !Helpers::instance()->ca_total_isset(request('class_id'))) {
             # code...
@@ -341,9 +343,10 @@ class ResultController extends Controller
         }
 
         $subject = Subjects::find(request('course_id'));
+        $classSubject = $subject->_class_subject($request->class_id);
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
         $data['exam_total'] = Helpers::instance()->exam_total(request('class_id'));
-        $data['title'] = __('text.fill_exam_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+        $data['title'] = __('text.fill_exam_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>ProgramLevel::find(request('class_id'))->name()]);
         return view('admin.result.fill_exam', $data);
     }
 
@@ -355,7 +358,8 @@ class ResultController extends Controller
         }
         
         $subject = Subjects::find(request('course_id'));
-        $data['title'] = __('text.import_exam_results_for', ['course'=>"[ ".$subject->code." ] ".$subject->name, 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+        $classSubject = $subject->_class_subject($request->class_id);
+        $data['title'] = __('text.import_exam_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>ProgramLevel::find(request('class_id'))->name()]);
 
         return view('admin.result.import_exam', $data);
     }
@@ -388,7 +392,7 @@ class ResultController extends Controller
             
             while(($row = fgetcsv($file_pointer, 100, ',')) != null){
                 if(is_numeric($row[1]))
-                $imported_data[] = [$row[0], $row[1], $row[2]];
+                $imported_data[] = $row;
             }
             if(count($imported_data)==0){
                 return back()->with('error', __('text.empty_or_wrong_data_format'));
@@ -417,7 +421,7 @@ class ResultController extends Controller
                     ];
                     if(Result::where($base)->whereNotNull('ca_score')->count()>0){
                         $existing_results .= "<br> ".__('text.ca_results_already_exist_for', ['item'=>$data[0]]);
-                    }elseif (!$data[1] == null) {
+                    }elseif ($data[1] != null) {
                         # code...
                         Result::updateOrCreate($base, ['ca_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(),  'campus_id'=>$student->campus_id]);
                     }
@@ -425,7 +429,7 @@ class ResultController extends Controller
                         $existing_results .= "<br> ".__('text.exam_results_already_exist_for', ['item'=>$data[0]]);
                     }elseif (!$data[2] == null) {
                         # code...
-                        Result::updateOrCreate($base, ['exam_score'=>$data[1], 'reference'=>$request->reference, 'user_id'=>auth()->id(),  'campus_id'=>$student->campus_id]);
+                        Result::updateOrCreate($base, ['exam_score'=>$data[2], 'reference'=>$request->reference, 'user_id'=>auth()->id(),  'campus_id'=>$student->campus_id]);
                     }
                 }
                 else{

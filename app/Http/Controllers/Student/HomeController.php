@@ -236,16 +236,16 @@ class HomeController extends Controller
         
         // CODE TO CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS; WILL BE COMMENTED OUT TILL IT SHOULD TAKE EFFECT
         // if(){
-            //     return back()->with('error', "You have not paid plaftorm or semester result charges for the selected semester");
-            // }
-            
-            // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
-            
-            $data['title'] = "My Exam Result";
-            $data['user'] = auth('student')->user();
-            $data['semester'] = $semester;
-            $data['class'] = $class;
-            $data['year'] = $year;
+        //     return back()->with('error', "You have not paid plaftorm or semester result charges for the selected semester");
+        // }
+        
+        // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
+        
+        $data['title'] = "My Exam Result";
+        $data['user'] = auth('student')->user();
+        $data['semester'] = $semester;
+        $data['class'] = $class;
+        $data['year'] = $year;
         $data['ca_total'] = $class->program()->first()->ca_total;
         $data['exam_total'] = $class->program()->first()->exam_total;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
@@ -620,7 +620,8 @@ class HomeController extends Controller
             // return __DIR__;
             // dd($data);
             $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-            $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+            $data['access'] = ($fee['total'] - Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+            // dd($data);
             return view('student.courses.register', $data);
         } catch (\Throwable $th) {
             // throw $th;

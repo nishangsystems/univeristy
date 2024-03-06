@@ -7,89 +7,83 @@
 <div class="mx-3">
     <div class="form-panel">
         @if($student->total_balance() > 0)
-        <form class="form-horizontal" role="form" method="POST" action="{{route('admin.fee.student.payments.store',$student->id)}}">
-            <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_fee_details')}}</h5>
-            @csrf
-            <div class="form-group row">
-                <label for="cname" class="control-label col-sm-2 text-capitalize">{{__('text.total_fee')}}: </label>
-                <div class="col-sm-10">
-                    <input for="cname" class="form-control" value="{{number_format($total_fee)}} CFA" disabled>
+            <form class="form-horizontal" role="form" method="POST" action="{{route('admin.fee.student.payments.store',$student->id)}}">
+                <h5 class="mt-5 font-weight-bold text-capitalize">{{__('text.enter_fee_details')}}</h5>
+                @csrf
+                <div class="form-group row">
+                    <label for="cname" class="control-label col-sm-2 text-capitalize">{{__('text.total_fee')}}: </label>
+                    <div class="col-sm-10">
+                        <input for="cname" class="form-control" value="{{number_format($total_fee)}} CFA" disabled>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.scholarship_award')}}:</label>
-                <div class="col-lg-10">
-                    <input for="cname" class="form-control" value="{{number_format($scholarship)}} CFA" disabled>
+                <div class="form-group">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.scholarship_award')}}:</label>
+                    <div class="col-lg-10">
+                        <input for="cname" class="form-control" value="{{number_format($scholarship)}} CFA" disabled>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.balance_fee')}}:</label>
-                <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="balance" value="{{number_format($student->bal())}} CFA" disabled>
+                <div class="form-group">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.balance_fee')}}:</label>
+                    <div class="col-lg-10">
+                        <input for="cname" class="form-control" name="balance" value="{{number_format($student->bal(null, $c_year))}} CFA" disabled>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.extra_fee')}}:</label>
-                <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->extraFee($c_year) == null ? 0 : $student->extraFee($c_year)->amount}} CFA" disabled>
+                <div class="form-group">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.extra_fee')}}:</label>
+                    <div class="col-lg-10">
+                        <input for="cname" class="form-control" name="xtra-fee" value="{{$student->extraFee($c_year) == null ? 0 : $student->extraFee($c_year)->amount}} CFA" disabled>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
-                <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year-1) }} CFA" disabled>
+                <div class="form-group">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
+                    <div class="col-lg-10">
+                        <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)}} CFA" disabled></input>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_debt')}}:</label>
-                <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="xtra-fee" value="{{$student->total_debts($c_year)}} CFA" disabled></input>
+                <div class="form-group @error('item') has-error @enderror">
+                    <label class="control-label col-lg-2 text-capitalize">{{__('text.word_item')}} <span style="color:red">*</span></label>
+                    <div class="col-lg-10">
+                        <select class="form-control" name="item">
+                            <option value="" disabled class="text-capitalize">{{__('text.select_item')}}</option>
+                            @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->payment_items()->where(['year_id'=>$c_year])->get() ?? [] as $item)
+                                <option value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
+                            @endforeach
+                        </select>
+                        @error('item')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
-            </div>
-            <div class="form-group @error('item') has-error @enderror">
-                <label class="control-label col-lg-2 text-capitalize">{{__('text.word_item')}} <span style="color:red">*</span></label>
-                <div class="col-lg-10">
-                    <select class="form-control" name="item">
-                        <option value="" disabled class="text-capitalize">{{__('text.select_item')}}</option>
-                        @foreach($student->class(\App\Helpers\Helpers::instance()->getYear())->payment_items()->where(['year_id'=>$c_year])->get() ?? [] as $item)
-                            <option value="{{$item->id}}">{{$item->name." - ".$item->amount}} FCFA</option>
-                        @endforeach
-                    </select>
-                    @error('item')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
+                <div class="form-group @error('amount') has-error @enderror">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_amount')}} <span style="color:red">*</span></label>
+                    <div class="col-lg-10">
+                        <input class=" form-control" name="amount" value="{{old('amount')}}" type="number" required />
+                        @error('amount')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
-            </div>
-            <div class="form-group @error('amount') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_amount')}} <span style="color:red">*</span></label>
-                <div class="col-lg-10">
-                    <input class=" form-control" name="amount" value="{{old('amount')}}" type="number" required />
-                    @error('amount')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
+                <div class="form-group">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_date')}}<span style="color:red">*</span></label>
+                    <div class="col-lg-10">
+                        <input class=" form-control" name="date" value="{{old('amount')}}" type="date" required />
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_date')}}<span style="color:red">*</span></label>
-                <div class="col-lg-10">
-                    <input class=" form-control" name="date" value="{{old('amount')}}" type="date" required />
+                <div class="form-group">
+                    <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.reference_number')}}</label>
+                    <div class="col-lg-10">
+                        <input class=" form-control" name="reference_number" value="{{old('reference_number')}}" type="text" placeholder="{{__('text.word_optional')}}" />
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.reference_number')}}</label>
-                <div class="col-lg-10">
-                    <input class=" form-control" name="reference_number" value="{{old('reference_number')}}" type="text" placeholder="{{__('text.word_optional')}}" />
+                <div class="form-group">
+                    <div class="d-flex justify-content-end col-lg-12">
+                        <button id="save" class="btn btn-xs btn-primary mx-3 text-capitalize" type="submit">{{__('text.word_save')}}</button>
+                        <a class="btn btn-xs btn-danger " href="{{route('admin.fee.student.payments.index', $student->id)}}" type="button">{{__('text.word_cancel')}}</a>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="d-flex justify-content-end col-lg-12">
-                    <button id="save" class="btn btn-xs btn-primary mx-3 text-capitalize" type="submit">{{__('text.word_save')}}</button>
-                    <a class="btn btn-xs btn-danger " href="{{route('admin.fee.student.payments.index', $student->id)}}" type="button">{{__('text.word_cancel')}}</a>
-                </div>
-            </div>
-        </form>
+            </form>
         @else
-        <div class="alert alert-success text-center text-capitalize">{{__('text.phrase_fee_complete')}} <span class="mx-3 fw-bolder">{{$student->debt($c_year) == 0 ? '' : 'DEBT : '.$student->debt($c_year)}}</span></div>
+            <div class="alert alert-success text-center text-capitalize">{{__('text.phrase_fee_complete')}} <span class="mx-3 fw-bolder">{{$student->debt($c_year) == 0 ? '' : 'DEBT : '.$student->debt($c_year)}}</span></div>
         @endif
 
         <div class="px-5 py-3">
@@ -108,7 +102,7 @@
                     </thead>
                     <tbody>
                         @php($k=1)
-                        @forelse($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->whereNull('transaction_id')->where('user_id', auth()->id())->orderBy('id', 'DESC')->get() as $item)
+                        @forelse($student->payments()->where(['payment_year_id'=>$c_year])->orderBy('id', 'DESC')->get() as $item)
 
                         <!-- <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end"> -->
                             <tr>
@@ -155,7 +149,7 @@
                                 </thead>
                                 <tbody>
                                     @php($k=1)
-                                    @foreach($student->payments()->where(['batch_id'=>\App\Helpers\Helpers::instance()->getYear()])->get() as $item)
+                                    @foreach($student->payments()->where(['payment_year_id'=>$c_year])->get() as $item)
                                     <!-- <div class="card border bg-light py-3 px-5 d-flex justify-content-between my-4 align-items-end"> -->
                                     <tr>
                                         <td>{{$k++}}</td>

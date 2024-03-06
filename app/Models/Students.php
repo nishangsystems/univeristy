@@ -40,6 +40,15 @@ class Students extends Authenticatable
         $builder = $this->hasMany(ExtraFee::class, 'student_id')->where('year_id', '=', $year_id);
         return $builder->count() == 0 ? null : $builder->first();
     }
+
+    public function _classes($year_id = null)
+    {
+        # code...
+        return $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id')
+            ->where('student_classes.year_id', '<=', $year_id ?? Helpers::instance()->getCurrentAccademicYear())
+            ->orderByDesc('student_classes.year_id');
+
+    }
     
     public function _class($year=null)
     {
@@ -53,8 +62,9 @@ class Students extends Authenticatable
 
     public function class($year)
     {
-        // return CampusProgram::where('campus_id', $this->campus_id)->where('program_level_id', $this->_class($year)->id)->first();
-        return $this->_class($year)->campus_programs($this->campus_id)->first() ?? null;
+        $class = $this->_class($year);
+        $class = $class ==  null ? $this->_class() : $class;
+        return $class->campus_programs($this->campus_id)->first() ?? null;
     }
 
     public function classes()
@@ -123,9 +133,11 @@ class Students extends Authenticatable
     public function paid($year = null) // fee paid for current academic year
     {
         $year = $year == null ? Helpers::instance()->getYear() : $year;
-        $item_id = $this->payment_items()->where('name', 'TUTION')->first()->id??0;
-        $items = $this->payments()->where('batch_id', $year)->where('payment_id', $item_id)->selectRaw('COALESCE(sum(amount),0) total')->get();
-        return $items->first()->total;
+        $item_id = $this->payment_items()->where('year_id', $year)->where('name', 'TUTION')->first()->id??0;
+        // $items = $this->payments()->where('payment_year_id', $year)->where('payment_id', $item_id)->selectRaw('COALESCE(sum(amount),0) total')->get();
+        $items = $this->payments()->where('payment_year_id', $year)->get();
+        // dd($items->sum('amount'));
+        return $items->sum('amount');
     }
 
     public function registration_paid($year = null) // fee paid for current academic year
@@ -142,7 +154,9 @@ class Students extends Authenticatable
         $year = $year == null ? Helpers::instance()->getCurrentAccademicYear() : $year;
         $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id, $year);
         // dd($scholarship);
-        return $this->total() + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid() - ($scholarship);
+        $ret = $this->total() + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid() - ($scholarship);
+        // dd($ret);
+        return $ret;
     }
 
     // current year's unpaid fee
@@ -158,8 +172,9 @@ class Students extends Authenticatable
     public function total_balance($student_id = null, $year = null)
     {
         $year = $year == null ? Helpers::instance()->getCurrentAccademicYear() : $year;
+        return $this->total_debts($year);
         $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id);
-        return $this->total($year) + $this->total_debts($year-1) + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid($year) - ($scholarship);
+        $ret = $this->total($year) + $this->total_debts($year-1) + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid($year) - ($scholarship);
     }
 
     public function debt($year)
@@ -283,10 +298,18 @@ class Students extends Authenticatable
        
     } 
 
+    public function allScholarships($year = null)
+    {
+        # code...
+        $year = $year == null ? Helpers::instance()->getCurrentAccademicYear() : $year;
+        return $this->hasMany(StudentScholarship::class, 'student_id')->where('student_scholarships.batch_id', '<', $year+1)->get();
+    }
+
     // cumulative depts upto the current academic year
     public function total_debts($year)
     {
         # code...
+
 
         $campus_program_levels = $this->classes()
             ->where('year_id', '>', $this->admission_batch_id-1)
@@ -295,22 +318,25 @@ class Students extends Authenticatable
             ->get(['campus_programs.id', 'student_classes.year_id']);
         // dd($campus_program_levels);
         // fee amounts
-        $fee_items = [];
+        $fees = [];
          foreach (Batch::where('id', '<', $year+1)->get() as $key => $batch) {
             # code...
             $class = $this->_class($batch->id);
             if($class== null or $class->campus_programs($this->campus_id)->first() == null )continue;
-            $fee_items[] = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('name', 'TUTION')->where('year_id', $batch->id)->first();
+            $fees[] = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('name', 'TUTION')->where('year_id', $batch->id)->first();
         }
-        $fee_items = collect($fee_items);
+        $fees = collect($fees);
+        
+        $scholarships = $this->allScholarships($year);
+        $extra_fees = ExtraFee::where('student_id', $this->id)->where('year_id', '<', $year+1)->get();
+        $total_paid = Payments::where('student_id', $this->id)->get();
+        
+        $cumDebt = $fees->sum('amount') + $extra_fees->sum('amount') - $scholarships-> sum('amount') - $total_paid->sum('amount');
+        // dd($cumDebt);
+        // dd($fees->pluck('id')->toArray());
+        return $cumDebt;
 
-        $extra_fees = ExtraFee::where('year_id', '<', $year+1)->where('student_id', $this->id)->sum('amount');
-        $payments = Payments::where('student_id', $this->id)->where('payment_year_id', '<', $year+1)->whereIn('payment_id', $fee_items->pluck('id')->toArray())->sum(DB::raw('amount - debt'));
-        $scholarships = StudentScholarship::where('student_id', $this->id)->where('batch_id', '<', $year+1)->sum('amount');
-        $fees = $fee_items->sum('amount');
 
-        $debt = $fees + $extra_fees - ($payments + $scholarships);
-        return $debt;
 
     }
 
@@ -336,6 +362,7 @@ class Students extends Authenticatable
         $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
         return $this->hasMany(StudentSubject::class, 'student_id')->WHERE('year_id', '=', $year);
     }
+    
     public function course_pivot(){
         return $this->hasMany(StudentSubject::class, 'student_id');
     }
@@ -350,5 +377,11 @@ class Students extends Authenticatable
     {
         # code...
         return $this->belongsToMany(ProgramLevel::class, ClassDelegate::class,'student_id', 'class_id');
+    }
+
+    public function feeClearance()
+    {
+        # code...
+        return $this->hasOne(FeeClearance::class, 'student_id');
     }
 }

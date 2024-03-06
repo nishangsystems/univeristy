@@ -23,6 +23,8 @@ class SubjectResource extends JsonResource
             'name' => $this->name,
             'code' => $this->code,
             'semester' => $course->semester->name,
+            'coef' => $this->coef,
+            'cv' => $this->cv??null,
         ];
     }
 }

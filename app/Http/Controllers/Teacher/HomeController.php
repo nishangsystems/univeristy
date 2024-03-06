@@ -390,7 +390,8 @@ class HomeController extends Controller
 
         $class = ProgramLevel::find($class_id);
         $course = Subjects::find($course_id);
-        $data['title'] = "Import CA Results For {$course->name} | {$class->name()}";
+        $classSubject = $course->_class_subject($class_id);
+        $data['title'] = "Import CA Results For {$course->name} [{$course->code}] | CV : ".($classSubject->coef ?? $course->coef)." | STATUS : ".($classSubject->status ?? $course->status)." | {$class->name()}";
         return view('teacher.result.import_ca', $data);
     }
 

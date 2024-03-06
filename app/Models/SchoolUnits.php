@@ -146,4 +146,10 @@ class SchoolUnits extends Model
         # code...
         return $this->belongsToMany(Subjects::class, DepartmentalCourse::class, 'school_unit_id', 'subject_id');
     }
+
+    public function degree()
+    {
+        # code...
+        return $this->belongsTo(Degree::class, 'degree_id');
+    }
 }
