@@ -434,7 +434,10 @@ class HomeController extends Controller
         // dd($st_classes);
 
         $data = [];
-        foreach ($class->_students($year)->get() as $key => $student) {
+        $campus_id = auth()->user()->campus_id??null;
+        foreach ($class->_students($year)->where(function($query)use($campus_id){
+            $campus_id == null ? null : $query->where('campus_id', $campus_id);
+        })->get() as $key => $student) {
             $items = [];
             foreach ($student->classes as $key => $_class) {
                 if(($it = $_class->class->single_payment_item($student->campus_id, $_class->year_id)->where('name', 'TUTION')->get()->first()) != null){
