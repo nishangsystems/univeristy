@@ -256,9 +256,15 @@ class PaymentController extends Controller
 
     public function destroy(Request $request, $student_id, $id)
     {
-        $p =  Payments::find($id);
-        $p->delete();
-        return back()->with('success', __('text.word_done'));
+        try {
+            //code...
+            $p =  Payments::find($id);
+            $p->delete();
+            return back()->with('success', __('text.word_done'));
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', $th->getMessage());
+        }
     }
 
     public function print(Request $request, $student_id, $item_id)

@@ -114,12 +114,14 @@
                                 <td class="d-inline-flex">
                                     <!-- <a href="{{route('admin.fee.student.payments.edit', [ $student->id, $item->id])}}" class="btn m-2 btn-sm btn-primary text-white text-capitalize">{{__('text.word_edit')}}</a> -->
             
-                                    <a onclick="event.preventDefault();
-                                                        document.getElementById('delete-{{$item->id}}').submit();" class=" btn btn-danger btn-sm m-2 text-capitalize">{{__('text.word_delete')}}</a>
-                                    <form id="delete-{{$item->id}}" action="{{route('admin.fee.student.payments.destroy',[$student->id,$item->id])}}" method="POST" style="display: none;">
-                                        @method('DELETE')
-                                        {{ csrf_field() }}
-                                    </form>
+                                    @if($item->user_id == auth()->id())
+                                        <a onclick="event.preventDefault();
+                                                            document.getElementById('delete-{{$item->id}}').submit();" class=" btn btn-danger btn-sm m-2 text-capitalize">{{__('text.word_delete')}}</a>
+                                        <form id="delete-{{$item->id}}" action="{{route('admin.fee.student.payments.destroy',[$student->id,$item->id])}}" method="POST" style="display: none;">
+                                            @method('DELETE')
+                                            {{ csrf_field() }}
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
