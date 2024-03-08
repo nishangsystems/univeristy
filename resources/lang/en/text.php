@@ -907,9 +907,17 @@ return [
     'to_whom_it_may_concern'=>'to whom it may concern',
     'clearance_text'=>"We hereby attest that <b style=\"text-decoration: underline\"> :name</b> Matricule <b style=\"text-decoration: underline\"> :matric</b> <b> :program</b>, student in the <b>SHOOL OF :school </b> admitted in the year <b style=\"text-decoration: underline\"> :adm_year</b>, has paid complete fees upto <b style=\"text-decoration: underline\"> :fin_year</b> as follows :",
     'clearance_text_debt'=>"We hereby attest that <b style=\"text-decoration: underline\"> :name</b> Matricule <b style=\"text-decoration: underline\"> :matric</b> <b> :program</b>, student in the <b>SHOOL OF :school </b> admitted in the year <b style=\"text-decoration: underline\"> :adm_year</b>,  is <b style=\"text-decoration: underline; text-transform: uppercase; color: red;\">owing a fee of :debt CFA</b> upto  <b style=\"text-decoration: underline\"> :fin_year</b> :",
+    'fee_clearance'=>'fee clearance',
     'tution_fees_paid'=>'tution fees paid',
     'registration_fees_paid'=>'registration fees paid',
     'registration_fee_expected'=>'registration fee expected',
     'registration_fee_paid'=>'registration fee paid',
+    'coded_results'=>'coded results', 
+    'course_coding'=>'course coding',
+    'student_coding'=>'student coding',
+    'import_course_codes'=>'import course codes',
+    'import_student_codes'=>'import student codes',
+    'import_exam'=>'import exam',
+    'result_code'=>'result code',
     ''
 ];

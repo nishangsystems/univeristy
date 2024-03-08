@@ -828,6 +828,47 @@
             </li>
             @endif
 
+            @if (\Auth::user()->hasPermissionTo('manage_result_coding'))
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
+                    <span class="menu-text">
+						{{__('text.coded_results')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+
+                    <li>
+                        <a href="{{route('admin.result.coded.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.course_coding')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    
+                    <li>
+                        <a href="{{route('admin.result.coded.students')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.student_coding')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.result.coded.import')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.import_exams')}}
+                        </a>    
+                        <b class="arrow"></b>
+                    </li>    
+
+                </ul>
+            </li>
+            @endif
+
             @if (\Auth::user()->hasPermissionTo('manage_scholarship'))
             <li>
                 <a href="#" class="dropdown-toggle">
