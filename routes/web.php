@@ -283,6 +283,22 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::get('set_dateline/{background_id?}', 'Admin\ResultSettingsController@setExamUploadLatestDate')->name('dateline.set');
             Route::post('set_dateline/{background_id?}', 'Admin\ResultSettingsController@saveExamUploadLatestDate')->name('dateline.set');
         });
+
+        Route::prefix('coded')->name('coded.')->group(function(){
+            Route::get('/', [Admin\CodedResultsController::class, 'index'])->name('index');
+            Route::get('/courses', [Admin\CodedResultsController::class, 'import_course_codes'])->name('courses');
+            Route::post('/courses', [Admin\CodedResultsController::class, 'save_course_codes']);
+            Route::get('/students', [Admin\CodedResultsController::class, 'import_student_codes'])->name('students');
+            Route::post('/students', [Admin\CodedResultsController::class, 'save_student_codes']);
+            Route::get('/exam/import', [Admin\CodedResultsController::class, 'import_results'])->name('import');
+            Route::post('/exam/import', [Admin\CodedResultsController::class, 'save_results']);
+            Route::get('/{course_id}', [Admin\CodedResultsController::class, 'course'])->name('course');
+            Route::post('/{course_id}', [Admin\CodedResultsController::class, 'save_course_code']);
+            Route::get('/{course_id}/import', [Admin\CodedResultsController::class, 'import_results_per_course'])->name('course.import');
+            Route::post('/{course_id}/import', [Admin\CodedResultsController::class, 'save_results_per_course']);
+            
+        });
+
         Route::get('imports', 'Admin\ResultController@imports_index')->name('imports');
         // END OF ADDED RESULT ROUTES FOR OFFLINE SYSTEM
     });
@@ -804,7 +820,6 @@ Route::prefix('student')->name('student.')->middleware(['isStudent'])->group(fun
         Route::get('check_out/{attendance_id}', 'Student\ClassDelegateController@check_out')->name('check_out');
         Route::post('check_out/{attendance_id}', 'Student\ClassDelegateController@check_out_save');
         Route::post('attendance.delete/{attendance_id}', 'Student\ClassDelegateController@drop_attendance')->name('attendance.drop');
-        
         Route::get('course/log/{attendance_id}/init', 'Student\ClassDelegateController@course_log_init')->name('course.log.init');
         Route::get('course/log/{attendance_id}/{topic_id}', 'Student\ClassDelegateController@course_log')->name('course.log');
         Route::post('course/log/{attendance_id}/{topic_id}', 'Student\ClassDelegateController@course_log_save');
