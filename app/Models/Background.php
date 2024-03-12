@@ -15,17 +15,17 @@ class Background extends Model
     public function semesters()
     {
         # code...
-        // if(str_contains($this->background_name, 'MASTERS') ){
-        //     // dd(123123);
-        //     return Semester::join('backgrounds', 'backgrounds.id', '=', 'semesters.background_id')
-        //         ->where('background_name', 'LIKE', '%MASTERS%')->select('semesters.*');
-        // }
+        if(str_contains($this->background_name, 'MASTERS 2') ){
+            // dd(123123);
+            return Semester::join('backgrounds', 'backgrounds.id', '=', 'semesters.background_id')
+                ->where('background_name', 'LIKE', '%MASTERS%')->select('semesters.*');
+        }
         return $this->hasMany(Semester::class, 'background_id');
     }
     public function currentSemesters()
     {
         # code....
-        // if(str_contains($this->background_name, 'MASTERS') ){
+        // if(str_contains($this->background_name, 'MASTERS 2') ){
         //     return Semester::where(['semesters.status'=>1])
         //         ->join('backgrounds', 'backgrounds.id', '=', 'semesters.background_id')
         //         ->where('background_name', 'LIKE', '%MASTERS%')->select('semesters.*');
