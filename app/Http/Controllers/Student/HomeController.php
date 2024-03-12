@@ -380,7 +380,7 @@ class HomeController extends Controller
             return $rol;
             
             // dd($grade);
-        }, $res);
+        }, $registered_courses);
 
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
         $sum_cv = $data['results']->sum('coef');
