@@ -12,7 +12,7 @@
                 <form action="{{Request::url()}}/download">
                     <input type="hidden" name="year" value="{{request('year')}}">
                     <input type="hidden" name="semester" value="{{request('semester')}}">
-                    {{-- <button type="submit" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_download')}}</button> --}}
+                    <button type="submit" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_download')}}</button>
                     <button type="button" class="btn btn-sm btn-primary text-capitalize" onclick="print_result()">{{__('text.word_print')}}</button>
                 </form>
             </div>
