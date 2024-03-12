@@ -919,5 +919,9 @@ return [
     'import_student_codes'=>'import student codes',
     'import_exam'=>'import exam',
     'result_code'=>'result code',
+    'results_already_exist_for_accademic_year'=>'results already exist for accademic year',
+    'no_results_found_for_this_accademic_year'=>'no results found for this accademic year',
+    'data_format'=>'data format',
+    'exam_code'=>'exam code',
     ''
 ];
