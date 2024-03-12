@@ -89,7 +89,7 @@ class Helpers
         \App\Models\Background::where('background_name', 'LIKE', "%masters 2%")->first();
         
         // dd($background);
-        return $background->semesters;
+        return $background->semesters()->get();
     }
 
     public function getSemester($program_level_id)
