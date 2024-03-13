@@ -833,7 +833,7 @@
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
                     <span class="menu-text">
-						{{__('text.coded_results')}}
+						{{__('text.import_results')}}
 						</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
@@ -844,12 +844,12 @@
                     <li>
                         <a href="{{route('admin.result.coded.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.course_coding')}}
+                            {{__('text.word_index')}}
                         </a>
                         <b class="arrow"></b>
                     </li>
                     
-                    <li>
+                    {{-- <li>
                         <a href="{{route('admin.result.coded.students')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.student_coding')}}
@@ -863,7 +863,7 @@
                             {{__('text.import_exams')}}
                         </a>    
                         <b class="arrow"></b>
-                    </li>    
+                    </li>     --}}
 
                 </ul>
             </li>

@@ -10,7 +10,7 @@ class ExamCourseCode extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['course_id', 'course_code', 'exam_code', 'year_id'];
+    protected $fillable = ['course_id', 'course_code', 'exam_code', 'year_id', 'semester_id'];
 
     public function year()
     {
@@ -22,6 +22,12 @@ class ExamCourseCode extends Model
     {
         # code...
         return $this->belongsTo(Subjects::class, 'course_id');
+    }
+
+    public function semester()
+    {
+        # code...
+        return $this->belongsTo(Semester::class, 'semester_id');
     }
 
     public function results()

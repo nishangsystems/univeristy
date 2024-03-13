@@ -19,6 +19,12 @@ class Subjects extends Model
     }
 
     
+    public function classes()
+    {
+        return  $this->belongsToMany(ProgramLevel::class, ClassSubject::class, 'subject_id', 'class_id');
+    }
+
+    
     public function class_subject()
     {
         return  $this->hasMany(ClassSubject::class, 'subject_id');

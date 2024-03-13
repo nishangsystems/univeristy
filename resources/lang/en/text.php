@@ -923,5 +923,10 @@ return [
     'no_results_found_for_this_accademic_year'=>'no results found for this accademic year',
     'data_format'=>'data format',
     'exam_code'=>'exam code',
+    'student_code'=>'student code',
+    'student_matricule'=>'student matricule',
+    'word_initialise'=>'initialise',
+    'clear_exam'=>'clear exam',
+    'import_coded_results'=>'import coded results',
     ''
 ];

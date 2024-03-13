@@ -19,6 +19,7 @@ class CreateExamCourseCodesTable extends Migration
             $table->string('course_code')->nullable();
             $table->string('exam_code');
             $table->integer('year_id');
+            $table->integer('semester_id');
             $table->timestamps();
             $table->softDeletes();
         });

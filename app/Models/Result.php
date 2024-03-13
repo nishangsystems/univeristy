@@ -16,6 +16,12 @@ class Result extends Model
         'class_subject_id', 'reference', 'user_id', 'campus_id', 'published'
     ];
 
+    public function year()
+    {
+        # code...
+        return $this->belongsTo(Batch::class, 'batch_id');
+    }
+
     public function student()
     {
         # code...
