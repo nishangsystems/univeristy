@@ -40,12 +40,14 @@ class PaymentController extends Controller
     {
         // return 1000000;
         $student = Students::find($student_id);
+        $years = $student->classes()->join('batches', 'batches.id', '=', 'student_classes.year_id')->select(['batches.*'])->distinct()->get();
         $data['student'] = $student;
         $data['scholarship'] = Helpers::instance()->getStudentScholarshipAmount($student_id);
         $data['total_fee'] = (int)$student->total();
         // $data['total_fee'] = CampusProgram::where('campus_id', $student->campus_id)->where('program_level_id', $student->program_id)->first()->payment_items()->first()->amount;
         $data['balance'] =  $student->bal($student_id);
         $data['title'] = __('text.collect_fee_for', ['item'=>$student->name]);
+        $data['years'] = $years;
 
         // if ($data['balance'] == 0) {
         //     return redirect(route('admin.fee.collect'))->with('success', 'Student has already completed fee');
@@ -108,15 +110,15 @@ class PaymentController extends Controller
                 'amount' => 'required',
                 'date' => 'required|date',
             ]);
-            foreach (Batch::orderBy('name')->pluck('id')->toArray() as $key => $year_id) {
-                # code...
-                if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
-                $class = $student->_class($year_id);
+            if($request->year != null){
+                $class = $student->_class($request->year);
+                // dd($class);
                 if($class != null){
                     $cpid = $class->campus_programs->where('campus_id', $student->campus_id)->first();
                     if($cpid != null){
-                        $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $request->item : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
-                        $total_balance = $student->total_balance($student->id, $year_id);
+                        $payment_id = $request->year == Helpers::instance()->getCurrentAccademicYear() ? $request->item : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$request->year])->first()->id??null;
+                        $total_balance = $student->bal($student->id, $request->year);
+                        // dd($total_balance);
                         if($total_balance > 0){
                             $amount = 0; $debt = 0;
                             if($__amount >= $total_balance){
@@ -126,7 +128,7 @@ class PaymentController extends Controller
                                 $amount = $__amount;
                                 $__amount = 0;
                             }
-                            if($year_id == Helpers::instance()->getCurrentAccademicYear()){
+                            if($request->year == Helpers::instance()->getCurrentAccademicYear()){
                                 $debt = $__amount > 0 ? -$__amount : 0;
                             }else{$debt = 0;}
 
@@ -134,12 +136,12 @@ class PaymentController extends Controller
                                 "payment_id" => $payment_id,
                                 "student_id" => $student->id,
                                 "unit_id" => $class->id,
-                                "batch_id" => $year_id,
+                                "batch_id" => $request->year,
                                 "amount" => $amount,
                                 // "date" => $request->date,
                                 'reference_number' => $request->reference_number.time().'_'.random_int(1000000, 99999999),
                                 'user_id' => auth()->user()->id,
-                                'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
+                                'payment_year_id'=>$request->year,
                                 'debt' => $debt,
                                 'created_at'=>date(DATE_ATOM, time()),
                                 'updated_at'=>date(DATE_ATOM, time())
@@ -148,6 +150,51 @@ class PaymentController extends Controller
                                 $_data[] = $data;
                             }else{return back()->with('error', __('text.reference_already_exist'));}
                         };
+                    }
+                }
+                // dd($_data);
+            }else{
+                foreach (Batch::orderBy('name')->pluck('id')->toArray() as $key => $year_id) {
+                    # code...
+                    if($year_id > Helpers::instance()->getCurrentAccademicYear()) break;
+                    $class = $student->_class($year_id);
+                    if($class != null){
+                        $cpid = $class->campus_programs->where('campus_id', $student->campus_id)->first();
+                        if($cpid != null){
+                            $payment_id = $year_id == Helpers::instance()->getCurrentAccademicYear() ? $request->item : PaymentItem::where(['campus_program_id'=>$cpid->id, 'year_id'=>$year_id])->first()->id??null;
+                            $total_balance = $student->total_balance($student->id, $year_id);
+                            if($total_balance > 0){
+                                $amount = 0; $debt = 0;
+                                if($__amount >= $total_balance){
+                                    $__amount -= $total_balance;
+                                    $amount = $total_balance;
+                                }else{
+                                    $amount = $__amount;
+                                    $__amount = 0;
+                                }
+                                if($year_id == Helpers::instance()->getCurrentAccademicYear()){
+                                    $debt = $__amount > 0 ? -$__amount : 0;
+                                }else{$debt = 0;}
+    
+                                $data = [
+                                    "payment_id" => $payment_id,
+                                    "student_id" => $student->id,
+                                    "unit_id" => $class->id,
+                                    "batch_id" => $year_id,
+                                    "amount" => $amount,
+                                    // "date" => $request->date,
+                                    'reference_number' => $request->reference_number.time().'_'.random_int(1000000, 99999999),
+                                    'user_id' => auth()->user()->id,
+                                    'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
+                                    'debt' => $debt,
+                                    'created_at'=>date(DATE_ATOM, time()),
+                                    'updated_at'=>date(DATE_ATOM, time())
+                                ];
+                                if ($data['reference_number'] == null || (Payments::where(['reference_number' => $data['reference_number']])->count() == 0)) {
+                                    $_data[] = $data;
+                                }else{return back()->with('error', __('text.reference_already_exist'));}
+                            };
+                        }
                     }
                 }
             }

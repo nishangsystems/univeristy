@@ -154,7 +154,7 @@ class Students extends Authenticatable
         $year = $year == null ? Helpers::instance()->getCurrentAccademicYear() : $year;
         $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id, $year);
         // dd($scholarship);
-        $ret = $this->total() + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid() - ($scholarship);
+        $ret = $this->total($year) + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid($year) - ($scholarship);
         // dd($ret);
         return $ret;
     }
