@@ -12,9 +12,15 @@ class Result extends Model
     protected $connection = 'mysql';
     protected $fillable = [
         'batch_id', 'student_id', 'class_id', 'semester_id', 
-        'subject_id', 'ca_score', 'exam_score', 'coef', 'remark',
+        'subject_id', 'ca_score', 'exam_score', 'exam_code', 'coef', 'remark',
         'class_subject_id', 'reference', 'user_id', 'campus_id', 'published'
     ];
+
+    public function year()
+    {
+        # code...
+        return $this->belongsTo(Batch::class, 'batch_id');
+    }
 
     public function student()
     {

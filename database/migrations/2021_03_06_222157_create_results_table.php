@@ -23,6 +23,7 @@ class CreateResultsTable extends Migration
             $table->integer('subject_id');
             $table->double('ca_score')->default(0);
             $table->double('exam_score')->nullable();
+            $table->string('exam_code', 16)->nullable();
             $table->double('coef');
             $table->string('remark');
             $table->string('reference');

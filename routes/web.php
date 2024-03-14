@@ -286,16 +286,30 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
         Route::prefix('coded')->name('coded.')->group(function(){
             Route::get('/', [Admin\CodedResultsController::class, 'index'])->name('index');
-            Route::get('/courses', [Admin\CodedResultsController::class, 'import_course_codes'])->name('courses');
-            Route::post('/courses', [Admin\CodedResultsController::class, 'save_course_codes']);
-            Route::get('/students', [Admin\CodedResultsController::class, 'import_student_codes'])->name('students');
-            Route::post('/students', [Admin\CodedResultsController::class, 'save_student_codes']);
-            Route::get('/exam/import', [Admin\CodedResultsController::class, 'import_results'])->name('import');
-            Route::post('/exam/import', [Admin\CodedResultsController::class, 'save_results']);
-            Route::get('/{course_id}', [Admin\CodedResultsController::class, 'course'])->name('course');
-            Route::post('/{course_id}', [Admin\CodedResultsController::class, 'save_course_code']);
-            Route::get('/{course_id}/import', [Admin\CodedResultsController::class, 'import_results_per_course'])->name('course.import');
-            Route::post('/{course_id}/import', [Admin\CodedResultsController::class, 'save_results_per_course']);
+            // manage exam coding
+            Route::get('{year_id}/{semester_id}/courses', [Admin\CodedResultsController::class, 'import_course_codes'])->name('courses');
+            Route::post('{year_id}/{semester_id}/courses', [Admin\CodedResultsController::class, 'save_course_codes']);
+            Route::get('{year_id}/{semester_id}/{course_id}', [Admin\CodedResultsController::class, 'course'])->name('course');
+            Route::post('{year_id}/{semester_id}/{course_id}', [Admin\CodedResultsController::class, 'save_course_code']);
+            Route::get('{year_id}/{semester_id}/{course_id}/drop', [Admin\CodedResultsController::class, 'drop_course_code'])->name('course.undo');
+            Route::get('{year_id}/{semester_id}/{course_id}/students', [Admin\CodedResultsController::class, 'import_student_codes'])->name('students');
+            Route::post('{year_id}/{semester_id}/{course_id}/students', [Admin\CodedResultsController::class, 'save_student_codes']);
+            Route::post('{year_id}/{semester_id}/{course_id}/students/undo', [Admin\CodedResultsController::class, 'undo_student_code_import'])->name('students.undo');
+
+            // CA only
+            Route::get('{year_id}/{semester_id}/{course_id}/import/ca', [Admin\CodedResultsController::class, 'import_ca_only'])->name('course.import.ca');
+            Route::post('{year_id}/{semester_id}/{course_id}/import/ca', [Admin\CodedResultsController::class, 'save_ca_only']);
+            Route::get('{year_id}/{semester_id}/{course_id}/import/ca/undo/{class_id?}', [Admin\CodedResultsController::class, 'undo_ca_import'])->name('course.import.ca.undo');
+
+            // normal EXAM import
+            Route::get('{year_id}/{semester_id}/{course_id}/exam/import', [Admin\CodedResultsController::class, 'import_exam'])->name('course.import.exam');
+            Route::post('{year_id}/{semester_id}/{course_id}/exam/import', [Admin\CodedResultsController::class, 'save_exam']);
+            Route::post('{year_id}/{semester_id}/{course_id}/exam/import/undo', [Admin\CodedResultsController::class, 'undo_exam_import'])->name('course.import.exam.undo');
+
+            // coded EXAM import
+            Route::get('{year_id}/{semester_id}/{course_id}/exam/coded/import', [Admin\CodedResultsController::class, 'import_coded_exam'])->name('course.import.exam.coded');
+            Route::post('{year_id}/{semester_id}/{course_id}/exam/coded/import', [Admin\CodedResultsController::class, 'save_coded_exam']);
+            Route::get('{year_id}/{semester_id}/{course_id}/exam/coded/import/undo/{class_id?}', [Admin\CodedResultsController::class, 'undo_coded_exam_import'])->name('course.import.exam.coded.undo');
             
         });
 

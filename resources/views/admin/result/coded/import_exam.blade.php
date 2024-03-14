@@ -30,7 +30,7 @@
                             <th colspan="2" class="text-center border-bottom border-white">@lang('text.file_format_csv')</th>
                         </tr>
                         <tr class="border-bottom border-dark">
-                            <th>@lang('text.student_code')</th>
+                            <th>@lang('text.word_matricule')</th>
                             <th>@lang('text.exam_mark')</th>
                         </tr>
                     </thead>
@@ -51,10 +51,14 @@
                             <thead class="text-capitalize">
                                 <tr class="border-bottom border-white">
                                     <th colspan="6" class="text-center">
-                                        <form action="{{ route('admin.result.coded.course.undo', [$year->id??'', $semester->id??'', $course->id??'']) }}" method="post" class="row">
+                                        <form action="{{ route('admin.result.coded.course.import.exam.undo', [$year->id??'', $semester->id??'', $course->id??'']) }}" method="post" class="row">
+                                            @csrf
                                             <div class="col-sm-8 col-xl-8">
                                                 <select name="class_id" id="" class="form-control border-top-0 border-bottom-0">
                                                     <option value="">@lang('text.select_class')</option>
+                                                    @foreach($classes as $key => $value)
+                                                        <option value="{{ $value->id }}">{{ $value->name() }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <div class="col-sm-4 col-xl-4"><button class="btn btn-warning rounded form-control">@lang('text.clear_exam')</button></div>
@@ -70,6 +74,21 @@
                                     <th>@lang('text.exam_mark')</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                @php
+                                    $k = 1;
+                                @endphp
+                                @foreach($results as $key => $value)
+                                    <tr>
+                                        <td>{{ $k++ }}</td>
+                                        <td>{{ $value->student->matric }}</td>
+                                        <td>{{ $value->subject->code }}</td>
+                                        <td>{{ $value->year->name }}</td>
+                                        <td>{{ $value->ca_score }}</td>
+                                        <td>{{ $value->exam_score }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
                         </table>
                     </div>
                 </div>
