@@ -29,7 +29,7 @@
                         <a href="{{ route('admin.result.coded.course.import.exam', [$year->id??'', $semester->id??'', $course->id??'']) }}" class="btn btn-success rounded my-1 mx-1">@lang('text.import_exam')</a>
                         <a href="{{ route('admin.result.coded.students', [$year->id??'', $semester->id??'', $course->id??'']) }}" class="btn btn-info rounded my-1 mx-1">@lang('text.student_coding')</a>
                     </div>
-                    @if($exam_code != null and $exam_code->results()->whereNotNull('exam_score')->count() > 0)
+                    @if($has_exam)
                         <div class="alert-success fs-2 py-5">@lang('text.results_already_exist_for_accademic_year')</div>
                     @else
                         <div class="alert-danger fs-2 py-5">@lang('text.no_results_found_for_this_accademic_year')</div>

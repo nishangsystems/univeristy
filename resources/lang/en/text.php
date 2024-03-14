@@ -315,7 +315,7 @@ return [
     'select_month'=>'select month',
     'clear_fees'=>'clear fees',
     'word_file' =>'file',
-    'ca_mark'=>'ca mark',
+    'ca_mark'=>'CA mark',
     'exam_mark'=>'exam mark',
     'word_reference'=>'reference',
     'word_users'=> 'users',
@@ -928,5 +928,6 @@ return [
     'word_initialise'=>'initialise',
     'clear_exam'=>'clear exam',
     'import_coded_results'=>'import coded results',
+    'existing_data'=>'existing data',
     ''
 ];

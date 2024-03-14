@@ -27,7 +27,7 @@
                 <table class="table-dark col-md-10 col-lg-8 margin-top-5">
                     <thead class="text-capitalize">
                         <tr>
-                            <th colspan="2" class="text-center border-bottom border-white">@lang('text.data_format')</th>
+                            <th colspan="2" class="text-center border-bottom border-white">@lang('text.file_format_csv')</th>
                         </tr>
                         <tr class="border-bottom border-dark">
                             <th>@lang('text.student_code')</th>

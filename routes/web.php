@@ -294,6 +294,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::get('{year_id}/{semester_id}/{course_id}/drop', [Admin\CodedResultsController::class, 'drop_course_code'])->name('course.undo');
             Route::get('{year_id}/{semester_id}/{course_id}/students', [Admin\CodedResultsController::class, 'import_student_codes'])->name('students');
             Route::post('{year_id}/{semester_id}/{course_id}/students', [Admin\CodedResultsController::class, 'save_student_codes']);
+            Route::post('{year_id}/{semester_id}/{course_id}/students/undo', [Admin\CodedResultsController::class, 'undo_student_code_import'])->name('students.undo');
 
             // CA only
             Route::get('{year_id}/{semester_id}/{course_id}/import/ca', [Admin\CodedResultsController::class, 'import_ca_only'])->name('course.import.ca');
