@@ -126,6 +126,18 @@ class ApiController extends Controller
         return response()->json(['data'=>Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->groupBy('school_units.id')->orderBy('school_units.name')->distinct()->get(['school_units.*', 'departments.name as parent'])]);
     }
 
+    public function campus_programs_by_school($campus_id)
+    {
+        # code...
+        return response()->json([
+            'data'=>Campus::find($campus_id)->programs()
+                ->join('school_units', ['school_units.id'=>'program_levels.program_id'])
+                ->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])
+                ->join('school_units as schools', ['schools.id'=>'departments.parent_id'])
+                ->groupBy('school_units.id')->orderBy('school_units.name')->distinct()->get(['school_units.*', 'departments.name as department', 'schools.name as school'])
+        ]);
+    }
+
     public function levels()
     {
         # code...
