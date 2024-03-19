@@ -938,10 +938,14 @@ class ProgramController extends Controller
             $student = Students::find($student_id);
             DB::beginTransaction();
             if(($program = SchoolUnits::find($request->program)) != null){
-                $former_class = $student->_class();
+                $former_class = $student->_class($this->current_accademic_year) ?? $student->_class();
                 // Update student class
                 $class = $program->classes->where('level_id', $request->level)->first();
                 StudentClass::updateOrInsert(['student_id'=>$student_id, 'year_id'=>$this->current_accademic_year], ['class_id'=>$class->id]);
+
+                // update fee record 'class_id' & 'payment_id' fields
+                $fee_item = $former_class->campus_programs($student->campus_id)->first()->payment_items()->where('year_id', $this->current_accademic_year)->first();
+                \App\Models\Payments::where(['student_id'=>$student_id, 'payment_year_id'=>$this->current_accademic_year])->update(['unit_id'=>$class->id, 'payment_id'=>$fee_item->id??null]);
                 // update student matricule if program changes
                 // dd($former_class);
                 if($former_class->program_id == $request->program){
