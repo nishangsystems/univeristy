@@ -99,7 +99,7 @@ class Students extends Authenticatable
         $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
         if ($this->classes()->where('year_id', $year)->first() != null) {
             # code...
-            dd($year);
+            dd($this->_class($year));
             // return $this->campus()->first()->campus_programs()->where(['program_level_id' => $this->_class(Helpers::instance()->getCurrentAccademicYear())->id ?? 0, 'campus_id'=>$this->campus_id])->first()->payment_items()->first()->amount ?? -1;
             $rec = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year, 'name'=>'TUTION'])->first();
             return $rec ? $rec->amount : 0;
