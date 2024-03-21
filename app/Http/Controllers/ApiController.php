@@ -147,8 +147,7 @@ class ApiController extends Controller
     public function store_student(Request $request)
     {
         # code...
-        $student = json_decode($request->student);
-        // return $student;
+        $student = $request->student;
         if($student == null){
             return response(json_encode(['data'=>'No student data specified']), 400);
         }
@@ -159,22 +158,19 @@ class ApiController extends Controller
             return response(json_encode(['data'=>'Applicant email already used']), 400);
         }
         if($student != null){
+            return ['data'=>$student];
             // save student to Database
-            $record = ['name'=>$student->name, 'email'=>$student->email,
-            'phone'=>$student->phone,
-            'address'=>$student->residence,
-            'gender'=>$student->gender,
-            'matric'=>$student->matric,
-            'dob'=>$student->dob,
-            'pob'=>$student->pob,
-            'campus_id'=>$student->campus_id,
-            'admission_batch_id'=>$student->year_id,
-            'password'=>Hash::make('12345678'),
-            'parent_name'=>$student->fee_payer_name,
-            'program_id'=>$student->program_first_choice,
-            'parent_phone_number'=>$student->fee_payer_tel,
-            'imported'=>0,
-            'active'=>1];
+            $record = [
+                'name'=>$student->name, 'email'=>$student->email, 'phone'=>$student->phone,
+                'address'=>$student->residence, 'gender'=>$student->gender,
+                'matric'=>$student->matric, 'dob'=>$student->dob, 'pob'=>$student->pob,
+                'campus_id'=>$student->campus_id, 'admission_batch_id'=>$student->year_id,
+                'password'=>Hash::make('12345678'), 'parent_name'=>$student->fee_payer_name,
+                'program_id'=>$student->program_first_choice,
+                'parent_phone_number'=>$student->fee_payer_tel,
+                'imported'=>0, 'active'=>1
+            ];
+            return ['data'=>$record];
             $student_instance = new Students($record);
             $student_instance->save();
 
@@ -230,6 +226,7 @@ class ApiController extends Controller
     public function max_matric(Request $request, $prefix, $year)
     {
         # code...
+        // return ['data'=>25372];
         return response()->json(['data'=> Students::where('matric', 'LIKE', "%{$prefix}/{$year}/%")->orderBy('matric', 'DESC')->get()->pluck('matric')->first()]);
     }
 
