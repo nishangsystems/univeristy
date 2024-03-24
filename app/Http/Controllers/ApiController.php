@@ -147,44 +147,59 @@ class ApiController extends Controller
     public function store_student(Request $request)
     {
         # code...
-        $student = $request->student;
-        if($student == null){
-            return response(json_encode(['data'=>'No student data specified']), 400);
-        }
-        if(Students::where('matric', $student->matric)->count() > 0){
-            return response(json_encode(['data'=>'Assigned matricule number already used']), 400);
-        }
-        if(Students::where('email', $student->email)->where('admission_batch_id', $student->year_id)->where('active', 1)->count() > 0){
-            return response(json_encode(['data'=>'Applicant email already used']), 400);
-        }
-        if($student != null){
-            return ['data'=>$student];
-            // save student to Database
-            $record = [
-                'name'=>$student->name, 'email'=>$student->email, 'phone'=>$student->phone,
-                'address'=>$student->residence, 'gender'=>$student->gender,
-                'matric'=>$student->matric, 'dob'=>$student->dob, 'pob'=>$student->pob,
-                'campus_id'=>$student->campus_id, 'admission_batch_id'=>$student->year_id,
-                'password'=>Hash::make('12345678'), 'parent_name'=>$student->fee_payer_name,
-                'program_id'=>$student->program_first_choice,
-                'parent_phone_number'=>$student->fee_payer_tel,
-                'imported'=>0, 'active'=>1
-            ];
-            return ['data'=>$record];
-            $student_instance = new Students($record);
-            $student_instance->save();
-
-            // create student_class
-            $level = Level::where('level', $student->level)->first();
-            $program_level = ProgramLevel::where('program_id', $student->program_first_choice)->where('level_id', $level->id)->first();
-            if($program_level == null){
-                $program_level = new ProgramLevel(['program_id'=>$student->program_first_choice, 'level_id'=> $level->id]);
-                $program_level->save();
+        // return ['data'=>156745453];
+        try {
+            //code...
+            $student = json_decode($request->student);
+    
+            if($student == null){
+                return response(json_encode(['data'=>'No student data specified']), 400);
             }
-            $student_class = ['student_id'=>$student_instance->id, 'class_id'=>$program_level->id, 'year_id'=>$student->year_id, 'current'=>1];
-            StudentClass::updateOrInsert(['student_id'=>$student_instance->id, 'class_id'=>$program_level->id, 'year_id'=>$student->year_id], ['current'=>1]);
-
-            return response()->json(['data'=>['student'=>$student_instance->toArray(), 'student_class'=>$student_class, 'class'=>$program_level->toArray(), 'status'=>1]]);
+            if(Students::where('matric', $student->matric)->count() > 0){
+                return response(json_encode(['data'=>'Assigned matricule number already used']), 400);
+            }
+            if(Students::where('email', $student->email)->where('admission_batch_id', $student->year_id)->where('active', 1)->count() > 0){
+                return response(json_encode(['data'=>'Applicant email already used']), 400);
+            }
+            if($student != null){
+                // return ['data'=>$student->matric];
+                // save student to Database
+                $record = [
+                    'name'=>$student->name??null, 'email'=>$student->email??null, 'phone'=>$student->phone??null,
+                    'address'=>$student->residence??null, 'gender'=>$student->gender??null,
+                    'matric'=>$student->matric??null, 'dob'=>$student->dob??null, 'pob'=>$student->pob??null,
+                    'campus_id'=>$student->campus_id??null, 'admission_batch_id'=>$student->year_id??null,
+                    'password'=>Hash::make('12345678'), 'parent_name'=>$student->fee_payer_name??null,
+                    'program_id'=>$student->program_first_choice??null, 'region'=>$student->region??null,
+                    'parent_phone_number'=>$student->fee_payer_tel??null, 'division'=>$student->division??null, 
+                    'imported'=>0, 'active'=>1, 'nationality'=>$student->nationality??null,
+                    'special_needs'=>$student->special_needs??null, 'id_number'=>$student->id_number??null, 
+                    'father_name'=>$student->father_name??null, 'father_address'=>$student->father_address??null, 
+                    'father_tel'=>$student->father_tel??null, 'mother_name'=>$student->mother_name??null, 
+                    'mother_address'=>$student->mother_address??null, 'mother_tel'=>$student->mother_tel??null, 
+                    'guardian_name'=>$student->guardian_name??null, 'guardian_address'=>$student->guardian_address??null, 
+                    'guardian_tel'=>$student->guardian_tel??null, 'emergency_name'=>$student->emergency_name??null, 
+                    'emergency_address'=>$student->emergency_address??null, 'emergency_tel'=>$student->emergency_tel??null, 
+                ];
+                // return ['data'=>$record];
+                $student_instance = new Students($record);
+                $student_instance->save();
+    
+                // create student_class
+                $level = Level::where('level', $student->level)->first();
+                $program_level = ProgramLevel::where('program_id', $student->program_first_choice)->where('level_id', $level->id)->first();
+                if($program_level == null){
+                    $program_level = new ProgramLevel(['program_id'=>$student->program_first_choice, 'level_id'=> $level->id]);
+                    $program_level->save();
+                }
+                $student_class = ['student_id'=>$student_instance->id, 'class_id'=>$program_level->id, 'year_id'=>$student->year_id, 'current'=>1];
+                StudentClass::updateOrInsert(['student_id'=>$student_instance->id, 'class_id'=>$program_level->id, 'year_id'=>$student->year_id], ['current'=>1]);
+    
+                return response()->json(['data'=>['student'=>$student_instance->toArray(), 'student_class'=>$student_class, 'class'=>$program_level->toArray(), 'status'=>1]]);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['data'=>"L:: {$th->getLine()}, M:: {$th->getMessage()}"]);
         }
     }
 
