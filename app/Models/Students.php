@@ -17,10 +17,7 @@ class Students extends Authenticatable
         'name', 'email', 'phone', 'address', 'gender', 'username', 'matric', 
         'dob', 'pob', 'campus_id', 'admission_batch_id', 'password', 'parent_name', 
         'program_id', 'parent_phone_number', 'imported', 'active', 'password', 
-        'region', 'division', 'nationality', 'special_needs', 'id_number', 'father_name', 
-        'father_address', 'father_tel', 'mother_name', 'mother_address', 'mother_tel', 
-        'guardian_name', 'guardian_address', 'guardian_tel', 'emergency_name', 
-        'emergency_address', 'emergency_tel', 'previous_training'
+        'region', 'division', 'nationality',
     ];
 
     protected $connection = 'mysql';
