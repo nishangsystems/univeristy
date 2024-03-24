@@ -172,14 +172,7 @@ class ApiController extends Controller
                     'password'=>Hash::make('12345678'), 'parent_name'=>$student->fee_payer_name??null,
                     'program_id'=>$student->program_first_choice??null, 'region'=>$student->region??null,
                     'parent_phone_number'=>$student->fee_payer_tel??null, 'division'=>$student->division??null, 
-                    'imported'=>0, 'active'=>1, 'nationality'=>$student->nationality??null,
-                    'special_needs'=>$student->special_needs??null, 'id_number'=>$student->id_number??null, 
-                    'father_name'=>$student->father_name??null, 'father_address'=>$student->father_address??null, 
-                    'father_tel'=>$student->father_tel??null, 'mother_name'=>$student->mother_name??null, 
-                    'mother_address'=>$student->mother_address??null, 'mother_tel'=>$student->mother_tel??null, 
-                    'guardian_name'=>$student->guardian_name??null, 'guardian_address'=>$student->guardian_address??null, 
-                    'guardian_tel'=>$student->guardian_tel??null, 'emergency_name'=>$student->emergency_name??null, 
-                    'emergency_address'=>$student->emergency_address??null, 'emergency_tel'=>$student->emergency_tel??null, 
+                    'imported'=>0, 'active'=>1,
                 ];
                 // return ['data'=>$record];
                 $student_instance = new Students($record);
@@ -199,7 +192,7 @@ class ApiController extends Controller
             }
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(['data'=>"L:: {$th->getLine()}, M:: {$th->getMessage()}"]);
+            return response()->json(['data'=>"L:: {$th->getLine()}, M:: {$th->getMessage()}"], 400);
         }
     }
 
