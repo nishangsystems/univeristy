@@ -236,7 +236,9 @@ class HomeController extends Controller
         $campus = auth()->user()->campus;
         $title = $type . " fee  -  " . $class->name(). '  -  '.($campus ? $campus->name??'' : '');
         $title .= ' FOR ('.Batch::find($year)->name.') ONLY';
-        $students = $class->_students($year)->where('students.active', 1)->get();
+        $students = $class->_students($year)->where('students.active', 1)->where(function($qry)use($campus){
+            $campus == null ? null : $qry->where('campus_id', $campus->id);
+        })->get();
         // dd($students);
 
         $data = $students->map(function($student)use($campus, $year, $class){
