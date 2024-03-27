@@ -54,18 +54,18 @@ class ClearanceService{
             $data['program'] = $class->program;
             $data['degree'] = $data['program']->degree;
             $data['school'] = $data['program']->parent->parent??null;
-            $data['total_paid'] = $total_paid;
             $data['total_reg_paid'] = $total_reg_paid;
             $data['student'] = $student;
             $fees = $ret->where('name', 'TUTION');
             $regs = $ret->where('name', 'REGISTRATION');
              
             $ret->map(function($fxn)use($student_id, $regs){
-                    $fxn->_year = Batch::find($fxn->year_id)->name??'';
-                    $fxn->scholarship = StudentScholarship::where(['student_id'=>$student_id, 'batch_id'=>$fxn->year_id])->first()->amount??0;
-                    return $fxn;
-                })->sortBy('year');
-
+                $fxn->_year = Batch::find($fxn->year_id)->name??'';
+                $fxn->scholarship = StudentScholarship::where(['student_id'=>$student_id, 'batch_id'=>$fxn->year_id])->sum('amount');
+                return $fxn;
+            })->sortBy('year');
+            
+            $data['total_paid'] = $total_paid + $ret->sum('scholarship');
             foreach ($fees as $key => $fxn) {
                 # code...
                 if($total_paid <= $fxn->amount){
@@ -95,7 +95,7 @@ class ClearanceService{
                 $data['err_msg'] = "You still owe a sum of ".$data['debt'];
             }
             $data['institution'] = School::first();
-            // dd($data['total_expected']);
+            // dd($data);
             return $data;
         }
         return collect();

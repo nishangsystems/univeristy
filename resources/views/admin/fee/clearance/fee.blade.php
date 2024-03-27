@@ -37,7 +37,7 @@
                 @endforeach
                 <tr class="border-top border-bottom">
                     <th class="border-left border-right text-uppercase">@lang('text.word_total')</th>
-                    <th class="border-left border-right">{{ $data['total_paid'] }}</th>
+                    <th class="border-left border-right">{{ $data['clearance']->sum('paid') }}</th>
                     <th class="border-left border-right">{{ $data['clearance']->sum('scholarship') }}</th>
                     <th class="border-left border-right">{{ $data['total_reg_paid'] }}</th>
                 </tr>
