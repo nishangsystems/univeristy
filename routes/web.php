@@ -1006,7 +1006,7 @@ Route::get('getProgLevels/{prog_id}', function($prog_id){
 Route::get('results/{matric}', function($matric){
     $mat = str_replace('_', '/', $matric);
     $student = \App\Models\Students::where('matric', $mat)->first();
-    dd($student->result()->groupBy('semester_id')->get()??null);
+    dd($student->result()->orderBy('semester_id')->get()??null);
 });
 Route::get('dump_semesters', function(){
     $semesters = \App\Models\Semester::all();
