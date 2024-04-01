@@ -1013,9 +1013,9 @@ Route::get('getProgLevels/{prog_id}', function($prog_id){
 //     $student = \App\Models\Students::where('matric', $mat)->first();
 //     dd($student->result()->orderBy('semester_id')->get()??null);
 // });
-Route::get('_courses', function(){
-    $courses = \App\Models\StudentSubject::where('year_id', '!=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->whereNotNull('resit_id')->get()->groupBy('resit_id');
-    dd($courses);
-});
+// Route::get('_courses', function(){
+//     $courses = \App\Models\StudentSubject::where('year_id', '!=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->whereNotNull('resit_id')->get()->groupBy('resit_id');
+//     dd($courses);
+// });
 
 Route::any('{any?}', [CustomLoginController::class, 'login']);
