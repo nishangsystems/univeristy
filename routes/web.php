@@ -1014,7 +1014,7 @@ Route::get('getProgLevels/{prog_id}', function($prog_id){
 //     dd($student->result()->orderBy('semester_id')->get()??null);
 // });
 Route::get('_courses', function(){
-    $courses = \App\Models\StudentSubject::where('year_id', '!=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->whereNotNull('resit_id')->get();
+    $courses = \App\Models\StudentSubject::where('year_id', '!=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->whereNotNull('resit_id')->groupBy('resit_id')->get();
     dd($courses);
 });
 
