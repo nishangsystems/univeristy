@@ -350,7 +350,14 @@ class HomeController extends Controller
         $data['grading'] = $data['user']->_class($year)->program()->first()->gradingType->grading()->get() ?? [];
         $non_gpa_courses = NonGPACourse::pluck('id')->toArray();
         $res = $data['user']->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
-        $registered_courses = $data['user']->registered_courses($year)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
+
+        $_registered_courses = $data['user']->registered_courses($year)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
+        $registered_courses = count($_registered_courses) > 0 ? $_registered_courses : $data['user']->registered_courses($year->id)->whereNotNull('resit_id')->pluck('course_id')->toArray();
+
+        if(count($registered_courses) == 0){
+            session()->flash('error', __('text.no_courses_registered_phrase'));
+            return back()->withInput();
+        }
         $data['subjects'] = $data['user']->_class($year)->subjects()->whereIn('subjects.id', $res)->get();
         $results = array_map(function($subject_id)use($data, $year, $semester){
             $ca_mark = $data['user']->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
