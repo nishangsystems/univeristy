@@ -929,5 +929,6 @@ return [
     'clear_exam'=>'clear exam',
     'import_coded_results'=>'import coded results',
     'existing_data'=>'existing data',
+    'no_courses_registered_phrase'=>'You did not register for any courses this semester. If you registered and payed offline, contact your secretariat for rectification',
     ''
 ];
