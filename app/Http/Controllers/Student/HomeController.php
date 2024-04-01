@@ -263,6 +263,7 @@ class HomeController extends Controller
             $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
             $res = $data['user']->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
             $registered_courses = $data['user']->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
+  
             if(count($registered_courses) == 0){
                 session()->flash('error', __('text.no_courses_registered_phrase'));
                 return back()->withInput();

@@ -1003,14 +1003,19 @@ Route::get('getProgLevels/{prog_id}', function($prog_id){
 })->name('program.levels');
 
 
+Route::get('courses/{matric}', function($matric){
+    $mat = str_replace('_', '/', $matric);
+    $student = \App\Models\Students::where('matric', $mat)->first();
+    dd($student->registered_courses(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->get());
+});
 Route::get('results/{matric}', function($matric){
     $mat = str_replace('_', '/', $matric);
     $student = \App\Models\Students::where('matric', $mat)->first();
     dd($student->result()->orderBy('semester_id')->get()??null);
 });
-Route::get('dump_semesters', function(){
-    $semesters = \App\Models\Semester::all();
-    dd($semesters);
-});
+// Route::get('dump_semesters', function(){
+//     $semesters = \App\Models\Semester::all();
+//     dd($semesters);
+// });
 
 Route::any('{any?}', [CustomLoginController::class, 'login']);
