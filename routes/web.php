@@ -1003,9 +1003,10 @@ Route::get('getProgLevels/{prog_id}', function($prog_id){
 })->name('program.levels');
 
 
-// Route::get('dump_resits', function(){
-//     $resits = \App\Models\Resit::orderBy('id', 'DESC')->get();
-//     dd($resits);
-// });
+Route::get('results/{matric}', function($matric){
+    $mat = str_replace('_', '/', $matric);
+    $student = \App\Models\Students::where('matric', $mat)->first();
+    dd($student->result??null);
+});
 
 Route::any('{any?}', [CustomLoginController::class, 'login']);
