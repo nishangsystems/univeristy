@@ -38,7 +38,7 @@ class StudentMiddleware
 
         $charge = PlatformCharge::where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first();
         if (Helpers::instance()->payCharges() && ($charge != null && $charge->yearly_amount > 0)){
-            if(!Helpers::instance()->has_paid_platform_charges()){
+            if(!(Helpers::instance()->has_paid_platform_charges())){
                 return redirect(route('platform_charge.pay'))->with('error', 'Pay PLATFORM CHARGES to continue.');
             }
         }
