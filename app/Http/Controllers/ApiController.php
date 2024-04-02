@@ -273,4 +273,61 @@ class ApiController extends Controller
         }
         return response()->json(['status'=>'failed', 'data'=>[], 'message'=>'null or wrongly formated request data']);
     }
+
+    public function portal_fee_structure($year_id = null)
+    {
+        # code...
+        try {
+            //code...
+            $year_id = $year_id ==  null ? \App\Helpers\Helpers::instance()->getCurrentAccademicYear() : $year_id;
+            $fees = \App\Models\ProgramLevel::
+                join('school_units',  'school_units.id', '=', 'program_levels.program_id')
+                ->where('school_units.unit_id', 4)
+                ->join('program_banks', 'program_banks.school_unit_id', '=', 'school_units.id')
+                ->join('banks', 'banks.id', '=', 'program_banks.bank_id')
+                ->join('campus_programs', 'campus_programs.program_level_id', '=', 'program_levels.id')
+                ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+                ->where('payment_items.year_id', $year_id)
+                ->select(['program_levels.*', 'payment_items.amount', 'payment_items.first_instalment', 'payment_items.international_amount'])
+                ->get();
+
+            $banks = \App\Models\ProgramLevel::
+                join('school_units',  'school_units.id', '=', 'program_levels.program_id')
+                ->where('school_units.unit_id', 4)
+                ->join('program_banks', 'program_banks.school_unit_id', '=', 'school_units.id')
+                ->join('banks', 'banks.id', '=', 'program_banks.bank_id')
+                ->select(['program_levels.program_id', 'banks.name as bank_name', 'banks.account_number as bank_account_number', 'banks.account_name as bank_account_name'])
+                ->distinct()->get();
+
+            $structure = \App\Models\ProgramLevel::
+                join('school_units',  'school_units.id', '=', 'program_levels.program_id')
+                ->where('school_units.unit_id', 4)
+                ->join('school_units as departments', 'school_units.parent_id', '=', 'departments.id')
+                ->join('school_units as _schools', 'departments.parent_id', '=', '_schools.id')
+                ->select(['program_levels.*', '_schools.name as school', 'departments.name as department', 'school_units.name as program'])
+                ->get()->map(function($rec)use($fees, $banks){
+                    $fee = $fees->where('id', $rec->id)->first(); 
+                    $backs = $banks->where('program_id', $rec->program_id)->first(); 
+                        # code...
+                    $rec->class_name = $rec->name();
+                    
+                    $rec->amount = $fee->amount??null;
+                    $rec->first_instalment = $fee->first_instalment??null;
+                    $rec->international_amount = $fee->international_amount??null;
+                    
+                    $rec->bank_name = $fee->bank_name??null;
+                    $rec->bank_account_number = $fee->bank_account_number??null;
+                    $rec->bank_account_name = $fee->bank_account_name??null;
+                    
+                    return $rec;
+                })->unique();
+                
+    
+            return response()->json(['data'=>$structure]) ;
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['data'=>[], 'message'=>$th->getMessage(), 'status'=>500]) ;
+        }
+
+    }
 }
