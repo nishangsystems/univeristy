@@ -304,7 +304,7 @@ class ApiController extends Controller
                 ->where('school_units.unit_id', 4)
                 ->join('school_units as departments', 'school_units.parent_id', '=', 'departments.id')
                 ->join('school_units as _schools', 'departments.parent_id', '=', '_schools.id')
-                ->select(['program_levels.*', '_schools.name as school', 'departments.name as department', 'school_units.name as program'])
+                ->select(['program_levels.*', '_schools.name as school', 'departments.name as department', 'school_units.name as program', 'school_units.id as program_id'])
                 ->get()->map(function($rec)use($fees, $banks){
                     $fee = $fees->where('id', $rec->id)->first(); 
                     $backs = $banks->where('program_id', $rec->program_id)->first(); 
