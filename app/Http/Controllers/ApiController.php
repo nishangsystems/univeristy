@@ -116,8 +116,13 @@ class ApiController extends Controller
         return response('success');
     }
 
-    public function programs(){
-        return response()->json(['data'=>SchoolUnits::where('school_units.unit_id', 4)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->orderBy('school_units.name')->distinct()->get(['school_units.*', 'departments.name as parent'])]);
+    public function programs($program_id = null){
+
+        return response()->json([
+            'data'=>$program_id == null ? 
+                SchoolUnits::where('school_units.unit_id', 4)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->orderBy('school_units.name')->distinct()->get(['school_units.*', 'departments.name as parent']) :
+                SchoolUnits::where('school_units.id', $program_id)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->orderBy('school_units.name')->distinct()->select(['school_units.*', 'departments.name as parent'])->first()
+        ]);
     }
 
     public function campus_programs($campus_id)
