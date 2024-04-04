@@ -175,7 +175,10 @@ class CampusesController extends Controller
         # code...
         $this->validate($request, [
             'fees'=>'required|int',
-            'r_fees'=>'nullable|int'
+            'r_fees'=>'nullable|int',
+            'international_amount'=>'nullable|int',
+            'first_instalment'=>'nullable|int',
+            'second_instalment'=>'nullable|int'
         ]);
 
         try {
@@ -191,6 +194,9 @@ class CampusesController extends Controller
             $tution_inst->year_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
             $tution_inst->slug = Hash::make('TUTION');
             $tution_inst->amount = $request->fees;
+            $tution_inst->first_instalment = $request->first_instalment;
+            $tution_inst->second_instalment = $request->second_instalment;
+            $tution_inst->international_amount = $request->international_amount;
             $tution_inst->save();
     
             // save registration fee
@@ -205,7 +211,7 @@ class CampusesController extends Controller
                 $reg_inst->amount = $request->r_fees;
                 $reg_inst->save();
             }
-            return redirect(route('admin.campuses.programs', $id))->with('success', __('text.word_done'));
+            return redirect(route('admin.fee_settings', $id))->with('success', __('text.word_done'));
         } catch (\Throwable $th) {
             //throw $th;
             session()->flash('error', "F:{$th->getFile()} | L:{$th->getLine()} | M:{$th->getMessage()}");
