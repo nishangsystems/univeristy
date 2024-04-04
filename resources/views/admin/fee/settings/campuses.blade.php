@@ -5,11 +5,7 @@
 
     <div class="col-sm-12">
         <div class="content-panel">
-            @if(auth()->user()->campus_id == null)
-                <div class="py-3 container">
-                    <a href="{{route('admin.campuses.create')}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.add_campus')}}</a>
-                </div>
-            @endif
+            
             <div class="adv-table table-responsive">
                 <table cellpadding="0" cellspacing="0" border="0" class="table" id="hidden-table-info">
                     <thead>
@@ -31,9 +27,8 @@
                             <td>{{ $cps->address }}</td>
                             <td>{{ $cps->telephone }}</td>
                             <td>
-                                @if(auth()->user()->campus_id == null || auth()->user()->campus_id == $cps->id)
-                                    <a href="{{route('admin.fee_settings', $cps->id)}}" class="btn btn-sm btn-success text-capitalize">{{__('text.word_programs')}}</a>
-                                @endif
+                                <a href="{{route('admin.fee_banks', $cps->id)}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_programs')}}</a>
+                                <a href="{{route('admin.fee_settings', $cps->id)}}" class="btn btn-sm btn-success text-capitalize">{{__('text.fee_settings')}}</a>
                             </td>
                         </tr>
                     @endforeach
