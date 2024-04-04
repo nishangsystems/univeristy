@@ -772,6 +772,13 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    <li>
+                        <a href="{{route('admin.banks')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_banks')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
 
 

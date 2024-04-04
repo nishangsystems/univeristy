@@ -933,5 +933,6 @@ return [
     'international_tution'=>'international tution',
     'second_instalment'=>'second instalment',
     'first_instalment'=>'first instalment',
+    'fee_settings'=>'fee settings',
     ''
 ];

@@ -362,4 +362,34 @@ class FeesController extends Controller
         }
         return view('admin.fee.settings.classes', $data);
     }
+
+    public function fee_banks($campus_id)
+    {
+        # code...
+        $data['title'] = "All Banks";
+        $data['backs'] = \App\Models\Bank::all();
+        return view('admin.fee.settings.banks', $data);
+    }
+
+    public function banks($id = null)
+    {
+        # code...
+        $data['title'] = "All Banks";
+        $data['backs'] = \App\Models\Bank::all();
+        if($id !== null){
+            $data['bank'] = \App\Models\Bank::find($id);
+        }
+        return view('admin.fee.settings.banks', $data);
+    }
+
+    public function save_banks($id = null)
+    {
+        # code...
+        $data['title'] = "All Banks";
+        $data['backs'] = \App\Models\Bank::all();
+        if($id !== null){
+            $data['bank'] = \App\Models\Bank::find($id);
+        }
+        return view('admin.fee.settings.banks', $data);
+    }
 }
