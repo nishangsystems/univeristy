@@ -27,8 +27,8 @@
                             <td>{{ $cps->address }}</td>
                             <td>{{ $cps->telephone }}</td>
                             <td>
-                                <a href="{{route('admin.fee_banks', $cps->id)}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_programs')}}</a>
-                                <a href="{{route('admin.fee_settings', $cps->id)}}" class="btn btn-sm btn-success text-capitalize">{{__('text.fee_settings')}}</a>
+                                <a href="{{route('admin.fee_banks', [$cps->id])}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_programs')}}</a>
+                                <a href="{{route('admin.fee_settings', [$cps->id])}}" class="btn btn-sm btn-success text-capitalize">{{__('text.fee_settings')}}</a>
                             </td>
                         </tr>
                     @endforeach

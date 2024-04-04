@@ -363,33 +363,76 @@ class FeesController extends Controller
         return view('admin.fee.settings.classes', $data);
     }
 
-    public function fee_banks($campus_id)
+    public function fee_banks($campus_id, $program_id = null)
     {
         # code...
-        $data['title'] = "All Banks";
-        $data['backs'] = \App\Models\Bank::all();
-        return view('admin.fee.settings.banks', $data);
+        $campus = \App\Models\Campus::find($campus_id);
+        $data['title'] = "Program Banks";
+        $data['campus'] = $campus;
+        $data['program'] = $program_id == null ? null : SchoolUnits::find($program_id);
+        $data['program_bank'] = $program_id == null ? null : $data['program']->banks($campus_id)->first();
+        $data['programs'] = SchoolUnits::whereIn('id', $campus->programs->pluck('id')->all())->where('unit_id', 4)->distinct()->get(['*']);
+        $data['banks'] = \App\Models\Bank::all();
+        // dd($data['programs']);
+        return view('admin.fee.settings.program_banks', $data);
+    }
+
+    public function save_fee_banks(Request $request, $campus_id, $program_id = null)
+    {
+        # code...
+        try {
+            //code...
+            $validity = Validator::make($request->all(), ['bank_id'=>'required', 'school_unit_id'=>'required']);
+            if($validity->fails()){
+                session()->flash('error', $validity->errors()->first());
+                return back()->withInput();
+            }
+            $data = ['bank_id'=>$request->bank_id, 'school_units_id'=>$request->school_unit_id, 'campus_id'=>$campus_id];
+            \App\Models\ProgramBank::updateOrInsert(['school_units_id'=>$request->school_unit_id, 'campus_id'=>$campus_id], $data);
+            return back()->with('success', 'Done');
+        } catch (\Throwable $th) {
+            //throw $th;
+            session()->flash('error', "F::{$th->getFile()}, L::{$th->getLine()}, M::{$th->getMessage()}");
+            return back()->withInput();
+        }
     }
 
     public function banks($id = null)
     {
         # code...
         $data['title'] = "All Banks";
-        $data['backs'] = \App\Models\Bank::all();
+        $data['banks'] = \App\Models\Bank::all();
         if($id !== null){
             $data['bank'] = \App\Models\Bank::find($id);
         }
         return view('admin.fee.settings.banks', $data);
     }
 
-    public function save_banks($id = null)
+    public function save_bank(Request $request, $id = null)
     {
         # code...
-        $data['title'] = "All Banks";
-        $data['backs'] = \App\Models\Bank::all();
-        if($id !== null){
-            $data['bank'] = \App\Models\Bank::find($id);
+
+        try {
+            //code...
+            $validity = Validator::make($request->all(), ['name'=>'required', 'account_name'=>'required', 'account_number'=>'required']);
+            if($validity->fails()){
+                session()->flash('error', $validity->errors()->first());
+                return back()->withInput();
+            }
+    
+            $instance = $id != null ?
+                \App\Models\Bank::find($id) :
+                new \App\Models\Bank();
+    
+            $instance->name = $request->name;
+            $instance->account_name = $request->account_name;
+            $instance->account_number = $request->account_number;
+            $instance->save();
+            return back()->with('success', 'Done');
+        } catch (\Throwable $th) {
+            //throw $th;
+            session()->flash('error', "F::{$th->getFile()}, L::{$th->getLine()}, M::{$th->getMessage()}");
+            return back()->withInput();
         }
-        return view('admin.fee.settings.banks', $data);
     }
 }
