@@ -44,7 +44,7 @@
                     @endphp
                     @foreach($programs as $key => $prog)
                     @php
-                        $bank = $prog->banks($campus)->first();
+                        $bank = $prog->banks($campus->id)->first();
                     @endphp
                         <tr>
                             <td>{{ $counter++ }}</td>
