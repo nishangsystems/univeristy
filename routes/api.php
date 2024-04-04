@@ -84,7 +84,7 @@ Route::get('certificates', [ApiController::class, 'certificates'])->name('certif
 Route::get('certificate/program/{certificate_id}', [ApiController::class, 'get_certificate_programs'])->name('certificate.program.save');
 Route::post('certificate/program/{certificate_id}', [ApiController::class, 'save_certificate_programs']);
 Route::get('campuses', [ApiController::class, 'campuses'])->name('campuses');
-Route::get('programs', [ApiController::class, 'programs'])->name('programs');
+Route::get('programs/{program_id?}', [ApiController::class, 'programs'])->name('programs');
 Route::get('campus/program/levels/{campus_id}/{program_id}', [ApiController::class, 'campus_program_levels'])->name('campus.program.levles');
 Route::get('campus/programs/{campus_id}', [ApiController::class, 'campus_programs'])->name('campus.programs');
 Route::get('campus/programs/by_school/{campus_id}', [ApiController::class, 'campus_programs_by_school'])->name('campus.programs');

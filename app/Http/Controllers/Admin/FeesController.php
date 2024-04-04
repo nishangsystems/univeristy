@@ -323,4 +323,43 @@ class FeesController extends Controller
         return view('admin.fee.payments.history', $data);
 
     }
+
+    public function fee_settings(Request $request)
+    {
+        # code...
+        $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+        $data['title'] = "Fee Settings";
+        $data['campuses'] = \App\Models\Campus::all();
+        if($request->campus_id == null){
+            return view('admin.fee.settings.campuses', $data);
+        }
+        $data['campus'] = \App\Models\Campus::find($request->campus_id);
+        if($data['campus'] != null){
+            $tution_items = $data['campus']->campus_programs()
+                ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')->where('payment_items.name', 'TUTION')
+                ->where('payment_items.year_id', $year)->select(['payment_items.*', 'campus_programs.program_level_id'])->get();
+            $reg_items = $data['campus']->campus_programs()
+                ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')->where('payment_items.name', 'REGISTRATION')
+                ->where('payment_items.year_id', $year)->select(['payment_items.*', 'campus_programs.program_level_id'])->get();
+            
+            $check = $data['campus']->programs->first()->pivot;
+            // dd($check);
+            $classes = $data['campus']->programs->unique()->map(function($rec)use($tution_items, $reg_items){
+                $fee = $tution_items->where('program_level_id', $rec->id)->first();
+                if($fee != null){
+                    $reg = $reg_items->where('campus_program_id', $fee->campus_program_id??0)->first();
+                    $rec->amount = $fee->amount??null;
+                    $rec->reg = $reg->amount??null;
+                    $rec->first_instalment = $fee->first_instalment??null;
+                    $rec->second_instalment = $fee->second_instalment??null;
+                    $rec->international_amount = $fee->international_amount??null;
+                }
+                return $rec;
+            });
+            $data['classes'] = $classes;
+            // dd($classes);
+
+        }
+        return view('admin.fee.settings.classes', $data);
+    }
 }

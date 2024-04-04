@@ -765,6 +765,16 @@
                         <b class="arrow"></b>
                     </li>
 
+                    <li>
+                        <a href="{{route('admin.fee_settings')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.fee_settings')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+
                 </ul>
             </li>
             @endif

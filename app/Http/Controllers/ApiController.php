@@ -116,8 +116,13 @@ class ApiController extends Controller
         return response('success');
     }
 
-    public function programs(){
-        return response()->json(['data'=>SchoolUnits::where('school_units.unit_id', 4)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->orderBy('school_units.name')->distinct()->get(['school_units.*', 'departments.name as parent'])]);
+    public function programs($program_id = null){
+
+        return response()->json([
+            'data'=>$program_id == null ? 
+                SchoolUnits::where('school_units.unit_id', 4)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->orderBy('school_units.name')->distinct()->get(['school_units.*', 'departments.name as parent']) :
+                SchoolUnits::where('school_units.id', $program_id)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->orderBy('school_units.name')->distinct()->select(['school_units.*', 'departments.name as parent'])->first()
+        ]);
     }
 
     public function campus_programs($campus_id)
@@ -304,7 +309,7 @@ class ApiController extends Controller
                 ->where('school_units.unit_id', 4)
                 ->join('school_units as departments', 'school_units.parent_id', '=', 'departments.id')
                 ->join('school_units as _schools', 'departments.parent_id', '=', '_schools.id')
-                ->select(['program_levels.*', '_schools.name as school', 'departments.name as department', 'school_units.name as program'])
+                ->select(['program_levels.*', '_schools.name as school', 'departments.name as department', 'school_units.name as program', 'school_units.id as program_id'])
                 ->get()->map(function($rec)use($fees, $banks){
                     $fee = $fees->where('id', $rec->id)->first(); 
                     $backs = $banks->where('program_id', $rec->program_id)->first(); 

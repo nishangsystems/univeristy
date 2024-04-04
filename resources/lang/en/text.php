@@ -930,5 +930,8 @@ return [
     'import_coded_results'=>'import coded results',
     'existing_data'=>'existing data',
     'no_courses_registered_phrase'=>'You did not register for any courses this semester. If you registered and payed offline, contact your secretariat for rectification',
+    'international_tution'=>'international tution',
+    'second_instalment'=>'second instalment',
+    'first_instalment'=>'first instalment',
     ''
 ];
