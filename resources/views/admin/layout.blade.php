@@ -8,10 +8,6 @@
 
     <meta name="description" content="overview &amp; stats" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- bootstrap & fontawesome -->
-    {{-- <link rel="stylesheet" href="{{url('/')}}/public/assets/css/*.css" /> --}}
-
     <link rel="stylesheet" href="{{asset('css/app.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/font-awesome/4.5.0/css/font-awesome.min.css')}}" />
@@ -1415,6 +1411,14 @@
                         <b class="arrow"></b>
                     </li>
 
+                    <li>
+                        <a href="{{route('admin.transcript.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.print_transcript')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
 
                     <li>
                         <a href="{{route('admin.result.class_results')}}" class="text-capitalize">
@@ -1685,6 +1689,7 @@
             @else
                 <div class="container-fluid">
                     @yield('section')
+                    {{$slot ?? ''}}
                 </div>
             @endif
         </div>
@@ -1714,7 +1719,6 @@
 <script src="{{ asset('libs')}}/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="{{ asset('libs')}}/datatables.net-bs4/js/dataTables.responsive.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js" ></script>
-
 <script>
     $(function () {
         $('.table , .adv-table table').DataTable({

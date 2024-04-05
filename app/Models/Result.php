@@ -22,6 +22,12 @@ class Result extends Model
         return $this->belongsTo(Batch::class, 'batch_id');
     }
 
+    public function semester()
+    {
+        # code...
+        return $this->belongsTo(Semester::class, 'semester_id');
+    }
+
     public function student()
     {
         # code...

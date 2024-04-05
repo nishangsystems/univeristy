@@ -64,6 +64,11 @@ class Students extends Authenticatable
         return $this->hasMany(Result::class, 'student_id');
     }
 
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class, 'admission_batch_id');
+    }
+
 
     public function payments()
     {
@@ -223,7 +228,15 @@ class Students extends Authenticatable
                     return collect(Result::where(['student_id' => $this->id,  'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->get() ?? [])->groupBy("subject_id");
         });
     }
-    
+
+
+     public function hasResult( $class_id, $year_id, $semester_id = null){
+         $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
+         return Result::where(['student_id' => $this->id,  'batch_id' => $year_id, 'semester_id'=>$semester])->count() > 0;
+    }
+
+
+
     
     public function ca_score($course_id, $class_id, $year_id, $semester_id = null)
     {

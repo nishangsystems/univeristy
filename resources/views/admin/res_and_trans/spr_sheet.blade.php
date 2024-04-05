@@ -80,16 +80,18 @@
                         </thead>
                         <tbody class="text-sm">
                             @foreach($students as $student)
-                                <tr class="border-top border-bottom border-secondary">
-                                    <td class="border-left border-right border-secondary">{{$k++}}</td>
-                                    <td class="border-left border-right border-secondary">{{$student->matric}}</td>
-                                    @foreach ($courses as $course)
-                                        <td class="border-left border-secondary">{{$student->ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                        <td class="border-left border-right border-info">{{$student->exam_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                        <td class="border-left border-right border-info">{{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                        <th class="border-right border-secondary {{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id')) >= 50 ? 'text-success':'text-danger'}}">{{$student->grade($course->subject->id, request('class_id'), $year, request('semester_id'))}}</th>
-                                    @endforeach
-                                </tr>
+                                @if($student->hasResult(request('class_id'), $year, request('semester_id')))
+                                    <tr class="border-top border-bottom border-secondary">
+                                        <td class="border-left border-right border-secondary">{{$k++}}</td>
+                                        <td class="border-left border-right border-secondary">{{$student->matric}}</td>
+                                        @foreach ($courses as $course)
+                                            <td class="border-left border-secondary">{{$student->ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                            <td class="border-left border-right border-info">{{$student->exam_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                            <td class="border-left border-right border-info">{{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                            <th class="border-right border-secondary {{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id')) >= 50 ? 'text-success':'text-danger'}}">{{$student->grade($course->subject->id, request('class_id'), $year, request('semester_id'))}}</th>
+                                        @endforeach
+                                    </tr>
+                                @endif
                             @endforeach
                         </tbody>
                     </table>

@@ -934,5 +934,5 @@ return [
     'second_instalment'=>'second instalment',
     'first_instalment'=>'first instalment',
     'fee_settings'=>'fee settings',
-    ''
+    'print_transcript'=>"Print Transcript"
 ];
