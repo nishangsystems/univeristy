@@ -156,6 +156,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('programs/index', 'Admin\ProgramController@program_index')->name('programs.index');
     
     Route::get('banks/{id?}', 'Admin\FeesController@banks')->name('banks');
+    Route::get('fee/fee_settings/{campus_id?}', 'Admin\FeesController@fee_settings')->name('fee_settings');
+    Route::get('fee/fee_banks/{campus_id}/{program_id?}', 'Admin\FeesController@fee_banks')->name('fee_banks');
+    Route::post('fee/fee_banks/{campus_id}/{program_id?}', 'Admin\FeesController@save_fee_banks');
     Route::post('banks/{id?}', 'Admin\FeesController@save_bank');
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
     Route::get('fee/situation', 'Admin\FeesController@fee_situation')->name('fee.situation');
@@ -164,8 +167,6 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('fee/history/{student_id}', 'Admin\FeesController@fee_history')->name('fee.history');
     Route::get('fee/situation/list', 'Admin\FeesController@fee_situation_list')->name('fee.situation.list');
     Route::get('fee/fee_list', 'Admin\FeesController@fee_list');
-    Route::get('fee/fee_settings/{campus_id?}', 'Admin\FeesController@fee_settings')->name('fee_settings');
-    Route::get('fee/fee_banks/{campus_id?}', 'Admin\FeesController@fee_banks')->name('fee_banks');
     Route::get('print_fee', 'Admin\FeesController@printFee')->name('print_fee');
     Route::get('print_fee/{student_id}', 'Admin\FeesController@printStudentFee')->name('print_fee.student');
     Route::get('fee/classes', 'Admin\FeesController@classes')->name('fee.classes');

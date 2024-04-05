@@ -934,5 +934,14 @@ return [
     'second_instalment'=>'second instalment',
     'first_instalment'=>'first instalment',
     'fee_settings'=>'fee settings',
-    'print_transcript'=>"Print Transcript"
+    'word_bank'=>'bank',
+    'word_banks'=>'banks',
+    'bank_name'=>'bank name',
+    'account_name'=>'account name',
+    'account_number'=>'account number',
+    'create_new_bank'=>'create new bank',
+    'edit_bank'=>'edit bank :bank',
+    'set_program_bank'=>'set program bank',
+    'print_transcript'=>"Print Transcript",
+    ''
 ];

@@ -152,4 +152,12 @@ class SchoolUnits extends Model
         # code...
         return $this->belongsTo(Degree::class, 'degree_id');
     }
+
+    public function banks($campus_id = null)
+    {
+        # code...
+        return $campus_id == null ?
+            $this->belongsToMany(Bank::class, ProgramBank::class) :
+            $this->belongsToMany(Bank::class, ProgramBank::class)->where('program_banks.campus_id', $campus_id);
+    }
 }
