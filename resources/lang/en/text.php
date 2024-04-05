@@ -942,5 +942,6 @@ return [
     'create_new_bank'=>'create new bank',
     'edit_bank'=>'edit bank :bank',
     'set_program_bank'=>'set program bank',
+    'print_transcript'=>"Print Transcript",
     ''
 ];

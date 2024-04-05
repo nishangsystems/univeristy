@@ -98,6 +98,9 @@ Route::name('documentation.')->prefix('documentation')->middleware('isAdmin')->g
 
 Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function () {
 
+    Route::get('transcript/index', [\App\Http\Livewire\Admin\Transcript\Index::class, '__invoke'])->name('transcript.index');
+    Route::get('transcript/results/{student}', [\App\Http\Livewire\Admin\Transcript\Results::class, '__invoke'])->name('transcript.results');
+
     Route::get('', 'Admin\HomeController@index')->name('home');
     Route::get('home', 'Admin\HomeController@index')->name('home');
     Route::get('background_image', 'Admin\HomeController@set_background_image')->name('set_background_image');
