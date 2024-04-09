@@ -285,7 +285,7 @@ class ApiController extends Controller
         try {
             //code...
             $year_id = $year_id ==  null ? \App\Helpers\Helpers::instance()->getCurrentAccademicYear() : $year_id;
-            $fees = \App\Models\ProgramLevel::
+            $fees = ProgramLevel::
                 join('school_units',  'school_units.id', '=', 'program_levels.program_id')
                 ->where('school_units.unit_id', 4)
                 // ->join('program_banks', 'program_banks.school_units_id', '=', 'school_units.id')
@@ -296,7 +296,7 @@ class ApiController extends Controller
                 ->select(['program_levels.*', 'payment_items.amount', 'payment_items.first_instalment', 'payment_items.international_amount'])
                 ->get();
 
-            $banks = \App\Models\ProgramLevel::
+            $banks = ProgramLevel::
                 join('school_units',  'school_units.id', '=', 'program_levels.program_id')
                 ->where('school_units.unit_id', 4)
                 ->join('program_banks', 'program_banks.school_units_id', '=', 'school_units.id')
@@ -304,7 +304,7 @@ class ApiController extends Controller
                 ->select(['program_levels.program_id', 'banks.name as bank_name', 'banks.account_number as bank_account_number', 'banks.account_name as bank_account_name'])
                 ->distinct()->get();
 
-            $structure = \App\Models\ProgramLevel::
+            $structure = ProgramLevel::
                 join('school_units',  'school_units.id', '=', 'program_levels.program_id')
                 ->where('school_units.unit_id', 4)
                 ->join('school_units as departments', 'school_units.parent_id', '=', 'departments.id')
@@ -336,13 +336,15 @@ class ApiController extends Controller
 
     }
 
-    public function class_portal_fee_structure($prog_id, $level_id, $year_id = null)
+    public function class_portal_fee_structure($prog_id, $level, $year_id = null)
     {
         # code...
         try {
             //code...
             $year_id = $year_id ==  null ? \App\Helpers\Helpers::instance()->getCurrentAccademicYear() : $year_id;
-            $fees = \App\Models\ProgramLevel::where(['program_id'=>$prog_id, 'level_id'=>$level_id])
+            $fees = ProgramLevel::where(['program_id'=>$prog_id])
+                ->join('levels', 'levels.id', '=', 'program_levels.level_id')
+                ->where('levels.level', $level)
                 ->join('school_units',  'school_units.id', '=', 'program_levels.program_id')
                 ->where('school_units.unit_id', 4)
                 ->join('campus_programs', 'campus_programs.program_level_id', '=', 'program_levels.id')
@@ -351,7 +353,9 @@ class ApiController extends Controller
                 ->select(['program_levels.*', 'payment_items.amount', 'payment_items.first_instalment', 'payment_items.international_amount'])
                 ->get();
 
-            $banks = \App\Models\ProgramLevel::where(['program_id'=>$prog_id, 'level_id'=>$level_id])
+            $banks = ProgramLevel::where(['program_id'=>$prog_id])
+                ->join('levels', 'levels.id', '=', 'program_levels.level_id')
+                ->where('levels.level', $level)
                 ->join('school_units',  'school_units.id', '=', 'program_levels.program_id')
                 ->where('school_units.unit_id', 4)
                 ->join('program_banks', 'program_banks.school_units_id', '=', 'school_units.id')
@@ -359,7 +363,9 @@ class ApiController extends Controller
                 ->select(['program_levels.program_id', 'banks.name as bank_name', 'banks.account_number as bank_account_number', 'banks.account_name as bank_account_name'])
                 ->distinct()->get();
 
-            $structure = \App\Models\ProgramLevel::where(['program_id'=>$prog_id, 'level_id'=>$level_id])
+            $structure = ProgramLevel::where(['program_id'=>$prog_id])
+                ->join('levels', 'levels.id', '=', 'program_levels.level_id')
+                ->where('levels.level', $level)
                 ->join('school_units',  'school_units.id', '=', 'program_levels.program_id')
                 ->where('school_units.unit_id', 4)
                 ->join('school_units as departments', 'school_units.parent_id', '=', 'departments.id')
@@ -383,12 +389,30 @@ class ApiController extends Controller
                 })->unique();
                 
     
-            return response()->json(['data'=>\App\Models\ProgramLevel::where(['program_id'=>$prog_id, 'level_id'=>$level_id])->first()]) ;
             return response()->json(['data'=>$structure]) ;
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['data'=>[], 'message'=>$th->getMessage(), 'status'=>500]) ;
         }
 
+    }
+
+    public function school_program_structure(){
+        try {
+            //code...
+            $structure = ProgramLevel::join('school_units', 'school_units.id', '=', 'program_levels.program_id')
+                ->join('school_units as departments', 'departments.id', '=', 'school_units.parent_id')
+                ->join('school_units as _schools', '_schools.id', '=', 'departments.parent_id')
+                ->select(['_schools.id as school_id', '_schools.name as school', 'departments.id as department_id', 'departments.name as department', 'school_units.name as program', 'program_levels.*'])
+                ->groupBy(['school','department','program'])
+                ->distinct()->get();
+                // ->groupBy(['school','department','program']);
+    
+            // return $structure;
+            return response()->json(['data'=>$structure]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['data'=>[], 'message'=>$th->getMessage(), 'status'=>500]) ;
+        }
     }
 }
