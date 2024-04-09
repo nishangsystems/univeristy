@@ -28,14 +28,14 @@
             <div class="form-group">
                 <label  class="control-label col-lg-2 text-capitalize">{{__('text.word_prefix')}}</label>
                 <div class="col-lg-10">
-                    <input maxlength="3" class=" form-control" name="prefix" value="{{old('prefix', $unit->prefix)}}" type="text" />
+                    <input maxlength="5" class=" form-control" name="prefix" value="{{old('prefix', $unit->prefix)}}" type="text" />
                 </div>
             </div>
 
             <div class="form-group ">
                 <label  class="control-label col-lg-2 text-capitalize">{{__('text.word_suffix')}}</label>
                 <div class="col-lg-10">
-                    <input maxlength="3" class=" form-control" name="suffix" value="{{old('suffix', $unit->suffix)}}" type="text"/>
+                    <input maxlength="5" class=" form-control" name="suffix" value="{{old('suffix', $unit->suffix)}}" type="text"/>
                 </div>
             </div>
 
