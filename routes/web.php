@@ -47,6 +47,12 @@ Route::get('/clear', function () {
 });
 
 
+Route::get('checks', function(){
+    
+    return DB::table('payment_items')->first();
+});
+
+
 Route::get('publish_all', function(){
     DB::table('results')->update(['published'=>1]);
     return;
@@ -119,7 +125,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('dropcontacts/{id}', 'Admin\HomeController@drop_school_contacts')->name('dropcontacts');
     Route::get('deletebatch/{id}', 'Admin\HomeController@deletebatch')->name('deletebatch');
     Route::get('sections', 'Admin\ProgramController@sections')->name('sections');
-    Route ::get('sub_units_of/{id}', 'Admin\ProgramController@subunitsOf')->name('subunits');
+    Route::get('sub_units_of/{id}', 'Admin\ProgramController@subunitsOf')->name('subunits');
 
     Route::get('sub_units/{parent_id}', 'Admin\ProgramController@index')->name('units.index');
     Route::get('new_units/{parent_id}', 'Admin\ProgramController@create')->name('units.create');

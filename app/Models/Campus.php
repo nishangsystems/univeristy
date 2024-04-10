@@ -22,6 +22,11 @@ class Campus extends Model
         return $this->belongsToMany(ProgramLevel::class, CampusProgram::class, 'campus_id', 'program_level_id');
     }
 
+    public function payment_items()
+    {
+        return $this->hasManyThrough(PaymentItem::class, CampusProgram::class, 'campus_id', 'campus_program_id');
+    }
+
     public function students()
     {
         return $this->hasMany(Students::class, 'campus_id');
