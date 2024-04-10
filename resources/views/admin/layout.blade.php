@@ -761,10 +761,29 @@
                         <b class="arrow"></b>
                     </li>
 
+
+
+                </ul>
+            </li>
+            @endif
+
+            @if (\Auth::user()->hasPermissionTo('manage_fee'))
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-dollar"></i>
+                    <span class="menu-text">
+						{{__('text.fee_settings')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    
                     <li>
                         <a href="{{route('admin.fee_settings')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.fee_settings')}}
+                            {{__('text.word_fee')}}
                         </a>
                         <b class="arrow"></b>
                     </li>
@@ -775,8 +794,6 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-
-
 
                 </ul>
             </li>
