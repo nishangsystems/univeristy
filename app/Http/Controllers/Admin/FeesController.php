@@ -343,7 +343,7 @@ class FeesController extends Controller
                 ->where('payment_items.year_id', $year)->select(['payment_items.*', 'campus_programs.program_level_id'])->get();
             
             $check = $data['campus']->programs->first()->pivot;
-            // dd($check);
+            // dd($reg_items);
             $classes = $data['campus']->programs->unique()->map(function($rec)use($tution_items, $reg_items){
                 $fee = $tution_items->where('program_level_id', $rec->id)->first();
                 if($fee != null){
