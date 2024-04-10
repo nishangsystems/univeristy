@@ -49,7 +49,7 @@ Route::get('/clear', function () {
 
 Route::get('checks', function(){
     
-    return DB::table('payment_items')->first();
+    return DB::raw('ALTER TABLE program_banks RENAME COLUMN school_unit_id TO school_units_id');
 });
 
 
