@@ -293,7 +293,7 @@ class ApiController extends Controller
                 ->join('campus_programs', 'campus_programs.program_level_id', '=', 'program_levels.id')
                 ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                 ->where('payment_items.year_id', $year_id)
-                ->select(['program_levels.*', 'payment_items.amount', 'payment_items.first_instalment', 'payment_items.international_amount'])
+                ->select(['program_levels.*', 'payment_items.amount', 'payment_items.name as payment_type', 'payment_items.first_instalment', 'payment_items.international_amount'])
                 ->get();
 
             $banks = ProgramLevel::
@@ -311,11 +311,12 @@ class ApiController extends Controller
                 ->join('school_units as _schools', 'departments.parent_id', '=', '_schools.id')
                 ->select(['program_levels.*', '_schools.name as school', 'departments.name as department', 'school_units.name as program', 'school_units.id as program_id'])
                 ->get()->map(function($rec)use($fees, $banks){
-                    $fee = $fees->where('id', $rec->id)->first(); 
+                    $fee = $fees->where('id', $rec->id)->where('payment_type', 'TUTION')->first(); 
+                    $reg = $fees->where('id', $rec->id)->where('payment_type', 'REGISTRATION')->first(); 
                     $backs = $banks->where('program_id', $rec->program_id)->first(); 
                     
                     $rec->class_name = $rec->name();
-                    
+                    $rec->gegistratrion = $reg->amount??null;
                     $rec->amount = $fee->amount??null;
                     $rec->first_instalment = $fee->first_instalment??null;
                     $rec->international_amount = $fee->international_amount??null;
@@ -350,7 +351,7 @@ class ApiController extends Controller
                 ->join('campus_programs', 'campus_programs.program_level_id', '=', 'program_levels.id')
                 ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                 ->where('payment_items.year_id', $year_id)
-                ->select(['program_levels.*', 'payment_items.amount', 'payment_items.first_instalment', 'payment_items.international_amount'])
+                ->select(['program_levels.*', 'payment_items.amount', 'payment_items.name as payment_type', 'payment_items.first_instalment', 'payment_items.international_amount'])
                 ->get();
 
             $banks = ProgramLevel::where(['program_id'=>$prog_id])
@@ -372,11 +373,12 @@ class ApiController extends Controller
                 ->join('school_units as _schools', 'departments.parent_id', '=', '_schools.id')
                 ->select(['program_levels.*', '_schools.name as school', 'departments.name as department', 'school_units.name as program', 'school_units.id as program_id'])
                 ->get()->map(function($rec)use($fees, $banks){
-                    $fee = $fees->where('id', $rec->id)->first(); 
+                    $fee = $fees->where('id', $rec->id)->where('payment_type', 'TUTION')->first(); 
+                    $reg = $fees->where('id', $rec->id)->where('payment_type', 'REGISTRATION')->first(); 
                     $backs = $banks->where('program_id', $rec->program_id)->first(); 
                     
                     $rec->class_name = $rec->name();
-                    
+                    $rec->registration = $reg->amount??null;
                     $rec->amount = $fee->amount??null;
                     $rec->first_instalment = $fee->first_instalment??null;
                     $rec->international_amount = $fee->international_amount??null;

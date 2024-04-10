@@ -335,19 +335,15 @@ class FeesController extends Controller
         }
         $data['campus'] = \App\Models\Campus::find($request->campus_id);
         if($data['campus'] != null){
-            $tution_items = $data['campus']->campus_programs()
-                ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')->where('payment_items.name', 'TUTION')
-                ->where('payment_items.year_id', $year)->select(['payment_items.*', 'campus_programs.program_level_id'])->get();
-            $reg_items = $data['campus']->campus_programs()
-                ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')->where('payment_items.name', 'REGISTRATION')
+            $fee_items = $data['campus']->campus_programs()
+                ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                 ->where('payment_items.year_id', $year)->select(['payment_items.*', 'campus_programs.program_level_id'])->get();
             
-            $check = $data['campus']->programs->first()->pivot;
-            // dd($reg_items);
-            $classes = $data['campus']->programs->unique()->map(function($rec)use($tution_items, $reg_items){
-                $fee = $tution_items->where('program_level_id', $rec->id)->first();
+            <!-- dd($fee_items->where('name', 'REGISTRATION')); -->
+            $classes = $data['campus']->programs->unique()->map(function($rec)use($fee_items){
+                $fee = $fee_items->where('program_level_id', $rec->id)->where('name', 'TUTION')->first();
+                $reg = $fee_items->where('program_level_id', $rec->id)->where('name', 'REGISTRATION')->first();
                 if($fee != null){
-                    $reg = $reg_items->where('campus_program_id', $fee->campus_program_id??0)->first();
                     $rec->amount = $fee->amount??null;
                     $rec->reg = $reg->amount??null;
                     $rec->first_instalment = $fee->first_instalment??null;
