@@ -339,7 +339,7 @@ class FeesController extends Controller
                 ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
                 ->where('payment_items.year_id', $year)->select(['payment_items.*', 'campus_programs.program_level_id'])->get();
             
-            <!-- dd($fee_items->where('name', 'REGISTRATION')); -->
+            //  dd($fee_items->where('name', 'REGISTRATION')); 
             $classes = $data['campus']->programs->unique()->map(function($rec)use($fee_items){
                 $fee = $fee_items->where('program_level_id', $rec->id)->where('name', 'TUTION')->first();
                 $reg = $fee_items->where('program_level_id', $rec->id)->where('name', 'REGISTRATION')->first();
