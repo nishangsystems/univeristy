@@ -316,7 +316,7 @@ class ApiController extends Controller
                     $backs = $banks->where('program_id', $rec->program_id)->first(); 
                     
                     $rec->class_name = $rec->name();
-                    $rec->gegistratrion = $reg->amount??null;
+                    $rec->registratrion = $reg->amount??null;
                     $rec->amount = $fee->amount??null;
                     $rec->first_instalment = $fee->first_instalment??null;
                     $rec->international_amount = $fee->international_amount??null;
