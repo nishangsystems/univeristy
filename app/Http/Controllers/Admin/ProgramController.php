@@ -217,6 +217,7 @@ class ProgramController extends Controller
             $unit->degree_id = $request->degree_id??$unit->degree_id;
             $unit->background_id = $request->background_id??$unit->background_id;
             $unit->grading_type_id = $request->grading_type_id??$unit->grading_type_id;
+            $unit->deg_name = $request->deg_name??$unit->deg_name;
             $unit->save();
             DB::commit();
 
