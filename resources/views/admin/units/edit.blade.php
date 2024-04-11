@@ -102,6 +102,13 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label  class="control-label col-lg-2 text-capitalize">{{__('text.degree_conferred')}}</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" name="deg_name" required value="{{ $unit->deg_name??'' }}">
+                    </div>
+                </div>
             @endif
 
             <div class="form-group">

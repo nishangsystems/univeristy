@@ -943,5 +943,6 @@ return [
     'edit_bank'=>'edit bank :bank',
     'set_program_bank'=>'set program bank',
     'print_transcript'=>"Print Transcript",
+    'degree_conferred'=>'degree conferred',
     ''
 ];
