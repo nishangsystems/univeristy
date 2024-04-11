@@ -18,7 +18,7 @@
                         <td>
                             <a class="btn btn-sm btn-primary rounded" href="{{ route('admin.headOfSchools.classes', [$prog->parent->parent->id, $prog->parent->id, $prog->id]) }}">@lang('text.word_classes')</a>|
                             <a class="btn btn-sm btn-success rounded" href="{{ route('admin.headOfSchools.program.students',  $prog->id) }}">@lang('text.word_students')</a>|
-                            <a class="btn btn-sm btn-info rounded" href="{{ route('admin.units.edit',  $prog->id) }}">@lang('text.word_students')</a>
+                            <a class="btn btn-sm btn-info rounded" href="{{ route('admin.units.edit',  $prog->id) }}">@lang('text.word_edit')</a>
                         </td>
                     </tr>
                 @endforeach
