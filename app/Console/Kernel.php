@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('tranzaktrace')->everyFiveMinutes();
+        $schedule->command('tranzaktrace')->everyFifteenMinutes();
     }
 
     /**
