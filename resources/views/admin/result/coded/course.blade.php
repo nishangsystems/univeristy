@@ -14,7 +14,7 @@
                             <input type="text" name="code" id="" class="form-control rounded border-0 border-bottom" placeholder="result code here" value="{{ old('code', $exam_code->exam_code??'') }}">
                         </div>
                         <div class="col-sm-3 col-md-2">
-                            @if($exam_code->exam_code != null)
+                            @if(($exam_code->exam_code??null) != null)
                                 <button class="form-control btn btn-success" type="submit">@lang('text.word_update')</button>
                             @else
                                 <button class="form-control btn btn-primary" type="submit">@lang('text.word_save')</button>

@@ -313,7 +313,8 @@ class ApiController extends Controller
                 ->get()->map(function($rec)use($fees, $banks){
                     $fee = $fees->where('id', $rec->id)->where('payment_type', 'TUTION')->first(); 
                     $reg = $fees->where('id', $rec->id)->where('payment_type', 'REGISTRATION')->first(); 
-                    $backs = $banks->where('program_id', $rec->program_id)->first(); 
+                    $backs = $banks->where('program_id', $rec->program_id)->first();
+                     
                     
                     $rec->class_name = $rec->name();
                     $rec->registration = $reg->amount??null;
