@@ -224,7 +224,8 @@ class ProgramController extends Controller
             return redirect()->to($unit->parent_id ? route('admin.units.index', [$unit->parent_id]) : route('admin.sections'))->with('success', __('text.word_done'));
         } catch (\Exception $e) {
             DB::rollback();
-            echo ($e);
+            session()->flash('error', "F::{$e->getFile()}, L::{$e->getLine()}, M::{$e->getMessage()}");
+            return back()->withInput();
         }
     }
 

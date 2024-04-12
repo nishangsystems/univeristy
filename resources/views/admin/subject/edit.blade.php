@@ -56,6 +56,7 @@
                             <option value="C" {{$subject->status=='C' ? 'selected' : ''}}>C</option>
                             <option value="R" {{$subject->status=='R' ? 'selected' : ''}}>R</option>
                             <option value="G" {{$subject->status=='G' ? 'selected' : ''}}>G</option>
+                            <option value="E" {{$subject->status=='E' ? 'selected' : ''}}>E</option>
                         </select>
                     </div>
                 </div>

@@ -41,6 +41,7 @@
                     <option value="C">C</option>
                     <option value="R">R</option>
                     <option value="G">G</option>
+                    <option value="E">E</option>
                 </select>
             </div>
         </div>

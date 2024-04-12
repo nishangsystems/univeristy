@@ -350,7 +350,7 @@ class ResultController extends Controller
         return view('admin.result.fill_exam', $data);
     }
 
-    public function exam_import(){
+    public function exam_import(Request $request){
         // check if exam total is set for this program
         if (!Helpers::instance()->exam_total_isset(request('class_id'))) {
             # code...
