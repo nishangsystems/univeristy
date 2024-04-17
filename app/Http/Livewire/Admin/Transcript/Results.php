@@ -22,6 +22,8 @@ class Results extends Component
 
     public $results = [];
 
+    public $gpa = 0.23;
+
     public function render()
     {
         return view('livewire.admin.transcript.results')->layout('livewire.admin.transcript.layout');
@@ -58,6 +60,8 @@ class Results extends Component
                 }
             }
         });
+
+        $this->gpa = Helpers::getGPA($this->results);
 
         $this->results =    $this->results->groupBy('batch_id');
 

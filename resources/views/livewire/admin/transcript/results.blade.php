@@ -1,9 +1,10 @@
 <html>
 <head>
+    <title>{{ $student->name}}</title>
     <style>
         body {
             background: #fff;
-            font-size: 14px !important;
+            font-size: 12px !important;
             line-height: 2;
             font-family: Arial, Helvetica, sans-serif;
         }
@@ -41,11 +42,8 @@
             font-size: 10px;
         }
 
-        .font-14 {
-            font-size: 12px;
-        }
         .border-right{
-            border-right: 1px solid #000;
+            border-right: 1px solid #888888;
         }
 
         .font-13 {
@@ -61,7 +59,7 @@
         }
 
         .mt-0 {
-            margin-top: 0px;
+            margin: 0px;
         }
 
         .bold {
@@ -69,7 +67,7 @@
         }
 
         td {
-            border: 1px solid #000;
+            border: 1px solid  #888888;
         }
 
         td {
@@ -96,16 +94,16 @@
         }
 
         .grade {
-            font-size: 12px;
+            font-size: 10px;
             width: 40px;
             text-align: start;
         }
 
         .title{
             width: 52px;
-            padding: 5px;
-            font-size: 10px;
-            border-right: 1px solid #000;
+            padding: 3px;
+            font-size: 9px;
+            border-right: 1px solid  #888888;
         }
 
         .score{
@@ -114,13 +112,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
-            border-right: 1px solid #000;
+            font-size: 9px;
+            border-right: 1px solid  #888888;
             text-align: center;
         }
 
         .border-right-2{
-            border-right: 1px solid #000;
+            border-right: 1px solid  #888888;
         }
 
         .border-none{
@@ -143,27 +141,27 @@
             <tbody>
             <tr style="height: 30px">
                 <td colspan="5" rowspan="2">
-                    <p style="font-weight: bold; font-size: 13px;" class="mt-0"> ST LOUIS UNIVERSITY INSTITUTE<BR>
-                    <p style="font-size:12px; font-weight:bold">Medical Studies, Engineering & Technology ,
+                    <p style="font-weight: bold; font-size: 11px;" class="mt-0"> ST LOUIS UNIVERSITY INSTITUTE<BR>
+                    <p style="font-size:11px; font-weight:bold">Medical Studies, Engineering & Technology ,
                         Agriculture</p>
-                    <div class="font-12">
+                    <div class="font-10">
                         22-02 902/L/MINESUP/DDES/SD-ESUP/SDA/ANAP OF MAY,2022
                         <br>P.O BOX 77 BONABERI-DOUALA
                         <br>REPUBLIC OF CAMEROON
                     </div>
 
                 </td>
-                <td colspan="4" rowspan="2" class="font-14"> STUDENTS ACADEMIC RECORDS</td>
-                <td colspan="3" class="font-14"> Student's No: <span class="font-14 bold">{{$student->matric}}</span>
+                <td colspan="4" rowspan="2" class="font-10"> STUDENTS ACADEMIC RECORDS</td>
+                <td colspan="3" class="font-10"> Student's No: <span class="font-10 bold">{{$student->matric}}</span>
                 </td>
-                <td colspan="3" class="font-14 text-center">Date
+                <td colspan="3" class="font-10 text-center">Date
                     Printed: {{\Carbon\Carbon::now()->format("d-m-Y")}}</td>
-                <td colspan="3" class="font-14 text-center">Page <br> {{$page}} OF {{count($results)}}</td>
+                <td colspan="3" class="font-10 text-center">Page <br> {{$page}} OF {{count($results)}}</td>
             </tr>
             <tr style="height: 30px">
-                <td colspan="4" style="border-right-color: transparent;" class="font-14">First Name:
+                <td colspan="4" style="border-right-color: transparent;" class="font-10">First Name:
                     <b>{{explode(' ',$student->name)[0]}}</b></td>
-                <td colspan="5" class="font-14">Other Name(s): <b>{{ substr(strstr($student->name," "), 1)}}</b></td>
+                <td colspan="5" class="font-10">Other Name(s): <b>{{ substr(strstr($student->name," "), 1)}}</b></td>
             </tr>
             @if($page == 1)
                 <tr>
@@ -196,16 +194,17 @@
                         @endphp
                         <div> Department : {{$program->name}}</div>
                         <div> Degree Conferred :</div>
-                        <div>Date :</div>
+                        <div> Date :</div>
                     </td>
                 </tr>
 
             @endif
 
             @component('livewire.admin.transcript.year',['batch'=>$batch,'isLast'=>($page == count($results)),
-            'tca'=>$totalCreditAttempted,
-            'tce'=>$totalCreditEarned,
-            'tgpa'=>$totalCreditEarned])@endcomponent
+                'tca'=>$totalCreditAttempted,
+                'tce'=>$totalCreditEarned,
+                'tgpa'=>$gpa]
+            )@endcomponent
             </tbody>
         </table>
     </div>

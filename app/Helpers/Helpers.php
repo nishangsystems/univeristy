@@ -14,10 +14,25 @@ use App\Models\Students;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class Helpers
 {
+
+    public static function getGPA(Collection $results)
+    {
+        $totalCv = 0;
+        $gp = 0;
+
+        foreach ($results as $result){
+            $totalCv += $result['cv'];
+            $gp += $result['cv'] * $result['gp'];
+        }
+
+        return number_format($totalCv!=0 ? $gp/$totalCv:0, 2);
+    }
+
     public function getYear()
     {
         return session()->get('mode', $this->getCurrentAccademicYear());

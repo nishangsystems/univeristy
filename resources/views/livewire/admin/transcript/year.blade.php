@@ -12,14 +12,14 @@
             @endphp
 
             @component('livewire.admin.transcript.semester',
-        ['results'=>$first ,
-        'resits'=>$resit,
-         'class'=>'border-right-2',
-            'isLast'=>false,
-            'tca'=>$tca,
-            'tce'=>$tce,
-            'tgpa'=>$tgpa
-        ]) @endcomponent
+            ['results'=>$first ,
+            'resits'=>$resit,
+             'class'=>'border-right-2',
+                'isLast'=>false,
+                'tca'=>$tca,
+                'tce'=>$tce,
+                'tgpa'=>$tgpa
+            ]) @endcomponent
 
             @component('livewire.admin.transcript.semester', ['results'=>$second , 'resits'=>null, 'class'=>'', 'isLast'=>$isLast, 'tca'=>$tca,
             'tce'=>$tce,
