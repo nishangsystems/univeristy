@@ -944,5 +944,7 @@ return [
     'set_program_bank'=>'set program bank',
     'print_transcript'=>"Print Transcript",
     'degree_conferred'=>'degree conferred',
+    'departmental_courses'=>'departmental courses',
+    'import_courses'=>'import courses',
     ''
 ];
