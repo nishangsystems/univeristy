@@ -275,6 +275,13 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    <li>
+                        <a href="{{route('admin.courses.import')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.import_courses')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
 
                 </ul>
@@ -1558,13 +1565,15 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-                    <li>
-                        <a href="{{route('admin.users.reset_password')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.reset_password')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    @if(auth()->user()->hasPermissionTo('reset_user_password'))
+                        <li>
+                            <a href="{{route('admin.users.reset_password')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.reset_password')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    @endif
                     @endif
                 </ul>
             </li>

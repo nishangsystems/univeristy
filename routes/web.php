@@ -246,7 +246,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('payments/reg/create', 'Admin\PaymentController@reg_store');
     });
 
-
+    
+    Route::get('subjects/import', 'Admin\SubjectController@import_courses')->name('courses.import');
+    Route::post('subjects/import', 'Admin\SubjectController@import_courses_save');
     Route::resource('subjects', 'Admin\SubjectController');
     Route::post('subjects/create/next', 'Admin\SubjectController@next')->name('courses.create_next');
     Route::get('subjects/create/{background}/{semester}', 'Admin\SubjectController@_create')->name('courses._create');

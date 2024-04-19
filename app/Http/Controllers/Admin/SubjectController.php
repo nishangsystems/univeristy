@@ -8,6 +8,7 @@ use App\Models\Topic;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use function Ramsey\Uuid\v1;
@@ -242,5 +243,54 @@ class SubjectController extends Controller
             $topic->delete();
         }
         return back()->with('message', 'Operation complete');
+    }
+
+    public function import_courses(Request $request)
+    {
+        $data['title'] = "Import Courses";
+        return view('admin.subject.import', $data);
+    }
+
+    public function import_courses_save(Request $request)
+    {
+        $validity = Validator::make($request->all(), ['semester'=>'required', 'level'=>'required', 'file'=>'required|file']);
+
+        if($validity->fails()){
+            return back()->withInput()->with('error', $validity->errors()->first());
+        }
+
+        try {
+            //code...
+            if(($file = $request->file('file')) != null){
+                $filename ='__courses_upload'.time().'.'.$file->getClientOriginalExtension();
+                $filepath = public_path('uploads/files');
+                $file->move($filepath, $filename);
+    
+                // read data from file into array
+                $input_data_array = [];
+                $filepathname = $filepath.'/'.$filename;
+                $readingStream = fopen($filepathname, 'r');
+                while(($row = fgetcsv($readingStream, 1000)) != null){
+                    $input_data_array[] = [
+                        'code'=>$row[0], 'name'=>$row[1], 'coef'=>$row[2], 'status'=>$row[3]
+                    ];
+                }
+                // close file after reading is done
+                fclose($readingStream);
+                
+                // write file data to database
+                DB::beginTransaction();
+                foreach($input_data_array as $row){
+                    Subjects::updateOrInsert(['code'=>$row['code'], 'name'=>$row['name'], 'semester_id'=>$request->semester, 'level_id'=>$request->level], $row);
+                }
+                DB::commit();
+                return redirect(route('admin.subjects.index'))->with('success', 'Import complete');
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            session()->flash('error', "F::{$th->getFile()}, L::{$th->getLine()}, M::{$th->getMessage()}");
+            return back()->withInput();
+        }
     }
 }
