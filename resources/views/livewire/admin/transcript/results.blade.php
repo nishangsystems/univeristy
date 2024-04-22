@@ -25,9 +25,11 @@
 
         table {
             border-collapse: collapse;
+            max-width: 280mm !important;
             border: none;
             width: 100%;
-            margin-top: 10px;
+            height: 190mm;
+            margin:10px 20px;
             font-size: 10px !important;
             border-spacing: 0;
         }
@@ -75,7 +77,7 @@
         }
 
         div.landscape {
-            max-width: 296mm !important;
+            max-width: 286mm !important;
             max-height: 207mm;
         }
 
@@ -140,7 +142,7 @@
         <table border="0" cellspacing="0" cellpadding="0">
             <tbody>
             <tr style="height: 30px">
-                <td colspan="5" rowspan="2">
+                <td colspan="6" rowspan="2" width="34%">
                     <p style="font-weight: bold; font-size: 11px;" class="mt-0"> ST LOUIS UNIVERSITY INSTITUTE<BR>
                     <p style="font-size:11px; font-weight:bold">Medical Studies, Engineering & Technology ,
                         Agriculture</p>
@@ -151,30 +153,32 @@
                     </div>
 
                 </td>
-                <td colspan="4" rowspan="2" class="font-10"> STUDENTS ACADEMIC RECORDS</td>
-                <td colspan="3" class="font-10"> Student's No: <span class="font-10 bold">{{$student->matric}}</span>
+                <td colspan="3" width="17%" rowspan="2" class="font-10"> STUDENTS ACADEMIC RECORDS</td>
+                <td colspan="4" width="22%" class="font-10"> Student's No: <span class="font-10 bold">{{$student->matric}}</span>
                 </td>
-                <td colspan="3" class="font-10 text-center">Date
-                    Printed: {{\Carbon\Carbon::now()->format("d-m-Y")}}</td>
-                <td colspan="3" class="font-10 text-center">Page <br> {{$page}} OF {{count($results)}}</td>
+                <td colspan="3" class="font-10 text-center">
+                    Date Printed <br>
+                {{\Carbon\Carbon::now()->format("d-m-Y")}}
+                </td>
+                <td colspan="2" class="font-10 text-center">Page <br> {{$page}} OF {{count($results)}}</td>
             </tr>
             <tr style="height: 30px">
-                <td colspan="4" style="border-right-color: transparent;" class="font-10">First Name:
+                <td colspan="5" style="border-right-color: transparent;" class="font-10">First Name:
                     <b>{{explode(' ',$student->name)[0]}}</b></td>
-                <td colspan="5" class="font-10">Other Name(s): <b>{{ substr(strstr($student->name," "), 1)}}</b></td>
+                <td colspan="4" class="font-10">Other Name(s): <b>{{ substr(strstr($student->name," "), 1)}}</b></td>
             </tr>
             @if($page == 1)
                 <tr>
                     <td colspan="5" style="font-weight: bold">Date of Birth:<br/>{{$student->dob}}</td>
-                    <td colspan="4" style="font-weight: bold">Place of Birth:<br/>{{$student->pob}}</td>
-                    <td colspan="3" style="font-weight: bold">Sex: <br/>{{$student->gender}}</td>
-                    <td colspan="6" style="font-weight: bold">This Transcript is not valid without the signature of
+                    <td colspan="4" width="22%" style="font-weight: bold">Place of Birth:<br/>{{$student->pob}}</td>
+                    <td colspan="4" width="22%" style="font-weight: bold">Sex: <br/>{{$student->gender}}</td>
+                    <td colspan="5" width="28%" style="font-weight: bold">This Transcript is not valid without the signature of
                         the Registrar and Enbossed seal of the school
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="12" style="font-weight: bold">Date of Enrolment : {{$student->batch->name}}</td>
-                    <td colspan="6" rowspan="2" style="font-weight: bold">
+                    <td colspan="13" style="font-weight: bold">Date of Enrolment : {{$student->batch->name}}</td>
+                    <td colspan="5" rowspan="2" style="font-weight: bold">
                         @foreach($gradings as $grade)
                             <div style="display: flex;">
                                 <div  class="grade">{{$grade->grade}}</div>
@@ -188,7 +192,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="12" style="font-weight: bold">
+                    <td colspan="13" style="font-weight: bold;  height: 70px;">
                         @php
                             $program = \App\Models\ProgramLevel::find($student->_class()->id)->program;
                         @endphp

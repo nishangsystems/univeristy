@@ -59,7 +59,7 @@ class Results extends Component
                     ]);
                 }
             }
-        });
+        })->sortBy('code');
 
         $this->gpa = Helpers::getGPA($this->results);
 

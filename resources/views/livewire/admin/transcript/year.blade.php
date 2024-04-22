@@ -1,6 +1,6 @@
-<tr>
+<tr style="vertical-align: top">
     <td colspan="18" style="padding: 0px 5px;">
-        <div style="display: flex;">
+        <div style="display: flex; height: 100%">
             @php
                 $semesters   = $batch->groupBy('semester_id')->all();
                 ksort($semesters);

@@ -30,7 +30,7 @@ class Helpers
             $gp += $result['cv'] * $result['gp'];
         }
 
-        return number_format($totalCv!=0 ? $gp/$totalCv:0, 2);
+        return number_format($totalCv!=0 ? $gp/$totalCv:0, 2 );
     }
 
     public function getYear()
