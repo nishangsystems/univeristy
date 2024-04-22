@@ -253,8 +253,9 @@ class ProgramController extends Controller
         $parent = ProgramLevel::find($program_level_id);
         $data['title'] = __('text.subjects_under', ['class'=>$parent->name()]);
         $data['parent'] = $parent;
-        // dd($parent->subjects()->get());
-        $data['subjects'] = ProgramLevel::find($program_level_id)->subjects()->whereNull('deleted_at')->get();
+        // dd($parent->subjects);
+        $data['subjects'] = ProgramLevel::find($program_level_id)->subjects()->whereNull('deleted_at')->get(['subjects.*', 'class_subjects.coef as _coef', 'class_subjects.status as _status']);
+        // return $data;
         return view('admin.units.subjects')->with($data);
     }
 
