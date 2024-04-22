@@ -26,17 +26,7 @@
                                 <input class=" form-control" name="semester" type="number" required  disabled/>
                             </div>
                         </div>
-                        <div class="form-group @error('level') has-error @enderror">
-                            <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_level')}} ({{__('text.word_required')}})</label>
-                            <div class="col-lg-10">
-                                <select class=" form-control" name="level">
-                                    <option value="">{{__('text.select_background')}}</option>
-                                    @foreach(\App\Models\Level::all() as $lvl)
-                                        <option value="{{$lvl->id}}">{{$lvl->level}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                        
                         <div class="form-group @error('file') has-error @enderror" id="semesters-box">
                             <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_semester')}} ({{__('text.word_required')}})</label>
                             <div class="col-lg-10" id="semesters">

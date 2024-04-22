@@ -85,7 +85,7 @@ class SubjectController extends Controller
             'name' => 'required',
             'coef' => 'required',
             'code'=>'required',
-            'level'=>'required',
+            // 'level'=>'required',
             'semester'=>'required',
             'status'=>'required',
         ]);
@@ -97,7 +97,7 @@ class SubjectController extends Controller
         $subject->coef = $request->input('coef');
         $subject->code = $request->input('code');
         $subject->status = $request->input('status');
-        $subject->level_id = $request->input('level');
+        $subject->level_id = $request->input('level', 0);
         $subject->semester_id = $request->input('semester');
         $subject->objective = $request->input('objective');
         $subject->outcomes = $request->input('outcomes');
@@ -253,7 +253,7 @@ class SubjectController extends Controller
 
     public function import_courses_save(Request $request)
     {
-        $validity = Validator::make($request->all(), ['semester'=>'required', 'level'=>'required', 'file'=>'required|file']);
+        $validity = Validator::make($request->all(), ['semester'=>'required', 'file'=>'required|file']);
 
         if($validity->fails()){
             return back()->withInput()->with('error', $validity->errors()->first());
@@ -281,7 +281,7 @@ class SubjectController extends Controller
                 // write file data to database
                 DB::beginTransaction();
                 foreach($input_data_array as $row){
-                    Subjects::updateOrInsert(['code'=>$row['code'], 'name'=>$row['name'], 'semester_id'=>$request->semester, 'level_id'=>$request->level], $row);
+                    Subjects::updateOrInsert(['code'=>$row['code'], 'name'=>$row['name'], 'semester_id'=>$request->semester, 'level_id'=>$request->level??0], $row);
                 }
                 DB::commit();
                 return redirect(route('admin.subjects.index'))->with('success', 'Import complete');

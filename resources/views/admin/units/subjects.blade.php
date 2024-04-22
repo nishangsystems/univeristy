@@ -29,10 +29,10 @@
                         <td>{{ $k+1 }}</td>
                         <td>{{ $subject->code }}</td>
                         <td>{{ $subject->name }}</td>
-                        <td>{{ $subject->coef }}</td>
+                        <td>{{ $subject->_coef ?? $subject->coef }}</td>
                         <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
                         <td>{{ \App\Models\Level::find($subject->level_id)->level }}</td>
-                        <td>{{ $subject->status }}</td>
+                        <td>{{ $subject->_status ?? $subject->status }}</td>
                         <td class="d-flex">
                             <a class="btn btn-sm btn-primary" href="{{route('admin.edit.class_subjects',[request('program_level_id'), $subject->id])}}">
                                 <i class="fa fa-edit text-capitalize"> {{__('text.word_edit')}}</i>

@@ -9,13 +9,25 @@
             <div class="form-group row">
                 <label for="cname" class="control-label col-sm-2 text-capitalize">{{__('text.word_name')}}: </label>
                 <div class="col-sm-10">
-                    <input for="cname" class="form-control" name="name" value="{{$subject->name}}"></input>
+                    <input for="cname" class="form-control" name="name" readonly value="{{$subject->name}}">
                 </div>
             </div>
             <div class="form-group">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_coefficient')}}:</label>
                 <div class="col-lg-10">
-                    <input for="cname" class="form-control" name="coef" value="{{$subject->coef}}"></input>
+                    <input for="cname" class="form-control" name="coef" value="{{$subject->coef}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_status')}}:</label>
+                <div class="col-lg-10">
+                    <select  class="form-control" name="status" value="{{$subject->status}}">
+                        <option>@lang('text.select_status')</option>
+                        <option value="C" {{ old('status', $subject->status) == 'C' ? 'selected' : '' }}>C</option>
+                        <option value="R" {{ old('status', $subject->status) == 'R' ? 'selected' : '' }}>R</option>
+                        <option value="G" {{ old('status', $subject->status) == 'G' ? 'selected' : '' }}>G</option>
+                        <option value="E" {{ old('status', $subject->status) == 'E' ? 'selected' : '' }}>E</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
