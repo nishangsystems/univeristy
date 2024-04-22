@@ -1,6 +1,9 @@
 @php
     $creditAttempted = 0;
     $creditEarned = 0;
+
+    $gpaCreditAttempted = 0;
+    $gpaCreditEarned = 0;
 @endphp
 
 <div class="bold" style="margin:5px 10px; ">
@@ -36,22 +39,30 @@
         $creditAttempted += $result['cv'];
         $creditEarned += $result['ce'];
     @endphp
+
+
+    @php
+        if($result['validated']){
+            $gpaCreditAttempted += $result['cv'];
+            $gpaCreditEarned += $result['ce'];
+        }
+    @endphp
 @endforeach
 
 @if($isseminster)
-<div style="display: flex; padding: 5px">
-    <div style="flex-grow: 1">
-        TOTAL CREDITS ATTEMPTED : {{$creditAttempted}}<br/>
-        GPA CREDITS ATTEMPTED:  {{$creditAttempted}}
+    <div style="display: flex; padding: 5px">
+        <div style="flex-grow: 1">
+            TOTAL CREDITS ATTEMPTED : {{$creditAttempted}}<br/>
+            GPA CREDITS ATTEMPTED: {{$creditAttempted}}
+        </div>
+
+        <div style="flex-grow: 1">
+            TOTAL CREDITS EARNED : {{$gpaCreditEarned}}<br/>
+            GPA CREDITS EARNED: {{$gpaCreditEarned}}
+        </div>
     </div>
 
-    <div style="flex-grow: 1">
-        TOTAL CREDITS EARNED : {{$creditEarned}}<br/>
-        GPA CREDITS EARNED: {{$creditEarned}}
+    <div style=" padding: 5px; font-weight: bold;">
+        SEMESTER GPA = {{ \App\Helpers\Helpers::getGPA($results) }}
     </div>
-</div>
-
-<div style=" padding: 5px; font-weight: bold;">
-    SEMESTER GPA = {{ \App\Helpers\Helpers::getGPA($results) }}
-</div>
 @endif

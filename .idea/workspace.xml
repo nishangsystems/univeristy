@@ -21,12 +21,13 @@
   <component name="ChangeListManager">
     <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Helpers/Helpers.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/Helpers.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Livewire/Admin/Transcript/Results.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Livewire/Admin/Transcript/Results.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/results.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/results.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ResultResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ResultResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/result/individual_result.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/result/individual_result.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/index.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/semester-result.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/semester-result.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/semester.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/semester.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/year.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/year.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -239,7 +240,7 @@
       <workItem from="1712327880317" duration="192000" />
       <workItem from="1712674459557" duration="1000" />
       <workItem from="1713354144916" duration="6023000" />
-      <workItem from="1713769324960" duration="3522000" />
+      <workItem from="1713769324960" duration="7000000" />
     </task>
     <servers />
   </component>
@@ -267,6 +268,10 @@
       <screen x="0" y="25" width="1920" height="1175" />
     </state>
     <state x="698" y="371" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.25.1920.1175@0.25.1920.1175" timestamp="1712143372199" />
+    <state x="625" y="285" key="run.anything.popup" timestamp="1713777718822">
+      <screen x="0" y="0" width="1920" height="1200" />
+    </state>
+    <state x="625" y="285" key="run.anything.popup/0.0.1920.1200@0.0.1920.1200" timestamp="1713777718822" />
     <state x="625" y="271" width="670" height="676" key="search.everywhere.popup" timestamp="1711762614281">
       <screen x="0" y="0" width="1920" height="1200" />
     </state>

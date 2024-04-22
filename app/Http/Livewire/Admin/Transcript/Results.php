@@ -3,11 +3,10 @@
 namespace App\Http\Livewire\Admin\Transcript;
 
 use App\Helpers\Helpers;
-use App\Models\Semester;
+use App\Models\Result;
 use App\Models\Students;
-use App\Models\Subjects;
-use Livewire\Component;
 use Illuminate\Http\Request;
+use Livewire\Component;
 
 class Results extends Component
 {
@@ -43,19 +42,29 @@ class Results extends Component
                 $passed = $total >= ($prog->ca_total + $prog->exam_total)*0.5;
                 if ($total >= $grade->lower && $total <= $grade->upper) {
                     $this->totalCreditAttempted += $result->subject->coef;
-                    $this->totalCreditEarned += $passed ? $result->subject->coef:0;
+                    $this->totalCreditEarned += $passed ? $result->subject->coef : 0;
+                    if ($passed && !$result->validated) {
+                        Result::where([
+                            "student_id" => $result->student_id,
+                            "subject_id" => $result->subject_id
+                        ])->update(['validated' => 1]);
+                    }
+
+                    $result->refresh();
+
                     return collect([
-                        'name'=>$result->subject->name,
-                        'year_name'=>$result->year->name,
-                        'semester_name'=>$result->semester->name,
-                        'semester_id'=>$result->semester_id,
-                        'batch_id'=>$result->batch_id,
-                        'code'=>$result->subject->code,
-                        'type'=>$result->subject->status,
-                        'cv'=>$result->subject->coef,
-                        'ce'=>$passed ? $result->subject->coef:0,
-                        'grade'=> ($grade != "")?$grade->grade:"-",
-                        'gp'=>($grade != "")?$grade->weight:0.0,
+                        'name' => $result->subject->name,
+                        'year_name' => $result->year->name,
+                        'semester_name' => $result->semester->name,
+                        'semester_id' => $result->semester_id,
+                        'batch_id' => $result->batch_id,
+                        'code' => $result->subject->code,
+                        'type' => $result->subject->status,
+                        'cv' => $result->subject->coef,
+                        'validated' => $result->validated,
+                        'ce' => $passed ? $result->subject->coef : 0,
+                        'grade' => ($grade != "") ? $grade->grade : "-",
+                        'gp' => ($grade != "") ? $grade->weight : 0.0,
                     ]);
                 }
             }
