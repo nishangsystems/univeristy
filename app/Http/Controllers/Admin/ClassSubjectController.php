@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassSubject;
+use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
 use App\Models\Subjects;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class ClassSubjectController extends Controller
 
     public function  edit($section_id, $id)
     {
-        $data['parent'] = SchoolUnits::find($section_id);
+        $data['parent'] = ProgramLevel::find($section_id);
         $data['subject'] = DB::table('class_subjects')->whereNull('.deleted_at')
             ->join('school_units', ['school_units.id' => 'class_subjects.class_id'])
             ->join('subjects', ['subjects.id' => 'class_subjects.subject_id'])
@@ -23,7 +24,7 @@ class ClassSubjectController extends Controller
             ->where('class_subjects.subject_id', $id)
             ->select('class_subjects.subject_id', 'subjects.name', 'class_subjects.coef', 'class_subjects.status')
             ->first();
-        $data['title'] = __('text.word_edit').' ' . $data['subject']->name . ' '.__('text.word_for').' ' . $data['parent']->name;
+        $data['title'] = __('text.word_edit').' ' . $data['subject']->name . ' '.__('text.word_for').' ' . $data['parent']->name();
         return view('admin.class_subjects.edit')->with($data);
     }
 
