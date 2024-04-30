@@ -28,7 +28,7 @@
             max-width: 280mm !important;
             border: none;
             width: 100%;
-            height: 190mm;
+            height: 180mm;
             margin:10px 20px;
             font-size: 10px !important;
             border-spacing: 0;
@@ -103,7 +103,7 @@
 
         .title{
             width: 52px;
-            padding: 3px;
+            padding: 2px 3px;
             font-size: 9px;
             border-right: 1px solid  #888888;
         }
@@ -168,7 +168,7 @@
                 <td colspan="4" class="font-10">Other Name(s): <b>{{ substr(strstr($student->name," "), 1)}}</b></td>
             </tr>
             @if($page == 1)
-                <tr>
+                <tr style="height: 30px">
                     <td colspan="5" style="font-weight: bold">Date of Birth:<br/>{{$student->dob}}</td>
                     <td colspan="4" width="22%" style="font-weight: bold">Place of Birth:<br/>{{$student->pob}}</td>
                     <td colspan="4" width="22%" style="font-weight: bold">Sex: <br/>{{$student->gender}}</td>
@@ -196,9 +196,13 @@
                         @php
                             $program = \App\Models\ProgramLevel::find($student->_class()->id)->program;
                         @endphp
-                        <div> Department : {{$program->name}}</div>
-                        <div> Degree Conferred :</div>
-                        <div> Date :</div>
+                        <div style="display: flex">
+                            <span style="width: 120px;">Department :</span>
+                            <span>{{$program->name}}</span>
+                        </div>
+
+                        <div style="display: flex"> <span style="width: 120px">Degree Conferred :</span></div>
+                        <div style="display: flex"> <span style="width: 120px">Date :</span></div>
                     </td>
                 </tr>
 
@@ -211,6 +215,7 @@
             )@endcomponent
             </tbody>
         </table>
+        <div style="display: flex; justify-content: center; font-weight: bold">Registra</div>
     </div>
     @php
         $page ++;

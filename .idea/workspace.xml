@@ -21,13 +21,13 @@
   <component name="ChangeListManager">
     <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultsAndTranscriptsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultsAndTranscriptsController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Livewire/Admin/Transcript/Results.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Livewire/Admin/Transcript/Results.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ResultResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ResultResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/result/individual_result.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/result/individual_result.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/ProgramLevel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/ProgramLevel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/results.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/results.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/semester-result.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/semester-result.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/semester.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/semester.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/year.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/year.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -240,7 +240,9 @@
       <workItem from="1712327880317" duration="192000" />
       <workItem from="1712674459557" duration="1000" />
       <workItem from="1713354144916" duration="6023000" />
-      <workItem from="1713769324960" duration="7000000" />
+      <workItem from="1713769324960" duration="7361000" />
+      <workItem from="1714329334084" duration="3083000" />
+      <workItem from="1714509707490" duration="1128000" />
     </task>
     <servers />
   </component>

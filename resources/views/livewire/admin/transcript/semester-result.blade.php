@@ -50,7 +50,7 @@
 @endforeach
 
 @if($isseminster)
-    <div style="display: flex; padding: 5px">
+    <div style="display: flex; padding: 2px 5px">
         <div style="flex-grow: 1">
             TOTAL CREDITS ATTEMPTED : {{$creditAttempted}}<br/>
             GPA CREDITS ATTEMPTED: {{$creditAttempted}}
@@ -62,7 +62,7 @@
         </div>
     </div>
 
-    <div style=" padding: 5px; font-weight: bold;">
+    <div style=" padding: 0px 5px; font-weight: bold;">
         SEMESTER GPA = {{ \App\Helpers\Helpers::getGPA($results) }}
     </div>
 @endif

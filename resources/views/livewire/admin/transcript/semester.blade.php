@@ -45,18 +45,18 @@
 
     @if($isLast)
         <div style="display: flex;">
-            <div style="font-weight: bold; flex-grow: 1; padding:5px;">
+            <div style="font-weight: bold; flex-grow: 1; padding:2px 5px;">
                 TOTAL CREDITS ATTEMPTED: {{$tca}}<br/>
                 CUMMULATIVE TOTAL CREDIT EARNED: {{$tce}}
             </div>
 
-            <div style="font-weight: bold; flex-grow: 1; padding: 5px;">
+            <div style="font-weight: bold; flex-grow: 1; padding: 2px 5px;">
                 GPA CREDITS ATTEMTED: {{$tca}}<br/>
                 CUM GPA CREDITS EARNED: {{$tce}}
             </div>
         </div>
 
-        <div style="font-weight: bold; padding: 5px">
+        <div style="font-weight: bold; padding: 2px 5px">
             CUMMULATIVE GPA: {{$tgpa}}
         </div>
     @endif

@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\PaymentItem;
 use App\Models\ProgramLevel;
+use App\Models\Result;
 use App\Models\SchoolUnits;
 use App\Models\Transcript;
 use App\Models\TranscriptRating;
@@ -54,8 +55,18 @@ class ResultsAndTranscriptsController extends Controller{
             $data['grades'] = \Cache::remember('grading_scale', 60, function () use ($class) {
                 return $class->program->gradingType->grading->sortBy('grade') ?? [];
             });
-            
-            $data['courses'] = $class->class_subjects_by_semester(request('semester_id')) ?? [];
+            $courses = [];
+            foreach (($class->class_subjects_by_semester(request('semester_id')) ?? [] ) as $course){
+               if(Result::where([
+                       'batch_id'=>request('year_id'),
+                       'subject_id'=>$course->subject->id
+                   ])->count() > 0 ){
+
+                   array_push($courses ,  $course);
+               }
+            }
+
+            $data['courses'] = $courses;
             $data['base_pass'] = ($class->program->ca_total ?? 0 + $class->program->exam_total ?? 0)*0.5;
             $data['_title'] = $class->name().' '.$semester->name.' '.$data['title'].' FOR '.$year->name.' '.__('text.academic_year');
         }

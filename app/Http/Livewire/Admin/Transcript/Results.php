@@ -58,6 +58,7 @@ class Results extends Component
                         'semester_name' => $result->semester->name,
                         'semester_id' => $result->semester_id,
                         'batch_id' => $result->batch_id,
+                        'level' => $this->student->_class()->level_id,
                         'code' => $result->subject->code,
                         'type' => $result->subject->status,
                         'cv' => $result->subject->coef,
@@ -73,7 +74,6 @@ class Results extends Component
         $this->gpa = Helpers::getGPA($this->results);
 
         $this->results =    $this->results->groupBy('batch_id');
-
 
 
 
