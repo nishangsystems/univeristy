@@ -77,12 +77,14 @@ class ApiController extends Controller
         return response()->json(['data'=>Campus::find($campus_id)->programs()->where('program_id', $program_id)->join('levels', ['levels.id'=>'program_levels.level_id'])->select(['levels.*'])->distinct()->get()]) ;
     }
 
-    public function campus_degree_certificate_programs(Request $request, $campus_id, $degree_id, $certificate_id)
+    public function campus_degree_certificate_programs(Request $request, $campus_id, $degree_id, $certificate_id = null)
     {
         # code...
         // return response()->json(['data'=> Campus::find($campus_id)->programs()->join('school_units', ['school_units.id'=>'program_levels.program_id'])->where('school_units.degree_id', $degree_id)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->join('certificate_programs', ['certificate_programs.program_id'=>'school_units.id'])->where('certificate_programs.certificate_id', $certificate_id)->distinct()->get(['school_units.id', 'school_units.name', 'school_units.unit_id', 'departments.name as parent'])]);
-        $certificate = Certificate::find($certificate_id);
-        $certificate_programs = $certificate->programs()->pluck('school_units.id')->toArray();
+        
+        $certificate_programs = $certificate_id == null ?
+            SchoolUnits::pluck('school_units.id')->toArray() :
+            Certificate::find($certificate_id)->programs()->pluck('school_units.id')->toArray();
         $cert_degree_programs = SchoolUnits::where('degree_id', $degree_id)->whereIn('id', $certificate_programs)->pluck('id')->toArray();
         $campus = Campus::find($campus_id);
         $campus_deg_cert_programs = $campus->programs()->join('school_units', 'school_units.id', '=', 'program_levels.program_id')->whereIn('school_units.id', $cert_degree_programs)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->select(['school_units.*', 'departments.name as parent'])->get()->unique('id')->all();
