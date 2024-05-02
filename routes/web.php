@@ -280,23 +280,29 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     
         // ADDED RESULT ROUTES FOR OFFLINE SYSTEM
         Route::prefix('ca')->name('ca.')->group(function(){
-            Route::get('{class_id?}', 'Admin\ResultController@ca_result')->name('index');
+            Route::get('set_dateline/{background_id?}', 'Admin\ResultSettingsController@setCaUploadLatestDate')->name('dateline.set');
+            Route::post('set_dateline/{background_id?}', 'Admin\ResultSettingsController@saveCaUploadLatestDate')->name('dateline.set');
+            Route::get('special/{year?}/{semester?}/{course_code?}', 'Admin\ResultController@import_special_ca')->name('special');
+            Route::post('special/{year?}/{semester?}/{course_code?}', 'Admin\ResultController@import_save_special_ca');
+            Route::get('special/{year}/{semester}/{course_code}/clear', 'Admin\ResultController@clear_special_ca')->name('special.clear');
             Route::get('{class_id}/{course_id}/import', 'Admin\ResultController@ca_import')->name('import');
             Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@ca_import_save')->name('import.save');
             Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@ca_fill')->name('fill');
             Route::post('{class_id}/{course_id}/fill', 'Admin\ResultController@ca_fill_save')->name('fill');
-            Route::get('set_dateline/{background_id?}', 'Admin\ResultSettingsController@setCaUploadLatestDate')->name('dateline.set');
-            Route::post('set_dateline/{background_id?}', 'Admin\ResultSettingsController@saveCaUploadLatestDate')->name('dateline.set');
+            Route::get('{class_id?}', 'Admin\ResultController@ca_result')->name('index');
         });
 
         Route::prefix('exam')->name('exam.')->group(function(){
-            Route::get('{class_id?}', 'Admin\ResultController@exam_result')->name('index');
+            Route::get('set_dateline/{background_id?}', 'Admin\ResultSettingsController@setExamUploadLatestDate')->name('dateline.set');
+            Route::post('set_dateline/{background_id?}', 'Admin\ResultSettingsController@saveExamUploadLatestDate')->name('dateline.set');
+            Route::get('special/{year?}/{semester?}/{course_code?}', 'Admin\ResultController@import_special_exam')->name('special');
+            Route::post('special/{year?}/{semester?}/{course_code?}', 'Admin\ResultController@import_save_special_exam');
+            Route::get('special/{year}/{semester}/{course_code}/clear', 'Admin\ResultController@clear_special_exam')->name('special.clear');
             Route::get('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import')->name('import');
             Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import_save')->name('import');
             Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill')->name('fill');
             Route::post('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill_save')->name('fill');
-            Route::get('set_dateline/{background_id?}', 'Admin\ResultSettingsController@setExamUploadLatestDate')->name('dateline.set');
-            Route::post('set_dateline/{background_id?}', 'Admin\ResultSettingsController@saveExamUploadLatestDate')->name('dateline.set');
+            Route::get('{class_id?}', 'Admin\ResultController@exam_result')->name('index');
         });
 
         Route::prefix('coded')->name('coded.')->group(function(){

@@ -230,7 +230,7 @@ class ResultController extends Controller
         return view('admin.result.ca_result', $data);
     }
 
-    public function ca_fill(){
+    public function ca_fill(Request $request){
         // check if CA total is set forthis program
         if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
             # code...
@@ -350,7 +350,7 @@ class ResultController extends Controller
         return view('admin.result.fill_exam', $data);
     }
 
-    public function exam_import(){
+    public function exam_import(Request $request){
         // check if exam total is set for this program
         if (!Helpers::instance()->exam_total_isset(request('class_id'))) {
             # code...
@@ -631,4 +631,190 @@ class ResultController extends Controller
             return response(['message'=>$th->getMessage()], 500);
         }
     }
+
+
+    public function import_special_ca(Request $request, $year=null, $semester=null, $course_code=null){
+        $data['title'] = "Special CA importation";
+        $data['year_id'] = $year;
+        $data['semester_id'] = $semester;
+        $data['course_code'] = $course_code;
+        $data['semesters'] = Semester::where('is_main_semester', 1)->distinct()->get();
+        if($course_code != null){
+            $sem = Semester::find($data['semester_id']);
+            $batch = Batch::find($data['year_id']);
+            $subject = Subjects::where('code', $course_code)->first();
+            $data['semester'] = $sem;
+            $data['year'] = $batch;
+            $data['course'] = $subject;
+            $data['title2'] = __('text.uploading_ca_marks_for', ['ccode'=>$course_code, 'year'=>$batch->name]);
+            $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $course_code .'</b> || '.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
+            $data['delete_label'] = __('text.clear_ca_for', ['year'=>$batch->name??'YR', 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
+            $data['results'] = Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$subject->id??null])->get();
+            $data['can_update_ca'] = $data['results']->where('exam_score', '>', 0)->count() == 0;
+            $data['delete_prompt'] = "You are about to delete all the CA marks for {$subject->code}, {$sem->name} {$batch->name}";
+        }
+        // dd($data);
+        return view('admin.result.special.ca', $data);
+    }
+
+
+    public function import_save_special_ca(Request $request, $year, $semester, $course_code){
+        if($request->file('file') == null){
+            session()->flash('error', 'file field requried');
+            return back()->withInput();
+        }
+
+        // save the file
+        $file = $request->file('file');
+        $fname = "ca_upload_".time().'.csv';
+        $path = public_path('uploads/files');
+        $file->move($path, $fname);
+
+        // open file for reading
+        $reading_stream = fopen($path.'/'.$fname, 'r');
+
+        // read file data into an array
+        $file_data = [];
+        while(($row = fgetcsv($reading_stream, 1000)) != null){
+            $file_data[] = ['matric'=>$row[1], 'ca_score'=>$row[2]];
+        }
+
+        // write CA results to database
+        $missing_students = "";
+        $subject = Subjects::where('code', $course_code)->first();
+        if($subject == null){
+            return back()->withInput()->with('error', "Course with course code {$course_code} not found");
+        }
+        foreach($file_data as $rec){
+            $student = Students::where('matric', $rec['matric'])->first();
+            
+            if($student == null){
+                $missing_students .= " ".$rec['matric'];
+                continue;
+            }
+            $class = $student->a_class($year);
+            $class_subject = $class->class_subjects()->where('subject_id', $subject->id)->first();
+            $data = [
+                'batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class->id, 'semester_id'=>$semester, 
+                'subject_id'=>$subject->id, 'ca_score'=>$rec['ca_score'], 'coef'=>$class_subject->coef ?? $subject->coef,
+                'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class->id.$semester.$subject->id.$subject->coef, 
+                'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'published'=>0
+            ];
+            $base = ['batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class->id, 'semester_id'=>$semester, 
+            'subject_id'=>$subject->id];
+    
+            Result::updateOrInsert($base, $data);
+        }
+        if(strlen($missing_students) > 0){
+            return back()->with('success', 'Done')->with('message', "Students with matricules {$missing_students} are not found");
+        }
+        return back()->with('success', 'Done');
+
+    }
+
+
+    public function clear_special_ca(Request $request, $year, $semester, $course_code){
+        $subject = Subjects::where('code', $course_code)->first();
+        if($subject != null){
+            Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$subject->id])->each(function($row){
+                $row->delete();
+            });
+            return back()->with('sucess', 'Done');
+        }else{
+            return back()->with('error', "Course not found");
+        }
+    }
+
+
+    public function import_special_exam(Request $request, $year=null, $semester=null, $course_code=null){
+        $data['title'] = "Special Exam importation";
+        $data['year_id'] = $year;
+        $data['semester_id'] = $semester;
+        $data['course_code'] = $course_code;
+        $data['semesters'] = Semester::where('is_main_semester', 1)->distinct()->get();
+        if($course_code != null){
+            $sem = Semester::find($data['semester_id']);
+            $batch = Batch::find($data['year_id']);
+            $subject = Subjects::where('code', $course_code)->first();
+            $data['semester'] = $sem;
+            $data['year'] = $batch;
+            $data['course'] = $subject;
+            $data['title2'] = __('text.uploading_exam_marks_for', ['ccode'=>$course_code, 'year'=>$batch->name]);
+            $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $course_code .'</b> || '.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
+            $data['delete_label'] = __('text.clear_exam_for', ['year'=>$batch->name??'YR', 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
+            $data['results'] = Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$subject->id??null])->get();
+            $data['can_update_exam'] = $data['results']->where('ca_score', '>', 0)->count() > 0;
+            $data['delete_prompt'] = "You are about to delete all the entire results for {$subject->code}, {$sem->name} {$batch->name}";
+        }
+        // dd($data);
+        return view('admin.result.special.exam', $data);
+    }
+
+
+    public function import_save_special_exam(Request $request, $year, $semester, $course_code){
+        if($request->file('file') == null){
+            session()->flash('error', 'file field requried');
+            return back()->withInput();
+        }
+
+        // save the file
+        $file = $request->file('file');
+        $fname = "exam_upload_".time().'.csv';
+        $path = public_path('uploads/files');
+        $file->move($path, $fname);
+
+        // open file for reading
+        $reading_stream = fopen($path.'/'.$fname, 'r');
+
+        // read file data into an array
+        $file_data = [];
+        while(($row = fgetcsv($reading_stream, 1000)) != null){
+            $file_data[] = ['matric'=>$row[1], 'exam_score'=>$row[2]];
+        }
+
+        // write CA results to database
+        $missing_students = "";
+        $subject = Subjects::where('code', $course_code)->first();
+        if($subject == null){
+            return back()->withInput()->with('error', "Course with course code {$course_code} not found");
+        }
+        foreach($file_data as $rec){
+            $student = Students::where('matric', $rec['matric'])->first();
+            
+            if($student == null){
+                $missing_students .= " ".$rec['matric'];
+                continue;
+            }
+            $class = $student->a_class($year);
+            $class_subject = $class->class_subjects()->where('subject_id', $subject->id)->first();
+            $data = [
+                'batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class->id, 'semester_id'=>$semester, 
+                'subject_id'=>$subject->id, 'exam_score'=>$rec['exam_score'], 'coef'=>$class_subject->coef ?? $subject->coef,
+                'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class->id.$semester.$subject->id.$subject->coef, 
+                'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'published'=>0
+            ];
+            $base = ['batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class->id, 'semester_id'=>$semester, 
+            'subject_id'=>$subject->id];
+    
+            Result::updateOrInsert($base, $data);
+        }
+        if(strlen($missing_students) > 0){
+            return back()->with('success', 'Done')->with('message', "Students with matricules {$missing_students} are not found");
+        }
+        return back()->with('success', 'Done');
+    }
+    
+
+    public function clear_special_exam(Request $request, $year, $semester, $course_code){
+        $subject = Subjects::where('code', $course_code)->first();
+        if($subject != null){
+            Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$subject->id])->each(function($row){
+                $row->delete();
+            });
+            return back()->with('sucess', 'Done');
+        }else{
+            return back()->with('error', "Course not found");
+        }
+    }
+
 }
