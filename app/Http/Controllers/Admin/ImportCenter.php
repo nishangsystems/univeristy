@@ -223,9 +223,10 @@ class ImportCenter extends Controller
                             }
                             if ($exam_total == null || $exam_total == 0) {
                                 # code...
-                                $errors .= __('text.exam_total_not_set_for', ['program'=>$student->_class($request->year)->program->name]);
-                                continue;
-                            }else{
+                                // $errors .= __('text.exam_total_not_set_for', ['program'=>$student->_class($request->year)->program->name]);
+                                // continue;
+                            }
+                            else{
                                 if($row[3] > $exam_total){
                                     $errors .= __('text.exam_mark_exceeds_totals', ['course'=>"[ ".$subject->code.' ] '.$subject->name, 'student'=>'[ '.$student->matric.' ]']);
                                     continue;
