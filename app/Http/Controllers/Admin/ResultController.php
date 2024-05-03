@@ -403,7 +403,8 @@ class ResultController extends Controller
             $existing_results = '';
 
             foreach($imported_data as $data){
-                if ($data[1] > $ca_total || $data[2] > $exam_total) {
+                // if ($data[1] > $ca_total || $data[2] > $exam_total) {
+                if ($data[1] > $ca_total) {
                     # code...
                     $bad_results++;
                     continue;
@@ -679,6 +680,7 @@ class ResultController extends Controller
         while(($row = fgetcsv($reading_stream, 1000)) != null){
             $file_data[] = ['matric'=>$row[1], 'ca_score'=>$row[2]];
         }
+        fclose($reading_stream);
 
         // write CA results to database
         $missing_students = "";
@@ -744,7 +746,8 @@ class ResultController extends Controller
             $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $course_code .'</b> || '.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
             $data['delete_label'] = __('text.clear_exam_for', ['year'=>$batch->name??'YR', 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
             $data['results'] = Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$subject->id??null])->get();
-            $data['can_update_exam'] = $data['results']->where('ca_score', '>', 0)->count() > 0;
+            $data['can_update_exam'] = true;
+            // $data['can_update_exam'] = $data['results']->where('ca_score', '>', 0)->count() > 0;
             $data['delete_prompt'] = "You are about to delete all the entire results for {$subject->code}, {$sem->name} {$batch->name}";
         }
         // dd($data);
@@ -772,6 +775,7 @@ class ResultController extends Controller
         while(($row = fgetcsv($reading_stream, 1000)) != null){
             $file_data[] = ['matric'=>$row[1], 'exam_score'=>$row[2]];
         }
+        fclose($reading_stream);
 
         // write CA results to database
         $missing_students = "";
@@ -818,4 +822,108 @@ class ResultController extends Controller
         }
     }
 
+
+    public function migrate_results(Request $request, $year=null, $semester=null, $class=null, $course_code=null)
+    {
+        # code...
+        $data['title'] = "Migrate Results";
+        $data['year_id'] = $year;
+        $data['semester_id'] = $semester;
+        $data['class_id'] = $class;
+        $data['course_code'] = $course_code;
+        $data['semesters'] = Semester::where('is_main_semester', 1)->distinct()->get();
+        $data['classes'] = HomeController::sorted_program_levels();
+        if($course_code != null){
+            $sem = Semester::find($data['semester_id']);
+            $batch = Batch::find($data['year_id']);
+            $subject = Subjects::where('code', $course_code)->first();
+            $program_level = ProgramLevel::find($class);
+            $data['semester'] = $sem;
+            $data['year'] = $batch;
+            $data['course'] = $subject;
+            $data['class'] = $program_level;
+            $data['title2'] = __('text.migrating_results_for', ['class'=>$program_level->name(), 'ccode'=>$course_code, 'year'=>$batch->name, 'sem'=>$sem->name]);
+            $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $course_code .'</b> || '.__('text.word_class').' :: <b class="text-danger">'. $program_level->name() .'</b>'.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
+            $data['delete_label'] = __('text.clear_results_for', ['year'=>$batch->name??'YR', 'class'=>$program_level->name(), 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
+            $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class, 'semester_id'=>$semester, 'subject_id'=>$subject->id??null])->get();
+            $data['can_update_exam'] = true;
+            $data['delete_prompt'] = "You are about to delete all {$program_level->name()} results for {$subject->code}, {$sem->name} {$batch->name}";
+        }
+        // dd($data);
+        return view('admin.result.special.migrate', $data);
+    }
+
+
+    public function migrate_save_results(Request $request, $year=null, $semester=null, $class_id, $course_code=null)
+    {
+        # code...
+        if($request->file('file') == null){
+            session()->flash('error', 'file field requried');
+            return back()->withInput();
+        }
+
+        // save the file
+        $file = $request->file('file');
+        $fname = "exam_upload_".time().'.csv';
+        $path = public_path('uploads/files');
+        $file->move($path, $fname);
+
+        // open file for reading
+        $reading_stream = fopen($path.'/'.$fname, 'r');
+
+        // read file data into an array
+        $file_data = [];
+        while(($row = fgetcsv($reading_stream, 1000)) != null){
+            $file_data[] = ['matric'=>$row[0], 'ca_score'=>$row[1], 'exam_score'=>$row[2]];
+        }
+        fclose($reading_stream);
+
+        // write CA results to database
+        $missing_students = "";
+        $subject = Subjects::where('code', $course_code)->first();
+        if($subject == null){
+            return back()->withInput()->with('error', "Course with course code {$course_code} not found");
+        }
+
+        $class = ProgramLevel::find($class_id);
+        foreach($file_data as $rec){
+            $student = Students::where('matric', $rec['matric'])->first();
+            
+            if($student == null){
+                $missing_students .= " ".$rec['matric'];
+                continue;
+            }
+            $class_subject = $class->class_subjects()->where('subject_id', $subject->id)->first();
+            $data = [
+                'batch_id'=>$year, 'student_id'=>$student->id, 'semester_id'=>$semester, 'subject_id'=>$subject->id, 
+                'ca_score'=>$rec['ca_score'], 'exam_score'=>$rec['exam_score'], 'coef'=>$class_subject->coef ?? $subject->coef,
+                'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class->id.$semester.$subject->id.$subject->coef, 
+                'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'published'=>0
+            ];
+            $base = ['batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class_id, 'semester_id'=>$semester, 
+            'subject_id'=>$subject->id];
+    
+            Result::updateOrInsert($base, $data);
+        }
+        if(strlen($missing_students) > 0){
+            return back()->with('success', 'Done')->with('message', "Students with matricules {$missing_students} are not found");
+        }
+        return back()->with('success', 'Done');
+    }
+
+
+    public function migrate_clear_results(Request $request, $year, $semester, $class, $course_code)
+    {
+        # code...
+        // dd(23);
+        $subject = Subjects::where('code', $course_code)->first();
+        if($subject != null){
+            Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$subject->id, 'class_id'=>$class])->each(function($row){
+                $row->delete();
+            });
+            return back()->with('sucess', 'Done');
+        }else{
+            return back()->with('error', "Course not found");
+        }
+    }
 }

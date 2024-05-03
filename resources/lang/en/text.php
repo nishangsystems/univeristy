@@ -960,8 +960,12 @@ return [
     'clear_ca_for'=>'clear CA for :ccode for :semester :year',
     'uploading_exam_marks_for'=>'uploading exam marks for :ccode || year : :year',
     'upload_exam_marks_in_csv_only'=>'upload exam marks in csv only',
+    'upload_results_in_csv_only'=>'upload results in csv only',
     'clear_exam_for'=>'clear exam for :ccode for :semester :year',
     'cant_alter_ca_after_exam_is_uploaded'=>'can\'t alter CA after exam is uploaded',
     'cant_import_exam_without_uploading_ca'=>'can\'t import exam without uploading ca',
+    'migrate_results'=>'migrate results',
+    'migrating_results_for'=>'migrating :ccode results for :class, :sem || :year',
+    'clear_results_for'=>'clear :ccode results for :ccode for :semester :year',
     ''
 ];

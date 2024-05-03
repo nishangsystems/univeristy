@@ -276,6 +276,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('unpublish/{year}/{semester}', 'Admin\ResultController@unpublish_results')->name('unpublish');
 
         Route::post('store_results', 'Admin\ResultController@store_results')->name('store_result');
+
+        Route::get('migrate/{year?}/{semester?}/{class?}/{course_code?}', 'Admin\ResultController@migrate_results')->name('migrate');
+        Route::post('migrate/{year?}/{semester?}/{class?}/{course_code?}', 'Admin\ResultController@migrate_save_results');
+        Route::get('migrate/{year}/{semester}/{class}/{course_code}/clear', 'Admin\ResultController@migrate_clear_results')->name('migrate.clear');
     
     
         // ADDED RESULT ROUTES FOR OFFLINE SYSTEM
