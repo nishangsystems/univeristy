@@ -54,6 +54,12 @@ class Students extends Authenticatable
         return $class->campus_programs($this->campus_id)->first() ?? null;
     }
 
+    public function a_class($year)
+    {
+        $class = $this->_class($year);
+        return $class ==  null ? $this->_class() : $class;
+    }
+
     public function classes()
     {
         return $this->hasMany(StudentClass::class, 'student_id');

@@ -953,5 +953,15 @@ return [
     'current_amount_paid'=>'current amount paid',
     'cum_amount_paid'=>'cum.amount paid',
     'cum_amount_owing'=>'cum.amount owing',
+    'special_ca'=>'special CA',
+    'special_exams'=>'special exams',
+    'uploading_ca_marks_for'=>'uploading CA marks for :ccode || year : :year',
+    'upload_ca_marks_in_csv_only'=>'upload ca marks in csv only',
+    'clear_ca_for'=>'clear CA for :ccode for :semester :year',
+    'uploading_exam_marks_for'=>'uploading exam marks for :ccode || year : :year',
+    'upload_exam_marks_in_csv_only'=>'upload exam marks in csv only',
+    'clear_exam_for'=>'clear exam for :ccode for :semester :year',
+    'cant_alter_ca_after_exam_is_uploaded'=>'can\'t alter CA after exam is uploaded',
+    'cant_import_exam_without_uploading_ca'=>'can\'t import exam without uploading ca',
     ''
 ];
