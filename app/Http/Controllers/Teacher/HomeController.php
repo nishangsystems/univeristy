@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Teacher;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
+use App\Models\Batch;
 use App\Models\ClassSubject;
 use App\Models\ProgramLevel;
 use App\Models\Result;
@@ -15,6 +16,7 @@ use App\Models\Campus;
 use App\Models\CourseLog;
 use App\Models\Notification;
 use App\Models\Period;
+use App\Models\Semester;
 use App\Models\Students;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -384,14 +386,34 @@ class HomeController extends Controller
                 return view('teacher.result.fill_ca', $data);
     }
 
-    public function course_ca_import($class_id, $course_id){
+    public function course_ca_import(Request $request, $class_id=null, $course_id=null, $year=null, $semester=null){
 
         // check if CA total is set forthis program
 
-        $class = ProgramLevel::find($class_id);
-        $course = Subjects::find($course_id);
-        $classSubject = $course->_class_subject($class_id);
-        $data['title'] = "Import CA Results For {$course->name} [{$course->code}] | CV : ".($classSubject->coef ?? $course->coef)." | STATUS : ".($classSubject->status ?? $course->status)." | {$class->name()}";
+        $data['title'] = "Import CA";
+        $data['year_id'] = $year;
+        $data['semester_id'] = $semester;
+        $data['class_id'] = $class_id;
+        $subject = Subjects::find($course_id)->first();
+        $program_level = ProgramLevel::find($class_id);
+        $data['semesters'] = Helpers::instance()->getSemesters($program_level->id)->where('is_main_semester', 1);
+        $data['course_code'] = $subject->code;
+        $data['classes'] = HomeController::sorted_program_levels();
+        $data['course'] = $subject;
+        if($semester != null){
+            $sem = Semester::find($data['semester_id']);
+            $batch = Batch::find($data['year_id']);
+            $data['semester'] = $sem;
+            $data['year'] = $batch;
+            $data['course'] = $subject;
+            $data['class'] = $program_level;
+            $data['title2'] = __('text.import_CA_results_for', ['class'=>$program_level->name(), 'ccode'=>$subject->code, 'year'=>$batch->name, 'sem'=>$sem->name]);
+            $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $subject->code .'</b> || '.__('text.word_class').' :: <b class="text-danger">'. $program_level->name() .'</b>'.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
+            $data['delete_label'] = __('text.clear_ca_for', ['year'=>$batch->name??'YR', 'class'=>$program_level->name(), 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
+            $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class_id, 'semester_id'=>$semester, 'subject_id'=>$subject->id??null])->get();
+            $data['delete_prompt'] = "You are about to delete all {$program_level->name()} CA for {$subject->code}, {$sem->name} {$batch->name}";
+            $data['can_update_ca'] = true;
+        }
         return view('teacher.result.import_ca', $data);
     }
 
