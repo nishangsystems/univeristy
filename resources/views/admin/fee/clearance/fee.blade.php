@@ -3,23 +3,23 @@
     <div class="my-4 d-flex justify-content-end py-2">
         <button class="btn btn-primary rounded btn-sm text-uppercase" onclick="printClearance()">print</button>
     </div>
-    <div class="py-3 px-4 border" id="clearance_panel">
+    <div class=" px-4 border" style="font-size: 14px;" id="clearance_panel">
         {{-- <div class="text-center h3 font-weight-bold my-4 text-underline">{{ $data['institution']->name }}</div> --}}
-        <div class="d-flex justify-content-center py-2 my-4">
+        <div class="d-flex justify-content-center py-1 my-1">
             <img src="{{ $helpers->getHeader() }}" alt="" srcset="" style="width: 100%; height: auto;">
         </div>
-        <div class="py-2">
+        <div class="py-1">
             <div class="font-weight-bold h6">@lang('text.department_of_finance')</div>
             <small class="text-capitalize">@lang('text.our_reference') : <span class="font-weight-semibold text-underline">21/24/2931</span></small>
         </div>
-        <div class="text-center h4 font-weight-bold my-4 text-uppercase text-underline">@lang('text.to_whom_it_may_concern')</div>
+        <div class="text-center h4 font-weight-bold my-2 text-uppercase text-underline">@lang('text.to_whom_it_may_concern')</div>
         <div class="h6 font-weight-bold my-2 text-uppercase text-underline">@lang('text.fees_clearance')</div>
         @if ($data['fee_cleared'])
             <div>{!! __('text.clearance_text', ['name'=>$data['student']->name, 'matric'=>$data['student']->matric, 'program'=>$data['degree']->deg_name." IN ".$data['program']->parent->name, 'school'=>$data['school']->name, 'adm_year'=>$data['clearance']->first()->_year, 'fin_year'=>$data['clearance']->last()->_year]) !!}</div>
         @else
             <div>{!! __('text.clearance_text_debt', ['name'=>$data['student']->name, 'matric'=>$data['student']->matric, 'program'=>$data['degree']->deg_name." IN ".$data['program']->parent->name, 'school'=>$data['school']->name, 'adm_year'=>$data['clearance']->first()->_year, 'fin_year'=>$data['clearance']->last()->_year, 'debt'=>$data['debt']]) !!}</div>
         @endif
-        <table class="my-5 border">
+        <table class="my-2 border">
             <thead class="text-uppercase border-top border-bottom">
                 <th class="border-left border-right">@lang('text.word_year')/@lang('text.word_level')</th>
                 <th class="border-left border-right">@lang('text.tution_fees_paid')</th>
@@ -54,43 +54,40 @@
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
         </div>
-        <div class="margin-top-2 padding-top-2 d-flex justify-content-center">
-            <div class="col-sm-7 my-1 py-2 d-flex">
+        <div class="margin-top-2 padding-top-2 row">
+            <div class="col-6 my-1 py-2 d-flex">
                 <span class="text-uppercase font-weight-bold">approved by:</span>
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
-        </div>
-        <div class="margin-top-2 padding-top-2 row">
-            <div class="col-sm-5 my-1 py-2 d-flex">
+            <div class="col-4 my-1 py-2 d-flex">
                 <span class="text-uppercase font-weight-bold">signature:</span>
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
-            <div class="col-sm-4 my-1 py-2 d-flex">
+            <div class="col-2 my-1 py-2 d-flex">
                 <span class="text-uppercase font-weight-bold">on the:</span>
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
         </div>
-        <div class="margin-top-5 padding-top-5 d-flex justify-content-center">
-                <span class="text-uppercase font-weight-bold">this clearance is issued once</span>
-            </div>
+        <div class="py-2 d-flex justify-content-center">
+            <span class="text-uppercase font-weight-bold">this clearance is issued once</span>
         </div>
 
-        <hr class="my-2" style="border: 1px dotted #fefefe;">
-        <div class="d-flex justify-content-center py-2 my-4">
+        {{-- second print --}}
+        <div class="d-flex justify-content-center py-1 my-1">
             <img src="{{ $helpers->getHeader() }}" alt="" srcset="" style="width: 100%; height: auto;">
         </div>
-        <div class="py-2">
+        <div class="py-1">
             <div class="font-weight-bold h6">@lang('text.department_of_finance')</div>
             <small class="text-capitalize">@lang('text.our_reference') : <span class="font-weight-semibold text-underline">21/24/2931</span></small>
         </div>
-        <div class="text-center h4 font-weight-bold my-4 text-uppercase text-underline">@lang('text.to_whom_it_may_concern')</div>
+        <div class="text-center h4 font-weight-bold my-2 text-uppercase text-underline">@lang('text.to_whom_it_may_concern')</div>
         <div class="h6 font-weight-bold my-2 text-uppercase text-underline">@lang('text.fees_clearance')</div>
         @if ($data['fee_cleared'])
             <div>{!! __('text.clearance_text', ['name'=>$data['student']->name, 'matric'=>$data['student']->matric, 'program'=>$data['degree']->deg_name." IN ".$data['program']->parent->name, 'school'=>$data['school']->name, 'adm_year'=>$data['clearance']->first()->_year, 'fin_year'=>$data['clearance']->last()->_year]) !!}</div>
         @else
             <div>{!! __('text.clearance_text_debt', ['name'=>$data['student']->name, 'matric'=>$data['student']->matric, 'program'=>$data['degree']->deg_name." IN ".$data['program']->parent->name, 'school'=>$data['school']->name, 'adm_year'=>$data['clearance']->first()->_year, 'fin_year'=>$data['clearance']->last()->_year, 'debt'=>$data['debt']]) !!}</div>
         @endif
-        <table class="my-5 border">
+        <table class="my-2 border">
             <thead class="text-uppercase border-top border-bottom">
                 <th class="border-left border-right">@lang('text.word_year')/@lang('text.word_level')</th>
                 <th class="border-left border-right">@lang('text.tution_fees_paid')</th>
@@ -125,25 +122,22 @@
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
         </div>
-        <div class="margin-top-2 padding-top-2 d-flex justify-content-center">
-            <div class="col-sm-7 my-1 py-2 d-flex">
+        <div class="margin-top-2 padding-top-2 row">
+            <div class="col-6 my-1 py-2 d-flex">
                 <span class="text-uppercase font-weight-bold">approved by:</span>
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
-        </div>
-        <div class="margin-top-2 padding-top-2 row">
-            <div class="col-sm-5 my-1 py-2 d-flex">
+            <div class="col-4 my-1 py-2 d-flex">
                 <span class="text-uppercase font-weight-bold">signature:</span>
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
-            <div class="col-sm-4 my-1 py-2 d-flex">
+            <div class="col-2 my-1 py-2 d-flex">
                 <span class="text-uppercase font-weight-bold">on the:</span>
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
         </div>
-        <div class="margin-top-5 padding-top-5 d-flex justify-content-center">
-                <span class="text-uppercase font-weight-bold">this clearance is issued once</span>
-            </div>
+        <div class="py-2 d-flex justify-content-center">
+            <span class="text-uppercase font-weight-bold">this clearance is issued once</span>
         </div>
     </div>
 @endsection
