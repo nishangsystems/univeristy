@@ -720,7 +720,7 @@ class ResultController extends Controller
         $subject = Subjects::where('code', $course_code)->first();
         if($subject != null){
             Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$subject->id])->each(function($row){
-                $row->delete();
+                $row->exam_score == null ? $row->delete() : $row->update(['ca_score'=>null]);
             });
             return back()->with('sucess', 'Done');
         }else{
@@ -814,7 +814,7 @@ class ResultController extends Controller
         $subject = Subjects::where('code', $course_code)->first();
         if($subject != null){
             Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$subject->id])->each(function($row){
-                $row->delete();
+                ($row->ca_score == null) ? $row->delete() : $row->update('exam_score'=>null);
             });
             return back()->with('sucess', 'Done');
         }else{

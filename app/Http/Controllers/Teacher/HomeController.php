@@ -394,7 +394,6 @@ class HomeController extends Controller
         $data['semester_id'] = $semester;
         $data['class_id'] = $class_id;
         $subject = Subjects::find($course_id);
-
         $program_level = ProgramLevel::find($class_id);
         $data['title'] = "Import CA For [{$subject->code}] {$subject->name}";
         $data['semesters'] = Helpers::instance()->getSemesters($program_level->id)->where('is_main_semester', 1);
@@ -418,67 +417,69 @@ class HomeController extends Controller
         return view('teacher.result.import_ca', $data);
     }
 
-    public function course_ca_import_save(Request $request, $class_id, $course_id){
+    public function course_ca_import_save(Request $request, $class_id, $course_id, $year, $semester){
         // return $request->all();
-        $check = Validator::make($request->all(), [
-            'reference'=>'required',
-            'file'=>'required|file'
-        ]);
-
-        $ca_total = Helpers::instance()->ca_total(request('class_id'));
-        if($check->fails()){
-            return back()->with('error', $check->errors()->first());
-        }
-        if(!($ca_total > 0)){
-            session()->flash('error', 'CA & Exam totals not set');
+        if($request->file('file') == null){
+            session()->flash('error', 'file field requried');
             return back()->withInput();
         }
+
+        // save the file
         $file = $request->file('file');
-        if($file != null &&$file->getClientOriginalExtension() == 'csv'){
-            $filename = 'ca_'.random_int(1000, 9999).'_'.time().'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('uploads/files'), $filename);
+        $fname = "exam_upload_".time().'.csv';
+        $path = public_path('uploads/files');
+        $file->move($path, $fname);
 
-            $file_pointer = fopen(asset('uploads/files').'/'.$filename, 'r');
+        // open file for reading
+        $reading_stream = fopen($path.'/'.$fname, 'r');
 
-            $imported_data = [];
-            $course = Subjects::find($request->course_id);
-            $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
-            $semester = \App\Helpers\Helpers::instance()->getSemester($request->class_id);
-            
-            while(($row = fgetcsv($file_pointer, 100, ',')) != null){
-                if(is_numeric($row[1]))
-                $imported_data[] = [$row[0], $row[1]];
-            }
-            if(count($imported_data)==0){
-                return back()->with('error', 'No data or wrong data format.');
-            }
-
-            $bad_results = 0;
-            foreach($imported_data as $data){
-                if ($data[1] > $ca_total) {
-                    # code...
-                    $bad_results++;
-                    continue;
-                }
-                $student = Students::where(['matric'=>$data[0]])->first() ?? null;
-                if($student != null){
-                    $base=[
-                        'batch_id' => $year, 
-                        'subject_id' => $request->course_id,
-                        'student_id' => $student->id,
-                        'class_id' => $request->class_id,
-                        'semester_id' => $semester->id
-                    ];
-                    Result::updateOrCreate($base, ['ca_score'=>$data[1] == null ? 0 : $data[1], 'reference'=>$request->reference, 'coef'=>$course->_class_subject($request->class_id)->coef??$course->coef, 'user_id'=>auth()->id(), 'class_subject_id'=>$course->_class_subject($request->class_id)->id??0]);
-                }
-            }
-            if($bad_results > 1){
-                return back()->with('success', 'Done. ' . $bad_results . ' records not imported. Unsupported values supplied.');
-            }
-            return back()->with('success', 'Done');
-        }else{
-            return back()->with('error', 'Empty or bad file type. CSV files only are accepted.');
+        // read file data into an array
+        $file_data = [];
+        while(($row = fgetcsv($reading_stream, 1000)) != null){
+            $file_data[] = ['matric'=>$row[0], 'ca_score'=>$row[1], 'exam_score'=>$row[2]];
         }
+        fclose($reading_stream);
+
+        // write CA results to database
+        $missing_students = "";
+        $subject = Subjects::find($course_id);
+        if($subject == null){
+            return back()->withInput()->with('error', "Course with course code {$subject->code} not found");
+        }
+
+        $class = ProgramLevel::find($class_id);
+        foreach($file_data as $rec){
+            $student = Students::where('matric', $rec['matric'])->first();
+            
+            if($student == null){
+                $missing_students .= " ".$rec['matric'];
+                continue;
+            }
+            $class_subject = $class->class_subjects()->where('subject_id', $subject->id)->first();
+            $data = [
+                'batch_id'=>$year, 'student_id'=>$student->id, 'semester_id'=>$semester, 'subject_id'=>$subject->id, 
+                'ca_score'=>$rec['ca_score'], 'coef'=>$class_subject->coef ?? $subject->coef,
+                'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class->id.$semester.$subject->id.$subject->coef, 
+                'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'published'=>0
+            ];
+            $base = ['batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class_id, 'semester_id'=>$semester, 
+            'subject_id'=>$subject->id];
+    
+            Result::updateOrInsert($base, $data);
+        }
+        if(strlen($missing_students) > 0){
+            return back()->with('success', 'Done')->with('message', "Students with matricules {$missing_students} are not found");
+        }
+        return back()->with('success', 'Done');
+        
+    }
+
+    public function course_ca_import_clear(Request $request, $class_id, $course_id, $year, $semester){
+        // return $request->all();
+        Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$course_id, 'class_id'=>$class_id])->each(function($row){
+            $row->exam_score == null ? $row->delete() : $row->update(['ca_score'=>0]);
+        });
+        return back()->with('sucess', 'Done');
         
     }
 
