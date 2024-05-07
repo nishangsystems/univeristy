@@ -390,12 +390,13 @@ class HomeController extends Controller
 
         // check if CA total is set forthis program
 
-        $data['title'] = "Import CA";
         $data['year_id'] = $year;
         $data['semester_id'] = $semester;
         $data['class_id'] = $class_id;
-        $subject = Subjects::find($course_id)->first();
+        $subject = Subjects::find($course_id);
+
         $program_level = ProgramLevel::find($class_id);
+        $data['title'] = "Import CA For [{$subject->code}] {$subject->name}";
         $data['semesters'] = Helpers::instance()->getSemesters($program_level->id)->where('is_main_semester', 1);
         $data['course_code'] = $subject->code;
         $data['classes'] = HomeController::sorted_program_levels();
