@@ -135,7 +135,7 @@
                         <div class="py-2 my-3 alert alert-info text-center border-top border-bottom">
                             <b>{{ $title2 ?? 'Uploaded CA Marks' }}</b> <hr class="my-1">
                             @if ($can_update_ca)
-                                <a class="btn btn-danger btn-sm rounded px-5 py-1 text-capitalize" onclick="clearResult(`{{ route('admin.result.ca.special.clear', ['year'=>$year_id, 'semester'=>$semester_id, 'course_code'=>$course_code]) }}`)"><b>{{ $delete_label }}</b></a>
+                                <a class="btn btn-danger btn-sm rounded px-5 py-1 text-capitalize" onclick="clearResult(`{{ route('user.class_course.ca.import.clear', ['year'=>$year_id, 'semester'=>$semester_id, 'course_id'=>$course->id]) }}`)"><b>{{ $delete_label }}</b></a>
                             @else
                                 <div class="alert-danger py-3 border-top border-bottom text-uppercase text-center"><b>@lang('text.cant_alter_ca_after_exam_is_uploaded')</b></div>
                             @endif

@@ -746,6 +746,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::get('ca/fill', 'Teacher\HomeController@course_ca_fill')->name('ca.result');
         Route::get('ca/import/{year?}/{semester?}', 'Teacher\HomeController@course_ca_import')->name('ca.import');
         Route::post('ca/import/{year?}/{semester?}', 'Teacher\HomeController@course_ca_import_save');
+        Route::post('ca/import/{year}/{semester}/clear', 'Teacher\HomeController@course_ca_import_clear')->name('ca.import.clear');
         Route::get('exam/fill', 'Teacher\HomeController@course_exam_fill')->name('exam.result');
         Route::get('exam/import', 'Teacher\HomeController@course_exam_import')->name('exam.import');
         Route::post('exam/import', 'Teacher\HomeController@course_exam_import_save');
