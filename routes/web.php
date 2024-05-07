@@ -744,8 +744,8 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
     // Route::get('{program_level_id}/class_courses', 'Teacher\HomeController@manage_courses')->name('edit.class_courses');
     Route::prefix('{class_id}/course/{course_id}')->name('class_course.')->group(function () {
         Route::get('ca/fill', 'Teacher\HomeController@course_ca_fill')->name('ca.result');
-        Route::get('ca/import', 'Teacher\HomeController@course_ca_import')->name('ca.import');
-        Route::post('ca/import', 'Teacher\HomeController@course_ca_import_save');
+        Route::get('ca/import/{year?}/{semester?}', 'Teacher\HomeController@course_ca_import')->name('ca.import');
+        Route::post('ca/import/{year?}/{semester?}', 'Teacher\HomeController@course_ca_import_save');
         Route::get('exam/fill', 'Teacher\HomeController@course_exam_fill')->name('exam.result');
         Route::get('exam/import', 'Teacher\HomeController@course_exam_import')->name('exam.import');
         Route::post('exam/import', 'Teacher\HomeController@course_exam_import_save');

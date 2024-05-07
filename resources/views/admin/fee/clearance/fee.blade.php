@@ -4,9 +4,9 @@
         <button class="btn btn-primary rounded btn-sm text-uppercase" onclick="printClearance()">print</button>
     </div>
     <div class="py-3 px-4 border" id="clearance_panel">
-        <div class="text-center h3 font-weight-bold my-4 text-underline">{{ $data['institution']->name }}</div>
+        {{-- <div class="text-center h3 font-weight-bold my-4 text-underline">{{ $data['institution']->name }}</div> --}}
         <div class="d-flex justify-content-center py-2 my-4">
-            <img src="{{ asset('assets/images/avatars/logo.png') }}" alt="" srcset="" style="width: 14rem; height: 14rem;">
+            <img src="{{ $helpers->getHeader() }}" alt="" srcset="" style="width: 100%; height: auto;">
         </div>
         <div class="py-2">
             <div class="font-weight-bold h6">@lang('text.department_of_finance')</div>
@@ -45,27 +45,27 @@
         </table>
 
         <div class="margin-top-5 padding-top-5 row">
-            <div class="col-sm-7 my-5 py-3 d-flex">
+            <div class="col-sm-7 my-1 py-2 d-flex">
                 <span class="text-uppercase font-weight-bold">checked by:</span>
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
-            <div class="col-sm-5 my-5 py-3 d-flex">
+            <div class="col-sm-5 my-1 py-2 d-flex">
                 <span class="text-uppercase font-weight-bold">signature:</span>
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
         </div>
         <div class="margin-top-2 padding-top-2 d-flex justify-content-center">
-            <div class="col-sm-7 my-5 py-3 d-flex">
+            <div class="col-sm-7 my-1 py-2 d-flex">
                 <span class="text-uppercase font-weight-bold">approved by:</span>
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
         </div>
         <div class="margin-top-2 padding-top-2 row">
-            <div class="col-sm-5 my-5 py-3 d-flex">
+            <div class="col-sm-5 my-1 py-2 d-flex">
                 <span class="text-uppercase font-weight-bold">signature:</span>
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
-            <div class="col-sm-4 my-5 py-3 d-flex">
+            <div class="col-sm-4 my-1 py-2 d-flex">
                 <span class="text-uppercase font-weight-bold">on the:</span>
                 <div style="flex:auto;" class="border-bottom py-2"></div>
             </div>
