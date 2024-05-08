@@ -549,7 +549,7 @@ class HomeController  extends Controller
                         $campus_id != null ? $query->where(['students.campus_id'=>$campus_id]) : null;
                     })                    
                     ->select(['subjects.*', 'resit_id', 'year_id'])->orderBy('subjects.name')->distinct()->get();
-        // dd($data['courses']);
+        dd($data['courses']);
         $data['resit'] = $resit;
         if($request->has('print') && $request->print == 1){
             $pdf = Pdf::loadView('admin.resit.course_list_downloadable', $data);
@@ -561,9 +561,9 @@ class HomeController  extends Controller
     public function resit_course_list_download(Request $request, $resit_id, $subject_id)
     {
         # code...
-        $subject = Subjects::find($request->subject_id);
-        $data['title'] = __('text.resit_course_list_for', ['item'=>Resit::find($request->resit_id)->name]);
-        $data['subjects'] = Subjects::find($request->subject_id)->student_subjects()->where(['resit_id' => $request->resit_id])->whereNotNull('paid')
+        $subject = Subjects::find($subject_id);
+        $data['title'] = __('text.resit_course_list_for', ['item'=>Resit::find($resit_id)->name??null]);
+        $data['subjects'] = $subject->student_subjects()->where(['student_courses.resit_id' => $resit_id])->whereNotNull('student_courses.paid')
                         ->join('students',  ['students.id'=>'student_courses.student_id'])
                         ->orderBy('students.name')->get(['student_courses.*']);
         if($request->print == 1){
