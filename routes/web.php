@@ -473,9 +473,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('/update/{id}', 'Admin\CampusesController@delete')->name('delete');
         Route::get('/{id}/programs', 'Admin\CampusesController@programs')->name('programs');
         Route::get('/{id}/programs/{program_id}/set_fee', 'Admin\CampusesController@set_program_fee')->name('set_fee');
+        Route::post('/{id}/programs/{program_id}/set_fee', 'Admin\CampusesController@save_program_fee');
         Route::get('/{id}/programs/{program_id}/add', 'Admin\CampusesController@add_program')->name('add_program');
         Route::get('/{id}/programs/{program_id}/drop', 'Admin\CampusesController@drop_program')->name('drop_program');
-        Route::post('/{id}/programs/{program_id}/set_fee', 'Admin\CampusesController@save_program_fee');
     });
     Route::prefix('schools')->name('schools.')->group(function(){
         Route::get('/', 'Admin\SchoolsController@index')->name('index');
