@@ -448,6 +448,7 @@ class HomeController extends Controller
         }
 
         $class = ProgramLevel::find($class_id);
+        $_sem = Semester::find($semester);
         foreach($file_data as $rec){
             $student = Students::where('matric', $rec['matric'])->first();
             
@@ -457,7 +458,7 @@ class HomeController extends Controller
             }
             $class_subject = $class->class_subjects()->where('subject_id', $subject->id)->first();
             $data = [
-                'batch_id'=>$year, 'student_id'=>$student->id, 'semester_id'=>$semester, 'subject_id'=>$subject->id, 
+                'batch_id'=>$year, 'student_id'=>$student->id, 'semester_id'=>$_sem->sem, 'subject_id'=>$subject->id, 
                 'ca_score'=>$rec['ca_score'], 'coef'=>$class_subject->coef ?? $subject->coef,
                 'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class->id.$semester.$subject->id.$subject->coef, 
                 'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'published'=>0
@@ -476,8 +477,9 @@ class HomeController extends Controller
 
     public function course_ca_import_clear(Request $request, $class_id, $course_id, $year, $semester){
         // return $request->all();
-        Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$course_id, 'class_id'=>$class_id])->each(function($row){
-            $row->exam_score == null ? $row->delete() : $row->update(['ca_score'=>0]);
+        $sem = Semester::find($semester);
+        Result::where(['batch_id'=>$year, 'semester_id'=>$sem->sem, 'subject_id'=>$course_id, 'class_id'=>$class_id])->each(function($row){
+            $row->exam_score == null ? $row->delete() : $row->update(['ca_score'=>null]);
         });
         return back()->with('sucess', 'Done');
         

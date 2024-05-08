@@ -684,6 +684,7 @@ class ResultController extends Controller
         // write CA results to database
         $missing_students = "";
         $subject = Subjects::where('code', $course_code)->first();
+        $sem = Semester::find($semester);
         if($subject == null){
             return back()->withInput()->with('error', "Course with course code {$course_code} not found");
         }
@@ -697,7 +698,7 @@ class ResultController extends Controller
             $class = $student->a_class($year);
             $class_subject = $class->class_subjects()->where('subject_id', $subject->id)->first();
             $data = [
-                'batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class->id, 'semester_id'=>$semester, 
+                'batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class->id, 'semester_id'=>$sem->sem, 
                 'subject_id'=>$subject->id, 'ca_score'=>$rec['ca_score'], 'coef'=>$class_subject->coef ?? $subject->coef,
                 'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class->id.$semester.$subject->id.$subject->coef, 
                 'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'published'=>0
@@ -772,13 +773,14 @@ class ResultController extends Controller
         // read file data into an array
         $file_data = [];
         while(($row = fgetcsv($reading_stream, 1000)) != null){
-            $file_data[] = ['matric'=>$row[1], 'exam_score'=>$row[2]];
+            $file_data[] = ['matric'=>$row[0], 'exam_score'=>$row[1]];
         }
         fclose($reading_stream);
 
         // write CA results to database
         $missing_students = "";
         $subject = Subjects::where('code', $course_code)->first();
+        $sem = Semester::find($semester);
         if($subject == null){
             return back()->withInput()->with('error', "Course with course code {$course_code} not found");
         }
@@ -792,7 +794,7 @@ class ResultController extends Controller
             $class = $student->a_class($year);
             $class_subject = $class->class_subjects()->where('subject_id', $subject->id)->first();
             $data = [
-                'batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class->id, 'semester_id'=>$semester, 
+                'batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class->id, 'semester_id'=>$sem->sem, 
                 'subject_id'=>$subject->id, 'exam_score'=>$rec['exam_score'], 'coef'=>$class_subject->coef ?? $subject->coef,
                 'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class->id.$semester.$subject->id.$subject->coef, 
                 'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'published'=>0
@@ -813,7 +815,7 @@ class ResultController extends Controller
         $subject = Subjects::where('code', $course_code)->first();
         if($subject != null){
             Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$subject->id])->each(function($row){
-                ($row->ca_score == null) ? $row->delete() : $row->update('exam_score'=>null);
+                ($row->ca_score == null) ? $row->delete() : $row->update(['exam_score'=>null]);
             });
             return back()->with('sucess', 'Done');
         }else{
@@ -885,6 +887,7 @@ class ResultController extends Controller
         }
 
         $class = ProgramLevel::find($class_id);
+        $_sem = Semester::find($semester);
         foreach($file_data as $rec){
             $student = Students::where('matric', $rec['matric'])->first();
             
@@ -894,7 +897,7 @@ class ResultController extends Controller
             }
             $class_subject = $class->class_subjects()->where('subject_id', $subject->id)->first();
             $data = [
-                'batch_id'=>$year, 'student_id'=>$student->id, 'semester_id'=>$semester, 'subject_id'=>$subject->id, 
+                'batch_id'=>$year, 'student_id'=>$student->id, 'semester_id'=>$_sem->sem, 'subject_id'=>$subject->id, 
                 'ca_score'=>$rec['ca_score'], 'exam_score'=>$rec['exam_score'], 'coef'=>$class_subject->coef ?? $subject->coef,
                 'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class->id.$semester.$subject->id.$subject->coef, 
                 'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'published'=>0
