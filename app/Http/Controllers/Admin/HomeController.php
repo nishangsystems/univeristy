@@ -558,7 +558,7 @@ class HomeController  extends Controller
         return view('admin.resit.course_list', $data);
     }
 
-    public function resit_course_list_download(Request $request)
+    public function resit_course_list_download(Request $request, $resit_id, $subject_id)
     {
         # code...
         $subject = Subjects::find($request->subject_id);
@@ -571,7 +571,7 @@ class HomeController  extends Controller
             $pdf = Pdf::loadView('admin.resit._course_list_print', $data);
             return $pdf->download(__('text.resit_course_list_for', ['item'>"[ ".$subject->code .' ] '. $subject->name.' - '.Resit::find($request->resit_id)->year->name . '.pdf']));
         }
-        // dd($data['subjects']);
+        dd($data['subjects']);
         return view('admin.resit.course_list_print', $data);
     }
 
