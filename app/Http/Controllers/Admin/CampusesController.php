@@ -10,6 +10,7 @@ use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 
 class CampusesController extends Controller
@@ -194,9 +195,15 @@ class CampusesController extends Controller
             $tution_inst->year_id = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
             $tution_inst->slug = Hash::make('TUTION');
             $tution_inst->amount = $request->fees;
-            $tution_inst->first_instalment = $request->first_instalment;
-            $tution_inst->second_instalment = $request->second_instalment;
-            $tution_inst->international_amount = $request->international_amount;
+            if(Schema::hasColumn('payment_items', 'first_instalment')){
+                $tution_inst->first_instalment = $request->first_instalment;
+            }
+            if(Schema::hasColumn('payment_items', 'second_instalment')){
+                $tution_inst->second_instalment = $request->second_instalment;
+            }
+            if(Schema::hasColumn('payment_items', 'international_amount')){
+                $tution_inst->international_amount = $request->international_amount;
+            }
             $tution_inst->save();
     
             // save registration fee
