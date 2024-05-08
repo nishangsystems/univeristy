@@ -549,7 +549,7 @@ class HomeController  extends Controller
                         $campus_id != null ? $query->where(['students.campus_id'=>$campus_id]) : null;
                     })                    
                     ->select(['subjects.*', 'resit_id', 'year_id'])->orderBy('subjects.name')->distinct()->get();
-        dd($data['courses']);
+        // dd($data['courses']);
         $data['resit'] = $resit;
         if($request->has('print') && $request->print == 1){
             $pdf = Pdf::loadView('admin.resit.course_list_downloadable', $data);
@@ -571,7 +571,7 @@ class HomeController  extends Controller
             $pdf = Pdf::loadView('admin.resit._course_list_print', $data);
             return $pdf->download(__('text.resit_course_list_for', ['item'>"[ ".$subject->code .' ] '. $subject->name.' - '.Resit::find($request->resit_id)->year->name . '.pdf']));
         }
-        dd($data['subjects']);
+        // dd($data['subjects']);
         return view('admin.resit.course_list_print', $data);
     }
 
