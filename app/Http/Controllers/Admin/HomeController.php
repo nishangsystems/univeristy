@@ -540,11 +540,14 @@ class HomeController  extends Controller
         }
         $data['title'] = __('text.course_list_for', ['item'=>$resit->name]);
         // return 'nonsense going on here';
+        $campus_id = auth()->user()->campus_id;
         $data['courses'] = Subjects::join('student_courses', ['student_courses.course_id'=>'subjects.id'])
                     ->whereNotNull('student_courses.paid')
-                    ->where(['student_courses.resit_id'=>$resit_id, 'student_courses.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
+                    ->where(['student_courses.resit_id'=>$resit_id])
                     ->join('students', ['students.id'=>'student_courses.student_id'])
-                    ->where(['students.campus_id'=>auth()->user()->campus_id])
+                    ->where(function($query)use($campus_id){
+                        $campus_id != null ? $query->where(['students.campus_id'=>$campus_id]) : null;
+                    })                    
                     ->select(['subjects.*', 'resit_id', 'year_id'])->orderBy('subjects.name')->distinct()->get();
         // dd($data['courses']);
         $data['resit'] = $resit;
