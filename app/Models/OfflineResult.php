@@ -16,7 +16,7 @@ class OfflineResult extends Model
     ];
     protected $connection = 'mysql';
 
-    protected $table = 'offline_results';
+    protected $table = 'results';
     
     public function student()
     {
