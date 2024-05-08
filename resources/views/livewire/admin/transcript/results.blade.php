@@ -211,8 +211,10 @@
             @component('livewire.admin.transcript.year',['batch'=>$batch,'isLast'=>($page == count($results)),
                 'tca'=>$totalCreditAttempted,
                 'tce'=>$totalCreditEarned,
-                'tgpa'=>$gpa]
+                'tgpa'=>$gpa
+                ]
             )@endcomponent
+
             </tbody>
         </table>
         <div style="display: flex; justify-content: center; font-weight: bold">Registra</div>

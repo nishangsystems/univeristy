@@ -24,37 +24,11 @@
     <link rel="stylesheet" href="{{asset('richtexteditor/rte_theme_default.css')}}" />
     <script type="text/javascript" src="{{asset('/richtexteditor/rte.js')}}"></script>
     <script type="text/javascript" src="{{asset('/richtexteditor/plugins/all_plugins.js')}}"></script>
-    
-    
-    <!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js"></script> -->
+    @livewireStyles
 
     <STYLE>
         body {
             font-family: Arial, Helvetica, sans-serif;
-        }
-        .input-group {
-            position: relative;
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: stretch;
-            width: 100%;
-        }
-        .dt-button{
-            background-image: none!important;
-            border: 1px solid #FFF;
-            border-radius: 0;
-            padding: 5px 20px;
-            border-radius: 5px;
-            box-shadow: none!important;
-            -webkit-transition: background-color .15s,border-color .15s,opacity .15s;
-            -o-transition: background-color .15s,border-color .15s,opacity .15s;
-            transition: background-color .15s,border-color .15s,opacity .15s;
-            vertical-align: middle;
-            margin: 0;
-            position: relative;
         }
         table{padding: 0px !important}
         table th, table td{
@@ -1866,5 +1840,6 @@
     })(jQuery)
 </script>
 @yield('script')
+@livewireScripts
 </body>
 </html>

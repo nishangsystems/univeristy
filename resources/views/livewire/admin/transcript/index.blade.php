@@ -33,6 +33,7 @@
                     tbody_content ='';
                     let k = 1;
                     var link = "{{route('admin.transcript.results', "VALUE")}}";
+                    var hnd = "{{route('admin.hnd.results', "VALUE")}}";
                     data.forEach(element => {
                         tbody_content += `<tr class="border-top border-bottom border-secondary">
                             <td class="border-left boder-right border-secondary">${k++}</td>
@@ -41,7 +42,8 @@
                             <td class="border-left boder-right border-secondary">${element.year}</td>
                             <td class="border-left boder-right border-secondary">${element.class}</td>
                             <td class="border-left boder-right border-secondary">
-                                <a class="btn btn-sm btn-primary" target="_blank" href="${link.replace("VALUE", element.id)}">{{__('text.word_print')}}</a>
+                                <a class="btn btn-sm btn-primary" href="${hnd.replace("VALUE", element.id)}">{{__('text.hnd_results')}}</a>
+                                <a class="btn btn-sm btn-primary" target="_blank" href="${link.replace("VALUE", element.id)}">{{__('text.print_transcript')}}</a>
                             </td>
                         </tr>`;
                     });
