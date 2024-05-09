@@ -28,7 +28,6 @@
             max-width: 280mm !important;
             border: none;
             width: 100%;
-            height: 180mm;
             margin:10px 20px;
             font-size: 10px !important;
             border-spacing: 0;
@@ -109,7 +108,7 @@
         }
 
         .score{
-            width: 35px;
+            width: 23px;
             padding: 2px 5px;
             display: flex;
             align-items: center;
@@ -139,12 +138,12 @@
 @endphp
 @foreach($results as $batch)
     <div class="page landscape">
-        <table border="0" cellspacing="0" cellpadding="0">
+        <table border="0" cellspacing="0" cellpadding="0" style="height: {{$page == count($results)?"180mm;":"190mm;"}}">
             <tbody>
             <tr style="height: 30px">
                 <td colspan="6" rowspan="2" width="34%">
                     <p style="font-weight: bold; font-size: 11px;" class="mt-0"> ST LOUIS UNIVERSITY INSTITUTE<BR>
-                    <p style="font-size:11px; font-weight:bold">Medical Studies, Engineering & Technology ,
+                    <p style="font-size:11px; margin: 1px 0px; font-weight:bold">Medical Studies, Engineering & Technology ,
                         Agriculture</p>
                     <div class="font-10">
                         22-02 902/L/MINESUP/DDES/SD-ESUP/SDA/ANAP OF MAY,2022
@@ -177,8 +176,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="13" style="font-weight: bold">Date of Enrolment : {{$student->batch->name}}</td>
-                    <td colspan="5" rowspan="2" style="font-weight: bold">
+                    <td colspan="13" style="font-weight: bold; padding: 0px 5px;">Date of Enrolment : {{$student->batch->name}}</td>
+                    <td colspan="5" rowspan="2" style="font-weight: bold; padding: 0px 5px">
                         @foreach($gradings as $grade)
                             <div style="display: flex;">
                                 <div  class="grade">{{$grade->grade}}</div>
@@ -192,17 +191,19 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="13" style="font-weight: bold;  height: 70px;">
-                        @php
-                            $program = \App\Models\ProgramLevel::find($student->_class()->id)->program;
-                        @endphp
-                        <div style="display: flex">
-                            <span style="width: 120px;">Department :</span>
-                            <span>{{$program->name}}</span>
-                        </div>
+                    <td colspan="13" style="font-weight: bold;  height: 70px; padding: 0px 5px; ">
+                       <div style="display: flex; flex-direction: column; justify-content: space-around; height: 100%;">
+                           @php
+                               $program = \App\Models\ProgramLevel::find($student->_class()->id)->program;
+                           @endphp
+                           <div style="display: flex">
+                               <span style="width: 120px;">Department :</span>
+                               <span>{{$program->name}}</span>
+                           </div>
 
-                        <div style="display: flex"> <span style="width: 120px">Degree Conferred :</span></div>
-                        <div style="display: flex"> <span style="width: 120px">Date :</span></div>
+                           <div style="display: flex"> <span style="width: 120px">Degree Conferred :</span></div>
+                           <div style="display: flex"> <span style="width: 120px">Date :</span></div>
+                       </div>
                     </td>
                 </tr>
 
@@ -217,7 +218,9 @@
 
             </tbody>
         </table>
-        <div style="display: flex; justify-content: center; font-weight: bold">Registra</div>
+        @if($page == count($results))
+            <div style="display: flex; justify-content: center; font-weight: bold">Registra</div>
+        @endif
     </div>
     @php
         $page ++;
