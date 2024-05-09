@@ -47,7 +47,7 @@ class Resit extends Model
         # code...
         return $this->hasMany(StudentSubject::class, 'resit_id')->where(function ($qr) use ($student_id) {
             $student_id == null ? null : $qr->where(['student_id' => $student_id]);
-        });
+        })->groupBy('course_id')->distinct();
     }
     
 }
