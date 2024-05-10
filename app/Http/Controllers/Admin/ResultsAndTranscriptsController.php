@@ -275,7 +275,11 @@ class ResultsAndTranscriptsController extends Controller{
             return back()->withInput();
         }
 
-        $data = ['batch_id'=>$year_id, 'student_id'=>]
+        $update = ['ca_score'=>$request->ca_score, 'exam_score'=>$request->exam_score, 'reference'=>'missing addition'];
+        $base = ['batch_id'=>$year_id, 'student_id'=>$student_id, 'subject_id'=>$request->course_id, 'semester_id'=>$semester_id];
+        Result::updateOrInsert($base, $update);
+
+        return back()->with('success', 'Done');
     }
 
 }
