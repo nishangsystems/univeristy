@@ -276,8 +276,8 @@ class ResultsAndTranscriptsController extends Controller{
         }
 
         $student = Students::find($student_id);
-        $class = $student->_class($year_id);
-        $update = ['ca_score'=>$request->ca_score, 'exam_score'=>$request->exam_score, 'class_id'=>$class->id??null, 'reference'=>'__MISSING__'];
+        $class = $student->_class();
+        $update = ['ca_score'=>$request->ca_score, 'exam_score'=>$request->exam_score, 'class_id'=>$class->id??0, 'reference'=>'__MISSING__'];
         $base = ['batch_id'=>$year_id, 'student_id'=>$student_id, 'subject_id'=>$request->course_id, 'semester_id'=>$semester_id];
         Result::updateOrInsert($base, $update);
 
