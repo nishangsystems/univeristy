@@ -36,7 +36,7 @@
                             <td class="border-left border-right border-secondary">{{$student->name}}</td>
                             <td class="border-left border-right border-secondary">{{$student->matric}}</td>
                             @foreach($courses as $course)
-                                <td class="border-left border-right border-secondary">{{$student->offline_ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                <td class="border-left border-right border-secondary">{{$student->ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
                             @endforeach
                         </tr>
                     @endforeach

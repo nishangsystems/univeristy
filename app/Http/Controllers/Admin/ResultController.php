@@ -503,7 +503,7 @@ class ResultController extends Controller
                     ->orWhere('matric', 'like', "%{$request->searchValue}%");
             })
                 ->join('student_classes', ['student_classes.student_id' => 'students.id'])
-                ->get(['student_classes.id', 'student_classes.year_id', 'student_classes.class_id', 'students.name', 'students.id as student_id', 'students.matric']);
+                ->select(['student_classes.id', 'student_classes.year_id', 'student_classes.class_id', 'students.name', 'students.id as student_id', 'students.matric'])->take(30)->get();
     
             return \response()->json(ResultResource::collection($instances));
 
@@ -928,5 +928,10 @@ class ResultController extends Controller
         }else{
             return back()->with('error', "Course not found");
         }
+    }
+
+
+    public function get_record($student_id, $year_id, $semester_id, $course_id){
+        return Result::where(['batch_id'=>$year_id, 'student_id'=>$student_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id])->first();
     }
 }

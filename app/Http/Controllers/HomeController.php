@@ -77,16 +77,29 @@ class HomeController extends Controller
         ]);
     }
 
+    public function student_semesters($student_id){
+        try{
+            $student = \App\Models\Students::find($student_id);
+            $class = $student->_class()->id ?? null;
+            return \App\Helpers\Helpers::instance()->getSemesters($class);
+        }catch(\Throwable $th){
+            return $th->getMessage();
+        }
+    }
+
     public function student($name)
     {
+        return 2222;
         $students = Students::join('student_classes', ['students.id' => 'student_classes.student_id'])
             ->join('campuses', ['students.campus_id' => 'campuses.id'])
             ->where('student_classes.year_id', Helpers::instance()->getYear())
             ->join('program_levels', ['students.program_id' => 'program_levels.id'])
             ->join('school_units', ['program_levels.program_id' => 'school_units.id'])
             ->join('levels', ['program_levels.level_id' => 'levels.id'])
-            ->where('students.name', 'LIKE', "%{$name}%")
-            ->orWhere('students.matric', '=', $name)
+            ->where(function($qry)use($name){
+                $qry->where('students.name', 'LIKE', "%{$name}%")
+                    ->orWhere('students.matric', '=', $name);
+            })
             ->take(10)
             ->get(['students.*', 'campuses.name as campus']);
 
@@ -117,6 +130,7 @@ class HomeController extends Controller
 
     public function searchStudents($name)
     {
+        // return $name;
         $name = str_replace('/', '\/', $name);
         try {
             //code...

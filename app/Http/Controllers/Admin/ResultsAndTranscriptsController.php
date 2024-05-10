@@ -254,19 +254,28 @@ class ResultsAndTranscriptsController extends Controller{
     }
 
 
-    public function alter_student_results(Request $request, $student_id = null, $year_id = null, $course_id = null){
-        $data = ['title'=>'Alter Student Results', 'student_id'=>$student_id, 'year_id'=>$year_id, 'course_id'=>$course_id];
+    public function alter_student_results(Request $request, $student_id = null, $year_id = null, $semester_id = null){
+        $data = ['title'=>'Alter Student Results', 'student_id'=>$student_id, 'year_id'=>$year_id, 'semester_id'=>$semester_id];
         $data['years'] = Batch::all();
         if($student_id != null){
             $data['student'] = Students::find($student_id);
+            $data['semester'] = \App\Models\Semester::find($semester_id);
             $data['title'] = "Alter Student Results For {$data['student']->name}";
         }
         return view('admin.res_and_trans.alter_results', $data);
     }
 
 
-    public function alter_save_student_results(Request $request, $student_id = null, $year_id = null, $course_id = null){
+    public function alter_save_student_results(Request $request, $student_id = null, $year_id = null, $semester_id = null){
+        
+        $validity = Validator::make($request->all(), ['course_id'=>'required', 'exam_score'=>'required']);
 
+        if($validity->fails()){
+            session()->flash('error', $validity->errors()->first());
+            return back()->withInput();
+        }
+
+        $data = ['batch_id'=>$year_id, 'student_id'=>]
     }
 
 }
