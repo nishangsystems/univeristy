@@ -280,6 +280,7 @@ class HomeController extends Controller
                     $exam_mark = $data['user']->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
                     
                     $total = $ca_mark + $exam_mark;
+                    if($total == 0){ return null;}
                     $rol = [
                         'id'=>$subject_id,
                         'code'=>Subjects::find($subject_id)->code ?? '',
@@ -373,6 +374,9 @@ class HomeController extends Controller
                 $ca_mark = $data['user']->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
                 $exam_mark = $data['user']->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
                 $total = $ca_mark + $exam_mark;
+                if($total == 0){
+                    return null;
+                }
                 $rol = [
                     'id'=>$subject_id,
                     'code'=>Subjects::find($subject_id)->code ?? '',
