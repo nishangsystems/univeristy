@@ -121,8 +121,8 @@ class HomeController extends Controller
         $data['ca_total'] = $class->program()->first()->ca_total;
         $data['semester'] = $semester;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
-        $registered_courses = $user->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
-        $res = $user->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->toArray();
+        $registered_courses = $user->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->unique()->toArray();
+        $res = $user->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->unique()->toArray();
         $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
         $results = array_map(function($subject_id)use($user, $year, $semester){
             return [
@@ -155,8 +155,8 @@ class HomeController extends Controller
         $data['ca_total'] = $class->program()->first()->ca_total;
         $data['semester'] = $semester;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
-        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->toArray();
-        $registered_courses = $data['user']->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
+        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->unique()->toArray();
+        $registered_courses = $data['user']->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->unique()->toArray();
         $data['subjects'] = $class->subjects()->whereIn('subjects.id', $res)->get();
         $results = array_map(function($subject_id)use($data, $year, $semester){
             return [
@@ -189,8 +189,8 @@ class HomeController extends Controller
         $data['ca_total'] = auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->ca_total;
         $data['semester'] = $semester;
         $data['grading'] = auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->program()->first()->gradingType->grading()->get() ?? [];
-        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->toArray();
-        $registered_courses = $data['user']->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
+        $res = auth('student')->user()->result()->where('results.batch_id', '=', $year)->where('results.semester_id', '=', $semester->id)->pluck('subject_id')->unique()->toArray();
+        $registered_courses = $data['user']->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->unique()->toArray();
         $data['subjects'] = Auth('student')->user()->_class(Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
         $data['results'] = array_map(function($subject_id)use($data, $year, $semester){
             return [
@@ -202,9 +202,9 @@ class HomeController extends Controller
                 'ca_mark'=>$data['user']->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? '',
             ];
         }, $res);
-        dd($data['results']);
+        // dd($data['results']);
         $pdf = PDF::loadView('student.templates.ca-result-template',$data);
-        // return $pdf->render(auth('student')->user()->matric.'_'.$semester->name.'_CA_RESULTS.pdf');
+        return $pdf->download(auth('student')->user()->matric.'_'.$semester->name.'_CA_RESULTS.pdf');
         // return view('student.templates.ca-result-template')->with($data);
     }
 
@@ -264,8 +264,9 @@ class HomeController extends Controller
                 $data['exam_total'] = $class->program()->first()->exam_total;
                 $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
                 $res = $data['user']->result()->where('results.batch_id', '=', $year->id)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
-                $_registered_courses = $data['user']->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
-                $registered_courses = count($_registered_courses) > 0 ? $_registered_courses : $data['user']->registered_courses($year->id)->whereNotNull('resit_id')->pluck('course_id')->toArray();
+                
+                $_registered_courses = $data['user']->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->unique()->toArray();
+                $registered_courses = count($_registered_courses) > 0 ? $_registered_courses : $data['user']->registered_courses($year->id)->whereNotNull('resit_id')->pluck('course_id')->unique()->toArray();
       
                 if(count($registered_courses) == 0){
                     session()->flash('error', __('text.no_courses_registered_phrase'));
@@ -360,8 +361,8 @@ class HomeController extends Controller
             $non_gpa_courses = NonGPACourse::pluck('id')->toArray();
             $res = $data['user']->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
     
-            $_registered_courses = $data['user']->registered_courses($year)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
-            $registered_courses = count($_registered_courses) > 0 ? $_registered_courses : $data['user']->registered_courses($year)->whereNotNull('resit_id')->pluck('course_id')->toArray();
+            $_registered_courses = $data['user']->registered_courses($year)->where('semester_id', $semester->id)->pluck('course_id')->unique()->toArray();
+            $registered_courses = count($_registered_courses) > 0 ? $_registered_courses : $data['user']->registered_courses($year)->whereNotNull('resit_id')->pluck('course_id')->unique()->toArray();
     
             if(count($registered_courses) == 0){
                 session()->flash('error', __('text.no_courses_registered_phrase'));
