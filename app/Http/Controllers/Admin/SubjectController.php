@@ -34,7 +34,6 @@ class SubjectController extends Controller
             'name' => 'required',
             'coef' => 'required',
             'code'=>'required',
-            'level'=>'required',
             'semester'=>'required',
             'status'=>'required',
         ]);
@@ -46,7 +45,6 @@ class SubjectController extends Controller
         $subject->coef = $request->input('coef');
         $subject->code = $request->input('code');
         $subject->status = $request->input('status');
-        $subject->level_id = $request->input('level');
         $subject->semester_id = $request->input('semester');
         $subject->save();
         return back()->with('success', "Subject Created!");

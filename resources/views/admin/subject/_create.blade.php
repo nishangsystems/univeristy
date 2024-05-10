@@ -23,17 +23,6 @@
             </div>
         </div>
         <div class="row my-2">
-            <label for="" class="col-md-3">{{__('text.word_level')}}</label>
-            <div class="col-md-9 col-lg-9">
-                <select name="level" id="" required class="form-control">
-                    <option value="">{{__('text.select_level')}}</option>
-                    @foreach(\App\Models\Level::all() as $level)
-                    <option value="{{$level->id}}">{{$level->level}}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <div class="row my-2">
             <label for="" class="col-md-3">{{__('text.word_status')}}</label>
             <div class="col-md-9 col-lg-9">
                 <select name="status" id="" required class="form-control text-uppercase">
