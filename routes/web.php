@@ -568,6 +568,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('grd_sheet', [ResultsAndTranscriptsController::class, 'grades_sheet'])->name('grd_sheet');
         Route::get('alter_result/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_student_results'])->name('alter_results');
         Route::post('alter_result/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_save_student_results']);
+        Route::get('alter_delete_result/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_delete_student_results'])->name('alter_results');
+        Route::post('alter_delete_result/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_save_delete_student_results']);
         Route::name('transcripts.')->prefix('transcripts')->group(function () {
             Route::get('config', [ResultsAndTranscriptsController::class, 'configure_transcript'])->name('config');
             Route::post('config', [ResultsAndTranscriptsController::class, 'configure_save_transcript']);
