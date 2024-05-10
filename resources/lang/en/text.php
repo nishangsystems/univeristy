@@ -969,5 +969,7 @@ return [
     'clear_results_for'=>'clear :ccode results for :ccode for :semester :year',
     'alter_student_results'=>'alter student results',
     'hnd_results'=>'HND Result',
+    'transcript_fees'=>'transcript fees',
+    'marks_management'=>'marks management',
     ''
 ];

@@ -43,11 +43,10 @@
     @else
         @php
 
-            // dd($grades);
             $k = 1;
         @endphp
         <div class="my-2">
-            <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100">
+            <img src="{{ $helpers->getHeader() }}" alt="" class="w-100">
             <div class="text-center py-2">
                 <h4 class="text-decoration text-capitalize"><b>
                     {{ $_title }}

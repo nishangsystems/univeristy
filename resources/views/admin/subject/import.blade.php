@@ -28,7 +28,7 @@
                         </div>
                         
                         <div class="form-group @error('file') has-error @enderror" id="semesters-box">
-                            <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_semester')}} ({{__('text.word_required')}})</label>
+                            <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_file')}} ({{__('text.word_required')}})</label>
                             <div class="col-lg-10" id="semesters">
                                 <input class=" form-control" name="file" type="file" required />
                             </div>

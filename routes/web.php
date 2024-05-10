@@ -275,6 +275,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('publishing', 'Admin\ResultController@result_publishing')->name('publishing');
         Route::get('publish/{year}/{semester}', 'Admin\ResultController@publish_results')->name('publish');
         Route::get('unpublish/{year}/{semester}', 'Admin\ResultController@unpublish_results')->name('unpublish');
+        Route::get('get_record/{student_id}/{year_id}/{semester_id}/{course_id}', 'Admin\ResultController@get_record')->name('get_record');
 
         Route::post('store_results', 'Admin\ResultController@store_results')->name('store_result');
 
@@ -304,7 +305,6 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::post('special/{year?}/{semester?}/{course_code?}', 'Admin\ResultController@import_save_special_exam');
             Route::get('special/{year}/{semester}/{course_code}/clear', 'Admin\ResultController@clear_special_exam')->name('special.clear');
             Route::get('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import')->name('import');
-            Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import_save')->name('import');
             Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill')->name('fill');
             Route::post('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill_save')->name('fill');
             Route::get('{class_id?}', 'Admin\ResultController@exam_result')->name('index');
@@ -566,8 +566,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('passfail_report', [ResultsAndTranscriptsController::class, 'passfail_report'])->name('passfail_report');
         Route::post('sem_res_report', [ResultsAndTranscriptsController::class, 'semester_results_report'])->name('sem_res_report');
         Route::post('grd_sheet', [ResultsAndTranscriptsController::class, 'grades_sheet'])->name('grd_sheet');
-        Route::get('alter_result/{student_id?}/{year_id?}/{course_id?}', [ResultsAndTranscriptsController::class, 'alter_student_results'])->name('alter_results');
-        Route::post('alter_result/{student_id?}/{year_id?}/{course_id?}', [ResultsAndTranscriptsController::class, 'alter_save_student_results']);
+        Route::get('alter_result/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_student_results'])->name('alter_results');
+        Route::post('alter_result/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_save_student_results']);
         Route::name('transcripts.')->prefix('transcripts')->group(function () {
             Route::get('config', [ResultsAndTranscriptsController::class, 'configure_transcript'])->name('config');
             Route::post('config', [ResultsAndTranscriptsController::class, 'configure_save_transcript']);
@@ -655,6 +655,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('fee/generate/{student_id}', [Admin\ClearanceController::class, 'generate_fee_clearance'])->name('fee.generate');
         Route::post('fee/generate/{student_id}', [Admin\ClearanceController::class, 'save_fee_clearance']);
     });
+
+    
 
 });
 
@@ -961,6 +963,7 @@ Route::name('messages.')->prefix('messages')->group(function(){
 Route::get('search/students/boarders/{name}', 'HomeController@getStudentBoarders')->name('getStudentBoarder');
 
 Route::get('/campuses/{id}/programs', [Controller::class, 'sorted_campus_program_levels'])->name('campus.programs');
+Route::get('student/semesters/{student_id}', 'HomeController@student_semesters')->name('student_semesters');
 Route::get('semesters/{background}', function(Request $request){
     return \App\Models\Semester::where('background_id', $request->background)->get();
 })->name('semesters');

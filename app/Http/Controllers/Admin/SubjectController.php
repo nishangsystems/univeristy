@@ -281,7 +281,7 @@ class SubjectController extends Controller
                 // write file data to database
                 DB::beginTransaction();
                 foreach($input_data_array as $row){
-                    Subjects::updateOrInsert(['code'=>$row['code'], 'name'=>$row['name'], 'semester_id'=>$request->semester, 'level_id'=>$request->level??0], $row);
+                    Subjects::updateOrInsert(['code'=>$row['code'], 'name'=>$row['name'], 'semester_id'=>$request->semester], $row);
                 }
                 DB::commit();
                 return redirect(route('admin.subjects.index'))->with('success', 'Import complete');
