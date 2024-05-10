@@ -105,6 +105,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::get('transcript/index', [\App\Http\Livewire\Admin\Transcript\Index::class, '__invoke'])->name('transcript.index');
     Route::get('transcript/results/{student}', [\App\Http\Livewire\Admin\Transcript\Results::class, '__invoke'])->name('transcript.results');
+    Route::get('results/hnd/{student}', [\App\Http\Livewire\Admin\Transcript\HNDResults::class, '__invoke'])->name('hnd.results');
 
     Route::get('', 'Admin\HomeController@index')->name('home');
     Route::get('home', 'Admin\HomeController@index')->name('home');
@@ -270,7 +271,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('individual_results/{student_id}/print', 'Admin\ResultController@print_individual_results')->name('individual_results.print');
         Route::get('class_results', 'Admin\ResultController@class_results')->name('class_results');
         Route::post('class_results', 'Admin\ResultController@class_results');
-        Route::get('individual_results/instances/{searchValue}', 'Admin\ResultController@individual_instances')->name('individual.instances');
+        Route::get('individual_results/instances', 'Admin\ResultController@individual_instances')->name('individual.instances');
         Route::get('publishing', 'Admin\ResultController@result_publishing')->name('publishing');
         Route::get('publish/{year}/{semester}', 'Admin\ResultController@publish_results')->name('publish');
         Route::get('unpublish/{year}/{semester}', 'Admin\ResultController@unpublish_results')->name('unpublish');

@@ -18,7 +18,7 @@ class ResultResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'=> $this->id,
+            'id'=> $this->student_id,
             'name'=> $this->name,
             'matric'=>$this->matric,
             'year'=> Batch::find($this->year_id)->name,
