@@ -3,22 +3,23 @@
     <div class="py-4">
         <div class="my-4 container-lg-fluid mx-auto row">
             <div class="col-lg-5 my-2">
-                <input class="form-control" id="student_search" type="text" oninput="search_student(this)">
+                <input class="form-control" id="student_search" type="text" value="{{ ($student->matric??'').' : '. ($student->name??'') }}" oninput="search_student(this)">
                 <span class="text-secondary text-capitalize">{{ trans_choice('text.word_student', 1) }}</span>
-                <input name="student_id" type="hidden" id="student_id_field" onchange="load_semesters(this)">
+                <input name="student_id" type="hidden" id="student_id_field" value="{{ $student_id??'' }}" onchange="load_semesters(this)">
                 <div class="container-fluid" id="student_display_panel"></div>
             </div>
             <div class="col-lg-2 my-2">
                 <select class="form-control" id="year_id_field" name="year_id">
                     <option></option>
                     @foreach($years as $year)
-                        <option value="{{ $year->id }}">{{ $year->name }}</option>
+                        <option value="{{ $year->id }}" {{ $year_id == $year->id ? 'selected' : '' }}>{{ $year->name }}</option>
                     @endforeach
                 </select>
                 <span class="text-secondary text-capitalize">@lang('text.academic_year')</span>
             </div>
             <div class="col-lg-3 my-2">
                 <select class="form-control" id="semester_id_field" name="semester_id">
+                    <option value="{{ $semester_id??'' }}" selected>{{ $semester->name??null }}</option>
                 </select>
                 <span class="text-secondary text-capitalize">@lang('text.word_semester')</span>
             </div>
@@ -47,7 +48,7 @@
                             <span class="text-capitalize text-secondary">@lang('text.exam_mark')</span>
                         </div>
                         <div class="col-lg-2">
-                            <button class="btn btn-sm btn-primary rounded" type="submit">@lang('text.add_course')</button>
+                            <button id="save_course_button" class="btn btn-sm btn-primary rounded" type="submit">@lang('text.add_course')</button>
                         </div>
 
                     </form>
@@ -142,6 +143,9 @@
             $.ajax({
                 method: 'get', url: _url, success: function(data){
                     console.log(data)
+                    if(data.ca_score + data.exam_score > 0){
+                        $('#save_course_button').addClass('hidden');
+                    }
                     $('#ca_score').val(data.ca_score);
                     $('#exam_score').val(data.exam_score);
                 }
