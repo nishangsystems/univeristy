@@ -8,6 +8,8 @@ use App\Models\PaymentItem;
 use App\Models\ProgramLevel;
 use App\Models\Result;
 use App\Models\SchoolUnits;
+use App\Models\Students;
+use App\Models\Batch;
 use App\Models\Transcript;
 use App\Models\TranscriptRating;
 use Illuminate\Http\Request;
@@ -249,6 +251,22 @@ class ResultsAndTranscriptsController extends Controller{
             return back()->with('success', __('text.word_done'));
         }
         return back()->with('error', __('text.not_found'));
+    }
+
+
+    public function alter_student_results(Request $request, $student_id = null, $year_id = null, $course_id = null){
+        $data = ['title'=>'Alter Student Results', 'student_id'=>$student_id, 'year_id'=>$year_id, 'course_id'=>$course_id];
+        $data['years'] = Batch::all();
+        if($student_id != null){
+            $data['student'] = Students::find($student_id);
+            $data['title'] = "Alter Student Results For {$data['student']->name}";
+        }
+        return view('admin.res_and_trans.alter_results', $data);
+    }
+
+
+    public function alter_save_student_results(Request $request, $student_id = null, $year_id = null, $course_id = null){
+
     }
 
 }

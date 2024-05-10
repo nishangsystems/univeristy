@@ -17,7 +17,7 @@
                 <td>{{ $background->background_name }}</td>
                 <td>
                     <a class="btn btn-xs btn-success fw-bold" href="{{ route('admin.result.ca.dateline.set', $background->id) }}">set ca upload deadline</a>
-                    <a class="btn btn-xs btn-warning fw-bold" href="{{ route('admin.result.exam.dateline.set', $background->id) }}">set exam upload deadline</a>
+                    {{-- <a class="btn btn-xs btn-warning fw-bold" href="{{ route('admin.result.exam.dateline.set', $background->id) }}">set exam upload deadline</a> --}}
                 </td>
             </tr>
         @endforeach

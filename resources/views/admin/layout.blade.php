@@ -241,13 +241,13 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="{{route('admin.dep_courses.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.departmental_courses')}}
                         </a>
                         <b class="arrow"></b>
-                    </li>
+                    </li> --}}
                     <li>
                         <a href="{{route('admin.courses.import')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -387,7 +387,7 @@
                         <li>
                             <a href="{{route('admin.result.settings')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.results_date_line')}}
+                            {{__('text.ca_dateline')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
@@ -1449,6 +1449,15 @@
                         <a href="{{route('admin.result.class_results')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.class_results')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('admin.res_and_trans.alter_results')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.alter_student_results')}}
                         </a>
                         <b class="arrow"></b>
                     </li>

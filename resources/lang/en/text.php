@@ -967,5 +967,7 @@ return [
     'migrate_results'=>'migrate results',
     'migrating_results_for'=>'migrating :ccode results for :class, :sem || :year',
     'clear_results_for'=>'clear :ccode results for :ccode for :semester :year',
-    'hnd_results'=>'HND Result'
+    'alter_student_results'=>'alter student results',
+    'hnd_results'=>'HND Result',
+    ''
 ];
