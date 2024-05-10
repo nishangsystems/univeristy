@@ -272,7 +272,7 @@ class SubjectController extends Controller
                 $readingStream = fopen($filepathname, 'r');
                 while(($row = fgetcsv($readingStream, 1000)) != null){
                     $input_data_array[] = [
-                        'code'=>$row[0], 'name'=>$row[1], 'coef'=>$row[2], 'status'=>$row[3]
+                        'code'=>$row[0], 'name'=>$row[1], 'coef'=>$row[2], 'status'=>$row[3], 'semester_id'=>$request->semester
                     ];
                 }
                 // close file after reading is done
@@ -281,7 +281,7 @@ class SubjectController extends Controller
                 // write file data to database
                 DB::beginTransaction();
                 foreach($input_data_array as $row){
-                    Subjects::updateOrInsert(['code'=>$row['code'], 'name'=>$row['name'], 'semester_id'=>$request->semester], $row);
+                    Subjects::updateOrInsert(['code'=>$row['code']], $row);
                 }
                 DB::commit();
                 return redirect(route('admin.subjects.index'))->with('success', 'Import complete');
