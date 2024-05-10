@@ -232,11 +232,11 @@ class ResultController extends Controller
 
     public function ca_fill(Request $request){
         // check if CA total is set forthis program
-        if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
-            # code...
-            return back()->with('error', __('text.CA_total_not_set_for', ['program'=>__('text.word_program')]));
+        // if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
+        //     # code...
+        //     return back()->with('error', __('text.CA_total_not_set_for', ['program'=>__('text.word_program')]));
 
-        }
+        // }
 
         $subject = Subjects::find(request('course_id'));
         $classSubject = $subject->_class_subject($request->class_id);
@@ -248,10 +248,10 @@ class ResultController extends Controller
 
     public function ca_import(Request $request){
         // check if CA total is set forthis program
-        if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
-            # code...
-            return back()->with('error',  __('text.CA_total_not_set_for', ['program'=>__('text.word_program')]));
-        }
+        // if (!Helpers::instance()->ca_total_isset(request('class_id'))) {
+        //     # code...
+        //     return back()->with('error',  __('text.CA_total_not_set_for', ['program'=>__('text.word_program')]));
+        // }
 
         $subject = Subjects::find(request('course_id'));
         $classSubject = $subject->_class_subject($request->class_id);
@@ -337,10 +337,10 @@ class ResultController extends Controller
 
     public function exam_fill(Request $request){
         // check if exam total is set for this program
-        if (!Helpers::instance()->exam_total_isset(request('class_id')) || !Helpers::instance()->ca_total_isset(request('class_id'))) {
-            # code...
-            return back()->with('error', __('text.exam_total_not_set_for', ['program'=>__('text.word_program')]));
-        }
+        // if (!Helpers::instance()->exam_total_isset(request('class_id')) || !Helpers::instance()->ca_total_isset(request('class_id'))) {
+        //     # code...
+        //     return back()->with('error', __('text.exam_total_not_set_for', ['program'=>__('text.word_program')]));
+        // }
 
         $subject = Subjects::find(request('course_id'));
         $classSubject = $subject->_class_subject($request->class_id);
@@ -352,10 +352,10 @@ class ResultController extends Controller
 
     public function exam_import(Request $request){
         // check if exam total is set for this program
-        if (!Helpers::instance()->exam_total_isset(request('class_id'))) {
-            # code...
-            return back()->with('error',  __('text.exam_total_not_set_for', ['program'=>__('text.word_program')]));
-        }
+        // if (!Helpers::instance()->exam_total_isset(request('class_id'))) {
+        //     # code...
+        //     return back()->with('error',  __('text.exam_total_not_set_for', ['program'=>__('text.word_program')]));
+        // }
         
         $subject = Subjects::find(request('course_id'));
         $classSubject = $subject->_class_subject($request->class_id);
