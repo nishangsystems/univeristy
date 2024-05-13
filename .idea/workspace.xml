@@ -20,6 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/config/livewire.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/results.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/results.blade.php" afterDir="false" />
     </list>
@@ -192,7 +193,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/config" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -204,6 +205,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/config" />
       <recent name="$PROJECT_DIR$/resources/views/livewire/admin/transcript" />
       <recent name="$PROJECT_DIR$/public/assets/js" />
       <recent name="$PROJECT_DIR$/ssp_env" />
@@ -241,7 +243,9 @@
       <workItem from="1714910473796" duration="9946000" />
       <workItem from="1715160512107" duration="1686000" />
       <workItem from="1715209539178" duration="1924000" />
-      <workItem from="1715269930134" duration="1017000" />
+      <workItem from="1715269930134" duration="1828000" />
+      <workItem from="1715601244221" duration="968000" />
+      <workItem from="1715624611798" duration="1130000" />
     </task>
     <servers />
   </component>

@@ -135,6 +135,7 @@
 <body>
 @php
     $page = 1;
+    $school = \App\Models\School::first();
 @endphp
 @foreach($results as $batch)
     <div class="page landscape">
@@ -142,13 +143,12 @@
             <tbody>
             <tr style="height: 30px">
                 <td colspan="6" rowspan="2" width="34%">
-                    <p style="font-weight: bold; font-size: 11px;" class="mt-0"> ST LOUIS UNIVERSITY INSTITUTE<BR>
-                    <p style="font-size:11px; margin: 1px 0px; font-weight:bold">Medical Studies, Engineering & Technology ,
-                        Agriculture</p>
+                    <p style="font-weight: bold; font-size: 11px;" class="mt-0">
+                        {!! $school->name !!}
+                    </p>
+
                     <div class="font-10">
-                        22-02 902/L/MINESUP/DDES/SD-ESUP/SDA/ANAP OF MAY,2022
-                        <br>P.O BOX 77 BONABERI-DOUALA
-                        <br>REPUBLIC OF CAMEROON
+                      {!! $school->address !!}
                     </div>
 
                 </td>
@@ -201,7 +201,16 @@
                                <span>{{$program->name}}</span>
                            </div>
 
-                           <div style="display: flex"> <span style="width: 120px">Degree Conferred :</span></div>
+                           <div style="display: flex">
+                               <span style="width: 120px">Degree Proposed :</span>
+                               <span>{{$program->name}}</span>
+                           </div>
+                           <div style="display: flex">
+                               <span style="width: 120px">Degree Conferred :</span>
+                                @if($totalCreditEarned >= $program->max_credit)
+                                   <span>{{$program->name}}</span>
+                                @endif
+                           </div>
                            <div style="display: flex"> <span style="width: 120px">Date :</span></div>
                        </div>
                     </td>
@@ -219,7 +228,7 @@
             </tbody>
         </table>
         @if($page == count($results))
-            <div style="display: flex; justify-content: center; font-weight: bold">Registra</div>
+            <div style="display: flex; justify-content: center; font-weight: bold">Registrar</div>
         @endif
     </div>
     @php
