@@ -10,23 +10,6 @@
             </div>
 
             <div class="form-group  mt-3">
-                <label class="control-label col-lg-2 text-capitalize">Department <span
-                            style="color:red">*</span></label>
-                <div class="col-lg-10">
-                    <select class="form-control" wire:model="department">
-                        <option value="">{{__('text.select_year')}}</option>
-                        @foreach( \App\Models\SchoolUnits::where('unit_id', 3)->orderBy('name')->get() as $key => $deb)
-                            <option value="{{$deb->id}}">{{$deb->name}}</option>
-                        @endforeach
-                    </select>
-                    @error('department')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-
-
-            <div class="form-group  mt-3">
                 <label class="control-label col-lg-2 text-capitalize">Batch <span
                             style="color:red">*</span></label>
                 <div class="col-lg-10">

@@ -38,7 +38,7 @@
 
     @if(isset($resits))
         @component('livewire.admin.transcript.semester-result',
-       ['results'=>$resits, 'isseminster'=>false])
+       ['results'=>$resits, 'isseminster'=>true])
         @endcomponent
     @endif
 

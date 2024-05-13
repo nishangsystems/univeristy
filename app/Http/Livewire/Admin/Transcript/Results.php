@@ -43,7 +43,7 @@ class Results extends Component
                 $this->totalCreditEarned += 120;
                 $grade = Grading::find($result->exam_score);
                 return collect([
-                    'name' => "HND Results",
+                    'name' => "Higher National Diploma",
                     'year_name' => $result->year->name,
                     'semester_name' => "HND",
                     'semester_id' => "HND",
