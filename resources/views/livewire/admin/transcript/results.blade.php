@@ -168,7 +168,7 @@
             </tr>
             @if($page == 1)
                 <tr style="height: 30px">
-                    <td colspan="5" style="font-weight: bold">Date of Birth:<br/>{{$student->dob}}</td>
+                    <td colspan="5" style="font-weight: bold">Date of Birth:<br/>{{\Carbon\Carbon::parse($student->dob)->format('d-m-Y')}}</td>
                     <td colspan="4" width="22%" style="font-weight: bold">Place of Birth:<br/>{{$student->pob}}</td>
                     <td colspan="4" width="22%" style="font-weight: bold">Sex: <br/>{{$student->gender}}</td>
                     <td colspan="5" width="28%" style="font-weight: bold">This Transcript is not valid without the signature of
