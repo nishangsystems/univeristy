@@ -386,12 +386,13 @@ class HomeController extends Controller
                 return view('teacher.result.fill_ca', $data);
     }
 
-    public function course_ca_import(Request $request, $class_id=null, $course_id=null, $year=null, $semester=null){
+    public function course_ca_import(Request $request, $class_id=null, $course_id=null, $year=null, $semester_id=null){
 
-        // check if CA total is set forthis program
-
-        $data['year_id'] = $year;
-        $data['semester_id'] = $semester;
+        $sem = \App\Helpers\Helpers::instance()->getSemester($class_id);
+        $batch = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+        // dd($sem);
+        $data['year_id'] = $batch->id;
+        $data['semester_id'] = $sem->id;
         $data['class_id'] = $class_id;
         $subject = Subjects::find($course_id);
         $program_level = ProgramLevel::find($class_id);
@@ -400,9 +401,7 @@ class HomeController extends Controller
         $data['course_code'] = $subject->code;
         $data['classes'] = HomeController::sorted_program_levels();
         $data['course'] = $subject;
-        if($semester != null){
-            $sem = Semester::find($data['semester_id']);
-            $batch = Batch::find($data['year_id']);
+        if($sem != null){
             $data['semester'] = $sem;
             $data['year'] = $batch;
             $data['course'] = $subject;
@@ -410,9 +409,9 @@ class HomeController extends Controller
             $data['title2'] = __('text.import_CA_results_for', ['class'=>$program_level->name(), 'ccode'=>$subject->code, 'year'=>$batch->name, 'sem'=>$sem->name]);
             $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $subject->code .'</b> || '.__('text.word_class').' :: <b class="text-danger">'. $program_level->name() .'</b>'.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
             $data['delete_label'] = __('text.clear_ca_for', ['year'=>$batch->name??'YR', 'class'=>$program_level->name(), 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
-            $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class_id, 'semester_id'=>$semester, 'subject_id'=>$subject->id??null])->get();
+            $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class_id, 'semester_id'=>$sem->id, 'subject_id'=>$subject->id??null])->get();
             $data['delete_prompt'] = "You are about to delete all {$program_level->name()} CA for {$subject->code}, {$sem->name} {$batch->name}";
-            $data['can_update_ca'] = true;
+            $data['can_update_ca'] = (now()->isAfter($sem->ca_upload_latest_date??(now()->addDays()->toString())));
         }
         return view('teacher.result.import_ca', $data);
     }
@@ -536,11 +535,7 @@ class HomeController extends Controller
 
             $bad_results = 0;
             foreach($imported_data as $data){
-                if ($data[1] > $ca_total || $data[2] > $exam_total) {
-                    # code...
-                    $bad_results++;
-                    continue;
-                }
+                
                 $student = Students::where(['matric'=>$data[0]])->first() ?? null;
                 if($student != null){
                     $base=[

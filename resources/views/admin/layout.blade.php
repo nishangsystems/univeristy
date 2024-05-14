@@ -1363,13 +1363,22 @@
                     </li>
 
 
-                    {{-- <li>
-                        <a href="{{route('admin.result.ca.index')}}" class="text-capitalize">
+                    <li>
+                        <a href="{{route('admin.res_and_trans.alter_results.change')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.CA')}}
+                            {{__('text.change_CA_or_exam_mark')}}
                         </a>
                         <b class="arrow"></b>
-                    </li> --}}
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('admin.res_and_trans.alter_results.delete')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.delete_exam_course')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                     
                 </ul>
             </li>
@@ -1585,6 +1594,14 @@
             </li>
             <!-- End attaendance management -->
             @endif
+
+            <li>
+                <a href="{{route('documentation.index')}}" class="text-capitalize">
+                    <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
+                    {{__('text.word_documentation')}}
+                </a>
+                <b class="arrow"></b>
+            </li>
 
             <li>
                 <a href="{{route('admin.reset_password')}}" class="text-capitalize">

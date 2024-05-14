@@ -86,9 +86,7 @@
             let subject_url = "{{route('admin.result.store_result')}}";
             // $(".pre-loader").css("display", "block");
 
-            if($(this).val() > parseFloat('{{$ca_total}}')){
-
-            }else{
+            {
                 $.ajax({
                     type: "POST",
                     url: subject_url,

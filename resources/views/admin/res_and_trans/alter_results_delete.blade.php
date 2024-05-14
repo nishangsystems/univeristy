@@ -30,12 +30,12 @@
 
         @if($semester_id != null)
             <div class="card my-5 shadow border-left-0 border-right-0 border-top border-bottom border-dark">
-                <div class="text-center text-uppercase py-4 alert-danger border-bottom border-danger"><b>@lang('text.add_exam_course')</b></div>
+                <div class="text-center text-uppercase py-4 alert-danger border-bottom border-danger"><b>@lang('text.drop_exam_course')</b></div>
                 <div class="card-body py-5 my-2">
-                    <form class="row my-2" method="post">
+                    <form class="row my-2" method="post" id="drop-form">
                         @csrf
                         <div class="col-lg-5">
-                            <input type="text" class="form-control" autocomplete="off" id="course_field" oninput="search_course(this)">
+                            <input type="text" class="form-control" id="course_field" oninput="search_course(this)">
                             <span class="text-capitalize text-secondary">@lang('text.word_course')</span>
                             <input name="course_id" type="hidden" id="course_id_field">
                             <div class="container-fluid" id="course_display_panel"></div>
@@ -49,7 +49,7 @@
                             <span class="text-capitalize text-secondary">@lang('text.exam_mark')</span>
                         </div>
                         <div class="col-lg-2">
-                            <button id="save_course_button" class="btn btn-sm btn-primary rounded" type="submit">@lang('text.add_course')</button>
+                            <button id="save_course_button" class="btn btn-sm btn-danger rounded hidden" type="submit">@lang('text.drop_course')</button>
                         </div>
 
                     </form>
@@ -65,7 +65,7 @@
             let year = $('#year_id_field').val();
             let semester = $('#semester_id_field').val();
             let sid = $('#student_id_field').val();
-            let url = "{{ route('admin.res_and_trans.alter_results', ['year_id'=>'_YR_', 'semester_id'=>'_SMST_', 'student_id'=>'_SID_']) }}".replace('_YR_', year).replace('_SMST_', semester).replace('_SID_', `${sid}`);
+            let url = "{{ route('admin.res_and_trans.alter_results.delete', ['year_id'=>'_YR_', 'semester_id'=>'_SMST_', 'student_id'=>'_SID_']) }}".replace('_YR_', year).replace('_SMST_', semester).replace('_SID_', `${sid}`);
             window.location = url;
         }
 
@@ -145,6 +145,8 @@
                 method: 'get', url: _url, success: function(data){
                     console.log(data)
                     if(data.ca_score + data.exam_score > 0){
+                        $('#save_course_button').removeClass('hidden');
+                    }else{
                         $('#save_course_button').addClass('hidden');
                     }
                     $('#ca_score').val(data.ca_score);
@@ -152,6 +154,14 @@
                 }
             });
         }
+
+        $('#save_course_button').on('click', ()=>{
+            this.preventDefault();
+            let course = $('#course_field').val();
+            if(confirm(`You are about to drop ${$course}. Confirm to continue`)){
+                $('#drop-form').submit();
+            }
+        });
 
     </script>
 @endsection

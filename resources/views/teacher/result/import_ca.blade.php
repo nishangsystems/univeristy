@@ -45,7 +45,7 @@
     <div class="py-2 container-fluid">
         <div class="row my-4 container p-3 shadow">
             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 p-2">
-                <select class="form-control" name="year" id="form_year" required>
+                <select class="form-control" name="year" id="form_year" disabled>
                     <option></option>
                     @foreach (\App\Models\Batch::all() as $year)
                         <option value="{{ $year->id }}" {{ $year->id == old('year', $year_id) ? 'selected' : '' }}>{{ $year->name??'' }}</option>
@@ -54,7 +54,7 @@
                 <span class="text-secondary">{{ __('text.academic_year') }}</span>
             </div>
             <div class="col-sm-6 col-md-4 col-lg-3 p-2">
-                <select class="form-control" name="semester" id="form_semester" required>
+                <select class="form-control" name="semester" id="form_semester" disabled>
                     <option></option>
                     @foreach ($semesters??[] as $semester)
                         <option value="{{ $semester->id }}" {{ $semester->id == old('year', $semester_id) ? 'selected' : '' }}>{{ $semester->name??'' }}</option>
@@ -63,7 +63,7 @@
                 <span class="text-secondary">{{ __('text.word_semester') }}</span>
             </div>
             <div class="col-sm-6 col-md-4 col-lg-3 p-2">
-                <select class="form-control" name="class" id="form_class" required>
+                <select class="form-control" name="class" id="form_class" disabled>
                     <option></option>
                     @foreach ($classes??[] as $_class)
                         <option value="{{ $_class['id'] }}" {{ $_class['id'] == old('class', $class_id) ? 'selected' : '' }}>{{ $_class['name']??'' }}</option>
@@ -72,7 +72,7 @@
                 <span class="text-secondary">{{ __('text.word_class') }}</span>
             </div>
             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 p-2">
-                <input class="form-control" name="course_code" id="form_course_code" value="{{ $course_code??'' }}" required oninput="search_course(this)">
+                <input class="form-control" name="course_code" id="form_course_code" value="{{ $course_code??'' }}" readonly oninput="search_course(this)">
                 <span class="text-secondary">{{ __('text.course_code') }}</span>
                 <div id="course_search_list" class="position-relative"></div>
             </div>
@@ -135,7 +135,7 @@
                         <div class="py-2 my-3 alert alert-info text-center border-top border-bottom">
                             <b>{{ $title2 ?? 'Uploaded CA Marks' }}</b> <hr class="my-1">
                             @if ($can_update_ca)
-                                <a class="btn btn-danger btn-sm rounded px-5 py-1 text-capitalize" onclick="clearResult(`{{ route('user.class_course.ca.import.clear', ['year'=>$year_id, 'semester'=>$semester_id, 'course_id'=>$course->id]) }}`)"><b>{{ $delete_label }}</b></a>
+                                <a class="btn btn-danger btn-sm rounded px-5 py-1 text-capitalize" onclick="clearResult(`{{ route('user.class_course.ca.import.clear', ['year'=>$year_id, 'semester'=>$semester_id, 'course_id'=>$course->id, 'class_id'=>$class->id]) }}`)"><b>{{ $delete_label }}</b></a>
                             @else
                                 <div class="alert-danger py-3 border-top border-bottom text-uppercase text-center"><b>@lang('text.cant_alter_ca_after_exam_is_uploaded')</b></div>
                             @endif

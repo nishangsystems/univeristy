@@ -1024,9 +1024,9 @@ class ProgramController extends Controller
         if($request->has('ca_dateline') || $request->has('exam_dateline')){
             $semester = Semester::find($request->semester_id);
             if($request->has('ca_dateline'))
-                $semester->ca_latest_date = $request->ca_dateline;
+                $semester->ca_upload_latest_date = $request->ca_dateline;
             if($request->has('exam_dateline'))
-                $semester->exam_latest_date = $request->exam_dateline;
+                $semester->exam_upload_latest_date = $request->exam_dateline;
 
             $semester->save();
             return back()->with('success', 'Done');
