@@ -30,26 +30,44 @@
 
         @if($semester_id != null)
             <div class="card my-5 shadow border-left-0 border-right-0 border-top border-bottom border-dark">
-                <div class="text-center text-uppercase py-4 alert-danger border-bottom border-danger"><b>@lang('text.add_exam_course')</b></div>
+                <div class="text-center text-uppercase py-4 alert-danger border-bottom border-danger"><b>@lang('text.change_ca_mark')</b></div>
                 <div class="card-body py-5 my-2">
-                    <form class="row my-2" method="post">
+                    <form class="row my-2" method="post" action="{{ route('admin.res_and_trans.alter_results.change.ca', ['semester_id'=>$semester_id, 'student_id'=>$student_id, 'year_id'=>$year_id]) }}">
                         @csrf
-                        <div class="col-lg-5">
-                            <input type="text" class="form-control" autocomplete="off" id="course_field" oninput="search_course(this)">
+                        <div class="col-lg-6">
+                            <input type="text" class="form-control" id="ca_course_field" oninput="search_course(this, 'ca')">
                             <span class="text-capitalize text-secondary">@lang('text.word_course')</span>
-                            <input name="course_id" type="hidden" id="course_id_field">
-                            <div class="container-fluid" id="course_display_panel"></div>
+                            <input name="course_id" type="hidden" id="ca_course_id_field">
+                            <div class="container-fluid" id="ca_course_display_panel"></div>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-4">
                             <input type="text" class="form-control" name="ca_score" id="ca_score">
                             <span class="text-capitalize text-secondary">@lang('text.ca_mark')</span>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
+                            <button id="ca_save_course_button" class="btn btn-sm btn-warning rounded hidden" type="submit">@lang('text.save_ca_mark')</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="card my-5 shadow border-left-0 border-right-0 border-top border-bottom border-dark">
+                <div class="text-center text-uppercase py-4 alert-danger border-bottom border-danger"><b>@lang('text.change_exam_mark')</b></div>
+                <div class="card-body py-5 my-2">
+                    <form class="row my-2" method="post" action="{{ route('admin.res_and_trans.alter_results.change.exam', ['semester_id'=>$semester_id, 'student_id'=>$student_id, 'year_id'=>$year_id]) }}">
+                        @csrf
+                        <div class="col-lg-6">
+                            <input type="text" class="form-control" id="exam_course_field" oninput="search_course(this, 'exam')">
+                            <span class="text-capitalize text-secondary">@lang('text.word_course')</span>
+                            <input name="course_id" type="hidden" id="exam_course_id_field">
+                            <div class="container-fluid" id="exam_course_display_panel"></div>
+                        </div>
+                        <div class="col-lg-4">
                             <input type="text" class="form-control" name="exam_score" id="exam_score">
                             <span class="text-capitalize text-secondary">@lang('text.exam_mark')</span>
                         </div>
                         <div class="col-lg-2">
-                            <button id="save_course_button" class="btn btn-sm btn-primary rounded" type="submit">@lang('text.add_course')</button>
+                            <button id="exam_save_course_button" class="btn btn-sm btn-warning rounded hidden" type="submit">@lang('text.save_exam_mark')</button>
                         </div>
 
                     </form>
@@ -65,7 +83,7 @@
             let year = $('#year_id_field').val();
             let semester = $('#semester_id_field').val();
             let sid = $('#student_id_field').val();
-            let url = "{{ route('admin.res_and_trans.alter_results', ['year_id'=>'_YR_', 'semester_id'=>'_SMST_', 'student_id'=>'_SID_']) }}".replace('_YR_', year).replace('_SMST_', semester).replace('_SID_', `${sid}`);
+            let url = "{{ route('admin.res_and_trans.alter_results.change', ['year_id'=>'_YR_', 'semester_id'=>'_SMST_', 'student_id'=>'_SID_']) }}".replace('_YR_', year).replace('_SMST_', semester).replace('_SID_', `${sid}`);
             window.location = url;
         }
 
@@ -88,14 +106,6 @@
             });
         }
 
-        
-        let pickStudent = function(sid, matric, name){
-            $("#student_search").val(`[ ${matric} ] ${name}`);
-            $('#student_id_field').val(sid);
-            $('#student_display_panel').html(null);
-            load_semesters(sid);
-        }
-
         let load_semesters = function(sid){
             let student_id = sid;
             let _url = "{{ route('student_semesters', ['student_id'=>'__SID__']) }}".replace('__SID__', student_id);
@@ -111,7 +121,15 @@
             });
         }
 
-        let search_course = function(element){
+        
+        let pickStudent = function(sid, matric, name){
+            $("#student_search").val(`[ ${matric} ] ${name}`);
+            $('#student_id_field').val(sid);
+            $('#student_display_panel').html(null);
+            load_semesters(sid);
+        }
+
+        let search_course = function(element, type){
             let value = $(element).val();
             let _url = "{{ route('search_subjects') }}?name="+value;
             $.ajax({
@@ -120,35 +138,39 @@
                     let html = `<div class="my-2 px-2 py-3 position-absolute border-left border-right bg-white" style="max-height: 40rem; overflow-y: scroll; z-index: 20;">`;
                     // console.log(data.data);
                     data.data.forEach(element => {
-                        html += `<div class="alert-success p-2  border-top border-bottom my-1" onclick="pickCourse('${element.id}', '${element.code}', '${element.name}')">
+                        html += `<div class="alert-success p-2  border-top border-bottom my-1" onclick="pickCourse('${element.id}', '${element.code}', '${element.name}', '${type}')">
                                 <b class="text-danger">${element.code}</b> || <small class="text-uppercase text-secondary">${element.name}</small>
                             </div>`
                     });
                     html += `</div>`;
-                    $('#course_display_panel').html(html);
+                    $('#'+type+'_course_display_panel').html(html);
                 }
             })
         }
 
-        let pickCourse = function(cid, ccode, ctitle){
-            $('#course_field').val('[ '+ccode+' ] '+ctitle);
-            $('#course_id_field').val(cid);
-            $('#course_display_panel').html(null);
+        let pickCourse = function(cid, ccode, ctitle, type){
+            $('#'+type+'_course_field').val('[ '+ccode+' ] '+ctitle);
+            $('#'+type+'_course_id_field').val(cid);
+            $('#'+type+'_course_display_panel').html(null);
 
             // get the result record for the course
-            get_result(cid);
+            get_result(cid, type);
         }
 
-        let get_result = function(cid){
+        let get_result = function(cid, type){
             let _url = "{{ route('admin.result.get_record', ['student_id'=>$student_id, 'year_id'=>$year_id, 'semester_id'=>$semester_id, 'course_id'=>'__CID__']) }}".replace('__CID__', cid);
             $.ajax({
                 method: 'get', url: _url, success: function(data){
                     console.log(data)
-                    if(data.ca_score + data.exam_score > 0){
-                        $('#save_course_button').addClass('hidden');
-                    }
-                    $('#ca_score').val(data.ca_score);
-                    $('#exam_score').val(data.exam_score);
+                    if(type=='ca')
+                        $('#'+type+'_score').val(data.ca_score);
+                    else
+                        $('#'+type+'_score').val(data.exam_score);
+
+                    $('#'+type+'_score').on('input', ()=>{
+                        $('#'+type+'_save_course_button').removeClass('hidden');
+
+                    })
                 }
             });
         }

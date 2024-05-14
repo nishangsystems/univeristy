@@ -275,7 +275,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('publishing', 'Admin\ResultController@result_publishing')->name('publishing');
         Route::get('publish/{year}/{semester}', 'Admin\ResultController@publish_results')->name('publish');
         Route::get('unpublish/{year}/{semester}', 'Admin\ResultController@unpublish_results')->name('unpublish');
-        Route::get('get_record/{student_id}/{year_id}/{semester_id}/{course_id}', 'Admin\ResultController@get_record')->name('get_record');
+        Route::get('get_record/{student_id?}/{year_id?}/{semester_id?}/{course_id?}', 'Admin\ResultController@get_record')->name('get_record');
 
         Route::post('store_results', 'Admin\ResultController@store_results')->name('store_result');
 
@@ -566,10 +566,13 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('passfail_report', [ResultsAndTranscriptsController::class, 'passfail_report'])->name('passfail_report');
         Route::post('sem_res_report', [ResultsAndTranscriptsController::class, 'semester_results_report'])->name('sem_res_report');
         Route::post('grd_sheet', [ResultsAndTranscriptsController::class, 'grades_sheet'])->name('grd_sheet');
+        Route::get('alter_result/delete/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_delete_student_results'])->name('alter_results.delete');
+        Route::post('alter_result/delete/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_save_delete_student_results']);
+        Route::post('alter_result/change/ca/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_save_student_ca_results'])->name('alter_results.change.ca');
+        Route::post('alter_result/change/exam/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_save_student_exam_results'])->name('alter_results.change.exam');
+        Route::get('alter_result/change/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_change_student_results'])->name('alter_results.change');
         Route::get('alter_result/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_student_results'])->name('alter_results');
         Route::post('alter_result/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_save_student_results']);
-        Route::get('alter_delete_result/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_delete_student_results'])->name('alter_results');
-        Route::post('alter_delete_result/{student_id?}/{year_id?}/{semester_id?}', [ResultsAndTranscriptsController::class, 'alter_save_delete_student_results']);
         Route::name('transcripts.')->prefix('transcripts')->group(function () {
             Route::get('config', [ResultsAndTranscriptsController::class, 'configure_transcript'])->name('config');
             Route::post('config', [ResultsAndTranscriptsController::class, 'configure_save_transcript']);

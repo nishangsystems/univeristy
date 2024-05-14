@@ -296,11 +296,6 @@ class ResultController extends Controller
             $null_students = '';
 
             foreach($imported_data as $data){
-                if ($data[1] > $ca_total) {
-                    # code...
-                    $bad_results++;
-                    continue;
-                }
                 $student = Students::where(['matric'=>$data[0]])->first() ?? null;
                 if($student != null){
                     $base=[
@@ -336,11 +331,6 @@ class ResultController extends Controller
     }
 
     public function exam_fill(Request $request){
-        // check if exam total is set for this program
-        // if (!Helpers::instance()->exam_total_isset(request('class_id')) || !Helpers::instance()->ca_total_isset(request('class_id'))) {
-        //     # code...
-        //     return back()->with('error', __('text.exam_total_not_set_for', ['program'=>__('text.word_program')]));
-        // }
 
         $subject = Subjects::find(request('course_id'));
         $classSubject = $subject->_class_subject($request->class_id);
@@ -351,11 +341,6 @@ class ResultController extends Controller
     }
 
     public function exam_import(Request $request){
-        // check if exam total is set for this program
-        // if (!Helpers::instance()->exam_total_isset(request('class_id'))) {
-        //     # code...
-        //     return back()->with('error',  __('text.exam_total_not_set_for', ['program'=>__('text.word_program')]));
-        // }
         
         $subject = Subjects::find(request('course_id'));
         $classSubject = $subject->_class_subject($request->class_id);
@@ -403,12 +388,7 @@ class ResultController extends Controller
             $existing_results = '';
 
             foreach($imported_data as $data){
-                // if ($data[1] > $ca_total || $data[2] > $exam_total) {
-                if ($data[1] > $ca_total) {
-                    # code...
-                    $bad_results++;
-                    continue;
-                }
+                
                 $student = Students::where(['matric'=>$data[0]])->first() ?? null;
                 if($student != null){
                     $base=[
@@ -518,7 +498,10 @@ class ResultController extends Controller
         # code...
         $student = Students::find($request->student_id);
         $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
-        $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id);
+        $class = $student->_class(Helpers::instance()->getCurrentAccademicYear());
+        $semester = $request->semester ? 
+            Semester::find($request->semester) : 
+            Helpers::instance()->getSemester($class->id);
         $class = $student->_class($year);
         $data['title'] = __('text.my_exam_results');
         $data['user'] = $student;
@@ -652,7 +635,7 @@ class ResultController extends Controller
             $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $course_code .'</b> || '.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
             $data['delete_label'] = __('text.clear_ca_for', ['year'=>$batch->name??'YR', 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
             $data['results'] = Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$subject->id??null])->get();
-            $data['can_update_ca'] = $data['results']->where('exam_score', '>', 0)->count() == 0;
+            $data['can_update_ca'] = !(now()->isAfter($sem->ca_upload_latest_date??now()->addDays()->toString()));;
             $data['delete_prompt'] = "You are about to delete all the CA marks for {$subject->code}, {$sem->name} {$batch->name}";
         }
         // dd($data);
@@ -747,7 +730,7 @@ class ResultController extends Controller
             $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $course_code .'</b> || '.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
             $data['delete_label'] = __('text.clear_exam_for', ['year'=>$batch->name??'YR', 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
             $data['results'] = Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'subject_id'=>$subject->id??null])->get();
-            $data['can_update_exam'] = true;
+            $data['can_update_exam'] = !(now()->isAfter($sem->exam_upload_latest_date??now()->addDays()->toString()));;
             // $data['can_update_exam'] = $data['results']->where('ca_score', '>', 0)->count() > 0;
             $data['delete_prompt'] = "You are about to delete all the entire results for {$subject->code}, {$sem->name} {$batch->name}";
         }
@@ -848,7 +831,7 @@ class ResultController extends Controller
             $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $course_code .'</b> || '.__('text.word_class').' :: <b class="text-danger">'. $program_level->name() .'</b>'.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
             $data['delete_label'] = __('text.clear_results_for', ['year'=>$batch->name??'YR', 'class'=>$program_level->name(), 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
             $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class, 'semester_id'=>$semester, 'subject_id'=>$subject->id??null])->get();
-            $data['can_update_exam'] = true;
+            $data['can_update_exam'] = !(now()->isAfter($sem->exam_upload_latest_date??now()->addDays()->toString()));
             $data['delete_prompt'] = "You are about to delete all {$program_level->name()} results for {$subject->code}, {$sem->name} {$batch->name}";
         }
         // dd($data);

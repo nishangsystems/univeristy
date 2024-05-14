@@ -35,6 +35,12 @@ return [
     */
 
     'channels' => [
+        'student_results'=>[
+            'driver'=>'single',
+            'name'=>'custom_result',
+            'path'=>storage_path('logs/result_changes.log'),
+            'level'=>env('LOG_LEVEL', 'critical')
+        ],
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

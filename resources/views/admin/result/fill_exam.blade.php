@@ -95,9 +95,7 @@
 
             // $(".pre-loader").css("display", "block");
 
-            if( ($(this).attr('data-score-type') == 'ca' && $(this).val() > parseFloat('{{$ca_total}}')) || ($(this).attr('data-score-type') == 'exam' && $(this).val() > parseFloat('{{$exam_total}}'))){
-
-            }else{
+            {
                 $.ajax({
                     type: "POST",
                     url: subject_url,
