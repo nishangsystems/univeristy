@@ -1357,7 +1357,7 @@
                     <li>
                         <a href="{{route('admin.res_and_trans.alter_results')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.alter_student_results')}}
+                            {{__('text.add_exam_course')}}
                         </a>
                         <b class="arrow"></b>
                     </li>

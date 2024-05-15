@@ -305,7 +305,12 @@ class PaymentController extends Controller
     {
         try {
             //code...
+            dd($id);
+
             $p =  Payments::find($id);
+            $payment = $p;
+            $student = $payment->student;
+            $year = $payment->year;
             $p->delete();
             return back()->with('success', __('text.word_done'));
         } catch (\Throwable $th) {

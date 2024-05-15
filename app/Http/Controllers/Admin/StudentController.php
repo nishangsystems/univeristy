@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\StudentChangedEvent;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
@@ -358,8 +359,13 @@ class StudentController extends Controller
          || $student->payment) {
             return redirect()->back()->with('error', "Student cant be deleted !");
         }
+        
+        $st = $student;
+        $_class = $student->_class();
         $student->classes->first()->delete();
         $student->delete();
+
+        event(new StudentChangedEvent($st, $_class, $action = "STUDENT_ACCOUNT_DELETED", $actor = auth()->user()));
         return redirect()->back()->with('success', "Student deleted successfully !");
     }
 

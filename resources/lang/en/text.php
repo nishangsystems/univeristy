@@ -981,5 +981,6 @@ return [
     'save_ca_mark'=>'save ca mark',
     'save_exam_mark'=>'save exam mark',
     'word_next'=>'next',
+    'add_exam_course'=>'add exam course',
     ''
 ];
