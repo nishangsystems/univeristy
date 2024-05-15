@@ -14,14 +14,20 @@ class FeeChangedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+
+    public $student, $payment, $year, $reason;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($student, $payment, $year, $reason)
     {
         //
+        $this->student = $student;
+        $this->payment = $payment;
+        $this->year = $year;
+        $this->reason = $reason;
     }
 
     /**

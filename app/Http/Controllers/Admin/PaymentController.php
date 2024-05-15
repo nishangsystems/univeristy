@@ -12,6 +12,7 @@ use App\Models\SchoolUnits;
 use App\Models\Students;
 use App\Models\StudentScholarship;
 use Illuminate\Http\Request;
+use App\Events\FeeChangedEvent;
 use Session;
 use Redirect;
 
@@ -305,13 +306,15 @@ class PaymentController extends Controller
     {
         try {
             //code...
-            dd($id);
+            // dd($id);
 
             $p =  Payments::find($id);
             $payment = $p;
             $student = $payment->student;
             $year = $payment->year;
             $p->delete();
+
+            event(new FeeChangedEvent($student, $payment, $year, $reason=$request->reason??''));
             return back()->with('success', __('text.word_done'));
         } catch (\Throwable $th) {
             //throw $th;
