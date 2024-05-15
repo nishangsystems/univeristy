@@ -25,11 +25,10 @@ class LogStudentResultChangeListener
         $_course = \App\Models\Subjects::find($event->course_id);
         $_semester = \App\Models\Semester::find($event->semester_id);
         // Save log to database
-        $data = ['student_id'=>$event->student_id, 'batch_id'=>$event->year_id, 'semester_id'=>$event->semester_id, 'course_id'=>$event->request->course_id, 'action'=>$event->action, 'actor'=>$event->actor, 'data'=>$event->data];
-        $description = `{$_semester->name} {$_batch->name} :: {$event->action}:: On [{$_course->code}] {$_course->name} :: To [{$_student->matric}] {$_student->name} :: By {$_actor->name} :: EXTRA-INFO {$event->data}`;
+        $data = ['student_id'=>$event->student_id, 'batch_id'=>$event->year_id, 'semester_id'=>$event->semester_id, 'course_id'=>$event->course_id, 'action'=>$event->action, 'actor'=>$event->actor, 'data'=>$event->data];
+        $description = "{$_semester->name} {$_batch->name} :: {$event->action}:: On [{$_course->code}] {$_course->name} :: To [{$_student->matric}] {$_student->name} :: By {$_actor->name} :: EXTRA-INFO {$event->data}";
         
-        $log_string = now()->toAtomString().`_________________________________________________________________________________`.
-            json_encode($data).`-------------------------`.$description.`_______________________________________________________________________`;
+        $log_string = '___________________________'.json_encode($data).'-----------------'.$description.'____________________________';
 
         // log to monitoring log
         Log::channel('student_results')->info($log_string);

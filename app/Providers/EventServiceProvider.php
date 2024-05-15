@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\FeeChangedEvent;
+use App\Events\StudentChangedEvent;
+use App\Events\StudentResultChangedEvent;
+use App\Listeners\FeeChangeListener;
+use App\Listeners\LogStudentResultChangeListener;
+use App\Listeners\StudentChangeListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -15,9 +21,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],
+        Registered::class => [SendEmailVerificationNotification::class],
+        StudentResultChangedEvent::class => [LogStudentResultChangeListener::class],
+        FeeChangedEvent::class => [FeeChangeListener::class],
+        StudentChangedEvent::class => [StudentChangeListener::class],
+
     ];
 
     /**

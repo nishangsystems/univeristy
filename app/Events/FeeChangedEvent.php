@@ -10,27 +10,18 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class StudentResultChangedEvent
+class FeeChangedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $student_id, $year_id, $semester_id,
-            $course_id, $action, $actor, $data;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($student_id, $year_id, $semester_id, $course_id, $action, $actor, $data=null)
+    public function __construct()
     {
         //
-        $this->student_id = $student_id;
-        $this->year_id = $year_id;
-        $this->semester_id = $semester_id;
-        $this->course_id = $course_id;
-        $this->action = $action;
-        $this->actor = $actor;
-        $this->data = is_array($data) ? json_encode($data) : $data;
     }
 
     /**

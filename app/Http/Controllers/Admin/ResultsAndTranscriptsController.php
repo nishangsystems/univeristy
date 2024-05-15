@@ -73,16 +73,7 @@ class ResultsAndTranscriptsController extends Controller{
             $data['base_pass'] = ($class->program->ca_total ?? 0 + $class->program->exam_total ?? 0)*0.5;
             $data['_title'] = $class->name().' '.$semester->name.' '.$data['title'].' FOR '.$year->name.' '.__('text.academic_year');
         }
-        // dd($data);
-
-        // if (($class = ProgramLevel::find($request->class_id??0)) != null) {
-        //     # code...
-        //     $data = $class->_students($request->year_id)
-        //         ->where('students.active', 1)
-        //         ->join('results', 'results.student_id', '=', 'students.id')
-        //         ->where('results.batch_id', $request->year_id)
-        //         ->where('results.semester_id', $request->semester_id);
-        // }
+        
         return view('admin.res_and_trans.spr_sheet', $data);
     }
 
@@ -256,12 +247,12 @@ class ResultsAndTranscriptsController extends Controller{
 
 
     public function alter_student_results(Request $request, $student_id = null, $year_id = null, $semester_id = null){
-        $data = ['title'=>'Alter Student Results', 'student_id'=>$student_id, 'year_id'=>$year_id, 'semester_id'=>$semester_id];
+        $data = ['title'=>'Add Student Exam Course', 'student_id'=>$student_id, 'year_id'=>$year_id, 'semester_id'=>$semester_id];
         $data['years'] = Batch::all();
         if($student_id != null){
             $data['student'] = Students::find($student_id);
             $data['semester'] = \App\Models\Semester::find($semester_id);
-            $data['title'] = "Alter Student Results For {$data['student']->name}";
+            $data['title'] = "Add Student Exam Course For {$data['student']->name}";
         }
         return view('admin.res_and_trans.alter_results', $data);
     }
@@ -281,6 +272,11 @@ class ResultsAndTranscriptsController extends Controller{
         $update = ['ca_score'=>$request->ca_score, 'exam_score'=>$request->exam_score, 'class_id'=>$class->id??0, 'reference'=>'__MISSING__'];
         $base = ['batch_id'=>$year_id, 'student_id'=>$student_id, 'subject_id'=>$request->course_id, 'semester_id'=>$semester_id];
         Result::updateOrInsert($base, $update);
+
+        event(new StudentResultChangedEvent($student_id, $year_id, $semester_id, $request->course_id, $action="EXAM_COURSE_ADDED", $actor=auth()->id(), $data=null));
+
+        $rec = Result::where($base)->first();
+        $_message = "EXAM COURSE ADDED; Student: [{$rec->student->matric}, Course code: {$rec->subject->code}, Year: {}";
 
         return back()->with('success', 'Done');
     }
@@ -307,6 +303,9 @@ class ResultsAndTranscriptsController extends Controller{
         $base = ['batch_id'=>$year_id, 'student_id'=>$student_id, 'subject_id'=>$request->course_id, 'semester_id'=>$semester_id];
         $result = Result::where($base)->first();
         $result->delete();
+
+        // trigger monitoring event
+        event(new StudentResultChangedEvent($student_id, $year_id, $semester_id, $request->course_id, $action="EXAM_COURSE_DELETED", $actor=auth()->id(), $data=null));
 
         return back()->with('success', 'Done');
     }
@@ -355,7 +354,7 @@ class ResultsAndTranscriptsController extends Controller{
     }
 
     public function alter_save_student_exam_results(Request $request, $student_id, $year_id, $semester_id){
-        $validity = Validator::make($request->all(), ['exam_score'=>'required', 'course_id'=>'requried']);
+        $validity = Validator::make($request->all(), ['exam_score'=>'required', 'course_id'=>'required']);
         
         if($validity->fails()){
             session()->flash('error', $validity->errors()->first());

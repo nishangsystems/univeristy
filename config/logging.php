@@ -37,10 +37,25 @@ return [
     'channels' => [
         'student_results'=>[
             'driver'=>'single',
-            'name'=>'custom_result',
+            'name'=>'result-change log',
             'path'=>storage_path('logs/result_changes.log'),
             'level'=>env('LOG_LEVEL', 'critical')
         ],
+        
+        'fee_change'=>[
+            'driver'=>'single',
+            'name'=>'fee-change log',
+            'path'=>storage_path('logs/fee_changes.log'),
+            'level'=>env('LOG_LEVEL', 'critical')
+        ],
+        
+        'student_change'=>[
+            'driver'=>'single',
+            'name'=>'student-change log',
+            'path'=>storage_path('logs/student_changes.log'),
+            'level'=>env('LOG_LEVEL', 'critical')
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
