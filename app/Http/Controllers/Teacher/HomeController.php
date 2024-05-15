@@ -411,7 +411,7 @@ class HomeController extends Controller
             $data['delete_label'] = __('text.clear_ca_for', ['year'=>$batch->name??'YR', 'class'=>$program_level->name(), 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
             $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class_id, 'semester_id'=>$sem->id, 'subject_id'=>$subject->id??null])->get();
             $data['delete_prompt'] = "You are about to delete all {$program_level->name()} CA for {$subject->code}, {$sem->name} {$batch->name}";
-            $data['can_update_ca'] = (now()->isAfter($sem->ca_upload_latest_date??(now()->addDays()->toString())));
+            $data['can_update_ca'] = !(now()->isAfter($sem->ca_upload_latest_date));
         }
         return view('teacher.result.import_ca', $data);
     }
