@@ -178,16 +178,23 @@
                 <tr>
                     <td colspan="13" style="font-weight: bold; padding: 0px 5px;">Date of Enrolment : {{$student->batch->name}}</td>
                     <td colspan="5" rowspan="2" style="font-weight: bold; padding: 0px 5px">
-                        @foreach($gradings as $grade)
+                            @foreach($gradings as $grade)
+                                <div style="display: flex;">
+                                    <div  class="grade">{{$grade->grade}}</div>
+                                    <div  class="grade">{{$grade->lower}}</div>
+                                    <div  class="grade">-</div>
+                                    <div  class="grade">{{$grade->upper}}</div>
+                                    <div  class="grade">{{$grade->weight}} GP</div>
+                                </div>
+                            @endforeach
                             <div style="display: flex;">
-                                <div  class="grade">{{$grade->grade}}</div>
-                                <div  class="grade">{{$grade->lower}}</div>
-                                <div  class="grade">-</div>
-                                <div  class="grade">{{$grade->upper}}</div>
-                                <div  class="grade">{{$grade->weight}} GP</div>
+                                <div  class="grade">C-</div>
+                                <div>Compulsory</div>
                             </div>
-                        @endforeach
-
+                            <div style="display: flex;">
+                                <div  class="grade">R-</div>
+                                <div>School Requirement</div>
+                            </div>
                     </td>
                 </tr>
                 <tr>
@@ -203,15 +210,20 @@
 
                            <div style="display: flex">
                                <span style="width: 120px">Degree Proposed :</span>
-                               <span>{{$program->name}}</span>
+                               <span>{{$program->deg_name}}</span>
                            </div>
                            <div style="display: flex">
                                <span style="width: 120px">Degree Conferred :</span>
                                 @if($totalCreditEarned >= $program->max_credit)
-                                   <span>{{$program->name}}</span>
+                                   <span>{{$program->deg_name}}</span>
                                 @endif
                            </div>
-                           <div style="display: flex"> <span style="width: 120px">Date :</span></div>
+                           <div style="display: flex">
+                               <span style="width: 120px">Date :</span>
+                               @if($totalCreditEarned >= $program->max_credit)
+                                   <span>{{collect($results)->last()[0]['year_name'] }}</span>
+                               @endif
+                           </div>
                        </div>
                     </td>
                 </tr>

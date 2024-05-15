@@ -1,5 +1,5 @@
 <tr style="vertical-align: top">
-    <td colspan="18" style="padding: 0px 5px;">
+    <td colspan="18" style="padding: 0px">
         <div style="display: flex; height: 100%">
 
             @php

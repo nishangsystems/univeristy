@@ -45,7 +45,7 @@ class Results extends Component
                 return collect([
                     'name' => "Higher National Diploma",
                     'year_name' => $result->year->name,
-                    'semester_name' => "HND",
+                    'semester_name' => "Entry Qualification",
                     'semester_id' => "HND",
                     'batch_id' => "HND",
                     'level' => "200",

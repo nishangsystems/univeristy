@@ -17,6 +17,10 @@ class HNDResults extends Component
 
     public Students $student;
 
+    protected $listeners = [
+        "updated"=>'$refresh'
+    ];
+
     protected function getRules()
     {
         return [
@@ -69,6 +73,15 @@ class HNDResults extends Component
         }
 
         $this->redirectRoute('admin.transcript.index');
+
+    }
+
+
+    public function delete()
+    {
+        $this->result->delete();
+        $this->result = null;
+        $this->emit('updated');
 
     }
 
