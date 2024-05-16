@@ -43,11 +43,11 @@ class TrashController extends Controller
     
     //
     public function undo_fee_trash(Request $request, $fee_id){
-        $payment = Payments::onlyTrashed()->where('id', $fee_id);
+        $payment = Payments::onlyTrashed()->where('id', $fee_id)->first();
         $track = FeeTrack::where('payment_id', $fee_id)->first();
         $payment->deleted_at = null;
         $payment->save();
-        $track->delete();
+        $track == null ? null :$track->delete();
         return back()->with('success', "Done");
     }
     
