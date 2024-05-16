@@ -359,13 +359,15 @@ class StudentController extends Controller
          || $student->payment) {
             return redirect()->back()->with('error', "Student cant be deleted !");
         }
-        
+        $sclass = $student->classes()->orderBy('year_id', 'desc')->first();
+        $year_id = $sclass == null ? \App\Helpers\Helpers::instance()->getCurrentAccademicYear() : $sclass->year_id;
+        $year = \App\Models\Batch::find($year_id);
         $st = $student;
         $_class = $student->_class();
         $student->classes->first()->delete();
         $student->delete();
 
-        event(new StudentChangedEvent($st, $_class, $action = "STUDENT_ACCOUNT_DELETED", $actor = auth()->user()));
+        event(new StudentChangedEvent($st, $_class, $year=$year, $action = "STUDENT_ACCOUNT_DELETED", $actor = auth()->user()));
         return redirect()->back()->with('success', "Student deleted successfully !");
     }
 

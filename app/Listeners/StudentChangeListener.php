@@ -20,8 +20,8 @@ class StudentChangeListener implements ShouldQueue
     {
         //
 
-        $data = ['student_id'=>$event->student->id, 'class_id'=>$event->student_class->id??'', 'action'=>$event->action, 'actor'=>$event->actor->id];
-        $text = "{$event->action}:: Student: [{$event->student->matric}] {$event->student->name}, Student class: {$event->student_class->name()}, By: {$event->actor->name}";
+        $data = ['student_id'=>$event->student->id, 'class_id'=>$event->student_class->id??'', 'action'=>$event->action, 'actor'=>$event->actor->id, 'year_id'=>$event->year->id];
+        $text = "{$event->action}:: Student: [{$event->student->matric}] {$event->student->name}, Student class: {$event->student_class->name()} {$event->year->name}, By: {$event->actor->name}";
 
         StudentTrack::create($data);
 

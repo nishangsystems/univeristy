@@ -22,7 +22,7 @@
                         <td>{{ $k++ }}</td>
                         <td>{{ $row->matric??'' }}</td>
                         <td>{{ $row->name??'' }}</td>
-                        <td>{{ $row->class??'' }}</td>
+                        <td>{{ $row->track->class->name()??'' }}</td>
                         <td>{{ $row->deleted_at->format('d/m/Y')??'' }}</td>
                         <td>{{ $row->track == null ? null : $row->track->user->name??'' }}</td>
                         <td><a class="btn btn-sm btn-rounded btn-warning" href="{{ route('admin.trash.students.undo', $row->id) }}">@lang('text.word_undo')</a></td>

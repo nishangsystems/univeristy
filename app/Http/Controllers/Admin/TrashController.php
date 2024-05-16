@@ -22,9 +22,12 @@ class TrashController extends Controller
     
     //
     public function undo_student_trash(Request $request, $student_id){
-        $student = Students::find($student_id);
+        $student = Students::onlyTrashed()->where('id', $student_id)->first();
+        // dd($student);
         $track = StudentTrack::where(['student_id'=>$student_id, 'action'=>'STUDENT_ACCOUNT_DELETED'])->first();
         $student->deleted_at = null;
+        $sclass_data = ['student_id'=>$student_id, 'class_id'=>$track->class_id, 'year_id'=>$track->year_id];
+        StudentClass::create($sclass_data);
         $student->save();
         $track->delete();
         return back()->with('success', "Done");
@@ -40,11 +43,11 @@ class TrashController extends Controller
     
     //
     public function undo_fee_trash(Request $request, $fee_id){
-        $payment = Payments::find($fee_id);
+        $payment = Payments::onlyTrashed()->where('id', $fee_id);
         $track = FeeTrack::where('payment_id', $fee_id)->first();
         $payment->deleted_at = null;
-        $track->delete();
         $payment->save();
+        $track->delete();
         return back()->with('success', "Done");
     }
     
