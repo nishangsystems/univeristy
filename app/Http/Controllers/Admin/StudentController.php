@@ -359,13 +359,15 @@ class StudentController extends Controller
          || $student->payment) {
             return redirect()->back()->with('error', "Student cant be deleted !");
         }
-        
+        $sclass = $student->classes()->orderBy('year_id', 'desc')->first();
+        $year_id = $sclass == null ? \App\Helpers\Helpers::instance()->getCurrentAccademicYear() : $sclass->year_id;
+        $year = \App\Models\Batch::find($year_id);
         $st = $student;
         $_class = $student->_class();
         $student->classes->first()->delete();
         $student->delete();
 
-        event(new StudentChangedEvent($st, $_class, $action = "STUDENT_ACCOUNT_DELETED", $actor = auth()->user()));
+        event(new StudentChangedEvent($st, $_class, $year=$year, $action = "STUDENT_ACCOUNT_DELETED", $actor = auth()->user()));
         return redirect()->back()->with('success', "Student deleted successfully !");
     }
 
@@ -1141,7 +1143,7 @@ class StudentController extends Controller
         # code...
         $student_class = StudentClass::where(['student_id'=>$request->student_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear()]);
         if(!$student_class == null){
-            $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason, 'result_bypass_semester'=>$request->semester ?? Helpers::instance()->getSemester($student_class->first()->class_id)->id]);
+            $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason, 'bypassed_by'=>auth()->id(), 'bypassed_at'=>now(), 'result_bypass_semester'=>$request->semester ?? Helpers::instance()->getSemester($student_class->first()->class_id)->id]);
 
             return back()->with('success', 'Done');
         }
@@ -1163,7 +1165,7 @@ class StudentController extends Controller
     {
         $std_class = StudentClass::find($id);
         if($std_class != null){
-            StudentClass::where('id', '=', $id)->update(['bypass_result'=>0, 'bypass_result_reason'=>null, 'result_bypass_semester'=>null]);
+            StudentClass::where('id', '=', $id)->update(['bypass_result'=>0, 'bypass_result_reason'=>null, 'result_bypass_semester'=>null, 'bypassed_by'=>null, 'bypassed_at'=>null]);
             return back()->with('success', 'Done');
         }
         return back()->with('error', 'Operation failed. Bypass could not be resolved to a class.');

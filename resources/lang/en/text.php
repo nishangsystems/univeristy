@@ -982,5 +982,12 @@ return [
     'save_exam_mark'=>'save exam mark',
     'word_next'=>'next',
     'add_exam_course'=>'add exam course',
+    'word_encoding'=>'encoding',
+    'word_trash'=>'trash',
+    'deleted_on'=>'deleted on',
+    'deleted_by'=>'deleted by',
+    'result_bypass'=>'result bypass',
+    'bypassed_by'=>'bypassed by',
+    'bypassed_on'=>'bypassed on',
     ''
 ];

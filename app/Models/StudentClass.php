@@ -13,6 +13,7 @@ class StudentClass extends Model
     protected $connection = 'mysql';
 
     protected $fillable = ['student_id', 'class_id', 'year_id', 'result_bypass_semester', 'current'];
+    protected $dates = ['bypassed_at'];
 
     public function class()
     {
@@ -37,6 +38,12 @@ class StudentClass extends Model
         # code...
         return $this->belongsTo(Batch::class, 'year_id');
     }
+
+    public function _bypassed_by(){
+        return $this->belongsTo(User::class, 'bypassed_by');
+    }
+
+
 
     
 }

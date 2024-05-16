@@ -199,7 +199,7 @@ class CodedResultsController extends Controller
             $course  = \App\Models\Subjects::find($course_id);
             $semester  = \App\Models\Semester::find($semester_id);
             $year  = \App\Models\Batch::find($year_id);
-            $excode = \App\Models\ExamCourseCode::where('course_id', $course_id)->first();
+            $excode = \App\Models\ExamCourseCode::where(['course_id'=> $course_id, 'semester_id'=>$semester_id, 'year_id'=>$year_id])->first();
             $codes = \App\Models\ExamCourseCode::where(['semester_id'=>$semester_id, 'year_id'=>$year_id])->orderBy('updated_at', 'DESC')->get();
             $data['title'] = "Update Exam Course Coding for {$course->name} [$course->code] | {$semester->name} | {$year->name}";
             $data['course'] = $course;

@@ -13,7 +13,7 @@ class Payments extends Model
     protected $connection = 'mysql';
     protected $table = 'payments';
     protected $fillable = [	"payment_id","student_id","batch_id",'unit_id',"amount","reference_number","import_reference", 'user_id', 'debt', 'paid_by', 'transaction_id', 'payment_year_id'];
-
+    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 
     public function item(){
         return $this->belongsTo(PaymentItem::class, 'payment_id');
@@ -31,6 +31,10 @@ class Payments extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function year(){
+        return $this->belongsTo(Batch::class, 'batch_id');
+    }
+
     public function transaction()
     {
         # code...
@@ -39,6 +43,10 @@ class Payments extends Model
         }else{
             return $this->hasOne(Transaction::class, 'payment_id');
         }
+    }
+
+    public function track(){
+        return $this->hasOne(FeeTrack::class, 'payment_id');
     }
 
 }

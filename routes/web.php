@@ -661,6 +661,14 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('fee/generate/{student_id}', [Admin\ClearanceController::class, 'save_fee_clearance']);
     });
 
+    Route::prefix('trash')->name('trash.')->group(function(){
+        Route::get('students', [Admin\Trashcontroller::class, 'students'])->name('students');
+        Route::get('students/undo/{student_id}', [Admin\Trashcontroller::class, 'undo_student_trash'])->name('students.undo');
+        Route::get('fee', [Admin\Trashcontroller::class, 'fee'])->name('fee');
+        Route::get('fee/undo/{fee_id}', [Admin\Trashcontroller::class, 'undo_fee_trash'])->name('fee.undo');
+        Route::get('result_bypass', [Admin\Trashcontroller::class, 'result_bypass'])->name('result_bypass');
+        Route::get('result_bypass/undo/{bypass_id}', [Admin\StudentController::class, 'cancelResultBypass'])->name('result_bypass.undo');
+    });
     
 
 });

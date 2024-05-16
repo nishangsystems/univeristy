@@ -14,19 +14,20 @@ class StudentChangedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $student, $student_class, $action, $actor;
+    public $student, $student_class, $action, $actor, $year;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($student, $student_class, $action, $actor)
+    public function __construct($student, $student_class, $year, $action, $actor)
     {
         //
         $this->student = $student;
         $this->student_class = $student_class;
         $this->action = $action;
         $this->actor = $actor;
+        $this->year = $year;
     }
 
     /**
