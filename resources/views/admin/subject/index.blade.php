@@ -32,7 +32,7 @@
                         <td>{{ $subject->name }}</td>
                         <td>{{ $subject->coef }}</td>
                         <td>{{ $subject->semester->name??'' }}</td>
-                        <td>{{ $subject->level->level??;'' }}</td>
+                        <td>{{ $subject->level->level??'' }}</td>
                         <td>{{ $subject->status }}</td>
                         <td class="d-flex justify-content-end align-items-center text-capitalize">
                             <a class="btn btn-xs btn-success" href="{{route('admin.subjects.edit',[$subject->id])}}"><i class="fa fa-edit"> {{__('text.word_edit')}}</i></a> |
