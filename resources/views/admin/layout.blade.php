@@ -438,13 +438,13 @@
                     </li>
 
                     
-                    <li>
+                    {{-- <li>
                         <a href="{{route('admin.result_release.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                            {{__('text.add_result_release')}}
                         </a>
                         <b class="arrow"></b>
-                    </li>
+                    </li> --}}
 
                     
                     <li>
@@ -879,47 +879,6 @@
             </li>
             @endif
 
-            @if (\Auth::user()->hasPermissionTo('manage_result_coding'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize" title="import coded results">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
-                    <span class="menu-text">
-						{{__('text.import_results')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-
-                    <li>
-                        <a href="{{route('admin.result.coded.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_index')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    {{-- <li>
-                        <a href="{{route('admin.result.coded.students')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.student_coding')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.result.coded.import')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.import_exams')}}
-                        </a>    
-                        <b class="arrow"></b>
-                    </li>     --}}
-
-                </ul>
-            </li>
-            @endif
-
             @if (\Auth::user()->hasPermissionTo('manage_scholarship'))
             <li>
                 <a href="#" class="dropdown-toggle">
@@ -1185,6 +1144,17 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+
+                    
+                    @if (\Auth::user()->hasPermissionTo('manage_result_coding'))
+                        <li>
+                            <a href="{{route('admin.result.coded.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_encoding')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    @endif
 
                 </ul>
             </li>
@@ -1595,13 +1565,53 @@
             <!-- End attaendance management -->
             @endif
 
+                            
+            @if (\Auth::user()->hasPermissionTo('manage_trash'))
+            <!-- Attendance management -->
             <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                    <span class="menu-text">
+						{{__('text.word_trash')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.trash.fee')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_fee')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.trash.students')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_students')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.trash.result_bypass')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.result_bypass')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <!-- End attaendance management -->
+            @endif
+
+
+            {{-- <li>
                 <a href="{{route('documentation.index')}}" class="text-capitalize">
                     <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
                     {{__('text.word_documentation')}}
                 </a>
                 <b class="arrow"></b>
-            </li>
+            </li> --}}
 
             <li>
                 <a href="{{route('admin.reset_password')}}" class="text-capitalize">

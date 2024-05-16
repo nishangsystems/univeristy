@@ -32,6 +32,7 @@ class CreateStudentsTable extends Migration
             $table->integer('program_id')->nullable();
             $table->integer('imported')->default(0);
             $table->boolean('active')->default(1);
+            $table->softDeletes()->nullable();
             $table->timestamps();
 
             $table->foreign('campus_id')->references('id')->on('campuses');

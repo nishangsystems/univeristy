@@ -129,11 +129,11 @@
                                     <!-- <a href="{{route('admin.fee.student.payments.edit', [ $student->id, $item->id])}}" class="btn m-2 btn-sm btn-primary text-white text-capitalize">{{__('text.word_edit')}}</a> -->
             
                                     @if($item->user_id == auth()->id())
-                                        <a onclick="event.preventDefault();
-                                                            document.getElementById('delete-{{$item->id}}').submit();" class=" btn btn-danger btn-sm m-2 text-capitalize">{{__('text.word_delete')}}</a>
-                                        <form id="delete-{{$item->id}}" action="{{route('admin.fee.student.payments.destroy',[$student->id,$item->id])}}" method="POST" style="display: none;">
+                                        <a onclick="event.preventDefault(); delete_fee_item('delete-{{$item->id}}-form', 'delete-{{$item->id}}-reason')" class=" btn btn-danger btn-sm m-2 text-capitalize">{{__('text.word_delete')}}</a>
+                                        <form id="delete-{{$item->id}}-form" action="{{route('admin.fee.student.payments.destroy',[$student->id,$item->id])}}" method="POST" style="display: none;">
                                             @method('DELETE')
                                             {{ csrf_field() }}
+                                            <input type="hidden" name="reason" id="delete-{{$item->id}}-reason">
                                         </form>
                                     @endif
                                 </td>
@@ -198,6 +198,14 @@
         document.body.innerHTML = _printable_doc;
         window.print();
         document.body.innerHTML = _this_doc;
+    }
+
+    let delete_fee_item = function(form_id, field_id){
+        let reason = prompt("SPECIFY THE REASON FOR DELETING THIS FEE RECORD:");
+        if(reason == "" || reason == null){alert("YOU CAN'T DELETE A FEE RECORD WITHOUT SPECIFYING THE REASON"); return;}
+        $('#'+field_id).val(reason);
+        $('#'+form_id).submit();
+
     }
 </script>
 @endsection

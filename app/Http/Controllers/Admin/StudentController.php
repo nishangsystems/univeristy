@@ -1141,7 +1141,7 @@ class StudentController extends Controller
         # code...
         $student_class = StudentClass::where(['student_id'=>$request->student_id, 'year_id'=>Helpers::instance()->getCurrentAccademicYear()]);
         if(!$student_class == null){
-            $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason, 'result_bypass_semester'=>$request->semester ?? Helpers::instance()->getSemester($student_class->first()->class_id)->id]);
+            $student_class->update(['bypass_result'=>true, 'bypass_result_reason'=>$request->bypass_result_reason, 'bypassed_by'=>auth()->id(), 'bypassed_at'=>now(), 'result_bypass_semester'=>$request->semester ?? Helpers::instance()->getSemester($student_class->first()->class_id)->id]);
 
             return back()->with('success', 'Done');
         }
@@ -1163,7 +1163,7 @@ class StudentController extends Controller
     {
         $std_class = StudentClass::find($id);
         if($std_class != null){
-            StudentClass::where('id', '=', $id)->update(['bypass_result'=>0, 'bypass_result_reason'=>null, 'result_bypass_semester'=>null]);
+            StudentClass::where('id', '=', $id)->update(['bypass_result'=>0, 'bypass_result_reason'=>null, 'result_bypass_semester'=>null, 'bypassed_by'=>null, 'bypassed_at'=>null]);
             return back()->with('success', 'Done');
         }
         return back()->with('error', 'Operation failed. Bypass could not be resolved to a class.');

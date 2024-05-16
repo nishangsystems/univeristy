@@ -314,11 +314,11 @@ class PaymentController extends Controller
             $year = $payment->year;
             $p->delete();
 
-            event(new FeeChangedEvent($student, $payment, $year, $reason=$request->reason??''));
+            event(new FeeChangedEvent($student, $payment, $year, $action='FEE_RECORD_DELETED', $actor=auth()->user(), $reason=$request->reason??''));
             return back()->with('success', __('text.word_done'));
         } catch (\Throwable $th) {
             //throw $th;
-            return back()->with('error', $th->getMessage());
+            return back()->with('error', "F:: {$th->getFile()}, L:: {$th->getLine()}, M:: {$th->getMessage()}");
         }
     }
 

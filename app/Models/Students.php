@@ -5,20 +5,23 @@ namespace App\Models;
 use App\Helpers\Helpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
 
 class Students extends Authenticatable
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, HasApiTokens, SoftDeletes;
 
     protected $fillable = [
         'name', 'email', 'phone', 'address', 'gender', 'username', 'matric', 
         'dob', 'pob', 'campus_id', 'admission_batch_id', 'password', 'parent_name', 
         'program_id', 'parent_phone_number', 'imported', 'active', 'password', 
-        'region', 'division', 'nationality',
+        'region', 'division', 'nationality', 'deleted_at'
     ];
+
+    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 
     protected $connection = 'mysql';
 
@@ -390,5 +393,9 @@ class Students extends Authenticatable
     {
         # code...
         return $this->hasOne(FeeClearance::class, 'student_id');
+    }
+
+    public function track(){
+        return $this->hasOne(StudentTrack::class, 'student_id');
     }
 }
