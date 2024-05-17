@@ -6,22 +6,28 @@
         <div id="section">
             <div class="form-group">
                 <div>
-                    <form method="get" action="{{Request::url().'/fee_list'}}" target="new">
+                    <form method="get" action="{{Request::url().'/fee_list'}}" target="new" class=" border-top border-bottom border-dark py-4 my-2">
                         <input type="hidden" name="type" id="" value="{{request('type')}}">
-                        <div class="input-group input-group-merge border">
-                            <select class="w-100 border-0 section form-control" id="year" name="year" required>
-                                <option selected class="text-capitalize">{{__('text.select_year')}}</option>
-                                @forelse(\App\Models\Batch::all() as $batch)
-                                    <option value="{{$batch->id}}">{{$batch->name}}</option>
-                                @endforeach
-                            </select>
-                            <select class="w-100 border-0  section form-control" name="class" id="class" required>
-                                <option selected class="text-capitalize">{{__('text.select_class')}}</option>
-                                @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
-                                    <option value="{{$pl['id']}}">{{$pl['name']}}</option>
-                                @endforeach
-                            </select>
-                            <button type="submit" class="border-0 text-uppercase" >{{__('text.word_get')}}</button>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <select class="section form-control" id="year" name="year" required>
+                                    <option selected class="text-capitalize">{{__('text.select_year')}}</option>
+                                    @forelse(\App\Models\Batch::all() as $batch)
+                                        <option value="{{$batch->id}}">{{$batch->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <select class="section form-control" name="class" id="class" required>
+                                    <option selected class="text-capitalize">{{__('text.select_class')}}</option>
+                                    @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                                        <option value="{{$pl['id']}}">{{$pl['name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-sm btn-rounded btn-secondary text-uppercase" >{{__('text.word_get')}}</button>
+                            </div>
                         </div>
                     </form>
                 </div>

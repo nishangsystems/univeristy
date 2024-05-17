@@ -77,7 +77,9 @@ class Controller extends BaseController
             $pls[] = [
                 'id' => $value->id,
                 'level_id'=>$value->level_id,
+                'level'=>$value->level->level,
                 'program_id'=>$value->program_id,
+                'program'=>$value->program->name??'',
                 'name' => $value->name()??'',
                 'department'=> $value->program->parent_id
             ];
@@ -93,14 +95,16 @@ class Controller extends BaseController
             //code...
             // return collect();
             $campus = Campus::find($campus);
-            $pls = $campus->programs()->get()->map(function($cl){
-                $cl->name = $cl->name();
-                $cl->program = $cl->program->name??'';
-                $cl->level = $cl->level->level??'';
-                return $cl;
-            })->sortBy('name');
+            // $pls = $campus->programs()->get()->map(function($cl){
+            //     $cl->name = $cl->name();
+            //     $cl->program = $cl->program->name??'';
+            //     $cl->level = $cl->level->level??'';
+            //     return $cl;
+            // })->sortBy('name');
+            $cpids = $campus->programs->pluck('id')->unique()->toArray();
+            $prgs = Self::sorted_program_levels()->whereIn('id', $cpids);
             
-            return response($pls);
+            return response($prgs);
         } catch (\Throwable $th) {
             //throw $th;
             return response( $th->getMessage().'\n Line: '.$th->getLine().'\n File: '.$th->getFile(), 500);

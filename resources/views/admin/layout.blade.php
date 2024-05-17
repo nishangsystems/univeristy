@@ -1570,7 +1570,7 @@
             <!-- Attendance management -->
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-trash"></i>
                     <span class="menu-text">
 						{{__('text.word_trash')}}
 						</span>

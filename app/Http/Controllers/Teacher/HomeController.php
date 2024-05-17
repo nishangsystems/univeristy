@@ -404,12 +404,11 @@ class HomeController extends Controller
         if($sem != null){
             $data['semester'] = $sem;
             $data['year'] = $batch;
-            $data['course'] = $subject;
             $data['class'] = $program_level;
             $data['title2'] = __('text.import_CA_results_for', ['class'=>$program_level->name(), 'ccode'=>$subject->code, 'year'=>$batch->name, 'sem'=>$sem->name]);
             $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $subject->code .'</b> || '.__('text.word_class').' :: <b class="text-danger">'. $program_level->name() .'</b>'.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
             $data['delete_label'] = __('text.clear_ca_for', ['year'=>$batch->name??'YR', 'class'=>$program_level->name(), 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
-            $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class_id, 'semester_id'=>$sem->id, 'subject_id'=>$subject->id??null])->get();
+            $data['results'] = Result::where(['batch_id'=>$batch->id, 'class_id'=>$class_id, 'semester_id'=>$sem->id, 'subject_id'=>$subject->id])->get();
             $data['delete_prompt'] = "You are about to delete all {$program_level->name()} CA for {$subject->code}, {$sem->name} {$batch->name}";
             $data['can_update_ca'] = !(now()->isAfter($sem->ca_upload_latest_date));
         }
@@ -417,7 +416,6 @@ class HomeController extends Controller
     }
 
     public function course_ca_import_save(Request $request, $class_id, $course_id, $year, $semester){
-        // return $request->all();
         if($request->file('file') == null){
             session()->flash('error', 'file field requried');
             return back()->withInput();
@@ -435,10 +433,11 @@ class HomeController extends Controller
         // read file data into an array
         $file_data = [];
         while(($row = fgetcsv($reading_stream, 1000)) != null){
-            $file_data[] = ['matric'=>$row[0], 'ca_score'=>$row[1], 'exam_score'=>$row[2]];
+            $file_data[] = ['matric'=>$row[0], 'ca_score'=>$row[1]];
         }
         fclose($reading_stream);
 
+        // dd($file_data);
         // write CA results to database
         $missing_students = "";
         $subject = Subjects::find($course_id);

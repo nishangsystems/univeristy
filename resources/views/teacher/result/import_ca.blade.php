@@ -89,7 +89,7 @@
                     <div class="">
                         <div class="alert-warning py-3 text-center text-uppercase border-top border-bottom"><b>@lang('text.upload_ca_marks_in_csv_only')</b></div>
                         @if($can_update_ca)
-                            <form class="my-4" method="POST" enctype="multipart/form-data">
+                            <form class="my-4" method="POST" enctype="multipart/form-data" action="{{ route('user.class_course.ca.import', ['class_id'=>$class_id, 'semester'=>$semester_id, 'year'=>$year_id, 'course_id'=>$course->id]) }}">
                                 @csrf
                                 <input class="form-control my-2 rounded" name="file" type="file">
                                 <button class="form-control btn btn-sm btn-primary rounded my-2" type="submit">@lang('text.word_import')</button>
