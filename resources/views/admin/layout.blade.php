@@ -1349,6 +1349,24 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+
+
+                    <li>
+                        <a href="{{route('admin.res_and_trans.exam.add_mark')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.add_marks')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('admin.res_and_trans.exam.roundoff')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.roundoff_marks')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                     
                 </ul>
             </li>
@@ -1570,7 +1588,7 @@
             <!-- Attendance management -->
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-trash"></i>
                     <span class="menu-text">
 						{{__('text.word_trash')}}
 						</span>

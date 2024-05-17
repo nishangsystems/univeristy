@@ -989,5 +989,12 @@ return [
     'result_bypass'=>'result bypass',
     'bypassed_by'=>'bypassed by',
     'bypassed_on'=>'bypassed on',
+    'add_marks'=>'add marks',
+    'roundoff_marks'=>'roundoff marks',
+    'additional_mark'=>'additional mark',
+    'add_mark'=>'add mark',
+    'roundoff_mark'=>'roundoff mark',
+    'upper_limit'=>'upper limit',
+    'lower_limit'=>'lower limit',
     ''
 ];

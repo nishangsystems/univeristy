@@ -384,5 +384,4 @@ class ResultsAndTranscriptsController extends Controller{
             return back()->withInput();
         }
     }
-    
 }

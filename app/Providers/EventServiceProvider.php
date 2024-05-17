@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Events\BulkMarkAddedEvent;
 use App\Events\FeeChangedEvent;
 use App\Events\StudentChangedEvent;
 use App\Events\StudentResultChangedEvent;
+use App\Listeners\BulkMarkAddedListener;
 use App\Listeners\FeeChangeListener;
 use App\Listeners\LogStudentResultChangeListener;
 use App\Listeners\StudentChangeListener;
@@ -25,7 +27,7 @@ class EventServiceProvider extends ServiceProvider
         StudentResultChangedEvent::class => [LogStudentResultChangeListener::class],
         FeeChangedEvent::class => [FeeChangeListener::class],
         StudentChangedEvent::class => [StudentChangeListener::class],
-
+        BulkMarkAddedEvent::class => [BulkMarkAddedListener::class],
     ];
 
     /**
