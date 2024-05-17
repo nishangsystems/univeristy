@@ -51,8 +51,15 @@ return [
         
         'student_change'=>[
             'driver'=>'single',
-            'name'=>'student-change log',
+            'name'=>'student-change',
             'path'=>storage_path('logs/student_changes.log'),
+            'level'=>env('LOG_LEVEL', 'critical')
+        ],
+        
+        'bulk_mark_change'=>[
+            'driver'=>'single',
+            'name'=>'bulk_mark_change',
+            'path'=>storage_path('logs/bulk_mark_changes.log'),
             'level'=>env('LOG_LEVEL', 'critical')
         ],
 
