@@ -661,7 +661,7 @@ class ResultController extends Controller
         // read file data into an array
         $file_data = [];
         while(($row = fgetcsv($reading_stream, 1000)) != null){
-            $file_data[] = ['matric'=>$row[1], 'ca_score'=>$row[2]];
+            $file_data[] = ['matric'=>$row[0], 'ca_score'=>$row[1]];
         }
         fclose($reading_stream);
 
@@ -916,5 +916,46 @@ class ResultController extends Controller
 
     public function get_record($student_id, $year_id, $semester_id, $course_id){
         return Result::where(['batch_id'=>$year_id, 'student_id'=>$student_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id])->first();
+    }
+
+    public function ca_upload_report(Request $request, $year=null, $semester=null, $pl=null){
+        $data['title'] = "CA Upload Record";
+        $data['year_id'] = $year; $data['semester_id'] = $semester; $data['class_id'] = $pl;
+        $data['years'] = Batch::all();
+        $data['semesters'] = Semester::all();
+        $data['classes'] = \App\Http\Controllers\Controller::sorted_program_levels();
+        if($pl != null){
+            $data['year'] = Batch::find($year);
+            $data['semeser'] = Semester::find($semester);
+            $data['class'] = ProgramLevel::find($pl);
+            $data['title'] = "CA Upload Record For {$data['class']->name()}, {$data['semester']->name} {$data['year']->name}";
+            $uploaded = Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'class_id'=>$pl])->whereNotNull('ca_score')->orderBy('subject_id')->distinct()->pluck('subject_id')->toArray();
+            $data['record'] = ProgramLevel::find($pl)->subjects->map(function($rec)use($uploaded){
+                $rec->_status = in_array($rec->id, $uploaded) ? 1: 0;
+                return $rec;
+            });
+        }
+        return view('admin.result.ca_upload_record', $data);
+    }
+
+    public function exam_upload_report(Request $request, $year=null, $semester=null, $pl=null){
+        $data['title'] = "Exam Upload Record";
+        $data['year_id'] = $year; $data['semester_id'] = $semester; $data['class_id'] = $pl;
+        $data['years'] = Batch::all();
+        $data['semesters'] = Semester::all();
+        $data['classes'] = \App\Http\Controllers\Controller::sorted_program_levels();
+        if($pl != null){
+            $data['year'] = Batch::find($year);
+            $data['semeser'] = Semester::find($semester);
+            $data['class'] = ProgramLevel::find($pl);
+            $data['title'] = "Exam Upload Record For {$data['class']->name()}, {$data['semester']->name} {$data['year']->name}";
+
+            $uploaded = Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'class_id'=>$pl])->whereNotNull('exam_score')->orderBy('subject_id')->distinct()->pluck('subject_id')->toArray();
+            $data['record'] = ProgramLevel::find($pl)->subjects->map(function($rec)use($uploaded){
+                $rec->_status = in_array($rec->id, $uploaded) ? 1: 0;
+                return $rec;
+            });
+        }
+        return view('admin.result.exam_upload_record', $data);
     }
 }

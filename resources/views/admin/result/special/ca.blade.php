@@ -56,7 +56,7 @@
                                 </tr>
                                 <tr class="bg-light text-danger border-top border-bottom">
                                     {{-- <th></th> --}}
-                                    <th>@lang('text.word_name')</th>
+                                    {{-- <th>@lang('text.word_name')</th> --}}
                                     <th>@lang('text.word_matricule')</th>
                                     <th>@lang('text.ca_mark')</th>
                                 </tr>
@@ -64,23 +64,26 @@
                             <tbody>
                                 <tr class="border-top border-bottom">
                                     {{-- <td class="bg-light">1</td> --}}
-                                    <td></td>  <td>DNT23D023</td>  <td>23</td>
+                                    {{-- <td></td>   --}}
+                                    <td>DNT23D023</td>  <td>23</td>
                                 </tr>
                                 <tr class="border-top border-bottom">
                                     {{-- <td class="bg-light">2</td>   --}}
-                                    <td></td>  <td>DNT23D003</td>  <td>20</td>
+                                    {{-- <td></td>   --}}
+                                    <td>DNT23D003</td>  <td>20</td>
                                 </tr>
                                 <tr class="border-top border-bottom">
                                     {{-- <td class="bg-light">3</td>   --}}
-                                    <td></td>  <td>DNT23D102</td>  <td>17</td>
+                                    {{-- <td></td>   --}}
+                                    <td>DNT23D102</td>  <td>17</td>
                                 </tr>
                                 <tr class="border-top border-bottom">
                                     {{-- <td class="bg-light">4</td>   --}}
-                                    <td></td>  <td>DNT23D021</td>  <td>25</td>
+                                    {{-- <td></td>   --}}
+                                    <td>DNT23D021</td>  <td>25</td>
                                 </tr>
                                 <tr class="border-top border-bottom">
-                                    {{-- <td class="bg-light">5</td>   --}}
-                                    <td></td>  <td>DNT23D025</td>  <td>24</td>
+                                    <td>DNT23D025</td>  <td>24</td>
                                 </tr>
                             </tbody>
                         </table>
