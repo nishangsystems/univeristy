@@ -20,6 +20,7 @@ class AuthController extends Controller
 
     public function studentLogin(Request $request)
     {
+        return $request->all();
         $validated = Validator::make($request->all(), [
             'matric' => 'required',
             'password' => 'required|min:6'

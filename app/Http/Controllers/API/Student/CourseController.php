@@ -26,7 +26,6 @@ class CourseController extends Controller
         
         $student = Auth('student_api')->user();
         
-
         $_year = $request->year ?? Helpers::instance()->getYear();
         $_semester = $request->semester ?? Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
         $courses = StudentSubject::where(['student_courses.student_id'=>$student->id])->where(['student_courses.year_id'=>$_year])
