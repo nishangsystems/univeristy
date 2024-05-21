@@ -291,6 +291,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::get('special/{year?}/{semester?}/{course_code?}', 'Admin\ResultController@import_special_ca')->name('special');
             Route::post('special/{year?}/{semester?}/{course_code?}', 'Admin\ResultController@import_save_special_ca');
             Route::get('special/{year}/{semester}/{course_code}/clear', 'Admin\ResultController@clear_special_ca')->name('special.clear');
+            Route::get('upload/report/{year?}/{semester?}/{program_level?}', 'Admin\ResultController@ca_result')->name('index');
             Route::get('{class_id}/{course_id}/import', 'Admin\ResultController@ca_import')->name('import');
             Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@ca_import_save')->name('import.save');
             Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@ca_fill')->name('fill');
@@ -515,9 +516,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('clear_exam', 'Admin\ImportCenter@clear_exam_save');
         Route::get('clear_fee', 'Admin\ImportCenter@clear_fee')->name('clear_fee');
         Route::post('clear_fee', 'Admin\ImportCenter@clear_fee_save');
-    });
-
-    
+    });    
     
     Route::name('stock.')->prefix('stock')->group(function(){
         Route::get('/', 'Admin\StockController@index')->name('index');
@@ -555,9 +554,6 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('set_letter_head', [AdminHomeController::class, 'set_letter_head'])->name('set_letter_head');
     Route::post('set_letter_head/save', [AdminHomeController::class, 'save_letter_head'])->name('save_letter_head');
 
-
-    
-    
     // ROUTES FOR RESULT OPERATIONS
     Route::prefix('res_and_trans')->name('res_and_trans.')->group(function () {
         Route::post('spr_sheet', [ResultsAndTranscriptsController::class, 'spread_sheet'])->name('spr_sheet');
@@ -672,6 +668,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('fee/undo/{fee_id}', [Admin\Trashcontroller::class, 'undo_fee_trash'])->name('fee.undo');
         Route::get('result_bypass', [Admin\Trashcontroller::class, 'result_bypass'])->name('result_bypass');
         Route::get('result_bypass/undo/{bypass_id}', [Admin\StudentController::class, 'cancelResultBypass'])->name('result_bypass.undo');
+        Route::get('added_marks', [Admin\Trashcontroller::class, 'added_marks'])->name('added_marks');
+        Route::get('added_marks/undo/{track_id}', [Admin\StudentController::class, 'cancel_added_marks'])->name('added_marks.undo');
     });
     
 

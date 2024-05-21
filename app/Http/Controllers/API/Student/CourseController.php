@@ -23,16 +23,21 @@ class CourseController extends Controller
 {
     public function courses(Request $request)
     {
+
+        try{
+            $student = Auth('student_api')->user();
+            
+            $_year = $request->year ?? Helpers::instance()->getYear();
+            $_semester = $request->semester ?? Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
+            $courses = StudentSubject::where(['student_courses.student_id'=>$student->id])->where(['student_courses.year_id'=>$_year])
+                ->join('subjects', ['subjects.id'=>'student_courses.course_id'])->where(['subjects.semester_id'=>$_semester])
+                ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->whereNull('class_subjects.deleted_at')
+                ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
+            return response()->json(['cv_sum'=>collect($courses)->sum('cv'), 'courses'=> CourseResource::collection($courses)]);
+        }catch(\Throwable $th){
+            return response()->response(['status'=>400, 'message'=>$th->getMessage()]);
+        }
         
-        $student = Auth('student_api')->user();
-        
-        $_year = $request->year ?? Helpers::instance()->getYear();
-        $_semester = $request->semester ?? Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
-        $courses = StudentSubject::where(['student_courses.student_id'=>$student->id])->where(['student_courses.year_id'=>$_year])
-            ->join('subjects', ['subjects.id'=>'student_courses.course_id'])->where(['subjects.semester_id'=>$_semester])
-            ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->whereNull('class_subjects.deleted_at')
-            ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
-        return response()->json(['cv_sum'=>collect($courses)->sum('cv'), 'courses'=> CourseResource::collection($courses)]);
     }
 
     public function class_courses(Request $request, $level = null)
@@ -47,13 +52,6 @@ class CourseController extends Controller
             $pl = Students::find($student->id)->_class($this->current_accademic_year)->select('program_levels.*')->first();
             $level_id = $level == null ? $pl->level_id : $level;
             $program_id = $pl->program_id;
-            // return $level_id;
-            // $subjects = ProgramLevel::where('program_levels.program_id', $program_id)->where('program_levels.level_id',$level_id)
-            //             ->join('class_subjects', 'class_subjects.class_id', '=', 'program_levels.id')->whereNull('class_subjects.deleted_at')
-            //             ->join('subjects', 'subjects.id', '=', 'class_subjects.subject_id')
-            //             // ->where('subjects.semester_id', '=', Helpers::instance()->getSemester($pl->id)->id)
-            //             ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->all();
-
             $subjects = Subjects::join('class_subjects', 'class_subjects.subject_id', '=', 'subjects.id')->whereNull('class_subjects.deleted_at')
                         ->join('program_levels', 'program_levels.id', '=', 'class_subjects.class_id')
                         ->where('program_levels.level_id',$level_id)->where('program_levels.program_id', $program_id)
@@ -61,8 +59,8 @@ class CourseController extends Controller
             return response()->json(['success'=>200, 'courses'=>CourseResource::collection($subjects), 'can_register'=>$rCheck['can'], 'reason'=>$rCheck['reason']]);
         }
         catch(Throwable $th){
-            throw $th;
-            // return $th->getTrace();
+            // throw $th;
+            return response()->response(['status'=>400, 'message'=>$th->getMessage()]);
         }
     }
 
@@ -179,8 +177,8 @@ class CourseController extends Controller
             $pdf->save($fpath);
             return response()->json(['status'=>'success', 'url'=>asset($fname)]);
         } catch (\Throwable $th) {
-            throw $th;
-            // return response()->json(['success'=>400, 'message'=>$th->getMessage()]);
+            // throw $th;
+            return response()->json(['success'=>400, 'message'=>$th->getMessage()]);
         }
     }
 
@@ -211,8 +209,8 @@ class CourseController extends Controller
                 'class'=>$class == null ? "" : ['id'=>$class->id, 'name'=>$class->name()],
             ]);
         } catch (\Throwable $th) {
-            throw $th;
-            return $th->getMessage();
+            // throw $th;
+            return response()->response(['status'=>400, 'message'=>$th->getMessage()]);
             
         }
     }
@@ -220,8 +218,6 @@ class CourseController extends Controller
     public function registered_courses(Request $request)
     {
         # code...
-        
-        // $student = auth('student_api')->user();
         return $this->_registerd_courses($request->year, $request->semester);
     }
 }
