@@ -3,7 +3,7 @@
     <div class="py-4">
         <div class="my-4 container-lg-fluid mx-auto row">
             <div class="col-lg-5 my-2">
-                <input class="form-control" id="student_search" type="text" value="{{ ($student->matric??'').' : '. ($student->name??'') }}" oninput="search_student(this)">
+                <input class="form-control" id="student_search" type="text" value="{{ ($student??null) == null ? '' : ($student->matric??'').' : '. ($student->name??'') }}" oninput="search_student(this)">
                 <span class="text-secondary text-capitalize">{{ trans_choice('text.word_student', 1) }}</span>
                 <input name="student_id" type="hidden" id="student_id_field" value="{{ $student_id??'' }}" onchange="load_semesters(this)">
                 <div class="container-fluid" id="student_display_panel"></div>

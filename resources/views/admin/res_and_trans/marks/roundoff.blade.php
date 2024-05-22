@@ -13,29 +13,30 @@
                 <span class="text-secondary text-capitalize">@lang('text.academic_year')<i class="text-danger">*</i></span>
             </div>
             <div class="col-md-6 col-xl-3 my-2">
+                <select class="form-control" id="background_id_field" name="background_id" onchange="loadSemesters(this)">
+                    <option value="">@lang('text.select_background')</option>
+                    @foreach ($backgrounds as $bg)
+                        <option value="{{ $bg->id }}" {{ $bg->id == $background_id ? 'selected' : '' }}>{{ $bg->background_name }}</option>
+                    @endforeach
+                </select>
+                <span class="text-secondary text-capitalize">@lang('text.word_background')<i class="text-danger">*</i></span>
+            </div>
+            <div class="col-md-6 col-xl-3 my-2">
                 <select class="form-control" id="semester_id_field" name="semester_id">
                     <option>@lang('text.word_semester')</option>
-                    @foreach ($semesters as $sem)
-                        <option value="{{ $sem->id??'' }}" {{ $sem->id == $semester_id ? 'selected' : '' }}>{{ $sem->name??null }}</option>
-                    @endforeach
+                    @isset ($semester)
+                        <option value="{{ $semester->id??'' }}" selected>{{ $semester->name??null }}</option>
+                    @endif
                 </select>
                 <span class="text-secondary text-capitalize">@lang('text.word_semester')<i class="text-danger">*</i></span>
             </div>
             <div class="col-md-6 col-xl-2 my-2">
-                <input type="text" class="form-control" autocomplete="off" id="course_field" oninput="search_course(this)" value="[{{ $course->code??'' }}] {{ $course->name??'' }}">
+                <input type="text" class="form-control" autocomplete="off" id="course_field" oninput="search_course(this)" value="{{ ($course??null) == null ? null : '['.($course->code??'').'] '.($course->name??'') }}">
                 <span class="text-capitalize text-secondary">@lang('text.word_course')<i class="text-danger">*</i></span>
                 <input name="course_id" type="hidden" id="course_id_field" value="{{ $course_id }}">
                 <div class="container-fluid" id="course_display_panel"></div>
             </div>
-            <div class="col-md-6 col-xl-3 my-2">
-                <select class="form-control" id="class_id_field" name="class_id">
-                    <option value="">@lang('text.select_class')</option>
-                    @foreach ($classes as $_class)
-                        <option value="{{ $_class['id']??'' }}" {{ $_class['id'] == $class_id ? 'selected' : '' }}>{{ $_class['name']??null }}</option>
-                    @endforeach
-                </select>
-                <span class="text-secondary text-capitalize">@lang('text.word_class')</span>
-            </div>
+            
             <div class="col-xl-2 my-2">
                 <button class="btn btn-primary rounded btn-sm" onclick="presubmit_submit()">@lang('text.word_next')</button>
             </div>
@@ -71,12 +72,29 @@
 @section('script')
     <script>
 
+        let loadSemesters = function(bg_element){
+            let bg_id = $(bg_element).val();
+            let _url = "{{ route('semesters', ['background'=>'__BID__']) }}".replace('__BID__', bg_id);
+            $.ajax({
+                method: 'GET', url: _url, 
+                success: function(data){
+                    console.log(data);
+                    let html = "<option value="">{{ __('text.word_semester') }}</option>";
+                    data.forEach(elemet=>{
+                        html += `<option value="${element.id}">${element.name}</option>`;
+                    });
+                    $('#semester_id_field').val(html);
+                }
+            });
+        }
+
+
         let presubmit_submit = function(element){
             let year = $('#year_id_field').val();
             let semester = $('#semester_id_field').val();
             let course = $('#course_id_field').val();
-            let class_id = $('#class_id_field').val();
-            let url = "{{ route('admin.res_and_trans.exam.roundoff', ['year_id'=>'_YR_', 'semester_id'=>'_SMST_', 'course_id'=>'_CID_', 'class_id'=>'_CLSID_']) }}".replace('_YR_', year).replace('_SMST_', semester).replace('_CID_', course).replace('_CLSID_', class_id);
+            let class_id = $('#background_id_field').val();
+            let url = "{{ route('admin.res_and_trans.exam.roundoff', ['year_id'=>'_YR_', 'semester_id'=>'_SMST_', 'course_id'=>'_CID_', 'background_id'=>'_CLSID_']) }}".replace('_YR_', year).replace('_SMST_', semester).replace('_CID_', course).replace('_CLSID_', class_id);
             window.location = url;
         }
 

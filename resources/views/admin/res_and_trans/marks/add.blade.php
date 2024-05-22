@@ -22,7 +22,7 @@
                 <span class="text-secondary text-capitalize">@lang('text.word_semester')<i class="text-danger">*</i></span>
             </div>
             <div class="col-md-6 col-xl-2 my-2">
-                <input type="text" class="form-control" autocomplete="off" id="course_field" oninput="search_course(this)" value="[{{ $course->code??'' }}] {{ $course->name??'' }}">
+                <input type="text" class="form-control" autocomplete="off" id="course_field" oninput="search_course(this)" value="{{ ($course??null) == null ? null : '['.($course->code??'').'] '.($course->name??'') }}">
                 <span class="text-capitalize text-secondary">@lang('text.word_course')<i class="text-danger">*</i></span>
                 <input name="course_id" type="hidden" id="course_id_field" value="{{ $course_id }}">
                 <div class="container-fluid" id="course_display_panel"></div>
