@@ -669,8 +669,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('fee/undo/{fee_id}', [Admin\Trashcontroller::class, 'undo_fee_trash'])->name('fee.undo');
         Route::get('result_bypass', [Admin\Trashcontroller::class, 'result_bypass'])->name('result_bypass');
         Route::get('result_bypass/undo/{bypass_id}', [Admin\StudentController::class, 'cancelResultBypass'])->name('result_bypass.undo');
-        Route::get('added_marks', [Admin\Trashcontroller::class, 'added_marks'])->name('added_marks');
-        Route::get('added_marks/undo/{track_id}', [Admin\StudentController::class, 'cancel_added_marks'])->name('added_marks.undo');
+        Route::get('bulk_added_marks', [Admin\Trashcontroller::class, 'bulk_added_marks'])->name('bulk_added_marks');
+        Route::get('bulk_added_marks/undo/{track_id}', [Admin\StudentController::class, 'cancel_bulk_added_marks'])->name('bulk_added_marks.undo');
+        Route::get('mark_changes', [Admin\Trashcontroller::class, 'mark_changes'])->name('mark_changes');
+        Route::get('mark_changes/undo/{track_id}', [Admin\StudentController::class, 'cancel_mark_changes'])->name('mark_changes.undo');
     });
     
 

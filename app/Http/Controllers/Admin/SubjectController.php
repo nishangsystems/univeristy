@@ -43,7 +43,7 @@ class SubjectController extends Controller
         $subject = new \App\Models\Subjects();
         $subject->name = $request->input('name');
         $subject->coef = $request->input('coef');
-        $subject->code = $request->input('code');
+        $subject->code = str_replace(' ', '', $request->input('code'));
         $subject->status = $request->input('status');
         $subject->semester_id = $request->input('semester');
         $subject->save();

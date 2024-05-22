@@ -12,6 +12,7 @@ class ResultTrack extends Model
     protected $connection = "tracking_db";
     protected $table = "result_tracks";
     protected $fillable = ['student_id', 'batch_id', 'semester_id', 'course_id', 'action', 'actor', 'data'];
+    protected $dates = ['created_at'];
 
     public function student(){
         return $this->belongsTo(Students::class, 'student_id');
@@ -30,7 +31,10 @@ class ResultTrack extends Model
     }
 
     public function change(){
-        return json_decode($this->data);
+        if($this->data == null){
+            return null;
+        }
+        return json_decode((string)$this->data);
     }
 
     public function user(){
