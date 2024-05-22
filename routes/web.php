@@ -583,8 +583,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         });
         Route::get('exam/add_mark/{year_id?}/{semester_id?}/{course_id?}/{class_id?}', [Admin\MarksBulkChangeController::class, 'exam_add_mark'])->name('exam.add_mark');
         Route::post('exam/add_mark/{year_id}/{semester_id}/{course_id}/{class_id?}', [Admin\MarksBulkChangeController::class, 'exam_add_mark_save']);
-        Route::get('exam/roundoff_mark/{year_id?}/{semester_id?}/{course_id?}/{class_id?}', [Admin\MarksBulkChangeController::class, 'exam_roundoff_mark'])->name('exam.roundoff');
-        Route::post('exam/roundoff_mark/{year_id}/{semester_id}/{course_id}/{class_id?}', [Admin\MarksBulkChangeController::class, 'exam_roundoff_mark_save']);
+        Route::get('exam/roundoff_mark/{year_id?}/{background_id?}/{semester_id?}/{course_id?}', [Admin\MarksBulkChangeController::class, 'exam_roundoff_mark'])->name('exam.roundoff');
+        Route::post('exam/roundoff_mark/{year_id}/{background_id?}/{semester_id}/{course_id}', [Admin\MarksBulkChangeController::class, 'exam_roundoff_mark_save']);
     });
 
     Route::prefix('resits')->name('resits.')->group(function(){
