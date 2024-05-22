@@ -70,9 +70,9 @@
 @section('script')
     <script>
         let submit_form = function(){
-            let _yr = $('#form_year');
-            let _sm = $('#form_semester');
-            let _cl = $('#form_class');
+            let _yr = $('#form_year').val();
+            let _sm = $('#form_semester').val();
+            let _cl = $('#form_class').val();
             let url = "{{ route('admin.result.ca.upload_report', ['program_level'=>'__CLID__', 'semester'=>'__STR__', 'year'=>'__YR__']) }}".replace('__CLID__', _cl).replace('__STR__', _sm).replace('__YR__', _yr);
             window.location = url
         }
