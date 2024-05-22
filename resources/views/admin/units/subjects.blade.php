@@ -17,7 +17,7 @@
                         <th>{{__('text.word_name')}}</th>
                         <th>{{__('text.word_coefficient')}}</th>
                         <th>{{__('text.word_semester')}}</th>
-                        <th>{{__('text.word_level')}}</th>
+                        {{-- <th>{{__('text.word_level')}}</th> --}}
                         <th>{{__('text.word_status')}}</th>
                         <th></th>
                     </tr>
@@ -31,7 +31,7 @@
                         <td>{{ $subject->name }}</td>
                         <td>{{ $subject->_coef ?? $subject->coef }}</td>
                         <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
-                        <td>{{ \App\Models\Level::find($subject->level_id)->level }}</td>
+                        {{-- <td>{{ \App\Models\Level::find($subject->level_id)->level }}</td> --}}
                         <td>{{ $subject->_status ?? $subject->status }}</td>
                         <td class="d-flex">
                             <a class="btn btn-sm btn-primary" href="{{route('admin.edit.class_subjects',[request('program_level_id'), $subject->id])}}">

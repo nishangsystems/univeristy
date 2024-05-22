@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\FeeTrack;
 use App\Models\Payments;
+use App\Models\ResultTrack;
 use App\Models\StudentClass;
 use Illuminate\Http\Request;
 use App\Models\Students;
@@ -53,6 +54,52 @@ class TrashController extends Controller
     
     //
     public function result_bypass(Request $request){
+        $data['title'] = "Student Result Bypass Records";
+        $data['data'] = StudentClass::where('bypass_result', true)
+            ->join('students', 'students.id', '=', 'student_classes.student_id')
+            ->orderBy('student_classes.year_id', 'desc')->orderBy('student_classes.updated_at', 'desc')
+            ->select(['student_classes.*', 'students.name', 'students.matric'])->get();
+        // dd($data);
+        return view('admin.trash.result_bypass', $data);
+    }
+    
+    //
+    public function bulk_added_marks(Request $request){
+        $data['title'] = "Student Result Bypass Records";
+        $data['data'] = StudentClass::where('bypass_result', true)
+            ->join('students', 'students.id', '=', 'student_classes.student_id')
+            ->orderBy('student_classes.year_id', 'desc')->orderBy('student_classes.updated_at', 'desc')
+            ->select(['student_classes.*', 'students.name', 'students.matric'])->get();
+        // dd($data);
+        return view('admin.trash.result_bypass', $data);
+    }
+    
+    
+    //
+    public function cancel_bulk_added_marks(Request $request, $track_id){
+        $data['title'] = "Student Result Bypass Records";
+        $data['data'] = StudentClass::where('bypass_result', true)
+            ->join('students', 'students.id', '=', 'student_classes.student_id')
+            ->orderBy('student_classes.year_id', 'desc')->orderBy('student_classes.updated_at', 'desc')
+            ->select(['student_classes.*', 'students.name', 'students.matric'])->get();
+        // dd($data);
+        return view('admin.trash.result_bypass', $data);
+    }
+    
+    
+    //
+    public function mark_changes(Request $request, $year_id=null){
+        $data['title'] = "Student Result Change Records";
+        $data['data'] = ResultTrack::where(function($rec)use($year_id){
+            $year_id == null ? null : $rec->where('batch_id', $year_id);
+        })->get();
+        // dd($data);
+        return view('admin.trash.result_changes', $data);
+    }
+    
+    
+    //
+    public function cancel_mark_changes(Request $request, $track_id){
         $data['title'] = "Student Result Bypass Records";
         $data['data'] = StudentClass::where('bypass_result', true)
             ->join('students', 'students.id', '=', 'student_classes.student_id')
