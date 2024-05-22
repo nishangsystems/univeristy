@@ -1195,7 +1195,7 @@
                     </li>
 
                     <li>
-                        <a href="{{route('admin.res_and_trans.exam.roundoff')}}" class="text-capitalize">
+                        <a href="{{route('admin.result.ca.upload_report')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.ca_upload_report')}}
                         </a>
@@ -1203,7 +1203,7 @@
                     </li>
 
                     <li>
-                        <a href="{{route('admin.res_and_trans.exam.roundoff')}}" class="text-capitalize">
+                        <a href="{{route('admin.result.exam.upload_report')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.exam_upload_report')}}
                         </a>

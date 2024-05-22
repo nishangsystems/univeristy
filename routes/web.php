@@ -291,7 +291,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::get('special/{year?}/{semester?}/{course_code?}', 'Admin\ResultController@import_special_ca')->name('special');
             Route::post('special/{year?}/{semester?}/{course_code?}', 'Admin\ResultController@import_save_special_ca');
             Route::get('special/{year}/{semester}/{course_code}/clear', 'Admin\ResultController@clear_special_ca')->name('special.clear');
-            Route::get('upload/report/{year?}/{semester?}/{program_level?}', 'Admin\ResultController@ca_result')->name('index');
+            Route::get('upload/report/{year?}/{semester?}/{program_level?}', 'Admin\ResultController@ca_upload_report')->name('upload_report');
             Route::get('{class_id}/{course_id}/import', 'Admin\ResultController@ca_import')->name('import');
             Route::post('{class_id}/{course_id}/import', 'Admin\ResultController@ca_import_save')->name('import.save');
             Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@ca_fill')->name('fill');
@@ -305,6 +305,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::get('special/{year?}/{semester?}/{course_code?}', 'Admin\ResultController@import_special_exam')->name('special');
             Route::post('special/{year?}/{semester?}/{course_code?}', 'Admin\ResultController@import_save_special_exam');
             Route::get('special/{year}/{semester}/{course_code}/clear', 'Admin\ResultController@clear_special_exam')->name('special.clear');
+            Route::get('upload/report/{year?}/{semester?}/{program_level?}', 'Admin\ResultController@exam_upload_report')->name('upload_report');
             Route::get('{class_id}/{course_id}/import', 'Admin\ResultController@exam_import')->name('import');
             Route::get('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill')->name('fill');
             Route::post('{class_id}/{course_id}/fill', 'Admin\ResultController@exam_fill_save')->name('fill');

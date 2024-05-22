@@ -510,6 +510,10 @@ class ResultController extends Controller
         $data['exam_total'] = $class->program()->first()->exam_total;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
         $res = $student->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
+
+        $_registered_courses = $data['user']->registered_courses($year)->where('semester_id', $semester->id)->pluck('course_id')->unique()->toArray();
+        $registered_courses = count($_registered_courses) > 0 ? $_registered_courses : $data['user']->registered_courses($year->id)->whereNotNull('resit_id')->pluck('course_id')->unique()->toArray();
+      
         $data['subjects'] = $student->_class(Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
         $data['results'] = array_map(function($subject_id)use($data, $year, $semester, $student){
             $ca_mark = $student->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
@@ -536,7 +540,7 @@ class ResultController extends Controller
             }
             
             // dd($grade);
-        }, $res);
+        }, $registered_courses);
 
         $fee = [
             'total_debt'=>$student->total_debts($year),
@@ -661,7 +665,7 @@ class ResultController extends Controller
         // read file data into an array
         $file_data = [];
         while(($row = fgetcsv($reading_stream, 1000)) != null){
-            $file_data[] = ['matric'=>$row[1], 'ca_score'=>$row[2]];
+            $file_data[] = ['matric'=>$row[0], 'ca_score'=>$row[1]];
         }
         fclose($reading_stream);
 
@@ -916,5 +920,49 @@ class ResultController extends Controller
 
     public function get_record($student_id, $year_id, $semester_id, $course_id){
         return Result::where(['batch_id'=>$year_id, 'student_id'=>$student_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id])->first();
+    }
+
+    public function ca_upload_report(Request $request, $year=null, $semester=null, $pl=null){
+        $data['title'] = "CA Upload Record";
+        $data['year_id'] = $year; $data['semester_id'] = $semester; $data['class_id'] = $pl;
+        $data['years'] = Batch::all();
+        $data['semesters'] = Semester::all();
+        $data['classes'] = \App\Http\Controllers\Controller::sorted_program_levels();
+        if($pl != null){
+            $data['year'] = Batch::find($year);
+            $data['semester'] = Semester::find($semester);
+            $data['class'] = ProgramLevel::find($pl);
+            if($data['semester'] != null && $data['class'] != null){
+                $data['title'] = "CA Upload Record For ".($data['class'] == null ? "" :$data['class']->name()).", ".($data['semester']->name??'')." ".($data['year']->name??'');
+                $uploaded = Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'class_id'=>$pl])->whereNotNull('ca_score')->orderBy('subject_id')->distinct()->pluck('subject_id')->toArray();
+                $data['record'] = ProgramLevel::find($pl)->subjects()->where('semester_id', $semester)->get()->map(function($rec)use($uploaded){
+                    $rec->_status = in_array($rec->id, $uploaded) ? 1: 0;
+                    return $rec;
+                });
+            }
+        }
+        return view('admin.result.ca_upload_record', $data);
+    }
+
+    public function exam_upload_report(Request $request, $year=null, $semester=null, $pl=null){
+        $data['title'] = "Exam Upload Record";
+        $data['year_id'] = $year; $data['semester_id'] = $semester; $data['class_id'] = $pl;
+        $data['years'] = Batch::all();
+        $data['semesters'] = Semester::all();
+        $data['classes'] = \App\Http\Controllers\Controller::sorted_program_levels();
+        if($pl != null){
+            $data['year'] = Batch::find($year);
+            $data['semester'] = Semester::find($semester);
+            $data['class'] = ProgramLevel::find($pl);
+            if($data['semester'] != null && $data['class'] != null){
+                $data['title'] = "Exam Upload Record For ".($data['class'] == null ? "" :$data['class']->name()).", ".($data['semester']->name??'')." ".$data['year']->name??'';
+                $uploaded = Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'class_id'=>$pl])->whereNotNull('exam_score')->orderBy('subject_id')->distinct()->pluck('subject_id')->toArray();
+                $data['record'] = ProgramLevel::find($pl)->subjects()->where('semester_id', $semester)->get()->map(function($rec)use($uploaded){
+                    $rec->_status = in_array($rec->id, $uploaded) ? 1: 0;
+                    return $rec;
+                });
+            }
+        }
+        return view('admin.result.exam_upload_record', $data);
     }
 }
