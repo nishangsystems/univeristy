@@ -65,13 +65,12 @@ class TrashController extends Controller
     
     //
     public function bulk_added_marks(Request $request){
-        $data['title'] = "Student Result Bypass Records";
-        $data['data'] = StudentClass::where('bypass_result', true)
-            ->join('students', 'students.id', '=', 'student_classes.student_id')
-            ->orderBy('student_classes.year_id', 'desc')->orderBy('student_classes.updated_at', 'desc')
-            ->select(['student_classes.*', 'students.name', 'students.matric'])->get();
+        $data['title'] = "MASS RESULT CHANGES";
+        $data['data'] = \App\Models\BulkMarkChange::where(function($qry)use($request){
+            $request->year_id == null ? null : $qry->where('year_id', $request->year_id);
+        })->get();
         // dd($data);
-        return view('admin.trash.result_bypass', $data);
+        return view('admin.trash.bulk_result_changes', $data);
     }
     
     
@@ -88,10 +87,10 @@ class TrashController extends Controller
     
     
     //
-    public function mark_changes(Request $request, $year_id=null){
+    public function mark_changes(Request $request){
         $data['title'] = "Student Result Change Records";
-        $data['data'] = ResultTrack::where(function($rec)use($year_id){
-            $year_id == null ? null : $rec->where('batch_id', $year_id);
+        $data['data'] = ResultTrack::where(function($rec)use($request){
+            $request->year_id == null ? null : $rec->where('batch_id', $request->year_id);
         })->get();
         // dd($data);
         return view('admin.trash.result_changes', $data);
@@ -108,5 +107,6 @@ class TrashController extends Controller
         // dd($data);
         return view('admin.trash.result_bypass', $data);
     }
+    
     
 }

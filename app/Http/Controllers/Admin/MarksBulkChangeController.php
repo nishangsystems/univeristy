@@ -98,10 +98,18 @@ class MarksBulkChangeController extends Controller
             return back()->withInput()->with('error', $validity->errors()->first());
         }
 
-        if($class_id == null)
-            $collection = Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id,])->select(['*', DB::raw('SUM(ca_score + IFNULL(exam_score, 0)) as total')])->groupBy('id')->having('total', '>=', $request->lower_limit)->having('total', '<=', $request->upper_limit)->get();
-        else
-            $collection = Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id, 'class_id'=>$class_id])->select(['*', DB::raw('SUM(ca_score + IFNULL(exam_score, 0)) as total')])->groupBy('id')->having('total', '>=', $request->lower_limit)->having('total', '<=', $request->upper_limit)->get();
+        if($background_id == null){
+            $background = null;
+            $classes = null;
+        }else{
+            $background = Background::find($background_id);
+            $classes = $background->classes;
+        }
+        $collection = Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id])->where(function($qry)use($background, $classes){
+            $background == null ? null : $qry->whereIn('class_id', $classes->pluck('id')->toArray());
+        })->select(['*', DB::raw('SUM(ca_score + IFNULL(exam_score, 0)) as total')])->groupBy('id')
+        ->having('total', '>=', $request->lower_limit)->having('total', '<=', $request->upper_limit)
+        ->get();
 
         // dd($collection);
         if ($collection->count() > 0) {
@@ -110,9 +118,9 @@ class MarksBulkChangeController extends Controller
                 $record->exam_score += $request->mark;
                 $record->save();
             });
-
+            event(new BulkMarkAddedEvent($year_id, $semester_id, $course_id, $action = "BULK_MARK_ROUNDOFF", $actor = auth()->user(), $additional_mark = $request->mark, $background_id = $background_id, $class_id=null, $range = ['lower_limit'=>$request->lower_limit, 'upper_limit'=>$request->upper_limit]));
+            
             // track updates here
-            event(new BulkMarkAddedEvent($year_id, $semester_id, $course_id, $action = "BULK_MARK_ROUNDOFF", $actor = auth()->user(), $additional_mark = $request->mark, $class_id = $class_id, $range = ['lower_limit'=>$request->lower_limit, 'upper_limit'=>$request->upper_limit]));
         }else {
             session()->flash('error', "No matching result records found");
         }

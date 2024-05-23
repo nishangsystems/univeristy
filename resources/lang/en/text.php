@@ -998,5 +998,10 @@ return [
     'ca_upload_report'=>'ca upload report',
     'exam_upload_report'=>'exam upload report',
     'mark_changes'=>'mark changes',
+    'result_upload_statistics'=>'result upload statistics',
+    'mass_mark_changes'=>'mass mark changes',
+    'applied_on'=>'applied on',
+    'import_exam_course_coding'=>'import exam course coding',
+    'paper_code'=>'paper code',
     ''
 ];
