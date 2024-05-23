@@ -1079,6 +1079,27 @@
                 @endif
             @endif
 
+            @if (\Auth::user()->hasPermissionTo('manage_school_debts'))
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                <i class="menu-icon fa fa-money"></i>
+                    <span class="menu-text">
+						{{__('text.school_debts')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a href="{{route('admin.debts.schoolDebts')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.manage_school_debts')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            @endif
+
             @if (\Auth::user()->hasPermissionTo('manage_result'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
@@ -1146,9 +1167,16 @@
                     
                     @if (\Auth::user()->hasPermissionTo('manage_result_coding'))
                         <li>
-                            <a href="{{route('admin.result.coded.index')}}" class="text-capitalize">
+                            <a href="{{route('admin.result.encoded.index')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.word_encoding')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.result.decoded.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_decoding')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
@@ -1210,27 +1238,6 @@
                         <b class="arrow"></b>
                     </li>
 
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_school_debts'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                <i class="menu-icon fa fa-money"></i>
-                    <span class="menu-text">
-						{{__('text.school_debts')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.debts.schoolDebts')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.manage_school_debts')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
                 </ul>
             </li>
             @endif
@@ -1630,6 +1637,13 @@
                         <a href="{{route('admin.trash.mark_changes')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.mark_changes')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.trash.bulk_added_marks')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.mass_mark_changes')}}
                         </a>
                         <b class="arrow"></b>
                     </li>

@@ -26,30 +26,38 @@
         </form>
         <hr>
         @isset($year)
-        <div class="d-flex justify-content-end py-3 flex-wrap">
-            <a href="{{ route('admin.result.coded.courses', [$year->id, $semester->id]) }}" class="text-capitalize btn btn-success rounded">@lang('text.import_course_codes')</a> 
-        </div>
+        
         <div class="row my-5">
             <div class="col-md-6 col-lg-6">
-                <div class="container-fluid">
-                    {{-- <hr> --}}
-                    <div class="py-3 my-4 text-center">
-                        <div class="h5 text-secondary">Search course by title or course code </div>
-                        <input type="search" name="" id="" oninput="getCourses(this)" class="form-control rounded text-center" placeholder="Search course by title or course code">
-                    </div>
-        
-                    <table class="table">
-                        <thead class="text-capitalize">
-                            <th>@lang('text.course_title')</th>
-                            <th>@lang('text.course_code')</th>
-                            <th>@lang('text.word_semester')</th>
-                            <th>@lang('text.word_level')</th>
-                            {{-- <th>@lang('text.result_code')</th> --}}
-                            <th>@lang('text.word_action')</th>
-                        </thead>
-                        <tbody id="xcourses_body"></tbody>
-                    </table>
+                <div class="container-fluid my-3 py-3 border-bottom border-top bg-light border-secondary">
+                    <form method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="header text-uppercase text-center"><b>@lang('text.import_exam_course_coding')</b></div>
+                        <div class="my-2">
+                            <input type="file" name="file" class="form-control" required>
+                            <i>@lang('text.csv_file')<span class="text-danger">*</span></i>
+                        </div>
+                        <div class="my-2">
+                            <button class="btn btn-sm btn-primary rounded" type="submit">@lang('text.word_import')</button>
+                        </div>
+                    </form>
                 </div>
+                <table class="table-stripped">
+                    <thead class="text-uppercase bg-danger text-white border-top border-bottom">
+                        <tr class="border-bottom border-light"><th colspan="3" class="header text-center"><b>@lang('text.file_format_csv')</b></th></tr>
+                        <tr>
+                            <th>@lang('text.course_code')</th>
+                            <th>@lang('text.paper_code')</th>
+                            <th>@lang('text.word_matricule')</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-light">
+                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
+                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
+                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
+                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
+                    </tbody>
+                </table>
             </div>
             <div class="col-md-6 col-lg-6">
                 <div class="container-fluid">
@@ -79,7 +87,6 @@
                                     <td>{{ $value->course->code }}</td>
                                     <td>{{ $value->exam_code }}</td>
                                     <td>
-                                        <a href="{{ route('admin.result.coded.course', [$year->id??'', $semester->id??'', $value->course_id??'']) }}" class="btn btn-primary btn-xs rounded">@lang('text.word_edit')</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -109,11 +116,7 @@
                         <td>${element._semester}</td>
                         <td>${element._level}</td>
                         {{-- <td>${element._code}</td> --}}
-                        <td>
-                            <a class="btn btn-xs rounded btn-primary mx-1 my-1" href="{{ route('admin.result.coded.course', [$year->id??'', $semester->id??'', '__COID__']) }}">details</a>
-                            <a class="btn btn-xs rounded btn-warning mx-1 my-1" href="{{ route('admin.result.coded.course.import.exam', [$year->id??'', $semester->id??'', '__COID__']) }}">@lang('text.import_exam')</a>
-                            <a class="btn btn-xs rounded btn-success mx-1 my-1" href="{{ route('admin.result.coded.course.import.ca', [$year->id??'', $semester->id??'', '__COID__']) }}">@lang('text.import_ca')</a>
-                        </td>
+                        <td></td>
                     </tr>
                     `.replaceAll('__COID__', element.id);
                 });

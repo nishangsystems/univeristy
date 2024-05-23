@@ -38,4 +38,8 @@ class Background extends Model
         # code...
         return $this->hasMany(Resit::class, 'background_id');
     }
+
+    public function classes(){
+        return $this->hasManyThrough(ProgramLevel::class, SchoolUnits::class, 'background_id', 'program_id');
+    }
 }

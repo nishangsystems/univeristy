@@ -11,7 +11,8 @@ class BulkMarkChange extends Model
 
     protected $connection = "tracking_db";
     protected $table = "bulk_mark_changes";
-    protected $fillable = ['year_id', 'semester_id', 'course_id', 'class_id', 'action', 'additional_mark', 'actor', 'interval'];
+    protected $fillable = ['year_id', 'semester_id', 'course_id', 'background_id', 'class_id', 'action', 'additional_mark', 'actor', 'interval'];
+    protected $dates = ['created_at'];
 
     public function year(){
         return $this->belongsTo(Batch::class, 'year_id');
@@ -31,5 +32,13 @@ class BulkMarkChange extends Model
 
     public function user(){
         return $this->belongsTo(User::class, 'actor');
+    }
+    
+    public function background(){
+        return $this->belongsTo(Background::class, 'background_id');
+    }
+
+    public function interval(){
+        return json_decode($this->interval);
     }
 }

@@ -27,6 +27,9 @@
                                     <a href="{{route('notifications.index', ['C', $pl['id'], request('campus_id') ?? 0])}}" class="btn btn-sm btn-success">{{__('text.word_notifications')}}</a>
                                     <a href="{{route('material.index', ['C', $pl['id'], request('campus_id') ?? 0])}}" class="btn btn-sm btn-primary">{{__('text.program_material')}}</a>
                                     <a href="{{route('user.programs.courses', $pl['id'])}}" class="btn btn-sm btn-success">{{__('text.word_subjects')}}</a>
+                                    <a class="btn btn-sm btn-info" href="{{route('user.results.upload_statistics', ['class_id'=>$pl['id']])}}">
+                                        <i class="fa fa-file"> {{__('text.result_upload_statistics')}}</i>
+                                    </a>
                                 @endif
                             </td>
                         </tr>
