@@ -256,6 +256,14 @@
                         <b class="arrow"></b>
                     </li>
 
+                    <li>
+                        <a href="{{route('admin.cleaner.courses')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_clean_courses')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
 
                 </ul>
             </li>

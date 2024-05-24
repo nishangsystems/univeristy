@@ -345,7 +345,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::get('/', [Admin\CodedResultsController::class, 'decoder_index'])->name('index');
             // manage exam coding
             Route::get('{year_id}/{semester_id}/courses', [Admin\CodedResultsController::class, 'import_course_codes'])->name('courses');
-            Route::post('{year_id}/{semester_id}/courses', [Admin\CodedResultsController::class, 'save_course_codes']);
+            Route::post('{year_id}/{semester_id}/courses', [Admin\CodedResultsController::class, 'decode_save']);
             Route::get('{year_id}/{semester_id}/{course_id}', [Admin\CodedResultsController::class, 'course'])->name('course');
             Route::post('{year_id}/{semester_id}/{course_id}', [Admin\CodedResultsController::class, 'save_course_code']);
             Route::get('{year_id}/{semester_id}/{course_id}/drop', [Admin\CodedResultsController::class, 'drop_course_code'])->name('course.undo');
@@ -689,6 +689,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('mark_changes/undo/{track_id}', [Admin\StudentController::class, 'cancel_mark_changes'])->name('mark_changes.undo');
     });
     
+    Route::prefix('cleaner')->name('cleaner.')->group(function(){
+        Route::get('courses', [admin\CleaningController::class, 'courses'])->name('courses');
+    });
 
 });
 
