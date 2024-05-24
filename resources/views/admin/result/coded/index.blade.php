@@ -83,8 +83,8 @@
                             @foreach($courses as $key => $value)
                                 <tr>
                                     <td>{{ $k++ }}</td>
-                                    <td>{{ $value->course->name }}</td>
-                                    <td>{{ $value->course->code }}</td>
+                                    <td>{{ $value->subject->name }}</td>
+                                    <td>{{ $value->subject->code }}</td>
                                     <td>{{ $value->exam_code }}</td>
                                     <td>
                                     </td>
