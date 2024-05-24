@@ -1003,5 +1003,7 @@ return [
     'applied_on'=>'applied on',
     'import_exam_course_coding'=>'import exam course coding',
     'paper_code'=>'paper code',
+    'word_decoding'=>'decoding',
+    'word_clean_courses'=>'clean courses',
     ''
 ];

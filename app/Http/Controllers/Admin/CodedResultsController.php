@@ -16,14 +16,35 @@ class CodedResultsController extends Controller
         # code...
         try {
             //code...
-            $data['title'] = "Manage Coded Results";
+            $data['title'] = "Manage Exam Encoding";
             if($request->year_id != null)
                 $data['year']  = \App\Models\Batch::find($request->year_id);
             if($request->semester_id != null){
                 $data['semester']  = \App\Models\Semester::find($request->semester_id);
-                $data['codes'] = \App\Models\ExamCourseCode::where(['semester_id'=>$request->semester_id, 'year_id'=>$request->year_id])->orderBy('created_at', 'DESC')->get();
+                $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
             }
             return view('admin.result.coded.index', $data);
+        } catch (\Throwable $th) {
+            //throw $th;
+            session()->flash('error', "F::{$th->getFile()}, L::{$th->getLine()}, M::{$th->getMessage()}");
+            return back()->withInput();
+        }
+    }
+    //
+
+    public function decoder_index(Request $request)
+    {
+        # code...
+        try {
+            //code...
+            $data['title'] = "Manage Exam Decoding";
+            if($request->year_id != null)
+                $data['year']  = \App\Models\Batch::find($request->year_id);
+            if($request->semester_id != null){
+                $data['semester']  = \App\Models\Semester::find($request->semester_id);
+                $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->whereNotNull('exam_score')->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
+            }
+            return view('admin.result.coded.decoder_index', $data);
         } catch (\Throwable $th) {
             //throw $th;
             session()->flash('error', "F::{$th->getFile()}, L::{$th->getLine()}, M::{$th->getMessage()}");
@@ -65,18 +86,69 @@ class CodedResultsController extends Controller
                 // READ INPUT FILE
                 $file_data = [];
                 // dd($request->all());
-                DB::beganTransaction();
+                DB::beginTransaction();
                 $fileStream = fopen($filename, 'r');
                 while(($row = fgetcsv($fileStream, 1000))){
                     if(count($row) == 0 || ($row[0]??0) == null)
                         continue;
-                    $file_data[] = ['course_code'=>$row[0], 'exam_code'=>$row[1]];
+                    $file_data[] = ['course_code'=>$row[0], 'exam_code'=>$row[1], 'matric'=>$row[2]];
                 }
 
-                $input_data = collect($file_data)->map(function($rec)use($year_id){
+                $input_data = collect($file_data)->map(function($rec)use($year_id, $semester_id){
+                        $course = \App\Models\Subjects::where('code', $rec['course_code'])->first();
+                        $student = \App\Models\Students::where('matric', $rec['matric'])->first();
+                        if($student == null)return null;
+                        $rec['course_id'] = $course->id??null;
+                        $rec['student_id'] = $student->id;
+                        // dd($rec);
+                        return $rec;
+                    })->filter(function($rew){return $rew != null;});
+                // dd($input_data);
+
+                foreach ($input_data as $key => $rec) {
+                    # code...
+                    \App\Models\Result::updateOrInsert(['subject_id'=>$rec['course_id'], 'batch_id'=>$year_id, 'semester_id'=>$semester_id, 'student_id'=>$rec['student_id']], ['exam_code'=>$rec['exam_code']]);
+                }
+                DB::commit();
+                return back()->with('success', 'Done');
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            session()->flash('error', "F::{$th->getFile()}, L::{$th->getLine()}, M::{$th->getMessage()}");
+            return back()->withInput();
+        }
+    }
+
+    public function decode_save(Request $request, $year_id, $semester_id)
+    {
+        # code...
+        try {
+            $validity = Validator::make($request->all(), ['file'=>'required|file']);
+
+            if($validity->fails()){
+                session()->flash('error', $validity->errors()->first());
+                return back()->withInput();
+            }
+            if(($file = $request->file('file')) != null){
+                $filepath = public_path('uploads/files/');
+                $filename = public_path('uploads/files/exam_course_codes.csv');
+                $file->move($filepath, 'exam_course_codes.csv');
+                
+                // READ INPUT FILE
+                $file_data = [];
+                // dd($request->all());
+                DB::beginTransaction();
+                $fileStream = fopen($filename, 'r');
+                while(($row = fgetcsv($fileStream, 1000))){
+                    if(count($row) == 0 || ($row[0]??0) == null)
+                        continue;
+                    $file_data[] = ['course_code'=>$row[0], 'exam_code'=>$row[1], 'exam_score'=>$row[2]];
+                }
+
+                $input_data = collect($file_data)->map(function($rec)use($year_id, $semester_id){
                         $course = \App\Models\Subjects::where('code', $rec['course_code'])->first();
                         $rec['course_id'] = $course->id??null;
-                        $rec['year_id'] = $year_id;
                         // dd($rec);
                         return $rec;
                     });
@@ -84,7 +156,7 @@ class CodedResultsController extends Controller
 
                 foreach ($input_data as $key => $rec) {
                     # code...
-                    \App\Models\ExamCourseCode::updateOrInsert(['course_id'=>$rec['course_id'], 'course_code'=>$rec['course_code'], 'year_id'=>$rec['year_id']], $rec);
+                    \App\Models\Result::where(['subject_id'=>$rec['course_id'], 'batch_id'=>$year_id, 'exam_code'=>$rec['exam_code'], 'semester_id'=>$semester_id])->update(['exam_score'=>$rec['exam_score']]);
                 }
                 DB::commit();
                 return back()->with('success', 'Done');

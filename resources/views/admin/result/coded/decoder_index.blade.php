@@ -30,9 +30,9 @@
         <div class="row my-5">
             <div class="col-md-6 col-lg-6">
                 <div class="container-fluid my-3 py-3 border-bottom border-top bg-light border-secondary">
-                    <form method="POST" enctype="multipart/form-data" action="{{ route('admin.result.encoded.courses', ['semester_id'=>$semester->id, 'year_id'=>$year->id]) }}">
+                    <form method="POST" enctype="multipart/form-data" action="{{ route('admin.result.decoded.courses', ['semester_id'=>$semester->id, 'year_id'=>$year->id]) }}">
                         @csrf
-                        <div class="header text-uppercase text-center"><b>@lang('text.import_exam_course_coding')</b></div>
+                        <div class="header text-uppercase text-center"><b>@lang('text.import_coded_results')</b></div>
                         <div class="my-2">
                             <input type="file" name="file" class="form-control" required>
                             <i>@lang('text.csv_file')<span class="text-danger">*</span></i>
@@ -48,14 +48,14 @@
                         <tr>
                             <th>@lang('text.course_code')</th>
                             <th>@lang('text.paper_code')</th>
-                            <th>@lang('text.word_matricule')</th>
+                            <th>@lang('text.exam_mark')</th>
                         </tr>
                     </thead>
                     <tbody class="bg-light">
-                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
-                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
-                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
-                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
+                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smrk</td></tr>
+                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smrk</td></tr>
+                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smrk</td></tr>
+                        <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smrk</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -70,9 +70,8 @@
                             </tr>
                             <tr>
                                 <th>#</th>
-                                <th>@lang('text.course_title')</th>
                                 <th>@lang('text.course_code')</th>
-                                <th>@lang('text.exam_code')</th>
+                                <th>@lang('text.course_title')</th>
                                 <th>@lang('text.word_action')</th>
                             </tr>
                         </thead>
@@ -83,9 +82,8 @@
                             @foreach($courses as $key => $value)
                                 <tr>
                                     <td>{{ $k++ }}</td>
-                                    <td>{{ $value->course->name }}</td>
-                                    <td>{{ $value->course->code }}</td>
-                                    <td>{{ $value->exam_code }}</td>
+                                    <td>{{ $value->subject->code }}</td>
+                                    <td>{{ $value->subject->name }}</td>
                                     <td>
                                     </td>
                                 </tr>
