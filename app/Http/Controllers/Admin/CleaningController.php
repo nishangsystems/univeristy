@@ -12,7 +12,9 @@ class CleaningController extends Controller
     //
 
     public function courses(){
-        $courses = Subjects::select(['id', 'code', DB::raw('SELECT COUNT(*) as recs')])->groupBy('code')->having('recs', '>', 1)->get();
+        $courses = Subjects::select(['id', 'code'])->get()->each(function($rec){$rec->code = str_replace(' ', '', $rec->code);})->groupBy('code')->map(function($colc){
+            return $colc->count() > 1 ? $colc : null;
+        })->filter(function($row){return $});
         dd($courses);
     }
 }
