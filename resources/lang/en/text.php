@@ -1005,5 +1005,8 @@ return [
     'paper_code'=>'paper code',
     'word_decoding'=>'decoding',
     'word_clean_courses'=>'clean courses',
+    'n_courses_cleaned'=>" :count courses cleaned",
+    'n_courses_dropped'=>" :count courses dropped",
+    'operation_complete'=>'operation complete',
     ''
 ];

@@ -1848,6 +1848,18 @@
     $('#menu-toggler').on('click', function(){
         $('#sidebar').toggleClass('d-block');
     })
+
+    $("form").on('submit', ()=>{
+        $(this+' button[type="submit"]') != null ? $(this+' button[type="submit"]').addClass('d-none') : null;
+        $(this+' input[type="submit"]') != null ? $(this+' input[type="submit"]').addClass('d-none') : null;
+    });
+
+    //$("input[type='submit']").on('click', ()=>{
+    //    $(this).addClass('d-none');
+    //});
+    //$("button[type='submit']").on('click', ()=>{
+    //    $(this).addClass('d-none');
+    //});
 </script>
 
 <script src="{{ asset('libs')}}/datatables.net/js/dataTables.buttons.min.js"></script>

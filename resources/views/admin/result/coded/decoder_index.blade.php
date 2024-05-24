@@ -20,7 +20,7 @@
                     </select>
                 </div>
                 <div class="col-sm-2 col-md-2">
-                    <button class="form-control btn btn-primary border-0" type="submit">@lang('text.word_initialise')</button>
+                    <button class="form-control btn btn-primary border-0" type="submit">@lang('text.word_next')</button>
                 </div>
             </div>
         </form>
@@ -72,7 +72,7 @@
                                 <th>#</th>
                                 <th>@lang('text.course_code')</th>
                                 <th>@lang('text.course_title')</th>
-                                <th>@lang('text.word_action')</th>
+                                <th>@lang('text.word_count')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -84,8 +84,7 @@
                                     <td>{{ $k++ }}</td>
                                     <td>{{ $value->subject->code }}</td>
                                     <td>{{ $value->subject->name }}</td>
-                                    <td>
-                                    </td>
+                                    <td>{{ $value->decoded_records }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

@@ -66,8 +66,9 @@ class TrashController extends Controller
     //
     public function bulk_added_marks(Request $request){
         $data['title'] = "MASS RESULT CHANGES";
+        $data['years'] = \App\Models\Batch::all();
         $data['data'] = \App\Models\BulkMarkChange::where(function($qry)use($request){
-            $request->year_id == null ? null : $qry->where('year_id', $request->year_id);
+            $request->month == null ? null : $qry->where('created_at', 'LIKE', '%'.$request->month.'%');
         })->get();
         // dd($data);
         return view('admin.trash.bulk_result_changes', $data);
@@ -89,8 +90,9 @@ class TrashController extends Controller
     //
     public function mark_changes(Request $request){
         $data['title'] = "Student Result Change Records";
+        $data['years'] = \App\Models\Batch::all();
         $data['data'] = ResultTrack::where(function($rec)use($request){
-            $request->year_id == null ? null : $rec->where('batch_id', $request->year_id);
+            $request->month == null ? null : $rec->where('created_at', 'LIKE', '%'.$request->month.'%');
         })->get();
         // dd($data);
         return view('admin.trash.result_changes', $data);

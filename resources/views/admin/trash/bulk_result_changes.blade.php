@@ -1,5 +1,19 @@
 @extends('admin.layout')
 @section('section')
+    <div class="py-3 container-fluid">
+        <form method="GET">
+            <div class="row bg-light border-top border-bottom my-4 py-3 border-secondary">
+                
+                <div class="col-lg-8">
+                    <input type="month" class="form-control" name="month" value="{{ request('month') }}">
+                    <span class="text-capitalize text-secondary">@lang('text.select_month')<i class="text_danger">*</i></span>
+                </div>
+                <div class="col-lg-2">
+                    <button type="submit" class="btn btn-xs rounded btn-primary px-5">@lang('text.word_next')</button>
+                </div>
+            </div>
+        </form>
+    </div>
     <div class="py-3">
         <table class="table table-stripped">
             <thead>
