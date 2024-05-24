@@ -21,7 +21,7 @@ class CodedResultsController extends Controller
                 $data['year']  = \App\Models\Batch::find($request->year_id);
             if($request->semester_id != null){
                 $data['semester']  = \App\Models\Semester::find($request->semester_id);
-                $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
+                $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->select(['*', DB::raw("COUNT(*) as encoded_records")])->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
             }
             return view('admin.result.coded.index', $data);
         } catch (\Throwable $th) {
@@ -42,7 +42,7 @@ class CodedResultsController extends Controller
                 $data['year']  = \App\Models\Batch::find($request->year_id);
             if($request->semester_id != null){
                 $data['semester']  = \App\Models\Semester::find($request->semester_id);
-                $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->whereNotNull('exam_score')->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
+                $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->whereNotNull('exam_score')->select(['*', DB::raw("COUNT(*) as decoded_records")])->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
             }
             return view('admin.result.coded.decoder_index', $data);
         } catch (\Throwable $th) {
@@ -154,11 +154,17 @@ class CodedResultsController extends Controller
                     });
                 // dd($input_data);
 
+
+                $decoded = 0;
                 foreach ($input_data as $key => $rec) {
                     # code...
-                    \App\Models\Result::where(['subject_id'=>$rec['course_id'], 'batch_id'=>$year_id, 'exam_code'=>$rec['exam_code'], 'semester_id'=>$semester_id])->update(['exam_score'=>$rec['exam_score']]);
+                    if(\App\Models\Result::where(['subject_id'=>$rec['course_id'], 'batch_id'=>$year_id, 'exam_code'=>$rec['exam_code'], 'semester_id'=>$semester_id])->whereNotNull('exam_score')->count() == 0){
+                        \App\Models\Result::where(['subject_id'=>$rec['course_id'], 'batch_id'=>$year_id, 'exam_code'=>$rec['exam_code'], 'semester_id'=>$semester_id])->update(['exam_score'=>$rec['exam_score']]);
+                        $decoded++;
+                    }
                 }
                 DB::commit();
+                session()->flash('message', $decoded." Records decoded");
                 return back()->with('success', 'Done');
             }
         } catch (\Throwable $th) {
