@@ -25,6 +25,17 @@
             </div>
         </div>
         <div class="my-2 row">
+            <label class="col-sm-3 col-md-3">{{__('text.word_semester')}}</label>
+            <div class="col-sm-9 col-md-9">
+                <select class="form-control" name="semester_id" required>
+                    <option>---</option>
+                    @foreach (\App\Models\Semester::all() as $sem)
+                        <option value="{{$sem->id}}" {{$sem->id == ($current_semester??null) ? 'selected' : ''}}>{{$sem->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="my-2 row">
             <label class="col-sm-3 col-md-3">{{__('text.word_background')}}</label>
             <div class="col-sm-9 col-md-9">
                 <select class="form-control" name="background_id" required>

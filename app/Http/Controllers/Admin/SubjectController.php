@@ -270,7 +270,7 @@ class SubjectController extends Controller
                 $readingStream = fopen($filepathname, 'r');
                 while(($row = fgetcsv($readingStream, 1000)) != null){
                     $input_data_array[] = [
-                        'code'=>$row[0], 'name'=>$row[1], 'coef'=>$row[2], 'status'=>$row[3], 'semester_id'=>$request->semester
+                        'code'=>str_replace(' ', '', $row[0]), 'name'=>$row[1], 'coef'=>$row[2], 'status'=>$row[3], 'semester_id'=>$request->semester
                     ];
                 }
                 // close file after reading is done
