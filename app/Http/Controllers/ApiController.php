@@ -420,4 +420,17 @@ class ApiController extends Controller
             return response()->json(['data'=>[], 'message'=>$th->getMessage(), 'status'=>500]) ;
         }
     }
+
+    public function save_appliable_programs(Request $request){
+        $validity  = Validator::make($request->all(), ['programs'=>'required|array']);
+        if($validity->fails()){
+            return response()->json(['status'=>400, 'message'=>$validity->errors()->first()]);
+        }
+
+        if(count($request->programs) > 0){
+            \App\Models\SchoolUnits::where('unit_id', 4)->whereIn('id', $request->programs)->update(['appliable'=>1]);
+            \App\Models\SchoolUnits::where('unit_id', 4)->whereNotIn('id', $request->programs)->update(['appliable'=>0]);
+        }
+        
+    }
 }
