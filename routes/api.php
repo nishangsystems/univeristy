@@ -4,6 +4,7 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\api\HomeController as ApiHomeController;
 use App\Http\Controllers\API\Student\ProfileController;
 use App\Http\Controllers\API\ProfileController as UserProfileController;
 use App\Http\Controllers\Controller;
@@ -39,6 +40,11 @@ Route::get('semesters', [\App\Http\Controllers\API\PageController::class, 'semes
 Route::group([ 'prefix' => 'student', 'as' => 'student.'], function() {
     Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
 
+    Route::get('faqs', [ApiHomeController::class, 'faqs'])->name('faqs');
+    Route::get('years', [ApiHomeController::class, 'batches'])->name('years');
+    Route::get('levels', [ProfileController::class, 'levels'])->name('levels');
+    Route::get('semesters', [ProfileController::class, 'semesters'])->name('semesters');
+
     Route::get('courses', [App\Http\Controllers\API\Student\CourseController::class, 'courses']);
     Route::get('class_courses/{level_id?}', [App\Http\Controllers\API\Student\CourseController::class, 'class_courses']);
     Route::get('register_courses', [App\Http\Controllers\API\Student\CourseController::class, 'register']);
@@ -52,7 +58,6 @@ Route::group([ 'prefix' => 'student', 'as' => 'student.'], function() {
     Route::get('registration/eligible', [App\Http\Controllers\API\Student\CourseController::class, 'registration_eligible']);
     Route::get('registered_courses', [App\Http\Controllers\API\Student\CourseController::class, 'registered_courses']);//request payload {year:int, semester:int}
     Route::post('form_b/download', [App\Http\Controllers\API\Student\CourseController::class, 'form_b']);//request payload {year:int, semester:int}
-
 
 });
 
