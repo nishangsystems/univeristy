@@ -26,6 +26,7 @@ class CourseController extends Controller
 
         try{
             $student = Auth('student_api')->user();
+            // return $student;
             
             $_year = $request->year ?? Helpers::instance()->getYear();
             $_semester = $request->semester ?? Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
@@ -35,9 +36,8 @@ class CourseController extends Controller
                 ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
             return response()->json(['cv_sum'=>collect($courses)->sum('cv'), 'courses'=> CourseResource::collection($courses)]);
         }catch(\Throwable $th){
-            return response()->response(['status'=>400, 'message'=>$th->getMessage()]);
+            return response()->json(['status'=>400, 'message'=>$th->getMessage()]);
         }
-        
     }
 
     public function class_courses(Request $request, $level = null)
