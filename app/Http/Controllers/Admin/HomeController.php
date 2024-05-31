@@ -601,8 +601,6 @@ class HomeController  extends Controller
         return back()->with('success', __('text.word_done'));
     }
 
-
-
     // MANAGE WAGES
     public function wages(Request $request)
     {
