@@ -26,10 +26,21 @@
         <div class="my-2 row">
             <label class="col-sm-3 col-md-3">{{__('text.word_background')}}</label>
             <div class="col-sm-9 col-md-9">
-                <select class="form-control" name="background_id" required>
+                <select class="form-control" name="background_id"  required onchange="loadSemesters(this)">
                     <option>---</option>
                     @foreach (\App\Models\Background::all() as $batch)
                         <option value="{{$batch->id}}" {{$resit->background_id == $batch->id ? 'selected' : ''}}>{{$batch->background_name}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="my-2 row">
+            <label class="col-sm-3 col-md-3">{{__('text.word_semester')}}</label>
+            <div class="col-sm-9 col-md-9">
+                <select class="form-control" name="semester_id" id="semester_id_field" required>
+                    <option>---</option>
+                    @foreach (\App\Models\Semester::all() as $sem)
+                        <option value="{{ $sem->id }}" {{ $sem->id??0 == $resit->semester_id ? 'selected' : '' }}></option>
                     @endforeach
                 </select>
             </div>
@@ -83,4 +94,23 @@
         </tbody>
     </table>
 </div>
+@endsection
+@section('script')
+    <script>
+        let loadSemesters = (element)=>{
+            let background = $(element).val();
+            let _url = "{{ route('semesters', ['background'=>'__BGID__']) }}".replace('__BGID__', background);
+            $.ajax({
+                method: 'GET', url: _url, success: (data)=>{
+                    console.log(data);
+                    let html = `<option value=""></option>`;
+                    for (let index = 0; index < data.length; index++) {
+                        const element = data[index];
+                        html += `<option value="${element.id}">${element.name}</option>`;
+                    }
+                    $('#semester_id_field').html(html);
+                }
+            })
+        }
+    </script>
 @endsection

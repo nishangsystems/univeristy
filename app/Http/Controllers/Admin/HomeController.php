@@ -328,7 +328,7 @@ class HomeController  extends Controller
                 return ['semester'=>Semester::find($semester)->name, 'date_line'=>__('text.DATELINE_NOT_SET')];
             }
             // return __DIR__;
-            return ['semester'=>Semester::find($semester)->name, 'date_line'=>date('l d-m-Y', strtotime($config->first()->courses_date_line)), 'date'=>$config->first()->courses_date_line];
+            return ['semester'=>Semester::find($semester)->name, 'date_line'=>date('l d-m-Y', strtotime($conf->first()->courses_date_line)), 'date'=>$config->first()->courses_date_line];
     }
 
     public function program_settings(Request $request)
@@ -483,29 +483,30 @@ class HomeController  extends Controller
     public function custom_resit_save(Request $request)
     {
         # code...
-        $validator = Validator::make($request->all(), ['year_id'=>'required', 'background_id'=>"required", 'start_date'=>'required|date', 'end_date'=>'required|date']);
+        $validator = Validator::make($request->all(), ['year_id'=>'required', 'background_id'=>"required", 'semester_id', 'start_date'=>'required|date', 'end_date'=>'required|date']);
         if($validator->fails()){
             return back()->with('error', $validator->errors()->first());
         }
 
-        // if(Resit::where(['year_id'=>$request->year_id, 'background_id'=>$request->background_id, 'campus_id'=>$request->campus_id])->whereBetween('start_date'))
-        $resit = new Resit($request->all());
-        $resit->save();
+        $check = ['year_id'=>$request->year_id, 'background_id'=>$request->background_id, 'semester_id'=>$request->semester_id];
+        if(Resit::where($check)->count() > 0){
+            session()->flash('message', "A resit had been created already for the set semester and academic year. This is updated");
+        }
+        Resit::updateOrInsert($check, $request->all());
         return back()->with('success', __('text.word_done'));
     }
 
     public function custom_resit_update(Request $request, $id)
     {
         # code...
-        $validator = Validator::make($request->all(), ['year_id'=>'required', 'background_id'=>"required", 'start_date'=>'required|date', 'end_date'=>'required|date']);
+        $validator = Validator::make($request->all(), ['year_id'=>'required', 'background_id'=>"required", 'start_date'=>'required|date', 'end_date'=>'required|date', 'semester_id'=>'required']);
         if($validator->fails()){
             return back()->with('error', $validator->errors()->first());
         }
 
         $resit = Resit::find($id);
         if($resit != null){
-            $resit->fill($request->all());
-            $resit->save();
+            Resit::where()
             return back()->with('success', __('text.word_done'));
         }
 

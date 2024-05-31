@@ -11,7 +11,7 @@ class Resit extends Model
     use HasFactory;
     
     protected $connection = 'mysql';
-    protected $fillable = ['campus_id', 'name', 'year_id', 'background_id', 'start_date', 'end_date'];
+    protected $fillable = ['campus_id', 'name', 'year_id', 'background_id', 'start_date', 'end_date', 'semester_id'];
     
     public function is_open()
     {
@@ -28,6 +28,12 @@ class Resit extends Model
     {
         # code...
         return $this->belongsTo(Batch::class, 'year_id');
+    }
+
+    public function semester()
+    {
+        # code...
+        return $this->belongsTo(Semester::class, 'semester_id');
     }
 
     public function to_string()
