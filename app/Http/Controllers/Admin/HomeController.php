@@ -488,11 +488,13 @@ class HomeController  extends Controller
             return back()->with('error', $validator->errors()->first());
         }
 
+        // dd($request->all());
         $check = ['year_id'=>$request->year_id, 'background_id'=>$request->background_id, 'semester_id'=>$request->semester_id];
         if(Resit::where($check)->count() > 0){
             session()->flash('message', "A resit had been created already for the set semester and academic year. This is updated");
         }
-        Resit::updateOrInsert($check, $request->all());
+        $data = collect($request->all())->filter(function($el, $key){return $key != '_token';});
+        Resit::updateOrInsert($check, $data->toArray());
         return back()->with('success', __('text.word_done'));
     }
 
@@ -506,7 +508,8 @@ class HomeController  extends Controller
 
         $resit = Resit::find($id);
         if($resit != null){
-            Resit::where('id', $id)->update($request->all());
+            $data = collect($request->all())->filter(function($el, $key){return $key != '_token';});
+            Resit::where('id', $id)->update($data->toArray());
             return back()->with('success', __('text.word_done'));
         }
 

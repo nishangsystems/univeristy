@@ -22,7 +22,7 @@
                     <th class="">@lang('text.word_matricule')</th>
                     <th class="">@lang('text.word_student')</th>
                     <th class="">@lang('text.course_code')</th>
-                    <th class="">@lang('text.word_title')</th>
+                    <th class="">@lang('text.word_user')</th>
                     <th class="">@lang('text.word_type')</th>
                     <th class="">@lang('text.word_change')</th>
                     <th class="">@lang('text.word_date')</th>
@@ -39,7 +39,7 @@
                         <td>{{ $row->student->matric??'' }}</td>
                         <td>{{ $row->student->name??'' }}</td>
                         <td>{{ $row->course->code??'' }}</td>
-                        <td>{{ $row->course->name??'' }}</td>
+                        <td>{{ $row->user->name??'' }}</td>
                         <td>{{ str_replace('_', ' ', $row->action??'') }}</td>
                         <td>{{ $row->change() == null ? '' : "from ".($row->change()->from??'-')." to ".($row->change()->to??'-') }}</td>
                         <td>{{ $row->created_at==null ? '' : $row->created_at->format('d/m/Y')??'' }}</td>
