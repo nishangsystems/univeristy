@@ -23,7 +23,7 @@
                         <td>{{ $row->matric??'' }}</td>
                         <td>{{ $row->name??'' }}</td>
                         <td>{{ $row->class->name()??'' }}</td>
-                        <td>{{ $row->bypassed_at==null ? '' : $row->bypassed_at->format('d/m/Y')??'' }}</td>
+                        <td>{{ $row->bypassed_at==null ? '' : $row->bypassed_at->format('d/m/Y') ?? $row->created_at }}</td>
                         <td>{{ $row->_bypassed_by->name??'' }}</td>
                         <td><a class="btn btn-sm btn-rounded btn-warning" href="{{ route('admin.trash.result_bypass.undo', $row->id) }}">@lang('text.word_undo')</a></td>
                     </tr>
