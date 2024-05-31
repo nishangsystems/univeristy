@@ -677,15 +677,15 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     });
 
     Route::prefix('trash')->name('trash.')->group(function(){
-        Route::get('students', [Admin\Trashcontroller::class, 'students'])->name('students');
-        Route::get('students/undo/{student_id}', [Admin\Trashcontroller::class, 'undo_student_trash'])->name('students.undo');
-        Route::get('fee', [Admin\Trashcontroller::class, 'fee'])->name('fee');
-        Route::get('fee/undo/{fee_id}', [Admin\Trashcontroller::class, 'undo_fee_trash'])->name('fee.undo');
-        Route::get('result_bypass', [Admin\Trashcontroller::class, 'result_bypass'])->name('result_bypass');
+        Route::get('students', [Admin\TrashController::class, 'students'])->name('students');
+        Route::get('students/undo/{student_id}', [Admin\TrashController::class, 'undo_student_trash'])->name('students.undo');
+        Route::get('fee', [Admin\TrashController::class, 'fee'])->name('fee');
+        Route::get('fee/undo/{fee_id}', [Admin\TrashController::class, 'undo_fee_trash'])->name('fee.undo');
+        Route::get('result_bypass', [Admin\TrashController::class, 'result_bypass'])->name('result_bypass');
         Route::get('result_bypass/undo/{bypass_id}', [Admin\StudentController::class, 'cancelResultBypass'])->name('result_bypass.undo');
-        Route::get('bulk_added_marks', [Admin\Trashcontroller::class, 'bulk_added_marks'])->name('bulk_added_marks');
+        Route::get('bulk_added_marks', [Admin\TrashController::class, 'bulk_added_marks'])->name('bulk_added_marks');
         Route::get('bulk_added_marks/undo/{track_id}', [Admin\StudentController::class, 'cancel_bulk_added_marks'])->name('bulk_added_marks.undo');
-        Route::get('mark_changes', [Admin\Trashcontroller::class, 'mark_changes'])->name('mark_changes');
+        Route::get('mark_changes', [Admin\TrashController::class, 'mark_changes'])->name('mark_changes');
         Route::get('mark_changes/undo/{track_id}', [Admin\StudentController::class, 'cancel_mark_changes'])->name('mark_changes.undo');
     });
     
