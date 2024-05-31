@@ -1849,10 +1849,10 @@
         $('#sidebar').toggleClass('d-block');
     })
 
-    $("form").on('submit', ()=>{
-        $(this+' button[type="submit"]') != null ? $(this+' button[type="submit"]').addClass('d-none') : null;
-        $(this+' input[type="submit"]') != null ? $(this+' input[type="submit"]').addClass('d-none') : null;
-    });
+    //$("form").on('submit', ()=>{
+    //    $(this+' button[type="submit"]') != null ? $(this+' button[type="submit"]').addClass('d-none') : null;
+    //    $(this+' input[type="submit"]') != null ? $(this+' input[type="submit"]').addClass('d-none') : null;
+    //});
 
     //$("input[type='submit']").on('click', ()=>{
     //    $(this).addClass('d-none');
