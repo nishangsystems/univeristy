@@ -506,7 +506,7 @@ class HomeController  extends Controller
 
         $resit = Resit::find($id);
         if($resit != null){
-            Resit::where()
+            Resit::where('id', $id)->update($request->all());
             return back()->with('success', __('text.word_done'));
         }
 
