@@ -795,4 +795,24 @@ class HomeController  extends Controller
         return back()->with('error', "User record not found");
     }
 
+    public function resit_class_report(Request $request, $resit_id, $class_id=null){
+        $resit = Resit::find($resit_id);
+        $data['resit'] = $resit;
+        $data['title'] = "Get Resit Report For ".$resit->name??'';
+        $data['classes'] = $this::sorted_program_levels();
+        if($class_id != null){
+            $_class = \App\Models\ProgramLevel::find($class_id);
+            $student_ids = \App\Models\StudentClass::where(['class_id'=>$class_id, 'year_id'=>$resit->year_id])->pluck('student_id')->toArray();
+            $data['class'] = $_class;
+            $data['title'] = ($resit->name??'')." Report For ".$_class->name();
+            $data['resit_unit_cost'] = $_class->program->resit_cost;
+            $data['report'] = \App\Models\StudentSubject::where('resit_id', $resit_id)->whereIn('student_id', $student_ids)
+                ->select(['student_id', 'course_id', 'resit_id', 'paid', DB::raw("COUNT(*) as n_courses"), DB::raw("SUM(paid) as n_paid"), DB::raw("SUM(case when paid = 1 then 0 else 1 end) as n_unpaid")])
+                ->distinct()
+                ->groupBy('student_id')
+                ->get();
+        }
+        // dd($data);
+        return view('admin.resit.class_report', $data);
+    }
 }

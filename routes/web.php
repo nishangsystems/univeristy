@@ -603,6 +603,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::prefix('resits')->name('resits.')->group(function(){
         Route::get('index', [AdminHomeController::class, 'resits_index'])->name('index');
+        Route::get('class_report/{resit_id}/{class_id?}', [AdminHomeController::class, 'resit_class_report'])->name('class_report');
         Route::get('course_list/{resit_id}', [AdminHomeController::class, 'resit_course_list'])->name('course_list');
         Route::get('course_list/{resit_id}/{subject_id}/download', [AdminHomeController::class, 'resit_course_list_download'])->name('course_list.download');
     });
