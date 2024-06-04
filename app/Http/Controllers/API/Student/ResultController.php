@@ -255,22 +255,22 @@ class ResultController extends Controller
         }, $registered_courses);
 
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
-        $sum_cv = $data['results']->sum('coef');
-        $sum_earned_cv = collect($results)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
-        $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->sum('coef');
-        $gpa_cv_earned = $data['results']->whereNotIn('id', $non_gpa_courses)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
-        $sum_gpts = $data['results']->whereNotIn('id', $non_gpa_courses)->sum(function($item){
-            return $item['coef'] * $item['weight'];
-        });
-        $gpa = $sum_gpts/($gpa_cv==0?1:$gpa_cv);
-        // dd($gpa);
-        $gpa_data['sum_cv'] = $sum_cv;
-        $gpa_data['gpa_cv'] = $gpa_cv;
-        $gpa_data['sum_cv_earned'] = $sum_earned_cv;
-        $gpa_data['gpa_cv_earned'] = $gpa_cv_earned;
-        $gpa_data['gpa'] = $gpa;
+        // $sum_cv = $data['results']->sum('coef');
+        // $sum_earned_cv = collect($results)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
+        // $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->sum('coef');
+        // $gpa_cv_earned = $data['results']->whereNotIn('id', $non_gpa_courses)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
+        // $sum_gpts = $data['results']->whereNotIn('id', $non_gpa_courses)->sum(function($item){
+        //     return $item['coef'] * $item['weight'];
+        // });
+        // $gpa = $sum_gpts/($gpa_cv==0?1:$gpa_cv);
+        // // dd($gpa);
+        // $gpa_data['sum_cv'] = $sum_cv;
+        // $gpa_data['gpa_cv'] = $gpa_cv;
+        // $gpa_data['sum_cv_earned'] = $sum_earned_cv;
+        // $gpa_data['gpa_cv_earned'] = $gpa_cv_earned;
+        // $gpa_data['gpa'] = $gpa;
 
-        $data['gpa_data'] = $gpa_data;
+        // $data['gpa_data'] = $gpa_data;
 
 
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
