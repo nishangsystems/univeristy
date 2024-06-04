@@ -37,7 +37,7 @@ Route::get('faqs', [\App\Http\Controllers\API\PageController::class, 'faqs'])->n
 Route::get('year', [\App\Http\Controllers\API\PageController::class, 'year']);
 Route::get('semesters', [\App\Http\Controllers\API\PageController::class, 'semester']);
 
-Route::group([ 'prefix' => 'student', 'as' => 'student.'], function() {
+Route::group([ 'prefix' => 'student', 'as' => 'student.', 'middleware'=> 'api_student'], function() {
     Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
 
     Route::get('faqs', [ApiHomeController::class, 'faqs'])->name('faqs');
