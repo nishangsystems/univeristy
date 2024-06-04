@@ -56,7 +56,7 @@
 @section('script')
     <script>
         let submitClass = (element)=>{
-            let _class = $(element).val();
+            let _class = $('#class_id_field').val();
             let _url = "{{ route('admin.resits.class_report', ['resit_id'=>$resit->id, 'class_id'=>'__CLID__']) }}".replace('__CLID__', _class);
             window.location = _url;
         }
