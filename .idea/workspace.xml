@@ -21,12 +21,9 @@
   <component name="ChangeListManager">
     <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Livewire/Admin/Transcript/HNDResults.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Livewire/Admin/Transcript/HNDResults.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Livewire/Admin/Transcript/Results.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Livewire/Admin/Transcript/Results.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/h-n-d-results.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/h-n-d-results.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/results.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/results.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/semester-result.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/semester-result.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/year.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/year.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -252,7 +249,8 @@
       <workItem from="1715624611798" duration="1630000" />
       <workItem from="1715626532663" duration="259000" />
       <workItem from="1715627636555" duration="175000" />
-      <workItem from="1715756441134" duration="1766000" />
+      <workItem from="1715756441134" duration="1889000" />
+      <workItem from="1717478402387" duration="705000" />
     </task>
     <servers />
   </component>

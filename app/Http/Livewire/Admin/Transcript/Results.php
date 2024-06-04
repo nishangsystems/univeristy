@@ -64,7 +64,7 @@ class Results extends Component
                     if ($total >= $grade->lower && $total <= $grade->upper) {
 
                         $this->totalCreditAttempted += $result->subject->coef;
-                        $this->totalCreditEarned += $passed ? $result->subject->coef : 0;
+
 
 
                         if ($passed && !$result->validated) {
@@ -75,6 +75,10 @@ class Results extends Component
                         }
 
                         $result->refresh();
+
+                        if(!$result->validated){
+                            $this->totalCreditEarned +=  $result->subject->coef;
+                        }
 
                         return collect([
                             'name' => $result->subject->name,

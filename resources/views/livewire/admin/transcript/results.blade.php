@@ -176,8 +176,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="13" style="font-weight: bold; padding: 0px 5px;">Date of Enrolment : {{$student->batch->name}}</td>
-                    <td colspan="5" rowspan="2" style="font-weight: bold; padding: 0px 5px">
+                    <td colspan="13" style="font-weight: bold; height: 30px; padding: 0px 5px;">Date of Enrolment : {{$student->batch->name}}</td>
+                    <td colspan="5" rowspan="2" style="height:90px; font-weight: bold; padding: 0px 5px">
                             @foreach($gradings as $grade)
                                 <div style="display: flex;">
                                     <div  class="grade">{{$grade->grade}}</div>
@@ -198,7 +198,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="13" style="font-weight: bold;  height: 70px; padding: 0px 5px; ">
+                    <td colspan="13" style="font-weight: bold;  height: 60px; padding: 0px 5px; ">
                        <div style="display: flex; flex-direction: column; justify-content: space-around; height: 100%;">
                            @php
                                $program = \App\Models\ProgramLevel::find($student->_class()->id)->program;
@@ -221,7 +221,7 @@
                            <div style="display: flex">
                                <span style="width: 120px">Date :</span>
                                @if($totalCreditEarned >= $program->max_credit)
-                                   <span>{{collect($results)->last()[0]['year_name'] }}</span>
+                                   <span>{{explode('/',collect($results)->last()[0]['year_name'])[1] }}</span>
                                @endif
                            </div>
                        </div>

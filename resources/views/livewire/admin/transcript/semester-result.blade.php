@@ -6,7 +6,7 @@
     $gpaCreditEarned = 0;
 @endphp
 
-<div class="bold" style="margin:5px 10px; ">
+<div class="bold" style="margin:2px 10px; ">
     {{$results[0]['semester_name']}} @if($results[0]['code'] != "HND") - {{$results[0]['year_name']}}  @endif
 </div>
 
