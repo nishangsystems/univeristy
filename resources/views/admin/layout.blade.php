@@ -1163,6 +1163,14 @@
                         <b class="arrow"></b>
                     </li>
 
+                    <li>
+                        <a href="{{route('admin.result.super.migrate')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.super_migrate')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
 
                     <li>
                         <a href="{{route('admin.result.imports')}}" class="text-capitalize">

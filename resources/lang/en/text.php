@@ -1009,5 +1009,6 @@ return [
     'n_courses_dropped'=>" :count courses dropped",
     'operation_complete'=>'operation complete',
     'course_report'=>'course report',
+    'super_migrate'=>'super migrate',
     ''
 ];

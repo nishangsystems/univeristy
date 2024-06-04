@@ -274,6 +274,7 @@ class SubjectController extends Controller
                 }
                 // close file after reading is done
                 fclose($readingStream);
+                unlink($filepathname);
                 
                 // write file data to database
                 DB::beginTransaction();
