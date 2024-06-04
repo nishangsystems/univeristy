@@ -22,6 +22,7 @@
                     <td class="border-left border-right border-white">{{date('l d-m-Y', strtotime($resit->end_date))}}</td>
                     <td class="border-left border-right border-white">@if($resit->is_open()) <span class="text-primary">{{__('text.word_open')}}</span> @else <span class="text-danger">{{__('text.word_closed')}}</span> @endif</td>
                     <td class="border-left border-right border-white">
+                        <a class="btn btn-sm btn-success" href="{{route('admin.resits.class_report', ['resit_id'=>$resit->id])}}">{{__('text.course_report')}}</a>
                         <a class="btn btn-sm btn-primary" href="{{route('admin.resits.course_list', $resit->id)}}">{{__('text.word_students')}}</a>
                     </td>
                 </tr>
