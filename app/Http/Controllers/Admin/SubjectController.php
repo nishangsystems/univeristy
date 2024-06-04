@@ -95,7 +95,6 @@ class SubjectController extends Controller
         $subject->coef = $request->input('coef');
         $subject->code = $request->input('code');
         $subject->status = $request->input('status');
-        $subject->level_id = $request->input('level', null);
         $subject->semester_id = $request->input('semester');
         $subject->objective = $request->input('objective');
         $subject->outcomes = $request->input('outcomes');
