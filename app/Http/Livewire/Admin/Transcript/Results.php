@@ -95,9 +95,9 @@ class Results extends Component
 
         $this->totalCreditEarned =  $this->results->filter(function ($value, $key) {
             return $value['validated'] === 1;
-        })->sum("cv");
+        })->unique('code')->sum("cv");
 
-        $this->totalCreditAttempted =  $this->results->sum("cv");
+        $this->totalCreditAttempted =  $this->results->unique('code')->sum("cv");
 
 
         $this->gpa = Helpers::getGPA($this->results);

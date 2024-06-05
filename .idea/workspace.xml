@@ -22,7 +22,6 @@
     <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Livewire/Admin/Transcript/Results.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Livewire/Admin/Transcript/Results.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/year.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/transcript/year.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -253,7 +252,7 @@
       <workItem from="1717484738240" duration="60000" />
       <workItem from="1717484884596" duration="666000" />
       <workItem from="1717488172168" duration="198000" />
-      <workItem from="1717587072045" duration="1719000" />
+      <workItem from="1717587072045" duration="2388000" />
     </task>
     <servers />
   </component>
