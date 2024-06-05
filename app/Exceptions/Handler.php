@@ -50,9 +50,9 @@ class Handler extends ExceptionHandler
             }
         });
 
-       /* session()->flash('error', "F::{$e->getFile()}, L::{$e->getLine()}, M::{$e->getMessage()}");
-        return back()->withInput();
-     */   
+       // session()->flash('error', "F::{$e->getFile()}, L::{$e->getLine()}, M::{$e->getMessage()}");
+       // return back()->withInput();
+        
     }
 
     protected function unauthenticated($request, AuthenticationException $exception)
