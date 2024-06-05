@@ -62,23 +62,13 @@ class Results extends Component
                     $total = (($result->ca_score ?? 0 )+ ($result->exam_score ?? 0));
                     $passed = $total >= ($prog->ca_total + $prog->exam_total)*0.5;
                     if ($total >= $grade->lower && $total <= $grade->upper) {
-
-                        $this->totalCreditAttempted += $result->subject->coef;
-
-
-
                         if ($passed && !$result->validated) {
                             Result::where([
                                 "student_id" => $result->student_id,
                                 "subject_id" => $result->subject_id
                             ])->update(['validated' => 1]);
                         }
-
                         $result->refresh();
-
-                        if(!$result->validated){
-                            $this->totalCreditEarned +=  $result->subject->coef;
-                        }
 
                         return collect([
                             'name' => $result->subject->name,
@@ -103,6 +93,11 @@ class Results extends Component
 
         })->sortBy('code');
 
+        $this->totalCreditEarned =  $this->results->filter(function ($value, $key) {
+            return $value['validated'] === 1;
+        })->sum("cv");
+
+        $this->totalCreditAttempted =  $this->results->sum("cv");
 
 
         $this->gpa = Helpers::getGPA($this->results);

@@ -25,16 +25,17 @@
 
 
             @if(isset($hnd))
-                @component('livewire.admin.transcript.semester', ['results'=>$hnd , 'resits'=>null, 'class'=>'', 'isLast'=>false,
-                              'tca'=>"120",
-                             'tce'=>"120",
+                @component('livewire.admin.transcript.semester', ['results'=>$hnd , 'resits'=>null, 'class'=>'',
+                                'isLast'=>false,
+                              'tca'=>$tca,
+                             'tce'=>$tca,
                              'tgpa'=>$grade
                          ]) @endcomponent
 
                 @component('livewire.admin.transcript.semester',
                             ['results'=>null ,
                                  'resits'=>null,
-                                 'class'=>'border-right-2',
+                                  'class'=>'border-right-2',
                                 'isLast'=>true,
                                  'tca'=>$tca,
                 'tce'=>$tce,
