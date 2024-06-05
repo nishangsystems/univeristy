@@ -10,23 +10,6 @@
             </div>
 
             <div class="form-group  mt-3">
-                <label class="control-label col-lg-2 text-capitalize">Department <span
-                            style="color:red">*</span></label>
-                <div class="col-lg-10">
-                    <select class="form-control" wire:model="department">
-                        <option value="">{{__('text.select_year')}}</option>
-                        @foreach( \App\Models\SchoolUnits::where('unit_id', 3)->orderBy('name')->get() as $key => $deb)
-                            <option value="{{$deb->id}}">{{$deb->name}}</option>
-                        @endforeach
-                    </select>
-                    @error('department')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-
-
-            <div class="form-group  mt-3">
                 <label class="control-label col-lg-2 text-capitalize">Batch <span
                             style="color:red">*</span></label>
                 <div class="col-lg-10">
@@ -69,4 +52,34 @@
             </div>
         </form>
     </div>
+
+
+    @if(isset($result))
+       <div style="width: 300px;">
+           <table >
+               <thead>
+               <tr>
+                   <th style="width: 100px;">Year</th>
+                   <th style="width: 100px">Grade</th>
+                   <th style="width: 100px">Grade Point</th>
+               </tr>
+               </thead>
+               <tbody>
+               <tr>
+                   <td> {{$result->year->name}}</td>
+
+                   @php(  $grade = \App\Models\Grading::find($result->exam_score))
+                   <td>{{($grade != "") ? $grade->grade : "-"}}</td>
+                   <td>{{isset($grade) ? $grade->weight : 0.0}}</td>
+               </tr>
+               </tbody>
+           </table>
+       </div>
+
+
+        <button type="button" wire:click="delete" class="btn btn-xs px-4 py-2 btn-danger" wire:loading.attribute = 'disabled'>
+            <i class="fa fa-spinner d-none" wire:loading.class.remove="d-none" wire:target="delete"></i>
+            Delete Result
+        </button>
+    @endif
 </div>

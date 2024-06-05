@@ -43,9 +43,9 @@ class Results extends Component
                 $this->totalCreditEarned += 120;
                 $grade = Grading::find($result->exam_score);
                 return collect([
-                    'name' => "HND Results",
+                    'name' => "Higher National Diploma",
                     'year_name' => $result->year->name,
-                    'semester_name' => "HND",
+                    'semester_name' => "Entry Qualification",
                     'semester_id' => "HND",
                     'batch_id' => "HND",
                     'level' => "200",
@@ -62,18 +62,12 @@ class Results extends Component
                     $total = (($result->ca_score ?? 0 )+ ($result->exam_score ?? 0));
                     $passed = $total >= ($prog->ca_total + $prog->exam_total)*0.5;
                     if ($total >= $grade->lower && $total <= $grade->upper) {
-
-                        $this->totalCreditAttempted += $result->subject->coef;
-                        $this->totalCreditEarned += $passed ? $result->subject->coef : 0;
-
-
                         if ($passed && !$result->validated) {
                             Result::where([
                                 "student_id" => $result->student_id,
                                 "subject_id" => $result->subject_id
                             ])->update(['validated' => 1]);
                         }
-
                         $result->refresh();
 
                         return collect([
@@ -99,6 +93,11 @@ class Results extends Component
 
         })->sortBy('code');
 
+        $this->totalCreditEarned =  $this->results->filter(function ($value, $key) {
+            return $value['validated'] === 1;
+        })->unique('code')->sum("cv");
+
+        $this->totalCreditAttempted =  $this->results->unique('code')->sum("cv");
 
 
         $this->gpa = Helpers::getGPA($this->results);

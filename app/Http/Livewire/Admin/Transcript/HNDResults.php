@@ -11,18 +11,20 @@ class HNDResults extends Component
 {
     public $name = "";
     public $year = "";
-    public $department = "";
     public $grade = "";
 
     public ?Result $result;
 
     public Students $student;
 
+    protected $listeners = [
+        "updated"=>'$refresh'
+    ];
+
     protected function getRules()
     {
         return [
             "year" => 'required',
-            'department' =>'required',
             'grade' =>'required',
         ];
     }
@@ -40,7 +42,6 @@ class HNDResults extends Component
 
         if (isset($this->result)){
             $this->year = $this->result->batch_id;
-            $this->department = $this->result->class_id;
             $this->grade = $this->result->exam_score;
         }
 
@@ -56,7 +57,7 @@ class HNDResults extends Component
         if(isset($this->result)){
             $this->result->update([
                 'semester_id'=>'HND',
-                'class_id'=>$this->department,
+                'class_id'=>'HND',
                 'exam_score'=>$this->grade,
                 'batch_id'=>$this->year,
                 'student_id'=>$this->student->id
@@ -64,7 +65,7 @@ class HNDResults extends Component
         }else{
            $this->result =  Result::create([
                 'semester_id'=>'HND',
-                'class_id'=>$this->department,
+                'class_id'=>'HND',
                 'exam_score'=>$this->grade,
                 'batch_id'=>$this->year,
                 'student_id'=>$this->student->id
@@ -72,6 +73,15 @@ class HNDResults extends Component
         }
 
         $this->redirectRoute('admin.transcript.index');
+
+    }
+
+
+    public function delete()
+    {
+        $this->result->delete();
+        $this->result = null;
+        $this->emit('updated');
 
     }
 
