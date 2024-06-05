@@ -36,9 +36,9 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-    //     $this->reportable(function (Throwable $e) {
-    //         //
-    //     });
+        //     $this->reportable(function (Throwable $e) {
+        //         //
+        //     });
 
         $this->renderable(function (\Exception $e) {
             if ($e->getPrevious() instanceof \Illuminate\Session\TokenMismatchException) {
@@ -48,10 +48,9 @@ class Handler extends ExceptionHandler
                 # code...
                 return redirect(route('admin.home'));
             }
+            session()->flash('error', "F::{$e->getFile()}, L::{$e->getLine()}, M::{$e->getMessage()}");
+            return back()->withInput();
         });
-
-       // session()->flash('error', "F::{$e->getFile()}, L::{$e->getLine()}, M::{$e->getMessage()}");
-       // return back()->withInput();
         
     }
 
