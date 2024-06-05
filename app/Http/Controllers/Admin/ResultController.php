@@ -983,7 +983,7 @@ class ResultController extends Controller
             $data['delete_label'] = __('text.clear_results_for', ['year'=>$batch->name??'YR', 'class'=>($program_level == null ? '' : $program_level->name())]);
             $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class])->get();
             $data['can_update_exam'] = true;
-            $data['delete_prompt'] = "You are about to delete all {($program_level == null ? '' : $program_level->name())} results for {$batch->name}";
+            $data['delete_prompt'] = "You are about to delete all ".($program_level == null ? '' : $program_level->name())." results for {$batch->name}";
         }
         return view('admin.result.super.migrate', $data);
     }
