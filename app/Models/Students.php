@@ -41,7 +41,7 @@ class Students extends Authenticatable
     
     public function _class($year=null)
     {
-        $sc = StudentClass::where('student_id', $this->id)->where('year_id', '<=', $year != null ? $year : Helpers::instance()->getCurrentAccademicYear())->orderBy('year_id', 'DESC')->get();
+        $sc = StudentClass::where('student_id', $this->id)->where('year_id', '<=', $year != null ? $year : Helpers::instance()->getCurrentAccademicYear())->orderBy('year_id', 'DESC')->first();
         $batch = Batch::find($year != null ? $year : Helpers::instance()->getCurrentAccademicYear());
         if($sc == null){
             throw new \Exception('The student has not student-class instance by or before '.$batch->name??'');
