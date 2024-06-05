@@ -283,9 +283,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('migrate/{year?}/{semester?}/{class?}/{course_code?}', 'Admin\ResultController@migrate_save_results');
         Route::get('migrate/{year}/{semester}/{class}/{course_code}/clear', 'Admin\ResultController@migrate_clear_results')->name('migrate.clear');
     
-        Route::get('super_migrate/clear/{year?}/{semester?}/{class?}', 'Admin\ResultController@super_clear_results')->name('super.clear');
-        Route::get('super_migrate/{year?}/{semester?}/{class?}', 'Admin\ResultController@super_migrate_results')->name('super.migrate');
-        Route::post('super_migrate/{year?}/{semester?}/{class?}', 'Admin\ResultController@super_migrate_save_results');
+        Route::get('super_migrate/clear/{year?}/{class?}', 'Admin\ResultController@super_clear_results')->name('super.clear');
+        Route::get('super_migrate/{year?}/{class?}', 'Admin\ResultController@super_migrate_results')->name('super.migrate');
+        Route::post('super_migrate/{year?}/{class?}', 'Admin\ResultController@super_migrate_save_results');
     
         // ADDED RESULT ROUTES FOR OFFLINE SYSTEM
         Route::prefix('ca')->name('ca.')->group(function(){

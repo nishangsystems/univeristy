@@ -966,32 +966,29 @@ class ResultController extends Controller
         return view('admin.result.exam_upload_record', $data);
     }
 
-    public function super_migrate_results(Request $request, $year=null, $semester=null, $class=null){
+    public function super_migrate_results(Request $request, $year=null, $class=null){
         $data['title'] = "Result Super-Migrator Terminal";
         $data['year_id'] = $year;
-        $data['semester_id'] = $semester;
         $data['class_id'] = $class;
         $data['semesters'] = Semester::where('is_main_semester', 1)->distinct()->get();
         $data['classes'] = HomeController::sorted_program_levels();
         $data['years'] = Batch::all();
         if($class != null){
-            $sem = Semester::find($data['semester_id']);
             $batch = Batch::find($data['year_id']);
             $program_level = ProgramLevel::find($class);
-            $data['semester'] = $sem;
             $data['year'] = $batch;
             $data['class'] = $program_level;
-            $data['title2'] = "Result Super-Migrator Terminal :: ".($data['class']->name()).", ".($data['semester']->name??'')." ".$data['year']->name??'';
-            $data['_title2'] = __('text.word_class').' :: <b class="text-danger">'. $program_level->name() .'</b>'.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
-            $data['delete_label'] = __('text.clear_results_for', ['year'=>$batch->name??'YR', 'class'=>$program_level->name(), 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
-            $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class, 'semester_id'=>$semester])->get();
-            $data['can_update_exam'] = !(now()->isAfter($sem->exam_upload_latest_date??now()->addDays()->toString()));
-            $data['delete_prompt'] = "You are about to delete all {$program_level->name()} results for {$sem->name} {$batch->name}";
+            $data['title2'] = "Result Super-Migrator Terminal :: ".($data['class']->name()).", ".$data['year']->name??'';
+            $data['_title2'] = __('text.word_class').' :: <b class="text-danger">'. $program_level->name() .'</b>';
+            $data['delete_label'] = __('text.clear_results_for', ['year'=>$batch->name??'YR', 'class'=>$program_level->name()]);
+            $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class])->get();
+            $data['can_update_exam'] = true;
+            $data['delete_prompt'] = "You are about to delete all {$program_level->name()} results for {$batch->name}";
         }
         return view('admin.result.super.migrate', $data);
     }
 
-    public function super_migrate_save_results(Request $request, $year=null, $semester=null, $class=null){
+    public function super_migrate_save_results(Request $request, $year=null, $class=null){
         if($request->file('file') == null){
             session()->flash('error', 'file field requried');
             return back()->withInput();
@@ -1009,7 +1006,7 @@ class ResultController extends Controller
         // read file data into an array
         $file_data = [];
         while(($row = fgetcsv($reading_stream, 1000)) != null){
-            $file_data[] = ['ccode'=>str_replace(' ', '', $row[0]), 'matric'=>$row[1], 'ca_score'=>$row[2], 'exam_score'=>$row[3]];
+            $file_data[] = ['semester'=>$row[0], 'ccode'=>str_replace(' ', '', $row[1]), 'matric'=>$row[2], 'ca_score'=>$row[3], 'exam_score'=>$row[4]];
         }
         fclose($reading_stream);
         unlink($path.'/'.$fname);
@@ -1019,8 +1016,8 @@ class ResultController extends Controller
         $missing_courses = "";
 
         $_class = ProgramLevel::find($class);
-        $_sem = Semester::find($semester);
         foreach($file_data as $rec){
+            $_sem = Semester::find($rec['semester']);
             $student = Students::where('matric', $rec['matric'])->first();
             $subject = Subjects::where('code', $rec['ccode'])->first();
             
@@ -1036,10 +1033,10 @@ class ResultController extends Controller
             $data = [
                 'batch_id'=>$year, 'student_id'=>$student->id, 'semester_id'=>$_sem->sem, 'subject_id'=>$subject->id, 
                 'ca_score'=>$rec['ca_score'], 'exam_score'=>$rec['exam_score'], 'coef'=>$class_subject->coef ?? $subject->coef,
-                'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class.$semester.$subject->id.$subject->coef, 
+                'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class.$rec['semester'].$subject->id.$subject->coef, 
                 'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'published'=>0
             ];
-            $base = ['batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class, 'semester_id'=>$semester, 
+            $base = ['batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class, 'semester_id'=>$rec['semester'], 
             'subject_id'=>$subject->id];
     
             Result::updateOrInsert($base, $data);
@@ -1050,11 +1047,11 @@ class ResultController extends Controller
         return back()->with('success', 'Done');
     }
 
-    public function super_clear_results(Request $request, $year=null, $semester=null, $class=null){
-        if(Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'class_id'=>$class])->count() == 0){
+    public function super_clear_results(Request $request, $year=null, $class=null){
+        if(Result::where(['batch_id'=>$year, 'class_id'=>$class])->count() == 0){
             session()->flash('error', "No results are found for the set CLASS, SEMESTER, YEAR");
         }
-        Result::where(['batch_id'=>$year, 'semester_id'=>$semester, 'class_id'=>$class])->each(function($rec){$rec->delete();});
+        Result::where(['batch_id'=>$year, 'class_id'=>$class])->each(function($rec){$rec->delete();});
         return back()->with('success', 'Done');
     }
 }
