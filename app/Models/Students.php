@@ -37,17 +37,21 @@ class Students extends Authenticatable
         return $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id')
             ->where('student_classes.year_id', '<=', $year_id ?? Helpers::instance()->getCurrentAccademicYear())
             ->orderByDesc('student_classes.year_id');
-
     }
     
     public function _class($year=null)
     {
-        
-        $data =  $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id');
-        if($year == null)
-            return $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id')->where('student_classes.year_id', '<=', Helpers::instance()->getCurrentAccademicYear())->orderByDesc('student_classes.year_id')->first();
-        else
-            return  $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id')->where('student_classes.year_id', '=', $year)->orderByDesc('student_classes.year_id')->first();
+        $sc = StudentClass::where('student_id', $this->id)->where('year_id', '<=', $year != null ? $year : Helpers::instance()->getCurrentAccademicYear())->orderBy('year_id', 'DESC')->get();
+        $batch = Batch::find($year != null ? $year : Helpers::instance()->getCurrentAccademicYear());
+        if($sc == null){
+            throw new \Exception('The student has not student-class instance by or before '.$batch->name??'');
+        }
+        $_clas = ProgramLevel::find($sc->class_id);
+        if($_clas == null){
+            throw new \Exception('The program-level instance of this student by or before '.($batch->name??'')." with ID :{$sc->class_id} could not be found. Check to confirm that this program level had not been deleted");
+        }
+
+        return $_clas;
     }
 
     public function class($year)
