@@ -1006,7 +1006,7 @@ class ResultController extends Controller
         // read file data into an array
         $file_data = [];
         while(($row = fgetcsv($reading_stream, 1000)) != null){
-            $file_data[] = ['semester'=>$row[0], 'ccode'=>str_replace(' ', '', $row[1]), 'matric'=>$row[2], 'ca_score'=>$row[3], 'exam_score'=>$row[4]];
+            $file_data[] = ['semester'=>$row[4], 'ccode'=>str_replace(' ', '', $row[0]), 'matric'=>$row[1], 'ca_score'=>$row[2], 'exam_score'=>$row[3]];
         }
         fclose($reading_stream);
         unlink($path.'/'.$fname);
