@@ -53,28 +53,28 @@
                                 </tr>
                                 <tr class="bg-light text-danger border-top border-bottom">
                                     {{-- <th></th> --}}
-                                    <th>@lang('text.word_semester')</th>
                                     <th>@lang('text.course_code')</th>
                                     <th>@lang('text.word_matricule')</th>
                                     <th>@lang('text.ca_mark')</th>
                                     <th>@lang('text.exam_mark')</th>
+                                    <th>@lang('text.word_semester')</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="border-top border-bottom">
-                                    <td class="">1</td> td>CHEM123</td> <td>DNT23D023</td> <td>23</td> <td>54</td>
+                                    <td>CHEM123</td> <td>DNT23D023</td> <td>23</td> <td>54</td> <td class="">1</td> 
                                 </tr>
                                 <tr class="border-top border-bottom">
-                                    <td class="">1</td> <td>DNT223</td> <td>DNT23D003</td> <td>20</td> <td>50</td>
+                                    <td>DNT223</td> <td>DNT23D003</td> <td>20</td> <td>50</td> <td class="">1</td> 
                                 </tr>
                                 <tr class="border-top border-bottom">
-                                    <td class="">1</td> <td>DNT233</td> <td>DNT23D102</td> <td>17</td> <td>58</td>
+                                    <td>DNT233</td> <td>DNT23D102</td> <td>17</td> <td>58</td> <td class="">1</td> 
                                 </tr>
                                 <tr class="border-top border-bottom">
-                                    <td class="">1</td> <td>ORG231</td> <td>DNT23D021</td> <td>25</td> <td>45</td>
+                                    <td>ORG231</td> <td>DNT23D021</td> <td>25</td> <td>45</td> <td class="">1</td> 
                                 </tr>
                                 <tr class="border-top border-bottom">
-                                    <td class="">1</td> <td>SUP123</td> <td>DNT23D025</td> <td>24</td> <td>39</td>
+                                    <td>SUP123</td> <td>DNT23D025</td> <td>24</td> <td>39</td> <td class="">1</td> 
                                 </tr>
                             </tbody>
                         </table>
@@ -89,12 +89,12 @@
                         <table class="table-stripped table">
                             <thead class="text-capitalize border-top border-bottom">
                                 <th class="border-left border-right border-light">@lang('text.sn')</th>
-                                <th class="border-left border-right border-light">@lang('text.word_semester')</th>
                                 <th class="border-left border-right border-light">@lang('text.word_matricule')</th>
                                 <th class="border-left border-right border-light">@lang('text.course_code')</th>
                                 <th class="border-left border-right border-light">@lang('text.academic_year')</th>
                                 <th class="border-left border-right border-light">@lang('text.ca_mark')</th>
                                 <th class="border-left border-right border-light">@lang('text.exam_mark')</th>
+                                <th class="border-left border-right border-light">@lang('text.word_semester')</th>
                             </thead>
                             <tbody>
                                 @php
@@ -103,12 +103,12 @@
                                 @foreach ($results??[] as $res)
                                     <tr class="border-top border-bottom">
                                         <td>{{ $k++ }}</td>
-                                        <td>{{ $res->semester_id??'' }}</td>
                                         <td>{{ $res->student->matric??'' }}</td>
                                         <td>{{ $res->subject->code??'' }}</td>
                                         <td>{{ $res->year->name??'' }}</td>
                                         <td>{{ $res->ca_score??'' }}</td>
                                         <td>{{ $res->exam_score??'' }}</td>
+                                        <td>{{ $res->semester_id??'' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
