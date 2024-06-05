@@ -241,7 +241,7 @@ class ResultController extends Controller
         $subject = Subjects::find(request('course_id'));
         $classSubject = $subject->_class_subject($request->class_id);
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
-        $data['title'] = __('text.fill_CA_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+        $data['title'] = __('text.fill_CA_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>(($cls = ProgramLevel::find(request('class_id'))) != null ? $cls->name() : '')]);
 
         return view('admin.result.fill_ca', $data);
     }
@@ -255,7 +255,7 @@ class ResultController extends Controller
 
         $subject = Subjects::find(request('course_id'));
         $classSubject = $subject->_class_subject($request->class_id);
-        $data['title'] = __('text.import_CA_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+        $data['title'] = __('text.import_CA_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>(($cls = ProgramLevel::find(request('class_id'))) != null ? $cls->name() : '')]);
 
         return view('admin.result.import_ca', $data);
     }
@@ -336,7 +336,7 @@ class ResultController extends Controller
         $classSubject = $subject->_class_subject($request->class_id);
         $data['ca_total'] = Helpers::instance()->ca_total(request('class_id'));
         $data['exam_total'] = Helpers::instance()->exam_total(request('class_id'));
-        $data['title'] = __('text.fill_exam_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+        $data['title'] = __('text.fill_exam_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>(($cls = ProgramLevel::find(request('class_id'))) != null ? $cls->name() : '')]);
         return view('admin.result.fill_exam', $data);
     }
 
@@ -344,7 +344,7 @@ class ResultController extends Controller
         
         $subject = Subjects::find(request('course_id'));
         $classSubject = $subject->_class_subject($request->class_id);
-        $data['title'] = __('text.import_exam_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>ProgramLevel::find(request('class_id'))->name()]);
+        $data['title'] = __('text.import_exam_results_for', ['course'=>"{$subject->name} [ {$subject->code} ] | CV : ".($classSubject->coef ?? $subject->coef)." | ST : ".($classSubject->status ?? $subject->status), 'class'=>(($cls = ProgramLevel::find(request('class_id'))) != null ? $cls->name() : '')]);
 
         return view('admin.result.import_exam', $data);
     }
@@ -831,12 +831,12 @@ class ResultController extends Controller
             $data['year'] = $batch;
             $data['course'] = $subject;
             $data['class'] = $program_level;
-            $data['title2'] = __('text.migrating_results_for', ['class'=>$program_level->name(), 'ccode'=>$course_code, 'year'=>$batch->name, 'sem'=>$sem->name]);
-            $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $course_code .'</b> || '.__('text.word_class').' :: <b class="text-danger">'. $program_level->name() .'</b>'.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
-            $data['delete_label'] = __('text.clear_results_for', ['year'=>$batch->name??'YR', 'class'=>$program_level->name(), 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
+            $data['title2'] = __('text.migrating_results_for', ['class'=>($program_level != null ? $program_level->name() : ''), 'ccode'=>$course_code, 'year'=>$batch->name, 'sem'=>$sem->name]);
+            $data['_title2'] = __('text.word_course').' :: <b class="text-danger">'.$subject->name.'</b> || '.__('text.course_code').' :: <b class="text-danger">'. $course_code .'</b> || '.__('text.word_class').' :: <b class="text-danger">'. ($program_level != null ? $program_level->name() : '') .'</b>'.__('text.word_semester').' :: <b class="text-danger">'. $sem->name .'</b>';
+            $data['delete_label'] = __('text.clear_results_for', ['year'=>$batch->name??'YR', 'class'=>($program_level != null ? $program_level->name() : ''), 'ccode'=>$course_code??'CCODE', 'semester'=>$sem->name??'SEMESTER']);
             $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class, 'semester_id'=>$semester, 'subject_id'=>$subject->id??null])->get();
             $data['can_update_exam'] = !(now()->isAfter($sem->exam_upload_latest_date??now()->addDays()->toString()));
-            $data['delete_prompt'] = "You are about to delete all {$program_level->name()} results for {$subject->code}, {$sem->name} {$batch->name}";
+            $data['delete_prompt'] = "You are about to delete all {($program_level != null ? $program_level->name() : '')} results for {$subject->code}, {$sem->name} {$batch->name}";
         }
         // dd($data);
         return view('admin.result.special.migrate', $data);
@@ -978,12 +978,12 @@ class ResultController extends Controller
             $program_level = ProgramLevel::find($class);
             $data['year'] = $batch;
             $data['class'] = $program_level;
-            $data['title2'] = "Result Super-Migrator Terminal :: ".($data['class']->name()).", ".$data['year']->name??'';
-            $data['_title2'] = __('text.word_class').' :: <b class="text-danger">'. $program_level->name() .'</b>';
-            $data['delete_label'] = __('text.clear_results_for', ['year'=>$batch->name??'YR', 'class'=>$program_level->name()]);
+            $data['title2'] = "Result Super-Migrator Terminal :: ".($data['class'] == null ? '' : $data['class']->name()).", ".$data['year']->name??'';
+            $data['_title2'] = __('text.word_class').' :: <b class="text-danger">'. ($program_level == null ? '' : $program_level->name()) .'</b>';
+            $data['delete_label'] = __('text.clear_results_for', ['year'=>$batch->name??'YR', 'class'=>($program_level == null ? '' : $program_level->name())]);
             $data['results'] = Result::where(['batch_id'=>$year, 'class_id'=>$class])->get();
             $data['can_update_exam'] = true;
-            $data['delete_prompt'] = "You are about to delete all {$program_level->name()} results for {$batch->name}";
+            $data['delete_prompt'] = "You are about to delete all {($program_level == null ? '' : $program_level->name())} results for {$batch->name}";
         }
         return view('admin.result.super.migrate', $data);
     }
@@ -1015,6 +1015,7 @@ class ResultController extends Controller
         $missing_students = "";
         $missing_courses = "";
 
+        // dd($file_data);
         $_class = ProgramLevel::find($class);
         foreach($file_data as $rec){
             $_sem = Semester::find($rec['semester']);
@@ -1031,14 +1032,14 @@ class ResultController extends Controller
             }
             $class_subject = $_class->class_subjects()->where('subject_id', $subject->id)->first();
             $data = [
-                'batch_id'=>$year, 'student_id'=>$student->id, 'semester_id'=>$_sem->sem, 'subject_id'=>$subject->id, 
+                'batch_id'=>$year, 'student_id'=>$student->id, 'semester_id'=>$rec['semester'], 'subject_id'=>$subject->id, 
                 'ca_score'=>$rec['ca_score'], 'exam_score'=>$rec['exam_score'], 'coef'=>$class_subject->coef ?? $subject->coef,
                 'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class.$rec['semester'].$subject->id.$subject->coef, 
                 'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'published'=>0
             ];
             $base = ['batch_id'=>$year, 'student_id'=>$student->id, 'class_id'=>$class, 'semester_id'=>$rec['semester'], 
             'subject_id'=>$subject->id];
-    
+            
             Result::updateOrInsert($base, $data);
         }
         if(strlen($missing_students) > 0 || strlen($missing_courses) > 0){

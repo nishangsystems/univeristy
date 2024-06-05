@@ -476,12 +476,13 @@ class StudentController extends Controller
                 $i++;
             }
             fclose($file);
+            unlink($filepath);
             // dd($importData_arr);
 
             DB::beginTransaction();
             try {
                 foreach ($importData_arr as $importData) {
-                    if (Students::where('name', $importData[0])->orWhere('matric', $importData[1])->count() === 0) {
+                    if (Students::where('matric', $importData[1])->count() === 0) {
                         $student = \App\Models\Students::create([
                             'name' => mb_convert_case(str_replace('’', "'", $importData[0]), MB_CASE_UPPER),
                             'matric' => $importData[1],
