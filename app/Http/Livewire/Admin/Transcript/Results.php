@@ -32,7 +32,7 @@ class Results extends Component
         $this->student = $student;
 
         // $_class = $student->_class();
-        $_class = $student->_classes;
+        $_class = $student->_classes(Helpers::instance()->getCurrentAccademicYear());
         dd($_class);
         $this->gradings = $_class->program()->first()->gradingType->grading()->orderBy('weight','desc')->get() ?? [];
         $prog = $_class->program;
