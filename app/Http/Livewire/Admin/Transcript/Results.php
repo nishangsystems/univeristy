@@ -31,10 +31,10 @@ class Results extends Component
     public function mount(Request $request, Students $student){
         $this->student = $student;
 
-        $class = $student->_class();
-        dd($student);
-        $this->gradings = $class->program()->first()->gradingType->grading()->orderBy('weight','desc')->get() ?? [];
-        $prog = $class->program;
+        $_class = $student->_class();
+        dd($_class);
+        $this->gradings = $_class->program()->first()->gradingType->grading()->orderBy('weight','desc')->get() ?? [];
+        $prog = $_class->program;
 
 
         $this->results = $student->result->map(function ($result)  use ($prog){
