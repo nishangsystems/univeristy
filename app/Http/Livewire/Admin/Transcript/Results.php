@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\Transcript;
 
 use App\Helpers\Helpers;
+use App\Models\Batch;
 use App\Models\Grading;
 use App\Models\Result;
 use App\Models\Students;
@@ -33,7 +34,7 @@ class Results extends Component
 
         $_class = $student->_class();
         // $_class = $student->_classes(Helpers::instance()->getCurrentAccademicYear())->get();
-        dd($_class);
+        dd(Batch::orderBy('name')->get());
         $this->gradings = $_class->program()->first()->gradingType->grading()->orderBy('weight','desc')->get() ?? [];
         $prog = $_class->program;
 

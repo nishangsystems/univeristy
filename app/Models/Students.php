@@ -35,7 +35,10 @@ class Students extends Authenticatable
     {
         # code...
         return $this->belongsToMany(ProgramLevel::class, 'student_classes', 'student_id', 'class_id')
-            ->where('student_classes.year_id', '<=', $year_id ?? Helpers::instance()->getCurrentAccademicYear())
+            ->where(function($builder)use($year_id){
+                if($year_id != null)
+                    $builder->where('student_classes.year_id', $year_id);
+            })
             ->orderByDesc('student_classes.year_id');
     }
     
