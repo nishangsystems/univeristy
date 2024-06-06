@@ -41,17 +41,14 @@ class Students extends Authenticatable
     
     public function _class($year=null)
     {
-        $sc = StudentClass::where('student_id', $this->id)->where('year_id', '<=', $year != null ? $year : Helpers::instance()->getCurrentAccademicYear())->orderBy('year_id', 'DESC')->first();
-        $batch = Batch::find($year != null ? $year : Helpers::instance()->getCurrentAccademicYear());
-        if($sc == null){
-            throw new \Exception('The student has not student-class instance by or before '.$batch->name??'');
-        }
-        $_clas = ProgramLevel::find($sc->class_id);
-        if($_clas == null){
-            throw new \Exception('The program-level instance of this student by or before '.($batch->name??'')." with ID :{$sc->class_id} could not be found. Check to confirm that this program level had not been deleted");
-        }
+        $cls = $this->belongsToMany(ProgramLevel::class, StudentClass::class, 'student_id', 'class_id')->where(function($builder)use($year){
+            if($year != null)
+                $builder->where('student_classes.year_id', $year);
+            elseif($year == null)
+                $builder->where('student_classes.year_id', '<=', Helpers::instance()->getCurrentAccademicYear());
+        })->orderBy('student_classes.year_id', 'DESC')->first();
 
-        return $_clas;
+        return $cls;
     }
 
     public function class($year)
