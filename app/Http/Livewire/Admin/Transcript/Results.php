@@ -31,7 +31,8 @@ class Results extends Component
     public function mount(Request $request, Students $student){
         $this->student = $student;
 
-        $_class = $student->_class();
+        // $_class = $student->_class();
+        $_class = $student->_classes;
         dd($_class);
         $this->gradings = $_class->program()->first()->gradingType->grading()->orderBy('weight','desc')->get() ?? [];
         $prog = $_class->program;
