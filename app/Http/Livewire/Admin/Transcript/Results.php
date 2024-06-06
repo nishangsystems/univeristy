@@ -34,7 +34,7 @@ class Results extends Component
 
         $_class = $student->_class();
         // $_class = $student->_classes(Helpers::instance()->getCurrentAccademicYear())->get();
-        dd(Batch::orderBy('name')->get(['id', 'name'])->toArray());
+        return Batch::orderBy('name')->get(['id', 'name'])->toArray();
         $this->gradings = $_class->program()->first()->gradingType->grading()->orderBy('weight','desc')->get() ?? [];
         $prog = $_class->program;
 
