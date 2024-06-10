@@ -237,6 +237,11 @@
         </table>
         @if($page == count($results))
             <div style="display: flex; justify-content: center; font-weight: bold">Registrar</div>
+            @if(isset($school->page) && !empty($school->page))
+                <div style="display: flex; margin-left: 10px">
+                    {!! $school->page !!}
+                </div>
+            @endif
             @if(isset($school->pageb) && !empty($school->pageb))
                 <div style="display: flex; margin-left: 10px">
                     {!! $school->pageb !!}

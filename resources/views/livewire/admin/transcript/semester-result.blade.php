@@ -42,7 +42,7 @@
 
 
     @php
-        if($result['validated']){
+        if($result['passed']){
             $gpaCreditAttempted += $result['cv'];
             $gpaCreditEarned += $result['ce'];
         }
