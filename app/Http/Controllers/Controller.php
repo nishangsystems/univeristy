@@ -626,7 +626,7 @@ class Controller extends BaseController
                             Payments::insert($_data);
                             DB::commit();
                             $message = "Hello ".(auth('student')->user()->name??'').", You have successfully paid a sum of ".($transaction_instance->amount??'')." as part/all of TUTION for ".($transaction_instance->year->name??'')." ST. LOUIS UNIVERSITY INSTITUTE.";
-                            $this->sendSmsNotificaition($message, [auth('student')->user()->phone]);
+                            Self::sendSmsNotificaition($message, [auth('student')->user()->phone]);
                 
                         } catch (\Throwable $th) {
                             DB::rollBack();
