@@ -76,7 +76,10 @@
         }
 
         div.landscape {
-            max-width: 286mm !important;
+            width: 286mm !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             max-height: 210mm;
         }
 
@@ -237,12 +240,12 @@
         @if($page == count($results))
 
             @if(isset($school->page) && !empty($school->page))
-                <div style="display: flex; line-height: 15px; margin-left: 10px">
+                <div style="display: flex; width: 100%; line-height: 15px; margin-left: 10px">
                     {!! $school->page !!}
                 </div>
             @endif
             @if(isset($school->pageb) && !empty($school->pageb))
-                <div style="display: flex; line-height: 15px; margin-left: 10px">
+                <div style="display: flex; width: 100%;  line-height: 15px; margin-left: 10px">
                     {!! $school->pageb !!}
                 </div>
             @endif
