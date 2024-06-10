@@ -25,10 +25,9 @@
 
         table {
             border-collapse: collapse;
-            max-width: 283mm !important;
+            max-width: 278mm !important;
             border: none;
             width: 100%;
-            margin: 10px 10px;
             font-size: 10px !important;
             border-spacing: 0;
         }
@@ -240,12 +239,12 @@
         @if($page == count($results))
 
             @if(isset($school->page) && !empty($school->page))
-                <div style="display: flex; width: 100%; line-height: 15px; margin-left: 10px">
+                <div style="display: flex; width: 100%; line-height: 15px; margin-left: 25px">
                     {!! $school->page !!}
                 </div>
             @endif
             @if(isset($school->pageb) && !empty($school->pageb))
-                <div style="display: flex; width: 100%;  line-height: 15px; margin-left: 10px">
+                <div style="display: flex; width: 100%;  line-height: 15px; margin-left: 25px">
                     {!! $school->pageb !!}
                 </div>
             @endif
