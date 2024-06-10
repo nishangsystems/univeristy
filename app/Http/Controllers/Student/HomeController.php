@@ -313,8 +313,8 @@ class HomeController extends Controller
                 $data['results'] = collect($results)->filter(function($el){return $el != null;});
                 $sum_cv = $data['results']->where('coef', '>', 0)->sum('coef');
                 $sum_earned_cv = collect($results)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
-                $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->sum('coef');
-                $gpa_cv_earned = $data['results']->whereNotIn('id', $non_gpa_courses)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
+                $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->where('coef', '>', 0)->sum('coef');
+                $gpa_cv_earned = $data['results']->whereNotIn('id', $non_gpa_courses)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->where('coef', '>', 0)->sum('coef');
                 $sum_gpts = $data['results']->whereNotIn('id', $non_gpa_courses)->sum(function($item){
                     return $item['coef'] * $item['weight'];
                 });
@@ -410,8 +410,8 @@ class HomeController extends Controller
     
             $data['results'] = collect($results)->filter(function($el){return $el != null;});
             $sum_cv = $data['results']->where('coef', '>', 0)->sum('coef');
-            $sum_earned_cv = collect($results)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
-            $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->sum('coef');
+            $sum_earned_cv = collect($results)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->where('coef', '>', 0)->sum('coef');
+            $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->where('coef', '>', 0)->sum('coef');
             $gpa_cv_earned = $data['results']->whereNotIn('id', $non_gpa_courses)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
             $sum_gpts = $data['results']->whereNotIn('id', $non_gpa_courses)->sum(function($item){
                 return $item['coef'] * $item['weight'];
