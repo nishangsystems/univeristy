@@ -337,7 +337,7 @@ class HomeController extends Controller
     
             return view('student.exam-result')->with($data);
         } catch (\Throwable $th) {
-            //throw $th;
+            return $th;
             session()->flash('error', "F::{$th->getFile()}, L::{$th->getLine()}, M::{$th->getMessage()}");
             return back()->withInput();
         }

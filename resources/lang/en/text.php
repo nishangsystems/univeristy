@@ -1010,5 +1010,8 @@ return [
     'operation_complete'=>'operation complete',
     'course_report'=>'course report',
     'super_migrate'=>'super migrate',
+    'resit_payments'=>'resit payments',
+    'record_payment'=>'record payment',
+    'resit_registration_info'=>'resit registration info',
     ''
 ];

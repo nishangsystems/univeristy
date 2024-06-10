@@ -887,6 +887,30 @@
             </li>
             @endif
 
+            @if (\Auth::user()->hasPermissionTo('manage_fee'))
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-eur"></i>
+                    <span class="menu-text">
+						{{__('text.resit_payments')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    
+                    <li>
+                        <a href="{{route('admin.resits.payments.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_index')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            @endif
+
             @if (\Auth::user()->hasPermissionTo('manage_scholarship'))
             <li>
                 <a href="#" class="dropdown-toggle">
