@@ -28,8 +28,7 @@
             max-width: 283mm !important;
             border: none;
             width: 100%;
-            margin: 20px 10px;
-            margin-top: 30px;
+            margin: 10px 10px;
             font-size: 10px !important;
             border-spacing: 0;
         }
@@ -134,7 +133,7 @@
 @endphp
 @foreach($results as $batch)
     <div class="page landscape">
-        <table border="0" cellspacing="0" cellpadding="0" style="height: {{$page == count($results)?"175mm;":"185mm;"}}">
+        <table border="0" cellspacing="0" cellpadding="0" style="height: {{$page == count($results)?"175mm;":"185mm;"}};   {{$page > 0?"margin-top: 30px;":""}}">
             <tbody>
             <tr style="height: 30px">
                 <td colspan="6" rowspan="2" width="34%">
