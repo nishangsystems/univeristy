@@ -236,13 +236,15 @@
 
             </tbody>
         </table>
+        @if(isset($school->page) && !empty($school->page))
+            <div style="display: flex; width: 100%; line-height: 15px; margin-left: 25px">
+                {!! $school->page !!}
+            </div>
+        @endif
+
         @if($page == count($results))
 
-            @if(isset($school->page) && !empty($school->page))
-                <div style="display: flex; width: 100%; line-height: 15px; margin-left: 25px">
-                    {!! $school->page !!}
-                </div>
-            @endif
+
             @if(isset($school->pageb) && !empty($school->pageb))
                 <div style="display: flex; width: 100%;  line-height: 15px; margin-left: 25px">
                     {!! $school->pageb !!}
