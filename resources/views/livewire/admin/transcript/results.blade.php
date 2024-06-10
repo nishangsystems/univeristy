@@ -25,10 +25,10 @@
 
         table {
             border-collapse: collapse;
-            max-width: 280mm !important;
+            max-width: 283mm !important;
             border: none;
             width: 100%;
-            margin:10px 20px;
+            margin:10px 10px;
             font-size: 10px !important;
             border-spacing: 0;
         }
@@ -80,19 +80,6 @@
             max-height: 207mm;
         }
 
-        @media print {
-            body {
-                background: none;
-                -ms-zoom: 1.665;
-            }
-
-            div.landscape {
-                margin: 0;
-                padding: 0;
-                border: none;
-                background: none;
-            }
-        }
 
         .grade {
             font-size: 10px;
@@ -130,6 +117,15 @@
             text-align: left !important;
             flex-grow: 1;
         }
+
+        @media print {
+            @page {
+                size: A4 landscape;
+
+            }
+        }
+
+
     </style>
 </head>
 <body>
@@ -139,7 +135,7 @@
 @endphp
 @foreach($results as $batch)
     <div class="page landscape">
-        <table border="0" cellspacing="0" cellpadding="0" style="height: {{$page == count($results)?"180mm;":"190mm;"}}">
+        <table border="0" cellspacing="0" cellpadding="0" style="height: {{$page == count($results)?"175mm;":"185mm;"}}">
             <tbody>
             <tr style="height: 30px">
                 <td colspan="6" rowspan="2" width="34%">
@@ -176,7 +172,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="13" style="font-weight: bold; height: 30px; padding: 0px 5px;">Date of Enrolment : {{$student->batch->name}}</td>
+                    <td colspan="13" style="font-weight: bold; height: 30px; padding: 0px 5px;">Date of Enrolment : August {{explode('/',$student->batch->name)[0]}}</td>
                     <td colspan="5" rowspan="2" style="height:90px; font-weight: bold; padding: 0px 5px">
                             @foreach($gradings as $grade)
                                 <div style="display: flex;">
@@ -221,7 +217,7 @@
                            <div style="display: flex">
                                <span style="width: 120px">Date :</span>
                                @if($totalCreditEarned >= $program->max_credit)
-                                   <span>{{explode('/',collect($results)->last()[0]['year_name'])[1] }}</span>
+                                   <span>October {{explode('/',collect($results)->last()[0]['year_name'])[1] }}</span>
                                @endif
                            </div>
                        </div>
