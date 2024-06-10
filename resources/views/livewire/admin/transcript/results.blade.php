@@ -77,7 +77,7 @@
 
         div.landscape {
             max-width: 286mm !important;
-            max-height: 207mm;
+            max-height: 210mm;
         }
 
 
@@ -121,10 +121,9 @@
         @media print {
             @page {
                 size: A4 landscape;
-
+                margin: 0px;
             }
         }
-
 
     </style>
 </head>
@@ -229,6 +228,7 @@
             @component('livewire.admin.transcript.year',['batch'=>$batch,'isLast'=>($page == count($results)),
                 'tca'=>$totalCreditAttempted,
                 'tce'=>$totalCreditEarned,
+                'school'=>$school,
                 'tgpa'=>$gpa
                 ]
             )@endcomponent
@@ -237,6 +237,11 @@
         </table>
         @if($page == count($results))
             <div style="display: flex; justify-content: center; font-weight: bold">Registrar</div>
+            @if(isset($school->pageb) && !empty($school->pageb))
+                <div style="display: flex; margin-left: 10px">
+                    {!! $school->pageb !!}
+                </div>
+            @endif
         @endif
     </div>
     @php

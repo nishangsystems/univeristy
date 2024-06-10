@@ -36,7 +36,7 @@
                             ['results'=>null ,
                                  'resits'=>null,
                                   'class'=>'border-right-2',
-                                'isLast'=>true,
+                                 'isLast'=>true,
                                  'tca'=>$tca,
                 'tce'=>$tce,
                 'tgpa'=>$tgpa
