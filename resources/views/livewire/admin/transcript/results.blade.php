@@ -28,7 +28,8 @@
             max-width: 283mm !important;
             border: none;
             width: 100%;
-            margin:10px 10px;
+            margin: 20px 10px;
+            margin-top: 30px;
             font-size: 10px !important;
             border-spacing: 0;
         }
@@ -121,7 +122,6 @@
         @media print {
             @page {
                 size: A4 landscape;
-                margin: 0px;
             }
         }
 
@@ -236,17 +236,18 @@
             </tbody>
         </table>
         @if($page == count($results))
-            <div style="display: flex; justify-content: center; font-weight: bold">Registrar</div>
+
             @if(isset($school->page) && !empty($school->page))
-                <div style="display: flex; margin-left: 10px">
+                <div style="display: flex; line-height: 15px; margin-left: 10px">
                     {!! $school->page !!}
                 </div>
             @endif
             @if(isset($school->pageb) && !empty($school->pageb))
-                <div style="display: flex; margin-left: 10px">
+                <div style="display: flex; line-height: 15px; margin-left: 10px">
                     {!! $school->pageb !!}
                 </div>
             @endif
+                <div style="display: flex; line-height: 15px; justify-content: center; font-weight: bold">Registrar</div>
         @endif
     </div>
     @php
