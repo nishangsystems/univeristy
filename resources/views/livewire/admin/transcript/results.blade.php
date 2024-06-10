@@ -135,7 +135,7 @@
 @endphp
 @foreach($results as $batch)
     <div class="page landscape">
-        <table border="0" cellspacing="0" cellpadding="0" style="height: {{$page == count($results)?"175mm;":"185mm;"}};   {{$page > 0?"margin-top: 30px;":""}}">
+        <table border="0" cellspacing="0" cellpadding="0" style="height: {{$page == count($results)?"170mm;":"185mm;"}};   {{$page > 0?"margin-top: 10px;":""}}">
             <tbody>
             <tr style="height: 30px">
                 <td colspan="6" rowspan="2" width="34%">
