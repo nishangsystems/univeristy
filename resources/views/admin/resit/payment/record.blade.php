@@ -2,6 +2,26 @@
 @section('section')
     <div class="py-3">
         <div class="container-fluid">
+            <table class="table">
+                <thead>
+                    <tr><th colspan="3" class="border-top border-bottom etxt-center text-capitalize">@lang('text.word_history')</th></td>
+                    <tr class="border-bottom">
+                        <th>@lang('text.sn')</th>
+                        <th>@lang('text.word_date')</th>
+                        <th>@lang('text.word_amount')</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php($k = 1)
+                    @foreach ($payments as $payment)
+                        <tr class="border-bottom">
+                            <td>{{ $k++ }}</td>
+                            <td>{{ $payment->created_at != null ? $payment->created_at->format('d/m/Y') : '' }}</td>
+                            <td>{{ $payment->amount }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
             <div class="py-4">
                 <div class="header h4 fw-smeibold text-capitalize">@lang('text.resit_registration_info')</div>
                 <div class="row my-3">

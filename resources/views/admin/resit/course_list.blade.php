@@ -29,7 +29,7 @@
                         $q->where(['students.campus_id'=>auth()->user()->campus_id]);
                         })->distinct()->count()}}</td>
                     <td class="border-left border-right border-white">
-                        <a class="btn btn-sm btn-primary" href="{{route('admin.resits.course_list.download', [$element->resit_id, $element->id])}}">{{__('text.word_students')}}</a>
+                        <a class="btn btn-sm btn-primary" href="{{route('admin.resits.course_list.download', [$element->resit_id, $element->id])}}">{{__('text.student_list')}}</a>
                     </td>
                 </tr>
             @endforeach
