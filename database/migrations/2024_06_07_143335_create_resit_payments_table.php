@@ -18,6 +18,7 @@ class CreateResitPaymentsTable extends Migration
             $table->integer('resit_id');
             $table->integer('student_id');
             $table->integer('year_id');
+            $table->integer('amount');
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Resit;
+use App\Models\ResitPayment;
 use App\Models\StudentClass;
 use App\Models\Students;
 use App\Models\StudentSubject;
@@ -50,8 +51,8 @@ class ResitPaymentController extends Controller
         }
         
         $data = ['resit_id'=>$resit_id, 'student_id'=>$student_id, 'amount'=>$request->amount, 'year_id'=>$this->current_accademic_year];
-        $payment = Resit::where(['resit_id'=>$resit_id, 'student_id'=>$student_id, 'year_id'=>$this->current_accademic_year])->first();
-        Resit::updateOrInsert(['resit_id'=>$resit_id, 'student_id'=>$student_id, 'year_id'=>$this->current_accademic_year], ['amount'=>(($payment->amount??0)+$request->amount)]);
+        $payment = ResitPayment::where(['resit_id'=>$resit_id, 'student_id'=>$student_id, 'year_id'=>$this->current_accademic_year])->first();
+        ResitPayment::updateOrInsert(['resit_id'=>$resit_id, 'student_id'=>$student_id, 'year_id'=>$this->current_accademic_year], ['amount'=>(($payment->amount??0)+$request->amount)]);
         return back()->with('success', "Done");
     }
 }
