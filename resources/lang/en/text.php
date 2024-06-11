@@ -1013,5 +1013,6 @@ return [
     'resit_payments'=>'resit payments',
     'record_payment'=>'record payment',
     'resit_registration_info'=>'resit registration info',
+    'class_report'=>'class report',
     ''
 ];

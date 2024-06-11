@@ -383,14 +383,6 @@
                         <b class="arrow"></b>
                     </li>
 
-                    <li>
-                        <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.manage_custom_resits')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
                     @if(auth()->user()->campus_id == null)
                         <li>
                             <a href="{{route('admin.result.settings')}}" class="text-capitalize">
@@ -493,6 +485,15 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    
+                    <li>
+                        <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           {{__('text.manage_custom_resits')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
                 </ul>
             </li>
             @endif

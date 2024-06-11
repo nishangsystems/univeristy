@@ -486,11 +486,11 @@ class StudentController extends Controller
                         $student = \App\Models\Students::create([
                             'name' => mb_convert_case(str_replace('’', "'", $importData[0]), MB_CASE_UPPER),
                             'matric' => $importData[1],
-                            // 'email' => explode(' ', str_replace('’', "'", $importData[2]))[0],
+                            'email' => $importData[2] == null ? null : explode(' ', str_replace('’', "'", $importData[2]))[0],
                             'gender' => $importData[2] ?? null,
                             'pob' => $importData[3] ?? null,
                             'dob' => $importData[4] ?? null,
-                            // 'password' => Hash::make('12345678'),
+                            'password' => Hash::make('12345678'),
                             'campus_id'=> $request->campus_id ?? null,
                             'program_id' => $request->program_id ?? null,
                             'admission_batch_id' => $request->batch,
