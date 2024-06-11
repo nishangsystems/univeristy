@@ -546,7 +546,6 @@ class HomeController  extends Controller
         // return 'nonsense going on here';
         $campus_id = auth()->user()->campus_id;
         $data['courses'] = Subjects::join('student_courses', ['student_courses.course_id'=>'subjects.id'])
-                    ->whereNotNull('student_courses.paid')
                     ->where(['student_courses.resit_id'=>$resit_id])
                     ->join('students', ['students.id'=>'student_courses.student_id'])
                     ->where(function($query)use($campus_id){
@@ -567,7 +566,7 @@ class HomeController  extends Controller
         # code...
         $subject = Subjects::find($subject_id);
         $data['title'] = __('text.resit_course_list_for', ['item'=>Resit::find($resit_id)->name??null]);
-        $data['subjects'] = $subject->student_subjects()->where(['student_courses.resit_id' => $resit_id])->whereNotNull('student_courses.paid')
+        $data['subjects'] = $subject->student_subjects()->where(['student_courses.resit_id' => $resit_id])
                         ->join('students',  ['students.id'=>'student_courses.student_id'])
                         ->orderBy('students.name')->get(['student_courses.*']);
         if($request->print == 1){
