@@ -38,6 +38,7 @@ class ResitPaymentController extends Controller
         $data['resit'] = Resit::find($resit_id);
         $data['student'] = $student;
         $data['courses'] = StudentSubject::where(['student_id'=>$student_id, 'resit_id'=>$resit_id])->get();
+        $data['payments'] = ResitPayment::where(['student_id'=>$student_id, 'resit_id'=>$resit_id])->get();
         $data['collected'] = ResitPayment::where(['student_id'=>$student_id, 'resit_id'=>$resit_id])->sum('amount');
         if($data['courses']->count() == 0){
             session()->flash('message', "This student has not registered any courses for this resit");
@@ -53,9 +54,9 @@ class ResitPaymentController extends Controller
             return back()->with('error', $validity->errors()->first());
         }
         
-        $data = ['resit_id'=>$resit_id, 'student_id'=>$student_id, 'amount'=>$request->amount, 'year_id'=>$this->current_accademic_year, 'recorded_by'=>auth()->id()];
+        $data = ['resit_id'=>$resit_id, 'student_id'=>$student_id, 'amount'=>$request->amount, 'year_id'=>$this->current_accademic_year, 'recorded_by'=>auth()->id(), 'created_at'=>now(), 'updated_at'=>now()];
         $payment = ResitPayment::where(['resit_id'=>$resit_id, 'student_id'=>$student_id, 'year_id'=>$this->current_accademic_year])->first();
-        ResitPayment::create(['resit_id'=>$resit_id, 'student_id'=>$student_id, 'year_id'=>$this->current_accademic_year], ['amount'=>(($payment->amount??0)+$request->amount)]);
+        ResitPayment::create($data);
         return back()->with('success', "Done");
     }
     //
@@ -71,6 +72,6 @@ class ResitPaymentController extends Controller
             $data['title'] = "{$class->name()} Payment Report For {$resit->name}, {$resit->year->name}";
             $data['class'] = $class;
         }
-        
+
     }
 }
