@@ -46,7 +46,7 @@
                 <th>{{__('text.word_title')}}</th>
                 <th>{{__('text.course_code')}}</th>
                 <th>{{__('text.credit_value')}}</th>
-                <th>{{__('text.word_level')}}</th>
+                {{-- <th>{{__('text.word_level')}}</th> --}}
                 <th>{{__('text.word_status')}}</th>
                 <th></th>
             </thead>
@@ -58,7 +58,7 @@
                     <td>{{$subj->name}}</td>
                     <td>{{$subj->code}}</td>
                     <td>{{$subj->coef}}</td>
-                    <td>{{\App\Models\Level::find($subj->level_id)->level}}</td>
+                    {{-- <td>{{\App\Models\Level::find($subj->level_id)->level}}</td> --}}
                     <td>{{$subj->status}}</td>
                     <td>
                         <a href="{{route('admin.subjects.edit', $subj->id)}}" class="btn btn-primary btn-sm">{{__('text.word_edit')}}</a> | 

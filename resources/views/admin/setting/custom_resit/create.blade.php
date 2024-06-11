@@ -68,6 +68,7 @@
                 <th class="border-left border-right border-white">{{__('text.word_name')}}</th>
                 <th class="border-left border-right border-white">{{__('text.academic_year')}}</th>
                 <th class="border-left border-right border-white">{{__('text.word_background')}}</th>
+                <th class="border-left border-right border-white">{{__('text.word_semester')}}</th>
                 <th class="border-left border-right border-white">{{__('text.start_date')}}</th>
                 <th class="border-left border-right border-white">{{__('text.end_date')}}</th>
                 <th class="border-left border-right border-white">{{__('text.word_status')}}</th>
@@ -81,12 +82,15 @@
                     <td class="border-left border-right border-white">{{$resit->name ?? ''}}</td>
                     <td class="border-left border-right border-white">{{$resit->year->name}}</td>
                     <td class="border-left border-right border-white">{{$resit->background->background_name}}</td>
+                    <td class="border-left border-right border-white">{{$resit->semester->name??''}}</td>
                     <td class="border-left border-right border-white">{{date('l d-m-Y', strtotime($resit->start_date))}}</td>
                     <td class="border-left border-right border-white">{{date('l d-m-Y', strtotime($resit->end_date))}}</td>
                     <td class="border-left border-right border-white">@if($resit->is_open()) <span class="text-primary">{{__('text.word_open')}}</span> @else <span class="text-danger">{{__('text.word_closed')}}</span> @endif</td>
                     <td class="border-left border-right border-white">
                         <a class="btn btn-sm btn-primary" href="{{route('admin.custom_resit.edit', $resit->id)}}">{{__('text.word_edit')}}</a>
-                        <button class="btn btn-sm btn-danger" onclick="window.location = confirm(`Your about to delete resit : {{$resit->year->name}} - {{$resit->background->background_name}} - {{$resit->start_date}} to {{$resit->end_date}}`) ? `{{route('admin.custom_resit.delete', $resit->id)}}` : null">{{__('text.word_delete')}}</button>
+                        @if($resit->courses->count() == 0)
+                            <button class="btn btn-sm btn-danger" onclick="window.location = confirm(`Your about to delete resit : {{$resit->year->name}} - {{$resit->background->background_name}} - {{$resit->start_date}} to {{$resit->end_date}}`) ? `{{route('admin.custom_resit.delete', $resit->id)}}` : null">{{__('text.word_delete')}}</button>    
+                        @endif
                     </td>
                 </tr>
             @endforeach

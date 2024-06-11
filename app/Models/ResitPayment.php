@@ -9,4 +9,6 @@ class ResitPayment extends Model
 {
     use HasFactory;
     protected $fillable = ['year_id', 'resit_id', 'student_id', 'amount'];
+
+    
 }
