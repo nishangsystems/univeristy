@@ -481,6 +481,15 @@
                 </a>
 
                 <ul class="submenu">
+                
+                    <li>
+                        <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           {{__('text.manage_custom_resits')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    
                     <li>
                         <a href="{{route('admin.resits.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -490,9 +499,9 @@
                     </li>
                     
                     <li>
-                        <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
+                        <a href="{{route('admin.resits.payments.index')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.manage_custom_resits')}}
+                            {{__('text.resit_payments')}}
                         </a>
                         <b class="arrow"></b>
                     </li>
@@ -884,30 +893,6 @@
                         <a href="{{route('admin.clearance.fee')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.fees_clearance')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_fee'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-eur"></i>
-                    <span class="menu-text">
-						{{__('text.resit_payments')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    
-                    <li>
-                        <a href="{{route('admin.resits.payments.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_index')}}
                         </a>
                         <b class="arrow"></b>
                     </li>
