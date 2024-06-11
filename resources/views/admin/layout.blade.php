@@ -59,7 +59,10 @@
         .compressed-table tr, .compressed-table thead, .compressed-table tbody{
             padding: 0 !important;
         }
-        
+        .clickable:hover{
+            cursor: hand;
+            background-color: #fefffe;
+        }
     </STYLE>
 @php
     $bg1 = \App\Http\Controllers\HomeController::getColor('background_color_1');

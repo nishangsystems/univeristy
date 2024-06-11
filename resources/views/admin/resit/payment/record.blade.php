@@ -25,24 +25,24 @@
                 <div class="row my-3">
                     <span class="text-capitalize text-secondary col-lg-3">{{ __('text.amount_recieved') }}:</span>
                     <div class="col-lg-9">
-                        <label class="form-control rounded">{{ ($resit_cost??0)*($courses->whereNotNull('paid')->count()) }}</label>
+                        <label class="form-control rounded">{{ ($resit_cost??0)*($courses->whereNotNull('paid')->count()) + $collected??0 }}</label>
                     </div>
                 </div>
                 <div class="row my-3">
                     <span class="text-capitalize text-secondary col-lg-3">{{ __('text.word_balance') }}:</span>
                     <div class="col-lg-9">
-                        <label class="form-control rounded">{{ ($resit_cost??0)*($courses->whereNull('paid')->count()) }}</label>
+                        <label class="form-control rounded">{{ ($resit_cost??0)*($courses->whereNull('paid')->count()) -$collected??0 }}</label>
                     </div>
                 </div>
 
             </div>
             <div class="header h4 fw-smeibold text-capitalize">@lang('text.record_payment')</div>
-            <form methos="POST">
+            <form method="POST">
                 @csrf
                 <div class="row my-3">
                     <span class="text-capitalize text-secondary col-lg-3">{{ __('text.word_amount') }}:</span>
                     <div class="col-lg-9">
-                        <input type="number" name="amount" required class="form-control rounded" value="{{ ($resit_cost??0)*($courses->whereNull('paid')->count()) }}">
+                        <input type="number" name="amount" required class="form-control rounded" value="{{ ($resit_cost??0)*($courses->whereNull('paid')->count()) - $collected??0 }}">
                     </div>
                 </div>
                 <div class="d-flex my-3 justify-content-end">

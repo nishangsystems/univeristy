@@ -9,6 +9,7 @@ use App\Models\StudentClass;
 use App\Models\Students;
 use App\Models\StudentSubject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ResitPaymentController extends Controller
@@ -37,6 +38,7 @@ class ResitPaymentController extends Controller
         $data['resit'] = Resit::find($resit_id);
         $data['student'] = $student;
         $data['courses'] = StudentSubject::where(['student_id'=>$student_id, 'resit_id'=>$resit_id])->get();
+        $data['collected'] = ResitPayment::where(['student_id'=>$student_id, 'resit_id'=>$resit_id])->sum('amount');
         if($data['courses']->count() == 0){
             session()->flash('message', "This student has not registered any courses for this resit");
         }
@@ -45,14 +47,30 @@ class ResitPaymentController extends Controller
     //
 
     public function save_record(Request $request, $resit_id, $student_id){
+        // dd($request->all());
         $validity = Validator::make($request->all(), ['amount'=>'required|integer']);
         if($validity->fails()){
             return back()->with('error', $validity->errors()->first());
         }
         
-        $data = ['resit_id'=>$resit_id, 'student_id'=>$student_id, 'amount'=>$request->amount, 'year_id'=>$this->current_accademic_year];
+        $data = ['resit_id'=>$resit_id, 'student_id'=>$student_id, 'amount'=>$request->amount, 'year_id'=>$this->current_accademic_year, 'recorded_by'=>auth()->id()];
         $payment = ResitPayment::where(['resit_id'=>$resit_id, 'student_id'=>$student_id, 'year_id'=>$this->current_accademic_year])->first();
-        ResitPayment::updateOrInsert(['resit_id'=>$resit_id, 'student_id'=>$student_id, 'year_id'=>$this->current_accademic_year], ['amount'=>(($payment->amount??0)+$request->amount)]);
+        ResitPayment::create(['resit_id'=>$resit_id, 'student_id'=>$student_id, 'year_id'=>$this->current_accademic_year], ['amount'=>(($payment->amount??0)+$request->amount)]);
         return back()->with('success', "Done");
+    }
+    //
+
+    public function report(Request $request, $resit_id, $class_id=null){
+        $resit = Resit::find($resit_id);
+        $data['resit'] = $resit;
+        $data['title'] = "Payment Report For {$resit->name}, {$resit->year->name}";
+        $class = null;
+        $data['students'] = StudentSubject::where(['resit_id'=>$resit_id])->select(['student_id', 'year_id', 'semester_id', DB::raw("COUNT(*) as n_courses"), DB::raw("SUM(paid)")])->groupBy('student_id')->get();
+        if($class_id != null){
+            $class = \App\Models\ProgramLevel::find($class_id);
+            $data['title'] = "{$class->name()} Payment Report For {$resit->name}, {$resit->year->name}";
+            $data['class'] = $class;
+        }
+        
     }
 }

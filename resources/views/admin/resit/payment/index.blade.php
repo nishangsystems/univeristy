@@ -20,7 +20,8 @@
                         <td>{{ $resit->name??'' }}</td>
                         <td>{{ $resit->year->name??'' }}</td>
                         <td>
-                            <a class="btn btn-sm btn-primary" href="{{ route('admin.resits.payments.student', $resit->id) }}">{{ trans_choice('text.word_student', 1) }}</a>
+                            <a class="btn btn-sm btn-primary rounded px-4" href="{{ route('admin.resits.payments.student', $resit->id) }}">{{ trans_choice('text.word_next', 1) }}</a>
+                            <a class="btn btn-sm btn-warning rounded px-4" href="{{ route('admin.resits.payments.student', $resit->id) }}">{{ __('text.word_report') }}</a>
                         </td>
                     </tr>
                 @endforeach
