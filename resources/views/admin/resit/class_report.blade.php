@@ -4,18 +4,30 @@
 <div class="py-3">
     <div class="container row shadow py-5 px-3 mb-4 rounded">
         <div class="col-lg-9">
+            <div class="container-fluid">
+                <input type="search" class="rounded form-control searchable" placeholder="search class by name">
+                <input type="hidden" name="class_id" id="class_id_field" class="value_field">
+                <div class="searchable-dropdown" data-collection="{{ $classes }}"></div>
+            </div>
+        </div>
+        <!-- <div class="col-lg-5">
             <select class="rounded form-control" name="class_id" id="class_id_field">
                 <option value=""></option>
                 @foreach ($classes as $cls)
                     <option value="{{ $cls['id'] }}">{{ $cls['name'] }}</option>
                 @endforeach
             </select>
-        </div>
+        </div> -->
         <div class="col-lg-3">
             <button class="rounded btn btn-primary px-4" onclick="submitClass(this)">@lang('text.word_next')</button>
         </div>
     </div>
+    <div class="d-flex justify-content-end my-4">
+        <button class="btn btn-primary btn-lg rounded px-4 text-uppercase" onclick="printList()">@lang('text.word_print')</button>
+    </div>
+
     @isset($report)
+        {{-- @dd($report) --}}
         <div class="py-2">
             <table class="table">
                 <thead class="text-capitalize">
@@ -42,9 +54,9 @@
                             <td>{{ $rpt->student->name??'' }}</td>
                             <td>{{ $rpt->n_courses??'' }}</td>
                             <td>{{ $resit_unit_cost??'' }}</td>
-                            <td>{{ ($rpt->n_courses??0)*intVal($resit_unit_cost??0) }}</td>
-                            <td>{{ ($rpt->paid??0)*intVal($resit_unit_cost??0) }}</td>
-                            <td>{{ ($rpt->unpaid??0)*intVal($resit_unit_cost??0) }}</td>
+                            <td>{{ intVal($rpt->n_courses??0)*intVal($resit_unit_cost??0) }}</td>
+                            <td>{{ intVal($rpt->n_paid??0)*intVal($resit_unit_cost??0) }}</td>
+                            <td>{{ intVal($rpt->n_unpaid??0)*intVal($resit_unit_cost??0) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -59,6 +71,38 @@
             let _class = $('#class_id_field').val();
             let _url = "{{ route('admin.resits.class_report', ['resit_id'=>$resit->id, 'class_id'=>'__CLID__']) }}".replace('__CLID__', _class);
             window.location = _url;
+        }
+
+        let printList = ()=>{
+            let printable = $('.table');
+            let doc = $(document.body).html();
+            $(document.body).html(printable);
+            window.print();
+            $(document.body).html(doc);
+        }
+
+        $('input.searchable').on('input', function(){
+            let val = $(this).val();
+            let dropdown = $(this).nextAll('div.searchable-dropdown');
+            let data = JSON.parse($(dropdown).attr('data-collection'));
+            // filter @data with @val
+            let selection = data.filter((element)=>{
+                return element.name.toLowerCase().indexOf(val.toLowerCase()) > 0;
+            });
+            // console.log(data);
+            let html = ``;
+            selection.forEach(element => {
+                html += `<div class="alert-success p-2 clickable  border-top border-bottom my-1" onclick="pickItem('${element.name}', '${element.id}')">
+                        <small class="text-uppercase text-secondary">${element.name}</small>
+                    </div>`
+            });
+            $(dropdown).html(html);
+        });
+
+        let pickItem = function(name, id){
+            $('input.searchable').val(name);
+            $('input.searchable').nextAll('input.value_field').val(id);
+            $('input.searchable').nextAll('div.searchable-dropdown').html(null);
         }
     </script>
 @endsection
