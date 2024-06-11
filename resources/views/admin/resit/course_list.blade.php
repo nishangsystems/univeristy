@@ -24,7 +24,7 @@
                     <td class="border-left border-right border-white">{{$element->code}}</td>
                     <td class="border-left border-right border-white">{{$element->name}}</td>
                     <!-- <td class="border-left border-right border-white">{{$element->coef}}</td> -->
-                    <td class="border-left border-right border-white">{{$element->student_subjects()->whereNotNull('student_courses.paid')->where(['resit_id'=>request('resit_id')])->join('students', ['students.id'=>'student_courses.student_id'])->where(function($q){
+                    <td class="border-left border-right border-white">{{$element->student_subjects()->where(['resit_id'=>request('resit_id')])->join('students', ['students.id'=>'student_courses.student_id'])->where(function($q){
                         auth()->user()->campus_id == null ? null : 
                         $q->where(['students.campus_id'=>auth()->user()->campus_id]);
                         })->distinct()->count()}}</td>
