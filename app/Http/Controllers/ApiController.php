@@ -162,9 +162,9 @@ class ApiController extends Controller
             if($student == null){
                 return response(json_encode(['data'=>'No student data specified']), 400);
             }
-            if(Students::where('matric', $student->matric)->count() > 0){
-                $url = $request->url();
-                return response(json_encode(['data'=>'Assigned matricule number already used. coming from ::'.$url]), 400);
+            if(($students = Students::where('matric', $student->matric)->get())->count() > 0){
+                // $url = $request->url();
+                return response(json_encode(['data'=>'Assigned matricule number already used. coming from ::'.json_encode($student->first()->toArray())]), 400);
             }
             // if(Students::where('email', $student->email)->where('admission_batch_id', $student->year_id)->where('active', 1)->count() > 0){
                 // return response(json_encode(['data'=>'Applicant email already used']), 400);
