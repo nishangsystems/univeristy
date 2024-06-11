@@ -4,10 +4,10 @@
 <div class="py-3">
     <div class="container row shadow py-5 px-3 mb-4 rounded">
         <div class="col-lg-9">
-            <div class="container-fluid">
+            <div class="container-fluid position-relative">
                 <input type="search" class="rounded form-control searchable" placeholder="search class by name">
                 <input type="hidden" name="class_id" id="class_id_field" class="value_field">
-                <div class="searchable-dropdown" data-collection="{{ $classes }}"></div>
+                <div class="searchable-dropdown position-absolute mt-5" data-collection="{{ $classes }}"></div>
             </div>
         </div>
         <!-- <div class="col-lg-5">
