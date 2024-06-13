@@ -126,7 +126,7 @@
                 class_courses = data;
                 let html = ``;
                 for (const key in data) {
-                    if(registered_courses.filter(e => e['id'] == class_courses[key]['id']).length > 0){continue;}
+                    if(registered_courses.filter(e => {class_courses.contains(e);}).length > 0){continue;}
                     html += `<div class="border rounded bg-light py-3 px-2" id="modal-`+data[key]['id']+`">
                             <div class="row"><span class="col-4">{{__('text.course_code')}}</span>`+data[key]['code']+`</div>
                             <div class="row"><span class="col-4">{{__('text.course_title')}}</span>`+data[key]['name']+`</div>
