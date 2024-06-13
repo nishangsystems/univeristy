@@ -82,8 +82,8 @@ class ResitPaymentController extends Controller
         $student_courses = StudentSubject::where('resit_id', $resit_id)->distinct()->get();
         $resit_payments = ResitPayment::where('resit_id', $resit_id)->distinct()->get();
         $sids = array_unique(array_merge($student_courses->pluck('student_id')->toArray(), $resit_payments->pluck('student_id')->toArray()));
-        $students = Students::whereIn('id', $sids)
-            ->join('student_classes', 'student_classes.student_id', '=', )->get()->each(function($rec)use($student_courses, $resit_payments){
+        $students = Students::whereIn('students.id', $sids)
+            ->join('student_classes', 'student_classes.student_id', '=', 'students.id')->get()->each(function($rec)use($student_courses, $resit_payments){
             $program = $rec->_class()->program??null;
             $resit_cost = $program->resit_cost??0;
             $rec->unit_cost = $resit_cost;
