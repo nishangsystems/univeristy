@@ -1110,6 +1110,7 @@ class HomeController extends Controller
         })->get();
         return view('student.notification.index', $data);
     }
+
     public function _school_notifications(Request $request, $campus_id = null)
     {
         // dd(auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->level_id);
@@ -1128,6 +1129,7 @@ class HomeController extends Controller
         ->get();
         return view('student.notification.index', $data);
     }
+
     public function _program_material(Request $request, $program_id, $campus_id)
     {
         # code...
@@ -1137,6 +1139,7 @@ class HomeController extends Controller
         })->get();
         return view('student.notification.material_index', $data);
     }
+
     public function _school_material(Request $request, $campus_id = null)
     {
         # code...
@@ -1154,12 +1157,14 @@ class HomeController extends Controller
         ->get();
         return view('student.notification.material_index', $data);
     }
+
     public function edit_profile()
     {
         # code...
         $data['title'] = "Edit Profile";
         return view('student.edit_profile', $data);
     }
+    
     public function update_profile(Request $request)
     {
         # code...
