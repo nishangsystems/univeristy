@@ -68,7 +68,9 @@ class CourseController extends Controller
             $subjects = Subjects::join('class_subjects', 'class_subjects.subject_id', '=', 'subjects.id')->whereNull('class_subjects.deleted_at')
                 ->join('program_levels', 'program_levels.id', '=', 'class_subjects.class_id')
                 ->where('program_levels.level_id',$level_id)->where('program_levels.program_id', $program_id)
-                ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->filter(function($rec)use($rcourses){return !in_array($rec->id, $rcourses->pluck('id')->toArray());})->sortBy('name')->all();
+                ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])
+                ->filter(function($rec)use($rcourses){return !in_array($rec->id, $rcourses->pluck('id'));})
+                ->sortBy('name')->all();
             return response()->json(['success'=>200, 'courses'=>CourseResource::collection($subjects), 'can_register'=>$rCheck['can'], 'reason'=>$rCheck['reason']]);
         }
         catch(Throwable $th){
