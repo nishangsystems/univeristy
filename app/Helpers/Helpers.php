@@ -376,6 +376,28 @@ class Helpers
         return null;
     }
 
+    public function api_has_paid_platform_charges($year_id = null)
+    {
+        # code...
+        // if current student, he must have paid platform charges
+        $year = $year_id == null ? $this->getCurrentAccademicYear() : $year_id;
+        $current_class = auth('student_api')->user()->_class($year);
+        $plcharge = PlatformCharge::where(['year_id'=>$year])->first();
+        if($plcharge == null){return true;}
+        if($current_class == null){
+            // dd(auth()->user());
+            // this is a former student; doesn't have to pay platform charges
+            return true;
+        }else{
+            // check if student has payed platform charges
+            if(Charge::where(['year_id'=>$year, 'student_id'=>auth('student')->id(), 'type'=>'PLATFORM'])->count() > 0){
+                // student has paid platform charges
+                return true;
+            }
+            return false;
+        }
+    }
+
     public function has_paid_platform_charges($year_id = null)
     {
         # code...
