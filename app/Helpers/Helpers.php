@@ -390,7 +390,7 @@ class Helpers
             return true;
         }else{
             // check if student has payed platform charges
-            if(Charge::where(['year_id'=>$year, 'student_id'=>auth('student')->id(), 'type'=>'PLATFORM'])->count() > 0){
+            if(Charge::where(['year_id'=>$year, 'student_id'=>auth('student_api')->id(), 'type'=>'PLATFORM'])->count() > 0){
                 // student has paid platform charges
                 return true;
             }
