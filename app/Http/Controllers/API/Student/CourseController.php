@@ -30,10 +30,16 @@ class CourseController extends Controller
             
             $_year = $request->year ?? Helpers::instance()->getYear();
             $_semester = $request->semester ?? Helpers::instance()->getSemester($student->_class(Helpers::instance()->getCurrentAccademicYear())->id)->id;
+            $rcourses = StudentSubject::where(['student_courses.student_id'=>$student->id])
+                ->where(['student_courses.year_id'=>$_year, 'student_courses.semester_id'=>$_semester])
+                ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
+                ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->whereNull('class_subjects.deleted_at')
+                ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
             $courses = StudentSubject::where(['student_courses.student_id'=>$student->id])->where(['student_courses.year_id'=>$_year])
                 ->join('subjects', ['subjects.id'=>'student_courses.course_id'])->where(['subjects.semester_id'=>$_semester])
                 ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->whereNull('class_subjects.deleted_at')
-                ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
+                ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])
+                ->filter(function($rec)use($rcourses){return !in_array($rec->id, $rcourses->pluck('id')->toArray());});
             return response()->json(['cv_sum'=>collect($courses)->sum('cv'), 'courses'=> CourseResource::collection($courses)]);
         }catch(\Throwable $th){
             return response()->json(['status'=>400, 'message'=>$th->getMessage()]);
@@ -47,15 +53,22 @@ class CourseController extends Controller
             
             $student = Auth('student_api')->user();
             // return "1234567890";
+            $_year = $request->year ?? Helpers::instance()->getYear();
+            $_semester = $request->semester ?? Helpers::instance()->getSemester($student->_class()->id)->id;
             
             $rCheck = $this->registration_check();
             $pl = Students::find($student->id)->_class($this->current_accademic_year)->select('program_levels.*')->first();
             $level_id = $level == null ? $pl->level_id : $level;
             $program_id = $pl->program_id;
+            $rcourses = StudentSubject::where(['student_courses.student_id'=>$student->id])
+                ->where(['student_courses.year_id'=>$_year, 'student_courses.semester_id'=>$_semester])
+                ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
+                ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->whereNull('class_subjects.deleted_at')
+                ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
             $subjects = Subjects::join('class_subjects', 'class_subjects.subject_id', '=', 'subjects.id')->whereNull('class_subjects.deleted_at')
-                        ->join('program_levels', 'program_levels.id', '=', 'class_subjects.class_id')
-                        ->where('program_levels.level_id',$level_id)->where('program_levels.program_id', $program_id)
-                        ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->sortBy('name')->all();
+                ->join('program_levels', 'program_levels.id', '=', 'class_subjects.class_id')
+                ->where('program_levels.level_id',$level_id)->where('program_levels.program_id', $program_id)
+                ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])->filter(function($rec)use($rcourses){return !in_array($rec->id, $rcourses->pluck('id')->toArray());})->sortBy('name')->all();
             return response()->json(['success'=>200, 'courses'=>CourseResource::collection($subjects), 'can_register'=>$rCheck['can'], 'reason'=>$rCheck['reason']]);
         }
         catch(Throwable $th){
@@ -80,11 +93,11 @@ class CourseController extends Controller
             }
             if ($request->has('courses')) {
                 // DB::beginTransaction();
-                $ids = StudentSubject::where(['student_id'=>$student->id])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->pluck('id');
-                foreach ($ids as $key => $value) {
-                    # code...
-                    StudentSubject::find($value)->delete();
-                }
+                // $ids = StudentSubject::where(['student_id'=>$student->id])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->pluck('id');
+                // foreach ($ids as $key => $value) {
+                //     # code...
+                //     StudentSubject::find($value)->delete();
+                // }
                 # code...
                 foreach (json_decode($request->courses, true) as $key => $value) {
                     # code...
