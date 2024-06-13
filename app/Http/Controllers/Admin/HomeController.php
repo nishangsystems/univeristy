@@ -48,59 +48,11 @@ class HomeController  extends Controller
 
         $year = request()->has('year') ? request('year') : Helpers::instance()->getCurrentAccademicYear();
         $campus_id = auth()->user()->campus_id;
-        $expected_fees = PaymentItem::where('payment_items.year_id', $year)->where('payment_items.name', 'TUTION')
-            ->join('campus_programs', 'campus_programs.id', '=', 'payment_items.campus_program_id')
-            ->where(function($query)use($campus_id){
-                $campus_id != null ? $query->where('campus_programs.campus_id', $campus_id) : null;
-            })->join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-            ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')->where('student_classes.year_id', $year)
-            ->join('students', 'students.id', '=', 'student_classes.student_id')->where(function($query)use($campus_id){
-                $campus_id != null ? $query->where('students.campus_id', $campus_id) : null;
-            })->distinct()->get(['students.id as student_id', 'campus_programs.campus_id', 'payment_items.campus_program_id', 'students.matric', 'payment_items.amount']);
-
-        $payments = Payments::where('batch_id', $year)->whereIn('student_id', $expected_fees->pluck('student_id')->toArray());
-
-        $other_incomes = Income::where('year_id', $this->current_accademic_year)->join('pay_incomes', 'pay_incomes.income_id', '=', 'incomes.id')->select('incomes.id', 'incomes.name', DB::raw('sum(pay_incomes.amount) as amount'))->groupBy('id')->get();
-
-        $expected_reg_fee = Students::where('active', 1)
-            ->join('student_classes', 'student_classes.student_id', '=', 'students.id')
-            ->where('student_classes.year_id', $year)
-            ->join('program_levels', 'program_levels.id', '=', 'student_classes.class_id')
-            ->join('campus_programs',  function($join){
-                $join->on('campus_programs.program_level_id', '=', 'program_levels.id')
-                    ->on('campus_programs.campus_id', 'students.campus_id');
-            })
-            ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
-            ->where('payment_items.year_id', $year)
-            ->where('payment_items.name', 'REGISTRATION')
-            ->select(['payment_items.id', DB::raw('SUM(payment_items.amount) as amount'), DB::raw('COUNT(students.id) as students')])
-            ->distinct()
-            ->groupBy('payment_items.id')
-            ->distinct()->get();
-
-            // dd($expected_reg_fee);
-
-        $recieved_reg_fee = Payments::whereIn('payment_id', $expected_reg_fee->pluck('id')->toArray())->sum('amount');
-        // dd($other_incomes);
-        $levels = Level::all();
-        $data['expected_reg_fee'] = $expected_reg_fee->sum('amount');
-        $data['recieved_reg_fee'] = $recieved_reg_fee;
-        $data['other_incomes'] = $other_incomes;
-        $data['expected_fee'] = $expected_fees->sum('amount');
-        $data['paid_fee'] = $payments->sum('amount') - $payments->sum('debt');
-        $data['owed_fee'] = $data['expected_fee'] - $data['paid_fee'];
-        $data['levels'] = $levels;
-
-        $user = \Auth()->user();
-        $campus = $user->campus_id;
-        $data['campus'] = $campus;
-        $data['user'] = $user;
-        $data['year'] = $year;
-        
         $auth_user = auth()->user();
         $schools = $auth_user->headOfSchoolFor(1)->get();
         // $schools = SchoolUnits::where('id', '<=', '2')->get();
-        
+
+        $levels = Level::all();
         if($schools->count() > 0){
             $data['is_head_of_school'] = true;
             $programs = Helpers::instance()->schoolPrograms($schools->pluck('id')->toArray());
@@ -151,8 +103,8 @@ class HomeController  extends Controller
                 });
 
             $students = StudentClass::where('year_id', $year)->join('students', 'students.id', '=', 'student_classes.student_id')
-                ->where(function($query)use($campus){
-                    $campus != null ? $query->where('campus_id', $campus) : null;
+                ->where(function($query)use($campus_id){
+                    $campus_id != null ? $query->where('campus_id', $campus_id) : null;
                 })->distinct()->get(['students.*']);
 
                 
@@ -161,6 +113,57 @@ class HomeController  extends Controller
             $data['n_teachers'] = User::where('type', 'teacher')->count();
 
         }
+        $expected_fees = PaymentItem::where('payment_items.year_id', $year)->where('payment_items.name', 'TUTION')
+            ->join('campus_programs', 'campus_programs.id', '=', 'payment_items.campus_program_id')
+            ->where(function($query)use($campus_id){
+                $campus_id != null ? $query->where('campus_programs.campus_id', $campus_id) : null;
+            })->join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
+            ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')->where('student_classes.year_id', $year)
+            ->join('students', 'students.id', '=', 'student_classes.student_id')
+            ->where('students.active', 1)->where(function($query)use($campus_id){
+                $campus_id != null ? $query->where('students.campus_id', $campus_id) : null;
+            })->distinct()->get(['students.id as student_id', 'campus_programs.campus_id', 'payment_items.campus_program_id', 'students.matric', 'payment_items.amount']);
+
+        $payments = Payments::where('batch_id', $year)->whereIn('student_id', $expected_fees->pluck('student_id')->toArray());
+
+        $other_incomes = Income::where('year_id', $this->current_accademic_year)->join('pay_incomes', 'pay_incomes.income_id', '=', 'incomes.id')->whereIn('pay_incomes.student_id', $students->pluck('id')->toArray())->select('incomes.id', 'incomes.name', DB::raw('sum(pay_incomes.amount) as amount'))->groupBy('id')->get();
+
+        $expected_reg_fee = Students::where('active', 1)
+            ->join('student_classes', 'student_classes.student_id', '=', 'students.id')
+            ->where('student_classes.year_id', $year)
+            ->join('program_levels', 'program_levels.id', '=', 'student_classes.class_id')
+            ->join('campus_programs',  function($join){
+                $join->on('campus_programs.program_level_id', '=', 'program_levels.id')
+                    ->on('campus_programs.campus_id', 'students.campus_id');
+            })
+            ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
+            ->where('payment_items.year_id', $year)
+            ->where('payment_items.name', 'REGISTRATION')
+            ->select(['payment_items.id', DB::raw('SUM(payment_items.amount) as amount'), DB::raw('COUNT(students.id) as students')])
+            ->distinct()
+            ->groupBy('payment_items.id')
+            ->distinct()->get();
+            
+            // dd($expected_reg_fee);
+        
+            
+        $recieved_reg_fee = Payments::whereIn('payment_id', $expected_reg_fee->pluck('id')
+            ->whereIn('student_id', $students->pluck('id')->toArray())->toArray())->sum('amount');
+        // dd($other_incomes);
+        $data['expected_reg_fee'] = $expected_reg_fee->sum('amount');
+        $data['recieved_reg_fee'] = $recieved_reg_fee;
+        $data['other_incomes'] = $other_incomes;
+        $data['expected_fee'] = $expected_fees->sum('amount');
+        $data['paid_fee'] = $payments->sum('amount') - $payments->sum('debt');
+        $data['owed_fee'] = $data['expected_fee'] - $data['paid_fee'];
+        $data['levels'] = $levels;
+
+        $user = \Auth()->user();
+        $campus = $user->campus_id;
+        $data['campus'] = $campus;
+        $data['user'] = $user;
+        $data['year'] = $year;
+        
         // dd($students);
         $data['active_students'] = $students->where('active', 1);
         $data['inactive_students'] = $students->where('active', 0);
