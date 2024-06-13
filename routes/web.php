@@ -702,7 +702,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('student/{resit_id}', [admin\ResitPaymentController::class, 'student'])->name('student');
         Route::get('record/{resit_id}/{student_id}', [admin\ResitPaymentController::class, 'record'])->name('record');
         Route::post('record/{resit_id}/{student_id}', [admin\ResitPaymentController::class, 'save_record']);
-        Route::get('report/{resit_id}/{class_id?}', [admin\ResitPaymentController::class, 'report'])->name('report');
+        Route::get('report/{resit_id}/{class_id?}/{year_id?}', [admin\ResitPaymentController::class, 'report'])->name('report');
     });
 
 });

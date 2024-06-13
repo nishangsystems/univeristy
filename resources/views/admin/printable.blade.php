@@ -83,7 +83,7 @@
 <body class="no-skin">
     <div class="" style="background-color: white;">
         <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" style="width: 100%; max-height: 28rem;">
-        <div class="text-center text-black h3 py-2">{{$title ?? ''}}</div>
+        <div class="text-center text-black h4 py-3 bg-light border-top border-bottom border-light"><b>{{$title ?? ''}}</b></div>
         @yield('section')
     </div>
 <script src="{{asset('assets/js/jquery-2.1.4.min.js')}}"></script>
