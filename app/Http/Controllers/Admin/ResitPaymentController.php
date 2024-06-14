@@ -75,11 +75,10 @@ class ResitPaymentController extends Controller
             $data['title'] = "{$class->name()} Payment Report For {$resit->name}, {$resit->year->name}";
         }
 
-        // studennt 1: join student_courses for existing student-courses OR 2: join resit_payments for existing student-payments
         
         $_year_id = $year_id != null ? $year_id : $resit->year_id;
         $student_courses = StudentSubject::where(['resit_id'=>$resit_id, 'year_id'=>$_year_id])->distinct()->get();
-        $resit_payments = ResitPayment::where(['resit_id'=>$resit_id, 'year_id'=>$_year_id])->select(['resit_payments.*', DB::raw('SUM(amount) as _amt')])->groupBy('student_id')->distinct()->get();
+        $resit_payments = ResitPayment::where(['resit_id'=>$resit_id, 'year_id'=>$_year_id])->where('amount', '>', 0)->select(['resit_payments.*', DB::raw('SUM(amount) as _amt')])->groupBy('student_id')->distinct()->get();
         $sids = array_unique(array_merge($student_courses->pluck('student_id')->toArray(), $resit_payments->pluck('student_id')->toArray()));
         $students = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')
             ->whereIn('students.id', $sids)
