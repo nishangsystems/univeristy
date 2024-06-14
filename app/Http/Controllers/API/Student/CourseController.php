@@ -65,7 +65,7 @@ class CourseController extends Controller
                 ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
                 ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->whereNull('class_subjects.deleted_at')
                 ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
-            $subjects = Subjects::join('class_subjects', 'class_subjects.subject_id', '=', 'subjects.id')->whereNull('class_subjects.deleted_at')
+            $subjects = Subjects::where('semester_id', $_semester)->join('class_subjects', 'class_subjects.subject_id', '=', 'subjects.id')->whereNull('class_subjects.deleted_at')
                 ->join('program_levels', 'program_levels.id', '=', 'class_subjects.class_id')
                 ->where('program_levels.level_id',$level_id)->where('program_levels.program_id', $program_id)
                 ->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status'])
