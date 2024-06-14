@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\Resit;
@@ -50,7 +51,7 @@ class ResitPaymentController extends Controller
 
     public function save_record(Request $request, $resit_id, $student_id){
         // dd($request->all());
-        $validity = Validator::make($request->all(), ['amount'=>'required|integer']);
+        $validity = Validator::make($request->all(), ['amount'=>'required|integer|min:1']);
         if($validity->fails()){
             return back()->with('error', $validity->errors()->first());
         }
@@ -76,31 +77,31 @@ class ResitPaymentController extends Controller
 
         // studennt 1: join student_courses for existing student-courses OR 2: join resit_payments for existing student-payments
         
-        $scourses = StudentSubject::where('resit_id', $resit_id)->where(function($qbd)use($year_id){
-            if($year_id != null) $qbd->where(['year_id'=>$year_id]);
-        });
-        $student_courses = StudentSubject::where('resit_id', $resit_id)->distinct()->get();
-        $resit_payments = ResitPayment::where('resit_id', $resit_id)->distinct()->get();
+        $_year_id = $year_id != null ? $year_id : Helpers::instance()->getCurrentAccademicYear();
+        $student_courses = StudentSubject::where(['resit_id'=>$resit_id, 'year_id'=>$_year_id])->distinct()->get();
+        $resit_payments = ResitPayment::where(['resit_id'=>$resit_id, 'year_id'=>$_year_id])->distinct()->get();
         $sids = array_unique(array_merge($student_courses->pluck('student_id')->toArray(), $resit_payments->pluck('student_id')->toArray()));
-        $students = Students::whereIn('students.id', $sids)
-            ->join('student_classes', 'student_classes.student_id', '=', 'students.id')->get()->each(function($rec)use($student_courses, $resit_payments){
-            $program = $rec->_class()->program??null;
-            $resit_cost = $program->resit_cost??0;
-            $rec->unit_cost = $resit_cost;
-            if(($rp = $resit_payments->where('student_id', $rec->id))->count() != 0){
-                $rec->year_id = $rp->first()->year_id;
-                $rec->cash_pament = $rp->sum('amount');
-            }else{$rec->cash_pament = 0;}
-            if(($sc = $student_courses->where('student_id', $rec->id))->count() != 0){
-                $rec->year_id = $sc->first()->year_id;
-                $rec->n_courses = $sc->count();
-                $rec->expected_amount = $resit_cost * $rec->n_courses;
-                $rec->paid_online = $sc->where('paid', 1)->count() * $resit_cost;
-            }else{$rec->n_courses = 0; $rec->expected_amount = 0; $rec->paid_online = 0;}
-        });
-        if($year_id != null){
-            $students = $students->where('year_id', $year_id);
-        }
+        $students = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')
+            ->whereIn('students.id', $sids)
+            ->where(function($qry)use($class_id){
+                $class_id == null ? null : $qry->where('student_classes.class_id', $class_id);
+            })
+            ->get()->each(function($rec)use($student_courses, $resit_payments){
+                $program = $rec->_class()->program??null;
+                $resit_cost = $program->resit_cost??0;
+                $rec->unit_cost = $resit_cost;
+                if(($rp = $resit_payments->where('student_id', $rec->id))->count() != 0){
+                    $rec->year_id = $rp->first()->year_id;
+                    $rec->cash_pament = $rp->sum('amount');
+                }else{$rec->cash_pament = 0;}
+                if(($sc = $student_courses->where('student_id', $rec->id))->count() != 0){
+                    $rec->year_id = $sc->first()->year_id;
+                    $rec->n_courses = $sc->count();
+                    $rec->expected_amount = $resit_cost * $rec->n_courses;
+                    $rec->paid_online = $sc->where('paid', 1)->count() * $resit_cost;
+                }else{$rec->n_courses = 0; $rec->expected_amount = 0; $rec->paid_online = 0;}
+            });
+        
         $data['report'] = $students;
         // dd($students);
         if($request->print == 1)

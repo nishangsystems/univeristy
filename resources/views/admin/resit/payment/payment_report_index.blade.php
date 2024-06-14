@@ -83,7 +83,7 @@
             let url = "{{ route('admin.resits.payments.report', ['resit_id'=>$resit->id, 'year_id'=>'__YID__', 'class_id'=>'__CLID__']) }}?print=1".replace('__YID__', year).replace('__CLID__', _class);
             // let form = $('#indexerformid');
             // set form action and submit form
-            window.location = url
+            window.open(url, '_new')
         }
     </script>
 @endsection
