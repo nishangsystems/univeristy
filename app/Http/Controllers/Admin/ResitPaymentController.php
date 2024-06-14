@@ -36,9 +36,9 @@ class ResitPaymentController extends Controller
         $student = Students::find($student_id);
         $program = $student->_class()->program??null;
         $data['resit_cost'] = $program->resit_cost??null;
-        $data['title'] = "Record Payment For Resit";
         $data['resit'] = Resit::find($resit_id);
         $data['student'] = $student;
+        $data['title'] = "Record Resit Payment For {$data['resit']->name} :: {$student->name} [{$student->matric}]";
         $data['courses'] = StudentSubject::where(['student_id'=>$student_id, 'resit_id'=>$resit_id])->get();
         $data['payments'] = ResitPayment::where(['student_id'=>$student_id, 'resit_id'=>$resit_id])->get();
         $data['collected'] = ResitPayment::where(['student_id'=>$student_id, 'resit_id'=>$resit_id])->sum('amount');
@@ -79,7 +79,7 @@ class ResitPaymentController extends Controller
         
         $_year_id = $year_id != null ? $year_id : $resit->year_id;
         $student_courses = StudentSubject::where(['resit_id'=>$resit_id, 'year_id'=>$_year_id])->distinct()->get();
-        $resit_payments = ResitPayment::where(['resit_id'=>$resit_id, 'year_id'=>$_year_id])->distinct()->get();
+        $resit_payments = ResitPayment::where(['resit_id'=>$resit_id, 'year_id'=>$_year_id])->select(['resit_payments.*', DB::raw('SUM(amount) as _amt')])->groupBy('student_id')->distinct()->get();
         $sids = array_unique(array_merge($student_courses->pluck('student_id')->toArray(), $resit_payments->pluck('student_id')->toArray()));
         $students = Students::join('student_classes', 'student_classes.student_id', '=', 'students.id')
             ->whereIn('students.id', $sids)
@@ -94,7 +94,7 @@ class ResitPaymentController extends Controller
                 $rec->unit_cost = $resit_cost;
                 if(($rp = $resit_payments->where('student_id', $rec->id))->count() != 0){
                     $rec->year_id = $rp->first()->year_id;
-                    $rec->cash_pament = $rp->sum('amount');
+                    $rec->cash_pament = $rp->first()->_amt;
                 }else{$rec->cash_pament = 0;}
                 if(($sc = $student_courses->where('student_id', $rec->id))->count() != 0){
                     $rec->year_id = $sc->first()->year_id;
@@ -105,7 +105,7 @@ class ResitPaymentController extends Controller
             });
         
         $data['report'] = $students;
-        // dd($students);
+        // dd($student_courses);
         if($request->print == 1)
             return view('admin.resit.payment.payment_report', $data);
         return view('admin.resit.payment.payment_report_index', $data);
