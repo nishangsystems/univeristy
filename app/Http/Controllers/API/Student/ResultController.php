@@ -76,7 +76,7 @@ class ResultController extends Controller
         // return ['year'=>$year, 'semester'=>$semester];
         // check if results are published
         if(!$semester->result_is_published($year->id, $student->id)){
-            return view('api.error')->with('error', 'Results Not Yet Published For This Semester.');
+            return response()->json(['message'=>'Results Not Yet Published For This Semester.', 'error_type'=>'err6'], 400);
         }
 
         // check if semester result fee is set && that student has payed
@@ -85,12 +85,12 @@ class ResultController extends Controller
         if($amount != null && $amount > 0){
             $charge = Charge::where(['year_id'=>$year, 'semester_id'=>$semester->id, 'student_id'=>auth('student')->id(), 'type'=>'RESULTS'])->first();
             if($charge == null){
-                return view('api.error')->with('error', 'Pay Semester Result Charges to continue');
+                return response()->json(['message'=>'Pay Semester Result Charges to continue', 'error_type'=>'err5'], 400);
             }
         }
 
         if($class == null){
-            return view('api.error')->with('error', "No result found. Make sure you were admitted to this institution by or before the selected academic year");
+            return response()->json(['message'=>"No result found. Make sure you were admitted to this institution by or before the selected academic year", 'error_type'=>'err6'], 400);
         }
 
         // CODE TO CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS; WILL BE COMMENTED OUT TILL IT SHOULD TAKE EFFECT
@@ -150,23 +150,7 @@ class ResultController extends Controller
         // }, $res);
         }, $registered_courses);
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
-        // return ($registered_courses);
-        // $sum_cv = $data['results']->sum('coef');
-        // $sum_earned_cv = collect($results)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
-        // $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->sum('coef');
-        // $gpa_cv_earned = $data['results']->whereNotIn('id', $non_gpa_courses)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
-        // $sum_gpts = $data['results']->whereNotIn('id', $non_gpa_courses)->sum(function($item){
-        //     return $item['coef'] * $item['weight'];
-        // });
-        // $gpa = $sum_gpts/($gpa_cv==0?1:$gpa_cv);
-        // // dd($sum_gpts);
-        // $gpa_data['sum_cv'] = $sum_cv;
-        // $gpa_data['gpa_cv'] = $gpa_cv;
-        // $gpa_data['sum_cv_earned'] = $sum_earned_cv;
-        // $gpa_data['gpa_cv_earned'] = $gpa_cv_earned;
-        // $gpa_data['gpa'] = $gpa;
-
-        // $data['gpa_data'] = $gpa_data;
+        //
 
         $fee = [
             'total_debt'=>$student->total_debts($year->id),
@@ -176,22 +160,18 @@ class ResultController extends Controller
             'total_balance' => $student->total_balance(null, $year->id),
             'fraction' => $semester->semester_min_fee
         ];
-        $data['fee_data'] = $fee;
-        // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
-        // $data['min_fee'] = $fee['total']*$fee['fraction'];
-        // $data['access'] = ($fee['total'] - $fee['balance']) >= $data['min_fee'] || $student->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
-
-        $data['min_fee'] = $fee['total']*$fee['fraction'];
-        $data['total_balance'] = $student->total_balance($student->id, $year->id);
-        $data['access'] = ($fee['total'] - $fee['total_balance']) >= $data['min_fee'] || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        
+        // $data['fee_data'] = $fee;
+        
+        $min_fee = $fee['total']*$fee['fraction'];
+        // $data['total_balance'] = $student->total_balance($student->id, $year->id);
+        $data['access'] = ($fee['total'] - $fee['total_balance']) >= $min_fee || Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
         // dd($data);
         // return $data;
-        if ($class->program->background->background_name == "PUBLIC HEALTH") {
-            # code...
-            return view('api.public_health_exam_result')->with($data);
+        if(!$data['access']){
+            return response()->json(['message'=>"You have not paid upto the minimum fee of {$fee['min_fee']} required to access results. Pay your fee at ".url('/')." to continue.", "error_type"=>'err1'], 400);
         }
-        return view('api.exam_result')->with($data);
-
+        return response()->json(['data'=>$data]);
     }
 
     
@@ -255,23 +235,7 @@ class ResultController extends Controller
         }, $registered_courses);
 
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
-        // $sum_cv = $data['results']->sum('coef');
-        // $sum_earned_cv = collect($results)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
-        // $gpa_cv = $data['results']->whereNotIn('id', $non_gpa_courses)->sum('coef');
-        // $gpa_cv_earned = $data['results']->whereNotIn('id', $non_gpa_courses)->filter(function($el){return ($el != null) && ($el['ca_mark']+$el['exam_mark'] >= 50);})->sum('coef');
-        // $sum_gpts = $data['results']->whereNotIn('id', $non_gpa_courses)->sum(function($item){
-        //     return $item['coef'] * $item['weight'];
-        // });
-        // $gpa = $sum_gpts/($gpa_cv==0?1:$gpa_cv);
-        // // dd($gpa);
-        // $gpa_data['sum_cv'] = $sum_cv;
-        // $gpa_data['gpa_cv'] = $gpa_cv;
-        // $gpa_data['sum_cv_earned'] = $sum_earned_cv;
-        // $gpa_data['gpa_cv_earned'] = $gpa_cv_earned;
-        // $gpa_data['gpa'] = $gpa;
-
-        // $data['gpa_data'] = $gpa_data;
-
+        
 
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
 
