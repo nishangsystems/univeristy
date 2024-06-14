@@ -409,6 +409,14 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
+                                        
+                        <li>
+                            <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.manage_custom_resits')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
                         @if (auth()->user()->can('access_hidden_features'))
                             <li>
@@ -481,14 +489,6 @@
                 </a>
 
                 <ul class="submenu">
-                
-                    <li>
-                        <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.manage_custom_resits')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
                     
                     <li>
                         <a href="{{route('admin.resits.index')}}" class="text-capitalize">

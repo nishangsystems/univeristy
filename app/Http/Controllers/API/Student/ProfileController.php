@@ -6,7 +6,9 @@ namespace App\Http\Controllers\API\Student;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource3;
+use App\Models\Batch;
 use App\Models\Level;
+use App\Models\School;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -43,6 +45,27 @@ class ProfileController extends Controller
             'status' => 200,
             'levels' => $levels
         ]);
+    }
+
+    
+    public function current_accademic_year(Request $request) 
+    {
+        return response()->json(['data'=> Batch::find(Helpers::instance()->getCurrentAccademicYear())]);
+    }
+
+    
+    public function current_semester(Request $request) 
+    {
+        $student = auth('student_api')->user();
+        $semester = Helpers::instance()->getSemester($student->_class()->id);
+        return response()->json(['data'=> $semester]);
+    }
+
+    
+    public function school_name(Request $request) 
+    {
+        $school = School::first();
+        return response()->json(['data'=> $school]);
     }
 
     
