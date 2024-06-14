@@ -77,7 +77,7 @@ class ResitPaymentController extends Controller
 
         // studennt 1: join student_courses for existing student-courses OR 2: join resit_payments for existing student-payments
         
-        $_year_id = $year_id != null ? $year_id : Helpers::instance()->getCurrentAccademicYear();
+        $_year_id = $year_id != null ? $year_id : $resit->year_id;
         $student_courses = StudentSubject::where(['resit_id'=>$resit_id, 'year_id'=>$_year_id])->distinct()->get();
         $resit_payments = ResitPayment::where(['resit_id'=>$resit_id, 'year_id'=>$_year_id])->distinct()->get();
         $sids = array_unique(array_merge($student_courses->pluck('student_id')->toArray(), $resit_payments->pluck('student_id')->toArray()));
@@ -86,7 +86,9 @@ class ResitPaymentController extends Controller
             ->where(function($qry)use($class_id){
                 $class_id == null ? null : $qry->where('student_classes.class_id', $class_id);
             })
-            ->get()->each(function($rec)use($student_courses, $resit_payments){
+            ->distinct()
+            ->get(['students.*'])
+            ->each(function($rec)use($student_courses, $resit_payments){
                 $program = $rec->_class()->program??null;
                 $resit_cost = $program->resit_cost??0;
                 $rec->unit_cost = $resit_cost;
