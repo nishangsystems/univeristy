@@ -1015,5 +1015,7 @@ return [
     'resit_registration_info'=>'resit registration info',
     'class_report'=>'class report',
     'student_list'=>'student list',
+    'paid_online'=>'paid online',
+    'cash_collected'=>'cash collected',
     ''
 ];
