@@ -94,8 +94,8 @@ class ResitPaymentController extends Controller
                 $rec->unit_cost = $resit_cost;
                 if(($rp = $resit_payments->where('student_id', $rec->id))->count() != 0){
                     $rec->year_id = $rp->first()->year_id;
-                    $rec->cash_pament = $rp->first()->_amt;
-                }else{$rec->cash_pament = 0;}
+                    $rec->cash_payment = $rp->first()->_amt;
+                }else{$rec->cash_payment = 0;}
                 if(($sc = $student_courses->where('student_id', $rec->id))->count() != 0){
                     $rec->year_id = $sc->first()->year_id;
                     $rec->n_courses = $sc->count();
@@ -105,7 +105,7 @@ class ResitPaymentController extends Controller
             });
         
         $data['report'] = $students;
-        // dd($student_courses);
+        // dd($students);
         if($request->print == 1)
             return view('admin.resit.payment.payment_report', $data);
         return view('admin.resit.payment.payment_report_index', $data);

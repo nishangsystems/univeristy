@@ -2,10 +2,9 @@
 @section('section')
     <div class="py-3">
         <div class="container-fluid">
-            <div class="row py-1">
-                <div class="col-lg-7 p-1">
-                    <div class="py-4">
-                        <div class="header h4 fw-smeibold text-capitalize">@lang('text.resit_registration_info')</div>
+            <div class="row py-1 py-lg-0">
+                <div class="col-lg-7 px-1">
+                    <div class="py-1">
                         <div class="row my-3">
                             <span class="text-capitalize text-secondary col-lg-3">{{ __('text.word_count') }}:</span>
                             <div class="col-lg-9">
@@ -38,7 +37,7 @@
                         </div>
 
                     </div>
-                    <div class="header h4 fw-smeibold text-capitalize">@lang('text.record_payment')</div>
+                    <div class="py-2 border-bottom h4 fw-smeibold text-capitalize">@lang('text.record_payment')</div>
                     <form method="POST">
                         @csrf
                         <div class="row my-3">
