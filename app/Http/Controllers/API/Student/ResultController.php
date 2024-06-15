@@ -30,7 +30,7 @@ class ResultController extends Controller
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
         // dd($request->all());
         if($class == null){
-            return view('api.error')->with('error', "No result found. Make sure you were admitted to this institution by or before the selected academic year");
+            return response()->json(['message'=>"No result found. Make sure you were admitted to this institution by or before the selected academic year", 'error_type'=>'no-result-error'], 400);
         }
 
         $registered_courses = $student->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
@@ -57,7 +57,7 @@ class ResultController extends Controller
         }, $registered_courses);
         // dd($data['results']);
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
-        return view('api.ca_result')->with($data);
+        return response()->json(['data'=>$data]);
 
     }
 
@@ -73,10 +73,9 @@ class ResultController extends Controller
         $class = $student->_class($year->id);
         $semester = $request->semester ? Semester::find($request->semester) : Helpers::instance()->getSemester($class->id);
 
-        // return ['year'=>$year, 'semester'=>$semester];
-        // check if results are published
+        
         if(!$semester->result_is_published($year->id, $student->id)){
-            return response()->json(['message'=>'Results Not Yet Published For This Semester.', 'error_type'=>'err6'], 400);
+            return response()->json(['message'=>'Results Not Yet Published For This Semester.', 'error_type'=>'no-result-error'], 400);
         }
 
         // check if semester result fee is set && that student has payed
@@ -85,12 +84,12 @@ class ResultController extends Controller
         if($amount != null && $amount > 0){
             $charge = Charge::where(['year_id'=>$year, 'semester_id'=>$semester->id, 'student_id'=>auth('student')->id(), 'type'=>'RESULTS'])->first();
             if($charge == null){
-                return response()->json(['message'=>'Pay Semester Result Charges to continue', 'error_type'=>'err5'], 400);
+                return response()->json(['message'=>'Pay Semester Result Charges to continue', 'error_type'=>'err5', 'error_type'=>'result-charge-error'], 400);
             }
         }
 
         if($class == null){
-            return response()->json(['message'=>"No result found. Make sure you were admitted to this institution by or before the selected academic year", 'error_type'=>'err6'], 400);
+            return response()->json(['message'=>"No result found. Make sure you were admitted to this institution by or before the selected academic year", 'error_type'=>'no-result-error'], 400);
         }
 
         // CODE TO CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS; WILL BE COMMENTED OUT TILL IT SHOULD TAKE EFFECT
@@ -169,7 +168,7 @@ class ResultController extends Controller
         // dd($data);
         // return $data;
         if(!$data['access']){
-            return response()->json(['message'=>"You have not paid upto the minimum fee of {$fee['min_fee']} required to access results. Pay your fee at ".url('/')." to continue.", "error_type"=>'err1'], 400);
+            return response()->json(['message'=>"You have not paid upto the minimum fee of {$fee['min_fee']} required to access results. Pay your fee at ".url('/')." to continue.", "error_type"=>'min-fee-error'], 400);
         }
         return response()->json(['data'=>$data]);
     }
