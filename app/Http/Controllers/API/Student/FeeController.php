@@ -20,10 +20,10 @@ class FeeController extends Controller
         $data['student'] = $student;
         $data['total_paid'] = number_format($student->total_paid( $year));
         $data['total_debt'] = number_format($student->bal($student->id, $year));
-        $data['payments'] = $student->payments()->where(['batch_id'=>($year)])->get();
-        // ->each(function($item){
-        //     $item->payment_item = $item->item??null;
-        // });
+        $data['payments'] = $student->payments()->where(['batch_id'=>($year)])->get()
+        ->each(function($_item){
+            $_item->payment_item = $_item->item??null;
+        });
         if($data['payments']->count() == 0){
             return response()->json(['message'=>'No Fee payments found for '.(Batch::find($year)->name??''), 'error_type'=>'general-error'], 400);
         }
