@@ -184,7 +184,7 @@ class CourseController extends Controller
 
     public function registration_eligible(Request $request){
         $rCheck = $this->registration_check($request->student_id);
-        return response()->json(['success'=>200, 'eligible'=>$rCheck['can']?"YES":"NO", 'message'=>$rCheck['reason'], 'error_type'=>$rCheck['can'] ? '' : $rCheck['error_type']]);
+        return response()->json(['success'=>200, 'eligible'=>$rCheck['can'] == true ? "YES":"NO", 'message'=>$rCheck['reason'], 'error_type'=>$rCheck['can'] == true ? '' : $rCheck['error_type']]);
     }
 
     public function form_b(Request $request)// expects $year:int and $semester:int as request data;
