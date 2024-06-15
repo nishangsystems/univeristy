@@ -164,7 +164,7 @@ class CourseController extends Controller
                     ->where('students.id', '=', $student->id)->pluck('payment_items.amount')[0] ?? 0,
             'fraction' => $semester->courses_min_fee
         ];
-        $conf = CampusSemesterConfig::whereIn('campus_id', [null, $student->campus_id])->where(['semester_id'=>$semester->id])->first();
+        $conf = CampusSemesterConfig::whereNull('campus_id')->where(['semester_id'=>$semester->id])->first();
         if ($conf != null) {
             # code...
             if(($data['on_time'] = strtotime($conf->courses_date_line)) > strtotime(date('d-m-Y'))){
