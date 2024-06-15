@@ -82,7 +82,6 @@ class CourseController extends Controller
     public function register(Request $request)//takes courses=[course_ids]
     {
 
-        
         $student = Auth('student_api')->user();
 
         $year = $this->current_accademic_year;
@@ -167,7 +166,8 @@ class CourseController extends Controller
         $conf = CampusSemesterConfig::whereNull('campus_id')->where(['semester_id'=>$semester->id])->first();
         if ($conf != null) {
             # code...
-            if(($data['on_time'] = strtotime($conf->courses_date_line)) > strtotime(date('d-m-Y'))){
+            // if(now()->isAfter()){
+            if(strtotime($conf->courses_date_line) < strtotime(date('d-m-Y'))){
                 return ['can'=>false, 'reason'=>'Course registration dateline has passed', 'error_type'=>'course-dateline-error'];
             };
         }else{
@@ -184,7 +184,7 @@ class CourseController extends Controller
 
     public function registration_eligible(Request $request){
         $rCheck = $this->registration_check($request->student_id);
-        return response()->json(['success'=>200, 'eligible'=>$rCheck['can']?"YES":"NO", 'message'=>$rCheck['reason'], 'error_type'=>$rCheck['can'] ? '' : $rCheck['error_type']]);
+        return response()->json(['success'=>200, 'eligible'=>$rCheck['can'] == true ? "YES":"NO", 'message'=>$rCheck['reason'], 'error_type'=>$rCheck['can'] == true ? '' : $rCheck['error_type']]);
     }
 
     public function form_b(Request $request)// expects $year:int and $semester:int as request data;
