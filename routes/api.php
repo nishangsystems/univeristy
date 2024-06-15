@@ -39,15 +39,20 @@ Route::get('semesters', [\App\Http\Controllers\API\PageController::class, 'semes
 
 Route::group([ 'prefix' => 'student', 'as' => 'student.', 'middleware'=> 'api_student'], function() {
     Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
+    Route::get('notifications', [ProfileController::class, 'notifications']);
 
     Route::get('faqs', [ApiHomeController::class, 'faqs'])->name('faqs');
     Route::get('years', [ApiHomeController::class, 'batches'])->name('years');
     Route::get('levels', [ProfileController::class, 'levels'])->name('levels');
     Route::get('semesters', [ProfileController::class, 'semesters'])->name('semesters');
+    Route::get('current_semester', [ProfileController::class, 'current_semester']);
+    Route::get('current_accademic_year', [ApiHomeController::class, 'current_accademic_year']);
+    Route::get('school', [ApiHomeController::class, 'school']);
 
     Route::get('courses', [App\Http\Controllers\API\Student\CourseController::class, 'courses']);
     Route::get('class_courses/{level_id?}', [App\Http\Controllers\API\Student\CourseController::class, 'class_courses']);
     Route::get('register_courses', [App\Http\Controllers\API\Student\CourseController::class, 'register']);
+    Route::get('drop_courses', [App\Http\Controllers\API\Student\CourseController::class, 'drop']);
 
     Route::get('results/ca', [App\Http\Controllers\API\Student\ResultController::class, 'ca']);
     Route::get('results/exam', [App\Http\Controllers\API\Student\ResultController::class, 'exam']);

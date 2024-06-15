@@ -42,7 +42,7 @@ class CourseController extends Controller
                 ->filter(function($rec)use($rcourses){return !in_array($rec->id, $rcourses->pluck('id')->toArray());});
             return response()->json(['cv_sum'=>collect($courses)->sum('cv'), 'courses'=> CourseResource::collection($courses)]);
         }catch(\Throwable $th){
-            return response()->json(['status'=>400, 'message'=>$th->getMessage()]);
+            return response()->json(['status'=>400, 'message'=>$th->getMessage(), 'error_type'=>'general-error']);
         }
     }
 
@@ -75,7 +75,7 @@ class CourseController extends Controller
         }
         catch(Throwable $th){
             // throw $th;
-            return response()->response(['status'=>400, 'message'=>$th->getMessage()]);
+            return response()->response(['status'=>400, 'message'=>$th->getMessage(), 'error_type'=>'general-error']);
         }
     }
 
@@ -91,15 +91,9 @@ class CourseController extends Controller
         try {
             $rCheck = $this->registration_check();
             if ($rCheck['can'] == false) {
-                return response()->json(['success'=>400, 'message'=>$rCheck['reason']]);
+                return response()->json(['success'=>400, 'message'=>$rCheck['reason'], 'error_type'=>$rCheck['error_type']]);
             }
             if ($request->has('courses')) {
-                // DB::beginTransaction();
-                // $ids = StudentSubject::where(['student_id'=>$student->id])->where(['year_id'=>$year])->where(['semester_id'=>$semester])->pluck('id');
-                // foreach ($ids as $key => $value) {
-                //     # code...
-                //     StudentSubject::find($value)->delete();
-                // }
                 # code...
                 foreach (json_decode($request->courses, true) as $key => $value) {
                     # code...
@@ -114,6 +108,33 @@ class CourseController extends Controller
         }
     }
 
+    public function drop(Request $request)//takes courses=[course_ids]
+    {
+
+        $student = Auth('student_api')->user();
+
+        $year = $this->current_accademic_year;
+        $semester = Helpers::instance()->getSemester($student->_class($this->current_accademic_year)->id)->id;
+        $_semester = Helpers::instance()->getSemester($student->_class($this->current_accademic_year)->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
+        try {
+            $rCheck = $this->registration_check();
+            if ($rCheck['can'] == false) {
+                return response()->json(['success'=>400, 'message'=>$rCheck['reason'], 'error_type'=>$rCheck['error_type']]);
+            }
+            if ($request->has('courses')) {
+                foreach (json_decode($request->courses, true) as $key => $value) {
+                    # code...
+                    StudentSubject::where(['year_id'=>$year, 'semester_id'=>$semester, 'student_id'=>$student->id, 'course_id'=>$value])->each(function($rec){$rec->delete();});
+                }
+            }
+            // DB::commit();
+            return response()->json(['success'=>200, 'message'=>"Course(s) Droped Successfully"]);
+        } catch (\Throwable $th) {
+            // DB::rollBack();
+            return response()->json(['success'=>400, 'message'=>"Something went wrong , try again", 'error_type'=>'general-error'], 400);
+        }
+    }
+
     private function registration_check($student_id = null){
         
         $student = auth('student_api')->user();
@@ -123,7 +144,7 @@ class CourseController extends Controller
         $_semester = Helpers::instance()->getSemester($student_class->id)->background->semesters()->orderBy('sem', 'DESC')->first()->id;
         if ($semester->id == $_semester) {
             # code...
-            return ['can'=>false, 'reason'=>'Resit registration can not be done here. Do that under \"Resit Registration\"'];
+            return ['can'=>false, 'reason'=>'Resit registration can not be done here. Do that under \"Resit Registration\"', 'error_type'=>'general-error'];
         }
         $fee = [
             'amount' => array_sum(
@@ -147,15 +168,15 @@ class CourseController extends Controller
         if ($conf != null) {
             # code...
             if(($data['on_time'] = strtotime($conf->courses_date_line)) > strtotime(date('d-m-Y'))){
-                return ['can'=>false, 'reason'=>'Course registration dateline has passed'];
+                return ['can'=>false, 'reason'=>'Course registration dateline has passed', 'error_type'=>'course-dateline-error'];
             };
         }else{
-            return ['can'=>false, 'reason'=>'Can not sign courses for this program at the moment. Date limit not set. Contact registry.'];
+            return ['can'=>false, 'reason'=>'Can not sign courses for this program at the moment. Date limit not set. Contact registry.',  'error_type'=>'course-dateline-error'];
         }
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
         $data['access'] = ($fee['total'] + $student->total_debts($this->current_accademic_year)) >= $data['min_fee']  || $student->classes()->where(['year_id'=>$this->current_accademic_year])->first()->bypass_result;
         if(!$data['access']){
-            return ['can'=>false, 'reason'=>"Minimum fee requirement not met. You must pay at least {$data['fraction']} ({$data['min_fee']}) of the total fee to register your courses"];
+            return ['can'=>false, 'reason'=>"Minimum fee requirement not met. You must pay at least {$data['fraction']} ({$data['min_fee']}) of the total fee to register your courses",  'error_type'=>'min-fee-error'];
         }
         return ['can'=>true, 'reason'=>null];
         
@@ -163,7 +184,7 @@ class CourseController extends Controller
 
     public function registration_eligible(Request $request){
         $rCheck = $this->registration_check($request->student_id);
-        return response()->json(['success'=>200, 'eligible'=>$rCheck['can']?"YES":"NO", 'message'=>$rCheck['reason']]);
+        return response()->json(['success'=>200, 'eligible'=>$rCheck['can']?"YES":"NO", 'message'=>$rCheck['reason'], 'error_type'=>$rCheck['can'] ? '' : $rCheck['error_type']]);
     }
 
     public function form_b(Request $request)// expects $year:int and $semester:int as request data;
@@ -193,7 +214,7 @@ class CourseController extends Controller
             return response()->json(['status'=>'success', 'url'=>asset($fname)]);
         } catch (\Throwable $th) {
             // throw $th;
-            return response()->json(['success'=>400, 'message'=>$th->getMessage()]);
+            return response()->json(['success'=>400, 'message'=>$th->getMessage(), 'error_type'=>'general-error']);
         }
     }
 
@@ -225,7 +246,7 @@ class CourseController extends Controller
             ]);
         } catch (\Throwable $th) {
             // throw $th;
-            return response()->response(['status'=>400, 'message'=>$th->getMessage()]);
+            return response()->response(['status'=>400, 'message'=>$th->getMessage(), 'error_type'=>'general-error']);
             
         }
     }
