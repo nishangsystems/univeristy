@@ -924,7 +924,7 @@ Route::prefix('student')->name('student.')->middleware(['isStudent'])->group(fun
 Route::get('download_form_b/{year}/{semester}', 'Student\HomeController@download_courses_api');
 
 
-Route::prefix('parents')->name('parents.')->middleware(['parents', 'parent.charges'])->group(function(){
+Route::prefix('parents')->name('parents.')->middleware(['parents'])->group(function(){
     Route::get('home', [ParentsHomeController::class, 'index'])->name('home');
     Route::get('results/{child_id}', [ParentsHomeController::class, 'results_index'])->name('results');
     Route::post('results/{child_id}', [ParentsHomeController::class, 'results']);
@@ -940,8 +940,8 @@ Route::prefix('parents')->name('parents.')->middleware(['parents', 'parent.charg
         Route::post('platform/pay', [ParentsHomeController::class, 'tranzak_platform_pay'])->withoutMiddleware('parent.charges');
     });
     Route::get('contact_school', [ParentsHomeController::class, 'contact_school'])->name('contact_school');
-
 });
+
 // Route::post('student/charges/pay', 'Student\HomeController@pay_charges_save')->name('student.charge.pay');
 Route::get('platform/pay', 'Student\HomeController@pay_platform_charges')->name('platform_charge.pay');
 Route::get('student/charges/complete_transaction/{ts_id}', 'Student\HomeController@complete_charges_transaction')->name('student.charges.complete');
@@ -1083,21 +1083,5 @@ Route::get('getDeptPrograms/{dept_id}', function($dept_id){
 Route::get('getProgLevels/{prog_id}', function($prog_id){
     return response(['levels'=>\App\Models\Level::join('program_levels', 'program_levels.level_id', '=', 'levels.id')->where('program_levels.program_id', $prog_id)->get(['levels.*'])]) ;
 })->name('program.levels');
-
-
-// Route::get('courses/{matric}', function($matric){
-//     $mat = str_replace('_', '/', $matric);
-//     $student = \App\Models\Students::where('matric', $mat)->first();
-//     dd($student->registered_courses(\App\Helpers\Helpers::instance()->getCurrentAccademicYear())->get());
-// });
-// Route::get('results/{matric}', function($matric){
-//     $mat = str_replace('_', '/', $matric);
-//     $student = \App\Models\Students::where('matric', $mat)->first();
-//     dd($student->result()->orderBy('semester_id')->get()??null);
-// });
-// Route::get('_courses', function(){
-//     $courses = \App\Models\StudentSubject::where('year_id', '!=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())->whereNotNull('resit_id')->get()->groupBy('resit_id');
-//     dd($courses);
-// });
 
 Route::any('{any?}', [CustomLoginController::class, 'login']);

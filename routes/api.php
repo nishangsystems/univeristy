@@ -83,6 +83,24 @@ Route::group([ 'prefix' => 'teacher'], function() {
     Route::get('{class_id}/attendance', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'attendance']);
 });
 
+Route::prefix('parent')->middleware(['parent'])->group(function(){
+    Route::get('home', [ParentsHomeController::class, 'index'])->name('home');
+    Route::get('results/{child_id}', [ParentsHomeController::class, 'results_index'])->name('results');
+    Route::post('results/{child_id}', [ParentsHomeController::class, 'results']);
+    Route::get('fees/{child_id}', [ParentsHomeController::class, 'fees'])->name('fees');
+    Route::prefix('tranzak')->name('tranzak.')->group(function(){
+        Route::get('fee/pay/{student_id}', [ParentsHomeController::class, 'tranzak_pay_fee'])->name('pay_fee');
+        Route::post('fee/pay/{student_id}', [ParentsHomeController::class, 'tranzak_pay_fee_momo']);
+        Route::get('others/pay/{student_id}/{id?}', [ParentsHomeController::class, 'tranzak_pay_other_incomes'])->name('pay_others');
+        Route::post('others/pay/{student_is}/{id?}', [ParentsHomeController::class, 'tranzak_pay_other_incomes_momo']);
+        Route::get('processing/{type}', [ParentsHomeController::class, 'tranzak_processing'])->name('processing')->withoutMiddleware('parent.charges');
+        Route::post('processing/{type}', [ParentsHomeController::class, 'tranzak_complete'])->withoutMiddleware('parent.charges');
+        Route::get('platform/pay', [ParentsHomeController::class, 'tranzak_platform'])->name('platform_charge.pay')->withoutMiddleware('parent.charges');
+        Route::post('platform/pay', [ParentsHomeController::class, 'tranzak_platform_pay'])->withoutMiddleware('parent.charges');
+    });
+    Route::get('contact_school', [ParentsHomeController::class, 'contact_school'])->name('contact_school');
+});
+
 Route::post('student/store', [ApiController::class, 'store_student']);
 Route::get('student/update', [ApiController::class, 'update_student']);
 Route::get('degrees', [ApiController::class, 'degrees'])->name('degrees');
