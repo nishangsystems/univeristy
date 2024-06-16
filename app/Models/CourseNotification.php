@@ -19,13 +19,13 @@ class CourseNotification extends Model
     }
 
 
-    public function created_by()
+    public function user()
     {
         # code...
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function created_at()
+    public function course()
     {
         # code...
         return $this->belongsTo(Subjects::class, 'course_id');
