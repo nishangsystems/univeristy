@@ -95,7 +95,7 @@ class ProfileController extends Controller
             })->all();
 
         $notifications = array_merge($class_notificatoins, $program_notifications, $departmental_notifications, $school_notifications);
-        return response()->json(['data'=>$notifications, 'course_notifications'=>$course_notifications->all()]);
+        return response()->json(['data'=>$notifications, 'course_notifications'=>$course_notifications]);
     }
 
 }
