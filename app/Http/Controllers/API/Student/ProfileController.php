@@ -7,9 +7,11 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource3;
 use App\Models\Batch;
+use App\Models\CourseNotification;
 use App\Models\Level;
 use App\Models\Notification;
 use App\Models\School;
+use App\Models\StudentSubject;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -24,7 +26,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    
     public function semesters(Request $request) 
     {
         $student = Auth('student_api')->user();
@@ -35,7 +36,6 @@ class ProfileController extends Controller
             'semesters' => $semesters
         ]);
     }
-
     
     public function levels(Request $request) 
     {
@@ -47,7 +47,6 @@ class ProfileController extends Controller
             'levels' => $levels
         ]);
     }
-
     
     public function current_semester(Request $request) 
     {
@@ -60,6 +59,7 @@ class ProfileController extends Controller
     {
         $student = auth('student_api')->user();
         $class = $student->_class();
+        $year = Helpers::instance()->getCurrentAccademicYear();
         
         $class_notificatoins = Notification::where('school_unit_id', '=', $class->program_id)
             ->where('level_id', '=', $class->level_id)
@@ -87,9 +87,15 @@ class ProfileController extends Controller
             $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
         })->get()->all();
 
+        $semester = Helpers::instance()->getSemester($class->id);
+        $course_ids = StudentSubject::where(['year_id'=>$year, 'student_id'=>$student->id, 'semester_id'=>$semester->id??null])->pluck('course_id');
+        $course_notifications = CourseNotification::whereIn('course_id', $course_ids)
+            ->where('status', '=', 1)->get()->each(function($rec){
+                $rec->course = $rec->course;
+            })->all();
+
         $notifications = array_merge($class_notificatoins, $program_notifications, $departmental_notifications, $school_notifications);
-        return response()->json(['data'=>$notifications]);
+        return response()->json(['data'=>$notifications, 'course_notifications'=>$course_notifications->all()]);
     }
 
-    
 }
