@@ -61,21 +61,26 @@ class ProfileController extends Controller
         $student = auth('student_api')->user();
         $class = $student->_class();
         
-        $class_notificatoins = Notification::where('school_unit_id', '=', $class->program_id)->where('level_id', '=', $class->level_id)->where('campus_id', '=', $student->campus_id)->where(function($q){
-            $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
-        })->get()->all();
+        $class_notificatoins = Notification::where('school_unit_id', '=', $class->program_id)
+            ->where('level_id', '=', $class->level_id)
+            ->where('campus_id', '=', $student->campus_id)->where(function($q){
+                $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
+            })->get()->all();
 
-        $program_notifications = Notification::where('school_unit_id', '=', $class->program_id)->where('campus_id', '=', $student->campus_id)->where(function($q){
-            $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
-        })->get()->all();
+        $program_notifications = Notification::where('school_unit_id', '=', $class->program_id)
+            ->where('campus_id', '=', $student->campus_id)
+            ->where(function($q){
+                $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
+            })->get()->all();
 
-        $departmental_notifications = Notification::where('school_unit_id', '=', $class->program->parent_id)->where('campus_id', '=', $student->campus_id)->where(function($q){
-            $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
-        })->get()->all();
+        $departmental_notifications = Notification::where('school_unit_id', '=', $class->program->parent_id)
+            ->where('campus_id', '=', $student->campus_id)->where(function($q){
+                $q->where('visibility', '=', 'students')->orWhere('visibility', '=', 'general');
+            })->get()->all();
 
         $school_notifications = Notification::whereNull('school_unit_id')
-        ->where(function($q){
-            $q->WhereNull('level_id')->orWhere('level_id', '=', auth('student')->user()->_class()->level_id ?? null);
+        ->where(function($q)use($class){
+            $q->WhereNull('level_id')->orWhere('level_id', '=', $class->level_id ?? null);
         })->where(function($q)use($student){
              $q->where('campus_id', '=', $student->campus_id)->orWhere('campus_id', '=', 0);
         })->where(function($q){
