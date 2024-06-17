@@ -87,6 +87,13 @@ class AuthController extends Controller
         return response()->json(['status' => 300, 'message' => 'Invalid Credentails']);
     }
 
+    public function userLogout(Request $request) 
+    {
+        $token = $request->user('parent_api')->token();
+        $token->revoke();
+        return response()->json(['status' => 200]);
+    }
+
     public function teacherLogin(Request $request)
     {
         $validated = Validator::make($request->all(), [

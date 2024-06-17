@@ -31,10 +31,12 @@ Route::get('login', [ApiController::class, 'degrees'])->name('degrees');
 Route::get('login/student', [AuthController::class, 'studentLogin'])->name('student.login');
 Route::get('logout/student', [AuthController::class, 'studentLogout'])->name('student.logout');
 Route::get('login/user', [AuthController::class, 'userLogin'])->name('parent.login');
+Route::get('logout/user', [AuthController::class, 'userLogout'])->name('parent.logout');
 Route::get('login/teacher', [AuthController::class, 'teacherLogin'])->name('teacher.login');
 Route::get('logout/teacher', [AuthController::class, 'teacherLogout'])->name('teacher.logout');
 Route::get('faqs', [\App\Http\Controllers\API\PageController::class, 'faqs'])->name('faqs');
 Route::get('year', [\App\Http\Controllers\API\PageController::class, 'year']);
+Route::get('current_year', [\App\Http\Controllers\API\PageController::class, 'current_year']);
 Route::get('semesters', [\App\Http\Controllers\API\PageController::class, 'semester']);
 
 Route::group([ 'prefix' => 'student', 'as' => 'student.', 'middleware'=> 'api_student'], function() {
@@ -73,6 +75,8 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function() {
 
 Route::get('notifications', [App\Http\Controllers\API\NotificationController::class, 'notifications']);
 Route::get('attendance', [App\Http\Controllers\API\PageController::class, 'studentAttendance']);
+Route::get('school', [App\Http\Controllers\API\PageController::class, 'school']);
+Route::get('school_contacts', [App\Http\Controllers\API\PageController::class, 'school_contacts']);
 
 Route::group([ 'prefix' => 'teacher'], function() {
     Route::get('classes', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'classes']);
@@ -84,23 +88,15 @@ Route::group([ 'prefix' => 'teacher'], function() {
 });
 
 Route::prefix('parent')->middleware(['parent'])->group(function(){
-    Route::get('home', [ParentsHomeController::class, 'index'])->name('home');
-    Route::get('results/{child_id}', [ParentsHomeController::class, 'results_index'])->name('results');
-    Route::post('results/{child_id}', [ParentsHomeController::class, 'results']);
-    Route::get('fees/{child_id}', [ParentsHomeController::class, 'fees'])->name('fees');
-    Route::prefix('tranzak')->name('tranzak.')->group(function(){
-        Route::get('fee/pay/{student_id}', [ParentsHomeController::class, 'tranzak_pay_fee'])->name('pay_fee');
-        Route::post('fee/pay/{student_id}', [ParentsHomeController::class, 'tranzak_pay_fee_momo']);
-        Route::get('others/pay/{student_id}/{id?}', [ParentsHomeController::class, 'tranzak_pay_other_incomes'])->name('pay_others');
-        Route::post('others/pay/{student_is}/{id?}', [ParentsHomeController::class, 'tranzak_pay_other_incomes_momo']);
-        Route::get('processing/{type}', [ParentsHomeController::class, 'tranzak_processing'])->name('processing')->withoutMiddleware('parent.charges');
-        Route::post('processing/{type}', [ParentsHomeController::class, 'tranzak_complete'])->withoutMiddleware('parent.charges');
-        Route::get('platform/pay', [ParentsHomeController::class, 'tranzak_platform'])->name('platform_charge.pay')->withoutMiddleware('parent.charges');
-        Route::post('platform/pay', [ParentsHomeController::class, 'tranzak_platform_pay'])->withoutMiddleware('parent.charges');
-    });
-    Route::get('contact_school', [ParentsHomeController::class, 'contact_school'])->name('contact_school');
+    Route::get('students', [App\Http\Controllers\API\parent\HomeController::class, 'students']);
+    Route::get('semesters', [App\Http\Controllers\API\parent\HomeController::class, 'semesters']);
+    Route::get('fee', [App\Http\Controllers\API\parent\HomeController::class, 'fee']); // expects year and student as params
+    Route::get('result', [App\Http\Controllers\API\parent\HomeController::class, 'result']); // expects year, semester and student as params
+    Route::get('contact', [App\Http\Controllers\API\parent\HomeController::class, 'contacts']);
 });
 
+
+// ----------------------------- APPLICATION PORTAL API ENDPOINTS ----------------------------------
 Route::post('student/store', [ApiController::class, 'store_student']);
 Route::get('student/update', [ApiController::class, 'update_student']);
 Route::get('degrees', [ApiController::class, 'degrees'])->name('degrees');
@@ -124,3 +120,4 @@ Route::get('portal_fee_structure/{year_id?}', [ApiController::class, 'portal_fee
 Route::get('class_portal_fee_structure/{program_id}/{level_id}/{year_id?}', [ApiController::class, 'class_portal_fee_structure']);
 Route::get('school_program_structure', [ApiController::class, 'school_program_structure']);
 Route::post('appliable_programs/set', [ApiController::class, 'save_appliable_programs']);
+// ----------------------------- END OF APPLICATION PORTAL API ENDPOINTS ----------------------------------
