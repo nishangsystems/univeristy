@@ -111,10 +111,6 @@ return [
             'model' => App\Models\Guardian::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

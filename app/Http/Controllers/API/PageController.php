@@ -3,12 +3,14 @@
 
 namespace App\Http\Controllers\API;
 
-
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource3;
 use App\Models\Batch;
 use App\Models\FAQ;
 use App\Models\Guardian;
+use App\Models\School;
+use App\Models\SchoolContact;
 use App\Models\Students;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -28,11 +30,35 @@ class PageController extends Controller
         ]);
     }
 
+    public function school_contacts(Request $request)
+    {
+        return response([
+            'status' => 200,
+            'faqs' => SchoolContact::all()
+        ]);
+    }
+
+    public function school(Request $request)
+    {
+        return response([
+            'status' => 200,
+            'faqs' => School::first()
+        ]);
+    }
+
     public function year(Request $request)
     {
         return response([
             'status' => 200,
             'years' => Batch::all()
+        ]);
+    }
+
+    public function current_year(Request $request)
+    {
+        return response([
+            'status' => 200,
+            'year' => Batch::find(Helpers::instance()->getCurrentAccademicYear())
         ]);
     }
 
