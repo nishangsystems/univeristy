@@ -65,16 +65,9 @@ class PageController extends Controller
 
     public function semester(Request $request)
     {
-        $current_year = \App\Helpers\Helpers::instance()->getYear();
-        if($request->student_id){
-            $student = Students::find($request->student_id);
-        }else{
-            $student = Auth('student_api')->user();
-        }
-
         return response([
             'status' => 200,
-            'semesters' => \App\Models\ProgramLevel::find($student->_class($current_year)->id)->program()->first()->background()->first()->semesters()->get()
+            'semesters' => \App\Models\Semester::all()
         ]);
     }
 
