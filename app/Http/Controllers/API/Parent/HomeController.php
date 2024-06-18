@@ -10,6 +10,7 @@ use App\Models\PlatformCharge;
 use App\Models\SchoolContact;
 use App\Models\Semester;
 use App\Models\Students;
+use App\Models\StudentSubject;
 use App\Models\Subjects;
 use Illuminate\Http\Request;
 
@@ -122,6 +123,25 @@ class HomeController extends Controller
         $data['ca_total'] = $class->program()->first()->ca_total;
         $data['exam_total'] = $class->program()->first()->exam_total;
         $data['grading'] = $class->program()->first()->gradingType->grading()->get() ?? [];
+
+        $fee = [
+            'total_debt'=>$student->total_debts($year->id),
+            'total_paid'=>$student->total_paid($year->id),
+            'total' => $student->total($year->id),
+            'balance' => $student->bal(null, $year->id),
+            'total_balance' => $student->total_balance(null, $year->id),
+            'fraction' => $semester->semester_min_fee
+        ];
+        
+        // $data['fee_data'] = $fee;
+        
+        $min_fee = $fee['total']*$fee['fraction'];
+        $data['access'] = ($fee['total'] - $fee['total_balance']) >= $min_fee || $student->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        // dd($data);
+        // return $data;
+        if(!$data['access']){
+            return response()->json(['message'=>"You have not paid upto the minimum fee of ".$fee['min_fee']." required to access results. Pay your fee at ".url('/')." to continue.", "error_type"=>'min-fee-error'], 400);
+        }
         
         $results = array_map(function($subject_id)use($data, $year, $semester, $student){
             $ca_mark = $student->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
@@ -160,24 +180,7 @@ class HomeController extends Controller
         $data['results'] = collect($results)->filter(function($el){return $el != null;});
         //
 
-        $fee = [
-            'total_debt'=>$student->total_debts($year->id),
-            'total_paid'=>$student->total_paid($year->id),
-            'total' => $student->total($year->id),
-            'balance' => $student->bal(null, $year->id),
-            'total_balance' => $student->total_balance(null, $year->id),
-            'fraction' => $semester->semester_min_fee
-        ];
         
-        // $data['fee_data'] = $fee;
-        
-        $min_fee = $fee['total']*$fee['fraction'];
-        $data['access'] = ($fee['total'] - $fee['total_balance']) >= $min_fee || $student->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
-        // dd($data);
-        // return $data;
-        if(!$data['access']){
-            return response()->json(['message'=>"You have not paid upto the minimum fee of {$fee['min_fee']} required to access results. Pay your fee at ".url('/')." to continue.", "error_type"=>'min-fee-error'], 400);
-        }
         return response()->json(['data'=>$data]);
     }
 
@@ -188,4 +191,39 @@ class HomeController extends Controller
         $contacts = SchoolContact::all();
         return response()->json(['data'=>$contacts]);
     }
+
+    
+    public function registerd_courses(Request $request)
+    {
+        try {
+            //code...
+            $user = Students::find($request->student);
+            $_year = $request->year ?? $this->current_accademic_year;
+            $_semester = $request->semester ?? Helpers::instance()->getSemester($user->_class($_year)->id)->id;
+            $class = $user->_class($_year);
+            $yr = \App\Models\Batch::find($_year);
+            $sem = \App\Models\Semester::find($_semester);
+            # code...
+
+            // return response()->json(['user'=>$_student, 'year'=>$year, 'semester'=>$semester]);
+            $courses = StudentSubject::where(['student_courses.student_id'=>$user->id])->where(['student_courses.year_id'=>$_year, 'student_courses.semester_id'=>$_semester])
+                    ->join('subjects', ['subjects.id'=>'student_courses.course_id'])
+                    // ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])
+                    ->join('class_subjects', ['class_subjects.subject_id'=>'subjects.id'])->whereNull('class_subjects.deleted_at')
+                    ->distinct()->orderBy('subjects.name')->get(['subjects.*', 'class_subjects.coef as cv', 'class_subjects.status as status']);
+            return response()->json([
+                'ids'=>$courses->pluck('id'), 
+                'cv_sum'=>collect($courses)->sum('cv'), 
+                'courses'=>$courses,
+                'year'=>['id'=>$yr->id, 'name'=>$yr->name],
+                'semester'=>['id'=>$sem->id, 'name'=>$sem->name],
+                'class'=>$class == null ? "" : ['id'=>$class->id, 'name'=>$class->name()],
+            ]);
+        } catch (\Throwable $th) {
+            // throw $th;
+            return response()->response(['status'=>400, 'message'=>$th->getMessage(), 'error_type'=>'general-error']);
+            
+        }
+    }
+
 }

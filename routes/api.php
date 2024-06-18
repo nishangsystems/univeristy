@@ -93,6 +93,7 @@ Route::prefix('parent')->middleware(['parent_api'])->group(function(){
     Route::get('semesters', [App\Http\Controllers\API\parent\HomeController::class, 'semesters']);
     Route::get('fee', [App\Http\Controllers\API\parent\HomeController::class, 'fee']); // expects year and student as params
     Route::get('result', [App\Http\Controllers\API\parent\HomeController::class, 'results']); // expects year, semester and student as params
+    Route::get('registerd_courses', [App\Http\Controllers\API\parent\HomeController::class, 'registerd_courses']); // expects year, semester and student as params
     Route::get('contact', [App\Http\Controllers\API\parent\HomeController::class, 'contacts']);
 });
 
