@@ -41,6 +41,7 @@ Route::get('semesters', [\App\Http\Controllers\API\PageController::class, 'semes
 
 Route::group([ 'prefix' => 'student', 'as' => 'student.', 'middleware'=> 'api_student'], function() {
     Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
+    Route::get('profile_details', [ProfileController::class, 'profile_details'])->name('profile_details');
     Route::get('notifications', [ProfileController::class, 'notifications']);
 
     Route::get('faqs', [ApiHomeController::class, 'faqs'])->name('faqs');

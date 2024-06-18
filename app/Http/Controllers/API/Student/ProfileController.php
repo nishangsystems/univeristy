@@ -98,4 +98,35 @@ class ProfileController extends Controller
         return response()->json(['notifications'=>$notifications, 'course_notifications'=>$course_notifications]);
     }
 
+    public function profile_details(Request $request)
+    {
+        try {
+            //code...
+            $student = $request->user('student_api');
+            $class = $student->class();
+            $program = $class->program;
+            $department = $program->parent;
+            $school = $department->parent;
+            $institution = School::first();
+            $current_year = Batch::find(Helpers::instance()->getCurrentAccademicYear());
+            $current_semester = Helpers::instance()->getSemester($class->id);
+            $data = [
+                'name'=>$student->name??'',
+                'matric'=>$student->matric??'',
+                'class'=>$class->name()??'',
+                'program'=>$program->name??'',
+                'department'=>$department->name??'',
+                'school'=>$school->name??'',
+                'current_year'=>$current_year->name??'',
+                'current_semester'=>$current_semester->name??''
+            ];
+    
+            return response()->json(['data'=>$data]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['message'=>$th->getMessage()], 400);
+        }
+
+    }
+
 }
