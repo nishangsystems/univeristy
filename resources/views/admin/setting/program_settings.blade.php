@@ -6,8 +6,8 @@
             <span class="input-group-text col-sm-2" style="font-size: small;">{{__('text.word_program')}}</span>
             <select name="program" id="" class="form-control" required>
                 <option value=""></option>
-                @foreach(\App\Models\SchoolUnits::where('school_units.unit_id', '=', 4)->join('school_units as departments', ['departments.id'=>'school_units.parent_id'])->select(['school_units.*', 'departments.name as department'])->orderBy('department', 'ASC')->orderBy('name', 'ASC')->get() as $prog)
-                    <option value="{{$prog->id}}" {{request('program') == $prog->id ? 'selected' : ''}}>{{$prog->department.' : '.$prog->name}}</option>
+                @foreach($classes as $prog)
+                    <option value="{{$prog['id']}}" {{request('program') == $prog['id'] ? 'selected' : ''}}>{{$prog['name']}}</option>
                 @endforeach
             </select>
             <input type="submit" name="" value="{{__('text.word_get')}}" id="">

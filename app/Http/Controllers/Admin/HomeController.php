@@ -338,6 +338,7 @@ class HomeController  extends Controller
     {
         # code...
         $data['title'] = __('text.program_settings');
+        $data['classes'] = Controller::sorted_program_levels();
         return view('admin.setting.program_settings', $data);
     }
 
