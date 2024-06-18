@@ -103,7 +103,7 @@ class ProfileController extends Controller
         try {
             //code...
             $student = $request->user('student_api');
-            $class = $student->class();
+            $class = $student->_class();
             $program = $class->program;
             $department = $program->parent;
             $school = $department->parent;
