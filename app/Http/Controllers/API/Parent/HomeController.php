@@ -16,6 +16,14 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+
+    //
+    public function profile()
+    {
+        $parent = auth('parent_api')->user();
+        return response()->json([ 'data'=>['name'=>$parent->name??'', 'phone'=>$parent->phone??'']]);
+    }
+
     //
     public function students()
     {
@@ -191,7 +199,6 @@ class HomeController extends Controller
         $contacts = SchoolContact::all();
         return response()->json(['data'=>$contacts]);
     }
-
     
     public function registerd_courses(Request $request)
     {
