@@ -99,7 +99,7 @@ class ResultController extends Controller
 
         // END OF CHECK FOR PAYMENT OF REQUIRED PLATFORM PAYMENTS
 
-        $registered_courses = $student->registered_courses($year->id)->where('semester_id', $semester->id)->pluck('course_id')->toArray();
+        $registered_courses = $student->registered_courses($year->id)->where('semester_id', $semester->id)->get('course_id')->filter(function($rec){$rec->course_id != null && $rec->course_id != '';})->pluck('course_id');
 
         $data['title'] = "My Exam Result";
         $data['user'] = $student;
