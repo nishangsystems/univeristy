@@ -1,4 +1,19 @@
 @extends('admin.layout')
+@section('style')
+    <style>
+        .score{
+            width: 15px;
+        }
+        table{
+            width: auto !important;
+        }
+    </style>
+
+@endsection
+
+@section('action')
+    <button class="btn btn-primary" onclick="window.print()">Print</button>
+@endsection
 @section('section')
     @if(!request()->has('class_id'))
         <form method="post" target="new">
@@ -51,10 +66,13 @@
         <div class="my-2">
             <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100">
             <div class="text-center py-2">
-                <h4 class="text-decoration text-capitalize"><b>
-                    {{ $_title }}
-                </b></h4>
-                <div class="d-flex overflow-auto">
+               <div class="d-flex justify-content-center">
+                   <h4 class="text-decoration text-capitalize"><b>
+                           {{ $_title }}
+                       </b></h4>
+               </div>
+
+                <div class="d-flex justify-content-center overflow-auto">
                     <table class="compressed-table">
                         <thead class="text-capitalize">
                             <tr class="border-top border-bottom border-secondary">
@@ -85,10 +103,10 @@
                                         <td class="border-left border-right border-secondary">{{$k++}}</td>
                                         <td class="border-left border-right border-secondary">{{$student->matric}}</td>
                                         @foreach ($courses as $course)
-                                            <td class="border-left border-secondary">{{$student->ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                            <td class="border-left border-right border-info">{{$student->exam_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                            <td class="border-left border-right border-info">{{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                            <th class="border-right border-secondary {{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id')) >= 50 ? 'text-success':'text-danger'}}">{{$student->grade($course->subject->id, request('class_id'), $year, request('semester_id'))}}</th>
+                                            <td class="border-left border-secondary score">{{$student->ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                            <td class="border-left border-right border-info score">{{$student->exam_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                            <td class="border-left border-right border-info score">{{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                            <th class="border-right border-secondary score {{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id')) >= 50 ? 'text-success':'text-danger'}}">{{$student->grade($course->subject->id, request('class_id'), $year, request('semester_id'))}}</th>
                                         @endforeach
                                     </tr>
                                 @endif

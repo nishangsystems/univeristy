@@ -25,7 +25,7 @@
     <script type="text/javascript" src="{{asset('/richtexteditor/rte.js')}}"></script>
     <script type="text/javascript" src="{{asset('/richtexteditor/plugins/all_plugins.js')}}"></script>
     @livewireStyles
-
+    @yield('style')
     <STYLE>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -64,6 +64,7 @@
             background-color: #fefffe;
         }
     </STYLE>
+
 @php
     $bg1 = \App\Http\Controllers\HomeController::getColor('background_color_1');
     $bg2 = \App\Http\Controllers\HomeController::getColor('background_color_2');
@@ -1754,8 +1755,9 @@
             </div>
 
 
-            <div class="mb-4 mx-3">
+            <div class="mb-4 mx-3 d-flex justify-content-between">
                 <h4 id="title" class="font-weight-bold text-capitalize">{!! $title ?? '' !!}</h4>
+                @yield('action')
             </div>
             @if ((auth()->user()->password_reset != 1) && (now()->diffInDays(\Illuminate\Support\Carbon::createFromTimestamp(auth()->user()->created_at)) >= 14) && (url()->current() != route('admin.reset_password')))
                 <div class="py-5 h3 text-center text-danger mt-5 text-capitalize">{{__('text.password_reset_request')}}</div>
