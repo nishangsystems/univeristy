@@ -1326,17 +1326,15 @@
             </li>
             @endif
 
-
-            @if (\Auth::user()->hasPermissionTo('manage_transcripts_and_results'))
+            @if (\Auth::user()->hasPermissionTo('result_statistics'))
             <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-circle"></i>
-                    <span class="menu-text">
-						{{__('text.results_slash_transcripts')}}
+                <a href="#" class="dropdown-toggle">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-rocket"></i>
+                    <span class="menu-text text-capitalize">
+						{{__('text.result_statistics')}}
 						</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
-
 
                 <ul class="submenu">
                     <li>
@@ -1372,20 +1370,38 @@
                         <form action="{{route('admin.res_and_trans.sem_res_report')}}" method="post" class="hidden" id="sem_res_post_form">@csrf</form>
                     </li>
                     <li>
-                        <a class="text-capitalize" onclick="$('#ca_only_post_form').submit()">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.CA_only')}}
-                        </a>
-                        <b class="arrow"></b>
-                        <form action="{{route('admin.res_and_trans.ca_only')}}" method="post" class="hidden" id="ca_only_post_form">@csrf</form>
-                    </li>
-                    <li>
                         <a class="text-capitalize" onclick="$('#grd_post_form').submit()">
                             <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.grades_sheet')}}
                         </a>
                         <b class="arrow"></b>
                         <form action="{{route('admin.res_and_trans.grd_sheet')}}" method="post" class="hidden" id="grd_post_form">@csrf</form>
+                    </li>
+                </ul>
+            </li>
+            @endif
+
+
+            @if (\Auth::user()->hasPermissionTo('manage_transcripts_and_results'))
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-circle"></i>
+                    <span class="menu-text">
+						{{__('text.results_slash_transcripts')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    
+                    <li>
+                        <a class="text-capitalize" onclick="$('#ca_only_post_form').submit()">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.CA_only')}}
+                        </a>
+                        <b class="arrow"></b>
+                        <form action="{{route('admin.res_and_trans.ca_only')}}" method="post" class="hidden" id="ca_only_post_form">@csrf</form>
                     </li>
 
                     <li>
