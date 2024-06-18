@@ -7,7 +7,7 @@ use App\Models\PlatformCharge;
 use Closure;
 use Illuminate\Http\Request;
 
-class ParentApiMiddleware
+class ApiParentMiddleware
 {
     /**
      * Handle an incoming request.
