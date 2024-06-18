@@ -178,6 +178,7 @@ class HomeController extends Controller
         }
         return response()->json(['data'=>$data]);
     }
+    
     //
     public function contacts()
     {

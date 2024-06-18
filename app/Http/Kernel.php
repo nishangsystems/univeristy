@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'permission' => \App\Http\Middleware\PermissionMiddleware::class,
         'parents'=>\App\Http\Middleware\ParentsMiddleware::class,
+        'parent_api'=>\App\Http\Middleware\ParentApiMiddleware::class,
         'parent.charges'=>\App\Http\Middleware\ParentPlatformCharge::class,
         'api_student'=>\App\Http\Middleware\ApiStudentMiddleware::class,
     ];
