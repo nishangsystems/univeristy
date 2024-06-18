@@ -18,12 +18,11 @@ class ApiParentMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        return response()->json(['data'=>['gabatakoliticity']]);
         $parent = $request->user('parent_api');
         if($parent == null){
             return response()->json(['message'=>"Invalid Credentials", 'error_type'=>'session-expired-error'], 400);
         }
-
+        
         $year_id = Helpers::instance()->getCurrentAccademicYear();
         $plcharge = PlatformCharge::where(['year_id'=>$year_id])->first();
         $charge = $parent->platformCharges->where('year_id', $year_id)->first();
@@ -32,6 +31,8 @@ class ApiParentMiddleware
                 return response()->json(['message'=>'you have not paid platform charges for the current accademic year. Login to '.url('/').' and pay platform charges to continue.']);
             }
         }
+        // return response()->json(['data'=>['gabatakoliticity']]);
+
         return $next($request);
     }
 }
