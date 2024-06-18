@@ -33,7 +33,7 @@ class ApiStudentMiddleware
         $charge = PlatformCharge::where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first();
         if (Helpers::instance()->payCharges() && ($charge != null && $charge->yearly_amount > 0)){
             if(!(Helpers::instance()->api_has_paid_platform_charges())){
-                return response()->json(['message'=>'Pay PLATFORM CHARGES  at '.url('/').' to continue.', 'error_type'=>'profileplatform-charge-error'], 400);
+                return response()->json(['message'=>'Pay PLATFORM CHARGES  at '.url('/').' to continue.', 'error_type'=>'platform-charge-error'], 400);
             }
         }
 
