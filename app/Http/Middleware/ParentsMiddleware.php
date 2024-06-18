@@ -17,7 +17,7 @@ class ParentsMiddleware
     public function handle(Request $request, Closure $next)
     {
         if(auth('parents')->user() == null){
-            return redirect(route('login'))->with('error', __('text.operation_not_allowed'));
+            // return redirect(route('login'))->with('error', __('text.operation_not_allowed'));
         }
         return $next($request);
     }
