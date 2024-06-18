@@ -18,11 +18,12 @@ class ParentApiMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth('parent_api')->user() == null){
+        return response()->json(['data'=>['gabatakoliticity']]);
+        $parent = $request->user('parent_api');
+        if($parent == null){
             return response()->json(['message'=>"Invalid Credentials", 'error_type'=>'session-expired-error'], 400);
         }
 
-        $parent = $request->user('parent_api');
         $year_id = Helpers::instance()->getCurrentAccademicYear();
         $plcharge = PlatformCharge::where(['year_id'=>$year_id])->first();
         $charge = $parent->platformCharges->where('year_id', $year_id)->first();
