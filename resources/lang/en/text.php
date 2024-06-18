@@ -1019,5 +1019,6 @@ return [
     'cash_collected'=>'cash collected',
     'online_transcripts'=>'online transcripts',
     'trash_and_reports'=>'trash and reports',
+    'result_statistics'=>'result statistics',
     ''
 ];
