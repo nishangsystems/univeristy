@@ -747,7 +747,7 @@
                     <a href="#" class="dropdown-toggle text-capitalize">
                         <i  style="color: {{$bg1}}"class="menu-icon  fa fa-flag"></i>
                         <span class="menu-text">
-                            {{__('text.transcript_fees')}}
+                            {{__('text.online_transcripts')}}
                             </span>
                         <b class="arrow fa fa-angle-down"></b>
                     </a>
@@ -1636,7 +1636,7 @@
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}}"class="menu-icon  fa fa-trash"></i>
                     <span class="menu-text">
-						{{__('text.word_trash')}}
+						{{__('text.trash_and_reports')}}
 						</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>

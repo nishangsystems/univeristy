@@ -1017,5 +1017,7 @@ return [
     'student_list'=>'student list',
     'paid_online'=>'paid online',
     'cash_collected'=>'cash collected',
+    'online_transcripts'=>'online transcripts',
+    'trash_and_reports'=>'trash and reports',
     ''
 ];
