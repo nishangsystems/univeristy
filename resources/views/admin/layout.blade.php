@@ -1327,6 +1327,58 @@
             </li>
             @endif
 
+            @if (\Auth::user()->hasPermissionTo('manage_transcripts_and_results'))
+            <li>
+                <a href="#" class="dropdown-toggle text-capitalize">
+                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-circle"></i>
+                    <span class="menu-text">
+						{{__('text.results_slash_transcripts')}}
+						</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+
+                <ul class="submenu">
+                    
+                    <li>
+                        <a class="text-capitalize" onclick="$('#ca_only_post_form').submit()">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.CA_only')}}
+                        </a>
+                        <b class="arrow"></b>
+                        <form action="{{route('admin.res_and_trans.ca_only')}}" method="post" class="hidden" id="ca_only_post_form">@csrf</form>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.result.individual_results')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.individual_results')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li>
+                        <a href="{{route('admin.transcript.index')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.print_transcript')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+
+                    <li>
+                        <a href="{{route('admin.result.class_results')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.class_results')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    
+                </ul>
+            </li>
+            @endif
+
+            
             @if (\Auth::user()->hasPermissionTo('result_statistics'))
             <li>
                 <a href="#" class="dropdown-toggle">
@@ -1382,57 +1434,6 @@
             </li>
             @endif
 
-
-            @if (\Auth::user()->hasPermissionTo('manage_transcripts_and_results'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-circle"></i>
-                    <span class="menu-text">
-						{{__('text.results_slash_transcripts')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    
-                    <li>
-                        <a class="text-capitalize" onclick="$('#ca_only_post_form').submit()">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.CA_only')}}
-                        </a>
-                        <b class="arrow"></b>
-                        <form action="{{route('admin.res_and_trans.ca_only')}}" method="post" class="hidden" id="ca_only_post_form">@csrf</form>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.result.individual_results')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.individual_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.transcript.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.print_transcript')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('admin.result.class_results')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.class_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                </ul>
-            </li>
-            @endif
 
             @if (\Auth::user()->hasPermissionTo('manage_statistics'))
             <li>
