@@ -20,7 +20,7 @@ class HomeController extends Controller
     {
         $parent = auth('parent_api')->user();
 
-        $children = Students::where('parent_phone_number', $parent->phone)->get();
+        $children = Students::where('parent_phone_number', 'LIKE', '%'.$parent->phone)->get();
         return response()->json(['data'=>$children]);
     }
 
@@ -71,12 +71,14 @@ class HomeController extends Controller
     // expects semester, year and student as request params
     public function results(Request $request)
     {
+        // return now();
         $parent = auth('parent_api')->user();
         if(!$request->has('student')){
             return response()->json(['message'=>'student not specified', 'error_type'=>'general-error'], 400);
         }
         $student = Students::find($request->student);
-        if(!in_array($student, $parent->children()->all())){
+        // return $student;
+        if(!in_array($student->id, $parent->children()->pluck('id')->toArray())){
             return response()->json(['message'=>'The specified student is not your child', 'error_type'=>'general-error'], 400);
         }
 
@@ -178,7 +180,7 @@ class HomeController extends Controller
         }
         return response()->json(['data'=>$data]);
     }
-    
+
     //
     public function contacts()
     {
