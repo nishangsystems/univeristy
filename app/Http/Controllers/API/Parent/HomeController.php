@@ -185,7 +185,7 @@ class HomeController extends Controller
             // dd($grade);
         // }, $res);
         }, $registered_courses);
-        $data['results'] = collect($results)->filter(function($el){return $el != null;});
+        $data['results'] = collect($results)->filter(function($el){return $el != null;})->unique();
         //
 
         

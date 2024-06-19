@@ -99,4 +99,8 @@ class User extends Authenticatable
         return $this->belongsToMany(SchoolUnits::class, HeadOfSchool::class, 'user_id', 'school_unit_id')->where('status', $active);
     }
 
+    public function course_notifications(){
+        return $this->hasmany(CourseNotification::class, 'user_id');
+    }
+
 }
