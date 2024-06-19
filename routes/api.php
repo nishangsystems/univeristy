@@ -79,9 +79,13 @@ Route::get('attendance', [App\Http\Controllers\API\PageController::class, 'stude
 Route::get('school', [App\Http\Controllers\API\PageController::class, 'school']);
 Route::get('school_contacts', [App\Http\Controllers\API\PageController::class, 'school_contacts']);
 
-Route::group([ 'prefix' => 'teacher'], function() {
+Route::group([ 'prefix' => 'teacher', 'middleware'=>'api'], function() {
+    Route::get('profile', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'profile']);
     Route::get('classes', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'classes']);
-    Route::get('notifications', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'notifications']);
+    Route::get('notifications', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'notifications']); // takes optional notification_id
+    Route::get('course_notifications', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'course_notifications']); // takes course_id and optional notification_id
+    Route::get('courses', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'subjects']); // takes campus_id or class_id or
+    Route::get('create_notification', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'create_notification']); // takes course_id or class_id, or unit_id
     Route::get('{campus_id}/subjects/{class_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'subjects']);
     Route::get('{campus_id}/student/{class_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'students']);
     Route::get('student/attendance', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'studentAttendance']);
@@ -97,7 +101,6 @@ Route::prefix('parent')->middleware(['parent_api'])->group(function(){
     Route::get('registerd_courses', [App\Http\Controllers\API\parent\HomeController::class, 'registerd_courses']); // expects year, semester and student as params
     Route::get('contact', [App\Http\Controllers\API\parent\HomeController::class, 'contacts']);
 });
-
 
 // ----------------------------- APPLICATION PORTAL API ENDPOINTS ----------------------------------
 Route::post('student/store', [ApiController::class, 'store_student']);
