@@ -73,7 +73,7 @@ class PaymentController extends Controller
         $data['title'] = __('text.collect_registration_fee_for', ['item'=>$student->name]);
         $data['item'] = $student->class(\App\Helpers\Helpers::instance()->getYear())->payment_items()->where('name', 'REGISTRATION')->where(['year_id'=>$c_year])->first();
         
-        if ($data['total_fee'] <= 0) {
+        if ($data['item'] == null) {
 
             return redirect(route('admin.fee.registration.collect'))->with('error', __('text.registration_fee_not_set'));
         }
