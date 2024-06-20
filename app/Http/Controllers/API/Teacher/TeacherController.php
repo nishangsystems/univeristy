@@ -274,7 +274,7 @@ class TeacherController
         
     }
 
-    public function student_prifile(Request $request){
+    public function student_profile(Request $request){
         
         $student = Students::find($request->student);
         if($student == null){
