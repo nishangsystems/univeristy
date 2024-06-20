@@ -67,10 +67,7 @@ class HomeController extends Controller
         $data['student'] = $student;
         $data['total_paid'] = number_format($student->total_paid( $year));
         $data['total_debt'] = number_format($student->bal($student->id, $year));
-        $data['payments'] = $student->payments()->where(['batch_id'=>($year)])->get()
-        ->each(function($item){
-            $item->item = $item->item??null;
-        });
+        $data['payments'] = $student->payments()->where(['batch_id'=>($year)])->get();
         if($data['payments']->count() == 0){
             return response()->json(['message'=>'No Fee payments found for '.(Batch::find($year)->name??''), 'error_type'=>'general-error'], 400);
         }
@@ -200,6 +197,7 @@ class HomeController extends Controller
         return response()->json(['data'=>$contacts]);
     }
     
+    // expects student, year & semester
     public function registerd_courses(Request $request)
     {
         try {
