@@ -213,9 +213,7 @@ class HomeController  extends Controller
         }
         return back()->with('error', __('text.error_reading_file'));
     }
-
-
-    
+ 
     public function set_watermark()
     {
         # code...
@@ -247,16 +245,15 @@ class HomeController  extends Controller
         return back()->with('error', __('text.error_reading_file'));
     }
 
-
     public function set_background_image()
     {
         # code...
         $data['title'] = 'Set Background Image';
         return view('admin.setting.bg_image', $data);
     }
+
     public function save_background_image(Request $request)
     {
-        # code...
         # code...
         $check = Validator::make($request->all(), ['file'=>'required|file|mimes:png,jpg,jpeg,gif,tif']);
         if ($check->fails()) {

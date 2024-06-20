@@ -25,7 +25,7 @@
                 <td>{{ $program_level->international_amount ?? '----'}}</td>
                 <td>{{ $program_level->first_instalment ?? '----'}}</td>
                 <td>{{ $program_level->second_instalment ?? '----'}}</td>
-                <td>{{ $payment_items->reg ?? '----'}}</td>
+                <td>{{ $program_level->reg ?? '----'}}</td>
                 <td>
                     <a href="{{route('admin.campuses.set_fee', [$campus->id, $program_level->id])}}" class="btn btn-sm btn-primary">{{__('text.word_fees')}}</a>
                 </td>
