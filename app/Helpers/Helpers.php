@@ -288,11 +288,6 @@ class Helpers
     {
         # code...
         return asset('assets/images/avatars/lhead.png');
-        // $lt = 'lhead';
-        // if (file_exists(asset('assets/images/avatars/lhead.png'))) {
-        //     # code...
-        // }
-        // return '';
     }
 
     public function getBackground()
