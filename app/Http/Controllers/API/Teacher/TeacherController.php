@@ -53,6 +53,9 @@ class TeacherController
             })->where(function($query)use($campuses){
                 $query->whereIn('campus_id', $campuses)->orWhere('campus_id', null)->orWhere('campus_id', 0);
             })->where(function($query)use($levels){
+            })->where(function($query)use($campuses){
+                $query->where('status', 1)->whereDate('date', '<=', now());
+            })->where(function($query)use($levels){
                 $query->whereIn('level_id', $levels)->orWhere('level_id', null);
             })->get()
             ->filter(function($row) use ($classes){
@@ -134,24 +137,30 @@ class TeacherController
         return response()->json($data);
     }
 
-    public function subjects(Request $request,$campus_id, $class_id){
-        $unit = ProgramLevel::find($class_id);
-        if($request->teacher_id){
-            $teacher = User::find($request->teacher_id);
-        }else{
-            $teacher = auth('api')->user();
+    public function subjects(Request $request){
+
+        if($request->course != null){
+            $course = \App\Models\Subjects::find($request->course);
+            return response()->json(['course'=>$course]);
         }
+
+        if($request->_class != null)
+        $unit = ProgramLevel::find($request->class_id);
+        
+        $teacher = auth('api')->user();
+        
         $data['teacher_id'] = $teacher->id;
         $data['title'] = 'My '.$unit->program()->first()->name.' : LEVEL '.$unit->level()->first()->level;
         $data['subjects'] = \App\Models\Subjects::join('teachers_subjects', ['teachers_subjects.subject_id'=>'subjects.id'])
-            ->where(['teachers_subjects.class_id'=>$class_id])
             ->where(['teachers_subjects.teacher_id'=>$teacher->id])
-            ->where(function($q)use ($request, $campus_id){
-                $request->has('campus') ? $q->where(['teachers_subjects.campus_id'=>$campus_id]):null;
+            ->where(function($query)use($request){
+                if($request->_class != null ) $query->where(['teachers_subjects.class_id'=>$request->_class]);
+            })
+            ->where(function($q)use ($request){
+                $request->campus != null ? $q->where(['teachers_subjects.campus_id'=>$request->campus]) : null;
             })->distinct()
             ->select(['subjects.*','teachers_subjects.class_id as class', 'teachers_subjects.campus_id'])->get();
-
-
+            
         $data['success'] = 200;
         return response()->json($data);
     }
