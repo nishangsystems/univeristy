@@ -93,13 +93,13 @@ Route::group([ 'prefix' => 'teacher', 'middleware'=>'api'], function() {
 });
 
 Route::prefix('parent')->middleware(['parent_api'])->group(function(){
-    Route::get('profile', [App\Http\Controllers\API\parent\HomeController::class, 'profile']);
-    Route::get('students', [App\Http\Controllers\API\parent\HomeController::class, 'students']);
-    Route::get('semesters', [App\Http\Controllers\API\parent\HomeController::class, 'semesters']);
-    Route::get('fee', [App\Http\Controllers\API\parent\HomeController::class, 'fee']); // expects year and student as params
-    Route::get('result', [App\Http\Controllers\API\parent\HomeController::class, 'results']); // expects year, semester and student as params
-    Route::get('registerd_courses', [App\Http\Controllers\API\parent\HomeController::class, 'registerd_courses']); // expects year, semester and student as params
-    Route::get('contact', [App\Http\Controllers\API\parent\HomeController::class, 'contacts']);
+    Route::get('profile', [App\Http\Controllers\API\Parent\HomeController::class, 'profile']);
+    Route::get('students', [App\Http\Controllers\API\Parent\HomeController::class, 'students']);
+    Route::get('semesters', [App\Http\Controllers\API\Parent\HomeController::class, 'semesters']);
+    Route::get('fee', [App\Http\Controllers\API\Parent\HomeController::class, 'fee']); // expects year and student as params
+    Route::get('result', [App\Http\Controllers\API\Parent\HomeController::class, 'results']); // expects year, semester and student as params
+    Route::get('registerd_courses', [App\Http\Controllers\API\Parent\HomeController::class, 'registerd_courses']); // expects year, semester and student as params
+    Route::get('contact', [App\Http\Controllers\API\Parent\HomeController::class, 'contacts']);
 });
 
 // ----------------------------- APPLICATION PORTAL API ENDPOINTS ----------------------------------
