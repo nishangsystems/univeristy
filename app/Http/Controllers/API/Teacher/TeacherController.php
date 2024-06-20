@@ -151,9 +151,13 @@ class TeacherController
         }
 
         $course_notifications = \App\Models\CourseNotification::where(['user_id'=>$teacher->id])
+            ->where(function($query)use($request){
+                if($request->course != null)
+                $query->where('course_id', $request->course);
+            })
             ->where()->get()->each(function($rec){
                 $rec->campus = $rec->campus->name??'';
-                $rec->course = "[".($rec->course->name??'')."]".$rec->course->name??'';
+                $rec->course = "[ ".($rec->course->code??'')." ] ".$rec->course->name??'';
                 $rec->audience = $rec->audience();
             });
         $data['success'] = 200;

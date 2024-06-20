@@ -79,7 +79,7 @@ Route::get('attendance', [App\Http\Controllers\API\PageController::class, 'stude
 Route::get('school', [App\Http\Controllers\API\PageController::class, 'school']);
 Route::get('school_contacts', [App\Http\Controllers\API\PageController::class, 'school_contacts']);
 
-Route::group([ 'prefix' => 'teacher', 'middleware'=>'api'], function() {
+Route::group([ 'prefix' => 'teacher', 'middleware'=>['api']], function() {
     Route::get('profile', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'profile']);
     Route::get('classes', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'classes']);
     Route::get('courses', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'subjects']); // takes optional campus_id , class_id and/or course_id
