@@ -145,12 +145,10 @@ class TeacherController
         }
 
         if($request->_class != null)
-        $unit = ProgramLevel::find($request->class_id);
         
         $teacher = auth('api')->user();
         
         $data['teacher_id'] = $teacher->id;
-        $data['title'] = 'My '.$unit->program()->first()->name.' : LEVEL '.$unit->level()->first()->level;
         $data['subjects'] = \App\Models\Subjects::join('teachers_subjects', ['teachers_subjects.subject_id'=>'subjects.id'])
             ->where(['teachers_subjects.teacher_id'=>$teacher->id])
             ->where(function($query)use($request){
@@ -160,7 +158,7 @@ class TeacherController
                 $request->campus != null ? $q->where(['teachers_subjects.campus_id'=>$request->campus]) : null;
             })->distinct()
             ->select(['subjects.*','teachers_subjects.class_id as class', 'teachers_subjects.campus_id'])->get();
-            
+
         $data['success'] = 200;
         return response()->json($data);
     }
