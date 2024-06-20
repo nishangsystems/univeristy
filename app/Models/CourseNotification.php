@@ -40,6 +40,6 @@ class CourseNotification extends Model
     public function audience()
     {
         # code...
-        return Campus::find($this->campus_id)->name ?? ''.' '.$this->classSubject()->class()->first()->program->name ?? ''. ' - '.$this->classSubject()->class()->first()->level->level ?? ''.' '.$this->classSubject()->subject->name ?? '' .' Students.';
+        return Campus::find($this->campus_id)->name ?? ''.' '.($this->classSubject() != null ? $this->classSubject()->class()->first()->program->name : ''). ' - '.$this->classSubject()->class()->first()->level->level ?? ''.' '.($this->classSubject() != null ? $this->classSubject()->subject->name : '') .' Students.';
     }
 }
