@@ -236,7 +236,7 @@ class TeacherController
             ->where('year_id', '=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
             ->join('students', ['students.id'=>'student_classes.student_id'])
             ->whereIn('students.campus_id', $campuses)
-            ->join('campuses', ['campuses.id', '=', 'students.campus_id'])
+            ->join('campuses', ['campuses.id' => 'students.campus_id'])
             ->orderBy('students.name', 'ASC')->get(['students.*', 'campuses.name as campus_name', 'campuses.id as campus_id'])
             ->groupBy('campus_name');
 
@@ -262,10 +262,10 @@ class TeacherController
         $data['course'] = $course;
 
         $data['students'] = \App\Models\StudentSubject::where('student_courses.course_id', '=', $course->id)
-            ->where('year_id', '=', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
+            ->where('year_id', \App\Helpers\Helpers::instance()->getCurrentAccademicYear())
             ->join('students', ['students.id'=>'student_courses.course_id'])
             ->whereIn('students.campus_id', $campuses)
-            ->join('campuses', ['campuses.id', '=', 'students.campus_id'])
+            ->join('campuses', ['campuses.id' => 'students.campus_id'])
             ->orderBy('students.name', 'ASC')->get(['students.*', 'campuses.name as campus_name', 'campuses.id as campus_id'])
             ->groupBy('campus_name');
 
@@ -282,7 +282,7 @@ class TeacherController
         }
 
         $data['student'] = $student;
-        $data['_class'] = $student->_class();
+        $data['unit'] = $student->_class();
         $data['success'] = 200;
         return response()->json($data);
     }
