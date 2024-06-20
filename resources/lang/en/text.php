@@ -878,9 +878,9 @@ return [
     'word_periods'=>'periods',
     'student_data'=>'student data',
     'word_schools'=>'schools',
-    'head_of_school'=>'head of school',
+    'head_of_school'=>'director of school',
     'word_departments'=>'departments',
-    'new_head_of_school'=>'new head of school',
+    'new_head_of_school'=>'new director of school',
     'pending_courses'=>'pending courses', 
     'class_delegates'=>'class delegates',
     'add_class_delegate'=>'add class delegate',
@@ -1020,5 +1020,6 @@ return [
     'online_transcripts'=>'online transcripts',
     'trash_and_reports'=>'trash and reports',
     'result_statistics'=>'result statistics',
+    'ca_edit_dateline'=>'CA edit dateline',
     ''
 ];

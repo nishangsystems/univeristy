@@ -398,6 +398,13 @@
                         <li>
                             <a href="{{route('admin.course.date_line')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.ca_edit_dateline')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.course.date_line')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
                             {{__('text.course_registration_date_line')}}
                             </a>
                             <b class="arrow"></b>
