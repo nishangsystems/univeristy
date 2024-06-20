@@ -143,10 +143,8 @@ class TeacherController
             $course = \App\Models\Subjects::find($request->course);
             return response()->json(['course'=>$course]);
         }
-
-        if($request->_class != null)
         
-        $teacher = auth('api')->user();
+        $teacher = $request->user('api');
         
         $data['teacher_id'] = $teacher->id;
         $data['subjects'] = \App\Models\Subjects::join('teachers_subjects', ['teachers_subjects.subject_id'=>'subjects.id'])
