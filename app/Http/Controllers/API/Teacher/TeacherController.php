@@ -155,7 +155,7 @@ class TeacherController
                 if($request->course != null)
                 $query->where('course_id', $request->course);
             })
-            ->where()->get()->each(function($rec){
+            ->get()->each(function($rec){
                 $rec->campus = $rec->campus->name??'';
                 $rec->course = "[ ".($rec->course->code??'')." ] ".$rec->course->name??'';
                 $rec->audience = $rec->audience();
