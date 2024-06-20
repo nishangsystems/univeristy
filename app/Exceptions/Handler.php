@@ -42,14 +42,14 @@ class Handler extends ExceptionHandler
 
         $this->renderable(function (\Exception $e) {
             if ($e->getPrevious() instanceof \Illuminate\Session\TokenMismatchException) {
-                return $e;
+                return "F::{$e->getFile()}, L::{$e->getLine()}, M::{$e->getMessage()}";
                 return redirect()->route('login');
             };
             if ($e instanceof \GuzzleHttp\Exception\ServerException) {
                 # code...
                 return redirect(route('admin.home'));
             }
-            return $e;
+            return "F::{$e->getFile()}, L::{$e->getLine()}, M::{$e->getMessage()}";
             session()->flash('error', "F::{$e->getFile()}, L::{$e->getLine()}, M::{$e->getMessage()}");
             return back()->withInput();
         });
