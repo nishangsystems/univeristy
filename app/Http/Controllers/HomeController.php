@@ -276,7 +276,7 @@ class HomeController extends Controller
             });
         }elseif(($amount = $request->amount) != null){
             $resp = $data->filter(function($row, $amount){
-                return $row->total > $amount;
+                return $row->total >= $amount;
             });
         }else{
             $resp = $data->filter(function($row){
