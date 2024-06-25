@@ -12,6 +12,8 @@ class FeeClearance extends Model
     
     protected $fillable = ['student_id', 'admission_year_id', 'final_year_id'];
 
+    protected $dates = ['created_at', 'updated_at']; 
+
     public function student()
     {
         # code...

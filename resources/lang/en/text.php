@@ -1021,5 +1021,9 @@ return [
     'trash_and_reports'=>'trash and reports',
     'result_statistics'=>'result statistics',
     'ca_edit_dateline'=>'CA edit dateline',
+    'edit_programs'=>'edit programs',
+    'word_weight'=>'weight',
+    'word_remark'=>'remark',
+    'word_close'=>'close',
     ''
 ];

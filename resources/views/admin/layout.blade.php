@@ -716,7 +716,7 @@
             </li>
             @endif
 
-            @if (\Auth::user()->hasPermissionTo('manage_fee'))
+            @if (\Auth::user()->hasPermissionTo('manage_fee_settings'))
             <li>
                 <a href="#" class="dropdown-toggle text-capitalize">
                     <i  style="color: {{$bg1}}"class="menu-icon  fa fa-dollar"></i>
@@ -1595,124 +1595,125 @@
             @endif
                 
             @if (\Auth::user()->hasPermissionTo('manage_attendance'))
-            <!-- Attendance management -->
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
-                    <span class="menu-text">
-						{{__('text.manage_attendance')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                <!-- Attendance management -->
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                        <span class="menu-text">
+                            {{__('text.manage_attendance')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
-                <ul class="submenu">
-                    @if(auth()->user()->campus_id != null)
-                    <li>
-                        <a href="{{route('admin.attendance.teacher.init')}}?type=admin" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.teacher_attendance')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.attendance.report', ['type'=>'general', 'campus_id'=>auth()->user()->campus_id])}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.attendance_report')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    @endif
-                </ul>
-            </li>
-            <!-- End attaendance management -->
+                    <ul class="submenu">
+                        @if(auth()->user()->campus_id != null)
+                        <li>
+                            <a href="{{route('admin.attendance.teacher.init')}}?type=admin" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.teacher_attendance')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.attendance.report', ['type'=>'general', 'campus_id'=>auth()->user()->campus_id])}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.attendance_report')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        @endif
+                    </ul>
+                </li>
+                <!-- End attaendance management -->
             @endif
 
             
             @if (\Auth::user()->headOfSchoolFor()->count() > 0)
-            <!-- Attendance management -->
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
-                    <span class="menu-text">
-						{{__('text.head_of_school')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                <!-- Attendance management -->
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                        <span class="menu-text">
+                            {{__('text.head_of_school')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.headOfSchools.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_schools')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            <!-- End attaendance management -->
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('admin.headOfSchools.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_schools')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+                <!-- End attaendance management -->
             @endif
 
                             
             @if (\Auth::user()->hasPermissionTo('manage_trash'))
-            <!-- Attendance management -->
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-trash"></i>
-                    <span class="menu-text">
-						{{__('text.trash_and_reports')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                <!-- Attendance management -->
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-trash"></i>
+                        <span class="menu-text">
+                            {{__('text.trash_and_reports')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.trash.fee')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_fee')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.trash.students')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_students')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.trash.result_bypass')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.result_bypass')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.trash.mark_changes')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.mark_changes')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.trash.bulk_added_marks')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.mass_mark_changes')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            <!-- End attaendance management -->
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('admin.trash.fee')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_fee')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.trash.students')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_students')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.trash.result_bypass')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.result_bypass')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.trash.mark_changes')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.mark_changes')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.trash.bulk_added_marks')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.mass_mark_changes')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+                <!-- End attaendance management -->
             @endif
 
-
-            {{-- <li>
-                <a href="{{route('documentation.index')}}" class="text-capitalize">
-                    <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
-                    {{__('text.word_documentation')}}
-                </a>
-                <b class="arrow"></b>
-            </li> --}}
+            @if (auth()->user()->hasPermissionTo('edit_programs'))
+                <li>
+                    <a href="{{route('admin.edit_programs')}}" class="text-capitalize">
+                        <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
+                        {{__('text.edit_programs')}}
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+            @endif
 
             <li>
                 <a href="{{route('admin.reset_password')}}" class="text-capitalize">

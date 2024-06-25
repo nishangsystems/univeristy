@@ -52,7 +52,7 @@
                     {{ $_title }}
                 </b></h4>
                 <div class="d-flex overflow-auto"></div>
-                <table class="">
+                <table class="text-left">
                     <thead class="text-capitalize">
                         <tr class="border-top border-bottom border-secondary">
                             <th class="border-left border-right border-secondary" colspan="6"></th>
@@ -64,6 +64,7 @@
                             <th class="border-left border-right border-secondary">###</th>
                             <th class="border-left border-right border-secondary">{{__('text.word_code')}}</th>
                             <th class="border-left border-right border-secondary">{{__('text.course_title')}}</th>
+                            <th class="border-left border-right border-secondary">{{ trans_choice('text.word_teacher', 2) }}</th>
                             <th class="border-left border-right border-secondary">{{__('text.CV')}}</th>
                             <th class="border-left border-right border-secondary">{{__('text.ST')}}</th>
                             <th class="border-left border-right border-secondary">{{__('text.course_coverage')}}</th>
@@ -83,6 +84,7 @@
                                 <td class="border-left border-right border-secondary">{{$k++}}</td>
                                 <td class="border-left border-right border-secondary">{{$course->subject->code}}</td>
                                 <td class="border-left border-right border-secondary">{{$course->subject->name}}</td>
+                                <td class="border-left border-right border-secondary">{{$course->subject->teachers->first()->name??''}}</td>
                                 <td class="border-left border-right border-secondary">{{$course->coef}}</td>
                                 <td class="border-left border-right border-secondary">{{$course->status}}</td>
                                 <td class="border-left border-right border-secondary">missing</td>

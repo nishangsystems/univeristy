@@ -97,9 +97,9 @@
                         <td class="border-left border-right">{{$data->sum('incomplete')}}</td>
                         <td class="border-left border-right">{{number_format($data->sum('expected'), 2)}}</td>
                         <td class="border-left border-right">{{number_format($data->sum('recieved'), 2)}}</td>
-                        <td class="border-left border-right">{{number_format($data->sum('per_completed')/$data->count(), 2)}}</td>
-                        <td class="border-left border-right">{{number_format($data->sum('per_uncompleted')/$data->count(), 2)}}</td>
-                        <td class="border-left border-right">{{number_format($data->sum('per_recieved')/$data->count(), 2)}}</td>
+                        <td class="border-left border-right">{{number_format($data->sum('per_completed')/($data->count() > 0 ? $data->count() : 1), 2)}}</td>
+                        <td class="border-left border-right">{{number_format($data->sum('per_uncompleted')/($data->count() > 0 ? $data->count() : 1), 2)}}</td>
+                        <td class="border-left border-right">{{number_format($data->sum('per_recieved')/($data->count() > 0 ? $data->count() : 1), 2)}}</td>
                     </tr>
                     @endif
                 </tbody>
