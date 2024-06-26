@@ -677,6 +677,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::prefix('clearance')->name('clearance.')->group(function(){
         Route::get('fee', [Admin\ClearanceController::class, 'fee_clearance'])->name('fee');
         Route::get('fee/generate/{student_id}', [Admin\ClearanceController::class, 'generate_fee_clearance'])->name('fee.generate');
+        Route::get('fee/check/{student_id}', [Admin\ClearanceController::class, 'check_fee_clearance'])->name('fee.check');
         Route::post('fee/generate/{student_id}', [Admin\ClearanceController::class, 'save_fee_clearance']);
     });
 
@@ -704,6 +705,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::post('record/{resit_id}/{student_id}', [admin\ResitPaymentController::class, 'save_record']);
         Route::get('report/{resit_id}/{class_id?}/{year_id?}', [admin\ResitPaymentController::class, 'report'])->name('report');
     });
+
+    Route::get('edit_programs', [\App\Http\Controllers\ProgramControllerV2::class, 'edit_programs'])->name('edit_programs');
 
 });
 

@@ -93,6 +93,8 @@ class ClearanceService{
             if(!$data['fee_cleared']){
                 $data['debt'] = ($data['total_expected'] - ($data['total_paid'] + $data['total_reg_paid']));
                 $data['err_msg'] = "You still owe a sum of ".$data['debt'];
+            }else{
+                $this->saveClearance($student_id);
             }
             $data['institution'] = School::first();
             // dd($data);
@@ -110,6 +112,17 @@ class ClearanceService{
             $classes = $student->classes()->orderBy('year_id')->get();
             FeeClearance::updateOrInsert(['student_id'=>$student_id], ['admission_year_id'=>$classes->first()->year_id, 'final_year_id'=>$classes->last()->year_id, 'updated_at'=>now()]);
             return 1;
+        }
+        throw new \Exception("Student instance not found");
+    }
+
+
+    public function lastClearance($student_id)
+    {
+        # code...
+        $student = Students::find($student_id);
+        if($student != null){
+            return FeeClearance::where(['student_id'=>$student_id])->first();
         }
         throw new \Exception("Student instance not found");
     }

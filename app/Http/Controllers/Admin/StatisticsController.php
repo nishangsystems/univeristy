@@ -24,6 +24,7 @@ use Throwable;
 
 class StatisticsController extends Controller
 {
+
     //
     public function students(Request $request)
     {
@@ -149,186 +150,181 @@ class StatisticsController extends Controller
             // return $data['data'];
         }
         return view('admin.statistics.students')->with($data);
-    }
-    
+    }    
 
     // get fee statistics per program per academic year 
-    function program_fee_stats($program_id, $year, $campus_id = null){
-        $students = ProgramLevel::where('program_levels.program_id', '=', $program_id)
-            ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
-            ->where('student_classes.year_id', '=', $year)
-            ->join('students', 'students.id', '=', 'student_classes.student_id')->where('students.active', true)
-            ->where(function($q)use($campus_id){
-                $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
-            })->distinct()->pluck('students.id')->toArray();       
-        $return = [
-            'unit' => SchoolUnits::find($program_id)->name,
-            'students' => count($students), 'complete'=> 0, 'incomplete'=>0, 
-            'recieved' => 0, 'expected' => 0, 'per_completed'=>0, 
-            'per_uncompleted' =>0, 'per_recieved'=>0];
-        $fees = array_map(function($stud) use ($students, $year){
-            $student_class = Students::find($stud)->_class($year)->id;
-            return [
-                'amount' => array_sum(
-                    \App\Models\Payments::where('payments.student_id', '=', $stud)
-                    ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
-                    ->where('payment_items.name', '=', 'TUTION')
-                    ->where('payments.batch_id', '=', $year)
-                    ->pluck('payments.amount')
-                    ->toArray()
-                ),
-                'total' => 
-                        \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-                        ->where('program_levels.id', '=', $student_class)
-                        ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
-                        ->where('payment_items.name', '=', 'TUTION')
-                        ->whereNotNull('payment_items.amount')
-                        ->join('students', 'students.program_id', '=', 'program_levels.id')
-                        ->where('students.id', '=', $stud)->pluck('payment_items.amount')[0] ?? 0
-                    ,
-                'stud' => $stud
-            ];
-        }, $students);
-        // dd($fees);
-        foreach ($fees as $key => $value) {
-            # code...
-            $return['recieved'] += $value['amount'] > $value['total'] ? $value['total'] : $value['amount'];
-            $return['expected'] += $value['total'];
-            if ($value['total'] > 0 && $value['amount'] >= $value['total']) {$return['complete'] += 1;}
-            else{$return['incomplete'] += 1;}
-            
-        }
-        // $return['expected'] = (int)\App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-        //                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
-        //                         ->where('payment_items.name', '=', 'TUTION')
-        //                         ->whereNotNull('payment_items.amount')
-        //                         ->join('students', 'students.program_id', '=', 'program_levels.id')
-        //                         ->whereIn('students.id', $students)->sum('payment_items.amount');
-        $return['per_completed'] = $return['students'] == 0 ? 0 : $return['complete']*100/($return['students']);
-        $return['per_uncompleted'] =$return['students'] == 0 ? 0 : 100 - ($return['complete']*100/($return['students']));
-        $return['per_recieved'] = $return['expected'] == 0 ? 0 : ($return['recieved']*100/$return['expected']);
-        return $return;
+    function program_fee_stats($year, $campus_id = null){
+                
+        $fee_settings = \App\Models\StudentClass::where(['student_classes.year_id'=>$year])
+            ->join('students', function($query){
+                $query->on(['students.id'=>'student_classes.student_id']);
+            })
+            ->where(['students.active'=>1])
+            ->join('program_levels', ['program_levels.id'=>'student_classes.class_id'])
+            ->join('campus_programs', function($query){
+                $query->on(['campus_programs.program_level_id'=> 'program_levels.id'])
+                ->on(['campus_programs.campus_id'=>'students.campus_id']);
+            })
+            ->where(function($query)use($campus_id){
+                if($campus_id != null)
+                $query->where('campus_programs.campus_id', $campus_id);
+            })
+            ->join('payment_items', function($query){
+                $query->on(['payment_items.campus_program_id'=> 'campus_programs.id'])
+                ->on(['payment_items.year_id'=>'student_classes.year_id']);
+            })
+            ->where('payment_items.name', 'TUTION')
+            // ->select(['students.id as student_id', 'payment_items.campus_program_id', 'payment_items.amount', 'program_levels.id as class_id', DB::raw("COUNT(*) as student_total"), DB::raw("SUM(payment_items.amount) as expected_amount")])
+            // ->groupBy('campus_program_id')->distinct()->get()
+            ->select(['students.id as student_id', 'student_classes.id as student_class_id', 'program_levels.program_id',  'payment_items.campus_program_id', 'payment_items.amount', 'program_levels.id as class_id', 'payment_items.amount as expected_amount'])
+            ->groupBy('student_id')->distinct()->get()
+            ->each(function($rec)use($year){
+                $rec->paid = \App\Models\Payments::where('student_id', $rec->student_id)->where('payment_year_id', $year)
+                    ->join('students', ['students.id'=>'payments.student_id'])->distinct()->sum('amount');
+                $rec->completed = $rec->paid >= $rec->expected_amount;
+            })->groupBy('program_id')->map(function($item){
+                $students = $item->count();
+                $recieved = $item->sum('paid');
+                $expected = $item->sum('expected_amount');
+                $complete = $item->sum('completed');
+                $uncomplete = $students - $complete;
+
+                $ret = [
+                    'unit' => ProgramLevel::find($item->first()->class_id??0)->name(),
+                    'students' => $students,
+                    'recieved' => $recieved,
+                    'expected' => $expected,
+                    'complete' => $complete,
+                    'incomplete' => $uncomplete,
+                    'per_completed' => ($complete/($students <= 0 ? 1 : $students))*100,
+                    'per_uncompleted' => ($uncomplete/($students <= 0 ? 1 : $students))*100,
+                    'per_recieved' => ($recieved/($expected <= 0 ? 1 : $expected))*100
+                ];
+                return $ret;
+            });
+
+        // dd($fee_settings);
+
+        return $fee_settings;
+        
     }
 
     // get fee statistics per level per academic year
-    public function level_fee_stats($level_id, $year, $campus_id = null)
+    public function level_fee_stats($year, $campus_id = null)
     {
         # code...
-        $students = ProgramLevel::where('program_levels.level_id', '=', $level_id)
-            ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
-            ->where('student_classes.year_id', '=', $year)
-            ->join('students', 'students.id', '=', 'student_classes.student_id')->where('students.active', true)
-            ->where(function($q)use($campus_id){
-                $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
-            })->distinct()->pluck('students.id')->toArray();       
-        $return = [
-            'unit' => __('text.word_level').' '.Level::find($level_id)->level,
-            'students' => count($students), 'complete'=> 0, 'incomplete'=>0, 
-            'recieved' => 0, 'expected' => 0, 'per_completed'=>0, 
-            'per_uncompleted' =>0, 'per_recieved'=>0];
-        $fees = array_map(function($stud) use ($level_id, $year){
-            $student_class = Students::find($stud)->_class($year)->id;
-            return [
-                'amount' => array_sum(
-                    \App\Models\Payments::where('payments.student_id', '=', $stud)
-                    ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
-                    ->where('payment_items.name', '=', 'TUTION')
-                    ->where('payments.batch_id', '=', $year)
-                    ->pluck('payments.amount')
-                    ->toArray()
-                ),
-                'total' => 
-                        \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-                        ->where('program_levels.id', '=', $student_class)
-                        ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
-                        ->where('payment_items.name', '=', 'TUTION')
-                        ->whereNotNull('payment_items.amount')
-                        ->join('students', 'students.program_id', '=', 'program_levels.id')
-                        ->where('students.id', '=', $stud)->pluck('payment_items.amount')[0] ?? 0
-                    ,
-                'stud' => $stud
-            ];
-        }, $students);
-        // dd($fees);
-        foreach ($fees as $key => $value) {
-            # code...
-            $return['recieved'] += $value['amount'] > $value['total'] ? $value['total'] : $value['amount'];
-            $return['expected'] += $value['total'];
-            if ($value['total'] > 0 && $value['amount'] >= $value['total']) {$return['complete'] += 1;}
-            else{$return['incomplete'] += 1;}
-            
-        }
-        // $return['expected'] = (int)\App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-        //                         ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
-        //                         ->where('payment_items.name', '=', 'TUTION')
-        //                         ->whereNotNull('payment_items.amount')
-        //                         ->join('students', 'students.program_id', '=', 'program_levels.id')
-        //                         ->whereIn('students.id', $students)->sum('payment_items.amount');
-        $return['per_completed'] = $return['students'] == 0 ? 0 : $return['complete']*100/($return['students']);
-        $return['per_uncompleted'] =$return['students'] == 0 ? 0 : 100 - ($return['complete']*100/($return['students']));
-        $return['per_recieved'] = $return['expected'] == 0 ? 0 : ($return['recieved']*100/$return['expected']);
-        return $return;
+        
+        $fee_settings = \App\Models\StudentClass::where(['student_classes.year_id'=>$year])
+            ->join('students', function($query){
+                $query->on(['students.id'=>'student_classes.student_id']);
+            })
+            ->where(['students.active'=>1])
+            ->join('program_levels', ['program_levels.id'=>'student_classes.class_id'])
+            ->join('campus_programs', function($query){
+                $query->on(['campus_programs.program_level_id'=> 'program_levels.id'])
+                ->on(['campus_programs.campus_id'=>'students.campus_id']);
+            })
+            ->where(function($query)use($campus_id){
+                if($campus_id != null)
+                $query->where('campus_programs.campus_id', $campus_id);
+            })
+            ->join('payment_items', function($query){
+                $query->on(['payment_items.campus_program_id'=> 'campus_programs.id'])
+                ->on(['payment_items.year_id'=>'student_classes.year_id']);
+            })
+            ->where('payment_items.name', 'TUTION')
+            // ->select(['students.id as student_id', 'payment_items.campus_program_id', 'payment_items.amount', 'program_levels.id as class_id', DB::raw("COUNT(*) as student_total"), DB::raw("SUM(payment_items.amount) as expected_amount")])
+            // ->groupBy('campus_program_id')->distinct()->get()
+            ->select(['students.id as student_id', 'student_classes.id as student_class_id', 'program_levels.level_id',  'payment_items.campus_program_id', 'payment_items.amount', 'program_levels.id as class_id', 'payment_items.amount as expected_amount'])
+            ->groupBy('student_id')->distinct()->get()
+            ->each(function($rec)use($year){
+                $rec->paid = \App\Models\Payments::where('student_id', $rec->student_id)->where('payment_year_id', $year)
+                    ->join('students', ['students.id'=>'payments.student_id'])->distinct()->sum('amount');
+                $rec->completed = $rec->paid >= $rec->expected_amount;
+            })->groupBy('level_id')->map(function($item){
+                $students = $item->count();
+                $recieved = $item->sum('paid');
+                $expected = $item->sum('expected_amount');
+                $complete = $item->sum('completed');
+                $uncomplete = $students - $complete;
+
+                $ret = [
+                    'unit' => ProgramLevel::find($item->first()->class_id??0)->name(),
+                    'students' => $students,
+                    'recieved' => $recieved,
+                    'expected' => $expected,
+                    'complete' => $complete,
+                    'incomplete' => $uncomplete,
+                    'per_completed' => ($complete/($students <= 0 ? 1 : $students))*100,
+                    'per_uncompleted' => ($uncomplete/($students <= 0 ? 1 : $students))*100,
+                    'per_recieved' => ($recieved/($expected <= 0 ? 1 : $expected))*100
+                ];
+                return $ret;
+            });
+
+        // dd($fee_settings);
+
+        return $fee_settings;
+        
     }
 
     // get fee statistics per class per academic year
-    public function class_fee_stats($class_id, $year, $campus_id = null)
+    public function class_fee_stats($year, $campus_id = null)
     {
         # code...
-        $students = \App\Models\StudentClass::where('student_classes.class_id', '=', $class_id)
-                                            ->where('student_classes.year_id', '=', $year)
-                                            ->join('students', 'students.id', '=', 'student_classes.student_id')
-                                            ->where('students.active', true)
-                                            ->where(function($q)use($campus_id){
-                                                $campus_id == null ? null : $q->where(['students.campus_id'=>$campus_id]);
-                                            })->distinct()->pluck('students.id')->toArray();  
-        // dd($students);
-        $return = [
-            'unit' => ProgramLevel::find($class_id)->name(),
-            'students' => count($students), 'complete'=> 0, 'incomplete'=>0, 
-            'recieved' => 0, 
-            'expected' => 0, 
-            'per_completed'=>0, 
-            'per_uncompleted' =>0, 
-            'per_recieved'=>0];
-        $fees = array_map(function($stud) use ($class_id, $year){
-            return [
-                // amount paid by student
-                'amount' => array_sum(
-                    \App\Models\Payments::where('payments.student_id', '=', $stud)
-                    ->join('payment_items', 'payment_items.id', '=', 'payments.payment_id')
-                    ->where('payment_items.name', '=', 'TUTION')
-                    ->where('payments.batch_id', '=', $year)
-                    ->pluck('payments.amount')
-                    ->toArray()
-                ),
-                // school fee amount expected from student
-                'total' => 
-                        \App\Models\CampusProgram::join('program_levels', 'program_levels.id', '=', 'campus_programs.program_level_id')
-                        ->where('program_levels.id', '=', $class_id)
-                        ->join('payment_items', 'payment_items.campus_program_id', '=', 'campus_programs.id')
-                        ->where('payment_items.name', '=', 'TUTION')
-                        ->whereNotNull('payment_items.amount')
-                        ->join('students', 'students.program_id', '=', 'program_levels.id')
-                        ->where('students.id', '=', $stud)->pluck('payment_items.amount')[0] ?? 0
-                    ,
-                // student id
-                'stud' => $stud
-            ];
-        }, $students);
-        // dd($fees);
-        foreach ($fees as $key => $value) {
-            # code...
-            $return['recieved'] += $value['amount'] > $value['total'] ? $value['total'] : $value['amount'];
-            $return['expected'] += $value['total'];
-            if ($value['total'] > 0 && $value['amount'] >= $value['total']) {$return['complete'] += 1;}
-            else{$return['incomplete'] += 1;}
-            
-        }
+
+        $fee_settings = \App\Models\StudentClass::where(['student_classes.year_id'=>$year])
+            ->join('students', function($query){
+                $query->on(['students.id'=>'student_classes.student_id']);
+            })
+            ->where(['students.active'=>1])
+            ->join('program_levels', ['program_levels.id'=>'student_classes.class_id'])
+            ->join('campus_programs', function($query){
+                $query->on(['campus_programs.program_level_id'=> 'program_levels.id'])
+                ->on(['campus_programs.campus_id'=>'students.campus_id']);
+            })
+            ->where(function($query)use($campus_id){
+                if($campus_id != null)
+                $query->where('campus_programs.campus_id', $campus_id);
+            })
+            ->join('payment_items', function($query){
+                $query->on(['payment_items.campus_program_id'=> 'campus_programs.id'])
+                ->on(['payment_items.year_id'=>'student_classes.year_id']);
+            })
+            ->where('payment_items.name', 'TUTION')
+            // ->select(['students.id as student_id', 'payment_items.campus_program_id', 'payment_items.amount', 'program_levels.id as class_id', DB::raw("COUNT(*) as student_total"), DB::raw("SUM(payment_items.amount) as expected_amount")])
+            // ->groupBy('campus_program_id')->distinct()->get()
+            ->select(['students.id as student_id', 'student_classes.id as student_class_id', 'payment_items.campus_program_id', 'payment_items.amount', 'program_levels.id as class_id', 'payment_items.amount as expected_amount'])
+            ->groupBy('student_id')->distinct()->get()
+            ->each(function($rec)use($year){
+                $rec->paid = \App\Models\Payments::where('student_id', $rec->student_id)->where('payment_year_id', $year)
+                    ->join('students', ['students.id'=>'payments.student_id'])->distinct()->sum('amount');
+                $rec->completed = $rec->paid >= $rec->expected_amount;
+            })->groupBy('class_id')->map(function($item){
+                $students = $item->count();
+                $recieved = $item->sum('paid');
+                $expected = $item->sum('expected_amount');
+                $complete = $item->sum('completed');
+                $uncomplete = $students - $complete;
+
+                $ret = [
+                    'unit' => ProgramLevel::find($item->first()->class_id??0)->name(),
+                    'students' => $students,
+                    'recieved' => $recieved,
+                    'expected' => $expected,
+                    'complete' => $complete,
+                    'incomplete' => $uncomplete,
+                    'per_completed' => ($complete/($students <= 0 ? 1 : $students))*100,
+                    'per_uncompleted' => ($uncomplete/($students <= 0 ? 1 : $students))*100,
+                    'per_recieved' => ($recieved/($expected <= 0 ? 1 : $expected))*100
+                ];
+                return $ret;
+            });
+
+        // dd($fee_settings);
+
+        return $fee_settings;
         
-        $return['per_completed'] = $return['students'] == 0 ? 0 : $return['complete']*100/($return['students']);
-        $return['per_uncompleted'] =$return['students'] == 0 ? 0 : 100 - ($return['complete']*100/($return['students']));
-        $return['per_recieved'] = $return['expected'] == 0 ? 0 : ($return['recieved']*100/$return['expected']);
-        return $return;
     }
 
     // for each class, get the total number of students, fee per person, number of completed, number of owing, %age paid, %age owing, details
@@ -343,24 +339,18 @@ class StatisticsController extends Controller
                     case 'program':
                         # code...
                         $data['title'] = Campus::find($campus_id ?? 0)->name??null.' '.__('text.fee_statistics').' '.Batch::find($request->year)->name??null.' By Program';
-                        $data['data'] = array_map(function($program_id) use ($request, $campus_id){
-                            return $this->program_fee_stats($program_id, $request->year, $campus_id);
-                        }, SchoolUnits::where('unit_id', 4)->pluck('id')->toArray());
+                        $data['data'] = $this->program_fee_stats($request->year, $campus_id);
                         // dd($data);
                         break;
                     case 'level':
                         # code...
                         $data['title'] = Campus::find($campus_id ?? 0)->name??null.' '.__('text.fee_statistics').' '.Batch::find($request->year)->name??null.' By Level';
-                        $data['data'] = array_map(function($level_id) use ($request, $campus_id){
-                            return $this->level_fee_stats($level_id, $request->year, $campus_id);
-                        }, Level::pluck('id')->toArray());
+                        $data['data'] = $this->level_fee_stats($request->year, $campus_id);
                     break;
                     case 'class':
                         # code...
                         $data['title'] = Campus::find($campus_id ?? 0)->name??null.' '.__('text.fee_statistics').' '.Batch::find($request->year)->name??null.' By Class';
-                        $data['data'] = array_map(function($class_id) use ($request, $campus_id){
-                            return $this->class_fee_stats($class_id, $request->year, $campus_id);
-                        }, ProgramLevel::pluck('id')->toArray());
+                        $data['data'] = $this->class_fee_stats($request->year, $campus_id);
                         break;
                     
                     default:
@@ -445,10 +435,7 @@ class StatisticsController extends Controller
         
     }
 
-
-
     // REGISTRATION FEE STATISTICS
-
     // get fee statistics per program per academic year 
     function program_regfee_stats($program_id, $year, $campus_id = null){
         $students = ProgramLevel::where('program_levels.program_id', '=', $program_id)
@@ -672,6 +659,7 @@ class StatisticsController extends Controller
         $data['title'] = __('text.results_statistics');
         return view('admin.statistics.results', $data);
     }
+
     //
     public function income(Request $request)
     {
@@ -792,6 +780,7 @@ class StatisticsController extends Controller
         }
         
     }
+
     //
     public function expenditure(Request $request)
     {

@@ -59,4 +59,10 @@ class Subjects extends Model
         return $this->belongsTo(Level::class, 'level_id');
     }
 
+    public function teachers()
+    {
+        # code...
+        return $this->belongsToMany(User::class, TeachersSubject::class, 'subject_id', 'teacher_id');
+    }
+
 }

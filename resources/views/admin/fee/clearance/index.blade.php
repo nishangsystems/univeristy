@@ -24,7 +24,7 @@
 
                 </tbody>
             </table>
-
+            <div id="modal_box"></div>
         </div>
     </div>
 </div>
@@ -51,7 +51,7 @@
                             <td> ${data[i].name} </td>
                             <td> ${data[i].campus} </td>
                             <td class="d-flex justify-content-between align-items-center">
-                                <a class="btn btn-xs btn-primary" href="{{ route('admin.clearance.fee.generate', '__SID__') }}"> {{__("text.fee_clearance")}}</a>
+                                <button class="btn btn-xs btn-primary" href="{{ route('admin.clearance.fee.generate', '__SID__') }}" onclick="checkClearance(${data[i].id})"> {{__("text.fee_clearance")}}</button>
                             </td>
                         </tr>`.replace('__SID__', data[i].id);
                 }
@@ -60,5 +60,56 @@
             error: function(e) {}
         });
     });
+
+    let checkClearance = function(student_id){
+        let clearance_url = "{{ route('admin.clearance.fee.generate', '__SID__') }}".replace('__SID__', student_id);
+        let _url = "{{ route('admin.clearance.fee.check', '__STID') }}".replace('__STID', student_id);
+        console.log(_url);
+        $.ajax({
+            url: _url, 
+            method: 'GET', 
+            success: function(data){
+                console.log(data);
+                if(data.data == null)
+                    window.location = clearance_url;
+                else{
+                    let modal = `
+                    <div id="modal-wizard" class="modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div id="modal-wizard-container">
+                                    <div class="modal-header">
+                                        <h4 class="heading">CONFIRM RE-PRINT OF FEE CLEARANCE</h4>
+                                    </div>
+
+                                    <div class="modal-body step-content">
+                                        <div class="container-fluid text-center caption">
+                                            Only a single fee clearance is printed per student. Any more prints require payment from the concerned student. A fee clearance was last printed for this student on ${data.data.created_at}. 
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer wizard-actions">
+                                    
+                                    <a href="${clearance_url}" class="btn btn-success btn-sm btn-next">
+                                        Confirm
+                                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                                    </a>
+
+                                    <button class="btn btn-danger btn-sm pull-left" onclick="$('#modal-wizard').hide()">
+                                        <i class="ace-icon fa fa-times"></i>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+
+                    $('#modal_box').html(modal);
+                    $('#modal-wizard').show();
+                }
+            }
+        })
+    }
 </script>
 @endsection

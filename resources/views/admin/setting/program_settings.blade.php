@@ -6,8 +6,8 @@
             <span class="input-group-text col-sm-2" style="font-size: small;">{{__('text.word_program')}}</span>
             <select name="program" id="" class="form-control" required>
                 <option value=""></option>
-                @foreach($classes as $prog)
-                    <option value="{{$prog['id']}}" {{request('program') == $prog['id'] ? 'selected' : ''}}>{{$prog['name']}}</option>
+                @foreach($programs as $prog)
+                    <option value="{{$prog->id}}" {{request('program') == $prog->id ? 'selected' : ''}}>{{$prog->name}}</option>
                 @endforeach
             </select>
             <input type="submit" name="" value="{{__('text.word_get')}}" id="">

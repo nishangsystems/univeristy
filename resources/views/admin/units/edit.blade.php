@@ -82,7 +82,7 @@
                 <div class="form-group">
                     <label  class="control-label col-lg-2 text-capitalize">{{__('text.word_background')}}</label>
                     <div class="col-lg-10">
-                        <select class=" form-control" name="background_id" required>
+                        <select class=" form-control" name="background_id" required >
                             <option></option>
                             @foreach ($backgrounds as $bg)
                                 <option value="{{ $bg->id }}" {{ $unit->background_id == $bg->id ? 'selected' : '' }}>{{ $bg->background_name }}</option>

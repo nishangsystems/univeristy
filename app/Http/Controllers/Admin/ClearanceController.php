@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Students;
 use App\Services\ClearanceService;
 use Illuminate\Http\Request;
 
@@ -26,8 +27,9 @@ class ClearanceController extends Controller
     public function generate_fee_clearance (Request $request, $student_id)
     {
         # code...
+        $student = Students::find($student_id);
         $clearance = $this->clearanceService->feeClearance($student_id);
-        $data['title'] = "Fee Clearance For {$clearance['student']->name}";
+        $data['title'] = "Fee Clearance For ".$student->name??'';
         $data['data'] = $clearance;
         // dd($clearance);
         if (isset($clearance['err_msg'])) {
@@ -47,6 +49,21 @@ class ClearanceController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             return response("Error saving record to database ".$th->getMessage(), 500);
+        }
+
+    }
+
+    public function check_fee_clearance (Request $request, $student_id)
+    {
+
+        # code...
+        try {
+            //code...
+            $record = $this->clearanceService->lastClearance($student_id);
+            return response()->json(['data'=>$record]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['message'=>$th->getMessage()], 500);
         }
 
     }
