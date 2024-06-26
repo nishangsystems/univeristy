@@ -1027,5 +1027,6 @@ return [
     'word_close'=>'close',
     'course_master'=>'course master',
     'set_course_instructor'=>'set course instructor',
+    'word_grading'=>'grading',
     ''
 ];
