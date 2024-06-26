@@ -485,6 +485,16 @@
             </li>
             @endif
 
+            @if (auth()->user()->hasPermissionTo('edit_programs'))
+                <li>
+                    <a href="{{route('admin.edit_programs')}}" class="text-capitalize">
+                        <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
+                        {{__('text.edit_programs')}}
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+            @endif
+
             @if (\Auth::user()->hasPermissionTo('manage_resits'))
             <li>
                 <a href="#" class="dropdown-toggle">
@@ -1705,15 +1715,6 @@
                 <!-- End attaendance management -->
             @endif
 
-            @if (auth()->user()->hasPermissionTo('edit_programs'))
-                <li>
-                    <a href="{{route('admin.edit_programs')}}" class="text-capitalize">
-                        <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
-                        {{__('text.edit_programs')}}
-                    </a>
-                    <b class="arrow"></b>
-                </li>
-            @endif
 
             <li>
                 <a href="{{route('admin.reset_password')}}" class="text-capitalize">

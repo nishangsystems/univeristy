@@ -1033,4 +1033,35 @@ class ProgramController extends Controller
         }
         return back();
     }
+
+    public function course_master(Request $request, $program_level_id, $course_id){
+        try {
+            //code...
+            $course = Subjects::find($course_id);
+            $year = Batch::find(Helpers::instance()->getCurrentAccademicYear());
+            $class = ProgramLevel::find($program_level_id);
+            throw_if(!$course, "Course Not Found");
+            $data['title'] = "Course Master For ".$course->name;
+            $data['users'] = \App\Models\TeachersSubject::where(['batch_id'=>$year->id, 'class_id'=>$program_level_id, 'subject_id'=>$course_id])->get();
+            if(empty($data['users'])){
+                return back()->with('error', "No Lecturers have been assigned to {$course->name} in {$class->name()} for {$year->name}");
+            }
+            return view('admin.units.course_master', $data);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', "F:: {$th->getFile()}, L:: {$th->getLine()}, M::{$th->getMessage()}");
+        }
+    }
+
+    public function save_course_master(Request $request, $program_level_id, $course_id){
+        $validator = validator($request->all(), ['instructor'=>'required']);
+
+        if($validator->fails()){
+            return back()->with('error', "Instructor not specified");
+        }
+        
+        \App\Models\TeachersSubject::where('id', $request->instructor)->update(['is_master'=>1]);
+        \App\Models\TeachersSubject::where(['subject_id'=>$course_id, 'class_id'=>$program_level_id, 'batch_id'=>Helpers::instance()->getCurrentAccademicYear()])->where('id', '!=', $request->instructor)->update(['is_master'=>0]);
+        return back()->with('success', 'Done');
+    }
 }

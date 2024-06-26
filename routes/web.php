@@ -132,6 +132,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('units/{parent_id}/edit', 'Admin\ProgramController@edit')->name('units.edit');
     Route::resource('units', 'Admin\ProgramController')->except(['index', 'create', 'edit']);
     Route::get('units/{program_level_id}/subjects', 'Admin\ProgramController@subjects')->name('units.subjects');
+    Route::get('units/{program_level_id}/subjects/{course_id}/master', 'Admin\ProgramController@course_master')->name('units.course_master');
+    Route::post('units/{program_level_id}/subjects/{id}/master', 'Admin\ProgramController@save_course_master');
     Route::get('units/{program_level_id}/drop_level', 'Admin\ProgramController@_drop_program_level')->name('units.drop_level');
     Route::get('sections/{section_id}/subjects/{id}', 'Admin\ClassSubjectController@edit')->name('edit.class_subjects');
     Route::get('sections/{section_id}/subjects/{id}/delete', 'Admin\ClassSubjectController@delete')->name('delete.class_subjects');

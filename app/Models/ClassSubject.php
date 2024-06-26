@@ -26,6 +26,14 @@ class ClassSubject extends Model
         return $this->belongsToMany(User::class, TeachersSubject::class, 'subject_id', 'teacher_id');
     }
 
+    public function course_master()
+    {
+        # code...
+        return $this->belongsToMany(User::class, TeachersSubject::class, 'subject_id', 'teacher_id')->where('teachers_subjects.is_master', 1)->first();
+        return User::join('teachers_subjects', ['teachers_subjects.teacher_id'=>'users.id'])
+            ->where(['teachers_subjects.is_master'=> 1, 'teachers_subjects.class_id'=>$this->class_id, 'teachers_subjects.subject_id'=])->first();
+    }
+
     public function class()
     {
         return $this->belongsTo(ProgramLevel::class, 'class_id');

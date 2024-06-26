@@ -1025,5 +1025,7 @@ return [
     'word_weight'=>'weight',
     'word_remark'=>'remark',
     'word_close'=>'close',
+    'course_master'=>'course master',
+    'set_course_instructor'=>'set course instructor',
     ''
 ];
