@@ -5,6 +5,7 @@
             <thead class="text-capitalize">
                 <th>@lang('text.sn')</th>
                 <th>@lang('text.word_program')</th>
+                <th>@lang('text.grading_type')</th>
                 <th></th>
             </thead>
             <tbody>
@@ -15,9 +16,10 @@
                     <tr class="border-bottom">
                         <td class="border-left">{{ $c++ }}</td>
                         <td class="border-left">{{ $program->name??'' }}</td>
+                        <td class="border-left">{{  $program->gradingType->name??'' }}</td>
                         <td class="border-left">
                             <a class="btn btn-sm btn-primary rounded" href="{{ route('admin.units.edit', $program->id) }}?pms=1">@lang('text.word_edit')</a>
-                            <a class="btn btn-sm btn-secondary rounded" data-toggle="modal" href="#__{{ $program->id }}gradingSystemModal">@lang('text.grading_type')</a>
+                            <a class="btn btn-sm btn-secondary rounded" data-toggle="modal" href="#__{{ $program->id }}gradingSystemModal">@lang('text.word_grading')</a>
                             {{-- grading system details modal --}}
                             <div id="__{{ $program->id }}gradingSystemModal" class="modal">
                                 <div class="modal-dialog">

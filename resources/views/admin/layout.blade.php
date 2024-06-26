@@ -218,7 +218,6 @@
                 </a>
                 <b class="arrow"></b>
             </li>
-            
            
             @if (\Auth::user()->hasPermissionTo('manage_subject'))
             <li>
@@ -1395,7 +1394,6 @@
             </li>
             @endif
 
-            
             @if (\Auth::user()->hasPermissionTo('result_statistics'))
             <li>
                 <a href="#" class="dropdown-toggle">
@@ -1450,7 +1448,6 @@
                 </ul>
             </li>
             @endif
-
 
             @if (\Auth::user()->hasPermissionTo('manage_statistics'))
             <li>
@@ -1638,7 +1635,6 @@
                 <!-- End attaendance management -->
             @endif
 
-            
             @if (\Auth::user()->headOfSchoolFor()->count() > 0)
                 <!-- Attendance management -->
                 <li>
@@ -1663,7 +1659,6 @@
                 <!-- End attaendance management -->
             @endif
 
-                            
             @if (\Auth::user()->hasPermissionTo('manage_trash'))
                 <!-- Attendance management -->
                 <li>
@@ -1716,7 +1711,6 @@
                 <!-- End attaendance management -->
             @endif
 
-
             <li>
                 <a href="{{route('admin.reset_password')}}" class="text-capitalize">
                     <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
@@ -1736,8 +1730,7 @@
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 {{ csrf_field() }}
             </form>
-
-
+            
         </ul><!-- /.nav-list -->
 
 
