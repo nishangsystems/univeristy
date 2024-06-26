@@ -31,7 +31,7 @@ class ClassSubject extends Model
         # code...
         return $this->belongsToMany(User::class, TeachersSubject::class, 'subject_id', 'teacher_id')->where('teachers_subjects.is_master', 1)->first();
         return User::join('teachers_subjects', ['teachers_subjects.teacher_id'=>'users.id'])
-            ->where(['teachers_subjects.is_master'=> 1, 'teachers_subjects.class_id'=>$this->class_id, 'teachers_subjects.subject_id'=])->first();
+            ->where(['teachers_subjects.is_master'=> 1, 'teachers_subjects.class_id'=>$this->class_id, 'teachers_subjects.subject_id'=>$this->subject_id])->first();
     }
 
     public function class()
