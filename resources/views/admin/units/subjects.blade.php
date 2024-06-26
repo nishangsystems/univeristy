@@ -34,6 +34,9 @@
                         {{-- <td>{{ \App\Models\Level::find($subject->level_id)->level }}</td> --}}
                         <td>{{ $subject->_status ?? $subject->status }}</td>
                         <td class="d-flex">
+                            <a class="btn btn-sm btn-info" href="{{route('admin.units.course_master',['program_level_id'=>request('program_level_id'), 'course_id'=>$subject->id])}}">
+                                <i class="fa fa-user text-capitalize"> {{__('text.course_master')}}</i>
+                            </a> |
                             <a class="btn btn-sm btn-primary" href="{{route('admin.edit.class_subjects',[request('program_level_id'), $subject->id])}}">
                                 <i class="fa fa-edit text-capitalize"> {{__('text.word_edit')}}</i>
                             </a> |
