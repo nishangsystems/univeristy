@@ -7,6 +7,8 @@
                 <th>@lang('text.word_program')</th>
                 <th>@lang('text.grading_type')</th>
                 <th>@lang('text.degree_conferred')</th>
+                <th>@lang('text.ca_totals')</th>
+                <th>@lang('text.exam_totals')</th>
                 <th></th>
             </thead>
             <tbody>
@@ -19,6 +21,8 @@
                         <td class="border-left">{{ $program->name??'' }}</td>
                         <td class="border-left">{{  $program->gradingType->name??'' }}</td>
                         <td class="border-left">{{  $program->deg_name??'' }}</td>
+                        <td class="border-left">{{  $program->ca_total??'' }}</td>
+                        <td class="border-left">{{  $program->exam_total??'' }}</td>
                         <td class="border-left">
                             <a class="btn btn-sm btn-primary rounded" href="{{ route('admin.units.edit', $program->id) }}?pms=1">@lang('text.word_edit')</a>
                             <a class="btn btn-sm btn-secondary rounded" data-toggle="modal" href="#__{{ $program->id }}gradingSystemModal">@lang('text.word_grading')</a>
