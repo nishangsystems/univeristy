@@ -42,7 +42,7 @@
                                                             @php
                                                                 $k = 1;
                                                             @endphp
-                                                            @foreach ($program->gradingType->grading as $grading)
+                                                            @foreach (optional($program->gradingType)->grading??[] as $grading)
                                                                 <tr class="border-bottom">
                                                                     <td class="border-left border-right">{{ $k++; }}</td>
                                                                     <td class="border-left border-right">{{ $grading->grade }}</td>
