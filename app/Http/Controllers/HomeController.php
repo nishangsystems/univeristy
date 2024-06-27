@@ -451,7 +451,7 @@ class HomeController extends Controller
 
         $data = [];
         $campus_id = auth()->user()->campus_id??null;
-        foreach ($class->_students($year)->where(function($query)use($campus_id){
+        foreach ($class->_students($year)->where('active', 1)->where(function($query)use($campus_id){
             $campus_id == null ? null : $query->where('campus_id', $campus_id);
         })->get() as $key => $student) {
             $items = [];
@@ -505,10 +505,21 @@ class HomeController extends Controller
 
     }
 
-    
-    public static function rgfee_situation(Request $request)
-    {
-        # code...
+    public static function combined_fee_situation(Request $request){
+        /**
+         * Combines
+         * Batches
+         * Payment items
+         * Registration fees
+         * Extra Fees :: secondary (on selected collection)
+         * Scholarships :: secondary (on selected collection)
+         * Payments :: secondary (on selected collection)
+         */
+        
+        //  if(($cached_data = cache('combined_fee_situation_class'.$request->class??'')) != null){
+        //     dd($cached_data);
+        //  }
+
         $year = request('year', Helpers::instance()->getCurrentAccademicYear());
         $class = ProgramLevel::find(\request('class'));
 
@@ -516,9 +527,84 @@ class HomeController extends Controller
         // dd($st_classes);
 
         $data = [];
+        $campus_id = auth()->user()->campus_id??null;
+        foreach ($class->_students($year)->where('active', 1)->where(function($query)use($campus_id){
+            $campus_id == null ? null : $query->where('campus_id', $campus_id);
+        })->get() as $key => $student) {
+            $items = [];
+            $rg_item = null;
+            foreach ($student->classes as $key => $_class) {
+                if(($it = $_class->class->single_payment_item($student->campus_id, $_class->year_id)->where('name', 'TUTION')->first()) != null){
+                    $items[] = $it;
+                };
+            }
+            if(($rgit = $student->_class()->single_payment_item($student->campus_id, $_class->year_id)->where('name', 'REGISTRATION')->first()) != null){
+                $rg_item = $rgit;
+            };
+            # code...
+
+            $fee_items = collect($items);
+
+            $cum_fee_items = $fee_items->filter(function($row)use($year){
+                return $row != null && $row->year_id <= $year;
+            });
+            $past_fee = $fee_items->filter(function($row)use($year){
+                return $row != null && $row->year_id < $year;
+            });
+
+            $_payments = Payments::where('student_id', $student->id)->whereIn('payment_id', $fee_items->pluck('id')->toArray())->distinct()->get();
+            $_current_payments = Payments::where('student_id', $student->id)->whereIn('payment_id', $cum_fee_items->pluck('id')->toArray())->where('payment_year_id', '<=', $year)->distinct()->get();
+            $past_payments = Payments::where('student_id', $student->id)->whereIn('payment_id', $past_fee->pluck('id')->toArray())->where('payment_year_id', '<=', $year)->distinct()->get();
+            $current_payments = $_current_payments->sum('amount') - $_payments->sum('debt');
+
+            $current_scholarship = StudentScholarship::where('student_id', $student->id)->where('batch_id', '<=', $year)->distinct()->sum('amount');
+            $cum_scholarship = StudentScholarship::where('student_id', $student->id)->where('batch_id', '<=', $year)->distinct()->sum('amount');
+            $past_scholarship = StudentScholarship::where('student_id', $student->id)->where('batch_id', '<', $year)->distinct()->sum('amount');
+
+            $current_extra_fees = ExtraFee::where('student_id', $student->id)->where('year_id', '=', $year)->distinct()->sum('amount');
+            $cum_extra_fees = ExtraFee::where('student_id', $student->id)->where('year_id', '<=', $year)->distinct()->sum('amount');
+            $past_extra_fees = ExtraFee::where('student_id', $student->id)->where('year_id', '<', $year)->distinct()->sum('amount');
+
+            $curreg_paid = 0;
+            if($rg_item != null){
+                $curreg_paid = Payments::where('payment_id', $rg_item->id)->sum('amount');
+            }
+
+            // dd($fee_items);
+            $data[] = [
+                'id'=>$student->id, 'name'=>$student->name, 'matric'=>$student->matric,
+                'link'=>route('admin.fee.student.payments.index', $student->id),
+                'current_fee'=>$cum_fee_items->where('year_id', $year)->first()->amount??0,
+                'debt'=>($past_fee->sum('amount') + $past_extra_fees) - (($past_payments->sum('amount') - $past_payments->sum('debt') + $past_scholarship)),
+                'paid'=>$current_payments, 'scholarship'=>$current_scholarship, 'total'=>$cum_fee_items->sum('amount')+$cum_extra_fees,
+                'current_paid'=>$_payments->where('payment_year_id', $year)->sum('amount') + $_payments->where('payment_year_id', $year)->sum('debt'),
+                'extra_fee'=>$current_extra_fees, 
+                'cum_extra_fee'=>$cum_extra_fees, 
+                'owing'=>$cum_fee_items->sum('amount') + $cum_extra_fees - ($current_payments + $cum_scholarship),
+                'class'=>$class->name(),
+                'current_registration_fee'=>optional($rg_item)->amount??0,
+                'current_registration_fee_paid'=>$curreg_paid??0,
+            ];
+        }
+
+        // dd($data);
+        return ['students'=>collect($data)->sortBy('name')];
+
+    }
+    
+    public static function rgfee_situation(Request $request)
+    {
+        # code...
+        $year = request('year', Helpers::instance()->getCurrentAccademicYear());
+        $class = ProgramLevel::find(\request('class'));
+        $campus_id = $request->user()->campus_id;
+
+        $data = [];
 
         # code...
-        foreach ($class->_students($year)->get() as $key => $student) {
+        foreach ($class->_students($year)->where('active', 1)->where(function($query)use($campus_id){
+            $campus_id == null ? null : $query->where('campus_id', $campus_id);
+        })->get() as $key => $student) {
             $fee_items = $class->single_payment_item($student->campus_id, $year)->where('name', 'REGISTRATION')->get();
             
             if ($fee_items->count() > 0) {

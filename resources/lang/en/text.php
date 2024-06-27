@@ -1028,5 +1028,6 @@ return [
     'course_master'=>'course master',
     'set_course_instructor'=>'set course instructor',
     'word_grading'=>'grading',
+    'combined_fee_situation'=>'combined fee situation',
     ''
 ];

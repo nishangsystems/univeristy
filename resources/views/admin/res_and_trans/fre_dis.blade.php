@@ -86,10 +86,7 @@
                                 <td class="border-left border-right border-secondary">{{$course->subject->name}}</td>
                                 <td class="border-left border-right border-secondary">
                                     {{
-                                        $course->teachers()->where('is_master', 1)->count() > 0 ?
-                                        $course->teachers->where('is_master', 1)->first()->name :
-                                        NO COURSE MASTER'
-
+                                        $course->teachers->first()->name ??'NO COURSE MASTER'
                                     }}
                                 </td>
                                 <td class="border-left border-right border-secondary">{{$course->coef}}</td>

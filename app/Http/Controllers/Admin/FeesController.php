@@ -117,6 +117,23 @@ class FeesController extends Controller
         return view('admin.fee.fee_situation_list', $data);
     }
 
+    public function combined_fee_situation(Request $request)
+    {
+        # code...
+        $data['title'] = __('text.combined_fee_situation');
+        return view('admin.fee.fee_situation', $data);
+    }
+
+    public function combined_fee_situation_list(Request $request)
+    {
+        # code...
+        $class = ProgramLevel::find($request->class);
+        $data['title'] = __('text.combined_fee_situation').' '.__('text.word_for').' '.$class->program->name.' : '.__('text.word_level').' '.$class->level->level.' - '.Batch::find($request->year)->name;
+        $data['data'] = HomeController::combined_fee_situation($request);
+        // return $data;
+        return view('admin.fee.cbn_fee_situation_list', $data);
+    }
+
     public function registration_fee_situation_list (Request $request)
     {
         # code...

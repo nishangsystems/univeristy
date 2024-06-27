@@ -292,8 +292,6 @@ class StatisticsController extends Controller
                 ->on(['payment_items.year_id'=>'student_classes.year_id']);
             })
             ->where('payment_items.name', 'TUTION')
-            // ->select(['students.id as student_id', 'payment_items.campus_program_id', 'payment_items.amount', 'program_levels.id as class_id', DB::raw("COUNT(*) as student_total"), DB::raw("SUM(payment_items.amount) as expected_amount")])
-            // ->groupBy('campus_program_id')->distinct()->get()
             ->select(['students.id as student_id', 'student_classes.id as student_class_id', 'payment_items.campus_program_id', 'payment_items.amount', 'program_levels.id as class_id', 'payment_items.amount as expected_amount'])
             ->groupBy('student_id')->distinct()->get()
             ->each(function($rec)use($year){
@@ -363,7 +361,7 @@ class StatisticsController extends Controller
             return view('admin.statistics.fees')->with($data);
         }
         catch(Throwable $th){
-            dd($th);
+            return back()->with('error', "F:: {$th->getFile()}, L::{$th->getLine()}, M::{$th->getMessage()}");
         }
     }
 

@@ -18,18 +18,7 @@
         <form method="post" class="py-3 mt-5 ">
             @csrf
             <input type="hidden" name="program" id="" value="{{request('program')}}">
-            <div class="input-group-merge border border-dark rounded d-flex text-capitalize my-2">
-                <span class="input-group-text col-sm-2" style="font-size: small;">{{__('text.maximum_credits')}}</span>
-                <input type="number" name="max_credit" id="" class="form-control" required value="{{$p->max_credit}}">
-            </div>
-            <div class="input-group-merge border border-dark rounded d-flex text-capitalize my-2">
-                <span class="input-group-text col-sm-2" style="font-size: small;">{{__('text.ca_totals')}}</span>
-                <input type="number" name="ca_total" id="" class="form-control" required value="{{$p->ca_total}}">
-            </div>
-            <div class="input-group-merge border border-dark rounded d-flex text-capitalize my-2">
-                <span class="input-group-text col-sm-2" style="font-size: small;">{{__('text.exam_totals')}}</span>
-                <input type="number" name="exam_total" id="" class="form-control" required value="{{$p->exam_total}}">
-            </div>
+            
             <div class="input-group-merge border border-dark rounded d-flex text-capitalize my-2">
                 <span class="input-group-text col-sm-2" style="font-size: small;">{{__('text.resit_cost')}}</span>
                 <input type="number" name="resit_cost" id="" class="form-control" required value="{{$p->resit_cost}}">
