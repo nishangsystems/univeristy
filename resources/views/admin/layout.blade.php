@@ -904,6 +904,14 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    
+                    <li>
+                        <a href="{{route('admin.fee.situation.combined')}}" class="text-capitalize">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.combined_fee_situation')}}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
                     <li>
                         <a href="{{route('admin.clearance.fee')}}" class="text-capitalize">

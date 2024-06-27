@@ -4,11 +4,13 @@ namespace App\Providers;
 
 use App\Events\BulkMarkAddedEvent;
 use App\Events\FeeChangedEvent;
+use App\Events\ProgramChangeEvent;
 use App\Events\StudentChangedEvent;
 use App\Events\StudentResultChangedEvent;
 use App\Listeners\BulkMarkAddedListener;
 use App\Listeners\FeeChangeListener;
 use App\Listeners\LogStudentResultChangeListener;
+use App\Listeners\ProgramChangeListener;
 use App\Listeners\StudentChangeListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -28,6 +30,7 @@ class EventServiceProvider extends ServiceProvider
         FeeChangedEvent::class => [FeeChangeListener::class],
         StudentChangedEvent::class => [StudentChangeListener::class],
         BulkMarkAddedEvent::class => [BulkMarkAddedListener::class],
+        ProgramChangeEvent::class => [ProgramChangeListener::class],
     ];
 
     /**

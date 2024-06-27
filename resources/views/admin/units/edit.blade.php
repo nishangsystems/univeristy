@@ -109,12 +109,33 @@
                         <input type="text" class="form-control" name="deg_name" required value="{{ $unit->deg_name??'' }}">
                     </div>
                 </div>
+               
+                <div class="form-group">
+                    <label  class="control-label col-lg-2 text-capitalize">{{__('text.maximum_credits')}}</label>
+                    <div class="col-lg-10">
+                        <input type="number" class="form-control" name="max_credit" required value="{{ $unit->max_credit??'' }}">
+                    </div>
+                </div>
+               
+                <div class="form-group">
+                    <label  class="control-label col-lg-2 text-capitalize">{{__('text.ca_totals')}}</label>
+                    <div class="col-lg-10">
+                        <input type="number" class="form-control" name="ca_total" required value="{{ $unit->ca_total??'' }}">
+                    </div>
+                </div>
+               
+                <div class="form-group">
+                    <label  class="control-label col-lg-2 text-capitalize">{{__('text.exam_totals')}}</label>
+                    <div class="col-lg-10">
+                        <input type="number" class="form-control" name="exam_total" required value="{{ $unit->exam_total??'' }}">
+                    </div>
+                </div>
             @endif
 
             <div class="form-group">
                 <div class="col-lg-offset-2 col-lg-10 text-capitalize">
-                    <button class="btn btn-xs btn-theme" type="submit">{{__('text.word_save')}}</button>
-                    <a class="btn btn-xs btn-theme04" href="{{route('admin.units.index',[$parent_id])}}" type="button">{{__('text.word_cancel')}}</a>
+                    <button class="btn btn-sm btn-primary rounded" type="submit">{{__('text.word_save')}}</button>
+                    <a class="btn btn-sm btn-info rounded" href="{{route('admin.units.index',[$parent_id])}}" type="button">{{__('text.word_cancel')}}</a>
                 </div>
             </div>
         </form>

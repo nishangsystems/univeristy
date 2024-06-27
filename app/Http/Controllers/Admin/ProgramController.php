@@ -218,6 +218,9 @@ class ProgramController extends Controller
             $unit->background_id = $request->background_id??$unit->background_id;
             $unit->grading_type_id = $request->grading_type_id??$unit->grading_type_id;
             $unit->deg_name = $request->deg_name??$unit->deg_name;
+            $unit->max_credit = $request->max_credit??$unit->max_credit;
+            $unit->ca_total = $request->ca_total??$unit->ca_total;
+            $unit->exam_total = $request->exam_total??$unit->exam_total;
             $unit->save();
             DB::commit();
 
@@ -951,6 +954,7 @@ class ProgramController extends Controller
                 \App\Models\Payments::where(['student_id'=>$student_id, 'payment_year_id'=>$this->current_accademic_year])->update(['unit_id'=>$class->id, 'payment_id'=>$fee_item->id??null]);
                 // update student matricule if program changes
                 // dd($former_class);
+                new \App\Events\ProgramChangeEvent($former_class->id, $class->id, $student_id, auth()->id());
                 if($former_class->program_id == $request->program){
                     DB::commit();
                     return back()->with('success', 'Student Section successfully updated');

@@ -62,6 +62,13 @@ return [
             'path'=>storage_path('logs/bulk_mark_changes.log'),
             'level'=>env('LOG_LEVEL', 'critical')
         ],
+        
+        'program_change'=>[
+            'driver'=>'single',
+            'name'=>'program-change',
+            'path'=>storage_path('logs/program_changes.log'),
+            'level'=>env('LOG_LEVEL', 'critical')
+        ],
 
         'stack' => [
             'driver' => 'stack',
