@@ -237,6 +237,8 @@ class ApiController extends Controller
             StudentClass::updateOrInsert(['student_id'=>$student->id, 'year_id'=>$student->admission_batch_id], ['current'=>1, 'class_id'=>$program_level->id]);
 
             return response()->json(['data'=>['student'=>$student->toArray(), 'student_class'=>$student_class, 'class'=>$program_level->toArray(), 'status'=>1]]);
+        }else{
+            return response()->json(['message'=>"No student account with matric {$matric} was found. Make sure this student was admitted into the system"]);
         }
     }
 

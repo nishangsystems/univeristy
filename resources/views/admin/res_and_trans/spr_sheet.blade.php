@@ -58,10 +58,7 @@
         </form>
     @else
         @php
-
-            // dd($grades);
             $k = 1;
-            // dd($students);
         @endphp
         <div class="my-2">
             <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100">
