@@ -238,7 +238,7 @@ class ApiController extends Controller
 
             return response()->json(['data'=>['student'=>$student->toArray(), 'student_class'=>$student_class, 'class'=>$program_level->toArray(), 'status'=>1]]);
         }else{
-            return response()->json(['message'=>"No student account with matric {$matric} was found. Make sure this student was admitted into the system"]);
+            return response()->json(['data'=>"No student account with matric {$matric} was found. Make sure this student was admitted into the system"], 400);
         }
     }
 
