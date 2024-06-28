@@ -210,7 +210,7 @@ class ApiController extends Controller
         # code...
         $update = json_decode($request->query('student'))??collect([]);
         $matric = json_decode($request->query('matric'));
-        // return $update;
+        // return $request->query();
 
         $student = Students::where('matric', $matric)->first();
         if($update == null){
