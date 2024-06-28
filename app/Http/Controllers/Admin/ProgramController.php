@@ -954,7 +954,7 @@ class ProgramController extends Controller
                 \App\Models\Payments::where(['student_id'=>$student_id, 'payment_year_id'=>$this->current_accademic_year])->update(['unit_id'=>$class->id, 'payment_id'=>$fee_item->id??null]);
                 // update student matricule if program changes
                 // dd($former_class);
-                new \App\Events\ProgramChangeEvent($former_class->id, $class->id, $student_id, auth()->id());
+                event(new \App\Events\ProgramChangeEvent($former_class->id, $class->id, $student_id, auth()->id()));
                 if($former_class->program_id == $request->program){
                     DB::commit();
                     return back()->with('success', 'Student Section successfully updated');

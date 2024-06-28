@@ -62,6 +62,16 @@
                     </div>
                 </div>
 
+                <div class="form-group @error('dob') has-error @enderror">
+                    <label for="cname" class="control-label col-lg-2">{{__('text.date_of_birth')}}</label>
+                    <div class="col-lg-10">
+                        <input class=" form-control" name="dob" value="{{old('dob', $student->dob)}}" type="text"  />
+                        @error('dob')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="form-group @error('pob') has-error @enderror">
                     <label for="cname" class="control-label col-lg-2">{{__('text.place_of_birth')}}</label>
                     <div class="col-lg-10">
