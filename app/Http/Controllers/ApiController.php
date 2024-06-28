@@ -246,7 +246,7 @@ class ApiController extends Controller
     {
         # code...
         // return ['data'=>25372];
-        return response()->json(['data'=> Students::where('matric', 'LIKE', "%{$prefix}%{$year}%".($suffix??'')."%")->orderBy('matric', 'DESC')->get()->pluck('matric')->first()]);
+        return response()->json(['data'=> Students::where('matric', 'LIKE', "%{$prefix}/?{$year}/?".($suffix??'')."%")->orderBy('matric', 'DESC')->get()->pluck('matric')->first()]);
     }
 
     public function matricule_exists(Request $request)
