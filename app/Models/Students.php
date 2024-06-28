@@ -21,7 +21,7 @@ class Students extends Authenticatable
         'region', 'division', 'nationality', 'deleted_at'
     ];
 
-    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
+    protected $dates = ['deleted_at', 'created_at', 'updated_at', 'dob'];
 
     protected $connection = 'mysql';
 
