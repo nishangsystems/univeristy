@@ -232,9 +232,6 @@ class StudentController extends Controller
                 // read user input
                 $input = $request->all();
                 $input['name'] = mb_convert_case($request->name, MB_CASE_UPPER);
-                // $input['password'] = Hash::make('password');
-                // create a student
-                // $input['matric'] = $this->getNextAvailableMatricule($request->section);
                 $student = new \App\Models\Students($input);
                 $student->save();
                 // dd($student);
@@ -339,10 +336,10 @@ class StudentController extends Controller
             // $class->class_id = $request->program_id;
             // $class->save();
             DB::commit();
-            return redirect()->back()->with('success', "Student saved successfully !");
+            return redirect()->back()->with('success', "Student saved successfully!");
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e;
+            return back()->with('error', $e->getMessage());
         }
     }
 
