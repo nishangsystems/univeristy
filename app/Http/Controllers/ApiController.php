@@ -245,22 +245,35 @@ class ApiController extends Controller
     public function max_matric(Request $request, $prefix, $year, $suffix=null)
     {
         # code...
-        $school = \App\Models\School::first();
-        $separator = $school->matric_separator??'';
-        $pattern = '';
-        if($separator == '' || $separator == null){
-            if($suffix == null || $suffix == '')
-                $pattern = "%{$prefix}{$year}%";
-            else
-                $pattern = "%{$prefix}{$year}{$suffix}%";
-        } else {
-            if($suffix == null  || $suffix == '')
-                $pattern = "%{$prefix}{$separator}{$year}%";
-            else
-                $pattern = "%{$prefix}{$separator}{$year}{$separator}{$suffix}%";
+        try {
+            
+            $school = \App\Models\School::first();
+            $separator = $school->matric_separator??'';
+            $pattern = '';
+            if($separator == '' || $separator == null){
+                if($suffix == null || $suffix == '')
+                    $pattern = "%{$prefix}{$year}%";
+                else
+                    $pattern = "%{$prefix}{$year}{$suffix}%";
+            } else {
+                if($suffix == null  || $suffix == '')
+                    $pattern = "%{$prefix}{$separator}{$year}%";
+                else
+                    $pattern = "%{$prefix}{$separator}{$year}{$separator}{$suffix}%";
+            }
+    
+            $max1 = SchoolUnits::where(['prefix'=>$prefix, 'unit_id'=>4])->where('suffix', ($suffix??null))
+                ->join('program_levels', 'program_levels.program_id', '=', 'school_units.id')
+                ->join('student_classes', 'student_classes.class_id', '=', 'program_levels.id')
+                ->join('students', 'students.id', '=', 'student_classes.student_id')
+                ->where('students.matric', 'LIKE', $pattern)
+                ->orderBy('students.matric', 'DESC')
+                ->pluck('students.matric')->first();
+            return response()->json(['data'=> $max1]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['data'=>$th->getMessage()]);
         }
-        $max1 = Students::where('matric', 'LIKE', $pattern)->orderBy('matric', 'DESC')->get()->pluck('matric')->first();
-        return response()->json(['data'=> $max1]);
     }
 
     public function matricule_exists(Request $request)
