@@ -247,7 +247,19 @@ class ApiController extends Controller
         # code...
         $school = \App\Models\School::first();
         $separator = $school->matric_separator??'';
-        $max1 = Students::where('matric', 'LIKE', "%{$prefix}{$separator}{$year}{$separator}".($suffix??'')."%")->orderBy('matric', 'DESC')->get()->pluck('matric')->first();
+        $pattern = '';
+        if($separator == '' || $separator == null){
+            if($suffix == null || $suffix == '')
+                $pattern = "%{$prefix}{$year}%";
+            else
+                $pattern = "%{$prefix}{$year}{$suffix}%";
+        } else {
+            if($suffix == null  || $suffix == '')
+                $pattern = "%{$prefix}{$separator}{$year}%";
+            else
+                $pattern = "%{$prefix}{$separator}{$year}{$separator}{$suffix}%";
+        }
+        $max1 = Students::where('matric', 'LIKE', $pattern)->orderBy('matric', 'DESC')->get()->pluck('matric')->first();
         return response()->json(['data'=> $max1]);
     }
 
