@@ -245,7 +245,10 @@ class ApiController extends Controller
     public function max_matric(Request $request, $prefix, $year, $suffix=null)
     {
         # code...
-        return response()->json(['data'=> Students::where('matric', 'LIKE', "%{$prefix}/?{$year}/?".($suffix??'')."%")->orderBy('matric', 'DESC')->get()->pluck('matric')->first()]);
+        $school = \App\Models\School::first();
+        $separator = $school->matric_separator??'';
+        $max1 = Students::where('matric', 'LIKE', "%{$prefix}{$separator}{$year}{$separator}".($suffix??'')."%")->orderBy('matric', 'DESC')->get()->pluck('matric')->first();
+        return response()->json(['data'=> $max1]);
     }
 
     public function matricule_exists(Request $request)
