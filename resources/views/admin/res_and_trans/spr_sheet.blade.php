@@ -25,7 +25,7 @@
         .title{
             transform: rotate(270deg);
             padding: 10px 0px;
-            height: 100px;
+            height: 150px;
         }
 
     </style>
