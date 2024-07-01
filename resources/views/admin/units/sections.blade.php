@@ -39,12 +39,14 @@
                                         <a  class="btn btn-xs btn-primary" href="{{route('admin.units.index', [$unit->id])}}?action={{request('action')}}">Sub Units</a> |
                                     @endif
                                     <a class="btn btn-xs btn-success" href="{{route('admin.units.edit',[$unit->id])}}"><i class="fa fa-edit"> Edit</i></a> |
-                                    <a onclick="event.preventDefault();
-                                            document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">Delete</a>
-                                    <form id="delete" action="{{route('admin.units.destroy',$unit->id)}}" method="POST" style="display: none;">
-                                        @method('DELETE')
-                                        {{ csrf_field() }}
-                                    </form>
+                                    
+                                    @if($unit->unit()->count() == 0)
+                                        <a onclick="event.preventDefault(); document.getElementById('delete').submit();" class=" btn btn-danger btn-xs m-2">Delete</a>
+                                        <form id="delete" action="{{route('admin.units.destroy',$unit->id)}}" method="POST" style="display: none;">
+                                            @method('DELETE')
+                                            {{ csrf_field() }}
+                                        </form>
+                                    @endif
                                 @endif
                             </td>
                         </tr>
