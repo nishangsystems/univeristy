@@ -10,7 +10,7 @@
                     <select name="year" id="" class="form-control" required>
                         <option value="" selected>{{__('text.academic_year')}}</option>
                         @foreach(\App\Models\Batch::all() as $batch)
-                         <option value="{{$batch->id}}">{{$batch->name}}</option>
+                            <option value="{{$batch->id}}">{{$batch->name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -21,7 +21,7 @@
                     <select name="semester" id="" class="form-control" required>
                         <option value="" selected>{{__('text.word_semester')}}</option>
                         @foreach(\App\Models\Semester::all() as $sem)
-                         <option value="{{$sem->id}}">{{$sem->background()->first()->background_name.' >>> '.$sem->name}}</option>
+                            <option value="{{$sem->id}}">{{($sem->background()->first()->background_name??'UNDEFINED-BACKGROUND').' >>> '.$sem->name}}</option>
                         @endforeach
                     </select>
                 </div>

@@ -1713,6 +1713,13 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
+                        <li>
+                            <a href="{{route('admin.trash.program_change_report')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.program_change_report')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
                     </ul>
                 </li>
                 <!-- End attaendance management -->

@@ -1213,4 +1213,5 @@ class StudentController extends Controller
         // return config('tranzak.tranzak');
         return view('admin.student.repeat_students', $data);
     }
+
 }

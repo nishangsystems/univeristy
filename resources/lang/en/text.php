@@ -1025,9 +1025,17 @@ return [
     'word_weight'=>'weight',
     'word_remark'=>'remark',
     'word_close'=>'close',
-    'course_master'=>'course master',
+    'course_masters'=>'course masters',
     'set_course_instructor'=>'set course instructor',
     'word_grading'=>'grading',
     'combined_fee_situation'=>'combined fee situation',
+    'grand_total'=>'grand total',
+    'percentage_course_coverage'=>'percentage course coverage',
+    'candidates_registered'=>'candidates registered',
+    'candidates_examined'=>'candidates examined',
+    'program_change_report'=>'program change report',
+    'former_class'=>'former class',
+    'current_class'=>'current class',
+    'done_by'=>'done by',
     ''
 ];

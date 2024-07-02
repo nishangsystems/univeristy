@@ -695,7 +695,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('bulk_added_marks', [Admin\TrashController::class, 'bulk_added_marks'])->name('bulk_added_marks');
         Route::get('bulk_added_marks/undo/{track_id}', [Admin\StudentController::class, 'cancel_bulk_added_marks'])->name('bulk_added_marks.undo');
         Route::get('mark_changes', [Admin\TrashController::class, 'mark_changes'])->name('mark_changes');
-        Route::get('mark_changes/undo/{track_id}', [Admin\StudentController::class, 'cancel_mark_changes'])->name('mark_changes.undo');
+        Route::get('program_change_report', [Admin\TrashController::class, 'program_change_report'])->name('program_change_report');
     });
     
     Route::prefix('cleaner')->name('cleaner.')->group(function(){

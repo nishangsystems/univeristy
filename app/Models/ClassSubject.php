@@ -26,12 +26,12 @@ class ClassSubject extends Model
         return $this->belongsToMany(User::class, TeachersSubject::class, 'subject_id', 'teacher_id');
     }
 
-    public function course_master()
+    public function course_masters()
     {
         # code...
-        return $this->belongsToMany(User::class, TeachersSubject::class, 'subject_id', 'teacher_id')->where('teachers_subjects.is_master', 1)->first();
+        // return $this->belongsToMany(User::class, TeachersSubject::class, 'subject_id', 'teacher_id')->where('teachers_subjects.is_master', 1);
         return User::join('teachers_subjects', ['teachers_subjects.teacher_id'=>'users.id'])
-            ->where(['teachers_subjects.is_master'=> 1, 'teachers_subjects.class_id'=>$this->class_id, 'teachers_subjects.subject_id'=>$this->subject_id])->first();
+            ->where(['teachers_subjects.is_master'=> 1, 'teachers_subjects.class_id'=>$this->class_id, 'teachers_subjects.subject_id'=>$this->subject_id])->distinct()->get(['users.*']);
     }
 
     public function class()

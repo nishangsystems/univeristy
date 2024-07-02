@@ -56,7 +56,9 @@
                     <thead class="text-capitalize">
                         <tr class="border-top border-bottom border-secondary">
                             <th class="border-left border-right border-secondary" colspan="6"></th>
-                            <th class="border-left border-right border-secondary" colspan="4">{{__('text.word_number')}}</th>
+                            <th class="border-left border-right border-secondary" colspan="1"></th>
+                            <th class="border-left border-right border-secondary" colspan="3">{{__('text.word_number')}}</th>
+                            <th class="border-left border-right border-secondary" colspan="1"></th>
                             <th class="border-left border-right border-secondary" colspan="1"></th>
                             <th class="border-left border-right border-secondary" colspan="8">{{__('text.grade_and_number')}}</th>
                         </tr>
@@ -64,10 +66,10 @@
                             <th class="border-left border-right border-secondary">###</th>
                             <th class="border-left border-right border-secondary">{{__('text.word_code')}}</th>
                             <th class="border-left border-right border-secondary">{{__('text.course_title')}}</th>
-                            <th class="border-left border-right border-secondary">{{ trans_choice('text.word_teacher', 2) }}</th>
                             <th class="border-left border-right border-secondary">{{__('text.CV')}}</th>
                             <th class="border-left border-right border-secondary">{{__('text.ST')}}</th>
-                            <th class="border-left border-right border-secondary">{{__('text.course_coverage')}}</th>
+                            <th class="border-left border-right border-secondary">{{__('text.course_masters') }}</th>
+                            <th class="border-left border-right border-secondary">%CC</th>
                             <th class="border-left border-right border-secondary">{{__('text.CR')}}</th>
                             <th class="border-left border-right border-secondary">{{__('text.CE')}}</th>
                             <th class="border-left border-right border-secondary">{{__('text.word_passed')}}</th>
@@ -84,14 +86,16 @@
                                 <td class="border-left border-right border-secondary">{{$k++}}</td>
                                 <td class="border-left border-right border-secondary">{{$course->subject->code}}</td>
                                 <td class="border-left border-right border-secondary">{{$course->subject->name}}</td>
-                                <td class="border-left border-right border-secondary">
-                                    {{
-                                        $course->teachers->first()->name ??'NO COURSE MASTER'
-                                    }}
-                                </td>
                                 <td class="border-left border-right border-secondary">{{$course->coef}}</td>
                                 <td class="border-left border-right border-secondary">{{$course->status}}</td>
-                                <td class="border-left border-right border-secondary">missing</td>
+                                <td class="border-left border-right border-secondary">
+                                    @forelse ($course->course_masters()->take(2) as $master)
+                                        <span class="mx-2 border-right">{{ $master->name }}</span> &
+                                    @empty
+                                        NOT SET
+                                    @endforelse
+                                </td>
+                                <td class="border-left border-right border-secondary">??</td>
                                 <td class="border-left border-right border-secondary">{{count($students)}}</td>
                                 <td class="border-left border-right border-secondary">{{$course->results()->distinct()->count()}}</td>
                                 <td class="border-left border-right border-secondary">{{$course->passed($year, request('semester_id'))}}</td>
@@ -109,6 +113,41 @@
                                 @endforeach
                             </tr>
                         @endforeach
+                        <tr class="border-top border-bottom text-capitalize">
+                            <th class="border-left border-right border-secondary" colspan="3">@lang('text.grand_total')</th>
+                            <th class="border-left border-right border-secondary">{{ $courses->where('coef', '!=', null)->sum('coef') }}</th>
+                            <th class="border-left border-right border-secondary" colspan="2"></th>
+                            <th class="border-left border-right border-secondary"></th>
+                            <th class="border-left border-right border-secondary"></th>
+                            <th class="border-left border-right border-secondary"></th>
+                            <th class="border-left border-right border-secondary"></th>
+                            <th class="border-left border-right border-secondary"></th>
+                            <th class="border-left border-right border-secondary"></th>
+                            @foreach($grades as $grade)
+                                <th class="border-left border-right border-secondary" class="border-left border-right border-secondary">{{$course->passed_with_grade($grade->grade, $year, request('semester_id'))}}</th>
+                            @endforeach
+                        </tr>
+                        <tr>
+                            <td class="border-top border-bottom" colspan="{{ 12+$grades->count() }}">
+                                <div class="d-flex justify-content-around text-capitalize">
+                                    <span>CV=@lang('text.credit_value');</span>
+                                    <span>ST=@lang('text.word_status')</span>
+                                    <span>%CC=@lang('text.percentage_course_coverage')</span>
+                                    <span>C=@lang('text.word_compulsery')</span>
+                                    <span>CR=@lang('text.candidates_registered')</span>
+                                    <span>CE=@lang('text.candidates_examined')</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-top border-bottom" colspan="{{ 12+$grades->count() }}">
+                                <div class="d-flex flex-wrap justify-content-around text-capitalize">
+                                    @foreach ($course_masters as $cmaster)
+                                        <div class="text-center my-5 mx-5">____________________ <br> <div class="margin-top-4 padding-top-1" style="max-width: 12rem;">{{ $cmaster->user->name??"NO-NAME" }}</div></div>
+                                    @endforeach
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

@@ -111,4 +111,10 @@ class TrashController extends Controller
     }
     
     
+    public function program_change_report(Request $request){
+        $data['title'] = "Program Change Report";
+        $data['changes'] = \App\Models\ProgramChangeTrack::orderBy('id', 'DESC')->get();
+        return view('admin.trash.program_change_report', $data);
+    }
+    
 }

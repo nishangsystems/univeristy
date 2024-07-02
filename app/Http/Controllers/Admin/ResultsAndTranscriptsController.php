@@ -38,6 +38,8 @@ class ResultsAndTranscriptsController extends Controller{
             $data['students'] = $class->_students($year)->get();
             $data['grades'] = $class->program->gradingType->grading->sortBy('grade') ?? [];
             $data['courses'] = $class->class_subjects_by_semester(request('semester_id')) ?? [];
+            $data['course_masters'] = $class->teacher_courses()->where('is_master', 1)->get() ?? [];
+            // dd($data['course_masters']);
             $data['base_pass'] = ($class->program->ca_total ?? 0 + $class->program->exam_total ?? 0)*0.5;
             $data['_title'] = $class->name().' '.$semester->name.' '.__('text.frequency_distribution').' FOR '.$year->name.' '.__('text.academic_year');    
         }
