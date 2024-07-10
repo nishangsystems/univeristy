@@ -54,6 +54,20 @@
                         @enderror
                     </div>
                 </div>
+                <div class="form-group @error('year') has-error @enderror">
+                    <label class="control-label col-lg-2 text-capitalize">{{__('text.word_bank')}} <span style="color:red">*</span></label>
+                    <div class="col-lg-10">
+                        <select class="form-control" name="bank_id" aria-placeholder="default">
+                            <option class="text-capitalize"></option>
+                            @foreach($banks as $bank)
+                                <option value="{{$bank->id}}" {{ old('bank_id') == $bank->id ? 'selected' : '' }}>{{$bank->name}}</option>
+                            @endforeach
+                        </select>
+                        @error('year')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
                 <div class="form-group @error('item') has-error @enderror">
                     <label class="control-label col-lg-2 text-capitalize">{{__('text.word_item')}} <span style="color:red">*</span></label>
                     <div class="col-lg-10">

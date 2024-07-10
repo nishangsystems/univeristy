@@ -695,7 +695,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('bulk_added_marks', [Admin\TrashController::class, 'bulk_added_marks'])->name('bulk_added_marks');
         Route::get('bulk_added_marks/undo/{track_id}', [Admin\StudentController::class, 'cancel_bulk_added_marks'])->name('bulk_added_marks.undo');
         Route::get('mark_changes', [Admin\TrashController::class, 'mark_changes'])->name('mark_changes');
-        Route::get('mark_changes/undo/{track_id}', [Admin\StudentController::class, 'cancel_mark_changes'])->name('mark_changes.undo');
+        Route::get('program_change_report', [Admin\TrashController::class, 'program_change_report'])->name('program_change_report');
     });
     
     Route::prefix('cleaner')->name('cleaner.')->group(function(){
@@ -712,6 +712,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::get('edit_programs', [\App\Http\Controllers\ProgramControllerV2::class, 'edit_programs'])->name('edit_programs');
 
+    Route::get('settings/persist', [\App\Http\Controllers\Admin\HomeController::class, 'persist_settings'])->name('settings.persist');
+    Route::post('settings/persist', [\App\Http\Controllers\Admin\HomeController::class, 'persist_settings_save']);
 });
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {

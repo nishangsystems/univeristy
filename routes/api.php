@@ -8,6 +8,7 @@ use App\Http\Controllers\API\HomeController as ApiHomeController;
 use App\Http\Controllers\API\Student\ProfileController;
 use App\Http\Controllers\API\ProfileController as UserProfileController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\OpenAPI\StatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,4 +128,11 @@ Route::get('portal_fee_structure/{year_id?}', [ApiController::class, 'portal_fee
 Route::get('class_portal_fee_structure/{program_id}/{level_id}/{year_id?}', [ApiController::class, 'class_portal_fee_structure']);
 Route::get('school_program_structure', [ApiController::class, 'school_program_structure']);
 Route::post('appliable_programs/set', [ApiController::class, 'save_appliable_programs']);
+
+// PROGRAM PROVISIONING STATUS ROUTES
+Route::get('program_provisioning/all_status', [StatusController::class, 'program_provisioning_status']);
+Route::get('program_provisioning/program_status', [StatusController::class, 'program_status']);
+Route::get('program_provisioning/campus_propram_status', [StatusController::class, 'campus_propram_status']);
+Route::get('program_provisioning/admission_status_statics', [StatusController::class, 'admission_status_statics']);
+Route::post('program_provisioning/update_campus_program_status', [StatusController::class, 'update_campus_program_status']);
 // ----------------------------- END OF APPLICATION PORTAL API ENDPOINTS ----------------------------------

@@ -131,3 +131,13 @@ table{
     width:100% !important;
     max-width: 100% !important;
 }
+
+.watermark-bg{
+  background-image: url('../../uploads/watermark/watermark.jpeg');
+  background-repeat: repeat;
+  background-position: center;
+  background-size: cover;
+}
+.light-white{
+  background-color: rgba(255, 255, 255, 0.8);
+}

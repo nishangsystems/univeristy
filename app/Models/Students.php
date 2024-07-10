@@ -18,7 +18,7 @@ class Students extends Authenticatable
         'name', 'email', 'phone', 'address', 'gender', 'username', 'matric', 
         'dob', 'pob', 'campus_id', 'admission_batch_id', 'password', 'parent_name', 
         'program_id', 'parent_phone_number', 'imported', 'active', 'password', 
-        'region', 'division', 'nationality', 'deleted_at'
+        'region', 'division', 'nationality', 'deleted_at', 'program_status'
     ];
 
     protected $dates = ['deleted_at', 'created_at', 'updated_at', 'dob'];

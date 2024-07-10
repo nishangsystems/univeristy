@@ -49,6 +49,7 @@ class PaymentController extends Controller
         $data['balance'] =  $student->bal($student_id);
         $data['title'] = __('text.collect_fee_for', ['item'=>$student->name]);
         $data['years'] = $years;
+        $data['banks'] = \App\Models\Bank::orderBy('name')->get();
 
         // if ($data['balance'] == 0) {
         //     return redirect(route('admin.fee.collect'))->with('success', 'Student has already completed fee');
@@ -144,6 +145,7 @@ class PaymentController extends Controller
                                 'user_id' => auth()->user()->id,
                                 'payment_year_id'=>$request->year,
                                 'debt' => $debt,
+                                'bank_id'=>$request->bank_id,
                                 'created_at'=>date(DATE_ATOM, time()),
                                 'updated_at'=>date(DATE_ATOM, time())
                             ];
@@ -188,6 +190,7 @@ class PaymentController extends Controller
                                     'user_id' => auth()->user()->id,
                                     'payment_year_id'=>Helpers::instance()->getCurrentAccademicYear(),
                                     'debt' => $debt,
+                                    'bank_id'=>$request->bank_id,
                                     'created_at'=>date(DATE_ATOM, time()),
                                     'updated_at'=>date(DATE_ATOM, time())
                                 ];

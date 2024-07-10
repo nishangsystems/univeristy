@@ -12,6 +12,7 @@ class ProgramChangeTrack extends Model
     protected $connection = "tracking_db";
     protected $table = "program_change_tracks";
     protected $fillable = ['former_class', 'current_class', 'student_id', 'user_id'];
+    protected $dates = ['created_at'];
 
     public function former_class(){
         return $this->belongsTo(ProgramLevel::class, 'former_class');

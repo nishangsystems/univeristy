@@ -91,13 +91,21 @@ class ProgramLevel extends Model
     {
         return $this->hasManyThrough(PaymentItem::class, CampusProgram::class);
     }
+    
     public function single_payment_item($campus_id, $year_id)
     {
         return $this->hasManyThrough(PaymentItem::class, CampusProgram::class)->where('campus_programs.campus_id', $campus_id)->where('payment_items.year_id', $year_id);
     }
+
     public function student_classes()
     {
         return $this->hasMany(StudentClass::class, 'class_id');
+    }
+    
+    public function teacher_courses($year=null)
+    {
+        $year = $year != null ? $year : \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+        return $this->hasMany(TeachersSubject::class, 'class_id')->where('batch_id', $year);
     }
     
 }

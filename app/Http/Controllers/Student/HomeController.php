@@ -1621,7 +1621,7 @@ class HomeController extends Controller
     {
         # code...
         $semester = Helpers::instance()->getSemester(auth('student')->user()->_class()->id);
-        $charge = PlatformCharge::first();
+        $charge = PlatformCharge::where('year_id', Helpers::instance()->getCurrentAccademicYear())->first();
         // if($charge == null || $charge->yearly_amount == null || $charge->yearly_amount == 0){return back()->with('error', 'Platform charges not set.');}
         $data['title'] = "Pay Platform Charges";
         $data['amount'] = $charge->yearly_amount;

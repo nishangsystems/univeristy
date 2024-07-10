@@ -160,4 +160,10 @@ class SchoolUnits extends Model
             $this->belongsToMany(Bank::class, ProgramBank::class) :
             $this->belongsToMany(Bank::class, ProgramBank::class)->where('program_banks.campus_id', $campus_id);
     }
+
+    public function provision_status($campus = null){
+        return $campus == null ?
+            $this->belongsToMany(Status::class, CampusProgramStatus::class, 'status', 'program_id', 'name', 'id') :
+            $this->belongsToMany(Status::class, CampusProgramStatus::class, 'status', 'program_id', 'name', 'id')->where('campus_program_status.campus_id', $campus) ;
+    }
 }

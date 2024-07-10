@@ -12,7 +12,7 @@ class Payments extends Model
 
     protected $connection = 'mysql';
     protected $table = 'payments';
-    protected $fillable = [	"payment_id","student_id","batch_id",'unit_id',"amount","reference_number","import_reference", 'user_id', 'debt', 'paid_by', 'transaction_id', 'payment_year_id'];
+    protected $fillable = [	"payment_id","student_id","batch_id",'unit_id',"amount","reference_number","import_reference", 'user_id', 'debt', 'paid_by', 'transaction_id', 'payment_year_id', 'bank_id'];
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 
     public function item(){
