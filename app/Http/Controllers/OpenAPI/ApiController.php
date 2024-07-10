@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\OpenAPI;
 
+use App\Http\Controllers\Controller;
 use App\Models\Campus;
 use App\Models\CampusDegree;
 use App\Models\Certificate;
@@ -464,4 +465,5 @@ class ApiController extends Controller
         }
         
     }
+
 }

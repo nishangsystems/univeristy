@@ -712,6 +712,8 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
 
     Route::get('edit_programs', [\App\Http\Controllers\ProgramControllerV2::class, 'edit_programs'])->name('edit_programs');
 
+    Route::get('settings/persist', [\App\Http\Controllers\Admin\HomeController::class, 'persist_settings'])->name('settings.persist');
+    Route::post('settings/persist', [\App\Http\Controllers\Admin\HomeController::class, 'persist_settings_save']);
 });
 
 Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function () {

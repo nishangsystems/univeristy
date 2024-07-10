@@ -80,8 +80,8 @@
     $bg3 = \App\Http\Controllers\HomeController::getColor('background_color_3');
 @endphp
 </head>
-<body class="no-skin">
-    <div class="" style="background-color: white;">
+<body class="no-skin watermark-bg">
+    <div class="light-white">
         <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" style="width: 100%; max-height: 28rem;">
         <div class="text-center text-black h4 py-3 bg-light border-top border-bottom border-light"><b>{{$title ?? ''}}</b></div>
         @yield('section')

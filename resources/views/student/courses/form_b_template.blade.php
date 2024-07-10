@@ -79,7 +79,7 @@
         }
     </STYLE>
 </head>
-<body>
+<body class="watermark-bg">
     @php
         $program_name = $class->program->name;
         $faculty = $class->program()->first()->parent->parent;
@@ -89,10 +89,10 @@
 
         $flag = true;
     @endphp
-            <div class="" id="table_____">
+            <div class="light-white" id="table_____">
                 
                 
-                <div class=""  style="background-color: rgba(255, 255, 255, 0.9);">
+                <div class="">
                     <div class="" >
                         <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" class="w-100 h-auto" alt="">
                         <div class="border-top border-dashed my-2 " style="display: flex;">

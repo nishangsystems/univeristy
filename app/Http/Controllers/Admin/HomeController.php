@@ -235,8 +235,8 @@ class HomeController  extends Controller
         // return $file->getClientOriginalName();
         if(!($file == null)){
             $ext = $file->getClientOriginalExtension();
-            $filename = 'logo.jpeg';
-            $path = base_path('/assets/images');
+            $filename = 'watermark.jpeg';
+            $path = public_path('uploads/watermark');
             // $file->n('/bg_image', $filename);
             // \Storage::put($path, $file);
             $request->file('file')->move($path, $filename);
@@ -814,5 +814,14 @@ class HomeController  extends Controller
         }
         // dd($data);
         return view('admin.resit.class_report', $data);
+    }
+
+    public function persist_settings(Request $request){
+        $data['title'] = "Persist Settings To Current Accademic Year";
+        // $data['']
+    }
+
+    public function persist_settings_save(Request $request){
+        
     }
 }

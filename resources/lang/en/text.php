@@ -1037,5 +1037,6 @@ return [
     'former_class'=>'former class',
     'current_class'=>'current class',
     'done_by'=>'done by',
+    'persist_settings'=>'persist settings',
     ''
 ];

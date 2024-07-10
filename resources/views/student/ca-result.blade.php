@@ -13,7 +13,7 @@
             </form>
 
         </div>
-        <div class="card-body">
+        <div class="card-body ">
             <div id="table table-responsive" class="table-editable">
 
                 <table class="table table-bordered table-responsive-md table-striped text-center">

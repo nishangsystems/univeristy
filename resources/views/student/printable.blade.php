@@ -75,8 +75,8 @@
 		@endphp
 </head>
 
-<body class="no-skin">
-    <div class="" style="background-color: white;">
+<body class="no-skin watermark-bg">
+    <div class="light-white">
         <img src="{{$header}}" class="w-100 h-auto">
         <div class="text-center text-black h3 py-2">{{$title ?? ''}}</div>
         @yield('section')

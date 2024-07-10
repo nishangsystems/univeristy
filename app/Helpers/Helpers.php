@@ -292,7 +292,7 @@ class Helpers
 
     public function getBackground()
     {
-        return url('/storage/app/bg_image/background_image.jpeg');
+        return public_path('uploads/watermark/watermark.jpeg');
     }
 
 
