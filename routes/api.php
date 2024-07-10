@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ApiController;
+use App\Http\Controllers\OpenAPI\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -88,6 +88,7 @@ Route::group([ 'prefix' => 'teacher', 'middleware'=>['api']], function() {
     Route::get('class_list', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'class_list']); // takes class_id and optional campus
     Route::get('course_list', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'course_list']); // takes course_id and optional campus
     Route::get('student_profile', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'student_profile']); // takes student_id
+    Route::get('all_course_notifications', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'all_course_notifications']); // takes course_id and optional notification_id
     Route::get('course_notifications', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'course_notifications']); // takes course_id and optional notification_id
     Route::post('create_notification', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'store_notification']); // takes ['title', 'message', 'date' 'course_id', 'campus_id?']
     Route::get('student/attendance', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'studentAttendance']);
