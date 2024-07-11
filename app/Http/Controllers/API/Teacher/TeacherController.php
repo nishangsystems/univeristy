@@ -372,7 +372,7 @@ class TeacherController
         if(($notification  = \App\Models\CourseNotification::find($id)) != null){
             $data = collect($update)->filter(function($val, $key){ return in_array($key, ['title', 'message', 'date', 'status', 'course_id', 'campus_id']) and $val != null;});
             // $data = array_filter($update, function($val, $key){ return in_array($key, ['title', 'message', 'date', 'status', 'course_id', 'campus_id']);});
-            return "DEBUGGING HOLE 1";
+            // return "DEBUGGING HOLE 1";
             if($data->count() > 0){ $notification->update($data->all()); }
             return response()->json(['data'=>$notification]);
         }
