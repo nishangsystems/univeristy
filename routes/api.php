@@ -90,6 +90,8 @@ Route::group([ 'prefix' => 'teacher', 'middleware'=>['api']], function() {
     Route::get('student_profile', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'student_profile']); // takes student_id
     Route::get('all_course_notifications', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'all_course_notifications']); // takes course_id and optional notification_id
     Route::get('course_notifications', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'course_notifications']); // takes course_id and optional notification_id
+    Route::get('delete_course_notification/{notification_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'delete_course_notification']); // takes course_id and optional notification_id
+    Route::post('update_course_notification/{notification_id}', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'update_course_notification']); // takes ['title', 'message', 'date' 'course_id', 'campus_id?']
     Route::post('create_notification', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'store_notification']); // takes ['title', 'message', 'date' 'course_id', 'campus_id?']
     Route::get('student/attendance', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'studentAttendance']);
     Route::get('{class_id}/attendance', [\App\Http\Controllers\API\Teacher\TeacherController::class, 'attendance']);

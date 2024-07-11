@@ -366,4 +366,24 @@ class TeacherController
         $data['students'] = StudentAttendanceResource::collection($students);
         return response()->json($data);
     }
+
+    public function update_course_notification(request $request, $id){
+        $update = $request->all();
+        if(($notification  = \App\Models\CourseNotification::find($id)) != null){
+            $data = array_filter($update, function($val, $key){ return in_array($key, ['title', 'message', 'date', 'status', 'course_id', 'campus_id']);});
+            if(count($data) > 0){ $notification->update($data); }
+            return response()->json(['data'=>$notification]);
+        }
+        return response()->json(['message'=>"No notification was found with specified ID"], 400);
+    }
+
+    public function delete_course_notification(request $request, $id){
+        
+        $notification = \App\Models\CourseNotification::find($id);
+        if($notification == null){
+            return response()->json(['message'=>'No course notification was found with specified ID'], 400);
+        }
+        $notification->delete();
+        return response()->json(['data'=>true]);
+    }
 }

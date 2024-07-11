@@ -46,7 +46,7 @@ class StatusController extends Controller
                     $status == null ? null : $query->where('campus_program_status.status', $status);
                 })->join('school_units', ['school_units.id'=>'campus_program_status.program_id'])
                 ->where(['school_units.unit_id'=>4])->select(['campuses.id as campus_id', 'campuses.name as campus', 'school_units.id as program_id', 'school_units.name as program', 'campus_program_status.status'])
-                ->distinct()->get()->groupBy('campus');
+                ->distinct()->get()->each()->groupBy('campus');
             
             return response()->json(['data'=>$data]);
         } catch (\Throwable $th) {
