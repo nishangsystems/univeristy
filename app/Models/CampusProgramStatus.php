@@ -10,6 +10,7 @@ class CampusProgramStatus extends Model
     use HasFactory;
 
     protected $fillable = ['campus_id', 'program_id', 'status'];
+    protected $table = "campus_program_status";
 
     public function campus(){
         return $this->belongsTo(Campus::class, 'campus_id');

@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <div class="form-group @error('year') has-error @enderror">
-                    <label class="control-label col-lg-2 text-capitalize">{{__('text.word_bank')}} <span style="color:red">*</span></label>
+                    <label class="control-label col-lg-2 text-capitalize">{{__('text.word_bank')}}</label>
                     <div class="col-lg-10">
                         <select class="form-control" name="bank_id" aria-placeholder="default">
                             <option class="text-capitalize"></option>

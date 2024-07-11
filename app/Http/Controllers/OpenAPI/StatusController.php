@@ -14,11 +14,18 @@ class StatusController extends Controller
 {
 
     
-    public function program_status($program_id, $campus_id=null){
+    public function program_status(Request $request){
         try {
             //code...
+            $program_id = $request->program_id;
+            $campus_id = $request->campus_id;
+
             $program = SchoolUnits::find($program_id);
-            $status = $program->provision_status($campus_id)->get();
+            $status = CampusProgramStatus::where('campus_program_status.program_id', $program_id)
+                ->where(function($qry)use($campus_id){
+                    $campus_id == null ? null : $qry->where('campus_program_status.campus_id', $campus_id);
+                })->join('campuses', ['campuses.id'=>'campus_program_status.campus_id'])
+                ->select(['campuses.name as campus', 'campus_program_status.status'])->distinct()->get();
             return response()->json(['data'=>$status]);
         } catch (\Throwable $th) {
             //throw $th;
@@ -27,15 +34,19 @@ class StatusController extends Controller
         }
     }
 
-    public function campus_propram_status($campus_id, $status = null){
+    public function campus_propram_status(Request $request){
         try {
-            //code...
-            $data = Campus::where('id', $campus_id)->join('campus_program_status', ['campus_program_status.campus_id'=>'campuses.id'])
+            $campus_id = $request->campus_id;
+            $status = $request->status;
+
+            $data = Campus::where(function($qry)use($campus_id){
+                    $campus_id == null ? null : $qry->where('campuses.id', $campus_id);
+                })->join('campus_program_status', ['campus_program_status.campus_id'=>'campuses.id'])
                 ->where(function($query)use($status){
                     $status == null ? null : $query->where('campus_program_status.status', $status);
                 })->join('school_units', ['school_units.id'=>'campus_program_status.program_id'])
                 ->where(['school_units.unit_id'=>4])->select(['campuses.id as campus_id', 'campuses.name as campus', 'school_units.id as program_id', 'school_units.name as program', 'campus_program_status.status'])
-                ->distinct()->get();
+                ->distinct()->get()->groupBy('campus');
             
             return response()->json(['data'=>$data]);
         } catch (\Throwable $th) {
@@ -45,7 +56,7 @@ class StatusController extends Controller
         }
     }
 
-    public function program_provisioning_status(){
+    public function program_provisioning_status(Request $request){
         try {
             //code...
             $provisioning_status = Status::orderBy('name')->distinct()->get();
@@ -101,7 +112,7 @@ class StatusController extends Controller
                 ->where(function($qry)use($request){
                     $request->program_id == null ? null : $qry->where('school_units.id', $request->program_id);
                 })->select(['campuses.id as campus_id', 'campuses.name as campus', 'students.program_status', 'school_units.id as program_id', 'school_units.name as program', DB::raw("COUNT(*) as count")])
-                ->groupBy('program_id')->ditinct()->get();
+                ->groupBy('program_id', 'program_status')->distinct()->get();
 
             return response()->json(['data'=>$data]);
         } catch (\Throwable $th) {
