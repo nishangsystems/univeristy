@@ -370,6 +370,7 @@ class TeacherController
     public function update_course_notification(request $request, $id){
         $update = $request->all();
         if(($notification  = \App\Models\CourseNotification::find($id)) != null){
+            return "DEBUGGING HOLE 1";
             $data = array_filter($update, function($val, $key){ return in_array($key, ['title', 'message', 'date', 'status', 'course_id', 'campus_id']);});
             if(count($data) > 0){ $notification->update($data); }
             return response()->json(['data'=>$notification]);
