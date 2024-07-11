@@ -232,6 +232,8 @@ class StudentController extends Controller
                 // read user input
                 $input = $request->all();
                 $input['name'] = mb_convert_case($request->name, MB_CASE_UPPER);
+                if($request->dob != null)
+                    $input['dob'] = str_replace('/', '-', $request->dob);
                 $student = new \App\Models\Students($input);
                 $student->save();
                 // dd($student);
@@ -486,7 +488,7 @@ class StudentController extends Controller
                             'email' => $importData[2] == null ? null : explode(' ', str_replace('’', "'", $importData[2]))[0],
                             'gender' => $importData[2] ?? null,
                             'pob' => $importData[3] ?? null,
-                            'dob' => $importData[4] ?? null,
+                            'dob' => $importData[4] != null ? str_replace('/', '-', $importData[4]) : null,
                             'password' => Hash::make('12345678'),
                             'campus_id'=> $request->campus_id ?? null,
                             'program_id' => $request->program_id ?? null,
