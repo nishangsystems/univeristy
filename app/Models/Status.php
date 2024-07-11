@@ -10,6 +10,7 @@ class Status extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+    protected $table = "status";
 
     public function campuses($program_id = null){
         return $program_id == null ? 

@@ -145,16 +145,8 @@ class TeacherController
     public function course_notifications(Request $request){
         
         $teacher = $request->user('api');
-        if($request->notification != null){
-            $not = \App\Models\CourseNotification::find($request->application);
-            return response()->json(['notification'=>$not]);
-        }
 
         $course_notifications = \App\Models\CourseNotification::where(['user_id'=>$teacher->id])
-            ->where(function($query)use($request){
-                if($request->course != null)
-                $query->where('course_id', $request->course);
-            })
             ->get()->each(function($rec){
                 $rec->campus = $rec->campus->name??'';
                 $rec->course = $rec->course->code??$rec->course->name??'';
