@@ -31,7 +31,7 @@
                 <div class="form-group @error('email') has-error @enderror">
                     <label for="cname" class="control-label col-lg-2 text-capitalize">Username (required)</label>
                     <div class="col-lg-10">
-                        <input class=" form-control" readonly name="email" value="{{old('email', $user->email)}}" type="text" required />
+                        <input class=" form-control" name="email" value="{{old('email', $user->email)}}" type="text" required />
                         @error('email')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror

@@ -46,11 +46,20 @@ class StatusController extends Controller
                     $status == null ? null : $query->where('campus_program_status.status', $status);
                 })->join('school_units', ['school_units.id'=>'campus_program_status.program_id'])
                 ->where(['school_units.unit_id'=>4])->select(['campuses.id as campus_id', 'campuses.name as campus', 'school_units.id as program_id', 'school_units.name as program', 'campus_program_status.status'])
-                ->distinct()->get()->each()->groupBy('campus');
+                ->orderBy('program')->distinct()->get()->groupBy('campus')
+                ->map(function($query, $key){
+                    return
+                        collect($query)->groupBy('program_id')
+                        ->map(function($prog_cols){
+                            $rec = $prog_cols->first();
+                            $rec->status = $prog_cols->pluck('status')->all();
+                            return  $rec;
+                        });
+                });
             
             return response()->json(['data'=>$data]);
         } catch (\Throwable $th) {
-            //throw $th;
+            throw $th;
             $err = "F:: {$th->getFile()}, L:: {$th->getLine()}, M:: {$th->getMessage()}";
             return response()->json(['message'=>$err], 500);
         }
@@ -82,13 +91,20 @@ class StatusController extends Controller
             }
     
             $program_status = [];
+            DB::beginTransaction();
+            CampusProgramStatus::where('campus_id', $campus->id)->each(function($rec){$rec->delete();});
             foreach ($request->input('program_status') as $key => $pstatus) {
-                # code...
-                CampusProgramStatus::updateOrInsert(['campus_id'=>$campus->id, 'program_id'=>$pstatus['program_id']], ['status'=>$pstatus['status']]);
+                foreach($pstatus as $status){
+                    $program_status[] = ['campus_id'=>$campus->id, 'program_id'=>$key, 'status'=>$status];
+                }
             }
+            CampusProgramStatus::insert($program_status);
+            DB::commit();
+            
             return response()->json(['data'=>$request->all()]);
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollBack();
             $err = "F:: {$th->getFile()}, L:: {$th->getLine()}, M:: {$th->getMessage()}";
             return response()->json(['message'=>$err], 500);
         }

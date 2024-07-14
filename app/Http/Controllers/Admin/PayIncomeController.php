@@ -242,10 +242,7 @@ class PayIncomeController extends Controller
                 ->where(function($query){
                         auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id) : null;
                     })
-                // ->where(function($query){
-                //     auth()->user()->campus_id != null ? $query->where('students.campus_id', '=', auth()->user()->campus_id): null;
-                // })
-                ->select('students.*', 'student_classes.class_id')->get()->toArray();
+                ->select('students.*', 'student_classes.class_id')->take(10)->get()->toArray();
     
                 // return $students;
                 $_students = array_map(function($el){

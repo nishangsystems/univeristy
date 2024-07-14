@@ -838,15 +838,6 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-                    
-                    <li>
-                        <a href="{{route('admin.fee.registration.collect')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.collect_registration_fee')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
 
                     <li>
                         <a href="{{route('admin.print_fee')}}" class="text-capitalize">
@@ -855,7 +846,6 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-
 
                     <li>
                         <a href="{{route('admin.fee.daily_report')}}" class="text-capitalize">
@@ -887,7 +877,6 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-
 
                     <li>
                         <a href="{{route('admin.fee.drive')}}" class="text-capitalize">
@@ -944,15 +933,7 @@
 
 
                 <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.scholarship.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{trans_choice('text.scholarship', 2)}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
+                    
                     <li>
                         <a href="{{route('admin.scholarship.eligible')}}" class="text-capitalize">
                             <i class="menu-icon fa fa-caret-right"></i>
