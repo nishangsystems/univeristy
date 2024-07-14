@@ -49,4 +49,8 @@ class Payments extends Model
         return $this->hasOne(FeeTrack::class, 'payment_id');
     }
 
+    public function bank(){
+        return $this->belongsTo(Bank::class, 'bank_id');
+    }
+
 }

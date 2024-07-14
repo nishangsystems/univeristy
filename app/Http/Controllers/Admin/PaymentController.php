@@ -45,7 +45,6 @@ class PaymentController extends Controller
         $data['student'] = $student;
         $data['scholarship'] = Helpers::instance()->getStudentScholarshipAmount($student_id);
         $data['total_fee'] = (int)$student->total();
-        // $data['total_fee'] = CampusProgram::where('campus_id', $student->campus_id)->where('program_level_id', $student->program_id)->first()->payment_items()->first()->amount;
         $data['balance'] =  $student->bal($student_id);
         $data['title'] = __('text.collect_fee_for', ['item'=>$student->name]);
         $data['years'] = $years;
