@@ -182,7 +182,7 @@ class ApiController extends Controller
                     'password'=>Hash::make('12345678'), 'parent_name'=>$student->fee_payer_name??null,
                     'program_id'=>$student->program_first_choice??null, 'region'=>$student->region??null,
                     'parent_phone_number'=>$student->fee_payer_tel??null, 'division'=>$student->division??null, 
-                    'imported'=>0, 'active'=>1,
+                    'imported'=>0, 'active'=>1, 'program_status'=>$student->program_status??null
                 ];
                 // return ['data'=>$record];
                 $student_instance = new Students($record);
