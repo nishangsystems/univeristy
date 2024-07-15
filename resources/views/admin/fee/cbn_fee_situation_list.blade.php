@@ -88,6 +88,7 @@
                         <tr class="text-capitalize border-bottom bg-dark text-white border-top">
                             <th class="border-left border-right">#</th>
                             <th class="border-left border-right">{{__('text.word_name')}}</th>
+                            <th class="border-left border-right">{{__('text.word_matricule')}}</th>
                             <th class="border-left border-right"><span style="writing-mode: vertical-rl !important; text-orientation: mixed important;">{{__('text.current_fee')}}</span></th>
                             <th class="border-left border-right"><span style="writing-mode: vertical-rl !important; text-orientation: mixed important;">{{__('text.extra_fee')}}</span></th>
                             <th class="border-left border-right"><span style="writing-mode: vertical-rl !important; text-orientation: mixed important;">{{__('text.cum_extra_fee')}}</span></th>
@@ -107,6 +108,7 @@
                             <tr class="border-bottom">
                                 <td class="border-left border-right">{{$k++}}</td>
                                 <td class="border-left border-right">{{$student['name'] ?? ''}}</td>
+                                <td class="border-left border-right">{{$student['matric'] ?? ''}}</td>
                                 <td class="border-left border-right">{{$student['current_fee'] ?? ''}}</td>
                                 <td class="border-left border-right">{{$student['extra_fee'] ?? ''}}</td>
                                 <td class="border-left border-right">{{$student['cum_extra_fee'] ?? ''}}</td>

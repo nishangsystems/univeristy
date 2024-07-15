@@ -89,6 +89,7 @@
                         <tr class="text-capitalize bg-light">
                             <th>#</th>
                             <th>{{__('text.word_name')}}</th>
+                            <th>{{__('text.word_matricule')}}</th>
                             <th>{{__('text.word_total')}} (@lang('text.currency_cfa'))</th>
                             <th>{{__('text.word_paid')}} (@lang('text.currency_cfa'))</th>
                             <th>{{__('text.amount_owing')}} (@lang('text.currency_cfa'))</th>
@@ -101,6 +102,7 @@
                             <tr class="border-bottom">
                                 <td class="border-left border-right">{{$k++}}</td>
                                 <td class="border-left border-right">{{$student['name'] ?? ''}}</td>
+                                <td class="border-left border-right">{{$student['matric'] ?? ''}}</td>
                                 <td class="border-left border-right">{{number_format($student['total'] ?? 0)}} </td>
                                 <td class="border-left border-right">{{number_format($student['paid'] ?? 0)}}</td>
                                 <td class="border-left border-right">{{number_format(($student['total'] ?? 0) - ($student['paid'] ?? 0))}}</td>
