@@ -10,6 +10,8 @@ class ClassMaster extends Model
     use HasFactory;
     protected $connection = 'mysql';
 
+    protected $fillable = ['department_id', 'campus_id', 'batch_id', 'user_id'];
+
     public function class(){
         return  $this->belongsTo(SchoolUnits::class, 'department_id');
     }
