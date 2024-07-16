@@ -823,33 +823,42 @@ class HomeController  extends Controller
     }
 
     public function persist_settings_save(Request $request){
-        $validity = validator($request->all(), ['operation'=>'required', 'base_year'=>'required', 'target_year'=>'required|different:base_year']);
+        $validity = validator($request->all(), ['operation'=>'required|array', 'base_year'=>'required', 'target_year'=>'required|different:base_year']);
         if($validity->fails()){
             return back()->with('error', $validity->errors()->first());
         }
         try{
-            switch($request->operation){
-                case "fee_settings":
-                    $fee_settings = PaymentItem::where(['year_id'=>$request->base_year])->select(['year_id', 'campus_program_id', 'name', 'amount', 'unit', 'slug', 'formb_min_amt', 'charges', 'exam_min_amt', 'ca_min_amt', 'first_instalment', 'international_amount', 'second_instalment'])->each(function($rec)use($request){
-                        $data = $rec->toArray();
-                        $data['year_id'] = $request->target_year;
-                        PaymentItem::updateOrInsert(['year_id'=>$request->target_year, 'campus_program_id'=>$rec->campus_program_id, 'name'=>$rec->name], $data);
-                    });
-                    break;
-                case "course_instructors":
-                    \App\Models\TeachersSubject::where(['batch_id'=>$request->base_year])->each(function($rec)use($request){
-                        $data = $rec->toArray();
-                        $data['batch_id'] = $request->target_year;
-                        \App\Models\TeachersSubject::updateOrInsert(['batch_id'=>$request->target_year, 'teacher_id'=>$rec->teacher_id, 'subject_id'=>$rec->subject_id, 'class_id'=>$rec->class_id, 'campus_id'=>$rec->campus_id], $data);
-                    });
-                    break;
-                default:
-                    break;
+            if(in_array("fee_settings", $request->operation)){
+                $fee_settings = PaymentItem::where(['year_id'=>$request->base_year])->select(['year_id', 'campus_program_id', 'name', 'amount', 'unit', 'slug', 'formb_min_amt', 'charges', 'exam_min_amt', 'ca_min_amt', 'first_instalment', 'international_amount', 'second_instalment'])->each(function($rec)use($request){
+                    $data = $rec->toArray();
+                    $data['year_id'] = $request->target_year;
+                    PaymentItem::updateOrInsert(['year_id'=>$request->target_year, 'campus_program_id'=>$rec->campus_program_id, 'name'=>$rec->name], $data);
+                });
+            }
+            if(in_array("course_instructors", $request->operation)){
+                \App\Models\TeachersSubject::where(['batch_id'=>$request->base_year])->select(['teacher_id', 'subject_id', 'batch_id', 'class_id', 'campus_id'])->each(function($rec)use($request){
+                    $data = $rec->toArray();
+                    $data['batch_id'] = $request->target_year;
+                    \App\Models\TeachersSubject::updateOrInsert(['batch_id'=>$request->target_year, 'teacher_id'=>$rec->teacher_id, 'subject_id'=>$rec->subject_id, 'class_id'=>$rec->class_id, 'campus_id'=>$rec->campus_id], $data);
+                });
+            }
+            if(in_array("class_delegates", $request->operation)){
+                \App\Models\ClassDelegate::where(['year_id'=>$request->base_year])->select(['campus_id', 'class_id', 'student_id', 'status', 'year_id'])->each(function($rec)use($request){
+                    $data = $rec->toArray();
+                    $data['year_id'] = $request->target_year;
+                    \App\Models\ClassDelegate::updateOrInsert(['year_id'=>$request->target_year, 'class_id'=>$rec->class_id, 'campus_id'=>$rec->campus_id, 'student_id'=>$rec->student_id], $data);
+                });
+            }
+            if(in_array("hods", $request->operation)){
+                \App\Models\TeachersSubject::where(['batch_id'=>$request->base_year])->select(['department_id', 'campus_id', 'batch_id', 'user_id'])->each(function($rec)use($request){
+                    $data = $rec->toArray();
+                    $data['batch_id'] = $request->target_year;
+                    \App\Models\TeachersSubject::updateOrInsert(['batch_id'=>$request->target_year, 'user_id'=>$rec->user_id, 'campus_id'=>$rec->campus_id, 'department_id'=>$rec->department_id], $data);
+                });
             }
             return back()->with('success', "Done");
         }catch(\Throwable $th){
             return back()->with('error', $th->getMessage());
         }
-
     }
 }

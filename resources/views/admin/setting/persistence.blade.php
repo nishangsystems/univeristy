@@ -7,12 +7,13 @@
                 <div class="card-body py-0">
                     <div class="row">
                         <div class="col-lg-5 px-3 py-5">
-                            <label class="text-secondary text-capitalize">@lang('text.word_operation')</label>
-                            <select class="form-control text-uppercase rounded" name="operation" required>
-                                <option></option>
-                                <option value="fee_settings">PERSIST FEE SETTINGS</option>
-                                <option value="course_instructors">PERSIST COURSE INSTRUCTORS</option>
-                            </select>
+                            <label class="text-secondary text-capitalize">@lang('text.word_operations')</label>
+                            <div class="text-uppercase container-fluid text-secondary">
+                                <span class="mx-2 my-1 py-1 border-bottom d-flex"><input value="fee_settings" type="checkbox" class="mx-2" name="operation[]">PERSIST FEE SETTINGS</span>
+                                <span class="mx-2 my-1 py-1 border-bottom d-flex"><input value="course_instructors" type="checkbox" class="mx-2" name="operation[]">PERSIST COURSE INSTRUCTORS</span>
+                                <span class="mx-2 my-1 py-1 border-bottom d-flex"><input value="class_delegates" type="checkbox" class="mx-2" name="operation[]">CLASS DELEGATES</span>
+                                <span class="mx-2 my-1 py-1 border-bottom d-flex"><input value="hods" type="checkbox" class="mx-2" name="operation[]">HODs</span>
+                            </div>
                         </div>
                         <div class="col-lg-7 px-3 py-5 bg-light rounded shadow">
                             <div class="my-2 row mx-1">

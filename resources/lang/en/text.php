@@ -1039,6 +1039,7 @@ return [
     'done_by'=>'done by',
     'persist_settings'=>'persist settings',
     'word_operation'=>'operation',
+    'word_operations'=>'operations',
     'word_persist'=>'persist',
     ''
 ];
