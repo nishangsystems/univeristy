@@ -1041,5 +1041,6 @@ return [
     'word_operation'=>'operation',
     'word_operations'=>'operations',
     'word_persist'=>'persist',
+    'copy_data'=>'copy data',
     ''
 ];
