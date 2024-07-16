@@ -818,10 +818,38 @@ class HomeController  extends Controller
 
     public function persist_settings(Request $request){
         $data['title'] = "Persist Settings To Current Accademic Year";
-        // $data['']
+        $data['years'] = Batch::all();
+        return view('admin.setting.persistence', $data);
     }
 
     public function persist_settings_save(Request $request){
-        
+        $validity = validator($request->all(), ['operation'=>'required', 'base_year'=>'required', 'target_year'=>'required|different:base_year']);
+        if($validity->fails()){
+            return back()->with('error', $validity->errors()->first());
+        }
+        try{
+            switch($request->operation){
+                case "fee_settings":
+                    $fee_settings = PaymentItem::where(['year_id'=>$request->base_year])->select(['year_id', 'campus_program_id', 'name', 'amount', 'unit', 'slug', 'formb_min_amt', 'charges', 'exam_min_amt', 'ca_min_amt', 'first_instalment', 'international_amount', 'second_instalment'])->each(function($rec)use($request){
+                        $data = $rec->toArray();
+                        $data['year_id'] = $request->target_year;
+                        PaymentItem::updateOrInsert(['year_id'=>$request->target_year, 'campus_program_id'=>$rec->campus_program_id, 'name'=>$rec->name], $data);
+                    });
+                    break;
+                case "course_instructors":
+                    \App\Models\TeachersSubject::where(['batch_id'=>$request->base_year])->each(function($rec)use($request){
+                        $data = $rec->toArray();
+                        $data['batch_id'] = $request->target_year;
+                        \App\Models\TeachersSubject::updateOrInsert(['batch_id'=>$request->target_year, 'teacher_id'=>$rec->teacher_id, 'subject_id'=>$rec->subject_id, 'class_id'=>$rec->class_id, 'campus_id'=>$rec->campus_id], $data);
+                    });
+                    break;
+                default:
+                    break;
+            }
+            return back()->with('success', "Done");
+        }catch(\Throwable $th){
+            return back()->with('error', $th->getMessage());
+        }
+
     }
 }

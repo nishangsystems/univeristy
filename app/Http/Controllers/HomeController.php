@@ -628,8 +628,6 @@ class HomeController extends Controller
 
     }
 
-    
-
     public static function getColor($label)
     {
         # code...
