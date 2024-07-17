@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Events\StudentChangedEvent;
+use App\Events\StudentStatusChanged;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
@@ -1177,6 +1178,7 @@ class StudentController extends Controller
         if($student != null){
             $student->active = !$student->active;
             $student->save();
+            event(new StudentStatusChanged($student_id, ($student->active == 1 ? "ENABLED" : "DISABLED"), auth()->id()));
             return back()->with('success', __('text.word_done'));
         }
         return back()->with('error', __('text.item_not_found', __('text.word_student')));

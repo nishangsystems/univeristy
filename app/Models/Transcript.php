@@ -21,7 +21,8 @@ class Transcript extends Model
      */
     protected $connection = 'mysql';
     protected $fillable = ['config_id', 'student_id', 'status', 'delivery_format', 'tel', 'year_id', 'description', 'done', 'collected', 'giver_id', 'user_id', 'paid', 'transaction_id', 'paid_by'];
-
+    protected $dates = ['created_at', 'updated_at'];
+    
     public function done_by()
     {
         return $this->belongsTo(User::class, 'user_id');

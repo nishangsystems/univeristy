@@ -7,11 +7,13 @@ use App\Events\FeeChangedEvent;
 use App\Events\ProgramChangeEvent;
 use App\Events\StudentChangedEvent;
 use App\Events\StudentResultChangedEvent;
+use App\Events\StudentStatusChanged;
 use App\Listeners\BulkMarkAddedListener;
 use App\Listeners\FeeChangeListener;
 use App\Listeners\LogStudentResultChangeListener;
 use App\Listeners\ProgramChangeListener;
 use App\Listeners\StudentChangeListener;
+use App\Listeners\StudentStatusChangeListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -31,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
         StudentChangedEvent::class => [StudentChangeListener::class],
         BulkMarkAddedEvent::class => [BulkMarkAddedListener::class],
         ProgramChangeEvent::class => [ProgramChangeListener::class],
+        StudentStatusChanged::class => [StudentStatusChangeListener::class],
     ];
 
     /**
