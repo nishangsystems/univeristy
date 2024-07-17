@@ -386,4 +386,17 @@ class ResultsAndTranscriptsController extends Controller{
             return back()->withInput();
         }
     }
+    
+    public function transcripts_summary_stats(Request $request, $year_id = null){
+        $data['title'] = "Summary Transcript statistics";
+        
+        $data['stats'] = \App\Models\TranscriptRating::join('transcripts', ['tanscripts.config_id'=>'transcript_ratings.id'])
+            ->whereNotNull('transcripts.transaction_id')
+            ->select([
+                'transcript_ratings.mode', 'transcript_ratings.duration', 'transcripts.status', 'transcripts.done', 'transcripts.collected', 
+                DB::raw("SUM(CASE WHEN transcripts.status = 'CURRENT' THEN transcript_ratings.current_price ELSE transcript_ratings.former_price END) as amount")
+            ])->groupBy('transcript_ratings.mode', 'transcripts.status', 'transcripts.done', 'transcripts.collected')->distinct()->get();
+
+        return view('admin.res_and_trans.transcripts.summary', $data);
+    }
 }
