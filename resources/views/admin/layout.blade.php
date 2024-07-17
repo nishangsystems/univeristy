@@ -806,6 +806,13 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
+                        <li>
+                            <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.summary')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_summary')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
                     </ul>
                 </li>
             @endif

@@ -390,7 +390,7 @@ class ResultsAndTranscriptsController extends Controller{
     public function transcripts_summary_stats(Request $request, $year_id = null){
         $data['title'] = "Summary Transcript statistics";
         
-        $data['stats'] = \App\Models\TranscriptRating::join('transcripts', ['tanscripts.config_id'=>'transcript_ratings.id'])
+        $data['data'] = \App\Models\TranscriptRating::join('transcripts', ['transcripts.config_id'=>'transcript_ratings.id'])
             ->whereNotNull('transcripts.transaction_id')
             ->select([
                 'transcript_ratings.mode', 'transcript_ratings.duration', 'transcripts.status', 'transcripts.done', 'transcripts.collected', 

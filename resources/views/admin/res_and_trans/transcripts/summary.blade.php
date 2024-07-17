@@ -22,11 +22,6 @@
                             <td rowspan="2">{{ $counter++ }}</td>
                             <td rowspan="2">{{ optional($mode_items->first())->mode??'--mode--' }}</td>
                             @foreach ($mode_items->groupBy('status') as $status_items)
-                                @php
-                                    $expired = $status_items->filter(function($item){
-                                        return now()->diffInDays($item->created_at) > $item->duration;
-                                    })
-                                @endphp
                                 <td>{{ optional($status_items->first())->status??'--status--' }}</td>
                                 <td>{{ $status_items->sum('amount') }}</td>
                                 <td>{{ $status_items->whereNotNull('done')->count() }}</td>
