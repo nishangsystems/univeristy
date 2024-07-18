@@ -1042,5 +1042,8 @@ return [
     'word_operations'=>'operations',
     'word_persist'=>'persist',
     'copy_data'=>'copy data',
+    'word_summary'=>'summary',
+    'word_expired'=>'expired',
+    'manage_transcripts'=>'manage transcripts',
     ''
 ];

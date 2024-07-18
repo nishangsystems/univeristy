@@ -480,6 +480,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::prefix('statistics')->name('stats.')->group(function(){
         Route::get('sudents', 'Admin\StatisticsController@students')->name('students');
         Route::get('fees', 'Admin\StatisticsController@fees')->name('fees');
+        Route::get('fees/forward', 'Admin\StatisticsController@forwarded_fees')->name('fees.forwarded');
         Route::get('reg/fees', 'Admin\StatisticsController@registration_fees')->name('regfees');
         Route::get('results', 'Admin\StatisticsController@results')->name('results');
         Route::get('income', 'Admin\StatisticsController@income')->name('income');

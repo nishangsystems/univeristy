@@ -921,4 +921,32 @@ class StatisticsController extends Controller
         // return $th;
         }
     }
+
+    public function forwarded_fees(Request $request){
+        $year = \App\Helpers\Helpers::instance()->getCurrentAccademicYear();
+
+        $data = Students::join('student_classes', ['student_classes.student_id'=>'students.id'])
+            ->where('student_classes.year_id', '<', $year)
+            ->join('program_levels', ['program_levels.id'=>'student_classes.class_id'])
+            ->join('campus_programs', function($query){
+                $query->on(['campus_programs.program_level_id'=>'program_levels.id'])
+                ->on(['campus_programs.campus_id'=>'students.campus_id']);
+            })
+            ->join('payment_items', function($query){
+                $query->on(['payment_items.campus_program_id'=>'campus_programs.id'])
+                ->on(['payment_items.year_id'=>'student_classes.year_id']);
+            })
+            ->join('payments', function($query){
+                $query->on(['payments.student_id'=>'students.id'])
+                ->on(['payments.payment_year_id'=>'student_classes.year_id']);
+            })
+            ->select([
+                'students.*', 'payment_items.id as payment_id',
+                DB::raw("SUM(CASE WHEN students.program_status = 'INTERNATIONAL' and payment_items.name = 'TUTION' THEN payment_items.international_amount WHEN students.program_status = 'HYBRID' and payment_items.name = 'TUTION' THEN payment_items.hybrid_amount ELSE payment_items.amount END) as expected_amount"),
+                DB::raw("SUM(payments.amount - payments.debt) as total_payed")
+                ])
+            ->groupBy('payment_id')->having('total_payed', '>', 'expected_amount')->take(20)->get();
+
+        dd($data);
+    }
 }

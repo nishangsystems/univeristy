@@ -61,7 +61,7 @@
                 <th class="text-center py-0" >{{__('text.course_title')}}</th>
                 <th class="text-center py-0" >ST</th>
                 <th class="text-center py-0" >CV</th>
-                <th class="text-center py-0" >{{__('text.CA').'/'.$ca_total}}</th>
+                <th class="text-center py-0" >{{__('text.CA')}}</th>
             </tr>
         </thead>
         <tbody class="text-uppercase text-left">
