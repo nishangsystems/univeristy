@@ -165,8 +165,12 @@ class ResultController extends Controller
         // $data['fee_data'] = $fee;
         
         $min_fee = $fee['total']*$fee['fraction'];
-        // $data['total_balance'] = $student->total_balance($student->id, $year->id);
-        $data['access'] = ($fee['total'] - $fee['total_balance']) >= $min_fee || $student->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        if($min_fee == 0){
+            $data['access'] = true;
+        }else{
+            // $data['total_balance'] = $student->total_balance($student->id, $year->id);
+            $data['access'] = ($fee['total'] - $fee['total_balance']) >= $min_fee || $student->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0;
+        }
         // dd($data);
         // return $data;
         if(!$data['access']){

@@ -236,7 +236,12 @@ class HomeController extends Controller
             // TOTAL PAID - TOTAL DEBTS FOR THIS YEAR = AMOUNT PAID FOR THIS YEAR
             $data['min_fee'] = $fee['total']*$fee['fraction'];
             $data['total_balance'] = $data['user']->total_balance($student, $year->id);
-            $data['access'] = (($fee['total'] - $fee['total_debt']) >= $data['min_fee']) || (Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0);
+            if($data['min_fee'] == 0){
+                $data['access'] = true;
+            }else{
+                // $data['total_balance'] = $student->total_balance($student->id, $year->id);
+                $data['access'] = (($fee['total'] - $fee['total_debt']) >= $data['min_fee']) || (Students::find($student)->classes()->where(['year_id'=>$year->id, 'result_bypass_semester'=>$semester->id, 'bypass_result'=>1])->count() > 0);
+            }
             // dd($fee);
             if($data['access']){
                 // check if results are published
@@ -657,7 +662,12 @@ class HomeController extends Controller
             // return __DIR__;
             // dd($data);
             $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-            $data['access'] = ($fee['total'] - Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+            if($data['min_fee'] == 0){
+                $data['access'] = true;
+            }else{
+                // $data['total_balance'] = $student->total_balance($student->id, $year->id);
+                $data['access'] = ($fee['total'] - Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+            }
             // dd($data);
             return view('student.courses.register', $data);
         } catch (\Throwable $th) {
@@ -818,7 +828,11 @@ class HomeController extends Controller
             'fraction' => Helpers::instance()->getSemester(auth('student')->user()->_class(Helpers::instance()->getCurrentAccademicYear())->id)->courses_min_fee
         ];
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+        if($data['min_fee'] == 0){
+            $data['access'] = true;
+        }else{
+            $data['access'] = ($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']  || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+        }
         return view('student.courses.form_b', $data);
     }
 
@@ -859,7 +873,11 @@ class HomeController extends Controller
             'fraction' => Helpers::instance()->getSemester($class->id)->courses_min_fee
         ];
         $data['min_fee'] = number_format($fee['total']*$fee['fraction']);
-        $data['access'] = (($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']) || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+        if($data['min_fee'] == 0){
+            $data['access'] = true;
+        }else{
+            $data['access'] = (($fee['total'] + Students::find($student)->total_debts($year)) >= $data['min_fee']) || Students::find($student)->classes()->where(['year_id'=>Helpers::instance()->getCurrentAccademicYear()])->first()->bypass_result;
+        }
         return view('student.courses.index', $data);
     }
 
