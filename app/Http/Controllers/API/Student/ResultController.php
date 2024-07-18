@@ -168,7 +168,7 @@ class ResultController extends Controller
         // dd($data);
         // return $data;
         if(!$data['access']){
-            return response()->json(['message'=>"You have not paid upto the minimum fee of {$fee['min_fee']} required to access results. Pay your fee at ".url('/')." to continue.", "error_type"=>'min-fee-error'], 400);
+            return response()->json(['message'=>"You have not paid upto the minimum fee of {$min_fee} required to access results. Pay your fee at ".url('/')." to continue.", "error_type"=>'min-fee-error'], 400);
         }
         return response()->json(['data'=>$data]);
     }
