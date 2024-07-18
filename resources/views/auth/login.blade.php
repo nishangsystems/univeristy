@@ -257,11 +257,11 @@
 														</span>
 													</label>
 
-													{{-- <label class="block clearfix">
+													 <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="checkbox" name="type">  Am a student
+															<input type="checkbox" name="type">  I am a student
 														</span>
-													</label> --}}
+													</label>
 
 													<div class="clearfix">
 														<button type="submit" class="form-control btn-black btn-sm"  style="border-radius: 2rem; background-color: black; border: 1px solid black; color: white; text-transform: capitalize; margin-block: 2rem;">

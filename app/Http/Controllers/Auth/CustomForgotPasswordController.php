@@ -1,64 +1,72 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-use \Hash;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Students;
 use App\Mail\ResetEmail;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Students;
+use App\Models\User;
+use Carbon\Carbon;
+use Hash;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
 class CustomForgotPasswordController extends Controller
 {
 
     private function sendResetEmail($email, $token)
     {
-    $link = route('reset',[$token, urlencode($email)]);
-    //dd($link);
+        $link = route('reset', [$token, urlencode($email)]);
+
         try {
             $data['email'] = $email;
             $data['link'] = $link;
-                 Mail::to($email)->send(new ResetEmail($data));
-            } catch (\Exception $e) {
-           echo  ($e);
+            Mail::to($email)->send(new ResetEmail($data));
+        } catch (\Exception $e) {
+            die ($e);
         }
-        return true;  
+        return true;
     }
 
     public function validatePasswordRequest(Request $request)
-    {//You can add validation login here
-        //dd($request->type);
+    {
         $type = $request->type;
         $email = $request->email;
-      if($type){
+        if ($type) {
             $user = Students::where('email', $email)->get();
-            //dd($user);
             if ($user->count() == 0) {
-                return redirect()->back()->with('e','Student does not exist with this email');
+                return redirect()->back()->with('e', 'Student does not exist with this email');
             }
-      }else{
-        $user = User::where('email',  $email)->get();
-        if ($user->count() == 0) {
-            return redirect()->back()->with('e','User does not exist with this email');
+        } else {
+            $user = User::where('email', $email)->get();
+            if ($user->count() == 0) {
+                return redirect()->back()->with('e', 'User does not exist with this email');
+            }
         }
-      }
-      
+
+
+        //Get the token just created above
+        $tokenData = \DB::table('password_resets')
+            ->where('email', $email)->delete();
+
         //Create Password Reset Token
         \DB::table('password_resets')->insert([
-            'email' =>  $email,
+            'email' => $email,
             'token' => Str::random(64),
             'created_at' => Carbon::now(),
-            'type' => ($type)?'1':'0'
-        ]);//Get the token just created above
+            'type' => ($type) ? '1' : '0'
+        ]);
+
+        //Get the token just created above
         $tokenData = \DB::table('password_resets')
-            ->where('email',  $email)->first();
-        if ($this->sendResetEmail($email,$tokenData->token)) {
+            ->where('email', $email)->first();
+
+
+        if ($this->sendResetEmail($email, $tokenData->token)) {
             return redirect()->back()->with('s', 'A reset link has been sent to your email address.');
         } else {
-            return redirect()->back()->with('e','A Network Error occurred. Please try again.');
+            return redirect()->back()->with('e', 'A Network Error occurred. Please try again.');
         }
     }
 
