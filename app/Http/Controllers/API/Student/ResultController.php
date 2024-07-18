@@ -236,7 +236,7 @@ class ResultController extends Controller
         }, $registered_courses);
 
         
-        $data['results'] = collect($results)->filter(function($el){return $el != null});
+        $data['results'] = collect($results)->filter(function($el){return $el != null;});
 
         // dd($data);
         if ($data['class']->program->background->background_name == "PUBLIC HEALTH") {
