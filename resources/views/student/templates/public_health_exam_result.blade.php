@@ -60,7 +60,7 @@
                             <th class="text-center" >{{__('text.word_course')}}</th>
                             <th class="text-center" >ST</th>
                             <th class="text-center" >MV</th>
-                            <th class="text-center" >{{__('text.word_module').' / '.$ca_total}}</th>
+                            <th class="text-center" >{{__('text.word_module')}}</th>
                             <th class="text-center" >{{__('text.word_module') .' / 100'}}</th>
                             <th class="text-center" >{{__('text.word_grade')}}</th>
                             <th class="text-center" >{{__('text.word_remarks')}}</th>

@@ -20,13 +20,14 @@ class StudentStatusChanged
      * @return void
      */
 
-    public $student_id, $state, $user_id;
-    public function __construct($student_id, $state, $user_id)
+    public $student_id, $state, $user_id, $reason;
+    public function __construct($student_id, $state, $user_id, $reason)
     {
         //
         $this->student_id = $student_id;
         $this->state = $state;
         $this->user_id = $user_id;
+        $this->reason = $reason;
     }
 
     /**

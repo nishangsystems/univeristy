@@ -84,7 +84,7 @@
                             </form>
                             <a class="btn btn-sm btn-warning m-1" onclick="confirm('Are you sure you want to reset pasword for ${element.name}?') ? $('#id_${element.id}').submit() : null"><i class="fa fa-edit"> {{__('text.reset_password')}}</i></a>|
                             <form action="${element.password_reset}" method="post" id="id_${element.id}" class="hidden">@csrf</form>
-                            <a class="btn btn-sm btn-secondary m-1" onclick="confirm('Your are about to change student status for ${element.name}?') ? (window.location='${element.activate_link}') : null">
+                            <a class="btn btn-sm btn-secondary m-1" onclick="change_state('${element.activate_link}','Your are about to change student status for ${element.name}')">
                                 <i class="fa fa-cog">
                                      ${element.active == true ? "{{__('text.word_disactivate')}}" : "{{__('text.word_activate')}}"} 
                                 </i>
@@ -100,6 +100,15 @@
             }
         })
     })
+
+    let change_state = function(url, message){
+        let reason = prompt(message+" Provide a reason for this:");
+        if(reason != null){
+            window.location = url+"?reason="+reason;
+        }else{
+            alert("You are not allowed to change the status of a student without a justified reason");
+        }
+    }
 
 </script>
 @endsection

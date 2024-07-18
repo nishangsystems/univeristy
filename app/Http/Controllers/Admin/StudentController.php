@@ -1172,13 +1172,13 @@ class StudentController extends Controller
         return back()->with('error', 'Operation failed. Bypass could not be resolved to a class.');
     }
 
-    public function change_status($student_id)
+    public function change_status(Request $request, $student_id)
     {
         $student = Students::find($student_id);
         if($student != null){
             $student->active = !$student->active;
             $student->save();
-            event(new StudentStatusChanged($student_id, ($student->active == 1 ? "ENABLED" : "DISABLED"), auth()->id()));
+            event(new StudentStatusChanged($student_id, ($student->active == 1 ? "ENABLED" : "DISABLED"), auth()->id(), $reason = $request->reason));
             return back()->with('success', __('text.word_done'));
         }
         return back()->with('error', __('text.item_not_found', __('text.word_student')));

@@ -771,7 +771,7 @@
                     <a href="#" class="dropdown-toggle text-capitalize">
                         <i  style="color: {{$bg1}}"class="menu-icon  fa fa-flag"></i>
                         <span class="menu-text">
-                            {{__('text.manage_transcripts')}}
+                            {{__('text.online_transcripts')}}
                             </span>
                         <b class="arrow fa fa-angle-down"></b>
                     </a>

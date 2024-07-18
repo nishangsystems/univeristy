@@ -68,8 +68,8 @@
                 <th class="text-center" >{{__('text.word_course')}}</th>
                 <th class="text-center" >ST</th>
                 <th class="text-center" >CV</th>
-                <th class="text-center" >{{__('text.CA').' / '.$ca_total}}</th>
-                <th class="text-center" >{{__('text.word_exams').' / '.$exam_total}}</th>
+                <th class="text-center" >{{__('text.CA')}}</th>
+                <th class="text-center" >{{__('text.word_exams')}}</th>
                 <th class="text-center" >{{__('text.word_total') .' / '.($ca_total + $exam_total)}}</th>
                 <th class="text-center" >{{__('text.word_grade')}}</th>
                 <th class="text-center" >{{__('text.word_remarks')}}</th>

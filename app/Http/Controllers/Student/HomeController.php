@@ -412,7 +412,8 @@ class HomeController extends Controller
                 // dd($grade);
             }, $registered_courses);
     
-            $data['results'] = collect($results)->filter(function($el){return $el != null and $el['exam_mark'];});
+            $data['results'] = collect($results)->filter(function($el){return $el != null and $el['exam_mark'] > 0;});
+            
             $sum_cv = $data['results']->where('coef', '>', 0)->sum('coef');
             $sum_earned_cv = collect($results)->filter(function($el){
                     return ($el != null) && (($el['ca_mark'] ?? 0)+($el['exam_mark'] ?? 0) >= 50);

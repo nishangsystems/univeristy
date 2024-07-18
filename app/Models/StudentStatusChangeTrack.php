@@ -11,7 +11,7 @@ class StudentStatusChangeTrack extends Model
 
     protected $connection = "tracking_db";
     protected $table = "student_status_tracks";
-    protected $fillable = ['student_id', 'state', 'user_id'];
+    protected $fillable = ['student_id', 'state', 'user_id', 'reason'];
 
     public function student()
     {
