@@ -152,6 +152,7 @@ class HomeController extends Controller
             $ca_mark = $student->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = $student->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
             $total = $ca_mark + $exam_mark;
+            if($exam_mark == 0){return null;}
             $rol = [
                 'id'=>$subject_id,
                 'code'=>Subjects::find($subject_id)->code ?? '',
@@ -182,7 +183,7 @@ class HomeController extends Controller
             // dd($grade);
         // }, $res);
         }, $registered_courses);
-        $data['results'] = array_values(collect($results)->filter(function($el){return $el != null and $el['exam_mark'] > 0;})->unique()->all());
+        $data['results'] = array_values(collect($results)->filter(function($el){return $el != null;})->unique()->all());
         
         
         return response()->json(['data'=>$data]);
