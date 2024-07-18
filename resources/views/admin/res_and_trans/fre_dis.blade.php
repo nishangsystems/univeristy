@@ -1,4 +1,24 @@
 @extends('admin.layout')
+@section('action')
+    <button class="btn btn-primary no-print" onclick="window.print()">Print</button>
+@endsection
+@section('style')
+    <style>
+
+        @media print {
+            @page {
+                size: A4 landscape;
+            }
+            button.no-print, form.no-print, div.no-print {
+                display:none !important;
+            }
+        }
+
+
+    </style>
+
+@endsection
+
 @section('section')
     @if(!request()->has('class_id'))
         <form method="post" target="new">
