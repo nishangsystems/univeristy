@@ -219,13 +219,14 @@ class TeacherController
         $data['subjects'] = \App\Models\Subjects::join('teachers_subjects', ['teachers_subjects.subject_id'=>'subjects.id'])
             ->where(['teachers_subjects.teacher_id'=>$teacher->id])
             ->where(['teachers_subjects.batch_id'=>Helpers::instance()->getCurrentAccademicYear()])
+            ->join('campuses', ['campuses.id'=>'teacher_subjects.campus_id'])
             ->where(function($query)use($request){
                 if($request->_class != null ) $query->where(['teachers_subjects.class_id'=>$request->_class]);
             })
             ->where(function($q)use ($request){
                 $request->campus != null ? $q->where(['teachers_subjects.campus_id'=>$request->campus]) : null;
             })->distinct()
-            ->select(['subjects.*','teachers_subjects.class_id as class', 'teachers_subjects.campus_id'])->get();
+            ->select(['subjects.*','teachers_subjects.class_id as class', 'teachers_subjects.campus_id', 'campuses.name'])->get();
 
         $data['success'] = 200;
         return response()->json($data);
@@ -281,7 +282,7 @@ class TeacherController
             ->join('students', ['students.id'=>'student_courses.course_id'])
             ->whereIn('students.campus_id', $campuses)
             ->join('campuses', ['campuses.id' => 'students.campus_id'])
-            ->orderBy('students.name', 'ASC')->get(['students.*', 'campuses.name as campus_name', 'campuses.id as campus_id'])
+            ->orderBy('students.name', 'ASC')->distinct()->get(['students.*', 'campuses.name as campus_name', 'campuses.id as campus_id'])
             ->groupBy('campus_name');
 
         $data['success'] = 200;
