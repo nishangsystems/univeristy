@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 
 class ResultController extends Controller
 {
+    
     public function ca(Request $request)
     {
         $current_year = \App\Helpers\Helpers::instance()->getYear();
@@ -148,7 +149,7 @@ class ResultController extends Controller
             // dd($grade);
         // }, $res);
         }, $registered_courses);
-        $data['results'] = collect($results)->filter(function($el){return $el != null;})->unique();
+        $data['results'] = collect($results)->filter(function($el){return $el != null and $el['exam_mark'] > 0;})->unique();
         //
 
         $fee = [
@@ -173,7 +174,6 @@ class ResultController extends Controller
         return response()->json(['data'=>$data]);
     }
 
-    
     public function download_exam(Request $request)
     {
         // return $request->all();
@@ -233,10 +233,8 @@ class ResultController extends Controller
         // }, $res);
         }, $registered_courses);
 
-        $data['results'] = collect($results)->filter(function($el){return $el != null;});
         
-
-        $data['results'] = collect($results)->filter(function($el){return $el != null;});
+        $data['results'] = collect($results)->filter(function($el){return $el != null and $el['exam_mark'];});
 
         // dd($data);
         if ($data['class']->program->background->background_name == "PUBLIC HEALTH") {

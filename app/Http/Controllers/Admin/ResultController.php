@@ -542,6 +542,8 @@ class ResultController extends Controller
             // dd($grade);
         }, $registered_courses);
 
+        $data['results'] = collect($data['results'])->filter(function($rec){return $rec != null and $rec['exam_mark'] > 0;});
+
         $fee = [
             'total_debt'=>$student->total_debts($year),
             'total_paid'=>$student->total_paid($year),
