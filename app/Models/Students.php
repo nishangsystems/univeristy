@@ -102,7 +102,16 @@ class Students extends Authenticatable
     {
         $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
         if ($this->classes()->where('year_id', $year)->first() != null) {
-            return $rec = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->sum('amount');
+            switch($this->program_status){
+                case "ON-CAMPUS":
+                    return $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->sum('amount');
+                case "HYBRID":
+                    $builder = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year]);
+                    return $builder->where('name', 'TUTION')->sum('hybrid_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
+                case "INTERNATIONAL":
+                    $builder = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year]);
+                    return $builder->where('name', 'TUTION')->sum('international_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
+            }
         }
         
         return 0;
@@ -325,11 +334,19 @@ class Students extends Authenticatable
         // dd($campus_program_levels);
         // fee amounts
         $fees = 0;
-         foreach (Batch::where('id', '<', $year+1)->get() as $key => $batch) {
+        foreach (Batch::where('id', '<', $year+1)->get() as $key => $batch) {
             # code...
             $class = $this->_class($batch->id);
             if($class== null or $class->campus_programs($this->campus_id)->first() == null )continue;
-            $fees += $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->sum('amount');
+            if($this->program_status == "ON-CAMPUS"){
+                $fees += $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('payment_year_id', $batch->id)->sum('amount');
+            }elseif($this->program_status == "HYBRID"){
+                $builder = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('payment_year_id', $batch->id);
+                $fees += $builder->where('name', 'TUTION')->sum('bybrid_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
+            }elseif($this->program_status == "INTERNATIONAL"){
+                $builder = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('payment_year_id', $batch->id);
+                $fees += $builder->where('name', 'TUTION')->sum('international_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
+            }
         }
         
         $scholarships = $this->allScholarships($year);

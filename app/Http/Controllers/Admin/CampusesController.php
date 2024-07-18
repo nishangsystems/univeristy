@@ -178,6 +178,7 @@ class CampusesController extends Controller
             'fees'=>'required|int',
             'r_fees'=>'nullable|int',
             'international_amount'=>'nullable|int',
+            'hybrid_amount'=>'nullable|int',
             'first_instalment'=>'nullable|int',
             'second_instalment'=>'nullable|int'
         ]);
@@ -203,6 +204,9 @@ class CampusesController extends Controller
             }
             if(Schema::hasColumn('payment_items', 'international_amount')){
                 $tution_inst->international_amount = $request->international_amount;
+            }
+            if(Schema::hasColumn('payment_items', 'hybrid_amount')){
+                $tution_inst->hybrid_amount = $request->hybrid_amount;
             }
             $tution_inst->save();
     

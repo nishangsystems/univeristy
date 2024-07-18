@@ -27,31 +27,37 @@
             <div class="row my-2 text-capitalize">
                 <label for="" class="col-md-3 form-group-text">{{__('text.word_tution')}}</label>
                 <div class="col-md-9 col-lg-9">
-                    <input type="number" name="fees" id="" class="form-control" id="field" required value="{{ $tution->amount ?? '----' }}">
+                    <input type="number" name="fees" id="" class="form-control" required value="{{ $tution->amount ?? '----' }}">
                 </div>
             </div>
             <div class="row my-2 text-capitalize">
                 <label for="" class="col-md-3 form-group-text">{{__('text.international_tution')}}</label>
                 <div class="col-md-9 col-lg-9">
-                    <input type="number" name="international_amount" id="" class="form-control" id="field" value="{{ $tution->international_amount ?? '----' }}">
+                    <input type="number" name="international_amount" id="" class="form-control" value="{{ $tution->international_amount ?? '----' }}">
+                </div>
+            </div>
+            <div class="row my-2 text-capitalize">
+                <label for="" class="col-md-3 form-group-text">{{__('text.hybrid_amount')}}</label>
+                <div class="col-md-9 col-lg-9">
+                    <input type="number" name="hybrid_amount" id="" class="form-control" value="{{ $tution->international_amount ?? '----' }}">
                 </div>
             </div>
             <div class="row my-2 text-capitalize">
                 <label for="" class="col-md-3 form-group-text">{{__('text.first_instalment')}}</label>
                 <div class="col-md-9 col-lg-9">
-                    <input type="number" name="first_instalment" id="" class="form-control" id="field" value="{{ $tution->first_instalment ?? '----' }}">
+                    <input type="number" name="first_instalment" id="" class="form-control" value="{{ $tution->first_instalment ?? '----' }}">
                 </div>
             </div>
             <div class="row my-2 text-capitalize">
                 <label for="" class="col-md-3 form-group-text">{{__('text.second_instalment')}}</label>
                 <div class="col-md-9 col-lg-9">
-                    <input type="number" name="second_instalment" id="" class="form-control" id="field" value="{{ $tution->second_instalment ?? '----' }}">
+                    <input type="number" name="second_instalment" id="" class="form-control" value="{{ $tution->second_instalment ?? '----' }}">
                 </div>
             </div>
             <div class="row my-2 text-capitalize">
                 <label for="" class="col-md-3 form-group-text">{{__('text.word_registration')}}</label>
                 <div class="col-md-9 col-lg-9">
-                    <input type="number" name="r_fees" id="" class="form-control" id="field" value="{{ $reg->amount ?? '----' }}">
+                    <input type="number" name="r_fees" id="" class="form-control" value="{{ $reg->amount ?? '----' }}">
                 </div>
             </div>
             <div class="d-flex justify-content-end py-2">

@@ -601,6 +601,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::get('pending', [ResultsAndTranscriptsController::class, 'pending_transcripts'])->name('pending');
             Route::get('undone', [ResultsAndTranscriptsController::class, 'undone_transcripts'])->name('undone');
             Route::get('set_done/{id}', [ResultsAndTranscriptsController::class, 'set_done_transcripts'])->name('set_done');
+            Route::get('summary/{year_id?}', [ResultsAndTranscriptsController::class, 'transcripts_summary_stats'])->name('summary');
         });
         Route::get('exam/add_mark/{year_id?}/{semester_id?}/{course_id?}/{class_id?}', [Admin\MarksBulkChangeController::class, 'exam_add_mark'])->name('exam.add_mark');
         Route::post('exam/add_mark/{year_id}/{semester_id}/{course_id}/{class_id?}', [Admin\MarksBulkChangeController::class, 'exam_add_mark_save']);
