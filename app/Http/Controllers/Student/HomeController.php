@@ -278,7 +278,7 @@ class HomeController extends Controller
                 $results = array_map(function($subject_id)use($data, $year, $semester){
                     $ca_mark = $data['user']->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
                     $exam_mark = $data['user']->result()->where('results.batch_id', '=', $year->id)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
-                    
+                    if($exam_mark == 0){return null;}
                     $total = $ca_mark + $exam_mark;
                     if($total == 0){ return null;}
                     $rol = [
@@ -310,7 +310,8 @@ class HomeController extends Controller
                     
                 }, $registered_courses);
                 // dd($res);
-                $data['results'] = collect($results)->filter(function($el){return $el != null and $el['exam_mark'] > 0;});
+                $data['results'] = collect($results)->filter(function($el){return $el != null;});
+
                 $sum_cv = $data['results']->where('coef', '>', 0)->sum('coef');
                 $sum_earned_cv = collect($results)->filter(function($el){
                     return ($el != null) && (($el['ca_mark'] ?? 0)+($el['exam_mark'] ?? 0) >= 50);
@@ -377,10 +378,9 @@ class HomeController extends Controller
             $results = array_map(function($subject_id)use($data, $year, $semester){
                 $ca_mark = $data['user']->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
                 $exam_mark = $data['user']->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
+                if($exam_mark == 0){return null;}
                 $total = $ca_mark + $exam_mark;
-                if($total == 0){
-                    return null;
-                }
+             
                 $rol = [
                     'id'=>$subject_id,
                     'code'=>Subjects::find($subject_id)->code ?? '',
@@ -412,8 +412,8 @@ class HomeController extends Controller
                 // dd($grade);
             }, $registered_courses);
     
-            $data['results'] = collect($results)->filter(function($el){return $el != null and $el['exam_mark'] > 0;});
-            
+            $data['results'] = collect($results)->filter(function($el){return $el != null;});
+
             $sum_cv = $data['results']->where('coef', '>', 0)->sum('coef');
             $sum_earned_cv = collect($results)->filter(function($el){
                     return ($el != null) && (($el['ca_mark'] ?? 0)+($el['exam_mark'] ?? 0) >= 50);

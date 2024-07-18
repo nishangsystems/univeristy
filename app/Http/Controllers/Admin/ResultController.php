@@ -518,6 +518,7 @@ class ResultController extends Controller
         $data['results'] = array_map(function($subject_id)use($data, $year, $semester, $student){
             $ca_mark = $student->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->ca_score ?? 0;
             $exam_mark = $student->result()->where('results.batch_id', '=', $year)->where('results.subject_id', '=', $subject_id)->where('results.semester_id', '=', $semester->id)->first()->exam_score ?? 0;
+            if($exam_mark == 0){return null;}
             $total = $ca_mark + $exam_mark;
             foreach ($data['grading'] as $key => $value) {
                 # code...
@@ -542,7 +543,7 @@ class ResultController extends Controller
             // dd($grade);
         }, $registered_courses);
 
-        $data['results'] = collect($data['results'])->filter(function($rec){return $rec != null and $rec['exam_mark'] > 0;});
+        $data['results'] = collect($data['results'])->filter(function($rec){return $rec != null;});
 
         $fee = [
             'total_debt'=>$student->total_debts($year),
