@@ -1043,6 +1043,7 @@ return [
     'word_persist'=>'persist',
     'copy_data'=>'copy data',
     'word_summary'=>'summary',
+    'hybrid_amount'=>'hybrid amount',
     'word_expired'=>'expired',
     'manage_transcripts'=>'manage transcripts',
     ''
