@@ -113,7 +113,7 @@ class TeacherController
 
         $classes  = \App\Models\ProgramLevel::join('teachers_subjects', ['teachers_subjects.class_id'=>'program_levels.id'])
             ->where(['teachers_subjects.teacher_id'=>$teacher->id])
-            ->distinct()
+            ->orderBy('id', 'DESC')->distinct()
             ->select(['program_levels.*', 'teachers_subjects.campus_id'])
             ->get();
 
@@ -147,7 +147,7 @@ class TeacherController
         $teacher = $request->user('api');
 
         $course_notifications = \App\Models\CourseNotification::where(['user_id'=>$teacher->id])
-            ->get()->each(function($rec){
+            ->orderBy('id', 'DESC')->distinct()->get()->each(function($rec){
                 $rec->campus = $rec->campus->name??'';
                 $rec->course = $rec->course->code??$rec->course->name??'';
                 $rec->audience = $rec->audience();
@@ -170,7 +170,7 @@ class TeacherController
                 if($request->course != null)
                 $query->where('course_id', $request->course);
             })
-            ->get()->each(function($rec){
+            ->orderBy('id', 'DESC')->distinct()->get()->each(function($rec){
                 $rec->campus = $rec->campus->name??'';
                 $rec->course = $rec->course->code??$rec->course->name??'';
                 $rec->audience = $rec->audience();
