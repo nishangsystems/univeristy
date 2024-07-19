@@ -113,7 +113,7 @@ class Students extends Authenticatable
                     return $builder->where('name', 'TUTION')->sum('international_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
             }
         }
-        
+        dd(0);
         return 0;
     }
 
