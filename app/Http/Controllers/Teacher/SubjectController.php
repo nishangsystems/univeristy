@@ -105,6 +105,10 @@ class SubjectController extends Controller
             # code...
             $data['title'] = "Course List For ".$course->name.' [ '.$course->code.' ] : '.$campus->name;
             $data['students'] = StudentClass::where(['student_classes.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
+                ->join('teachers_subjects', function($query){
+                    $query->on(['teachers_subjects.class_id'=>'student_classes.class_id'])
+                        ->on(['teachers_subjects.year_id'=>'student_subjects.year_id']);
+                })->where(['teachers_subjects.campus_id'=>$campus->id])
                 ->join('students', ['students.id'=>'student_classes.student_id'])
                 ->where(['students.campus_id'=>$request->campus_id, 'students.active'=>1])
                 ->join('student_courses', ['student_courses.student_id'=>'students.id'])
