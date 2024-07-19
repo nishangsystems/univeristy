@@ -105,20 +105,20 @@ class SubjectController extends Controller
             # code...
             $data['title'] = "Course List For ".$course->name.' [ '.$course->code.' ] : '.$campus->name;
             $data['students'] = StudentClass::where(['student_classes.year_id'=>Helpers::instance()->getCurrentAccademicYear()])
-                        ->join('students', ['students.id'=>'student_classes.student_id'])
-                        ->where(['students.campus_id'=>$request->campus_id, 'students.active'=>1])
-                        ->join('student_courses', ['student_courses.student_id'=>'students.id'])
-                        ->where(['student_courses.course_id'=>$course_id])
-                        ->groupBy('student_classes.class_id', 'students.name')
-                        ->select(['students.*', 'student_classes.class_id as class_id'])->get();
+                ->join('students', ['students.id'=>'student_classes.student_id'])
+                ->where(['students.campus_id'=>$request->campus_id, 'students.active'=>1])
+                ->join('student_courses', ['student_courses.student_id'=>'students.id'])
+                ->where(['student_courses.course_id'=>$course_id])
+                ->groupBy('student_classes.class_id', 'students.name')
+                ->select(['students.*', 'student_classes.class_id as class_id'])->get();
         } else {
             # code...
             $data['title'] = "Class List For ".$class->name().' ('.$course->name.') : '.$campus->name;
             $data['students'] = $class->_students($this->current_accademic_year)
-                        ->where(['students.campus_id'=>$request->campus_id, 'students.active'=>1])
-                        ->join('student_courses', ['student_courses.student_id'=>'students.id'])
-                        ->where(['student_courses.course_id'=>$course_id])
-                        ->select(['students.*'])->get();
+                ->where(['students.campus_id'=>$request->campus_id, 'students.active'=>1])
+                ->join('student_courses', ['student_courses.student_id'=>'students.id'])
+                ->where(['student_courses.course_id'=>$course_id])
+                ->select(['students.*'])->get();
         }
         
 

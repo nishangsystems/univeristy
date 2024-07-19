@@ -219,7 +219,7 @@ class TeacherController
         $data['subjects'] = \App\Models\Subjects::join('teachers_subjects', ['teachers_subjects.subject_id'=>'subjects.id'])
             ->where(['teachers_subjects.teacher_id'=>$teacher->id])
             ->where(['teachers_subjects.batch_id'=>Helpers::instance()->getCurrentAccademicYear()])
-            ->join('campuses', ['campuses.id'=>'teacher_subjects.campus_id'])
+            ->join('campuses', ['campuses.id'=>'teachers_subjects.campus_id'])
             ->where(function($query)use($request){
                 if($request->_class != null ) $query->where(['teachers_subjects.class_id'=>$request->_class]);
             })
