@@ -101,17 +101,19 @@ class Students extends Authenticatable
     public function total($year_id = null)
     {
         $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
-        dd($this->classes);
+        // dd($this->classes);
         if ($this->classes()->where('year_id', $year)->first() != null) {
             switch($this->program_status){
                 case "ON-CAMPUS":
-                    return $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->sum('amount');
+                return $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->sum('amount');
                 case "HYBRID":
                     $builder = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year]);
                     return $builder->where('name', 'TUTION')->sum('hybrid_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
                 case "INTERNATIONAL":
                     $builder = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year]);
                     return $builder->where('name', 'TUTION')->sum('international_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
+                default:
+                    return $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->sum('amount');
             }
         }
         
