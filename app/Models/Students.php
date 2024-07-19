@@ -101,6 +101,7 @@ class Students extends Authenticatable
     public function total($year_id = null)
     {
         $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
+        dd($this->classes);
         if ($this->classes()->where('year_id', $year)->first() != null) {
             switch($this->program_status){
                 case "ON-CAMPUS":
@@ -113,7 +114,7 @@ class Students extends Authenticatable
                     return $builder->where('name', 'TUTION')->sum('international_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
             }
         }
-        // dd(0);
+        
         return 0;
     }
 
