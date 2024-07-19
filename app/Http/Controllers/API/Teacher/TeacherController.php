@@ -226,7 +226,7 @@ class TeacherController
             ->where(function($q)use ($request){
                 $request->campus != null ? $q->where(['teachers_subjects.campus_id'=>$request->campus]) : null;
             })->distinct()
-            ->select(['subjects.*','teachers_subjects.class_id as class', 'teachers_subjects.campus_id', 'campuses.name'])->get();
+            ->select(['subjects.*','teachers_subjects.class_id as class', 'teachers_subjects.campus_id', 'campuses.name as campus'])->get();
 
         $data['success'] = 200;
         return response()->json($data);
