@@ -130,6 +130,7 @@ Route::post('degree/certificates/{degree_id}', [ApiController::class, 'set_degre
 Route::get('portal_fee_structure/{year_id?}', [ApiController::class, 'portal_fee_structure']);
 Route::get('class_portal_fee_structure/{program_id}/{level_id}/{year_id?}', [ApiController::class, 'class_portal_fee_structure']);
 Route::get('school_program_structure', [ApiController::class, 'school_program_structure']);
+Route::get('grouped_school_program_structure', [ApiController::class, 'grouped_school_program_structure']);
 Route::post('appliable_programs/set', [ApiController::class, 'save_appliable_programs']);
 
 // PROGRAM PROVISIONING STATUS ROUTES

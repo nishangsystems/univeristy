@@ -453,6 +453,25 @@ class ApiController extends Controller
         }
     }
 
+    public function grouped_school_program_structure(){
+        try {
+            //code...
+            $structure = ProgramLevel::join('school_units', 'school_units.id', '=', 'program_levels.program_id')
+                ->join('school_units as departments', 'departments.id', '=', 'school_units.parent_id')
+                ->join('school_units as _schools', '_schools.id', '=', 'departments.parent_id')
+                ->select(['_schools.id as school_id', '_schools.name as school', 'departments.id as department_id', 'departments.name as department', 'school_units.name as program', 'program_levels.*'])
+                ->groupBy(['school','department','program'])
+                ->distinct()->get()->groupBy('school');
+                // ->groupBy(['school','department','program']);
+    
+            // return $structure;
+            return response()->json(['data'=>$structure]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['data'=>[], 'message'=>$th->getMessage(), 'status'=>500]) ;
+        }
+    }
+
     public function save_appliable_programs(Request $request){
         $validity  = Validator::make($request->all(), ['programs'=>'required|array']);
         if($validity->fails()){
