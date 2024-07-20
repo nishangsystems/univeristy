@@ -460,7 +460,7 @@ class ApiController extends Controller
             $structure = ProgramLevel::join('school_units', 'school_units.id', '=', 'program_levels.program_id')
                 ->join('school_units as departments', 'departments.id', '=', 'school_units.parent_id')
                 ->join('school_units as _schools', '_schools.id', '=', 'departments.parent_id')
-                ->select(['_schools.id as school_id', '_schools.name as school', 'departments.id as department_id', 'departments.name as department', 'school_units.name as program', 'school_units.deg_name', DB::raw("COUNT(*) as duration")])
+                ->select(['_schools.id as school_id', '_schools.name as school', 'departments.id as department_id', 'departments.name as department', 'school_units.name as program', 'school_units.deg_name', DB::raw("COUNT(*) as duration"), 'school_units.prefix', 'school_units.suffix'])
                 ->groupBy(['school','department','program'])
                 ->distinct()->get()->groupBy('school')->all();
                 // ->groupBy(['school','department','program']);
