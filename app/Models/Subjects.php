@@ -18,6 +18,11 @@ class Subjects extends Model
         return  $this->belongsToMany(SchoolUnits::class, 'class_subjects', 'subject_id', 'class_id')->whereNull('class_subjects.deleted_at');
     }
 
+    public function results()
+    {
+        return  $this->hasMany(Result::class, 'subject_id');
+    }
+
     
     public function classes()
     {

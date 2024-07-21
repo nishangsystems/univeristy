@@ -38,7 +38,7 @@ class Helpers
         return session()->get('mode', $this->getCurrentAccademicYear());
     }
 
-    public function getCurrentAccademicYear()
+    public static function getCurrentAccademicYear()
     {
         $config = \App\Models\Config::all()->last();
         return $config->year_id;
@@ -90,7 +90,7 @@ class Helpers
         return File::where('name', 'bg-image')->where('campus_id', auth()->user()->campus_id)->first()->path ?? '';
     }
 
-    public function getCurrentSemester()
+    public static function getCurrentSemester()
     {
         $config = \App\Models\Config::all()->last();
         return $config->semester_id;

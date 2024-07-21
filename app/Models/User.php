@@ -63,6 +63,7 @@ class User extends Authenticatable
         return $this->hasMany(TeachersSubject::class, 'teacher_id');
     }
 
+
     public function subjectR($year)
     {
         return $this->hasMany(TeachersSubject::class, 'teacher_id')

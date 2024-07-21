@@ -581,6 +581,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::prefix('res_and_trans')->name('res_and_trans.')->group(function () {
         Route::post('spr_sheet', [ResultsAndTranscriptsController::class, 'spread_sheet'])->name('spr_sheet');
         Route::post('fre_dis', [ResultsAndTranscriptsController::class, 'frequency_distribution'])->name('fre_dis');
+        Route::get('fre_dis', [\App\Http\Livewire\Admin\FrequencyDistribution::class, '__invoke'])->name('fre_dis');
         Route::post('ca_only', [ResultsAndTranscriptsController::class, 'ca_only'])->name('ca_only');
         Route::post('passfail_report', [ResultsAndTranscriptsController::class, 'passfail_report'])->name('passfail_report');
         Route::post('sem_res_report', [ResultsAndTranscriptsController::class, 'semester_results_report'])->name('sem_res_report');

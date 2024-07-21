@@ -5,20 +5,27 @@
             width: 15px;
         }
         table{
-            width: auto !important;
+            width: 100% !important;
+        }
+
+        #dataTable{
+            max-width: 278mm;
         }
 
         @media print {
             @page {
-                size: A4 landscape;
-            }
-
-            table{
-                margin-top: 20px;
+                size: landscape;
+                margin: 1in; /* You can adjust the margins as needed */
             }
 
             button.no-print, form.no-print, div.no-print {
                 display:none !important;
+            }
+
+            .compressed-table{
+                margin: 0 auto;
+                padding: 0;
+                overflow-x: auto;
             }
         }
 
@@ -81,59 +88,63 @@
         @php
             $k = 1;
         @endphp
-        <div class="my-2">
-            <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100">
-            <div class="text-center py-2">
-               <div class="d-flex justify-content-center">
-                   <h4 class="text-decoration text-capitalize no-print"><b>
-                           {{ $_title }}
-                       </b></h4>
-               </div>
+       <div class="d-flex justify-content-center">
+           <div class="my-2" id="dataTable">
+               <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100">
+               <div class="text-center py-2">
+                   <div class="d-flex justify-content-center">
+                       <h4 class="text-decoration text-capitalize no-print"><b>
+                               {{ $_title }}
+                           </b></h4>
+                   </div>
 
-                <div class="d-flex justify-content-center overflow-auto">
-                    <table class="compressed-table" style="margin-top: 20px">
-                        <thead class="text-capitalize">
-                            <tr class="border-top border-bottom border-secondary">
-                                <th class="border-left border-right border-secondary" colspan="2"></th>
-                                @foreach ($courses as $course)
-                                    <th class="border-left border-right border-secondary title "  colspan="4"><span> {!! $course->subject->name !!}<br/>{{$course->subject->code}} </span></th>
-                                @endforeach
-                            </tr>
-                            <tr class="border-top border-bottom border-secondary">
-                                <th class="border-left border-right border-secondary">#</th>
-                                <th class="border-left border-right border-secondary">{{__('text.word_matricule')}}</th>
-                                @foreach ($courses as $course)
-                                    <th class="border-left border-right border-secondary">{{__('text.CA')}}</th>
-                                    <th class="border-left border-right border-secondary">{{__('text.EX')}}</th>
-                                    <!-- <th class="border-left border-right border-secondary">{{__('text.word_exams')}}</th> -->
-                                    <th class="border-left border-right border-secondary">{{__('text.TT')}}</th>
-                                    <!-- <th class="border-left border-right border-secondary">{{__('text.word_total')}}</th> -->
-                                    <th class="border-left border-right border-secondary">{{__('text.GR')}}</th>
-                                    <!-- <th class="border-left border-right border-secondary">{{__('text.word_grade')}}</th> -->
-                                @endforeach
-        
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm">
-                            @foreach($students as $student)
-                                @if($student->hasResult(request('class_id'), $year, request('semester_id')))
-                                    <tr class="border-top border-bottom border-secondary">
-                                        <td class="border-left border-right border-secondary">{{$k++}}</td>
-                                        <td class="border-left border-right border-secondary">{{$student->matric}}</td>
-                                        @foreach ($courses as $course)
-                                            <td class="border-left border-secondary score">{{$student->ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                            <td class="border-left border-right border-info score">{{$student->exam_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                            <td class="border-left border-right border-info score">{{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
-                                            <th class="border-right border-secondary score {{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id')) >= 50 ? 'text-success':'text-danger'}}">{{$student->grade($course->subject->id, request('class_id'), $year, request('semester_id'))}}</th>
-                                        @endforeach
-                                    </tr>
-                                @endif
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+                   <div class="d-flex justify-content-center overflow-auto">
+                       <table class="compressed-table">
+                           <thead class="text-capitalize">
+                           <tr class="border-top border-bottom border-secondary">
+                               <th class="border-left border-right border-secondary" colspan="2"></th>
+                               @foreach ($courses as $course)
+                                   <th class="border-left border-right border-secondary title "   colspan="4"><span> {!! $course->subject->name !!}<br/>{{$course->subject->code}} </span></th>
+                               @endforeach
+                           </tr>
+                           <tr class="border-top border-bottom border-secondary">
+                               <th class="border-left border-right border-secondary">#</th>
+                               <th class="border-left border-right border-secondary">{{__('Name')}}</th>
+                               <th class="border-left border-right border-secondary">{{__('text.word_matricule')}}</th>
+                               @foreach ($courses as $course)
+                                   <th class="border-left border-right border-secondary">{{__('text.CA')}}</th>
+                                   <th class="border-left border-right border-secondary">{{__('text.EX')}}</th>
+                               <!-- <th class="border-left border-right border-secondary">{{__('text.word_exams')}}</th> -->
+                                   <th class="border-left border-right border-secondary">{{__('text.TT')}}</th>
+                               <!-- <th class="border-left border-right border-secondary">{{__('text.word_total')}}</th> -->
+                                   <th class="border-left border-right border-secondary">{{__('text.GR')}}</th>
+                               <!-- <th class="border-left border-right border-secondary">{{__('text.word_grade')}}</th> -->
+                               @endforeach
+
+                           </tr>
+                           </thead>
+                           <tbody class="text-sm">
+                           @foreach($students as $student)
+                               @if($student->hasResult(request('class_id'), $year, request('semester_id')))
+                                   <tr class="border-top border-bottom border-secondary">
+                                       <td class="border-left border-right border-secondary">{{$k++}}</td>
+                                       <td class="border-left border-right text-left border-secondary">{{$student->name}}</td>
+                                       <td class="border-left border-right border-secondary">{{$student->matric}}</td>
+                                       @foreach ($courses as $course)
+                                           <td class="border-left border-secondary score">{{$student->ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                           <td class="border-left border-right border-info score">{{$student->exam_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                           <td class="border-left border-right border-info score">{{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
+                                           <th class="border-right border-secondary score {{$student->total_score($course->subject->id, request('class_id'), $year, request('semester_id')) >= 50 ? 'text-success':'text-danger'}}">{{$student->grade($course->subject->id, request('class_id'), $year, request('semester_id'))}}</th>
+                                       @endforeach
+                                   </tr>
+                               @endif
+                           @endforeach
+                           </tbody>
+                       </table>
+                   </div>
+               </div>
+           </div>
+       </div>
     @endif
 @endsection
 @section('script')

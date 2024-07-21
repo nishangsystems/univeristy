@@ -20,10 +20,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/DataTable/DataTable.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/DataTable/WithExport.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/DataTable/WithFilters.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/DataTable/WithPagination.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/DataTable/WithSorting.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Auth/CustomForgotPasswordController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Auth/CustomForgotPasswordController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/login.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/passwords/reset.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/passwords/reset.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Helpers/Helpers.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/Helpers.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultsAndTranscriptsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultsAndTranscriptsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/ProgramLevel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/ProgramLevel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Subjects.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Subjects.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/res_and_trans/fre_dis.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/res_and_trans/spr_sheet.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/res_and_trans/spr_sheet.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,7 +205,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/config" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/Http/Livewire" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -202,10 +213,12 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/Http/Livewire" />
       <recent name="$PROJECT_DIR$/config" />
       <recent name="$PROJECT_DIR$/resources/views/livewire/admin/transcript" />
       <recent name="$PROJECT_DIR$/public/assets/js" />
@@ -262,7 +275,8 @@
       <workItem from="1719675930386" duration="192000" />
       <workItem from="1719831618529" duration="2921000" />
       <workItem from="1719842430849" duration="617000" />
-      <workItem from="1721301697021" duration="850000" />
+      <workItem from="1721301697021" duration="1781000" />
+      <workItem from="1721569700994" duration="17553000" />
     </task>
     <servers />
   </component>
@@ -286,26 +300,27 @@
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
     <state x="424" y="259" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1200@0.0.1920.1200" timestamp="1718024280393" />
-    <state x="281" y="363" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1712149509535">
+    <state x="656" y="298" key="#com.intellij.ide.util.MemberChooser" timestamp="1721575969416">
       <screen x="0" y="25" width="1920" height="1175" />
     </state>
-    <state x="281" y="363" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1920.1175@0.25.1920.1175" timestamp="1712149509535" />
-    <state x="698" y="371" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1714982503519">
+    <state x="656" y="298" key="#com.intellij.ide.util.MemberChooser/0.25.1920.1175@0.25.1920.1175" timestamp="1721575969416" />
+    <state x="698" y="371" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1721576214883">
       <screen x="0" y="25" width="1920" height="1175" />
     </state>
-    <state x="698" y="371" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.25.1920.1175@0.25.1920.1175" timestamp="1714982503519" />
-    <state x="100" y="100" width="1720" height="1000" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1718004842022">
-      <screen x="0" y="0" width="1920" height="1200" />
+    <state x="698" y="371" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.25.1920.1175@0.25.1920.1175" timestamp="1721576214883" />
+    <state x="100" y="123" width="1720" height="980" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1721578967452">
+      <screen x="0" y="25" width="1920" height="1175" />
     </state>
     <state x="100" y="100" width="1720" height="1000" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1200@0.0.1920.1200" timestamp="1718004842022" />
+    <state x="100" y="123" width="1720" height="980" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.25.1920.1175@0.25.1920.1175" timestamp="1721578967452" />
+    <state x="667" y="326" width="586" height="548" key="find.popup" timestamp="1721343020523">
+      <screen x="0" y="0" width="1920" height="1200" />
+    </state>
+    <state x="667" y="326" width="586" height="548" key="find.popup/0.0.1920.1200@0.0.1920.1200" timestamp="1721343020523" />
     <state x="625" y="285" key="run.anything.popup" timestamp="1713777718822">
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
     <state x="625" y="285" key="run.anything.popup/0.0.1920.1200@0.0.1920.1200" timestamp="1713777718822" />
-    <state x="625" y="271" width="670" height="676" key="search.everywhere.popup" timestamp="1711762614281">
-      <screen x="0" y="0" width="1920" height="1200" />
-    </state>
-    <state x="625" y="271" width="670" height="676" key="search.everywhere.popup/0.0.1920.1200@0.0.1920.1200" timestamp="1711762614281" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
