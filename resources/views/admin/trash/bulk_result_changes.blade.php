@@ -39,7 +39,7 @@
                         <td>{{ $k++ }}</td>
                         <td>{{ $row->year->name??'' }}</td>
                         <td>{{ $row->semester->code??'' }}</td>
-                        <td>{{ $row->class_id != null ? $row->class->name() : ($row->background_id != null ? ($row->background->background_name??'') : '' ) }}</td>
+                        <td>{{ $row->class != null ? $row->class->name() : ($row->background != null ? ($row->background->background_name??'') : '' ) }}</td>
                         <td>{{ $row->course->name??'' }}</td>
                         <td><i>{{ str_replace('_', ' ', $row->action??'') }}</i></td>
                         <td>{{ $row->additional_mark??'' }}</td>

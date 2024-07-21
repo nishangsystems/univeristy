@@ -73,6 +73,22 @@
                     @enderror
                 </div>
             </div>
+            
+            <div class="form-group @error('program_status') has-error @enderror">
+                <label for="cname" class="control-label col-lg-2">{{__('text.program_status')}}</label>
+                <div class="col-lg-10">
+                    <select class="form-control text-capitalize" name="program_status">
+                        <option disabled>{{__('text.select_gender')}}</option>
+                        @foreach ($status_set as $stats)
+                            <option {{old('program_status', $student->program_status) == $stats->name ? 'selected':''}} value="{{ $stats->name }}">{{ $stats->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('program_status')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
             <div class="form-group @error('gender') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_gender')}} </label>
                 <div class="col-lg-10">

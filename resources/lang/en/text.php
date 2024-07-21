@@ -1046,5 +1046,6 @@ return [
     'hybrid_amount'=>'hybrid amount',
     'word_expired'=>'expired',
     'manage_transcripts'=>'manage transcripts',
+    'program_status'=>'program status',
     ''
 ];
