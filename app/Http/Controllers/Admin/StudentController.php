@@ -205,6 +205,7 @@ class StudentController extends Controller
         // end of germanus' work
 
         // Original stuff
+        $data['status_set'] = \App\Models\Status::all();
         $data['title'] = "Admit New Student";
         return view('admin.student.create')->with($data);
     }
@@ -308,6 +309,7 @@ class StudentController extends Controller
     {
         $data['title'] = "Edit Student Profile";
         $data['student'] = \App\Models\Students::find($id);
+        $data['status_set'] = \App\Models\Status::all();
         $data['classes'] = $this->getBaseClasses();
         return view('admin.student.edit')->with($data);
     }
