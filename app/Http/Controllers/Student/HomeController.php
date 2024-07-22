@@ -225,8 +225,8 @@ class HomeController extends Controller
             $data['year'] = $year;
     
             $student = auth('student')->id();
-// resultsn ule under 
-return back back()->with("error", "ystem er under ma");
+// resultsn ule under
+return back()->with("error", "system er under ma");
 
             $fee = [
                 'total_debt'=>$data['user']->total_debts($year->id),
