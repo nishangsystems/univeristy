@@ -103,18 +103,25 @@ class Students extends Authenticatable
         $year = $year_id == null ? Helpers::instance()->getCurrentAccademicYear() : $year_id;
         // dd($this->classes);
         if ($this->classes()->where('year_id', $year)->first() != null) {
+
+            $registration = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->
+                where(['year_id'=>$year])->where('name', 'REGISTRATION')->sum('amount');
+           
             switch($this->program_status){
                 case "ON-CAMPUS":
-                return $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->sum('amount');
+                    $tuition = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->where('name', 'TUTION')->sum('amount');
+                    break;
                 case "HYBRID":
-                    $builder = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year]);
-                    return $builder->where('name', 'TUTION')->sum('hybrid_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
+                    $tuition = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->where('name', 'TUTION')->sum('hybrid_amount');
+                    break;
                 case "INTERNATIONAL":
-                    $builder = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year]);
-                    return $builder->where('name', 'TUTION')->sum('international_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
+                    $tuition = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->where('name', 'TUTION')->sum('international_amount');
+                    break;
                 default:
-                    return $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->sum('amount');
+                    $tuition = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->where('name', 'TUTION')->sum('amount');
             }
+            dd(($registration??0) + ($tuition??0));
+            return ($registration??0) + ($tuition??0);
         }
         
         return 0;
