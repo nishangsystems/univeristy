@@ -154,7 +154,7 @@ class Students extends Authenticatable
     {
         $year = $year == null ? Helpers::instance()->getYear() : $year;
         $items = $this->payments()->where('payment_year_id', $year)->get();
-        dd($items->sum('amount'));
+        // dd($items->sum('amount'));
         return $items->sum('amount');
     }
 
@@ -350,12 +350,12 @@ class Students extends Authenticatable
             $class = $this->_class($batch->id);
             if($class== null or $class->campus_programs($this->campus_id)->first() == null )continue;
             if($this->program_status == "ON-CAMPUS"){
-                $fees += $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('payment_year_id', $batch->id)->sum('amount');
+                $fees += $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->sum('amount');
             }elseif($this->program_status == "HYBRID"){
-                $builder = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('payment_year_id', $batch->id);
+                $builder = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id);
                 $fees += $builder->where('name', 'TUTION')->sum('bybrid_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
             }elseif($this->program_status == "INTERNATIONAL"){
-                $builder = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('payment_year_id', $batch->id);
+                $builder = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id);
                 $fees += $builder->where('name', 'TUTION')->sum('international_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
             }
         }

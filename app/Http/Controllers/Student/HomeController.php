@@ -225,8 +225,8 @@ class HomeController extends Controller
             $data['year'] = $year;
     
             $student = auth('student')->id();
-// resultsn ule under
-return back()->with("error", "system er under ma");
+// // resultsn ule under
+// return back()->with("error", "system er under ma");
 
             $fee = [
                 'total_debt'=>$data['user']->total_debts($year->id),
@@ -317,7 +317,7 @@ return back()->with("error", "system er under ma");
                     return $rol; 
                     
                 }, $registered_courses);
-                // dd($res);
+                // dd($fee);
                 $data['results'] = collect($results)->filter(function($el){return $el != null;});
 
                 $sum_cv = $data['results']->where('coef', '>', 0)->sum('coef');
