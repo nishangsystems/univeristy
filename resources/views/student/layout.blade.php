@@ -597,6 +597,7 @@
                     <li class="active">Dashboard</li>
                     <li class="active"> Full Name: <b style="color: #e30000">{{auth('student')->user()->name}}</b></li>
                     <li class="active text-capitalize"> {{__('text.word_matricule')}}: <b style="color: #e30000">{{auth('student')->user()->matric}}</b></li>
+                    <li class="active"> Semester: <b style="color: #e30000"></b></li>
 
                 </ul><!-- /.breadcrumb -->
             </div>
