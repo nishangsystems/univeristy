@@ -58,7 +58,17 @@ class MarksBulkChangeController extends Controller
             });
 
             // track updates here
-            event(new BulkMarkAddedEvent($year_id, $semester_id, $course_id, $action = "BULK_MARK_ADDED", $actor = auth()->user(), $additional_mark = $request->mark, $class_id = $class_id));
+            event(new BulkMarkAddedEvent(
+                $year_id, 
+                $semester_id, 
+                $course_id, 
+                $action = "BULK_MARK_ADDED", 
+                $actor = auth()->user(), 
+                $additional_mark = $request->mark, 
+                $background_id = null,
+                $class_id = $class_id,
+                $range = null
+            ));
         }else {
             session()->flash('error', "No matching result records found");
         }
@@ -118,7 +128,16 @@ class MarksBulkChangeController extends Controller
                 $record->exam_score += $request->mark;
                 $record->save();
             });
-            event(new BulkMarkAddedEvent($year_id, $semester_id, $course_id, $action = "BULK_MARK_ROUNDOFF", $actor = auth()->user(), $additional_mark = $request->mark, $background_id = $background_id, $class_id=null, $range = ['lower_limit'=>$request->lower_limit, 'upper_limit'=>$request->upper_limit]));
+            event(new BulkMarkAddedEvent(
+                $year_id, 
+                $semester_id, 
+                $course_id, 
+                $action = "BULK_MARK_ROUNDOFF", 
+                $actor = auth()->user(), 
+                $additional_mark = $request->mark, 
+                $background_id = $background_id, 
+                $class_id=null, 
+                $range = ['lower_limit'=>$request->lower_limit, 'upper_limit'=>$request->upper_limit]));
             
             // track updates here
         }else {
