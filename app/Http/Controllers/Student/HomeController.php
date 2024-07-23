@@ -225,8 +225,6 @@ class HomeController extends Controller
             $data['year'] = $year;
     
             $student = auth('student')->id();
-// // resultsn ule under
-// return back()->with("error", "system er under ma");
 
             $fee = [
                 'total_debt'=>$data['user']->total_debts($year->id),
@@ -491,6 +489,7 @@ class HomeController extends Controller
         $user = auth('student')->user();
         $user->email = $request->email;
         $user->phone = $request->phone;
+        
         $user->save();
         $data['user'] = auth('student')->user();
         return redirect()->back()->with(['s' => 'Phone Number and Email Updated Successfully']);
@@ -1199,11 +1198,12 @@ class HomeController extends Controller
         }
         
         $data = $request->all();
-        $data['parent_phone_number'] = $request->parent_phone_code .''. $request->parent_phone_number;
         // return $data;
         Students::find(auth('student')->id())->update($data);
         return redirect(route('student.home'))->with('success', __('text.word_Done'));
     }
+
+
     public function stock_report(Request $request)
     {
         # code...
