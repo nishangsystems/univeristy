@@ -154,6 +154,7 @@ class Students extends Authenticatable
     {
         $year = $year == null ? Helpers::instance()->getYear() : $year;
         $items = $this->payments()->where('payment_year_id', $year)->get();
+        dd($items->amount());
         return $items->sum('amount');
     }
 
@@ -172,7 +173,7 @@ class Students extends Authenticatable
         $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id, $year);
         // dd($scholarship);
         $ret = $this->total($year) + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid($year) - ($scholarship);
-        dd($ret);
+        // dd($ret);
         return $ret;
     }
 
