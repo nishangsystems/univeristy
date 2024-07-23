@@ -120,7 +120,7 @@ class Students extends Authenticatable
                 default:
                     $tuition = $this->_class($year)->campus_programs($this->campus_id)->first()->payment_items()->where(['year_id'=>$year])->where('name', 'TUTION')->sum('amount');
             }
-            dd(($registration??0) + ($tuition??0));
+            // dd(($registration??0) + ($tuition??0));
             return ($registration??0) + ($tuition??0);
         }
         
@@ -172,7 +172,7 @@ class Students extends Authenticatable
         $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id, $year);
         // dd($scholarship);
         $ret = $this->total($year) + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid($year) - ($scholarship);
-        // dd($ret);
+        dd($ret);
         return $ret;
     }
 
