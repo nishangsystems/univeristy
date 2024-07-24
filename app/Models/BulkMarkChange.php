@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BulkMarkChange extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $connection = "tracking_db";
     protected $table = "bulk_mark_changes";
-    protected $fillable = ['year_id', 'semester_id', 'course_id', 'background_id', 'class_id', 'action', 'additional_mark', 'actor', 'interval'];
+    protected $fillable = ['year_id', 'semester_id', 'course_id', 'background_id', 'class_id', 'action', 'additional_mark', 'actor', 'interval', 'deleted_at'];
     protected $dates = ['created_at'];
 
     public function year(){
@@ -43,7 +44,7 @@ class BulkMarkChange extends Model
     }
 
     public function records(){
-        dd($this->interval()->toArray());
+        // dd($this->interval());
         switch($this->action){
             case "BULK_MARK_ADDED":
                 if(($class = $this->class) != null){
@@ -73,8 +74,9 @@ class BulkMarkChange extends Model
                         ->where('results.batch_id', $this->year_id)->whereNotNull('results.exam_score')
                         ->where('results.semester_id', $this->semester_id)
                         ->where('results.subject_id', $this->course_id)
-                        ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])
-                        ->having('total', '>=', intval($this->interval()[0]) + $this->additional_mark)->having('total', '<=', intval($this->interval()[1]) + $this->additional_mark)
+                        ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])->get()
+                        ->where('total', '>=', intval($this->interval()->lower_limit) + $this->additional_mark)
+                        ->where('total', '<=', intval($this->interval()->upper_limit) + $this->additional_mark)
                         ->pluck('id')->toArray();
                 }
                 elseif (($background = $this->background) != null) {
@@ -83,15 +85,17 @@ class BulkMarkChange extends Model
                         ->whereNotNull('results.exam_score')
                         ->where('results.semester_id', $this->semester_id)
                         ->where('results.subject_id', $this->course_id)
-                        ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])
-                        ->having('total', '>=', intval($this->interval()[0]) + $this->additional_mark)->having('total', '<=', intval($this->interval()[1]) + $this->additional_mark)
+                        ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])->get()
+                        ->where('total', '>=', intval($this->interval()->lower_limit) + $this->additional_mark)
+                        ->where('total', '<=', intval($this->interval()->upper_limit) + $this->additional_mark)
                         ->pluck('id')->toArray();
                 }else{
                     return Result::where('results.batch_id', $this->year_id)
                         ->whereNotNull('results.exam_score')
                         ->where('results.subject_id', $this->course_id)
-                        ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])
-                        ->having('total', '>=', intval($this->interval()[0]) + $this->additional_mark)->having('total', '<=', intval($this->interval()[1]) + $this->additional_mark)
+                        ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])->get()
+                        ->where('total', '>=', intval($this->interval()->lower_limit) + $this->additional_mark)
+                        ->where('total', '<=', intval($this->interval()->upper_limit) + $this->additional_mark)
                         ->pluck('id')->toArray();
                 }
                 break;

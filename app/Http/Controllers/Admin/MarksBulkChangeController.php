@@ -6,6 +6,7 @@ use App\Events\BulkMarkAddedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Background;
 use App\Models\Batch;
+use App\Models\BulkMarkChange;
 use App\Models\ProgramLevel;
 use App\Models\Result;
 use App\Models\Semester;
@@ -151,12 +152,14 @@ class MarksBulkChangeController extends Controller
 
     // undo added marks
     public function revert_exam_added_mark($track_id){
-        $track = \App\Models\BulkMarkChange::find($track_id);
-        dd($track->records());
+        $track = BulkMarkChange::find($track_id);
+        // dd($track->records());
         Result::whereIn('id', $track->records())->each(function($record)use($track){
             $record->exam_score -= $track->additional_mark;
             $record->save();
         });
+        $track->delete();
+        return back()->with('success', "Done");
     }
 
 }
