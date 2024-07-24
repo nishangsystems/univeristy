@@ -28,6 +28,7 @@
                     <th class="">@lang('text.word_interval')</th>
                     <th class="">@lang('text.word_date')</th>
                     <th class="">@lang('text.word_user')</th>
+                    <th class=""></th>
                 </tr>
             </thead>
             <tbody>
@@ -46,9 +47,19 @@
                         <td>{{ $row->interval() != null ? ("lower limit: ".$row->interval()->lower_limit.", upper limit: ".$row->interval()->upper_limit) : '' }}</td>
                         <td>{{ $row->created_at==null ? '' : $row->created_at->format('d/m/Y')??'' }}</td>
                         <td>{{ $row->user->name??'' }}</td>
+                        <td><a class="btn btn-danger btn-sm rounded text-uppercase" onclick="confirm_undo(`{{ route('admin.res_and_trans.bulk_added_marks.undo', $row->id) }}`)">@lang('text.word_undo')</a></td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+@endsection
+@section('script')
+    <script>
+        let confirm_undo = function(url){
+            if(confirm("You are about to undo an addition of operations. Are you sure of the operation")){
+                window.location = url;
+            }
+        }
+    </script>
 @endsection
