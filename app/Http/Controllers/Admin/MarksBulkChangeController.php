@@ -46,9 +46,9 @@ class MarksBulkChangeController extends Controller
         }
 
         if($class_id == null)
-            $collection = Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id,])->get();
+            $collection = Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id,])->whereNotNull('exam_score')->get();
         else
-            $collection = Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id, 'class_id'=>$class_id])->get();
+            $collection = Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id, 'class_id'=>$class_id])->whereNotNull('exam_score')->get();
 
         if ($collection->count() > 0) {
             # code...
@@ -115,7 +115,9 @@ class MarksBulkChangeController extends Controller
             $background = Background::find($background_id);
             $classes = $background->classes;
         }
-        $collection = Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id])->where(function($qry)use($background, $classes){
+        $collection = Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id])
+        ->whereNotNull('exam_score')
+        ->where(function($qry)use($background, $classes){
             $background == null ? null : $qry->whereIn('class_id', $classes->pluck('id')->toArray());
         })->select(['*', DB::raw('SUM(ca_score + IFNULL(exam_score, 0)) as total')])->groupBy('id')
         ->having('total', '>=', $request->lower_limit)->having('total', '<=', $request->upper_limit)
@@ -146,5 +148,15 @@ class MarksBulkChangeController extends Controller
 
         return back()->with('success', 'Done');
     }
-    
+
+    // undo added marks
+    public function revert_exam_added_mark($track_id){
+        $track = \App\Models\BulkMarkChange::find($track_id);
+        dd($track->records());
+        Result::whereIn('id', $track->records())->each(function($record)use($track){
+            $record->exam_score -= $track->additional_mark;
+            $record->save();
+        });
+    }
+
 }
