@@ -41,4 +41,60 @@ class BulkMarkChange extends Model
     public function interval(){
         return json_decode($this->interval);
     }
+
+    public function records(){
+        dd($this->interval()->toArray());
+        switch($this->action){
+            case "BULK_MARK_ADDED":
+                if(($class = $this->class) != null){
+                    return $class->_students($this->year_id)->join('results', ['results.student_id'=>'students.id'])
+                        ->where('results.batch_id', $this->year_id)->whereNotNull('results.exam_score')
+                        ->where('results.semester_id', $this->semester_id)
+                        ->where('results.subject_id', $this->course_id)
+                        ->pluck('results.id')->toArray();
+                }
+                elseif (($background = $this->background) != null) {
+                    # code...
+                    return Result::where('results.batch_id', $this->year_id)
+                        ->whereNotNull('results.exam_score')
+                        ->where('results.semester_id', $this->semester_id)
+                        ->where('results.subject_id', $this->course_id)
+                        ->pluck('results.id')->toArray();
+                }else{
+                    return Result::where('results.batch_id', $this->year_id)
+                        ->whereNotNull('results.exam_score')
+                        ->where('results.subject_id', $this->course_id)
+                        ->pluck('results.id')->toArray();
+                }
+                break;
+            case "BULK_MARK_ROUNDOFF":
+                if(($class = $this->class) != null){
+                    return $class->_students($this->year_id)->join('results', ['results.student_id'=>'students.id'])
+                        ->where('results.batch_id', $this->year_id)->whereNotNull('results.exam_score')
+                        ->where('results.semester_id', $this->semester_id)
+                        ->where('results.subject_id', $this->course_id)
+                        ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])
+                        ->having('total', '>=', intval($this->interval()[0]) + $this->additional_mark)->having('total', '<=', intval($this->interval()[1]) + $this->additional_mark)
+                        ->pluck('id')->toArray();
+                }
+                elseif (($background = $this->background) != null) {
+                    # code...
+                    return Result::where('results.batch_id', $this->year_id)
+                        ->whereNotNull('results.exam_score')
+                        ->where('results.semester_id', $this->semester_id)
+                        ->where('results.subject_id', $this->course_id)
+                        ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])
+                        ->having('total', '>=', intval($this->interval()[0]) + $this->additional_mark)->having('total', '<=', intval($this->interval()[1]) + $this->additional_mark)
+                        ->pluck('id')->toArray();
+                }else{
+                    return Result::where('results.batch_id', $this->year_id)
+                        ->whereNotNull('results.exam_score')
+                        ->where('results.subject_id', $this->course_id)
+                        ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])
+                        ->having('total', '>=', intval($this->interval()[0]) + $this->additional_mark)->having('total', '<=', intval($this->interval()[1]) + $this->additional_mark)
+                        ->pluck('id')->toArray();
+                }
+                break;
+        }
+    }
 }
