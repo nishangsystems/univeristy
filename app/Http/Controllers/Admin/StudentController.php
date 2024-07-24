@@ -484,6 +484,7 @@ class StudentController extends Controller
             DB::beginTransaction();
             try {
                 foreach ($importData_arr as $importData) {
+                    if($importData_arr[0] == $importData){continue;}
                     if (Students::where('matric', $importData[1])->count() === 0) {
                         $student = \App\Models\Students::create([
                             'name' => mb_convert_case(str_replace('’', "'", $importData[0]), MB_CASE_UPPER),
