@@ -45,14 +45,14 @@
             <div class="card my-5 shadow border-left-0 border-right-0 border-top border-bottom border-dark">
                 <div class="text-center text-uppercase py-4 alert-danger border-bottom border-danger text-uppercase"><b>{{ $title }}</b></div>
                 <div class="card-body py-5 my-2">
-                    <form class="row my-2" method="post">
+                    <form class="row my-2" method="post" id="bulk_change_form">
                         @csrf
                         <div class="col-md-8">
                             <input type="number" class="form-control" name="mark" id="mark" required>
                             <span class="text-capitalize text-secondary">@lang('text.additional_mark')<i class="text-danger">*</i></span>
                         </div>
                         <div class="col-md-3">
-                            <button id="save_course_button" class="btn btn-sm btn-primary rounded" type="submit">@lang('text.add_mark')</button>
+                            <button id="save_course_button" class="btn btn-sm btn-primary rounded" type="submit" onclick="event.preventDefault(); confirm_operation('bulk_change_form')">@lang('text.add_mark')</button>
                         </div>
                     </form>
                 </div>
@@ -101,6 +101,14 @@
             get_result(cid);
         }
 
+
+        let confirm_operation = function(element_id){
+            let addition = $('#mark').val();
+            let alert_message = `Your are about to alter exam marks ${addition} for all @isset($class){{ $class->name() }} {{ $semester->name }} {{ $year->name }}@endisset students. You will not be able to undo this operation`;
+            if(confirm(alert_message) == true){
+                $('#'+element_id).submit();
+            }
+        }
 
     </script>
 @endsection
