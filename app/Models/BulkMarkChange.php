@@ -73,7 +73,6 @@ class BulkMarkChange extends Model
                     return $class->_students($this->year_id)->join('results', ['results.student_id'=>'students.id'])
                         ->where('results.batch_id', $this->year_id)->whereNotNull('results.exam_score')
                         ->where('results.semester_id', $this->semester_id)
-                        ->where('results.subject_id', $this->course_id)
                         ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])->get()
                         ->where('total', '>=', intval($this->interval()->lower_limit) + $this->additional_mark)
                         ->where('total', '<=', intval($this->interval()->upper_limit) + $this->additional_mark)
@@ -84,7 +83,6 @@ class BulkMarkChange extends Model
                     return Result::where('results.batch_id', $this->year_id)
                         ->whereNotNull('results.exam_score')
                         ->where('results.semester_id', $this->semester_id)
-                        ->where('results.subject_id', $this->course_id)
                         ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])->get()
                         ->where('total', '>=', intval($this->interval()->lower_limit) + $this->additional_mark)
                         ->where('total', '<=', intval($this->interval()->upper_limit) + $this->additional_mark)
@@ -92,7 +90,6 @@ class BulkMarkChange extends Model
                 }else{
                     return Result::where('results.batch_id', $this->year_id)
                         ->whereNotNull('results.exam_score')
-                        ->where('results.subject_id', $this->course_id)
                         ->select(['results.id', \Illuminate\Support\Facades\DB::raw("SUM(exam_score + ca_score) as total")])->get()
                         ->where('total', '>=', intval($this->interval()->lower_limit) + $this->additional_mark)
                         ->where('total', '<=', intval($this->interval()->upper_limit) + $this->additional_mark)

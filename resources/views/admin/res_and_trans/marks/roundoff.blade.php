@@ -6,13 +6,12 @@
         let presubmit_submit = function(element){
             let year = $('#year_id_field').val();
             let semester = $('#semester_id_field').val();
-            let course = $('#course_id_field').val();
             let class_id = $('#background_id_field').val();
-            let url = "{{ route('admin.res_and_trans.exam.roundoff', ['year_id'=>'_YR_', 'semester_id'=>'_SMST_', 'course_id'=>'_CID_', 'background_id'=>'_CLSID_']) }}".replace('_YR_', year).replace('_SMST_', semester).replace('_CID_', course).replace('_CLSID_', class_id);
+            let url = "{{ route('admin.res_and_trans.exam.roundoff', ['year_id'=>'_YR_', 'semester_id'=>'_SMST_', 'background_id'=>'_CLSID_']) }}".replace('_YR_', year).replace('_SMST_', semester).replace('_CLSID_', class_id);
             window.location = url;
         }
 
-
+        /*
         let search_course = function(element){
             let value = $(element).val();
             let _url = "{{ route('search_subjects') }}?name="+value;
@@ -40,7 +39,7 @@
             // get the result record for the course
             get_result(cid);
         }
-
+        */
         
         let loadSemesters = function(bg_element){
             let bg_id = $(bg_element).val();
@@ -72,7 +71,7 @@
                 </select>
                 <span class="text-secondary text-capitalize">@lang('text.academic_year')<i class="text-danger">*</i></span>
             </div>
-            <div class="col-md-6 col-xl-3 my-2">
+            <div class="col-md-6 col-xl-4 my-2">
                 <select class="form-control" id="background_id_field" name="background_id" onchange="loadSemesters(this)">
                     <option value="">@lang('text.select_background')</option>
                     @foreach ($backgrounds as $bg)
@@ -81,7 +80,7 @@
                 </select>
                 <span class="text-secondary text-capitalize">@lang('text.word_background')<i class="text-danger">*</i></span>
             </div>
-            <div class="col-md-6 col-xl-3 my-2">
+            <div class="col-md-6 col-xl-4 my-2">
                 <select class="form-control" id="semester_id_field" name="semester_id">
                     <option>@lang('text.word_semester')</option>
                     @isset ($semester)
@@ -90,19 +89,19 @@
                 </select>
                 <span class="text-secondary text-capitalize">@lang('text.word_semester')<i class="text-danger">*</i></span>
             </div>
-            <div class="col-md-6 col-xl-2 my-2">
+            {{-- <div class="col-md-6 col-xl-2 my-2">
                 <input type="text" class="form-control" autocomplete="off" id="course_field" oninput="search_course(this)" value="{{ !isset($course)  ? null : "[{$course->code}] {$course->name}" }}">
                 <span class="text-capitalize text-secondary">@lang('text.word_course')<i class="text-danger">*</i></span>
                 <input name="course_id" type="hidden" id="course_id_field" value="{{ $course_id }}">
                 <div class="container-fluid" id="course_display_panel"></div>
-            </div>
+            </div> --}}
             
             <div class="col-xl-2 my-2">
                 <button class="btn btn-primary rounded btn-sm" onclick="presubmit_submit()">@lang('text.word_next')</button>
             </div>
         </div>
 
-        @if($course_id != null)
+        @if($semester_id != null)
             <div class="card my-5 shadow border-left-0 border-right-0 border-top border-bottom border-dark">
                 <div class="text-center text-uppercase py-4 alert-danger border-bottom border-danger text-uppercase"><b>{{ $title }}</b></div>
                 <div class="card-body py-5 my-2">

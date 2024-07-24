@@ -78,30 +78,28 @@ class MarksBulkChangeController extends Controller
     }
     
     //
-    public function exam_roundoff_mark(Request $request, $year_id = null, $background_id=null, $semester_id = null, $course_id = null){
+    public function exam_roundoff_mark(Request $request, $year_id = null, $background_id=null, $semester_id = null){
         $data['title'] = "Roundoff Exam Marks";
         $data['year_id'] = $year_id;
         $data['semester_id'] = $semester_id;
-        $data['course_id'] = $course_id;
         $data['background_id'] = $background_id;
         $data['years'] = Batch::all();
         $data['semesters'] = Semester::orderBy('name')->get();
         $data['backgrounds'] = Background::all();
-        if($course_id != null){
+        if($semester_id != null){
             $data['year'] = Batch::find($year_id);
             $data['semester'] = Semester::find($semester_id);
-            $data['course'] = Subjects::find($course_id);
-            $data['title'] = "Roundoff Exam Marks For {$data['course']->code}, {$data['semester']->name} {$data['year']->name}";
+            $data['title'] = "Roundoff Exam Marks For {$data['semester']->name} {$data['year']->name}";
             if($background_id != null){
                 $data['background'] = Background::find($background_id);
-                $data['title'] = "Roundoff Exam Marks For [{$data['course']->code}], {$data['background']->background_name}, {$data['semester']->name} {$data['year']->name}";
+                $data['title'] = "Roundoff Exam Marks For {$data['background']->background_name}, {$data['semester']->name} {$data['year']->name}";
             }
         }
         return view('admin.res_and_trans.marks.roundoff', $data);
     }
     
     //
-    public function exam_roundoff_mark_save(Request $request, $year_id = null, $background_id=null, $semester_id = null, $course_id = null){
+    public function exam_roundoff_mark_save(Request $request, $year_id = null, $background_id=null, $semester_id = null){
         
         $validity = Validator::make($request->all(), ['mark'=>'required', 'lower_limit'=>'required', 'upper_limit'=>'required']);
 
@@ -116,7 +114,7 @@ class MarksBulkChangeController extends Controller
             $background = Background::find($background_id);
             $classes = $background->classes;
         }
-        $collection = Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id])
+        $collection = Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id])
         ->whereNotNull('exam_score')
         ->where(function($qry)use($background, $classes){
             $background == null ? null : $qry->whereIn('class_id', $classes->pluck('id')->toArray());
@@ -134,7 +132,7 @@ class MarksBulkChangeController extends Controller
             event(new BulkMarkAddedEvent(
                 $year_id, 
                 $semester_id, 
-                $course_id, 
+                $course_id = null, 
                 $action = "BULK_MARK_ROUNDOFF", 
                 $actor = auth()->user(), 
                 $additional_mark = $request->mark, 
