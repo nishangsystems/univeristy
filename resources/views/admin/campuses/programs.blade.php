@@ -26,8 +26,10 @@
                      '----'}}</td>
                 <td>
                     @if(in_array($program_level->id, $programs))
-                    <a href="{{route('admin.campuses.set_fee', [request('id'), $program_level->id])}}" class="btn btn-sm btn-primary">{{__('text.word_fees')}}</a>
-                    <!-- if class already has courses assigned to it, it can be dropped again -->
+                        @can('manage_fee_settings')
+                            <a href="{{route('admin.campuses.set_fee', [request('id'), $program_level->id])}}" class="btn btn-sm btn-primary">{{__('text.word_fees')}}</a>
+                        @endcan
+                        <!-- if class already has courses assigned to it, it can be dropped again -->
                         @if ($program_level->class_subjects()->count() == 0)
                         <a href="{{route('admin.campuses.drop_program', [request('id'), $program_level->id])}}" class="btn btn-sm btn-danger">{{__('text.word_drop')}}</a>
                         @endif
