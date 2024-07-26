@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api\parent;
+namespace \App\Http\Controllers\API\Parent;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;

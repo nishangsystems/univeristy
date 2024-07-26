@@ -33,7 +33,7 @@
                             <td>
                                 @if(auth()->user()->campus_id == null || auth()->user()->campus_id == $cps->id)
                                     <a href="{{route('admin.campuses.edit', $cps->id)}}" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_edit')}}</a>
-                                    {{-- <a href="{{route('admin.campuses.programs', $cps->id)}}" class="btn btn-sm btn-success text-capitalize">{{__('text.word_programs')}}</a> --}}
+                                    <a href="{{route('admin.campuses.programs', $cps->id)}}" class="btn btn-sm btn-success text-capitalize">{{__('text.word_programs')}}</a>
                                 @endif
                                 {{-- @if($cps->students()->count() == 0)
                                     <a href="{{route('admin.campuses.delete', $cps->id)}}" class="btn btn-sm btn-danger text-capitalize">{{__('text.word_delete')}}</a>
