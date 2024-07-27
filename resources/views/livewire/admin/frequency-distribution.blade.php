@@ -96,6 +96,15 @@
     @endphp
     @if($courses->count() > 0)
         @php
+            $gradeUpdates = [];
+            $total = [];
+
+           $total["cr"] = 0;
+           $total["ce"]= 0;
+           $total["pass"]= 0;
+           $total["failed"]= 0;
+           $total["per-pass"]= 0;
+
             $results = \App\Models\Result::where([
                 'batch_id'=>$filters['year_id'],
                 'semester_id'=>$filters['semester_id']
@@ -106,7 +115,7 @@
         <div class="my-2">
             <img src="{{ $helpers->getHeader() }}" alt="" class="w-100 d-none">
             <div class="text-center py-2">
-                <h4 class="text-decoration text-capitalize"><b>
+                <h4 class="text-decoration text-uppercase"><b>
                         {{ $_title }}
                     </b></h4>
                 <div class="d-flex overflow-auto"></div>
@@ -168,24 +177,31 @@
                             }}</td>
 
                             @php
-                                    $data = (isset(collect($res->get())->groupBy('subject_id')[$course->subject_id])?collect($res->get())->groupBy('subject_id')[$course->subject_id]:collect([]))->map(function ($result) use ($grades) {
-                                          foreach ($grades as $key => $grade) {
-                                                    $total = (($result->ca_score ?? 0 )+ ($result->exam_score ?? 0));
-                                                    $passed = $total >= 50;
-                                                    if ($total >= $grade->lower && $total <= $grade->upper) {
-                                                        return collect([
-                                                            'passed'=>$passed,
-                                                            'cv' => $result->subject->coef,
-                                                            'grade' => ($grade != "") ? $grade->grade : "-",
-                                                        ]);
+                                $total["cr"] += $students->count();
+                                 $total["ce"]  += $ce;
+                                       $data = (isset(collect($res->get())->groupBy('subject_id')[$course->subject_id])?collect($res->get())->groupBy('subject_id')[$course->subject_id]:collect([]))->map(function ($result) use ($grades) {
+                                             foreach ($grades as $key => $grade) {
+                                                       $total = (($result->ca_score ?? 0 )+ ($result->exam_score ?? 0));
+                                                       $passed = $total >= 50;
+                                                       if ($total >= $grade->lower && $total <= $grade->upper) {
+                                                           return collect([
+                                                               'passed'=>$passed,
+                                                               'cv' => $result->subject->coef,
+                                                               'grade' => ($grade != "") ? $grade->grade : "-",
+                                                           ]);
 
 
-                                            }
-                                        }
-                                    });
-                                    $passed = $data->filter(function ($item){
-                                        return $item?$item['passed']:false;
-                                    })->count()
+                                               }
+                                           }
+                                       });
+                                       $passed = $data->filter(function ($item){
+                                           return $item?$item['passed']:false;
+                                       })->count();
+
+                            $total["pass"]  += $passed;
+                            $total["failed"]  += ($ce - $passed);
+                            $total["per-pass"]  += ($ce > 0 ? number_format(100*$passed/$ce , 2):0);
+
                             @endphp
                             <td class="border-left border-right border-secondary">{{ $passed }}</td>
                             <td class="border-left border-right border-secondary">{{$ce - $passed}}</td>
@@ -198,8 +214,11 @@
                                         $gradeCount = $data->filter(function ($item) use ($grade){
 
                                             return $item?($item['grade'] == $grade->grade):false;
-                                        })->count()
+                                        })->count();
+
+                                        $gradeUpdates[$grade->grade] = isset($gradeUpdates[$grade->grade])? $gradeUpdates[$grade->grade]+$gradeCount :$gradeCount;
                                     @endphp
+
                                     {{$gradeCount}}
                                 </td>
                             @endforeach
@@ -210,14 +229,14 @@
                         <th class="border-left border-right border-secondary">{{ $courses->sum('coef') }}</th>
                         <th class="border-left border-right border-secondary" colspan="2"></th>
                         <th class="border-left border-right border-secondary"></th>
-                        <th class="border-left border-right border-secondary"></th>
-                        <th class="border-left border-right border-secondary"></th>
-                        <th class="border-left border-right border-secondary"></th>
-                        <th class="border-left border-right border-secondary"></th>
-                        <th class="border-left border-right border-secondary"></th>
+                        <th class="border-left border-right border-secondary">{{$total["cr"]}}</th>
+                        <th class="border-left border-right border-secondary">{{$total["ce"]}}</th>
+                        <th class="border-left border-right border-secondary">{{$total["pass"]}}</th>
+                        <th class="border-left border-right border-secondary">{{$total["failed"]}}</th>
+                        <th class="border-left border-right border-secondary">{{$total["per-pass"]/$courses->count()}}</th>
                         @foreach($grades as $grade)
                             <th class="border-left border-right border-secondary"
-                                class="border-left border-right border-secondary">{{$course->passed_with_grade($grade->grade, $year, request('semester_id'))}}</th>
+                                class="border-left border-right border-secondary">{{$gradeUpdates[$grade->grade]}}</th>
                         @endforeach
                     </tr>
                     <tr>

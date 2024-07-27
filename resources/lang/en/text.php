@@ -482,7 +482,7 @@ return [
     'exam_results'=>'exam results',
     'ca_results'=>'CA results',
     'results_slash_transcripts'=>'results/transcripts',
-    'frequency_distribution'=>'frequency distribution',
+    'frequency_distribution'=>"Frequency distribution of students' performance",
     'build_frequency_distribution'=>'build frequency distribution',
     'CV'=>'CV',
     'ST'=>'ST',

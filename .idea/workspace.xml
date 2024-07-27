@@ -20,21 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/DataTable/DataTable.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/DataTable/WithExport.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/DataTable/WithFilters.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/DataTable/WithPagination.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/DataTable/WithSorting.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Helpers/Helpers.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/Helpers.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultsAndTranscriptsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ResultsAndTranscriptsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/ProgramLevel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/ProgramLevel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Subjects.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Subjects.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/res_and_trans/fre_dis.blade.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/res_and_trans/spr_sheet.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/res_and_trans/spr_sheet.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lang/en/text.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/en/text.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/frequency-distribution.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/frequency-distribution.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -276,7 +264,8 @@
       <workItem from="1719831618529" duration="2921000" />
       <workItem from="1719842430849" duration="617000" />
       <workItem from="1721301697021" duration="1781000" />
-      <workItem from="1721569700994" duration="17553000" />
+      <workItem from="1721569700994" duration="18130000" />
+      <workItem from="1722088235516" duration="2226000" />
     </task>
     <servers />
   </component>
