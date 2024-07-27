@@ -15,6 +15,14 @@
                 }
             }
 
+            .border-bottom-0{
+                border-bottom: 0px transparent;
+            }
+
+            .border-top-0{
+                border-top: 0px transparent;
+            }
+
 
         </style>
 
@@ -113,37 +121,56 @@
         @endphp
 
         <div class="my-2">
-            <img src="{{ $helpers->getHeader() }}" alt="" class="w-100 d-none">
             <div class="text-center py-2">
-                <h4 class="text-decoration text-uppercase"><b>
-                        {{ $_title }}
-                    </b></h4>
+
                 <div class="d-flex overflow-auto"></div>
+                <div>
+                    <div class="d-flex justify-content-between align-items-center p-4">
+                        <div class="text-left font-weight-bold text-uppercase">
+                            BIAKA UNIVERSITY INSTITUTE OF BUEA<br>
+                            SCHOOL OF ENGINEERING<br>
+                            DEPARTMENT: <b>{{\App\Models\SchoolUnits::find($filters['program_id'])->parent->name}}</b>
+                        </div>
+                        <img src="{{\App\Models\School::first()->logo_path}}" style="100;" alt="University Logo">
+
+                       <div class=" text-uppercase text-left">
+                           <div class="font-weight-bold text-uppercase">
+                               {{\App\Models\Semester::find($filters['semester_id'])->name}} {{\App\Models\Batch::find($filters['year_id'])->name}} Academic Year
+                           </div>
+                           <div class="program">
+                               PROGRAM: <span class="font-weight-bold">{{\App\Models\SchoolUnits::find($filters['program_id'])->name}}</span>{
+                           </div>
+                       </div>
+                    </div>
+                </div>
+
+
+                <h4 class="text-decoration font-weight-bold text-uppercase pb-4"> {{ $_title }}</h4>
                 <table class="text-left">
                     <thead class="text-capitalize">
-                    <tr class="border-top border-bottom border-secondary">
-                        <th class="border-left border-right border-secondary" colspan="6"></th>
-                        <th class="border-left border-right border-secondary" colspan="1"></th>
-                        <th class="border-left border-right border-secondary"
+                    <tr class=" border-secondary">
+                        <th class=" border border-secondary" colspan="6"></th>
+                        <th class="border-left border-top border-bottom-0 border-secondary" colspan="1"></th>
+                        <th class="border border-right border-secondary"
                             colspan="3">{{__('text.word_number')}}</th>
-                        <th class="border-left border-right border-secondary" colspan="1"></th>
-                        <th class="border-left border-right border-secondary" colspan="1"></th>
-                        <th class="border-left border-right border-secondary"
+                        <th class="border border-secondary" colspan="1"></th>
+                        <th class="border-top border-left border-bottom-0 border-right border-secondary" colspan="1"></th>
+                        <th class="border border-secondary"
                             colspan="8">{{__('text.grade_and_number')}}</th>
                     </tr>
-                    <tr class="border-top border-bottom border-secondary">
-                        <th class="border-left border-right border-secondary">###</th>
-                        <th class="border-left border-right border-secondary">{{__('text.word_code')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.course_title')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.CV')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.ST')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.course_masters') }}</th>
-                        <th class="border-left border-right border-secondary">%CC</th>
-                        <th class="border-left border-right border-secondary">{{__('text.CR')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.CE')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.word_passed')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.word_failed')}}</th>
-                        <th class="border-left border-right border-secondary">{{__('text.percent_pass')}}</th>
+                    <tr >
+                        <th class="border border-secondary">###</th>
+                        <th class="border border-secondary">{{__('text.word_code')}}</th>
+                        <th class="border border-secondary">{{__('text.course_title')}}</th>
+                        <th class="border border-secondary">{{__('text.CV')}}</th>
+                        <th class="border border-secondary">{{__('text.ST')}}</th>
+                        <th class="border border-secondary">{{__('text.course_masters') }}</th>
+                        <th class="border-left border-top-0 border-right border-secondary">%CC</th>
+                        <th class="border border-secondary">{{__('text.CR')}}</th>
+                        <th class="border border-secondary">{{__('text.CE')}}</th>
+                        <th class="border border-secondary">{{__('text.word_passed')}}</th>
+                        <th class="border border-secondary">{{__('text.word_failed')}}</th>
+                        <th class="border-left border-top-0 border-right border-secondary">{{__('text.percent_pass')}}</th>
                         @foreach($grades as $grade)
                             <th class="border-left border-right border-secondary">{{$grade->grade}}</th>
                         @endforeach
@@ -206,7 +233,7 @@
                             <td class="border-left border-right border-secondary">{{ $passed }}</td>
                             <td class="border-left border-right border-secondary">{{$ce - $passed}}</td>
                             <td class="border-left border-right border-secondary">{{
-                                    $ce > 0 ? number_format(100*$passed/$ce , 2):0
+                                    number_format($ce > 0 ? number_format(100*$passed/$ce , 2):0, 1)
                                 }}</td>
                             @foreach($grades as $grade)
                                 <td class="border-left border-right border-secondary">
@@ -224,7 +251,7 @@
                             @endforeach
                         </tr>
                     @endforeach
-                    <tr class="border-top border-bottom text-capitalize">
+                    <tr class="border border-secondary text-capitalize">
                         <th class="border-left border-right border-secondary" colspan="3">@lang('text.grand_total')</th>
                         <th class="border-left border-right border-secondary">{{ $courses->sum('coef') }}</th>
                         <th class="border-left border-right border-secondary" colspan="2"></th>
@@ -233,15 +260,15 @@
                         <th class="border-left border-right border-secondary">{{$total["ce"]}}</th>
                         <th class="border-left border-right border-secondary">{{$total["pass"]}}</th>
                         <th class="border-left border-right border-secondary">{{$total["failed"]}}</th>
-                        <th class="border-left border-right border-secondary">{{$total["per-pass"]/$courses->count()}}</th>
+                        <th class="border-left border-right border-secondary">{{number_format($total["per-pass"]/$courses->count(), 1)}}</th>
                         @foreach($grades as $grade)
                             <th class="border-left border-right border-secondary"
                                 class="border-left border-right border-secondary">{{$gradeUpdates[$grade->grade]}}</th>
                         @endforeach
                     </tr>
                     <tr>
-                        <td class="border-top border-bottom" colspan="{{ 12+$grades->count() }}">
-                            <div class="d-flex justify-content-around text-capitalize">
+                        <td class="border border-secondary" colspan="{{ 12+$grades->count() }}">
+                            <div class=" d-flex justify-content-around text-capitalize">
                                 <span>CV=@lang('text.credit_value');</span>
                                 <span>ST=@lang('text.word_status')</span>
                                 <span>%CC=@lang('text.percentage_course_coverage')</span>
@@ -251,21 +278,49 @@
                             </div>
                         </td>
                     </tr>
+
+                    </tbody>
+                </table>
+
+
+                <table style="width: 300px !important; margin-top: 30px;">
+                    <tbody>
                     <tr>
-                        <td class="border-top border-bottom" colspan="{{ 12+$grades->count() }}">
-                            <div class="d-flex flex-wrap justify-content-around text-capitalize">
-                                @foreach ($course_masters as $cmaster)
-                                    <div class="text-center my-5 mx-5">____________________ <br>
-                                        <div class="margin-top-4 padding-top-1"
-                                             style="max-width: 12rem;">{{ $cmaster->user->name??"NO-NAME" }}</div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </td>
+                        <td class="border border-secondary">1</td>
+                        <td class="border border-secondary text-left">No. of script market</td>
+                        <td class="border border-secondary text-left">{{$total["ce"]}}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-secondary">2</td>
+                        <td class="border border-secondary text-left">No. of Passed scrips</td>
+                        <td class="border border-secondary text-left">{{$total["pass"]}}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-secondary">3</td>
+                        <td class="border border-secondary text-left">No. of Failed scrips</td>
+                        <td class="border border-secondary text-left">{{$total["failed"]}}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-secondary">4</td>
+                        <td class="border border-secondary text-left">Percentage passed</td>
+                        <td class="border border-secondary text-left">{{number_format($total["per-pass"]/$courses->count(), 1)}}</td>
                     </tr>
                     </tbody>
                 </table>
+                <div>
+                    <div>
+                        <div class="d-flex flex-wrap justify-content-around text-capitalize">
+                            @foreach ($course_masters as $cmaster)
+                                <div class="text-center my-5 mx-5">____________________ <br>
+                                    <div class="margin-top-4 padding-top-1"
+                                         style="max-width: 12rem;">{{ $cmaster->user->name??"NO-NAME" }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     @endif
+
 </div>

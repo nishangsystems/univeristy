@@ -20,6 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/livewire/admin/frequency-distribution.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/admin/frequency-distribution.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -263,7 +264,7 @@
       <workItem from="1719842430849" duration="617000" />
       <workItem from="1721301697021" duration="1781000" />
       <workItem from="1721569700994" duration="18130000" />
-      <workItem from="1722088235516" duration="2364000" />
+      <workItem from="1722088235516" duration="5468000" />
     </task>
     <servers />
   </component>
