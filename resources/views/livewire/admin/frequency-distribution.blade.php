@@ -10,7 +10,7 @@
                     size: A4 landscape;
                 }
 
-                button.no-print, form.no-print, div.no-print {
+                button.no-print, form.no-print, .no-print {
                     display: none !important;
                 }
             }
@@ -138,7 +138,7 @@
                                {{\App\Models\Semester::find($filters['semester_id'])->name}} {{\App\Models\Batch::find($filters['year_id'])->name}} Academic Year
                            </div>
                            <div class="program">
-                               PROGRAM: <span class="font-weight-bold">{{\App\Models\SchoolUnits::find($filters['program_id'])->name}}</span>{
+                               PROGRAM: <span class="font-weight-bold">{{\App\Models\SchoolUnits::find($filters['program_id'])->name}}</span>
                            </div>
                        </div>
                     </div>
