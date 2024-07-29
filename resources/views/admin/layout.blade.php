@@ -1425,6 +1425,17 @@
                         <b class="arrow"></b>
                         <form action="{{route('admin.res_and_trans.spr_sheet')}}" method="post" class="hidden" id="spr_sheet_post_form">@csrf</form>
                     </li>
+
+                    <li>
+                        <a class="text-capitalize" onclick="$('#spr_sheet_post_form1').submit()">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                           Spread Sheet with names
+                        </a>
+                        <b class="arrow"></b>
+                        <form action="{{route('admin.res_and_trans.spr_sheet', ['with_names'=>1])}}" method="post" class="hidden" id="spr_sheet_post_form1">@csrf</form>
+                    </li>
+
+
                     <li>
                         <a class="text-capitalize" onclick="$('#passfail_post_form').submit()">
                             <i class="menu-icon fa fa-caret-right"></i>

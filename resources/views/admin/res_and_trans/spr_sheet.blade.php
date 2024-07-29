@@ -104,12 +104,14 @@
                            <tr class="border-top border-bottom border-secondary">
                                <th class="border-left border-right border-secondary" colspan="2"></th>
                                @foreach ($courses as $course)
-                                   <th class="border-left border-right border-secondary title "   colspan="4"><span> {!! $course->subject->name !!}<br/>{{$course->subject->code}} </span></th>
+                                   <th class="border-left border-right border-secondary title "   colspan="4"><p> {!! strip_tags($course->subject->name) !!}</p><p>{{$course->subject->code}} </p></th>
                                @endforeach
                            </tr>
                            <tr class="border-top border-bottom border-secondary">
                                <th class="border-left border-right border-secondary">#</th>
-                               <th class="border-left border-right border-secondary">{{__('Name')}}</th>
+                              @if(request('with_names') == 1)
+                                   <th class="border-left border-right border-secondary" style="width: 180px">{{__('Name')}}</th>
+                              @endif
                                <th class="border-left border-right border-secondary">{{__('text.word_matricule')}}</th>
                                @foreach ($courses as $course)
                                    <th class="border-left border-right border-secondary">{{__('text.CA')}}</th>
@@ -128,7 +130,9 @@
                                @if($student->hasResult(request('class_id'), $year, request('semester_id')))
                                    <tr class="border-top border-bottom border-secondary">
                                        <td class="border-left border-right border-secondary">{{$k++}}</td>
-                                       <td class="border-left border-right text-left border-secondary">{{$student->name}}</td>
+                                       @if(request('with_names') == 1)
+                                           <td class="text-left border-left border-right border-secondary">{{$student->name}}</td>
+                                       @endif
                                        <td class="border-left border-right border-secondary">{{$student->matric}}</td>
                                        @foreach ($courses as $course)
                                            <td class="border-left border-secondary score">{{$student->ca_score($course->subject->id, request('class_id'), $year, request('semester_id'))}}</td>
