@@ -52,6 +52,7 @@ class HomeController  extends Controller
         $schools = $auth_user->headOfSchoolFor(1)->get();
         // $schools = SchoolUnits::where('id', '<=', '2')->get();
 
+        // dd(\App\Models\HeadOfSchool::where(['user_id'=>auth()->id(), 'status'=>1])->get());
         $levels = Level::all();
         if($schools->count() > 0){
             $data['is_head_of_school'] = true;
