@@ -252,7 +252,7 @@
                         <b class="arrow"></b>
                     </li> --}}
 
-                    @if($is_school_director == false)
+                    @if($is_school_director == 0)
                         <li>
                             <a href="{{route('admin.courses.import')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
@@ -274,7 +274,7 @@
             </li>
             @endif
             
-            @if($is_school_director == false)
+            @if($is_school_director == 0)
                 @if (\Auth::user()->hasPermissionTo('basic_settings'))
                 <li>
                     <a href="#" class="dropdown-toggle text-capitalize">
@@ -1643,7 +1643,7 @@
                 
             @endif
 
-            @if ($is_school_director == true)
+            @if ($is_school_director > 0)
                 <!-- Attendance management -->
                 <li>
                     <a href="#" class="dropdown-toggle text-capitalize">
@@ -1667,7 +1667,7 @@
                 <!-- End attaendance management -->
             @endif
 
-            @if($is_school_director == false)
+            @if($is_school_director == 0)
                 @if (\Auth::user()->hasPermissionTo('manage_trash'))
                     <!-- Attendance management -->
                     <li>
