@@ -36,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         View::share('helpers', \App\Helpers\Helpers::instance());
-        View::share('is_school_director', auth()->user()->headOfSchoolFor(1)->count());
+
+        View::share('is_school_director', auth()->user() == null ? null : auth()->user()->headOfSchoolFor(1)->count());
     }
 }
