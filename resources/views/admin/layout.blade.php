@@ -251,295 +251,35 @@
                         </a>
                         <b class="arrow"></b>
                     </li> --}}
-                    <li>
-                        <a href="{{route('admin.courses.import')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.import_courses')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
 
-                    <li>
-                        <a href="{{route('admin.cleaner.courses')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_clean_courses')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    @if($is_school_director == false)
+                        <li>
+                            <a href="{{route('admin.courses.import')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.import_courses')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
+                        <li>
+                            <a href="{{route('admin.cleaner.courses')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_clean_courses')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    @endif
 
                 </ul>
             </li>
             @endif
             
-            @if (\Auth::user()->hasPermissionTo('basic_settings'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-cog"></i>
-                    <span class="menu-text"> {{__('text.base_settings')}}</span>
-
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-                <b class="arrow"></b>
-
-                <ul class="submenu">
-                    
-                    <li>
-                        <a href="{{route('admin.set_letter_head')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.set_letter_head')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-                    {{-- <li>
-                        <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.set_background_image')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li> --}}
-                    <li>
-                        <a href="{{route('admin.set_watermark')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.set_watermark')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.setayear')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.set_school_year')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.setsemester')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.set_semester')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.setcontacts')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.school_contacts')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.periods')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            @lang('text.word_periods')
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_setting'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-cog"></i>
-                    <span class="menu-text"> {{__('text.settings_zone')}}</span>
-
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-                <b class="arrow"></b>
-
-                <ul class="submenu">
-                    
-                    @if(auth()->user()->campus_id == null)
-                    <li>
-                        <a href="{{route('admin.program_settings')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.program_settings')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    @endif
-
-                    @if (auth()->user()->can('manage_charges'))
-                        <li>
-                            <a href="{{route('admin.charges.set')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.set_charges')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                    @endif
-                    <li>
-                        <a href="{{route('admin.users.wages.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.hourly_wages')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    @if(auth()->user()->campus_id == null)
-                        <li>
-                            <a href="{{route('admin.result.settings')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.ca_dateline')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.course.date_line')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.ca_edit_dateline')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.course.date_line')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.course_registration_date_line')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        
-                        <li>
-                            <a href="{{route('admin.result.publishing')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.publish_results')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                                        
-                        <li>
-                            <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.manage_custom_resits')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-
-                        @if (auth()->user()->can('access_hidden_features'))
-                            <li>
-                                <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.set_background_image')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li> 
-                        @endif
-                    @endif
-
-                    @if(auth()->user()->campus_id == null)
-                    <li>
-                        <a href="{{route('admin.sections')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.manage_sections')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.programs.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.manage_programs')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-
-                    
-                    {{-- <li>
-                        <a href="{{route('admin.result_release.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.add_result_release')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li> --}}
-
-                    
-                    <li>
-                        <a href="{{route('admin.schools.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.manage_school')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    @endif
-
-                    <li>
-                        <a href="{{route('admin.campuses.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.manage_campuses')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.settings.persist')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.persist_settings')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif
-
-            @if (auth()->user()->hasPermissionTo('edit_programs'))
+            @if($is_school_director == false)
+                @if (\Auth::user()->hasPermissionTo('basic_settings'))
                 <li>
-                    <a href="{{route('admin.edit_programs')}}" class="text-capitalize">
-                        <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
-                        {{__('text.edit_programs')}}
-                    </a>
-                    <b class="arrow"></b>
-                </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_resits'))
-            <li>
-                <a href="#" class="dropdown-toggle">
-                <i style="color: {{$bg1}}" class="menu-icon fa fa-recycle"></i>
-                    <span class="menu-text text-capitalize">
-						{{__('text.manage_resits')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-                <ul class="submenu">
-                    
-                    <li>
-                        <a href="{{route('admin.resits.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_resits')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.resits.payments.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.resit_payments')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_student'))
-                <li>
-                    <a href="#" class="dropdown-toggle">
-                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-graduation-cap"></i>
-                        <span class="menu-text text-capitalize"> {{__('text.student_management')}}</span>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-cog"></i>
+                        <span class="menu-text"> {{__('text.base_settings')}}</span>
 
                         <b class="arrow fa fa-angle-down"></b>
                     </a>
@@ -547,1110 +287,1363 @@
                     <b class="arrow"></b>
 
                     <ul class="submenu">
+                        
                         <li>
-                            <a href="{{route('admin.student.create')}}" class="text-capitalize">
+                            <a href="{{route('admin.set_letter_head')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.enroll_student')}}
+                                {{__('text.set_letter_head')}}
                             </a>
+
                             <b class="arrow"></b>
                         </li>
-                        <li>
-                            <a href="{{route('admin.student.index')}}" class="text-capitalize">
+                        {{-- <li>
+                            <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.enrolled_students')}}
+                                {{__('text.set_background_image')}}
                             </a>
+
                             <b class="arrow"></b>
-                        </li>
+                        </li> --}}
                         <li>
-                            <a href="{{route('admin.students.inactive')}}" class="text-capitalize">
+                            <a href="{{route('admin.set_watermark')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.inactive_students')}}
+                                {{__('text.set_watermark')}}
                             </a>
+
                             <b class="arrow"></b>
                         </li>
                         
                         <li>
-                            <a href="{{route('admin.class.list')}}?action=class_list"  class="text-capitalize">
+                            <a href="{{route('admin.setayear')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.class_list')}}
+                                {{__('text.set_school_year')}}
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.setsemester')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.set_semester')}}
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.setcontacts')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.school_contacts')}}
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.periods')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                @lang('text.word_periods')
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('manage_setting'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-cog"></i>
+                        <span class="menu-text"> {{__('text.settings_zone')}}</span>
+
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+                    <b class="arrow"></b>
+
+                    <ul class="submenu">
+                        
+                        @if(auth()->user()->campus_id == null)
+                        <li>
+                            <a href="{{route('admin.program_settings')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.program_settings')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
-                        
+                        @endif
+
+                        @if (auth()->user()->can('manage_charges'))
+                            <li>
+                                <a href="{{route('admin.charges.set')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.set_charges')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
                         <li>
-                            <a href="{{route('admin.student.bulk.index')}}?action=class_list"  class="text-capitalize">
+                            <a href="{{route('admin.users.wages.index')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.student_listing')}}
+                            {{__('text.hourly_wages')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
 
+                        @if(auth()->user()->campus_id == null)
+                            <li>
+                                <a href="{{route('admin.result.settings')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.ca_dateline')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.course.date_line')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.ca_edit_dateline')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.course.date_line')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.course_registration_date_line')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            
+                            <li>
+                                <a href="{{route('admin.result.publishing')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.publish_results')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                                            
+                            <li>
+                                <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.manage_custom_resits')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+
+                            @if (auth()->user()->can('access_hidden_features'))
+                                <li>
+                                    <a href="{{route('admin.set_background_image')}}" class="text-capitalize">
+                                        <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.set_background_image')}}
+                                    </a>
+                                    <b class="arrow"></b>
+                                </li> 
+                            @endif
+                        @endif
+
+                        @if(auth()->user()->campus_id == null)
                         <li>
-                            <a href="{{route('admin.students.import')}}"  class="text-capitalize">
+                            <a href="{{route('admin.sections')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{trans_choice('text.import_student', 2)}}
+                                {{__('text.manage_sections')}}
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+                        
+                        <li>
+                            <a href="{{route('admin.programs.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.manage_programs')}}
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+
+                        
+                        {{-- <li>
+                            <a href="{{route('admin.result_release.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.add_result_release')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li> --}}
+
+                        
+                        <li>
+                            <a href="{{route('admin.schools.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.manage_school')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
-                        @if (\Auth::user()->hasPermissionTo('promote_students'))
-                            <li>
-                                <a href="{{route('admin.students.init_promotion')}}"  class="text-capitalize">
-                                    <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
-                                    {{__('text.promote_students')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="{{route('admin.students.custom_promotion')}}"  class="text-capitalize">
-                                    <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
-                                    {{__('text.custom_promotion')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="{{route('admin.students.repeat_students')}}"  class="text-capitalize">
-                                    <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
-                                    {{__('text.repeat_students')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
                         @endif
+
                         <li>
-                            <a href="{{route('admin.students.promotions')}}"  class="text-capitalize">
-                                <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
-                                {{__('text.promotion_history')}}
+                            <a href="{{route('admin.campuses.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.manage_campuses')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
-                        @if (\Auth::user()->hasPermissionTo('demote_students-option_already_removed'))
-                            <li>
-                                <a href="{{route('admin.students.init_demotion')}}?type=promotion" class="text-capitalize">
-                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
-                                    {{__('text.demote_students')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="{{route('admin.students.init_demotion')}}?type=demotion" class="text-capitalize">
-                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
-                                    {{__('text.word_demotions')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                        @endif
-                        @if (\Auth::user()->hasPermissionTo('approve_promotion'))
-                            <li>
-                                <a href="{{route('admin.students.trigger_approval')}}" class="text-capitalize">
-                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
-                                    {{__('text.validate_promotion')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                        @endif
-                        @if (\Auth::user()->hasPermissionTo('bypass_result'))
-                            <li>
-                                <a href="{{route('admin.result.bypass')}}" class="text-capitalize">
-                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
-                                    {{__('text.bypass_result')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                        @endif
+                        
                         <li>
-                            <a href="{{route('admin.student.section')}}" class="text-capitalize">
-                                <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
-                                {{__('text.change_section')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.bio_data.download')}}" class="text-capitalize">
-                                <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
-                                @lang('text.student_data')
+                            <a href="{{route('admin.settings.persist')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.persist_settings')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
                     </ul>
                 </li>
-            @endif
+                @endif
 
-            @if (\Auth::user()->hasPermissionTo('manage_stock'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
-                    <span class="menu-text">
-						{{__('text.stock_management')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    @if(auth()->user()->campus_id == null)
+                @if (auth()->user()->hasPermissionTo('edit_programs'))
                     <li>
-                        <a href="{{route('admin.stock.create')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.create_item')}}
+                        <a href="{{route('admin.edit_programs')}}" class="text-capitalize">
+                            <i  style="color: {{$bg1}};" class="fa fa-refresh menu-icon   "></i>
+                            {{__('text.edit_programs')}}
                         </a>
                         <b class="arrow"></b>
                     </li>
-                    
-                    <li>
-                        <a href="{{route('admin.stock.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_items')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                @endif
 
-                    @endif
-
-
-
-                    @if(!auth()->user()->campus_id == null)
-                    <li>
-                        <a href="{{route('admin.stock.campus.index', auth()->user()->campus_id)}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_items')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.stock.campus.givable.report', auth()->user()->campus_id)}}?type=givable" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.givable_report')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.stock.campus.receivable.report', auth()->user()->campus_id)}}?type=receivable" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.receivable_report')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    @endif
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_fee_settings'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-dollar"></i>
-                    <span class="menu-text">
-						{{__('text.fee_settings')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    
-                    <li>
-                        <a href="{{route('admin.fee_settings')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_fee')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.banks')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_banks')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_transcripts'))
+                @if (\Auth::user()->hasPermissionTo('manage_resits'))
                 <li>
-                    <a href="#" class="dropdown-toggle text-capitalize">
-                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-flag"></i>
-                        <span class="menu-text">
-                            {{__('text.online_transcripts')}}
+                    <a href="#" class="dropdown-toggle">
+                    <i style="color: {{$bg1}}" class="menu-icon fa fa-recycle"></i>
+                        <span class="menu-text text-capitalize">
+                            {{__('text.manage_resits')}}
                             </span>
                         <b class="arrow fa fa-angle-down"></b>
                     </a>
 
                     <ul class="submenu">
-                        @if (\Auth::user()->hasPermissionTo('configure_transcripts'))
+                        
+                        <li>
+                            <a href="{{route('admin.resits.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_resits')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        
+                        <li>
+                            <a href="{{route('admin.resits.payments.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.resit_payments')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                    </ul>
+                </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('manage_student'))
+                    <li>
+                        <a href="#" class="dropdown-toggle">
+                            <i  style="color: {{$bg1}}"class="menu-icon  fa fa-graduation-cap"></i>
+                            <span class="menu-text text-capitalize"> {{__('text.student_management')}}</span>
+
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+
+                        <b class="arrow"></b>
+
+                        <ul class="submenu">
                             <li>
-                                <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.config')}}">
+                                <a href="{{route('admin.student.create')}}" class="text-capitalize">
                                     <i class="menu-icon fa fa-caret-right"></i>
-                                    {{__('text.word_configure')}}
+                                    {{__('text.enroll_student')}}
                                 </a>
                                 <b class="arrow"></b>
                             </li>
+                            <li>
+                                <a href="{{route('admin.student.index')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.enrolled_students')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.students.inactive')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.inactive_students')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            
+                            <li>
+                                <a href="{{route('admin.class.list')}}?action=class_list"  class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.class_list')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            
+                            <li>
+                                <a href="{{route('admin.student.bulk.index')}}?action=class_list"  class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.student_listing')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+
+                            <li>
+                                <a href="{{route('admin.students.import')}}"  class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{trans_choice('text.import_student', 2)}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            @if (\Auth::user()->hasPermissionTo('promote_students'))
+                                <li>
+                                    <a href="{{route('admin.students.init_promotion')}}"  class="text-capitalize">
+                                        <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
+                                        {{__('text.promote_students')}}
+                                    </a>
+                                    <b class="arrow"></b>
+                                </li>
+                                <li>
+                                    <a href="{{route('admin.students.custom_promotion')}}"  class="text-capitalize">
+                                        <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
+                                        {{__('text.custom_promotion')}}
+                                    </a>
+                                    <b class="arrow"></b>
+                                </li>
+                                <li>
+                                    <a href="{{route('admin.students.repeat_students')}}"  class="text-capitalize">
+                                        <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
+                                        {{__('text.repeat_students')}}
+                                    </a>
+                                    <b class="arrow"></b>
+                                </li>
+                            @endif
+                            <li>
+                                <a href="{{route('admin.students.promotions')}}"  class="text-capitalize">
+                                    <strong  style="color: {{$bg1}}"class=" menu-icon ">&leftrightharpoons;</strong>
+                                    {{__('text.promotion_history')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            @if (\Auth::user()->hasPermissionTo('demote_students-option_already_removed'))
+                                <li>
+                                    <a href="{{route('admin.students.init_demotion')}}?type=promotion" class="text-capitalize">
+                                        <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
+                                        {{__('text.demote_students')}}
+                                    </a>
+                                    <b class="arrow"></b>
+                                </li>
+                                <li>
+                                    <a href="{{route('admin.students.init_demotion')}}?type=demotion" class="text-capitalize">
+                                        <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
+                                        {{__('text.word_demotions')}}
+                                    </a>
+                                    <b class="arrow"></b>
+                                </li>
+                            @endif
+                            @if (\Auth::user()->hasPermissionTo('approve_promotion'))
+                                <li>
+                                    <a href="{{route('admin.students.trigger_approval')}}" class="text-capitalize">
+                                        <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
+                                        {{__('text.validate_promotion')}}
+                                    </a>
+                                    <b class="arrow"></b>
+                                </li>
+                            @endif
+                            @if (\Auth::user()->hasPermissionTo('bypass_result'))
+                                <li>
+                                    <a href="{{route('admin.result.bypass')}}" class="text-capitalize">
+                                        <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
+                                        {{__('text.bypass_result')}}
+                                    </a>
+                                    <b class="arrow"></b>
+                                </li>
+                            @endif
+                            <li>
+                                <a href="{{route('admin.student.section')}}" class="text-capitalize">
+                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
+                                    {{__('text.change_section')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.bio_data.download')}}" class="text-capitalize">
+                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
+                                    @lang('text.student_data')
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('manage_stock'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-folder-open"></i>
+                        <span class="menu-text">
+                            {{__('text.stock_management')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+
+                    <ul class="submenu">
+                        @if(auth()->user()->campus_id == null)
+                        <li>
+                            <a href="{{route('admin.stock.create')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.create_item')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        
+                        <li>
+                            <a href="{{route('admin.stock.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_items')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
                         @endif
+
+
+
+                        @if(!auth()->user()->campus_id == null)
                         <li>
-                            <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.completed')}}">
+                            <a href="{{route('admin.stock.campus.index', auth()->user()->campus_id)}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.word_completed')}}
+                                {{__('text.word_items')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
                         <li>
-                            <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.pending')}}">
+                            <a href="{{route('admin.stock.campus.givable.report', auth()->user()->campus_id)}}?type=givable" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.word_pending')}}
+                                {{__('text.givable_report')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
                         <li>
-                            <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.undone')}}">
+                            <a href="{{route('admin.stock.campus.receivable.report', auth()->user()->campus_id)}}?type=receivable" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.word_undone')}}
+                                {{__('text.receivable_report')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        @endif
+                    </ul>
+                </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('manage_fee_settings'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-dollar"></i>
+                        <span class="menu-text">
+                            {{__('text.fee_settings')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+
+                    <ul class="submenu">
+                        
+                        <li>
+                            <a href="{{route('admin.fee_settings')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_fee')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
                         <li>
-                            <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.summary')}}">
+                            <a href="{{route('admin.banks')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.word_summary')}}
+                                {{__('text.word_banks')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                    </ul>
+                </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('manage_transcripts'))
+                    <li>
+                        <a href="#" class="dropdown-toggle text-capitalize">
+                            <i  style="color: {{$bg1}}"class="menu-icon  fa fa-flag"></i>
+                            <span class="menu-text">
+                                {{__('text.online_transcripts')}}
+                                </span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+
+                        <ul class="submenu">
+                            @if (\Auth::user()->hasPermissionTo('configure_transcripts'))
+                                <li>
+                                    <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.config')}}">
+                                        <i class="menu-icon fa fa-caret-right"></i>
+                                        {{__('text.word_configure')}}
+                                    </a>
+                                    <b class="arrow"></b>
+                                </li>
+                            @endif
+                            <li>
+                                <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.completed')}}">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_completed')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.pending')}}">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_pending')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.undone')}}">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_undone')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a class="text-capitalize" href="{{route('admin.res_and_trans.transcripts.summary')}}">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_summary')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('manage_fee'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-eur"></i>
+                        <span class="menu-text">
+                            {{__('text.fee_managenent')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+
+                    <ul class="submenu">
+                        
+                        <li>
+                            <a href="{{route('admin.extra-fee')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.collect_etxra_fee')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        
+                        <li>
+                            <a href="{{route('admin.fee.collect')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.collect_fee')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.print_fee')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.print_reciept')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.fee.daily_report')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.daily_reports')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.import_fee')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.import_fees')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.fee')}}?type=completed" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.completed_fees')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.fee')}}?type=uncompleted" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.uncompleted_fees')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.fee.drive')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.fee_drive')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        
+                        <li>
+                            <a href="{{route('admin.fee.situation')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.fee_situation')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        
+                        <li>
+                            <a href="{{route('admin.reg.fee.situation')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.registration_fee_situation')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        
+                        <li>
+                            <a href="{{route('admin.fee.situation.combined')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.combined_fee_situation')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.clearance.fee')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.fees_clearance')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
                     </ul>
                 </li>
-            @endif
+                @endif
 
-            @if (\Auth::user()->hasPermissionTo('manage_fee'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-eur"></i>
-                    <span class="menu-text">
-						{{__('text.fee_managenent')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    
-                    <li>
-                        <a href="{{route('admin.extra-fee')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.collect_etxra_fee')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.fee.collect')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.collect_fee')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.print_fee')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.print_reciept')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.fee.daily_report')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.daily_reports')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                     <li>
-                        <a href="{{route('admin.import_fee')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.import_fees')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.fee')}}?type=completed" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.completed_fees')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.fee')}}?type=uncompleted" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.uncompleted_fees')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.fee.drive')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.fee_drive')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.fee.situation')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.fee_situation')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.reg.fee.situation')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.registration_fee_situation')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.fee.situation.combined')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.combined_fee_situation')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.clearance.fee')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.fees_clearance')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_scholarship'))
-            <li>
-                <a href="#" class="dropdown-toggle">
-                <i style="color: {{$bg1}}" class="menu-icon fa fa-graduation-cap"></i>
-                    <span class="menu-text text-capitalize">
-						{{trans_choice('text.scholarship', 2)}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                @if (\Auth::user()->hasPermissionTo('manage_scholarship'))
+                <li>
+                    <a href="#" class="dropdown-toggle">
+                    <i style="color: {{$bg1}}" class="menu-icon fa fa-graduation-cap"></i>
+                        <span class="menu-text text-capitalize">
+                            {{trans_choice('text.scholarship', 2)}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
 
-                <ul class="submenu">
-                    
-                    <li>
-                        <a href="{{route('admin.scholarship.eligible')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.award_scholarship')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    <ul class="submenu">
+                        
+                        <li>
+                            <a href="{{route('admin.scholarship.eligible')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.award_scholarship')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                     <li>
-                        <a href="{{route('admin.scholarship.awarded_students')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{trans_choice('text.our_scholar', 2)}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif
+                        <li>
+                            <a href="{{route('admin.scholarship.awarded_students')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{trans_choice('text.our_scholar', 2)}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+                @endif
 
-            @if (\Auth::user()->hasPermissionTo('manage_incomes'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                <i style="color: {{$bg1}}" class="menu-icon fa fa-money"></i>
-                    <span class="menu-text">
-						{{__('text.other_incomes')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.income.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.income_list')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                     <li>
-                        <a href="{{route('admin.income.pay_income.create')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.collect_income')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                     <li>
-                        <a href="{{route('admin.income.pay_income.create_cash')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.collect_cash')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                     <li>
-                        <a href="{{route('admin.pay_income.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.paid_incomes')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_expenses'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                <i style="color: {{$bg1}}" class="menu-icon fa fa-spinner"></i>
-                    <span class="menu-text">
-						{{__('text.school_expenses')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                @if (\Auth::user()->hasPermissionTo('manage_incomes'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                    <i style="color: {{$bg1}}" class="menu-icon fa fa-money"></i>
+                        <span class="menu-text">
+                            {{__('text.other_incomes')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
 
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.expense.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.expense_list')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('admin.income.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.income_list')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.income.pay_income.create')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.collect_income')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.income.pay_income.create_cash')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.collect_cash')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.pay_income.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.paid_incomes')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+                @endif
 
-            @if (\Auth::user()->hasPermissionTo('manage_notifications'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                <i style="color: {{$bg1}}" class="menu-icon fa fa-bell"></i>
-                    <span class="menu-text">
-						{{__('text.manage_notifications')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('notifications.index', ['S', 0, auth()->user()->campus_id ?? 0])}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_notifications')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.student.bulk.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_create')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.student.bulk.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.send_SMS')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif
-            
-            @if(auth()->user()->campus_id != null)
+                @if (\Auth::user()->hasPermissionTo('manage_expenses'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                    <i style="color: {{$bg1}}" class="menu-icon fa fa-spinner"></i>
+                        <span class="menu-text">
+                            {{__('text.school_expenses')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('admin.expense.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.expense_list')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+                @endif
+
                 @if (\Auth::user()->hasPermissionTo('manage_notifications'))
                 <li>
                     <a href="#" class="dropdown-toggle text-capitalize">
-                    <i style="color: {{$bg1}}" class="menu-icon fa fa-comments"></i>
+                    <i style="color: {{$bg1}}" class="menu-icon fa fa-bell"></i>
                         <span class="menu-text">
-                            {{__('text.manage_messages')}}
+                            {{__('text.manage_notifications')}}
                             </span>
                         <b class="arrow fa fa-angle-down"></b>
                     </a>
                     <ul class="submenu">
                         <li>
-                            <a href="{{route('messages.create')}}" class="text-capitalize">
+                            <a href="{{route('notifications.index', ['S', 0, auth()->user()->campus_id ?? 0])}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_notifications')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.student.bulk.index')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.word_create')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
                         <li>
-                            <a href="{{route('messages.sent')}}" class="text-capitalize">
+                            <a href="{{route('admin.student.bulk.index')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.word_sent')}}
+                                {{__('text.send_SMS')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
                     </ul>
                 </li>
                 @endif
+                
+                @if(auth()->user()->campus_id != null)
+                    @if (\Auth::user()->hasPermissionTo('manage_notifications'))
+                    <li>
+                        <a href="#" class="dropdown-toggle text-capitalize">
+                        <i style="color: {{$bg1}}" class="menu-icon fa fa-comments"></i>
+                            <span class="menu-text">
+                                {{__('text.manage_messages')}}
+                                </span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        <ul class="submenu">
+                            <li>
+                                <a href="{{route('messages.create')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_create')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('messages.sent')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_sent')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
 
-                @if (\Auth::user()->hasPermissionTo('manage_faqs'))
+                    @if (\Auth::user()->hasPermissionTo('manage_faqs'))
+                    <li>
+                        <a href="#" class="dropdown-toggle text-capitalize">
+                        <i style="color: {{$bg1}}" class="menu-icon fa fa-question"></i>
+                            <span class="menu-text">
+                                {{__('text.manage_faqs')}}
+                                </span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        <ul class="submenu">
+                            <li>
+                                <a href="{{route('faqs.index')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_faqs')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('faqs.create')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_create')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('manage_school_debts'))
                 <li>
                     <a href="#" class="dropdown-toggle text-capitalize">
-                    <i style="color: {{$bg1}}" class="menu-icon fa fa-question"></i>
+                    <i class="menu-icon fa fa-money"></i>
                         <span class="menu-text">
-                            {{__('text.manage_faqs')}}
+                            {{__('text.school_debts')}}
                             </span>
                         <b class="arrow fa fa-angle-down"></b>
                     </a>
                     <ul class="submenu">
                         <li>
-                            <a href="{{route('faqs.index')}}" class="text-capitalize">
+                            <a href="{{route('admin.debts.schoolDebts')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.word_faqs')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li>
-                            <a href="{{route('faqs.create')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.word_create')}}
+                                {{__('text.manage_school_debts')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
                     </ul>
                 </li>
                 @endif
-            @endif
 
-            @if (\Auth::user()->hasPermissionTo('manage_school_debts'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                <i class="menu-icon fa fa-money"></i>
-                    <span class="menu-text">
-						{{__('text.school_debts')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.debts.schoolDebts')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.manage_school_debts')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_result'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon fa fa-question-circle"></i>
-                    <span class="menu-text">
-						{{__('text.marks_management')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                @if (\Auth::user()->hasPermissionTo('manage_result'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon fa fa-question-circle"></i>
+                        <span class="menu-text">
+                            {{__('text.marks_management')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
 
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.result.ca.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.CA')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('admin.result.exam.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_exams')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('admin.result.ca.special')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.special_ca')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('admin.result.exam.special')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.special_exams')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.result.migrate')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.migrate_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.result.super.migrate')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.super_migrate')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('admin.result.imports')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_imports')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    
-                    @if (\Auth::user()->hasPermissionTo('manage_result_coding'))
+                    <ul class="submenu">
                         <li>
-                            <a href="{{route('admin.result.encoded.index')}}" class="text-capitalize">
+                            <a href="{{route('admin.result.ca.index')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.word_encoding')}}
+                                {{__('text.CA')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+
+                        <li>
+                            <a href="{{route('admin.result.exam.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_exams')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+
+                        <li>
+                            <a href="{{route('admin.result.ca.special')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.special_ca')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+
+                        <li>
+                            <a href="{{route('admin.result.exam.special')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.special_exams')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.result.migrate')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.migrate_results')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.result.super.migrate')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.super_migrate')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+
+                        <li>
+                            <a href="{{route('admin.result.imports')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_imports')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        
+                        @if (\Auth::user()->hasPermissionTo('manage_result_coding'))
+                            <li>
+                                <a href="{{route('admin.result.encoded.index')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_encoding')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.result.decoded.index')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_decoding')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
+
+                        <li>
+                            <a href="{{route('admin.res_and_trans.alter_results')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.add_course')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.res_and_trans.alter_results.change')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.change_CA_or_exam_mark')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.res_and_trans.alter_results.delete')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.delete_course')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.res_and_trans.exam.add_mark')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.add_marks')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.res_and_trans.exam.roundoff')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.roundoff_marks')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.result.ca.upload_report')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.ca_upload_report')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.result.exam.upload_report')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.exam_upload_report')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                    </ul>
+                </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('manage_importation'))
+                <li>
+                    <a href="#" class="dropdown-toggle">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-rocket"></i>
+                        <span class="menu-text text-capitalize">
+                            {{__('text.importation_center')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('admin.imports.import_ca')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.import_ca')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        
+                        <li>
+                            <a href="{{route('admin.imports.import_exam')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.import_exams')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        
+                        <li>
+                            <a href="{{route('admin.imports.clear_ca')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.clear_results')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+
+                        <li>
+                            <a href="{{route('admin.import_fee')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.import_fees')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
                         <li>
-                            <a href="{{route('admin.result.decoded.index')}}" class="text-capitalize">
+                            <a href="{{route('admin.imports.clear_fee')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.word_decoding')}}
+                                {{__('text.clear_fees')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
-                    @endif
+                    </ul>
+                </li>
+                @endif
 
-                    <li>
-                        <a href="{{route('admin.res_and_trans.alter_results')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.add_course')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                @if (\Auth::user()->hasPermissionTo('manage_transcripts_and_results'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-circle"></i>
+                        <span class="menu-text">
+                            {{__('text.results_slash_transcripts')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
-                    <li>
-                        <a href="{{route('admin.res_and_trans.alter_results.change')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.change_CA_or_exam_mark')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.res_and_trans.alter_results.delete')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.delete_course')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.res_and_trans.exam.add_mark')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.add_marks')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.res_and_trans.exam.roundoff')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.roundoff_marks')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.result.ca.upload_report')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.ca_upload_report')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.result.exam.upload_report')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.exam_upload_report')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_importation'))
-            <li>
-                <a href="#" class="dropdown-toggle">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-rocket"></i>
-                    <span class="menu-text text-capitalize">
-						{{__('text.importation_center')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.imports.import_ca')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.import_ca')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.imports.import_exam')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.import_exams')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.imports.clear_ca')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.clear_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('admin.import_fee')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.import_fees')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.imports.clear_fee')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.clear_fees')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_transcripts_and_results'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-circle"></i>
-                    <span class="menu-text">
-						{{__('text.results_slash_transcripts')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-
-                <ul class="submenu">
-                    
-                    <li>
-                        <a class="text-capitalize" onclick="$('#ca_only_post_form').submit()">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.CA_only')}}
-                        </a>
-                        <b class="arrow"></b>
-                        <form action="{{route('admin.res_and_trans.ca_only')}}" method="post" class="hidden" id="ca_only_post_form">@csrf</form>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.result.individual_results')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.individual_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.transcript.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.print_transcript')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-
-                    <li>
-                        <a href="{{route('admin.result.class_results')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.class_results')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('result_statistics'))
-            <li>
-                <a href="#" class="dropdown-toggle">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-rocket"></i>
-                    <span class="menu-text text-capitalize">
-						{{__('text.result_statistics')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-                <ul class="submenu">
-                    <li>
-                        <a class="text-capitalize" href="{{route('admin.res_and_trans.fre_dis')}}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.frequency_distribution')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a class="text-capitalize" onclick="$('#spr_sheet_post_form').submit()">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.spread_sheet')}}
-                        </a>
-                        <b class="arrow"></b>
-                        <form action="{{route('admin.res_and_trans.spr_sheet')}}" method="post" class="hidden" id="spr_sheet_post_form">@csrf</form>
-                    </li>
-
-                    <li>
-                        <a class="text-capitalize" onclick="$('#spr_sheet_post_form1').submit()">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           Spread Sheet with names
-                        </a>
-                        <b class="arrow"></b>
-                        <form action="{{route('admin.res_and_trans.spr_sheet', ['with_names'=>1])}}" method="post" class="hidden" id="spr_sheet_post_form1">@csrf</form>
-                    </li>
-
-
-                    <li>
-                        <a class="text-capitalize" onclick="$('#passfail_post_form').submit()">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.passfail_report')}}
-                        </a>
-                        <b class="arrow"></b>
-                        <form action="{{route('admin.res_and_trans.passfail_report')}}" method="post" class="hidden" id="passfail_post_form">@csrf</form>
-                    </li>
-                    <li>
-                        <a class="text-capitalize" onclick="$('#sem_res_post_form').submit()">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.semester_results_report')}}
-                        </a>
-                        <b class="arrow"></b>
-                        <form action="{{route('admin.res_and_trans.sem_res_report')}}" method="post" class="hidden" id="sem_res_post_form">@csrf</form>
-                    </li>
-                    <li>
-                        <a class="text-capitalize" onclick="$('#grd_post_form').submit()">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.grades_sheet')}}
-                        </a>
-                        <b class="arrow"></b>
-                        <form action="{{route('admin.res_and_trans.grd_sheet')}}" method="post" class="hidden" id="grd_post_form">@csrf</form>
-                    </li>
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_statistics'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-signal"></i>
-                    <span class="menu-text"> {{__('text.statistics_zone')}}</span>
-
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-                <b class="arrow"></b>
-
-                <ul class="submenu">
-                    @if (\Auth::user()->hasPermissionTo('manage_student_statistics'))
-                    <li>
-                        <a href="{{route('admin.stats.students')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.student_statistics')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    @endif
-                    @if (\Auth::user()->hasPermissionTo('__________manage_result_statistics'))
-                    <li>
-                        <a href="{{route('admin.stats.results')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.results_statistics')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-                    @endif
-                    @if (\Auth::user()->hasPermissionTo('manage_finance_statistics'))
-                    <li>
-                        <a href="{{route('admin.stats.fees')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.fee_statistics')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-                    
-                    <li>
-                        <a href="{{route('admin.stats.regfees')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.registration_fee_statistics')}}
-                        </a>
-
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.stats.income')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.income_statistics')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.stats.expenditure')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.expenditure_statistics')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.stats.ie_report')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{__('text.IE_report')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    @endif
-                </ul>
-            </li>
-            @endif
-
-            @if (\Auth::user()->hasPermissionTo('manage_user'))
-            <li>
-                <a href="#" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
-                    <span class="menu-text">
-						{{__('text.user_accounts')}}
-						</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-
-                <ul class="submenu">
-                    @if(auth()->user()->campus_id == null)
-                    <li>
-                        <a href="{{route('admin.users.index')}}?type=admin" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{trans_choice('text.add_admin', 2)}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    @endif
-
-                    <li>
-                        <a href="{{route('admin.headOfSchools.users')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{trans_choice('text.head_of_school', 2)}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.users.classmaster')}}?type=teacher" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{trans_choice('text.word_HOD', 2)}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.users.index')}}?type=teacher" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{trans_choice('text.word_teacher', 2)}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <li>
-                        <a href="{{route('admin.delegates.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.class_delegates')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    @if(auth()->user()->campus_id == null)
-                    <li>
-                        <a href="{{route('admin.roles.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                           {{trans_choice('text.role', 2)}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    @if(auth()->user()->hasPermissionTo('reset_user_password'))
+                    <ul class="submenu">
+                        
                         <li>
-                            <a href="{{route('admin.users.reset_password')}}" class="text-capitalize">
+                            <a class="text-capitalize" onclick="$('#ca_only_post_form').submit()">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.reset_password')}}
+                                {{__('text.CA_only')}}
+                            </a>
+                            <b class="arrow"></b>
+                            <form action="{{route('admin.res_and_trans.ca_only')}}" method="post" class="hidden" id="ca_only_post_form">@csrf</form>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.result.individual_results')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.individual_results')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
-                    @endif
-                    @endif
-                </ul>
-            </li>
-            @endif
-                
-            @if (\Auth::user()->hasPermissionTo('manage_attendance'))
-                <!-- Attendance management -->
+
+                        <li>
+                            <a href="{{route('admin.transcript.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.print_transcript')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+
+                        <li>
+                            <a href="{{route('admin.result.class_results')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.class_results')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        
+                    </ul>
+                </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('result_statistics'))
+                <li>
+                    <a href="#" class="dropdown-toggle">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-rocket"></i>
+                        <span class="menu-text text-capitalize">
+                            {{__('text.result_statistics')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+                    <ul class="submenu">
+                        <li>
+                            <a class="text-capitalize" href="{{route('admin.res_and_trans.fre_dis')}}">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.frequency_distribution')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a class="text-capitalize" onclick="$('#spr_sheet_post_form').submit()">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.spread_sheet')}}
+                            </a>
+                            <b class="arrow"></b>
+                            <form action="{{route('admin.res_and_trans.spr_sheet')}}" method="post" class="hidden" id="spr_sheet_post_form">@csrf</form>
+                        </li>
+                        <li>
+                            <a class="text-capitalize" onclick="$('#passfail_post_form').submit()">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.passfail_report')}}
+                            </a>
+                            <b class="arrow"></b>
+                            <form action="{{route('admin.res_and_trans.passfail_report')}}" method="post" class="hidden" id="passfail_post_form">@csrf</form>
+                        </li>
+                        <li>
+                            <a class="text-capitalize" onclick="$('#sem_res_post_form').submit()">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.semester_results_report')}}
+                            </a>
+                            <b class="arrow"></b>
+                            <form action="{{route('admin.res_and_trans.sem_res_report')}}" method="post" class="hidden" id="sem_res_post_form">@csrf</form>
+                        </li>
+                        <li>
+                            <a class="text-capitalize" onclick="$('#grd_post_form').submit()">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.grades_sheet')}}
+                            </a>
+                            <b class="arrow"></b>
+                            <form action="{{route('admin.res_and_trans.grd_sheet')}}" method="post" class="hidden" id="grd_post_form">@csrf</form>
+                        </li>
+                    </ul>
+                </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('manage_statistics'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-signal"></i>
+                        <span class="menu-text"> {{__('text.statistics_zone')}}</span>
+
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+                    <b class="arrow"></b>
+
+                    <ul class="submenu">
+                        @if (\Auth::user()->hasPermissionTo('manage_student_statistics'))
+                        <li>
+                            <a href="{{route('admin.stats.students')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.student_statistics')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        @endif
+                        @if (\Auth::user()->hasPermissionTo('__________manage_result_statistics'))
+                        <li>
+                            <a href="{{route('admin.stats.results')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.results_statistics')}}
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+                        @endif
+                        @if (\Auth::user()->hasPermissionTo('manage_finance_statistics'))
+                        <li>
+                            <a href="{{route('admin.stats.fees')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.fee_statistics')}}
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+                        
+                        <li>
+                            <a href="{{route('admin.stats.regfees')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.registration_fee_statistics')}}
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.stats.income')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.income_statistics')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.stats.expenditure')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.expenditure_statistics')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.stats.ie_report')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.IE_report')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        @endif
+                    </ul>
+                </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('manage_user'))
                 <li>
                     <a href="#" class="dropdown-toggle text-capitalize">
                         <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
                         <span class="menu-text">
-                            {{__('text.manage_attendance')}}
+                            {{__('text.user_accounts')}}
                             </span>
                         <b class="arrow fa fa-angle-down"></b>
                     </a>
 
                     <ul class="submenu">
-                        @if(auth()->user()->campus_id != null)
+                        @if(auth()->user()->campus_id == null)
                         <li>
-                            <a href="{{route('admin.attendance.teacher.init')}}?type=admin" class="text-capitalize">
+                            <a href="{{route('admin.users.index')}}?type=admin" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.teacher_attendance')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.attendance.report', ['type'=>'general', 'campus_id'=>auth()->user()->campus_id])}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.attendance_report')}}
+                                {{trans_choice('text.add_admin', 2)}}
                             </a>
                             <b class="arrow"></b>
                         </li>
                         @endif
+
+                        <li>
+                            <a href="{{route('admin.headOfSchools.users')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{trans_choice('text.head_of_school', 2)}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.users.classmaster')}}?type=teacher" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{trans_choice('text.word_HOD', 2)}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.users.index')}}?type=teacher" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{trans_choice('text.word_teacher', 2)}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.delegates.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.class_delegates')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        @if(auth()->user()->campus_id == null)
+                        <li>
+                            <a href="{{route('admin.roles.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{trans_choice('text.role', 2)}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        @if(auth()->user()->hasPermissionTo('reset_user_password'))
+                            <li>
+                                <a href="{{route('admin.users.reset_password')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.reset_password')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
+                        @endif
                     </ul>
                 </li>
-                <!-- End attaendance management -->
+                @endif
+                    
+                @if (\Auth::user()->hasPermissionTo('manage_attendance'))
+                    <!-- Attendance management -->
+                    <li>
+                        <a href="#" class="dropdown-toggle text-capitalize">
+                            <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                            <span class="menu-text">
+                                {{__('text.manage_attendance')}}
+                                </span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+
+                        <ul class="submenu">
+                            @if(auth()->user()->campus_id != null)
+                            <li>
+                                <a href="{{route('admin.attendance.teacher.init')}}?type=admin" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.teacher_attendance')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.attendance.report', ['type'=>'general', 'campus_id'=>auth()->user()->campus_id])}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.attendance_report')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            @endif
+                        </ul>
+                    </li>
+                    <!-- End attaendance management -->
+                @endif
+                
             @endif
 
-            @if (\Auth::user()->headOfSchoolFor()->count() > 0)
+            @if ($is_school_director == true)
                 <!-- Attendance management -->
                 <li>
                     <a href="#" class="dropdown-toggle text-capitalize">
@@ -1674,63 +1667,65 @@
                 <!-- End attaendance management -->
             @endif
 
-            @if (\Auth::user()->hasPermissionTo('manage_trash'))
-                <!-- Attendance management -->
-                <li>
-                    <a href="#" class="dropdown-toggle text-capitalize">
-                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-trash"></i>
-                        <span class="menu-text">
-                            {{__('text.trash_and_reports')}}
-                            </span>
-                        <b class="arrow fa fa-angle-down"></b>
-                    </a>
+            @if($is_school_director == false)
+                @if (\Auth::user()->hasPermissionTo('manage_trash'))
+                    <!-- Attendance management -->
+                    <li>
+                        <a href="#" class="dropdown-toggle text-capitalize">
+                            <i  style="color: {{$bg1}}"class="menu-icon  fa fa-trash"></i>
+                            <span class="menu-text">
+                                {{__('text.trash_and_reports')}}
+                                </span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
 
-                    <ul class="submenu">
-                        <li>
-                            <a href="{{route('admin.trash.fee')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.word_fee')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.trash.students')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.word_students')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.trash.result_bypass')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.result_bypass')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.trash.mark_changes')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.mark_changes')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.trash.bulk_added_marks')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.mass_mark_changes')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.trash.program_change_report')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.program_change_report')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                    </ul>
-                </li>
-                <!-- End attaendance management -->
+                        <ul class="submenu">
+                            <li>
+                                <a href="{{route('admin.trash.fee')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_fee')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.trash.students')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_students')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.trash.result_bypass')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.result_bypass')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.trash.mark_changes')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.mark_changes')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.trash.bulk_added_marks')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.mass_mark_changes')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li>
+                                <a href="{{route('admin.trash.program_change_report')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.program_change_report')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- End attaendance management -->
+                @endif
             @endif
 
             <li>
@@ -1749,6 +1744,7 @@
                 </a>
                 <b class="arrow"></b>
             </li>
+
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 {{ csrf_field() }}
             </form>
