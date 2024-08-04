@@ -31,7 +31,7 @@
                                 <td>{{ $subject->name }}</td>
                                 <td>{{ \App\Models\ClassSubject::where(['class_id'=>request('program_level_id'), 'subject_id'=>$subject->id])->first()->coef??null }}</td>
                                 <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
-                                <td>{{ \App\Models\Level::find($subject->level_id)->level }}</td>
+                                <td>{{ \App\Models\Level::find($subject->level_id??0)->level??'' }}</td>
                                 <td>{{ $subject->status }}</td>
                                 <td>{{ \App\Models\ClassSubject::where(['class_id'=>request('program_level_id'), 'subject_id'=>$subject->id])->first()->hours??null }}</td>
                                 <td class="d-flex justify-content-end">
