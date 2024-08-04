@@ -220,84 +220,84 @@
             </li>
            
             @if (\Auth::user()->hasPermissionTo('manage_subject'))
-            <li>
-                <a href="" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
-                    <span class="menu-text">
-							{{__('text.course_zone')}}
-					</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                <li>
+                    <a href="" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
+                        <span class="menu-text">
+                                {{__('text.course_zone')}}
+                        </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.subjects.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.all_courses')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.subjects.create')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.add_course')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    {{-- <li>
-                        <a href="{{route('admin.dep_courses.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.departmental_courses')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li> --}}
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('admin.subjects.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.all_courses')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.subjects.create')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.add_course')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        {{-- <li>
+                            <a href="{{route('admin.dep_courses.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.departmental_courses')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li> --}}
 
-                    <li>
-                        <a href="{{route('admin.courses.import')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.import_courses')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                        <li>
+                            <a href="{{route('admin.courses.import')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.import_courses')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                    <li>
-                        <a href="{{route('admin.cleaner.courses')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.word_clean_courses')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                        <li>
+                            <a href="{{route('admin.cleaner.courses')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_clean_courses')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                </ul>
-            </li>
+                    </ul>
+                </li>
             @elseif(\App\Models\HeadOfSchool::where('user_id', auth()->id())->where('status', 1)->count() == 1)
-            <li>
-                <a href="" class="dropdown-toggle text-capitalize">
-                    <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
-                    <span class="menu-text">
-							{{__('text.course_zone')}}
-					</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                <li>
+                    <a href="" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-book"></i>
+                        <span class="menu-text">
+                                {{__('text.course_zone')}}
+                        </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
-                <ul class="submenu">
-                    <li>
-                        <a href="{{route('admin.subjects.index')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.all_courses')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li>
-                        <a href="{{route('admin.subjects.create')}}" class="text-capitalize">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{__('text.add_course')}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('admin.subjects.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.all_courses')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.subjects.create')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.add_course')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
 
-                </ul>
-            </li>
+                    </ul>
+                </li>
             @endif
             
             
@@ -324,6 +324,7 @@
                 </li>
                 <!-- End attaendance management -->
             @endif
+
             @if(\App\Models\HeadOfSchool::where('user_id', auth()->id())->where('status', 1)->count() == 0)
                 @if (\Auth::user()->hasPermissionTo('basic_settings'))
                 <li>
