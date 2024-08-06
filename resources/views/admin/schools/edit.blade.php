@@ -16,6 +16,13 @@
                 <input type="text" name="address" id="" class="form-control col-md-10" value="{{$school->address ?? ''}}">
             </div>
             <div class="row form-group text-capitalize my-3">
+                <label for="" class="col-md-2 ">matricule separator</label>
+                <select type="text" name="matric_separator" id="" class="form-control col-md-10">
+                    <option value=" " {{old('matric_separator', $school->matric_separator) != '/' ? 'selected' : ''}}> </option>
+                    <option value="/" {{old('matric_separator', $school->matric_separator) == '/' ? 'selected' : ''}}>/</option>
+                </select>
+            </div>
+            <div class="row form-group text-capitalize my-3">
                 <label for="" class="col-md-2 ">logo</label>
                 <input type="file" accept="image/*" name="logo_path" id="" class="form-control col-md-10">
             </div>
