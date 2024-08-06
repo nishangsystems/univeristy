@@ -9,8 +9,8 @@
                         <div class="col-lg-5 px-3 py-5">
                             <label class="text-secondary text-capitalize">@lang('text.word_operations')</label>
                             <div class="text-uppercase container-fluid text-secondary">
-                                <span class="mx-2 my-1 py-1 d-flex"><input value="fee_settings" type="checkbox" class="mx-2" name="operation[]">PERSIST FEE SETTINGS</span>
-                                <span class="mx-2 my-1 py-1 d-flex"><input value="course_instructors" type="checkbox" class="mx-2" name="operation[]">PERSIST COURSE INSTRUCTORS</span>
+                                <span class="mx-2 my-1 py-1 d-flex"><input value="fee_settings" type="checkbox" class="mx-2" name="operation[]">REPLICATE FEE SETTINGS</span>
+                                <span class="mx-2 my-1 py-1 d-flex"><input value="course_instructors" type="checkbox" class="mx-2" name="operation[]">REPLICATE COURSE INSTRUCTORS</span>
                                 <span class="mx-2 my-1 py-1 d-flex"><input value="class_delegates" type="checkbox" class="mx-2" name="operation[]">CLASS DELEGATES</span>
                                 <span class="mx-2 my-1 py-1 d-flex"><input value="hods" type="checkbox" class="mx-2" name="operation[]">HODs</span>
                             </div>
