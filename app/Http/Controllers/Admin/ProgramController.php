@@ -916,7 +916,7 @@ class ProgramController extends Controller
         $student = Students::find($student_id);
         if($student != null){
             $class = $student->_class();
-            $data['title'] = "Change Department/Program/Level For ".($student->name??'').' - ( Matric: '.($student->matric??'').')';
+            $data['title'] = "Change Class For ".($student->name??'').' - ( Matric: '.($student->matric??'').')';
             $data['program'] = $class->program;
             $data['programs'] = SchoolUnits::where('unit_id', '=', '4')->orderBy('name')->get();
             $data['department'] = $class->program->parent;
@@ -962,7 +962,12 @@ class ProgramController extends Controller
                 // dd($program);
                 $next_matric = null;
                 if(($prefix = ($program->prefix == null) ? $program->parent->prefix : $program->prefix) != null){
-                    $template = $prefix.'/'.substr(Batch::find($this->current_accademic_year)->name, 2, 2).'/';
+                    $suffix = $program->suffix??$program->parent->suffix??'';
+                    $matric_pattern = School::first()->matric_separator;
+                    if($matric_pattern == null){
+                        throw new \Exception("Matricule generation pattern not set");
+                    }
+                    $template = $prefix.$matric_pattern.substr(Batch::find($this->current_accademic_year)->name, 2, 2).$matric_pattern.($suffix == null ? '' : $suffix.$matric_pattern);
                     // dd(Students::where('matric', 'LIKE', "%{$template}%")->orderBy('matric', 'DESC')->get());
                     $last_matric = Students::where('matric', 'LIKE', "%{$template}%")->orderBy('matric', 'DESC')->first()->matric??null;
                     if($last_matric == null){

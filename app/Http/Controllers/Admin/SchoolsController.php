@@ -78,6 +78,7 @@ class SchoolsController extends Controller
                 $school->name = $request->name;
                 $school->contact = $request->contact;
                 $school->address = $request->address;
+                $school->matric_separator = $request->matric_separator??null;
 
                 if ($request->has('logo_path')) {
                     # code...
