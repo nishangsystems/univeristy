@@ -80,7 +80,7 @@
                     <select class="form-control text-capitalize" name="program_status">
                         <option disabled>{{__('text.select_gender')}}</option>
                         @foreach ($status_set as $stats)
-                            <option {{old('program_status', $student->program_status) == $stats->name ? 'selected':''}} value="{{ $stats->name }}">{{ $stats->name }}</option>
+                            <option {{old('program_status') == $stats->name ? 'selected':''}} value="{{ $stats->name }}">{{ $stats->name }}</option>
                         @endforeach
                     </select>
                     @error('program_status')
