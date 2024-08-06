@@ -871,7 +871,7 @@ return [
     'custom_promotion'=>'custom promotion',
     'repeat_students'=>'repeat students',
     'word_repeat'=>'repeat',
-    'change_section'=>'change section',
+    'change_section'=>'change class',
     'subjects_under'=>'subjects under :class',
     'starts_at'=>'starts at',
     'ends_at'=>'ends at',
