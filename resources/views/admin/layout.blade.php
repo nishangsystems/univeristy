@@ -701,15 +701,6 @@
                                     <b class="arrow"></b>
                                 </li>
                             @endif
-                            @if (\Auth::user()->hasPermissionTo('bypass_result'))
-                                <li>
-                                    <a href="{{route('admin.result.bypass')}}" class="text-capitalize">
-                                        <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
-                                        {{__('text.bypass_result')}}
-                                    </a>
-                                    <b class="arrow"></b>
-                                </li>
-                            @endif
                             <li>
                                 <a href="{{route('admin.student.section')}}" class="text-capitalize">
                                     <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
@@ -979,6 +970,17 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
+
+                        @if (\Auth::user()->hasPermissionTo('bypass_result'))
+                            <li>
+                                <a href="{{route('admin.result.bypass')}}" class="text-capitalize">
+                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
+                                    {{__('text.bypass_result')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
+                        
                     </ul>
                 </li>
                 @endif
