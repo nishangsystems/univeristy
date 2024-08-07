@@ -98,6 +98,7 @@ class SubjectController extends Controller
         $subject->semester_id = $request->input('semester');
         $subject->objective = $request->input('objective');
         $subject->outcomes = $request->input('outcomes');
+        $subject->outcomes = $request->input('outcomes');
         $subject->save();
         return back()->with('success', "Subject Updated Successfully!");
     }

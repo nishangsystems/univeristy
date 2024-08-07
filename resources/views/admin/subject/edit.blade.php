@@ -26,17 +26,17 @@
                         <input type="number" name="coef" id="" min="1" required value="{{$subject->coef}}" class="form-control">
                     </div>
                 </div>
-                <div class="row my-2">
+                {{-- <div class="row my-2">
                     <label for="" class="col-md-3">{{__('text.word_level')}}</label>
                     <div class="col-md-9 col-lg-9">
-                        <select name="level" id="" required class="form-control">
+                        <select name="level" id="" class="form-control">
                             <option value="">{{__('text.select_level')}}</option>
                             @foreach(\App\Models\Level::all() as $level)
                             <option value="{{$level->id}}" {{$level->id == $subject->level_id ? 'selected' : ''}}>{{$level->level}}</option>
                             @endforeach
                         </select>
                     </div>
-                </div>
+                </div> --}}
                 <div class="row my-2">
                     <label for="" class="col-md-3">{{__('text.word_semester')}}</label>
                     <div class="col-md-9 col-lg-9">
@@ -90,7 +90,7 @@
                     <th>{{__('text.word_title')}}</th>
                     <th>{{__('text.course_code')}}</th>
                     <th>{{__('text.credit_value')}}</th>
-                    <th>{{__('text.word_level')}}</th>
+                    {{-- <th>{{__('text.word_level')}}</th> --}}
                     <th>{{__('text.word_status')}}</th>
                     <th></th>
                 </thead>
@@ -102,7 +102,7 @@
                         <td>{{$subj->name}}</td>
                         <td>{{$subj->code}}</td>
                         <td>{{$subj->coef}}</td>
-                        <td>{{optional(\App\Models\Level::find($subj->level_id))->level??null}}</td>
+                        {{-- <td>{{optional(\App\Models\Level::find($subj->level_id))->level??null}}</td> --}}
                         <td>{{$subj->status}}</td>
                         <td>
                             <a href="{{route('admin.subjects.edit', $subj->id)}}" class="btn btn-primary btn-sm">{{__('text.word_edit')}}</a> | 
