@@ -59,14 +59,9 @@ $next_year = $year+1;
                     <div class="form-group py-1 row">
                         <label for="cname" class="text-secondary col-md-3 col-lg-3">{{__('text.word_from')}} </label>
                         <div class="col-md-9 col-lg-9">
-                            <select name="class_from" class="form-control text-dark rounded section text-capitalize" id="class_section" oninput="set_target()">
-                                <option selected disabled>{{__('text.select_section')}}</option>
-                                @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $class)
-                                <option value="{{$class['id']}}">{{$class['name']}}</option>
-                                @empty
-                                <option>{{__('text.no_sections_created')}}</option>
-                                @endforelse
-                            </select>
+                            <div id="class-selector">
+                                <x-class-filter :data="['field_name'=>'class_from']"></x-class-filter>
+                            </div>
                             <div class="children"></div>
                         </div>
                     </div>
@@ -94,8 +89,12 @@ $next_year = $year+1;
 @endsection
 @section('script')
 <script>
-    function set_target(){
-        let c_from = $('#class_section').val();
+    let class_changed = function(element){
+        let cfrom = $(element).val();
+        cedioc(cfrom)
+    }
+
+    let cedioc = function(c_from){
         let url = "{{ route('promotion.class.target', '__CLASSID__') }}".replace('__CLASSID__', c_from);
         // console.log(url);
         $.ajax({
@@ -113,6 +112,11 @@ $next_year = $year+1;
                 $('#nex_class_section').html(html);
             }
         });
+    }
+
+    function set_target(){
+        let c_from = $('#class_section').val();
+        cedioc(c_from);
     }
     let set_next_year = function(event){
         let year = event.target.value;

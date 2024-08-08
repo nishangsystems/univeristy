@@ -1073,4 +1073,45 @@ class ProgramController extends Controller
         \App\Models\TeachersSubject::where(['subject_id'=>$course_id, 'class_id'=>$program_level_id, 'batch_id'=>Helpers::instance()->getCurrentAccademicYear()])->where('id', '!=', $request->instructor)->update(['is_master'=>0]);
         return back()->with('success', 'Done');
     }
+
+    public function departments($school_id = null){
+        $departments = SchoolUnits::where('unit_id', 3)->where(function($qry)use($school_id){
+            $school_id != null ? $qry->where('parent_id', $school_id) : null;
+        })->orderBy('name')->select(['school_units.id', 'school_units.name'])->get();
+        return response()->json(['data'=>$departments->all()]);
+    }
+
+    public function unit_classes($unit_id, $campus = null){
+        $unit = SchoolUnits::find($unit_id);
+        $classes = $this->complete_classes($unit);
+        if($campus != null){
+            $cls = \App\Models\CampusProgram::where('campus_id', $campus)->pluck('progralevel_id')->toArray();
+            $classes = collect($this->complete_classes($unit))->whereIn('id', $cls)->toArray();
+        }
+        return response()->json(['data'=>$classes]);
+    }
+
+    protected function complete_classes($unit): array{
+        try{
+            if($unit == null){return [];}
+    
+            if($unit->unit_id == 4){
+                $classes = $unit->classes->each(function($rec){
+                    $rec->name = $rec->name();
+                })->all();
+    
+                return $classes;
+            }
+    
+            $sub_units = SchoolUnits::where('parent_id', $unit->id)->get();
+            $children = [];
+            foreach($sub_units as $sunit){
+                $children = array_merge($children, $this->complete_classes($sunit));
+            }
+            return $children;
+        }catch(\Throwable $th){
+            throw $th;
+        }
+
+    }
 }

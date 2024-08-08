@@ -147,14 +147,13 @@
             </div>
 
             <div class="form-group @error('program_id') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_program')}}</label>
+                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_program')}}
+                    <br><small class="text-secondary">({{ $class->name() }})</small>
+                </label>
                 <div class="col-lg-10">
-                    <select class=" form-control" name="program_id" id="program_id" required>
-                        <option value="">{{__('text.select_program')}}</option>
-                        @foreach(\App\Models\ProgramLevel::join('school_units', 'school_units.id', '=', 'program_levels.program_id')->get(['program_levels.*']) as $pl)
-                            <option value="{{$pl->id}}" {{old('program_id', $student->program_id) == $pl->id ? 'selected' : ''}}>{{$pl->name() ?? ''}}</option>
-                        @endforeach
-                    </select>
+                    <div id="class-selector">
+                        <x-class-filter :data="['field_name'=>'program_id']"></x-class-filter>
+                    </div>
                     @error('program_id')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
