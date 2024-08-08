@@ -47,7 +47,6 @@
                             @php($k = 1)
                             @foreach(array_unique(\App\Models\Payments::whereNotNull('import_reference')->distinct()->pluck('import_reference')->toArray()) as $import_ref)
                                 @php($import = \App\Models\Payments::where('import_reference', $import_ref)->first())
-                                @php(dd($import_ref))
                                 <tr class="border-bottom border-dark">
                                     <td class="border-left border-right border-secondary">{{$k++}}</td>
                                     <td class="border-left border-right border-secondary">{{$import->import_reference ?? ''}}</td>

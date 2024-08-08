@@ -219,7 +219,7 @@ class StudentController extends Controller
     public function store(Request $request)
     {
 
-        // return $request->all();
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'matric' => 'required',
@@ -227,6 +227,10 @@ class StudentController extends Controller
             'campus_id' => 'required',
             'program_id'=>'required',
         ]);
+        if($validator->fails()){
+            session()->flash('error', $validator->errors());
+            return back()->withInput();
+        }
         try {
             if(Students::where('matric', $request->matric)->count() == 0){
                 // return $request->all();
@@ -311,6 +315,7 @@ class StudentController extends Controller
         $data['student'] = \App\Models\Students::find($id);
         $data['status_set'] = \App\Models\Status::all();
         $data['classes'] = $this->getBaseClasses();
+        $data['class'] = $data['student']->_class();
         return view('admin.student.edit')->with($data);
     }
 

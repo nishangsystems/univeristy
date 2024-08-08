@@ -146,16 +146,16 @@
             <div class="form-group @error('program_id') has-error @enderror">
                 <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_program')}}</label>
                 <div class="col-lg-10">
-                    <select class=" form-control" name="program_id" id="program_id" required>
-                    </select>
+                    <div id="class-selector">
+                        <x-class-filter :data="['field_name'=>'program_id']"></x-class-filter>
+                    </div>
                     @error('program_id')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
 
-            
-           
+
             <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
                     <button id="save" class="btn btn-xs btn-primary mx-3" style="display: block" type="submit">{{__('text.word_save')}}</button>
@@ -175,31 +175,10 @@
     });
 
     function loadPrograms(element){
-        let val = element.value;
-        url = "{{route('campus.programs', ['__V__'])}}";
-        url =url.replace('__V__', val);
-        $.ajax({
-            method: 'get',
-            url: url,
-            success: function(data){
-                console.log(data);
-                let options = `<option value="">{{__('text.select_program')}}</option>`;
-                for (const key in data) {
-                    if (Object.hasOwnProperty.call(data, key)) {
-                        const element = data[key];
-                        // console.log(element);
-                        options += `<option value="`+element.id+`">`+element.name+`</option>`;
-                        
-                    }
-                }
-                // data.forEach(element => {
-                // });
-                $('#program_id').html(options);
-            },
-            error: function(error){
-                console.error(error);
-            }
-        });
+        
+        let val = $(element).val();
+        let html = `<x-class-filter :data="['field_name'=>'program_id', 'campus'=>'__CPID__']"></x-class-filter>`.replace('__CPID__', val);
+        $('#class-selector').html(html);
     }
 </script>
 @endsection

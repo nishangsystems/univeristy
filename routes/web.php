@@ -127,6 +127,9 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('sections', 'Admin\ProgramController@sections')->name('sections');
     Route::get('sub_units_of/{id}', 'Admin\ProgramController@subunitsOf')->name('subunits');
 
+    Route::get('departments/{school_id?}', [Admin\ProgramController::class, 'departments'])->name('departments');
+    Route::get('unit_classes/{unit_id}/{campus?}', [Admin\ProgramController::class, 'unit_classes'])->name('unit_classes');
+
     Route::get('sub_units/{parent_id}', 'Admin\ProgramController@index')->name('units.index');
     Route::get('new_units/{parent_id}', 'Admin\ProgramController@create')->name('units.create');
     Route::get('units/{parent_id}/edit', 'Admin\ProgramController@edit')->name('units.edit');
