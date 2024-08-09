@@ -478,14 +478,6 @@
                                 </a>
                                 <b class="arrow"></b>
                             </li>
-                                            
-                            <li>
-                                <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.manage_custom_resits')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
 
                             @if (auth()->user()->can('access_hidden_features'))
                                 <li>
@@ -576,19 +568,19 @@
                     </a>
 
                     <ul class="submenu">
-                        
+                                                                    
+                        <li>
+                            <a href="{{route('admin.custom_resit.create')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.create_resit_session')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
                         <li>
                             <a href="{{route('admin.resits.index')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.word_resits')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        
-                        <li>
-                            <a href="{{route('admin.resits.payments.index')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.resit_payments')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
@@ -995,6 +987,14 @@
                                 <b class="arrow"></b>
                             </li>
                         @endif
+                        
+                        <li>
+                            <a href="{{route('admin.resits.payments.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.resit_payments')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
                         
                     </ul>
                 </li>
