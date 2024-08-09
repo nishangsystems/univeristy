@@ -119,7 +119,7 @@
         </div>
 
 
-        @if(!(isset($is_head_of_school) and $is_head_of_school == 1))
+        @if (\Auth::user()->hasPermissionTo('manage_fee') || \Auth::user()->hasPermissionTo('manage_fee_settings'))
             {{-- FINANCIAL STATISTICS --}}
             <div class="w-100 py-3 text-capitalize" style="font-size: larger; font-weight: bold; color: gray !important;">{{ __('text.fee_information') }}</div>
             <div class=" text-capitalize">
@@ -252,7 +252,4 @@
         </div>
     </div>
 </div>
-@endsection
-@section('script')
-
 @endsection

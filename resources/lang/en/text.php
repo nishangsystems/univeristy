@@ -1047,5 +1047,6 @@ return [
     'word_expired'=>'expired',
     'manage_transcripts'=>'manage transcripts',
     'program_status'=>'program status',
+    'semester_min_fees'=>'result access fees',
     ''
 ];
