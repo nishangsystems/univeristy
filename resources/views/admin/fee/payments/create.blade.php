@@ -112,7 +112,7 @@
                     </div>
                 </form>
             @else
-                <div class="alert alert-success text-center text-capitalize">{{__('text.phrase_fee_complete')}} <span class="mx-3 fw-bolder">{{$student->debt($c_year) == 0 ? '' : 'DEBT : '.$student->debt($c_year)}}</span></div>
+                <div class="alert alert-success text-center text-capitalize">{{__('text.phrase_fee_complete')}} <span class="mx-3 fw-bolder">Total Debt: {{$student->total_debts($c_year)}} | Current Fee : {{number_format($total_fee)}}</span></div>
             @endif
         </div>
         <div class="col-lg-6 my-3">
