@@ -170,6 +170,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('fee/fee_settings/{campus_id?}', 'Admin\FeesController@fee_settings')->name('fee_settings');
     Route::get('fee/fee_banks/{campus_id}/{program_id?}', 'Admin\FeesController@fee_banks')->name('fee_banks');
     Route::post('fee/fee_banks/{campus_id}/{program_id?}', 'Admin\FeesController@save_fee_banks');
+    Route::get('fee/semester_results', 'Admin\FeesController@setMinSemesterFees')->name('fee.semester_minimums');
     Route::post('banks/{id?}', 'Admin\FeesController@save_bank');
     Route::get('fee', 'Admin\FeesController@fee')->name('fee');
     Route::get('fee/situation', 'Admin\FeesController@fee_situation')->name('fee.situation');
@@ -515,6 +516,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('/update/{id}', 'Admin\SchoolsController@delete')->name('delete');
     });
     
+    Route::get('gradings', [Admin\ProgramController::class, 'grading_list'])->name('gradings');
     Route::get('grading/set_type/{program_id}', 'Admin\ProgramController@set_program_grading_type')->name('grading.set_type');
     Route::post('grading/set_type/{program_id}', 'Admin\ProgramController@save_program_grading_type')->name('grading.post_type');
 

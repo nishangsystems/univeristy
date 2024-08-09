@@ -448,4 +448,10 @@ class FeesController extends Controller
             return back()->withInput();
         }
     }
+
+    public function setMinSemesterFees(Request $request) {
+        $data['title'] = "Set Minimum Fee For Accessing Semester Results";
+        $data['semesters'] = \App\Models\Semester::orderBy('sem')->orderBy('background_id')->get();
+        return view('admin.fee.semesters', $data);
+    }
 }

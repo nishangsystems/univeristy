@@ -1114,4 +1114,10 @@ class ProgramController extends Controller
         }
 
     }
+
+    public function grading_list(Request $request){
+        $data['title'] = "Available Grading Systems";
+        $data['gradings'] = \App\Models\GradingType::orderBy('name')->get();
+        return view('admin.setting.gradings', $data);
+    }
 }

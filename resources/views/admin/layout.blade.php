@@ -413,6 +413,14 @@
 
                     <ul class="submenu">
                         
+                        <li>
+                            <a href="{{route('admin.gradings')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                            {{__('text.word_grading')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
                         @if(auth()->user()->campus_id == null)
                         <li>
                             <a href="{{route('admin.program_settings')}}" class="text-capitalize">
@@ -803,6 +811,13 @@
                             <a href="{{route('admin.banks')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.word_banks')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.fee.semester_minimums')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.semester_min_fees')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
