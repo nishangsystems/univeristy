@@ -119,7 +119,7 @@
         </div>
 
 
-        @if (\Auth::user()->hasPermissionTo('manage_fee') || \Auth::user()->hasPermissionTo('manage_fee_settings'))
+        @if (\Auth::user()->hasPermissionTo('access_transaction_summary'))
             {{-- FINANCIAL STATISTICS --}}
             <div class="w-100 py-3 text-capitalize" style="font-size: larger; font-weight: bold; color: gray !important;">{{ __('text.fee_information') }}</div>
             <div class=" text-capitalize">
