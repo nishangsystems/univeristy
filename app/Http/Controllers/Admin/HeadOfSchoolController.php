@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProgramLevel;
+use App\Models\Semester;
 use App\Services\HeadOfSchoolService;
 use Illuminate\Http\Request;
 
@@ -218,5 +220,16 @@ class HeadOfSchoolController extends Controller
         }catch(\Throwable $th){
             return back()->with('error', $th->getMessage());
         }
+    }
+
+    public function class_courses(Request $request, $class_id) {
+        $class = ProgramLevel::find($class_id);
+        $data['title'] = "Class Courses For ".$class->name();
+        $data['class'] = $class;
+        $data['courses'] = $class->subjects->groupBy('semester_id')->each(function($rec, $key){
+            $rec->semester = Semester::find($key);
+        });
+        // dd($data);
+        return view('admin.head_of_school.class_courses', $data);
     }
 }
