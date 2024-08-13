@@ -664,6 +664,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
         Route::get('department/students/{department_id}/{level_id?}', [Admin\HeadOfSchoolController::class, 'department_students'])->name('department.students');
         Route::get('program/students/{program_id}/{level_id?}', [Admin\HeadOfSchoolController::class, 'program_students'])->name('program.students');
         Route::get('class/students/{class_id}', [Admin\HeadOfSchoolController::class, 'class_students'])->name('class.students');
+        Route::get('class/courses/{class_id}', [Admin\HeadOfSchoolController::class, 'class_courses'])->name('class.courses');
         Route::get('setStatus/{hos_id}/{status}', [Admin\HeadOfSchoolController::class, 'set_status'])->name('setStatus');
         Route::get('delete/{hos_id}', [Admin\HeadOfSchoolController::class, 'delete'])->name('delete');
         Route::get('create', [Admin\HeadOfSchoolController::class, 'create'])->name('create');
