@@ -11,7 +11,7 @@
         $k = 1;
     @endphp
     <div class="my-2">
-        <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100">
+        {{-- <img src="{{\App\Helpers\Helpers::instance()->getHeader()}}" alt="" class="w-100"> --}}
         <div class="text-center py-2">
             <h4 class="text-decoration text-capitalize"><b>
                 {{\App\Models\ProgramLevel::find(request('class_id'))->name().' '.\App\Models\Semester::find(request('semester_id'))->name.' '.$title.' FOR '.\App\Models\Batch::find(request('year_id'))->name.' '.__('text.academic_year')}}
