@@ -1049,5 +1049,6 @@ return [
     'program_status'=>'program status',
     'semester_min_fees'=>'result access fees',
     'create_resit_session'=>'create resit session',
+    'matricule_pattern'=>'matricule pattern',
     ''
 ];

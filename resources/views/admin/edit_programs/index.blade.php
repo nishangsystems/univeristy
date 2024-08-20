@@ -5,6 +5,7 @@
             <thead class="text-capitalize">
                 <th>@lang('text.sn')</th>
                 <th>@lang('text.word_program')</th>
+                <th>@lang('text.matricule_pattern')</th>
                 <th>@lang('text.grading_type')</th>
                 <th>@lang('text.degree_conferred')</th>
                 <th>@lang('text.ca_totals')</th>
@@ -19,6 +20,7 @@
                     <tr class="border-bottom">
                         <td class="border-left">{{ $c++ }}</td>
                         <td class="border-left">{{ $program->name??'' }}</td>
+                        <td class="border-left">{{ $program->prefix }}XX{{ $program->suffix }}XXX</td>
                         <td class="border-left">{{  $program->gradingType->name??'' }}</td>
                         <td class="border-left">{{  $program->deg_name??'' }}</td>
                         <td class="border-left">{{  $program->ca_total??'' }}</td>
