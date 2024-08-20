@@ -15,12 +15,13 @@
             <tbody>
                 @php
                     $c = 1;
+                    $school = \App\Models\School::first();
                 @endphp
                 @foreach ($programs as $program)
                     <tr class="border-bottom">
                         <td class="border-left">{{ $c++ }}</td>
                         <td class="border-left">{{ $program->name??'' }}</td>
-                        <td class="border-left">{{ $program->prefix }}XX{{ $program->suffix }}XXX</td>
+                        <td class="border-left">{{ $program->prefix.$school->matric_separator }}--{{ $school->matric_separator.$program->suffix .($program->suffix == null ? '' : $school->matric_separator) }}---</td>
                         <td class="border-left">{{  $program->gradingType->name??'' }}</td>
                         <td class="border-left">{{  $program->deg_name??'' }}</td>
                         <td class="border-left">{{  $program->ca_total??'' }}</td>
