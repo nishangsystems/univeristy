@@ -803,7 +803,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
 
         Route::post('alter_result/change/ca/{student_id?}/{year_id?}/{semester_id?}', [Teacher\ResultsController::class, 'alter_save_student_ca_results'])->name('alter_results.change.ca');
         Route::get('alter_result/change/{student_id?}/{year_id?}/{semester_id?}', [Teacher\ResultsController::class, 'alter_change_student_results'])->name('alter_results.change');
-        // Route::get('alter_result/{student_id?}/{year_id?}/{semester_id?}', [Teacher\ResultsController::class, 'alter_student_results'])->name('alter_results');
+
 
         Route::get('get_record/{student_id?}/{year_id?}/{semester_id?}/{course_id?}', [Teacher\ResultsController::class, 'get_record'])->name('get_record');
     });
@@ -830,6 +830,7 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::post('ca/import/{year?}/{semester?}', 'Teacher\HomeController@course_ca_import_save');
         Route::get('ca/import/{year}/{semester}/clear', 'Teacher\HomeController@course_ca_import_clear')->name('ca.import.clear');
         Route::post('ca/import/{year}/{semester}/clear', 'Teacher\HomeController@course_ca_import_clear');
+        Route::get('ca/print_sheet/{year?}/{semester?}', 'Teacher\HomeController@print_ca_sheet')->name('ca.print_sheet');
         Route::get('exam/fill', 'Teacher\HomeController@course_exam_fill')->name('exam.result');
         Route::get('exam/import', 'Teacher\HomeController@course_exam_import')->name('exam.import');
         Route::post('exam/import', 'Teacher\HomeController@course_exam_import_save');

@@ -555,4 +555,30 @@ class HomeController extends Controller
             return back()->with('error', 'Empty or bad file type. CSV files only are accepted.');
         }
     }
+
+    
+    public function print_ca_sheet(Request $request, $class_id=null, $course_id=null, $year=null, $semester_id=null){
+
+        $sem = \App\Helpers\Helpers::instance()->getSemester($class_id);
+        $batch = \App\Models\Batch::find(\App\Helpers\Helpers::instance()->getCurrentAccademicYear());
+        // dd($sem);
+        $data['year_id'] = $batch->id;
+        $data['semester_id'] = $sem->id;
+        $data['class_id'] = $class_id;
+        $subject = Subjects::find($course_id);
+        $program_level = ProgramLevel::find($class_id);
+        $data['title'] = "Import CA For [{$subject->code}] {$subject->name}";
+        $data['semesters'] = Helpers::instance()->getSemesters($program_level->id)->where('is_main_semester', 1);
+        $data['course_code'] = $subject->code;
+        $data['classes'] = HomeController::sorted_program_levels();
+        $data['course'] = $subject;
+        if($sem != null){
+            $data['semester'] = $sem;
+            $data['year'] = $batch;
+            $data['class'] = $program_level;
+            $data['results'] = Result::where(['batch_id'=>$batch->id, 'class_id'=>$class_id, 'semester_id'=>$sem->id, 'subject_id'=>$subject->id])->get();
+            // dd($data['results']);        
+        }
+        return view('teacher.result.ca_sheet', $data);
+    }
 }
