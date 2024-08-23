@@ -35,12 +35,9 @@
                         <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_class')}}</label>
                         <div class="col-lg-10">
                             <div id="class">
-                                <select class="form-control section" name="section" id="section0" disabled>
-                                    <option selected disabled>{{__('text.select_class')}}</option>
-                                    @foreach(\App\Http\Controllers\Controller::sorted_program_levels()  as $class)
-                                        <option value="{{$class['id']}}">{{$class['name']}}</option>
-                                    @endforeach
-                                </select>
+                                <div id="class-selector">
+                                    <x-class-filter :data="['field_name'=>'section']"></x-class-filter>
+                                </div>
                                 <div class="children"></div>
                             </div>
                         </div>
@@ -77,12 +74,16 @@
 
 @section('script')
     <script>
-        $('.section').on('change', function () {
-            refresh($(this));
-        })
-        $(document).ready(function(){
-            campusChanged(document.querySelector('#hidden-campus'));
-        })
+        
+        let class_changed = function(elm){
+            alert($(elm).val());
+            refresh($(elm).val());
+
+        }
+
+        // $(document).ready(function(){
+        //     campusChanged(document.querySelector('#hidden-campus'));
+        // })
 
         function campusChanged(element){
             campus = element.value;
@@ -117,7 +118,7 @@
 
             
             let subject_url = "{{route('section-subjects', 'VALUE')}}";
-                subject_url = subject_url.replace('VALUE', div.value);
+                subject_url = subject_url.replace('VALUE', div);
                 $.ajax({
                     type: "GET",
                     url: subject_url,

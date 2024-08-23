@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Events\StudentResultChangedEvent;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
@@ -12,6 +13,7 @@ use App\Models\Semester;
 use App\Models\Students;
 use App\Models\Subjects;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ResultsController extends Controller
@@ -134,5 +136,67 @@ class ResultsController extends Controller
             'title'=>"Course Result Upload Records For {$semester->name} {$year->name} | ".($program_level == null ? '' : $program_level->name())
         ];
         return view('teacher.result.upload_record_index', $data);
+    }
+
+    
+    // public function alter_student_results(Request $request, $student_id = null, $year_id = null, $semester_id = null){
+    //     $data = ['title'=>'Add Student Exam Course', 'student_id'=>$student_id, 'year_id'=>$year_id, 'semester_id'=>$semester_id];
+    //     $data['years'] = Batch::all();
+    //     if($student_id != null){
+    //         $data['student'] = Students::find($student_id);
+    //         $data['semester'] = \App\Models\Semester::find($semester_id);
+    //         $data['title'] = "Add Student Exam Course For {$data['student']->name}";
+    //     }
+    //     return view('teacher.result.alter_results', $data);
+    // }
+
+    
+    public function alter_change_student_results(Request $request, $student_id=null, $year_id=null, $semester_id=null){
+        $data = ['title'=>'Change Student CA Mark', 'student_id'=>$student_id, 'year_id'=>$year_id, 'semester_id'=>$semester_id];
+        $data['years'] = Batch::all();
+        if($student_id != null){
+            $data['student'] = Students::find($student_id);
+            $data['semester'] = \App\Models\Semester::find($semester_id);
+            $data['title'] = "Change Student CA Mark For {$data['student']->name}";
+        }
+        return view('teacher.result.alter_results_change_mark', $data);
+    }
+
+
+    public function alter_save_student_ca_results(Request $request, $student_id, $year_id, $semester_id){
+        $validity = Validator::make($request->all(), ['ca_score'=>'required', 'course_id'=>'required']);
+        
+        if($validity->fails()){
+            session()->flash('error', $validity->errors()->first());
+            return back()->withInput();
+        }
+
+        $base = ['batch_id'=>$year_id, 'student_id'=>$student_id, 'subject_id'=>$request->course_id, 'semester_id'=>$semester_id];
+        $rec = Result::where($base)->first();
+        if($rec == null){
+            session()->flash('error', "This course does not have a result record at the moment. Consider adding this course to the student result");
+            return back()->withInput();
+        }
+        $old_score = $rec->ca_score??null;
+        try {
+
+            DB::beginTransaction();
+            // update mark
+            $rec->ca_score = $request->ca_score;
+            $rec->save();
+            // trigger monitoring event
+            event(new StudentResultChangedEvent($student_id, $year_id, $semester_id, $request->course_id, $action="CA_MARK_CHANGED", $actor=auth()->id(), $data=['from'=>$old_score, 'to'=>$rec->ca_score]));
+            DB::commit();
+            return back()->with('success', 'Done');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            session()->flash('error', "F::{$th->getFile()}, L::{$th->getLine()}, M::{$th->getMessage()}");
+            return back()->withInput();
+        }
+    }
+
+    
+    public function get_record($student_id, $year_id, $semester_id, $course_id){
+        return Result::where(['batch_id'=>$year_id, 'student_id'=>$student_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id])->first();
     }
 }

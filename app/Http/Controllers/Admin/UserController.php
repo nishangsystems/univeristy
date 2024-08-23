@@ -159,6 +159,7 @@ class UserController extends Controller
 
         // update users table
         $input = $request->all();
+        $input['username'] = $request->email;
         // return $input;
         $user->update($input);
 
