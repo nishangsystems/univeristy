@@ -260,21 +260,13 @@ class FeesController extends Controller
                                 'batch_id' => $request->batch_id,
                                 'unit_id' => \App\Models\StudentClass::where('student_id', '=', $student->id)->pluck('class_id')[0],
                                 'amount' => $value[1],
-                                'reference_number' => $value['2'] ?? ''
+                                'reference_number' => $value['2'] != null ? $value['2'] : $request->reference_number
                             ];
                         }else{
                             $matric_probs .= ' '.__('text.word_matricule').' '.$value[0].' '.__('text.not_found').',';
                         }
                     }
-                    foreach ($payments as $value) {
-                        if ($value['reference_number'] != '' && \App\Models\Payments::where('reference_number', '=', $value['reference_number'])->count() == 0) {
-                            # code...
-                            \App\Models\Payments::create($value);
-                        }
-                        else{
-                            $ref_probs .= __('text.reference_error_with', ['item'=>\App\Models\Students::find($value['student_id'])->matric]);
-                        }
-                    }
+                    
                     DB::commit();
                     if(strlen($campus_access) > 0){throw new Error($campus_access_prefix.$campus_access);}
                     if(strlen($fee_settings_probs) > 0) {throw new Error($fee_settings_probs);}
