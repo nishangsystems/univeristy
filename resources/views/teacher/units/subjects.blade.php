@@ -16,7 +16,6 @@
                             <th>{{__('text.word_name')}}</th>
                             <th>{{__('text.word_coefficient')}}</th>
                             <th>{{__('text.word_semester')}}</th>
-                            <th>{{__('text.word_level')}}</th>
                             <th>{{__('text.word_status')}}</th>
                             <th>{{__('text.word_hours')}}</th>
                             <th></th>
@@ -31,10 +30,12 @@
                                 <td>{{ $subject->name }}</td>
                                 <td>{{ \App\Models\ClassSubject::where(['class_id'=>request('program_level_id'), 'subject_id'=>$subject->id])->first()->coef??null }}</td>
                                 <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
-                                <td>{{ \App\Models\Level::find($subject->level_id??0)->level??'' }}</td>
                                 <td>{{ $subject->status }}</td>
                                 <td>{{ \App\Models\ClassSubject::where(['class_id'=>request('program_level_id'), 'subject_id'=>$subject->id])->first()->hours??null }}</td>
                                 <td class="d-flex justify-content-end">
+                                    <a class="btn btn-sm btn-secondary" href="{{route('user.class_course.ca.print_sheet',['class_id'=>request('program_level_id'), 'course_id'=>$subject->id])}}">
+                                        <i class="fa fa-print"> {{__('text.print_CA')}}</i>
+                                    </a>|
                                     <a class="btn btn-sm btn-primary" href="{{route('user.class_course.ca.import',['class_id'=>request('program_level_id'), 'course_id'=>$subject->id])}}">
                                         <i class="fa fa-tick"> {{__('text.word_results')}}</i>
                                     </a>|

@@ -43,7 +43,7 @@
 @endsection
 @section('section')
     <div class="py-2 container-fluid">
-        <div class="row my-4 container p-3 shadow">
+        <div class="row my-4 container-fluid p-3 shadow">
             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 p-2">
                 <select class="form-control" name="year" id="form_year" disabled>
                     <option></option>
