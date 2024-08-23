@@ -250,6 +250,13 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
+                        <li>
+                            <a href="{{route('user.results.alter_results.change')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.change_ca_mark')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
                     </ul>
                 </li>
                 <li>

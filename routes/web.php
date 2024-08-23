@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\Teacher;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\BioDataDownloadController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
@@ -101,6 +102,10 @@ Route::name('documentation.')->prefix('documentation')->middleware('isAdmin')->g
 });
 // END OF DOCUMENTATION MANAGEMENT ROUTES
 
+Route::get('departments/{school_id?}', [Admin\ProgramController::class, 'departments'])->name('departments');
+Route::get('unit_classes/{unit_id}/{campus?}', [Admin\ProgramController::class, 'unit_classes'])->name('unit_classes');
+
+
 Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function () {
 
     Route::get('transcript/index', [\App\Http\Livewire\Admin\Transcript\Index::class, '__invoke'])->name('transcript.index');
@@ -126,9 +131,6 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('deletebatch/{id}', 'Admin\HomeController@deletebatch')->name('deletebatch');
     Route::get('sections', 'Admin\ProgramController@sections')->name('sections');
     Route::get('sub_units_of/{id}', 'Admin\ProgramController@subunitsOf')->name('subunits');
-
-    Route::get('departments/{school_id?}', [Admin\ProgramController::class, 'departments'])->name('departments');
-    Route::get('unit_classes/{unit_id}/{campus?}', [Admin\ProgramController::class, 'unit_classes'])->name('unit_classes');
 
     Route::get('sub_units/{parent_id}', 'Admin\ProgramController@index')->name('units.index');
     Route::get('new_units/{parent_id}', 'Admin\ProgramController@create')->name('units.create');
@@ -798,6 +800,12 @@ Route::name('user.')->prefix('user')->middleware('isTeacher')->group(function ()
         Route::get('upload/statistics/{class_id}', 'Teacher\ResultsController@upload_statistics')->name('upload_statistics');
         Route::get('ca/upload/report/{year?}/{semester?}/{program_level?}', 'Teacher\ResultsController@ca_upload_report')->name('ca.upload_report');
         Route::get('exam/upload/report/{year?}/{semester?}/{program_level?}', 'Teacher\ResultsController@exam_upload_report')->name('exam.upload_report');
+
+        Route::post('alter_result/change/ca/{student_id?}/{year_id?}/{semester_id?}', [Teacher\ResultsController::class, 'alter_save_student_ca_results'])->name('alter_results.change.ca');
+        Route::get('alter_result/change/{student_id?}/{year_id?}/{semester_id?}', [Teacher\ResultsController::class, 'alter_change_student_results'])->name('alter_results.change');
+        // Route::get('alter_result/{student_id?}/{year_id?}/{semester_id?}', [Teacher\ResultsController::class, 'alter_student_results'])->name('alter_results');
+
+        Route::get('get_record/{student_id?}/{year_id?}/{semester_id?}/{course_id?}', [Teacher\ResultsController::class, 'get_record'])->name('get_record');
     });
 
     Route::name('attendance.')->prefix('attendance')->group(function(){

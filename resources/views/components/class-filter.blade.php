@@ -26,7 +26,7 @@
         let school_selected = function(element){
             // Load departments and classes
             let val = $(element).val();
-            let _url = "{{route('admin.departments', '__UID__')}}".replace('__UID__', val);
+            let _url = "{{route('departments', '__UID__')}}".replace('__UID__', val);
             $.ajax({
                 method: "GET", url: _url, success: function(data){
                     console.log(data);
@@ -38,7 +38,7 @@
                 }
             })
 
-            let _url2 = "{{route('admin.unit_classes', '__UID__')}}".replace('__UID__', val);
+            let _url2 = "{{route('unit_classes', '__UID__')}}".replace('__UID__', val);
             $.ajax({
                 method: "GET", url: _url2, success: function(data){
                     console.log(data);
@@ -52,7 +52,7 @@
         }
         let department_selected = function(element){
             let val = $(element).val();
-            let _url2 = "{{route('admin.unit_classes', '__UID__')}}".replace('__UID__', val);
+            let _url2 = "{{route('unit_classes', '__UID__')}}".replace('__UID__', val);
             $.ajax({
                 method: "GET", url: _url2, success: function(data){
                     console.log(data);
