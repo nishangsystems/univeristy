@@ -446,4 +446,5 @@ class FeesController extends Controller
         $data['semesters'] = \App\Models\Semester::orderBy('sem')->orderBy('background_id')->get();
         return view('admin.fee.semesters', $data);
     }
+    
 }
