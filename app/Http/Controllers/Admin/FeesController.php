@@ -266,8 +266,10 @@ class FeesController extends Controller
                             $matric_probs .= ' '.__('text.word_matricule').' '.$value[0].' '.__('text.not_found').',';
                         }
                     }
-                    
+
+                    Payments::insert($payments);
                     DB::commit();
+
                     if(strlen($campus_access) > 0){throw new Error($campus_access_prefix.$campus_access);}
                     if(strlen($fee_settings_probs) > 0) {throw new Error($fee_settings_probs);}
                     if(strlen($matric_probs) > 0) {throw new Error($matric_probs);}
