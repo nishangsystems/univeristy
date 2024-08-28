@@ -240,13 +240,21 @@ class FeesController extends Controller
                             # code...
 
                             // GET TUTION FEE FOR PROGRAM IN CAMPUS
-                            $p_i = \App\Models\CampusProgram::where('campus_id', '=', $student->campus_id)
-                            ->where('program_level_id', '=', $student->program_id)
-                            ->join('payment_items', 'campus_program_id', '=', 'campus_programs.id')
-                            ->where('name', '=', 'TUTION')->whereNotNull('amount');
+                            $p_i = Students::where('students.id', $student->id)->join('student_classes', ['student_classes.student_id'=>'students.id'])
+                                ->where('student_classes.year_id', $request->batch)
+                                ->join('program_levels', ['program_levels.id'=>'student_classes.class_id'])
+                                ->join('campus_programs', function($query){
+                                    $query->on(['campus_programs.program_level_id'=>'program_levels.id'])
+                                        ->on(['campus_programs.campus_id'=>'students.campus_id']);
+                                })
+                                ->join('payment_items', function($query){
+                                    $query->on(['payment_items.campus_program_id'=>'campus_programs.id'])
+                                        ->on(['payment_items.year_id'=>'student_classes.year_id']);
+                                })
+                                ->select(['payment_items.*'])->distinct()->first();
                             // check if fee is set
                             // CHECK FEE SETTINGS FOR THE GIVEN PROGRAM IN THE GIVEN CAMPUS
-                            if ($p_i->count() == 0) {
+                            if ($p_i == null) {
                                 # code...
                                 $prog = \App\Models\ProgramLevel::find($student->program_id);
                                 $cmps = \App\Models\Campus::find($student->campus_id)->name;
@@ -255,7 +263,7 @@ class FeesController extends Controller
                                 continue;
                             }
                             $payments[] = [
-                                'payment_id' => $p_i->pluck('payment_items.id')[0],
+                                'payment_id' => $p_i->id,
                                 'student_id' => $student->id,
                                 'batch_id' => $request->batch_id,
                                 'unit_id' => \App\Models\StudentClass::where('student_id', '=', $student->id)->pluck('class_id')[0],
@@ -356,7 +364,9 @@ class FeesController extends Controller
                 $reg = $fee_items->where('program_level_id', $rec->id)->where('name', 'REGISTRATION')->first();
                 if($fee != null){
                     $rec->amount = $fee->amount??null;
+                    $rec->tution_id = $fee->id;
                     $rec->reg = $reg->amount??null;
+                    $rec->reg_id = $reg->id??null;
                     $rec->first_instalment = $fee->first_instalment??null;
                     $rec->second_instalment = $fee->second_instalment??null;
                     $rec->international_amount = $fee->international_amount??null;

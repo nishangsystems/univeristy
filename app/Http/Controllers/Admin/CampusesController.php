@@ -132,6 +132,7 @@ class CampusesController extends Controller
         # code...
         $data['title'] = __('text.manage_programs_under')." ".\App\Models\Campus::find($id)->name;
         $data['programs'] = \App\Models\CampusProgram::where('campus_id', $id)->pluck('program_level_id')->toArray();
+        // dd($data);
         return view('admin.campuses.programs', $data);
     }
 
