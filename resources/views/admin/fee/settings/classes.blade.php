@@ -27,7 +27,9 @@
                 <td>{{ $program_level->second_instalment ?? '----'}}</td>
                 <td>{{ $program_level->reg ?? '----'}}</td>
                 <td>
-                    <a href="{{route('admin.campuses.set_fee', [$campus->id, $program_level->id])}}" class="btn btn-sm btn-primary">{{__('text.word_fees')}}</a>
+                    <a href="{{route('admin.campuses.set_fee', [$campus->id, $program_level->id])}}" class="btn btn-xs btn-primary rounded"><span class="fa fa-cog mr-1 mb-1"></span>{{__('text.word_fees')}}</a>
+                    <a href="{{route('admin.campuses.set_fee', [$campus->id, $program_level->id])}}" class="btn btn-xs btn-success rounded"><span class="fa fa-upload mr-1 mb-1"></span>{{__('text.import_tution')}}</a>
+                    <a href="{{route('admin.campuses.set_fee', [$campus->id, $program_level->id])}}" class="btn btn-xs btn-info rounded"><span class="fa fa-upload mr-1 mb-1"></span>{{__('text.import_registration')}}</a>
                 </td>
             </tr>
             @endforeach

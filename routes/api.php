@@ -140,3 +140,16 @@ Route::get('program_provisioning/campus_propram_status', [StatusController::clas
 Route::get('program_provisioning/admission_status_statics', [StatusController::class, 'admission_status_statics']);
 Route::post('program_provisioning/update_campus_program_status', [StatusController::class, 'update_campus_program_status']);
 // ----------------------------- END OF APPLICATION PORTAL API ENDPOINTS ----------------------------------
+
+
+# User Api
+Route::prefix('user')->namespace('Api\User')->group(function() {    
+    
+    #Master 
+    Route::get('relation', [ApiHomeController::class,'relation']);
+    Route::get('state', [ApiHomeController::class,'state']);
+    Route::group(['middleware' => 'userApi'], function(){
+        Route::get('banner', [ApiHomeController::class,'banner']);   
+        Route::post('my-profile', [ApiHomeController::class,'getProfile']);   
+    });
+});
