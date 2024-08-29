@@ -4,6 +4,7 @@
         <table class="table">
             <thead class="text-capitalize">
                 <th>@lang('text.sn')</th>
+                <th>@lang('text.word_school')</th>
                 <th>@lang('text.word_program')</th>
                 <th>@lang('text.matricule_pattern')</th>
                 <th>@lang('text.grading_type')</th>
@@ -20,6 +21,7 @@
                 @foreach ($programs as $program)
                     <tr class="border-bottom">
                         <td class="border-left">{{ $c++ }}</td>
+                        <td class="border-left">{{ $program->school??'' }}</td>
                         <td class="border-left">{{ $program->name??'' }}</td>
                         <td class="border-left">{{ $program->prefix.$school->matric_separator }}--{{ $school->matric_separator.$program->suffix .($program->suffix == null ? '' : $school->matric_separator) }}---</td>
                         <td class="border-left">{{  $program->gradingType->name??'' }}</td>
