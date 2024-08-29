@@ -23,6 +23,7 @@ class Guardian extends User
     public function children()
     {
         # code...
-        return Students::where('parent_phone_number', 'LIKE', '%'.$this->phone)->get();
+        $_phone = substr($this->phone, -9);
+        return Students::where('parent_phone_number', 'LIKE', '%'.$_phone)->get();
     }
 }
