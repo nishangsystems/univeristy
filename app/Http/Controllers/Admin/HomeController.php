@@ -126,7 +126,7 @@ class HomeController  extends Controller
             })->distinct()->get(['students.id as student_id', 'campus_programs.campus_id', 'payment_items.campus_program_id', 'students.matric', 'payment_items.amount']);
 
         // $payments = Payments::where('batch_id', $year)->whereIn('student_id', $expected_fees->pluck('student_id')->toArray());
-        $payments = Payments::join('payment_items', ['payment_items.id'=>'payments.payment_id'])->where('payment_items.name', "TUTION")->where('payments.batch_id', $year)->select(['payments.*']);
+        $payments = Payments::join('payment_items', ['payment_items.id'=>'payments.payment_id'])->where('payment_items.name', "TUTION")->where('payments.batch_id', $year)->select(['payments.*'])->get();
 
         $other_incomes = Income::where('year_id', $this->current_accademic_year)->join('pay_incomes', 'pay_incomes.income_id', '=', 'incomes.id')->whereIn('pay_incomes.student_id', $students->pluck('id')->toArray())->select('incomes.id', 'incomes.name', DB::raw('sum(pay_incomes.amount) as amount'))->groupBy('id')->get();
 
@@ -149,7 +149,7 @@ class HomeController  extends Controller
             // dd($expected_reg_fee);
         
             
-        $recieved_reg_fee = Payments::join('payment_items', ['payment_items.id'=>'payments.payment_id'])->where('payment_items.name', "REGISTRATION")->where('payments.batch_id', $year)->select(['payments.*']);
+        $recieved_reg_fee = Payments::join('payment_items', ['payment_items.id'=>'payments.payment_id'])->where('payment_items.name', "REGISTRATION")->where('payments.batch_id', $year)->sum('payments.amount');
         // dd($other_incomes);
         $data['expected_reg_fee'] = $expected_reg_fee->sum('amount');
         $data['recieved_reg_fee'] = $recieved_reg_fee;
