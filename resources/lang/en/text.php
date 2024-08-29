@@ -1051,5 +1051,7 @@ return [
     'create_resit_session'=>'create resit session',
     'matricule_pattern'=>'matricule pattern',
     'print_CA'=>'print CA',
+    'import_tution'=>'import tution',
+    'import_registration'=>'import registration',
     ''
 ];

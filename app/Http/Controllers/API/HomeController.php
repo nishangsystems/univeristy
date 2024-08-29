@@ -66,9 +66,6 @@ class HomeController extends Controller
         return response()->json(['data'=> Batch::find(Helpers::instance()->getCurrentAccademicYear())]);
     }
 
-
-
-
     
 
     /** 
@@ -157,8 +154,6 @@ class HomeController extends Controller
     }
 
 
-
-
   /** 
      * Banner List 
      * 
@@ -207,5 +202,112 @@ class HomeController extends Controller
             }
     }
 
+
+    
+      /**
+     * @method to Get Profile
+     * 
+     * @return 
+     */
+    public function getProfile(Request $request)
+    {
+        # Validate request data
+        $validator = validator()->make($request->all(), [ 
+            'user_id'  => 'required|numeric',
+        ]);
+
+        # If validator fails return response
+        if ($validator->fails()) { 
+            return response()->json(['message'=>$validator->errors()->first(),'code' => (string)$this->failedStatus]);            
+        }
+
+        try {
+
+        # check user already Exist on that id
+        $user = $this->customer
+                     ->where('id', $request->get('user_id'))
+                     ->where('is_delete', 0)
+                     ->get()
+                     ->last();
+      
+        # return response if user already exist on requested user id
+        if($user != '') 
+        {
+            # Set the Data
+            $data = [
+                        'user_id'          => (string)$user->id,
+                        'is_profile_complete' => (string)$user->is_profile_complete,
+                        'user_unique_id'   => (string)$user->customer_unique_id,
+                        'api_token'        =>  (string)$user->api_token ?? '',
+                        'voter_id'         => (string)$user->voter_id,
+                        'aadhaar_card'     => (string)$user->aadhaar_card,
+                        'name'             => (string)$user->name,
+                        'gender'           => (string)$user->gender,
+                        'dob'              => (string)$user->dob,
+                        'guardian_name'    => (string)$user->guardian_name,
+                        'relation'         => (string)$user->relation,
+                        'mobile'           => (string)$user->mobile,
+                        'email'            => (string)$user->email,
+                        'state_id'         => $user->addressInfo ? (string)$user->addressInfo->state_id : '',
+                        'state_name'       => $user->addressInfo ? ($user->addressInfo->state_id ? $user->addressInfo->stateInfo->name : '' ) : '',
+                        'district_id'      => $user->addressInfo ? (string)$user->addressInfo->district_id : '',
+                        'district_name'    => $user->addressInfo ? ($user->addressInfo->district_id ? ($user->addressInfo->districtInfo ? $user->addressInfo->districtInfo->name : '') : '') : '',
+                        'tehsil_id'        => $user->addressInfo ? (string)$user->addressInfo->tehsil_id : '',
+                        'tehsil_name'    => $user->addressInfo ? ($user->addressInfo->tehsil_id ? ($user->addressInfo->tehsilInfo ? $user->addressInfo->tehsilInfo->name : '') : '') : '',
+                        
+                        'area'             => $user->addressInfo ? (string)$user->addressInfo->area : '',
+                        'parliamentary_id' => $user->addressInfo ? (string)$user->addressInfo->parliamentary_id : '',
+                        'parliamentary_name'    => $user->addressInfo ? ($user->addressInfo->parliamentary_id ? ($user->addressInfo->parliamentaryInfo ? $user->addressInfo->parliamentaryInfo->name : '') : '') : '',
+                        'assembly_id'      => $user->addressInfo ? (string)$user->addressInfo->assembly_id : '',
+                        'assembly_name'    => $user->addressInfo ? ($user->addressInfo->assembly_id ? ($user->addressInfo->assemblyInfo ? $user->addressInfo->assemblyInfo->name : '') : '') : '',
+                        
+                        'town_village_id'      => $user->addressInfo ? (string)$user->addressInfo->town_village_id : '',
+                        'town_village_name'    => $user->addressInfo ? ($user->addressInfo->town_village_id ? ($user->addressInfo->townVillageInfo ? $user->addressInfo->townVillageInfo->name : '') : '') : '',
+
+
+                        'panchayat_ward_id'         => $user->addressInfo ? (string)$user->addressInfo->panchayat_ward_id : '',
+                        'panchayat_ward_name'    => $user->addressInfo ? ($user->addressInfo->panchayat_ward_id ? ($user->addressInfo->panchayatWardInfo ? $user->addressInfo->panchayatWardInfo->name : '') : '') : '',
+
+                        'block_id'         => $user->addressInfo ? (string)$user->addressInfo->block_id : '',
+                        'block_name'    => $user->addressInfo ? ($user->addressInfo->block_id ? ($user->addressInfo->blockInfo ? $user->addressInfo->blockInfo->name : '') : '') : '',
+
+                        'thana_id'         => $user->addressInfo ? (string)$user->addressInfo->thana_id : '',
+                        'thana_name'    => $user->addressInfo ? ($user->addressInfo->thana_id ? ($user->addressInfo->thanaInfo ? $user->addressInfo->thanaInfo->name : '') : '') : '',
+
+                        'post_office_id'      => $user->addressInfo ? (string)$user->addressInfo->post_office_id : '',
+                        'post_office_name'    => $user->addressInfo ? ($user->addressInfo->post_office_id ? ($user->addressInfo->postOfficeInfo ? $user->addressInfo->postOfficeInfo->name : '') : '') : '',
+
+
+                        'locality'         => $user->addressInfo ? (string)$user->addressInfo->locality : '',
+                        'house_no'         => $user->addressInfo ? (string)$user->addressInfo->house_no : '',
+                        'land_mark'        => $user->addressInfo ? (string)$user->addressInfo->land_mark : '',
+                        'pincode'          => $user->addressInfo ? (string)$user->addressInfo->pincode : '',
+                    ];
+
+            # return response
+            return response()->json([
+                'code'      => (string)$this->successStatus, 
+                'message'   => 'Profile Details.',
+                'data'      => $data
+             ]);
+              
+        } else {
+            # return response
+            return response()->json([
+                'code'      => (string)$this->failedStatus, 
+                'message'   => 'User not Found on User Id.',
+                'data'      => []
+             ]); 
+        } 
+
+
+        } catch (\Exception $e) {
+            # return response
+                  return response()->json([
+                      'code'      => (string)$this->failedStatus, 
+                      'message'   => 'Something Went Worng.'
+                   ]);
+        }
+    }
 
 }
