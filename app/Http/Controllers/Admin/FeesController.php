@@ -177,20 +177,25 @@ class FeesController extends Controller
         return redirect()->back();
     }
 
-    public function import()
+    public function import(Request $request, $fee_id)
     {
         # code...
-        $data['title'] = __('text.import_fees');
+        $fee = PaymentItem::find($fee_id);
+        $campus_program = $fee->campusProgram;
+        $data['year'] = $fee->year;
+        $data['class'] = $campus_program->program_level??null;
+        $data['title'] = __('text.word_import').' '.$fee->name.' &rangle; &rangle; '.$data['class']->name().' &rangle; &rangle; '.$data['year']->name;
+        // $data['']
         return view('admin.fee.import', $data);
     }
 
-    public function import_save(Request $request)
+    public function import_save(Request $request, $fee_id)
     {
         # code...
         $validator = Validator::make($request->all(), [
             'file'=>'required|file',
             'import_reference'=>'required',
-            'batch'=>'reuired',
+            'batch_id'=>'required',
         ]);
         // import_reference is a text string that identifoes a particular importation so that it can be cancelled if an error occurs.
 
@@ -225,9 +230,13 @@ class FeesController extends Controller
                 $campus_access = '';
                 $campus_access_prefix= __('text.x_phrase_2');
                 $fee_settings_probs = '';
+
+                $fee = PaymentItem::find($fee_id);
+
                 if (count($file_data) > 0){
                     DB::beginTransaction();
                     $payments = [];
+                    
                     foreach ($file_data as $value) {
                         # code...
                         $student = \App\Models\Students::where('matric', '=', $value[0])->first() ?? null;
@@ -238,37 +247,16 @@ class FeesController extends Controller
                         }
                         if ($student != null) {
                             # code...
-
-                            // GET TUTION FEE FOR PROGRAM IN CAMPUS
-                            $p_i = Students::where('students.id', $student->id)->join('student_classes', ['student_classes.student_id'=>'students.id'])
-                                ->where('student_classes.year_id', $request->batch)
-                                ->join('program_levels', ['program_levels.id'=>'student_classes.class_id'])
-                                ->join('campus_programs', function($query){
-                                    $query->on(['campus_programs.program_level_id'=>'program_levels.id'])
-                                        ->on(['campus_programs.campus_id'=>'students.campus_id']);
-                                })
-                                ->join('payment_items', function($query){
-                                    $query->on(['payment_items.campus_program_id'=>'campus_programs.id'])
-                                        ->on(['payment_items.year_id'=>'student_classes.year_id']);
-                                })
-                                ->select(['payment_items.*'])->distinct()->first();
-                            // check if fee is set
-                            // CHECK FEE SETTINGS FOR THE GIVEN PROGRAM IN THE GIVEN CAMPUS
-                            if ($p_i == null) {
-                                # code...
-                                $prog = \App\Models\ProgramLevel::find($student->program_id);
-                                $cmps = \App\Models\Campus::find($student->campus_id)->name;
-                                $str = " Tution not set for Program : ".$prog->program()->first()->name." ".__('text.word_level')." ".$prog->level()->first()->level.' '.__('text.word_in').' '.$cmps.' '.__('text.word_campus');
-                                $fee_settings_probs .= str_contains($fee_settings_probs, $str) ? '' : $str;
-                                continue;
-                            }
+                            
                             $payments[] = [
-                                'payment_id' => $p_i->id,
+                                'payment_id' => $fee_id,
                                 'student_id' => $student->id,
                                 'batch_id' => $request->batch_id,
-                                'unit_id' => \App\Models\StudentClass::where('student_id', '=', $student->id)->pluck('class_id')[0],
+                                'payment_year_id' => $request->bacth_id,
+                                'unit_id' => $fee->campusProgram->program_level_id,
                                 'amount' => $value[1],
-                                'reference_number' => $value['2'] != null ? $value['2'] : $request->reference_number
+                                'reference_number' => $value['2'] != null ? $value['2'] : $request->import_reference,
+                                'import_reference' => $request->import_reference
                             ];
                         }else{
                             $matric_probs .= ' '.__('text.word_matricule').' '.$value[0].' '.__('text.not_found').',';
@@ -302,13 +290,9 @@ class FeesController extends Controller
     public function import_undo(Request $request)
     {
         # code...
-        $records = Payments::where('import_reference', $request->import_reference);
-        if($records->count() > 0){
-            foreach ($records->get() as $key => $record) {
-                # code...
-                $record->delete();
-            }
-        }
+        $records = Payments::where('import_reference', $request->import_reference)->each(function($rec){
+            $rec->delete();
+        });
         return back()->with('success', __('text.word_done'));
     }
 

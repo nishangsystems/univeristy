@@ -8,12 +8,14 @@
                 <div class="row py-2">
                     <label for="" class="col-md-2 fw-bold text-capitalize">{{__('text.word_year')}}</label>
                     <div class="col-md-10 col-lg-10">
-                        <select name="batch_id" id="" class="form-control" required>
-                            <option value="" selected>{{__('text.academic_year')}}</option>
-                            @foreach(\App\Models\Batch::all() as $batch)
-                                <option value="{{$batch->id}}">{{$batch->name}}</option>
-                            @endforeach
-                        </select>
+                        <input readonly id="" value="{{$year->name??''}}" class="form-control">
+                        <input type="hidden" name="batch_id" id="" value="{{$year->id??''}}">
+                    </div>
+                </div>
+                <div class="row py-2">
+                    <label for="" class="col-md-2 fw-bold text-capitalize">{{__('text.word_class')}}</label>
+                    <div class="col-md-10 col-lg-10">
+                        <input type="text" readonly id="" class="form-control" value="{{$class->name()}}">
                     </div>
                 </div>
                 <div class="row py-2">
@@ -45,14 +47,16 @@
                         </thead>
                         <tbody>
                             @php($k = 1)
-                            @foreach(array_unique(\App\Models\Payments::whereNotNull('import_reference')->distinct()->pluck('import_reference')->toArray()) as $import_ref)
-                                @php($import = \App\Models\Payments::where('import_reference', $import_ref)->first())
+                            @foreach(\App\Models\Payments::whereNotNull('import_reference')->select(['payments.*'])->groupBy('import_reference')->distinct()->get() as $import)
                                 <tr class="border-bottom border-dark">
                                     <td class="border-left border-right border-secondary">{{$k++}}</td>
                                     <td class="border-left border-right border-secondary">{{$import->import_reference ?? ''}}</td>
-                                    <td class="border-left border-right border-secondary">{{date('l d-m-Y H:m', strtotime($import->created_at))}}</td>
+                                    <td class="border-left border-right border-secondary">{{now()->parse($import->created_at)->format('l dS M Y - H:m')}}</td>
                                     <td class="border-left border-right border-secondary">
-                                        <a href="{{route('admin.fee.import.undo', $import_ref)}}" class="btn btn-sm btn-danger">{{__('text.word_undo')}}</a>
+                                        <form action="{{route('admin.fee.import.undo', $import->import_reference)}}" method="post">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-danger rounded">{{__('text.word_undo')}}</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
@@ -65,9 +69,9 @@
             <h5 class="text-center text-capitalize">{{__('text.file_format_csv')}}</h5>
             <table style="background-color: #dedeff;">
                 <thead class="text-capitalize" style="background-color: #dfdedf; border-bottom: 1px solid white;">
-                    <th>{{__('text.word_matricule')}}</th>
-                    <th>{{__('text.word_amount')}}</th>
-                    <th>{{__('text.reference_number')}}</th>
+                    <th>{{__('text.word_matricule')}}<span class="text-danger">*</span></th>
+                    <th>{{__('text.word_amount')}}<span class="text-danger">*</span></th>
+                    <th>{{__('text.word_reference')}}</th>
                 </thead>
                 @for($i = 0; $i < 4; $i++)
                     <tr class="border-bottom">

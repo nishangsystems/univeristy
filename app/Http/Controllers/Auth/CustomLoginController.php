@@ -120,7 +120,7 @@ class CustomLoginController extends Controller
         if( Auth::guard('student')->attempt(['matric'=>$request->username,'password'=>$request->password], $request->remember)){
             // return "Spot 1";
             return redirect()->intended(route('student.home'));
-        }elseif(auth('parents')->attempt(['phone'=>$request->username, 'password'=>$request->password])){
+        }elseif(auth('parents')->attempt(['phone'=>str_replace('+', '', $request->username), 'password'=>$request->password])){
             return redirect()->route('parents.home');
         }
         else{

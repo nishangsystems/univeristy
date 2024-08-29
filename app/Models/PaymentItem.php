@@ -15,4 +15,12 @@ class PaymentItem extends Model
     public function payments(){
         return  $this->hasMany(Payments::class,'payment_id');
     }
+
+    public function campusProgram(){
+        return  $this->belongsTo(CampusProgram::class,'campus_program_id');
+    }
+
+    public function year(){
+        return  $this->belongsTo(Batch::class,'year_id');
+    }
 }

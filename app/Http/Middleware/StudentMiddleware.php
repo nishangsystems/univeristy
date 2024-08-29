@@ -32,7 +32,7 @@ class StudentMiddleware
         if(!($user->parent_phone_number != null && strlen($user->parent_phone_number) > 7)){
             return redirect(route('student.edit_profile'))->with('message', 'Complete your profile to continue');
         }
-        if($user->parent_phone_number == $user->phone ){
+        if($user->parent_phone_number == $user->phone || strstr($user->parent_phone_number, $user->phone) != false  || strstr($user->phone, $user->parent_phone_number) != false ){
             return redirect(route('student.edit_profile'))->with('message', 'Update your profile to continue. Parent and student phone number must not be the same.');
         }
 
