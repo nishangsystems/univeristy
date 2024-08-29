@@ -287,10 +287,10 @@ class FeesController extends Controller
         }
     }
 
-    public function import_undo(Request $request)
+    public function import_undo(Request $request, $reference)
     {
         # code...
-        $records = Payments::where('import_reference', $request->import_reference)->each(function($rec){
+        $records = Payments::where('import_reference', $reference)->each(function($rec){
             $rec->delete();
         });
         return back()->with('success', __('text.word_done'));
