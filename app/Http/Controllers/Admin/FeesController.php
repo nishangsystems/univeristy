@@ -255,7 +255,7 @@ class FeesController extends Controller
                                 'payment_year_id' => $request->bacth_id,
                                 'unit_id' => $fee->campusProgram->program_level_id,
                                 'amount' => $value[1],
-                                'reference_number' => $value['2'] != null ? $value['2'] : $request->import_reference,
+                                'reference_number' => (array_key_exists(2, $value) and  $value['2'] != null) ? $value['2'] : $request->import_reference,
                                 'import_reference' => $request->import_reference
                             ];
                         }else{
