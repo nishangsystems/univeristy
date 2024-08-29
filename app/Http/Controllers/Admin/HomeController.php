@@ -125,7 +125,8 @@ class HomeController  extends Controller
                 $campus_id != null ? $query->where('students.campus_id', $campus_id) : null;
             })->distinct()->get(['students.id as student_id', 'campus_programs.campus_id', 'payment_items.campus_program_id', 'students.matric', 'payment_items.amount']);
 
-        $payments = Payments::where('batch_id', $year)->whereIn('student_id', $expected_fees->pluck('student_id')->toArray());
+        // $payments = Payments::where('batch_id', $year)->whereIn('student_id', $expected_fees->pluck('student_id')->toArray());
+        $payments = Payments::where('batch_id', $year);
 
         $other_incomes = Income::where('year_id', $this->current_accademic_year)->join('pay_incomes', 'pay_incomes.income_id', '=', 'incomes.id')->whereIn('pay_incomes.student_id', $students->pluck('id')->toArray())->select('incomes.id', 'incomes.name', DB::raw('sum(pay_incomes.amount) as amount'))->groupBy('id')->get();
 
