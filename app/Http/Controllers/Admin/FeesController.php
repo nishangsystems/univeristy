@@ -248,22 +248,36 @@ class FeesController extends Controller
                         if ($student != null) {
                             # code...
                             
-                            $payments[] = [
-                                'payment_id' => $fee_id,
-                                'student_id' => $student->id,
-                                'batch_id' => $request->batch_id,
-                                'payment_year_id' => $request->batch_id,
-                                'unit_id' => $fee->campusProgram->program_level_id,
-                                'amount' => $value[1],
-                                'reference_number' => (array_key_exists(2, $value) and  $value['2'] != null) ? $value['2'] : $request->import_reference,
-                                'import_reference' => $request->import_reference
-                            ];
+                            // $payments[] = [
+                            //     'payment_id' => $fee_id,
+                            //     'student_id' => $student->id,
+                            //     'batch_id' => $request->batch_id,
+                            //     'payment_year_id' => $request->batch_id,
+                            //     'unit_id' => $fee->campusProgram->program_level_id,
+                            //     'amount' => $value[1],
+                            //     'reference_number' => (array_key_exists(2, $value) and  $value['2'] != null) ? $value['2'] : $request->import_reference,
+                            //     'import_reference' => $request->import_reference
+                            // ];
+
+                            Payments::updateOrInsert(
+                                ['payment_id' => $fee_id,'student_id' => $student->id,'batch_id' => $request->batch_id],
+                                [
+                                    'payment_id' => $fee_id,
+                                    'student_id' => $student->id,
+                                    'batch_id' => $request->batch_id,
+                                    'payment_year_id' => $request->batch_id,
+                                    'unit_id' => $fee->campusProgram->program_level_id,
+                                    'amount' => $value[1],
+                                    'reference_number' => (array_key_exists(2, $value) and  $value['2'] != null) ? $value['2'] : $request->import_reference,
+                                    'import_reference' => $request->import_reference
+                                ]
+                            );
                         }else{
                             $matric_probs .= ' '.__('text.word_matricule').' '.$value[0].' '.__('text.not_found').',';
                         }
                     }
 
-                    Payments::insert($payments);
+                    // Payments::insert($payments);
                     DB::commit();
 
                     if(strlen($campus_access) > 0){throw new Error($campus_access_prefix.$campus_access);}
