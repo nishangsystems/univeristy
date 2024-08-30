@@ -142,7 +142,7 @@
                                     <td class="font-weight-bold">{{$item->amount}} {{__('text.currency_cfa')}}</td>
                                     <td class="font-weight-bold">{{ optional($item->bank)->name??'---' }}</td>
                                     <td class="font-weight-bold">{{$item->debt}} {{__('text.currency_cfa')}}</td>
-                                    <td>{{$item->created_at->format('l d/m/Y')}}</td>
+                                    <td>{{$item->created_at == null ? null : $item->created_at->format('l d/m/Y')}}</td>
                                     <td class="d-inline-flex">
                                         <!-- <a href="{{route('admin.fee.student.payments.edit', [ $student->id, $item->id])}}" class="btn m-2 btn-sm btn-primary text-white text-capitalize">{{__('text.word_edit')}}</a> -->
                 
