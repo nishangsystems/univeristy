@@ -1162,34 +1162,34 @@
                         </ul>
                     </li>
                     @endif
+                @endif
 
-                    @if (\Auth::user()->hasPermissionTo('manage_faqs'))
-                    <li>
-                        <a href="#" class="dropdown-toggle text-capitalize">
-                        <i style="color: {{$bg1}}" class="menu-icon fa fa-question"></i>
-                            <span class="menu-text">
-                                {{__('text.manage_faqs')}}
-                                </span>
-                            <b class="arrow fa fa-angle-down"></b>
-                        </a>
-                        <ul class="submenu">
-                            <li>
-                                <a href="{{route('faqs.index')}}" class="text-capitalize">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    {{__('text.word_faqs')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="{{route('faqs.create')}}" class="text-capitalize">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    {{__('text.word_create')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                        </ul>
-                    </li>
-                    @endif
+                @if (\Auth::user()->hasPermissionTo('manage_faqs'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                    <i style="color: {{$bg1}}" class="menu-icon fa fa-question"></i>
+                        <span class="menu-text">
+                            {{__('text.manage_faqs')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('faqs.index')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_faqs')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li>
+                            <a href="{{route('faqs.create')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.word_create')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
                 @endif
 
                 @if (\Auth::user()->hasPermissionTo('manage_school_debts'))
