@@ -51,7 +51,7 @@
         <div class="row py-2">
             <label for="" class="col-md-3 text-capitalize">{{__('text.date_of_birth')}}</label>
             <div class="col-md-9">
-                <input type="date" name="dob" id="" class="form-control border rounded" value="{{auth('student')->user()->dob}}">
+                <input type="date" name="dob" id="" class="form-control border rounded" required value="{{auth('student')->user()->dob == null ? null : auth('student')->user()->dob->format('Y-m-d')}}">
             </div>
         </div>
         <div class="d-flex justify-content-end py-3">
