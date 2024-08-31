@@ -190,7 +190,7 @@ class Students extends Authenticatable
     public function total_balance($student_id = null, $year = null)
     {
         $year = $year == null ? Helpers::instance()->getCurrentAccademicYear() : $year;
-        return $this->total_debts($year);
+        return $this->total_debts($year+1);
         $scholarship = Helpers::instance()->getStudentScholarshipAmount($this->id);
         $ret = $this->total($year) + $this->total_debts($year-1) + ($this->extraFee($year) == null ? 0 : $this->extraFee($year)->amount) - $this->paid($year) - ($scholarship);
     }
