@@ -365,7 +365,9 @@ class Students extends Authenticatable
         $total_paid = Payments::where('student_id', $this->id)->sum('amount');
         
         $cumDebt = $fees + $extra_fees - $scholarships-> sum('amount') - $total_paid;
-        dd($cumDebt);
+        dd([
+            'fees'=>$fees, 'extra_fee'=>$extra_fees, 'scholarship'=>$scholarships, 'paid'=>$total_paid
+        ]);
         return $cumDebt;
 
 
