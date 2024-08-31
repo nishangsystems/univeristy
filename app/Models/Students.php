@@ -366,7 +366,7 @@ class Students extends Authenticatable
         
         $cumDebt = $fees + $extra_fees - $scholarships-> sum('amount') - $total_paid;
         dd([
-            'fees'=>$fees, 'extra_fee'=>$extra_fees, 'scholarship'=>$scholarships, 'paid'=>$total_paid
+            'fees'=>$fees, 'extra_fee'=>$extra_fees, 'scholarship'=>$scholarships->sum('amount'), 'paid'=>$total_paid
         ]);
         return $cumDebt;
 

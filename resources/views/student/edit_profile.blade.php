@@ -14,9 +14,10 @@
             <div class="col-md-9">
                 <div class="row">
                     <div class="col-md-5">
-                        <select class="form-control border rounded" id="country_picker" name="parent_phone_code" onchange="set_field_length(this)">
+                        <select class="form-control border rounded" id="country_picker" required name="parent_phone_code" onchange="set_field_length(this)">
+                            <option value="">select country</option>
                             @foreach (collect(config('country-phone-data'))->sortBy('label') as $phdata)
-                                <option value="{{ $phdata['phone'] }}" data-length="{{ json_encode($phdata['phoneLength']) }}" {{ old('parent_phone_code', auth('student')->user()->parent_phone_code) == $phdata['phone'] ? 'selected' : '' }}>{{ $phdata['phone'].' - '.$phdata['label'] }}</option>
+                                <option value="{{ $phdata['phone'] }}" data-length="{{ json_encode($phdata['phoneLength']) }}" {{ old('parent_phone_code', auth('student')->user()->parent_phone_code) == $phdata['phone'] ? 'selected' : '' }}>{{ $phdata['label'].' - '.$phdata['phone'] }}</option>
                             @endforeach
                         </select>
                     </div>
