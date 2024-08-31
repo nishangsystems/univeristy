@@ -349,7 +349,7 @@ class Students extends Authenticatable
         foreach (Batch::where('id', '<', $year+1)->where('id', '>', $this->admission_batch_id-1)->get() as $key => $batch) {
             # code...
             $class = $this->_class($batch->id);
-            $dd[] = [$class->campus_programs($this->campus_id)->get()];
+            $dd[] = [$this->toArray()];
             if($class== null or $class->campus_programs($this->campus_id)->first() == null )continue;
             if($this->program_status == "ON-CAMPUS"){
                 $fees += $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->sum('amount');
