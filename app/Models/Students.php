@@ -351,7 +351,7 @@ class Students extends Authenticatable
             $class = $this->_class($batch->id);
             // $dd = $class->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->sum('amount');
             if($class== null or $class->campus_programs($this->campus_id)->first() == null )continue;
-            dd($this->program_status == "ON-CAMPUS");
+            dd($this->program_status);
             if($this->program_status == "ON-CAMPUS"){
                 $fees += $class->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->sum('amount');
             }
