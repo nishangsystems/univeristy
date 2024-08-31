@@ -352,16 +352,17 @@ class Students extends Authenticatable
             // $dd = $class->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->sum('amount');
             if($class== null or $class->campus_programs($this->campus_id)->first() == null )continue;
             if($this->program_status == "ON-CAMPUS"){
+                dd(1000000);
                 $fees += $class->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->sum('amount');
             }
-            // elseif($this->program_status == "HYBRID"){
-            //     $builder = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id);
-            //     $fees += $builder->where('name', 'TUTION')->sum('bybrid_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
-            // }
-            // elseif($this->program_status == "INTERNATIONAL"){
-            //     $builder = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id);
-            //     $fees += $builder->where('name', 'TUTION')->sum('international_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
-            // }
+            elseif($this->program_status == "HYBRID"){
+                $builder = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id);
+                $fees += $builder->where('name', 'TUTION')->sum('bybrid_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
+            }
+            elseif($this->program_status == "INTERNATIONAL"){
+                $builder = $this->_class($batch->id)->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id);
+                $fees += $builder->where('name', 'TUTION')->sum('international_amount') + $builder->where('name', 'REGISTRATION')->sum('amount');
+            }
         }
         
         $scholarships = $this->allScholarships($year);
