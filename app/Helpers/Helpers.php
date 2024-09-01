@@ -9,6 +9,7 @@ use App\Models\PlatformCharge;
 use App\Models\ProgramLevel;
 use App\Models\Resit;
 use App\Models\Result;
+use App\Models\School;
 use App\Models\SchoolUnits;
 use Google\Client;
 use Illuminate\Database\Eloquent\Model;
@@ -522,6 +523,7 @@ class Helpers
             $notification = [
                 'title' => $title,
                 'body' => $body,
+                'image' => School::first()->logo_path
             ];
 
             $fcmMessage = [
