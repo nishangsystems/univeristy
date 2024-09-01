@@ -19,25 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/layout.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/res_and_trans/spr_sheet.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/res_and_trans/spr_sheet.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/SubjectNotes/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/storage/SubjectNotes/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/SubjectNotes/1680199526.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/storage/SubjectNotes/1680199526.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/app/bg_image/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/storage/app/bg_image/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/app/files/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/storage/app/files/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/app/modules/modules.used" beforeDir="false" afterPath="$PROJECT_DIR$/storage/app/modules/modules.used" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/files/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/storage/files/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/files/ca_2022-10-20@10-31-24.csv" beforeDir="false" afterPath="$PROJECT_DIR$/storage/files/ca_2022-10-20@10-31-24.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/framework/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/storage/framework/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/framework/cache/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/storage/framework/cache/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/framework/cache/data/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/framework/sessions/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/storage/framework/sessions/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/framework/testing/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/storage/framework/testing/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/framework/views/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/storage/framework/views/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/logs/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/storage/logs/.gitignore" afterDir="false" />
-    </list>
+    <list default="true" id="fb4e8293-d801-4d50-8c26-97c5be11463f" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -197,6 +179,10 @@
       <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
       <path value="$PROJECT_DIR$/vendor/sebastian/environment" />
       <path value="$PROJECT_DIR$/vendor/filp/whoops" />
+      <path value="$PROJECT_DIR$/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/vendor/google/apiclient-services" />
+      <path value="$PROJECT_DIR$/vendor/google/apiclient" />
+      <path value="$PROJECT_DIR$/vendor/google/auth" />
     </include_path>
   </component>
   <component name="ProjectId" id="2WKwHNyyR4Bg1I492y9sBkpqk5R" />
@@ -219,6 +205,9 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/Http/Livewire" />
       <recent name="$PROJECT_DIR$/config" />
@@ -281,6 +270,9 @@
       <workItem from="1721569700994" duration="18130000" />
       <workItem from="1722088235516" duration="7381000" />
       <workItem from="1722273608992" duration="1838000" />
+      <workItem from="1725183456442" duration="704000" />
+      <workItem from="1725191183668" duration="1267000" />
+      <workItem from="1725196215584" duration="3635000" />
     </task>
     <servers />
   </component>
