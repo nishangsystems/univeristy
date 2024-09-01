@@ -10,8 +10,7 @@ use App\Models\ProgramLevel;
 use App\Models\Resit;
 use App\Models\Result;
 use App\Models\SchoolUnits;
-use App\Models\Students;
-use Illuminate\Contracts\Session\Session;
+use Google\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -514,5 +513,55 @@ class Helpers
             ->where('campus_id', null)
             ->get();
     }
+
+
+    function sendNotificationToMe($topic, $title, $body, $data = [])
+    {
+        try {
+
+            $notification = [
+                'title' => $title,
+                'body' => $body,
+            ];
+
+            $fcmMessage = [
+                'message' => [
+                    'to' => '/topics/' . $topic,
+                    'notification' => $notification,
+                    'data' => $data,
+                ]
+            ];
+
+            $headers = [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->generateAccessToken(),
+                'priority:high'
+            ];
+
+            $fcmUrl = 'https://fcm.googleapis.com/v1/projects/vamvam-54cac/messages:send';
+            $params = http_build_query($fcmMessage);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_URL, $fcmUrl);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            return $result;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    function generateAccessToken()
+    {
+        $client = new Client();
+        $client->setAuthConfig(__DIR__ . '/../../vamvam-54cac-53cc7c251d57.json');
+        $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+        $accessToken = $client->fetchAccessTokenWithAssertion();
+        return $accessToken['access_token'];
+    }
+
 
 }

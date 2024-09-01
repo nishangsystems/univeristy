@@ -258,7 +258,9 @@ class NotificationsController extends Controller
                 
                 default:
                     # code...
-                    return back()->with('error', 'Unknown notification type.');
+                    $app_title = 'all';
+                    $data['unit_id'] = null;
+                    $data['level_id'] = null;
                     break;
             }
             if($campus_id != 0 || auth()->user()->campus_id != null){
