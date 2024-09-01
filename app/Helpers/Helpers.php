@@ -518,42 +518,37 @@ class Helpers
 
     function sendNotificationToMe($topic, $title, $body, $data = [])
     {
-        try {
+        $notification = [
+            'title' => $title,
+            'body' => $body,
+            'image' => School::first()->logo_path
+        ];
 
-            $notification = [
-                'title' => $title,
-                'body' => $body,
-                'image' => School::first()->logo_path
-            ];
+        $fcmMessage = [
+            'message' => [
+                'to' => '/topics/all',
+                'notification' => $notification,
+                'data' => $data,
+            ]
+        ];
 
-            $fcmMessage = [
-                'message' => [
-                    'to' => '/topics/all',
-                    'notification' => $notification,
-                    'data' => $data,
-                ]
-            ];
+        $headers = [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->generateAccessToken(),
+            'priority:high'
+        ];
 
-            $headers = [
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $this->generateAccessToken(),
-                'priority:high'
-            ];
-
-            $fcmUrl = 'https://fcm.googleapis.com/v1/projects/vamvam-54cac/messages:send';
-            $params = http_build_query($fcmMessage);
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_URL, $fcmUrl);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $result = curl_exec($ch);
-            curl_close($ch);
-            return $result;
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
+        $fcmUrl = 'https://fcm.googleapis.com/v1/projects/vamvam-54cac/messages:send';
+        $params = http_build_query($fcmMessage);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_URL, $fcmUrl);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
     }
 
     function generateAccessToken()
