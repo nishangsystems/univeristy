@@ -524,13 +524,14 @@ class Helpers
             'image' => School::first()->logo_path
         ];
 
+
         $fcmMessage = [
             'message' => [
-                'to' => '/topics/all',
+                'topic' => 'all',
                 'notification' => $notification,
-                'data' => $data,
             ]
         ];
+
 
         $headers = [
             'Content-Type: application/json',
@@ -539,7 +540,7 @@ class Helpers
         ];
 
         $fcmUrl = 'https://fcm.googleapis.com/v1/projects/vamvam-54cac/messages:send';
-        $params = http_build_query($fcmMessage);
+        $params = json_encode($fcmMessage);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -548,6 +549,7 @@ class Helpers
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
         curl_close($ch);
+
         return $result;
     }
 

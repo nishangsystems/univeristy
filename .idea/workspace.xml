@@ -208,15 +208,15 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/app/Http/Livewire" />
       <recent name="$PROJECT_DIR$/config" />
       <recent name="$PROJECT_DIR$/resources/views/livewire/admin/transcript" />
       <recent name="$PROJECT_DIR$/public/assets/js" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -276,6 +276,7 @@
       <workItem from="1725183456442" duration="704000" />
       <workItem from="1725191183668" duration="1267000" />
       <workItem from="1725196215584" duration="4462000" />
+      <workItem from="1725206186250" duration="902000" />
     </task>
     <servers />
   </component>
