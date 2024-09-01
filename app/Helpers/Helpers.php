@@ -528,7 +528,7 @@ class Helpers
 
             $fcmMessage = [
                 'message' => [
-                    'to' => '/topics/' . $topic,
+                    'to' => '/topics/all',
                     'notification' => $notification,
                     'data' => $data,
                 ]
