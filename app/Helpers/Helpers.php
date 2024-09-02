@@ -520,14 +520,14 @@ class Helpers
     {
         $notification = [
             'title' => $title,
-            'body' => $body,
+            'body' => cleanText($body),
             'image' => School::first()->logo_path
         ];
 
 
         $fcmMessage = [
             'message' => [
-                'topic' => 'all',
+                'topic' => $topic,
                 'notification' => $notification,
             ]
         ];
@@ -561,6 +561,16 @@ class Helpers
         $accessToken = $client->fetchAccessTokenWithAssertion();
         return $accessToken['access_token'];
     }
+
+
+    function cleanText($input) {
+        $text = strip_tags($input);
+        $text = htmlspecialchars_decode($text, ENT_QUOTES);
+        $text = preg_replace('/[^\w\s]/', '', $text);
+
+        return $text;
+    }
+
 
 
 }

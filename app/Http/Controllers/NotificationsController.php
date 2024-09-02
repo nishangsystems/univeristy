@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\School;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Campus;
@@ -258,7 +259,8 @@ class NotificationsController extends Controller
                 
                 default:
                     # code...
-                    $app_title = 'all';
+                    $school_id = School::first()->notification_id;
+                    $app_title = "school_{$school_id}_{$request->visibility}";
                     $data['unit_id'] = null;
                     $data['level_id'] = null;
                     break;
