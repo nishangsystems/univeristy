@@ -520,7 +520,7 @@ class Helpers
     {
         $notification = [
             'title' => $title,
-            'body' => cleanText($body),
+            'body' => $this->cleanText($body),
             'image' => School::first()->logo_path
         ];
 
