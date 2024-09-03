@@ -22,12 +22,12 @@ class CodedResultsController extends Controller
                 $data['year']  = \App\Models\Batch::find($request->year_id);
             if($request->semester_id != null){
                 $data['semester']  = \App\Models\Semester::find($request->semester_id);
-                if($request->course_code != null){
-                    \App\Models\Subjects::where('code', $request->course_code)->first();
+                // if($request->course_code != null){
+                //     \App\Models\Subjects::where('code', $request->course_code)->first();
+                //     $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->select(['*', DB::raw("COUNT(*) as encoded_records")])->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
+                // }else{
                     $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->select(['*', DB::raw("COUNT(*) as encoded_records")])->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
-                }else{
-                    $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->select(['*', DB::raw("COUNT(*) as encoded_records")])->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
-                }
+                // }
             }
             if($request->course_code != null){
                 $data['course_code'] = $request->course_code;
@@ -571,7 +571,7 @@ class CodedResultsController extends Controller
         # code...
         try {
             //code...
-            $validity = Validator::make($request->all(), ['file'=>'required|file|mimesd:csv']);
+            $validity = Validator::make($request->all(), ['file'=>'required|file|mimes:csv']);
             if($validity->fails()){
                 session()->flash('error', $validity->errors()->first());
                 return back()->withInput();

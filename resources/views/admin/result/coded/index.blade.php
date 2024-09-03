@@ -3,7 +3,7 @@
     <div class="py-4 container-fluid">
         <form method="GET" class="card shadow">
             <div class="row my-4 container-fluid p-3">
-                <div class="col-sm-6 col-md-4 col-lg-3 p-2">
+                <div class="col-sm-6 col-md-5 col-lg-5 p-2">
                     <select class="form-control" name="year_id" id="form_year" required>
                         <option></option>
                         @foreach (\App\Models\Batch::all() as $_year)
@@ -12,7 +12,7 @@
                     </select>
                     <span class="text-secondary">{{ __('text.academic_year') }}</span>
                 </div>
-                <div class="col-sm-6 col-md-4 col-lg-3 p-2">
+                <div class="col-sm-6 col-md-5 col-lg-5 p-2">
                     <select class="form-control" name="semester_id" id="form_semester" required>
                         <option></option>
                         @foreach ($semesters??[] as $_semester)
@@ -21,12 +21,12 @@
                     </select>
                     <span class="text-secondary">{{ __('text.word_semester') }}</span>
                 </div>
-                <div class="col-sm-6 col-md-4 col-lg-3 p-2">
+                {{-- <div class="col-sm-6 col-md-4 col-lg-3 p-2">
                     <input class="form-control" name="course_code" id="form_course_code" value="{{ $course_code??'' }}" required oninput="search_course(this)">
                     <span class="text-secondary">{{ __('text.course_code') }}</span>
                     <div id="course_search_list" class="position-relative"></div>
-                </div>
-                <div class="col-sm-6 col-md-12 col-lg-3 p-2">
+                </div> --}}
+                <div class="col-sm-12 col-md-2 col-lg-2 p-2">
                     <button class="btn btn-primary rounded form-control" type="submit">{{ __('text.word_results') }}</button>
                 </div>
             </div>
@@ -52,15 +52,16 @@
                         <thead class="text-uppercase bg-danger text-white border-top border-bottom">
                             <tr class="border-bottom border-light"><th colspan="3" class="header text-center"><b>@lang('text.file_format_csv')</b></th></tr>
                             <tr>
+                                <th>@lang('text.course_code')</th>
                                 <th>@lang('text.paper_code')</th>
                                 <th>@lang('text.word_matricule')</th>
                             </tr>
                         </thead>
                         <tbody class="bg-light">
-                            <tr class="border-bottom border-secondary"><td>pcode</td><td>smat</td></tr>
-                            <tr class="border-bottom border-secondary"><td>pcode</td><td>smat</td></tr>
-                            <tr class="border-bottom border-secondary"><td>pcode</td><td>smat</td></tr>
-                            <tr class="border-bottom border-secondary"><td>pcode</td><td>smat</td></tr>
+                            <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
+                            <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
+                            <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
+                            <tr class="border-bottom border-secondary"><td>ccode</td><td>pcode</td><td>smat</td></tr>
                         </tbody>
                     </table>
                 </div>
