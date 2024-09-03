@@ -17,11 +17,21 @@ class CodedResultsController extends Controller
         try {
             //code...
             $data['title'] = "Manage Exam Encoding";
+            $data['semesters'] = \App\Models\Semester::orderBy('name')->get();
             if($request->year_id != null)
                 $data['year']  = \App\Models\Batch::find($request->year_id);
             if($request->semester_id != null){
                 $data['semester']  = \App\Models\Semester::find($request->semester_id);
-                $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->select(['*', DB::raw("COUNT(*) as encoded_records")])->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
+                if($request->course_code != null){
+                    \App\Models\Subjects::where('code', $request->course_code)->first();
+                    $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->select(['*', DB::raw("COUNT(*) as encoded_records")])->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
+                }else{
+                    $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->select(['*', DB::raw("COUNT(*) as encoded_records")])->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
+                }
+            }
+            if($request->course_code != null){
+                $data['course_code'] = $request->course_code;
+                $data['_course'] = \App\Models\Subjects::where('code', $request->course_code)->first();
             }
             return view('admin.result.coded.index', $data);
         } catch (\Throwable $th) {

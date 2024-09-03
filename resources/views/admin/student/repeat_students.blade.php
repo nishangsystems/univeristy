@@ -99,5 +99,11 @@ $next_year = $year+1;
             }
         })
     }
+
+    let class_changed = function(element){
+        let class_from = $(element).val();
+        let nc_field = `<input type="hidden" name="class_to" value="${class_from}">`;
+        $('#next_class_hidden').html(nc_field);
+    }
 </script>
 @endsection
