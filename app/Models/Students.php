@@ -250,7 +250,8 @@ class Students extends Authenticatable
     public function results($class_id, $year_id, $semester_id = null){
         return \Cache::remember("users_results_score_$this->id, $class_id, $year_id, $semester_id", 60, function () use ($class_id, $year_id, $semester_id) {
                  $semester = $semester_id == null ? Helpers::instance()->getSemester($class_id)->id : $semester_id;
-                    return collect(Result::where(['student_id' => $this->id,  'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->get() ?? [])->groupBy("subject_id");
+                    // return collect(Result::where(['student_id' => $this->id,  'class_id' => $class_id, 'batch_id' => $year_id, 'semester_id'=>$semester])->get() ?? [])->groupBy("subject_id");
+                    return collect(Result::where(['student_id' => $this->id, 'batch_id' => $year_id, 'semester_id'=>$semester])->get() ?? [])->groupBy("subject_id");
         });
     }
 
@@ -261,8 +262,6 @@ class Students extends Authenticatable
     }
 
 
-
-    
     public function ca_score($course_id, $class_id, $year_id, $semester_id = null)
     {
         return \Cache::remember("users_ca_score_$this->id $course_id, $class_id, $year_id, $semester_id", 60, function () use ($course_id, $class_id, $year_id, $semester_id) {
