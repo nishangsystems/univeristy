@@ -269,7 +269,8 @@ class FeesController extends Controller
                                     'unit_id' => $fee->campusProgram->program_level_id,
                                     'amount' => $value[1],
                                     'reference_number' => (array_key_exists(2, $value) and  $value['2'] != null) ? $value['2'] : $request->import_reference,
-                                    'import_reference' => $request->import_reference
+                                    'import_reference' => $request->import_reference,
+                                    'created_at'=>now()->timestamp
                                 ]
                             );
                         }else{
