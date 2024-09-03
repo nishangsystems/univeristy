@@ -345,13 +345,10 @@ class Students extends Authenticatable
         // dd($campus_program_levels);
         // fee amounts
         $fees = 0;
-        // $dd = [];
         foreach (Batch::where('id', '<', $year+1)->where('id', '>', $this->admission_batch_id-1)->get() as $key => $batch) {
             # code...
             $class = $this->_class($batch->id);
-            // $dd = $class->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->sum('amount');
             if($class== null or $class->campus_programs($this->campus_id)->first() == null )continue;
-            // dd($this->program_status);
             if($this->program_status == "ON-CAMPUS"){
                 $fees += $class->campus_programs($this->campus_id)->first()->payment_items()->where('year_id', $batch->id)->sum('amount');
             }
@@ -370,13 +367,8 @@ class Students extends Authenticatable
         $total_paid = Payments::where('student_id', $this->id)->sum('amount');
         
         $cumDebt = $fees + $extra_fees - $scholarships-> sum('amount') - $total_paid;
-        // dd($dd);
-        // dd([
-        //     'fees'=>$fees, 'extra_fee'=>$extra_fees, 'scholarship'=>$scholarships->sum('amount'), 'paid'=>$total_paid
-        // ]);
+        
         return $cumDebt;
-
-
 
     }
 

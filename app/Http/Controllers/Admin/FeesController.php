@@ -177,7 +177,7 @@ class FeesController extends Controller
         return redirect()->back();
     }
 
-    public function import(Request $request, $fee_id)
+    public function import($fee_id)
     {
         # code...
         $fee = PaymentItem::find($fee_id);
