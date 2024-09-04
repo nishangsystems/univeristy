@@ -1053,5 +1053,9 @@ return [
     'print_CA'=>'print CA',
     'import_tution'=>'import tution',
     'import_registration'=>'import registration',
+    'course_master'=>'course master',
+    'select_semester'=>'select semester',
+    'clear_encoding'=>'clear encoding',
+    'clear_decoding'=>'clear decoding',
     ''
 ];

@@ -4,10 +4,10 @@
         <div class="row py-5">
             <div class="col-md-5 col-lg-5">
                 <div class="d-flex justify-content-end">
-                    @if ($has_exam == false)
-                        <a href="{{route('admin.result.encoded.students.undo', ['course_id'=>request('course_id'), 'semester_id'=>request('semester_id'), 'year_id'=>request('year_id')])}}" class="btn btn-sm rounded text-capitalize btn-primary">@lang('text.clear_encoding')</a>
+                    @if ($has_exam == true)
+                        <a href="{{route('admin.result.decoded.students.undo', ['course_id'=>request('course_id'), 'semester_id'=>request('semester_id'), 'year_id'=>request('year_id')])}}" class="btn btn-sm rounded text-capitalize btn-primary">@lang('text.clear_decoding')</a>
                     @else
-                        <div class="alert alert-danger border-top border-bottom">Coding can not be reversed. Exams marks already exist.</div>
+                        <div class="alert alert-danger border-top border-bottom">Nothing to clear. No deocdede exams marks where found.</div>
                     @endif
                 </div>
                 <hr>
@@ -23,13 +23,13 @@
                         </thead>
                         <tbody>
                             @php $k = 1; @endphp
-                            @foreach ($encoding_summary as $item)
+                            @foreach ($decoding_summary as $item)
                                 <tr>
                                     <td>{{$k++;}}</td>
                                     <td>{{$item->_class->name()}}</td>
                                     <td>{{$item->size}}</td>
                                     <td>
-                                        <a href="{{route('admin.result.encoded.course.class.students', ['class_id'=>$item->class_id, 'course_id'=>$course->id, 'semester_id'=>$semester->id, 'year_id'=>$year->id])}}" class="btn btn-xs rounded text-capitalize btn-primary">@lang('text.word_students')</a>
+                                        <a href="{{route('admin.result.decoded.course.class.students', ['class_id'=>$item->class_id, 'course_id'=>$course->id, 'semester_id'=>$semester->id, 'year_id'=>$year->id])}}" class="btn btn-xs rounded text-capitalize btn-primary">@lang('text.word_students')</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -48,8 +48,8 @@
                                 <th>#</th>
                                 <th>@lang('text.word_name')</th>
                                 <th>@lang('text.word_matricule')</th>
-                                <th>@lang('text.exam_code')</th>
-                                <th>@lang('text.word_action')</th>
+                                <th>@lang('text.exam_mark')</th>
+                                {{-- <th>@lang('text.word_action')</th> --}}
                             </thead>
                             <tbody>
                                 @php
@@ -61,12 +61,12 @@
                                             <td>{{$k++}}</td>
                                             <td>{{$code->name}}</td>
                                             <td>{{$code->matric}}</td>
-                                            <td>{{$code->exam_code}}</td>
-                                            <td>
+                                            <td>{{$code->exam_score}}</td>
+                                            {{-- <td>
                                                 @if($code->exam_score == null)
                                                     <a href="{{route('admin.result.encoded.course.student.uncode', ['course_id'=>request('course_id'), 'semester_id'=>request('semester_id'), 'year_id'=>request('year_id'), 'result_id'=>$code->id])}}" class="btn btn-xs btn-danger rounded text-capitalize">@lang('text.word_delete')</a>
                                                 @endif
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 @endisset
@@ -77,6 +77,5 @@
                 </div>
             </div>
         </div>
-        
 
 @endsection

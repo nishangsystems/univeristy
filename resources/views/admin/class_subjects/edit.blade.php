@@ -31,6 +31,17 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="semester_id" class="control-label col-lg-2 text-capitalize">{{__('text.word_semester')}}:</label>
+                <div class="col-lg-10">
+                    <select  class="form-control" name="semester_id">
+                        <option>@lang('text.select_semester')</option>
+                        @foreach (\App\Models\Semester::where('is_main_semester', 1)->distinct()->get() as $semester)
+                            <option value="{{$semester->id}}" {{ old('semester_id', $subject->_semester_id) == $semester->id ? 'selected' : '' }}>{{$semester->name??''}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="d-flex justify-content-end col-lg-12">
                     <button id="save" class="btn btn-xs btn-primary mx-3 text-capitalize" type="submit">{{__('text.word_save')}}</button>
                     <a class="btn btn-xs btn-danger text-capitalize" href="{{route('admin.units.subjects', $parent->id)}}" type="button">{{__('text.word_cancel')}}</a>

@@ -110,56 +110,7 @@
                         @enderror
                     </div>
                 </div>
-                <h5 class="mt-5 mb-4 font-weight-bold text-capitalize">{{__('text.admission_class_information')}}</h5>
                 
-                <div class="form-group @error('admission_batch_id') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.academic_year')}}</label>
-                <div class="col-lg-10">
-                    <select class=" form-control" name="admission_batch_id" required>
-                        <option value="">select academic year</option>
-                        @forelse(\App\Models\Batch::all() as $batch)
-                            <option {{ old('admission_batch_id', $student->admission_batch_id) == $batch->id ? 'selected' : ''}} value="{{$batch->id}}">{{$batch->name}}</option>
-                        @empty
-                            <option value="" selected>No data found</option>
-                        @endforelse
-                    </select>
-                    @error('admission_batch_id')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-
-            <div class="form-group @error('campus_id') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_campus')}} </label>
-                <div class="col-lg-10">
-                    <select name="campus_id" class="form-control" id="" onchange="loadPrograms(event.target)" onload="loadPrograms(event.target)">
-                        <option value="">select campus</option>
-                        @forelse(\App\Models\Campus::all() as $campus)
-                            <option {{old('campus_id', $student->campus_id)==$campus->id ? 'selected' : ''}} value="{{$campus->id}}">{{$campus->name}}</option>
-                        @empty
-                            <option value="" selected>No data found</option>
-                        @endforelse
-                    </select>
-                    @error('year')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-
-            <div class="form-group @error('program_id') has-error @enderror">
-                <label for="cname" class="control-label col-lg-2 text-capitalize">{{__('text.word_program')}}
-                    <br><small class="text-secondary">({{ $class->name() }})</small>
-                </label>
-                <div class="col-lg-10">
-                    <div id="class-selector">
-                        <x-class-filter :data="['field_name'=>'program_id']"></x-class-filter>
-                    </div>
-                    @error('program_id')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-
                 <div class="form-group">
                     <div class="d-flex justify-content-end col-lg-12">
                         <button  class="btn btn-xs btn-primary mx-3" type="submit">{{__('text.word_save')}}</button>

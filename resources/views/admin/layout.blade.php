@@ -914,14 +914,14 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
-
+{{-- 
                         <li>
                             <a href="{{route('admin.import_fee')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.import_fees')}}
                             </a>
                             <b class="arrow"></b>
-                        </li>
+                        </li> --}}
                         <li>
                             <a href="{{route('admin.fee')}}?type=completed" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
@@ -1400,13 +1400,13 @@
                         </li>
 
 
-                        <li>
+                        {{-- <li>
                             <a href="{{route('admin.import_fee')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.import_fees')}}
                             </a>
                             <b class="arrow"></b>
-                        </li>
+                        </li> --}}
                         <li>
                             <a href="{{route('admin.imports.clear_fee')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
