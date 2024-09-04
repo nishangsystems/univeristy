@@ -320,14 +320,16 @@ class CodedResultsController extends Controller
             $semester  = \App\Models\Semester::find($semester_id);
             $year  = \App\Models\Batch::find($year_id);
             $encoding_summary = \App\Models\Result::where(['results.subject_id'=> $course_id, 'results.semester_id'=>$semester_id, 'results.batch_id'=>$year_id])->whereNotNull('exam_code')
-                ->join('class_subjects', ['class_subjects.subject_id'=>'results.subject_id'])
+                ->join('class_subjects', function($query){
+                    $query->on(['class_subjects.subject_id'=>'results.subject_id']);
+                })->where('class_subjects.subject_id', $course_id)
                 ->join('program_levels', ['program_levels.id'=>'class_subjects.class_id'])
-                ->select(['program_levels.*', 'program_levels.id as class_id', DB::raw("COUNT(*) as size")])->groupBy('program_levels.id')->distinct()->get();
+                ->select(['program_levels.*', 'program_levels.id as class_id', DB::raw("COUNT(results.exam_code) as size")])->groupBy('program_levels.id')->distinct()->get();
 
             if($request->class_id != null){
                 $data['class'] = ProgramLevel::find($request->class_id);
                 $data['student_codes'] = \App\Models\Result::where(['results.subject_id'=> $course_id, 'results.semester_id'=>$semester_id, 'results.batch_id'=>$year_id])->whereNotNull('exam_code')
-                ->join('class_subjects', ['class_subjects.subject_id'=>'results.subject_id'])->where(['class_subjects.class_id'=>$request->class_id])
+                ->join('class_subjects', ['class_subjects.subject_id'=>'results.subject_id'])->where(['class_subjects.class_id'=>$request->class_id, 'class_subjects.subject_id'=>$course_id])
                 ->join('students', ['students.id'=>'results.student_id'])
                 ->select(['students.name', 'students.matric', 'results.id', 'results.exam_code', 'results.student_id', 'results.exam_score'])->distinct()->get();
             }
