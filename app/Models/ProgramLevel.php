@@ -46,11 +46,13 @@ class ProgramLevel extends Model
 
     public function class_subjects_by_semester($semester_id)
     {
-        return $this->hasMany(ClassSubject::class, 'class_id')
-            ->whereNull('class_subjects.deleted_at')
-            ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
-            ->where('subjects.semester_id', '=', $semester_id)
-            ->get(['class_subjects.*']);
+        // return $this->hasMany(ClassSubject::class, 'class_id')
+        //     ->whereNull('class_subjects.deleted_at')
+        //     ->join('subjects', ['subjects.id'=>'class_subjects.subject_id'])
+        //     ->where('subjects.semester_id', '=', $semester_id)
+        //     ->get(['class_subjects.*']);
+
+        return $this->hasMany(ClassSubject::class, 'class_id')->where('semester_id', $semester_id)->whereNull('deleted_at')->get();
     }
 
     public function subjects()

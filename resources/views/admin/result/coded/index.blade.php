@@ -79,6 +79,7 @@
                                     <th>@lang('text.course_title')</th>
                                     <th>@lang('text.course_code')</th>
                                     <th>@lang('text.word_count')</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -91,6 +92,9 @@
                                         <td>{{ $value->subject->name }}</td>
                                         <td>{{ $value->subject->code }}</td>
                                         <td>{{ $value->encoded_records }}</td>
+                                        <td>
+                                            <a href="{{route('admin.result.encoded.course', ['course_id'=>$value->subject_id, 'semester_id'=>$value->semester_id, 'year_id'=>$value->batch_id])}}" class="btn btn-primary rounded btn-xs text-capitalize">@lang('text.word_details')</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

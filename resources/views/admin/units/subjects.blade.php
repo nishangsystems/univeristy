@@ -30,7 +30,7 @@
                         <td>{{ $subject->code }}</td>
                         <td>{{ $subject->name }}</td>
                         <td>{{ $subject->_coef ?? $subject->coef }}</td>
-                        <td>{{ \App\Models\Semester::find($subject->semester_id)->name }}</td>
+                        <td>{{ \App\Models\Semester::find($subject->_semester_id != null ? $subject->_semester_id : $subject->semester_id)->name }}</td>
                         {{-- <td>{{ \App\Models\Level::find($subject->level_id)->level }}</td> --}}
                         <td>{{ $subject->_status ?? $subject->status }}</td>
                         <td class="d-flex">

@@ -22,7 +22,7 @@ class ClassSubjectController extends Controller
             ->join('subjects', ['subjects.id' => 'class_subjects.subject_id'])
             ->where('class_subjects.class_id', $section_id)
             ->where('class_subjects.subject_id', $id)
-            ->select('class_subjects.subject_id', 'subjects.name', 'class_subjects.coef', 'class_subjects.status')
+            ->select('class_subjects.subject_id', 'subjects.name', 'class_subjects.coef', 'class_subjects.status', 'subjects.semester_id', 'class_subjects.semester_id as _semester_id')
             ->first();
         $data['title'] = __('text.word_edit').' ' . $data['subject']->name . ' '.__('text.word_for').' ' . $data['parent']->name();
         return view('admin.class_subjects.edit')->with($data);
@@ -36,7 +36,7 @@ class ClassSubjectController extends Controller
 
         $class_subject = ClassSubject::where('class_id', $section_id)->where('subject_id', $id)->first();
         $class_subject->update([
-            'coef' => $request->coef, 'status'=>$request->status??$class_subject->status
+            'coef' => $request->coef, 'status'=>$request->status??$class_subject->status, 'semester_id'=>$request->semester_id??''
         ]);
         return redirect()->route('admin.units.subjects', $section_id)->with('success', __('text.word_done'));
     }

@@ -332,10 +332,12 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             Route::post('{year_id}/{semester_id}/courses', [Admin\CodedResultsController::class, 'save_course_codes']);
             Route::get('{year_id}/{semester_id}/{course_id}', [Admin\CodedResultsController::class, 'course'])->name('course');
             Route::post('{year_id}/{semester_id}/{course_id}', [Admin\CodedResultsController::class, 'save_course_code']);
+            Route::get('{year_id}/{semester_id}/{course_id}/{class_id}/students', [Admin\CodedResultsController::class, 'course'])->name('course.class.students');
+            Route::get('{year_id}/{semester_id}/{course_id}/{result_id}/uncode', [Admin\CodedResultsController::class, 'uncode'])->name('course.student.uncode');
             Route::get('{year_id}/{semester_id}/{course_id}/drop', [Admin\CodedResultsController::class, 'drop_course_code'])->name('course.undo');
             Route::get('{year_id}/{semester_id}/{course_id}/students', [Admin\CodedResultsController::class, 'import_student_codes'])->name('students');
             Route::post('{year_id}/{semester_id}/{course_id}/students', [Admin\CodedResultsController::class, 'save_student_codes']);
-            Route::post('{year_id}/{semester_id}/{course_id}/students/undo', [Admin\CodedResultsController::class, 'undo_student_code_import'])->name('students.undo');
+            Route::get('{year_id}/{semester_id}/{course_id}/students/undo', [Admin\CodedResultsController::class, 'undo_student_code_import'])->name('students.undo');
 
             // CA only
             Route::get('{year_id}/{semester_id}/{course_id}/import/ca', [Admin\CodedResultsController::class, 'import_ca_only'])->name('course.import.ca');
@@ -359,12 +361,12 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
             // manage exam coding
             Route::get('{year_id}/{semester_id}/courses', [Admin\CodedResultsController::class, 'import_course_codes'])->name('courses');
             Route::post('{year_id}/{semester_id}/courses', [Admin\CodedResultsController::class, 'decode_save']);
-            Route::get('{year_id}/{semester_id}/{course_id}', [Admin\CodedResultsController::class, 'course'])->name('course');
-            Route::post('{year_id}/{semester_id}/{course_id}', [Admin\CodedResultsController::class, 'save_course_code']);
+            Route::get('{year_id}/{semester_id}/{course_id}', [Admin\CodedResultsController::class, 'decoder_course'])->name('course');
+            Route::get('{year_id}/{semester_id}/{course_id}/{class_id}', [Admin\CodedResultsController::class, 'decoder_course'])->name('course.class.students');
             Route::get('{year_id}/{semester_id}/{course_id}/drop', [Admin\CodedResultsController::class, 'drop_course_code'])->name('course.undo');
             Route::get('{year_id}/{semester_id}/{course_id}/students', [Admin\CodedResultsController::class, 'import_student_codes'])->name('students');
             Route::post('{year_id}/{semester_id}/{course_id}/students', [Admin\CodedResultsController::class, 'save_student_codes']);
-            Route::post('{year_id}/{semester_id}/{course_id}/students/undo', [Admin\CodedResultsController::class, 'undo_student_code_import'])->name('students.undo');
+            Route::get('{year_id}/{semester_id}/{course_id}/students/undo', [Admin\CodedResultsController::class, 'undo_student_decoding'])->name('students.undo');
 
         });
 

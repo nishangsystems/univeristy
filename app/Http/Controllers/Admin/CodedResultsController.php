@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use \App\Models\ProgramLevel;
+use App\Models\StudentClass;
 
 class CodedResultsController extends Controller
 {
@@ -117,7 +119,14 @@ class CodedResultsController extends Controller
 
                 foreach ($input_data as $key => $rec) {
                     # code...
-                    \App\Models\Result::updateOrInsert(['subject_id'=>$rec['course_id'], 'batch_id'=>$year_id, 'semester_id'=>$semester_id, 'student_id'=>$rec['student_id']], ['exam_code'=>$rec['exam_code']]);
+                    \App\Models\Result::updateOrInsert(
+                        [
+                            'subject_id'=>$rec['course_id'], 'batch_id'=>$year_id, 'semester_id'=>$semester_id, 'student_id'=>$rec['student_id']
+                        ], 
+                        [
+                            'exam_code'=>$rec['exam_code']
+                        ]
+                    );
                 }
                 DB::commit();
                 return back()->with('success', 'Done');
@@ -278,6 +287,29 @@ class CodedResultsController extends Controller
             return back()->withInput();
         }
     }
+    
+    public function undo_student_decoding(Request $request, $year_id, $semester_id, $course_id)
+    {
+        # code...
+        try {
+            //code...
+            $class = $request->class_id??null;
+            DB::beginTransaction();
+            if($class == null){
+                // nullify 'exam_code' for all students for the set semester and accademi9c year
+                \App\Models\Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id])->update(['exam_score'=>null]);
+            }else{
+                \App\Models\Result::where(['batch_id'=>$year_id, 'semester_id'=>$semester_id, 'subject_id'=>$course_id, 'class_id'=>$class])->update(['exam_score'=>null]);
+            }
+            DB::commit();
+            return back()->with('success', "Done");
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            session()->flash('error', "F::{$th->getFile()}, L::{$th->getLine()}, M::{$th->getMessage()}");
+            return back()->withInput();
+        }
+    }
 
     public function course(Request $request, $year_id, $semester_id, $course_id)
     {
@@ -287,17 +319,63 @@ class CodedResultsController extends Controller
             $course  = \App\Models\Subjects::find($course_id);
             $semester  = \App\Models\Semester::find($semester_id);
             $year  = \App\Models\Batch::find($year_id);
-            $excode = \App\Models\ExamCourseCode::where(['course_id'=> $course_id, 'semester_id'=>$semester_id, 'year_id'=>$year_id])->first();
-            $codes = \App\Models\ExamCourseCode::where(['semester_id'=>$semester_id, 'year_id'=>$year_id])->orderBy('updated_at', 'DESC')->get();
-            $data['title'] = "Update Exam Course Coding for {$course->name} [$course->code] | {$semester->name} | {$year->name}";
+            $encoding_summary = \App\Models\Result::where(['results.subject_id'=> $course_id, 'results.semester_id'=>$semester_id, 'results.batch_id'=>$year_id])->whereNotNull('exam_code')
+                ->join('class_subjects', ['class_subjects.subject_id'=>'results.subject_id'])
+                ->join('program_levels', ['program_levels.id'=>'class_subjects.class_id'])
+                ->select(['program_levels.*', 'program_levels.id as class_id', DB::raw("COUNT(*) as size")])->groupBy('program_levels.id')->distinct()->get();
+
+            if($request->class_id != null){
+                $data['class'] = ProgramLevel::find($request->class_id);
+                $data['student_codes'] = \App\Models\Result::where(['results.subject_id'=> $course_id, 'results.semester_id'=>$semester_id, 'results.batch_id'=>$year_id])->whereNotNull('exam_code')
+                ->join('class_subjects', ['class_subjects.subject_id'=>'results.subject_id'])->where(['class_subjects.class_id'=>$request->class_id])
+                ->join('students', ['students.id'=>'results.student_id'])
+                ->select(['students.name', 'students.matric', 'results.id', 'results.exam_code', 'results.student_id', 'results.exam_score'])->distinct()->get();
+            }
+            $data['title'] = "Exam encoding for {$course->name} [$course->code] &rangle;&rangle; {$semester->name} &rangle;&rangle; {$year->name}";
             $data['course'] = $course;
             $data['year'] = $year;
             $data['semester'] = $semester;
-            $data['codes'] = $codes;
-            $data['exam_code'] = $excode;
+            $data['encoding_summary'] = $encoding_summary;
             $data['has_exam'] = \App\Models\Result::where(['subject_id'=>$course_id, 'semester_id'=>$semester_id, 'batch_id'=>$year_id])->whereNotNull('exam_score')->count() > 0;
 
+            // dd($data);
             return view('admin.result.coded.course', $data);
+        } catch (\Throwable $th) {
+            //throw $th;
+            session()->flash('error', "Operation failed. L::{$th->getLine()}, F::{$th->getFile()}, M::{$th->getMessage()}");
+            return back()->withInput();
+        }
+    }
+
+    public function decoder_course(Request $request, $year_id, $semester_id, $course_id, $class_id = null)
+    {
+        # code...
+        try {
+            //code...
+            $course  = \App\Models\Subjects::find($course_id);
+            $semester  = \App\Models\Semester::find($semester_id);
+            $year  = \App\Models\Batch::find($year_id);
+            $decoding_summary = \App\Models\Result::where(['results.subject_id'=> $course_id, 'results.semester_id'=>$semester_id, 'results.batch_id'=>$year_id])->whereNotNull('exam_code')->whereNotNull('exam_score')
+                ->join('class_subjects', ['class_subjects.subject_id'=>'results.subject_id'])
+                ->join('program_levels', ['program_levels.id'=>'class_subjects.class_id'])
+                ->select(['program_levels.*', 'program_levels.id as class_id', DB::raw("COUNT(*) as size")])->groupBy('program_levels.id')->distinct()->get();
+
+            if($class_id != null){
+                $data['class'] = ProgramLevel::find($class_id);
+                $data['student_codes'] = \App\Models\Result::where(['results.subject_id'=> $course_id, 'results.semester_id'=>$semester_id, 'results.batch_id'=>$year_id])->whereNotNull('exam_code')->whereNotNull('exam_score')
+                ->join('class_subjects', ['class_subjects.subject_id'=>'results.subject_id'])->where(['class_subjects.class_id'=>$class_id])
+                ->join('students', ['students.id'=>'results.student_id'])
+                ->select(['students.name', 'students.matric', 'results.id', 'results.exam_code', 'results.student_id', 'results.exam_score'])->distinct()->get();
+            }
+            $data['title'] = "Exam decoding for {$course->name} [$course->code] &rangle;&rangle; {$semester->name} &rangle;&rangle; {$year->name}";
+            $data['course'] = $course;
+            $data['year'] = $year;
+            $data['semester'] = $semester;
+            $data['decoding_summary'] = $decoding_summary;
+            $data['has_exam'] = \App\Models\Result::where(['subject_id'=>$course_id, 'semester_id'=>$semester_id, 'batch_id'=>$year_id])->whereNotNull('exam_score')->count() > 0;
+
+            // dd($data);
+            return view('admin.result.coded.course_decode_details', $data);
         } catch (\Throwable $th) {
             //throw $th;
             session()->flash('error', "Operation failed. L::{$th->getLine()}, F::{$th->getFile()}, M::{$th->getMessage()}");
@@ -342,6 +420,21 @@ class CodedResultsController extends Controller
             session()->flash('error', "F::{$th->getFile()}, L::{$th->getLine()}, M::{$th->getMessage()}");
             return back()->withInput();
         }
+    }
+
+    public function uncode(Request $request, $year_id, $semester_id, $course_id, $result_id){
+        $record = \App\Models\Result::find($result_id);
+        if($record != null){
+            if($record->exam_score != null){
+                session()->flash('error', "Operation not allowed. Result record already has an exam mark.");
+                return back();
+            }
+            $record->update(['exam_code'=>null]);
+            session()->flash('success', "Operation complete");
+            return back();
+        }
+        session()->flash('error', "Operation failed. Result record not found.");
+        return back();
     }
 
     public function import_ca_only(Request $request, $year_id, $semester_id, $course_id)

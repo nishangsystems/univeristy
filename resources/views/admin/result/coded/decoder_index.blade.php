@@ -73,6 +73,7 @@
                                 <th>@lang('text.course_code')</th>
                                 <th>@lang('text.course_title')</th>
                                 <th>@lang('text.word_count')</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -85,6 +86,9 @@
                                     <td>{{ $value->subject->code }}</td>
                                     <td>{{ $value->subject->name }}</td>
                                     <td>{{ $value->decoded_records }}</td>
+                                    <td>
+                                        <a href="{{route('admin.result.decoded.course', ['course_id'=>$value->subject->id, 'semester_id'=>$semester->id, 'year_id'=>$year->id])}}" class="btn btn-xs btn-primary rounded text-capitalize">@lang('text.word_details')</a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

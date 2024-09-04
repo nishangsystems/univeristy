@@ -11,7 +11,7 @@ class Result extends Model
 
     protected $connection = 'mysql';
     protected $fillable = [
-        'batch_id', 'student_id', 'class_id', 'semester_id', 
+        'batch_id', 'student_id', 'class_id', 'semester_id',
         'subject_id', 'ca_score', 'exam_score', 'exam_code', 'coef', 'remark',
         'class_subject_id', 'reference', 'user_id', 'campus_id', 'published'
     ];
@@ -72,4 +72,7 @@ class Result extends Model
         return '';
     } 
 
+    public function _class(){
+        return $this->belongsTo(ProgramLevel::class, 'class_id');
+    }
 }

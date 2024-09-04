@@ -13,7 +13,7 @@ class ClassSubject extends Model
     use HasFactory, SoftDeletes;
     protected $connection = 'mysql';
     
-    protected $fillable = ['class_id', 'coef', 'status', 'subject_id', 'hours', 'deleted_at'];
+    protected $fillable = ['class_id', 'coef', 'status', 'subject_id', 'semester_id', 'hours', 'deleted_at'];
 
     public function subject()
     {
@@ -100,4 +100,7 @@ class ClassSubject extends Model
         return $count;
     }
 
+    public function semester(){
+        return $this->belongsTo(Semester::class, 'semester_id');
+    }
 }
