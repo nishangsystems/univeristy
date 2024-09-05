@@ -1057,5 +1057,6 @@ return [
     'select_semester'=>'select semester',
     'clear_encoding'=>'clear encoding',
     'clear_decoding'=>'clear decoding',
+    'result_coding'=>'result coding',
     ''
 ];

@@ -1285,24 +1285,7 @@
                             <b class="arrow"></b>
                         </li>
 
-                        
-                        @if (\Auth::user()->hasPermissionTo('manage_result_coding'))
-                            <li>
-                                <a href="{{route('admin.result.encoded.index')}}" class="text-capitalize">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    {{__('text.word_encoding')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                            <li>
-                                <a href="{{route('admin.result.decoded.index')}}" class="text-capitalize">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    {{__('text.word_decoding')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                        @endif
-
+    
                         <li>
                             <a href="{{route('admin.res_and_trans.alter_results')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
@@ -1358,6 +1341,42 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
+
+                    </ul>
+                </li>
+                @endif
+                @if (\Auth::user()->hasPermissionTo('manage_result_coding'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon fa fa-code"></i>
+                        <span class="menu-text">
+                            {{__('text.result_coding')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+
+                    <ul class="submenu">
+                        
+                        
+                        @if (\Auth::user()->hasPermissionTo('encode_results'))
+                            <li>
+                                <a href="{{route('admin.result.encoded.index')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_encoding')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
+                        @if (\Auth::user()->hasPermissionTo('decode_results'))
+                            <li>
+                                <a href="{{route('admin.result.decoded.index')}}" class="text-capitalize">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    {{__('text.word_decoding')}}
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        @endif
 
                     </ul>
                 </li>
@@ -1680,7 +1699,7 @@
                     <!-- Attendance management -->
                     <li>
                         <a href="#" class="dropdown-toggle text-capitalize">
-                            <i  style="color: {{$bg1}}"class="menu-icon  fa fa-users"></i>
+                            <i  style="color: {{$bg1}}"class="menu-icon  fa fa-list"></i>
                             <span class="menu-text">
                                 {{__('text.manage_attendance')}}
                                 </span>
