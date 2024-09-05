@@ -349,7 +349,7 @@ class ApiController extends Controller
                 ->get()->map(function($rec)use($fees, $banks){
                     $fee = $fees->where('id', $rec->id)->where('payment_type', 'TUTION')->first(); 
                     $reg = $fees->where('id', $rec->id)->where('payment_type', 'REGISTRATION')->first(); 
-                    $backs = $banks->where('program_id', $rec->program_id)->first();
+                    $bank = $banks->where('program_id', $rec->program_id)->first();
                      
                     
                     $rec->class_name = $rec->name();
@@ -358,9 +358,9 @@ class ApiController extends Controller
                     $rec->first_instalment = $fee->first_instalment??null;
                     $rec->international_amount = $fee->international_amount??null;
                     
-                    $rec->bank_name = $fee->bank_name??null;
-                    $rec->bank_account_number = $fee->bank_account_number??null;
-                    $rec->bank_account_name = $fee->bank_account_name??null;
+                    $rec->bank_name = $bank->bank_name??null;
+                    $rec->bank_account_number = $bank->bank_account_number??null;
+                    $rec->bank_account_name = $bank->bank_account_name??null;
                     
                     return $rec;
                 })->unique();
@@ -412,7 +412,7 @@ class ApiController extends Controller
                 ->get()->map(function($rec)use($fees, $banks){
                     $fee = $fees->where('id', $rec->id)->where('payment_type', 'TUTION')->first(); 
                     $reg = $fees->where('id', $rec->id)->where('payment_type', 'REGISTRATION')->first(); 
-                    $backs = $banks->where('program_id', $rec->program_id)->first(); 
+                    $bank = $banks->where('program_id', $rec->program_id)->first(); 
                     
                     $rec->class_name = $rec->name();
                     $rec->registration = $reg->amount??null;
@@ -420,9 +420,9 @@ class ApiController extends Controller
                     $rec->first_instalment = $fee->first_instalment??null;
                     $rec->international_amount = $fee->international_amount??null;
                     
-                    $rec->bank_name = $fee->bank_name??null;
-                    $rec->bank_account_number = $fee->bank_account_number??null;
-                    $rec->bank_account_name = $fee->bank_account_name??null;
+                    $rec->bank_name = $bank->bank_name??null;
+                    $rec->bank_account_number = $bank->bank_account_number??null;
+                    $rec->bank_account_name = $bank->bank_account_name??null;
                     
                     return $rec;
                 })->unique();
