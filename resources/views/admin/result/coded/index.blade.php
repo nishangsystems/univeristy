@@ -33,6 +33,7 @@
         </form>
         <hr>
         @isset($year)
+            <h4 class="text-center py-2 border-bottom text-success"><b>{!! $title2??'' !!}</b></h4>
             <div class="row my-5">
                 <div class="col-md-6 col-lg-6">
                     <div class="container-fluid my-3 py-3 border-bottom border-top bg-light border-secondary">

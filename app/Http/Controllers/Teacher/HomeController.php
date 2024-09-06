@@ -451,7 +451,7 @@ class HomeController extends Controller
             $student = Students::where('matric', $rec['matric'])->first();
             
             if($student == null){
-                $missing_students .= " ".$rec['matric'];
+                (strstr($missing_students, $rec['matric']) == false) ? ($missing_students .= " {$rec['matric']},") : null;
                 continue;
             }
             $class_subject = $class->class_subjects()->where('subject_id', $subject->id)->first();
