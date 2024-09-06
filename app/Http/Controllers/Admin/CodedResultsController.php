@@ -24,6 +24,7 @@ class CodedResultsController extends Controller
                 $data['year']  = \App\Models\Batch::find($request->year_id);
             if($request->semester_id != null){
                 $data['semester']  = \App\Models\Semester::find($request->semester_id);
+                $data['title2'] = $data['title']." &rangle;&rangle; {$data['semester']->name} &rangle;&rangle; {$data['year']->name}";
                 // if($request->course_code != null){
                 //     \App\Models\Subjects::where('code', $request->course_code)->first();
                 //     $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->select(['*', DB::raw("COUNT(*) as encoded_records")])->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
@@ -54,6 +55,7 @@ class CodedResultsController extends Controller
                 $data['year']  = \App\Models\Batch::find($request->year_id);
             if($request->semester_id != null){
                 $data['semester']  = \App\Models\Semester::find($request->semester_id);
+                $data['title2'] = $data['title']." &rangle;&rangle; {$data['semester']->name} &rangle;&rangle; {$data['year']->name}";
                 $data['courses'] = \App\Models\Result::where(['semester_id'=>$request->semester_id, 'batch_id'=>$request->year_id])->whereNotNull('exam_code')->whereNotNull('exam_score')->select(['*', DB::raw("COUNT(*) as decoded_records")])->groupBy('subject_id')->orderBy('updated_at')->distinct()->get();
             }
             return view('admin.result.coded.decoder_index', $data);
@@ -105,31 +107,44 @@ class CodedResultsController extends Controller
                         continue;
                     $file_data[] = ['course_code'=>$row[0], 'exam_code'=>$row[1], 'matric'=>$row[2]];
                 }
+                // dd(collect($file_data)->filter(function($rec){$rec == null;}));
 
-                $input_data = collect($file_data)->map(function($rec)use($year_id, $semester_id){
+                $missing_matric = '';
+                $missing_course = '';
+                $input_data = collect($file_data)->map(function($rec)use($year_id, $semester_id, $missing_matric, $missing_course){
                         $course = \App\Models\Subjects::where('code', $rec['course_code'])->first();
                         $student = \App\Models\Students::where('matric', $rec['matric'])->first();
-                        if($student == null)return null;
-                        $rec['course_id'] = $course->id??null;
-                        $rec['student_id'] = $student->id;
+                        $class = $student == null ? null : $student->_class($year_id);
+                        $rec['course_id'] = optional($course)->id??null;
+                        $rec['student_id'] = optional($student)->id??null;
+                        $rec['class_id'] = optional($class)->id??null;
+                        
                         // dd($rec);
                         return $rec;
-                    })->filter(function($rew){return $rew != null;});
-                // dd($input_data);
+                    });
 
-                foreach ($input_data as $key => $rec) {
+                // dd($input_data);
+                
+                $missing_matric = implode(', ', $input_data->where('student_id', null)->pluck('matric')->all());
+                $missing_course = implode(', ', $input_data->where('course_id', null)->pluck('course_code')->unique()->all());
+                $ipdata = $input_data->where('course_id', '!=', null)->where('student_id', '!=', null);
+                // dd($ipdata);
+                foreach ($ipdata as $key => $rec) {
                     # code...
                     \App\Models\Result::updateOrInsert(
                         [
                             'subject_id'=>$rec['course_id'], 'batch_id'=>$year_id, 'semester_id'=>$semester_id, 'student_id'=>$rec['student_id']
                         ], 
                         [
-                            'exam_code'=>$rec['exam_code']
+                            'exam_code'=>$rec['exam_code'], 'class_id'=>$rec['class_id']
                         ]
                     );
                 }
                 DB::commit();
-                return back()->with('success', 'Done');
+                $error = (strlen($missing_matric) > 0 ? " No students were found with following matric(s): {$missing_matric}. ........" : '')
+                    .(strlen($missing_course) > 0 ? " No courses were found with the following course codes: {$missing_course}. ........" : '');
+                session()->flash('message', $error);
+                return back()->with('success', "Done");
             }
         } catch (\Throwable $th) {
             //throw $th;
