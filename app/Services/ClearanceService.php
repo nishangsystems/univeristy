@@ -58,7 +58,7 @@ class ClearanceService{
             $data['total_reg_paid'] = $total_reg_paid;
             $data['student'] = $student;
             $data['ref'] = (intval(substr($student->matric, -4)) > 0 ? substr($student->matric, -4) : substr($student->matric, -3))
-                            .('/'.(substr($admission_year->name, 0, 2))."/".now()->format('my'));
+                            .('/'.(substr($admission_year->name, 2, 2))."/".now()->format('my'));
             $fees = $ret->where('name', 'TUTION');
             $regs = $ret->where('name', 'REGISTRATION');
              
