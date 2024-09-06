@@ -89,14 +89,14 @@
                             <th class="border-left border-right">#</th>
                             <th class="border-left border-right">{{__('text.word_name')}}</th>
                             <th class="border-left border-right">{{__('text.word_matricule')}}</th>
-                            <th class="border-left border-right"><span style="writing-mode: vertical-lr !important; text-orientation: mixed important;">{{__('text.current_fee')}}</span></th>
-                            <th class="border-left border-right"><span style="writing-mode: vertical-lr !important; text-orientation: mixed important;">{{__('text.extra_fee')}}</span></th>
-                            <th class="border-left border-right"><span style="writing-mode: vertical-lr !important; text-orientation: mixed important;">{{__('text.cum_extra_fee')}}</span></th>
-                            <th class="border-left border-right"><span style="writing-mode: vertical-lr !important; text-orientation: mixed important;">{{__('text.past_debt')}}</span></th>
-                            <th class="border-left border-right"><span style="writing-mode: vertical-lr !important; text-orientation: mixed important;">{{__('text.current_amount_paid')}}</span></th>
-                            <th class="border-left border-right"><span style="writing-mode: vertical-lr !important; text-orientation: mixed important;">{{__('text.cum_amount_paid')}}</span></th>
-                            <th class="border-left border-right"><span style="writing-mode: vertical-lr !important; text-orientation: mixed important;">{{__('text.word_scholarship')}}</span></th>
-                            <th class="border-left border-right"><span style="writing-mode: vertical-lr !important; text-orientation: mixed important;">{{__('text.cum_amount_owing')}}</span></th>
+                            <th class="border-left border-right"><span style="writing-mode: vertical-rl !important; text-orientation: mixed important; transform: rotate(-180deg);">{{__('text.current_fee')}}</span></th>
+                            <th class="border-left border-right"><span style="writing-mode: vertical-rl !important; text-orientation: mixed important; transform: rotate(-180deg);">{{__('text.extra_fee')}}</span></th>
+                            <th class="border-left border-right"><span style="writing-mode: vertical-rl !important; text-orientation: mixed important; transform: rotate(-180deg);">{{__('text.cum_extra_fee')}}</span></th>
+                            <th class="border-left border-right"><span style="writing-mode: vertical-rl !important; text-orientation: mixed important; transform: rotate(-180deg);">{{__('text.past_debt')}}</span></th>
+                            <th class="border-left border-right"><span style="writing-mode: vertical-rl !important; text-orientation: mixed important; transform: rotate(-180deg);">{{__('text.current_amount_paid')}}</span></th>
+                            <th class="border-left border-right"><span style="writing-mode: vertical-rl !important; text-orientation: mixed important; transform: rotate(-180deg);">{{__('text.cum_amount_paid')}}</span></th>
+                            <th class="border-left border-right"><span style="writing-mode: vertical-rl !important; text-orientation: mixed important; transform: rotate(-180deg);">{{__('text.word_scholarship')}}</span></th>
+                            <th class="border-left border-right"><span style="writing-mode: vertical-rl !important; text-orientation: mixed important; transform: rotate(-180deg);">{{__('text.cum_amount_owing')}}</span></th>
                             <!-- <th></th> -->
                         </tr>
                     </thead>
