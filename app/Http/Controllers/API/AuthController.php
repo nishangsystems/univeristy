@@ -59,7 +59,7 @@ class AuthController extends Controller
             return response(['message' => $validated->errors()->first()], 200);
         }
 
-        $user = Guardian::where(['phone' => $request->phone])->first();
+        $user = Guardian::where(['phone' => "+".$request->phone])->first();
 
         if(isset($user)){
             $token = $user->createToken('authToken')->accessToken;
@@ -69,10 +69,10 @@ class AuthController extends Controller
                 'phone' => $request->phone
             ]);
         } else {
-            $child = Students::where('parent_phone_number', $request->phone)->first();
+            $child = Students::where('parent_phone_number', "+".$request->phone)->first();
             if(isset($child)) {
                 $guardian = new Guardian();
-                $guardian->phone = $request->phone;
+                $guardian->phone = "+".$request->phone;
                 $guardian->password = Hash::make('12345678');
                 $guardian->save();
 
@@ -80,7 +80,7 @@ class AuthController extends Controller
                 return response()->json([
                     'status' => 200,
                     'token' => $token,
-                    'phone' => $request->phone
+                    'phone' => "+".$request->phone
                 ]);
             }
         }
