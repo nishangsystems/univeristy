@@ -268,6 +268,9 @@ class NotificationsController extends Controller
                     $data['level_id'] = null;
                     break;
             }
+
+            $school_id = School::first()->notification_id;
+            $app_title = "school_{$school_id}_{$request->visibility}";
             $data['message'] =  $data['message'].$app_title;
             $app_data = ['to'=>$app_title, 'title'=>$request->title, 'body'=>$request->message];
             $this->notify_app($app_data);
