@@ -60,6 +60,7 @@ class AuthController extends Controller
         }
 
         $user = Guardian::where(['phone' => $request->phone])->first();
+
         if(isset($user)){
             $token = $user->createToken('authToken')->accessToken;
             return response()->json([
@@ -84,7 +85,7 @@ class AuthController extends Controller
             }
         }
 
-        return response()->json(['status' => 300, 'message' => 'Invalid Credentails']);
+        return response()->json(['status' => 300, 'message' => 'No student found for with this contact ('.$request->phone.')']);
     }
 
     public function userLogout(Request $request) 

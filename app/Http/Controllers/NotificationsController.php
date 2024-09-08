@@ -265,6 +265,8 @@ class NotificationsController extends Controller
                     $data['level_id'] = null;
                     break;
             }
+
+
             if($campus_id != 0 || auth()->user()->campus_id != null){
                 $app_title .= '_campus_'.($campus_id == 0 ? auth()->user()->campus_id : $campus_id);
             }
