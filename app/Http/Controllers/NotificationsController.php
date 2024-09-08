@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\School;
+use Dompdf\Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Campus;
@@ -11,8 +12,10 @@ use App\Models\Level;
 use App\Models\Notification;
 use App\Models\ProgramLevel;
 use App\Models\SchoolUnits;
+
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class NotificationsController extends Controller
@@ -265,19 +268,15 @@ class NotificationsController extends Controller
                     $data['level_id'] = null;
                     break;
             }
-
-
-            if($campus_id != 0 || auth()->user()->campus_id != null){
-                $app_title .= '_campus_'.($campus_id == 0 ? auth()->user()->campus_id : $campus_id);
-            }
+            $data['message'] =  $data['message'].$app_title;
             $app_data = ['to'=>$app_title, 'title'=>$request->title, 'body'=>$request->message];
             $this->notify_app($app_data);
             Notification::create($data);
-            
+
             return redirect(route('notifications.index', [$layer, $layer_id, $campus_id]))->with('success', 'Done');
-        } catch (\Throwable $th) {
-            //throw $th;
-            return back()->with('error', 'Operation failed '.$th->getMessage());
+        } catch (Exception $e) {
+            Log::info($e);
+            return back()->with('error', 'Operation failed ');
         }
     }
     
