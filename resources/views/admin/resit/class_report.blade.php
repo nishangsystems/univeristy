@@ -5,19 +5,18 @@
     <div class="container row shadow py-5 px-3 mb-4 rounded">
         <div class="col-lg-9">
             <div class="container-fluid position-relative">
-                <input type="search" class="rounded form-control searchable" placeholder="search class by name">
-                <input type="hidden" name="class_id" id="class_id_field" class="value_field">
-                <div class="searchable-dropdown position-absolute mt-5" data-collection="{{ $classes }}"></div>
+                <div>
+                    <select class="chosen-select form-control" name="class_id" id="form-field-select-3" data-placeholder="search class by name...">
+                        <option selected class="text-capitalize">{{__('text.select_class')}}</option>
+                        @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                            <option value="{{$pl['id']}}">{{$pl['name']}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                
             </div>
         </div>
-        <!-- <div class="col-lg-5">
-            <select class="rounded form-control" name="class_id" id="class_id_field">
-                <option value=""></option>
-                @foreach ($classes as $cls)
-                    <option value="{{ $cls['id'] }}">{{ $cls['name'] }}</option>
-                @endforeach
-            </select>
-        </div> -->
+        
         <div class="col-lg-3">
             <button class="rounded btn btn-primary px-4" onclick="submitClass(this)">@lang('text.word_next')</button>
         </div>
@@ -68,7 +67,7 @@
 @section('script')
     <script>
         let submitClass = (element)=>{
-            let _class = $('#class_id_field').val();
+            let _class = $('#form-field-select-3').val();
             let _url = "{{ route('admin.resits.class_report', ['resit_id'=>$resit->id, 'class_id'=>'__CLID__']) }}".replace('__CLID__', _class);
             window.location = _url;
         }

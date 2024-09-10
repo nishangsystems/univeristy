@@ -905,8 +905,8 @@ return [
     'department_of_finance'=>'DEPARTMENT OF FINANCE',
     'our_reference'=>'our reference',
     'to_whom_it_may_concern'=>'to whom it may concern',
-    'clearance_text'=>"We hereby attest that <b style=\"text-decoration: underline\"> :name</b> Matricule <b style=\"text-decoration: underline\"> :matric</b> <b> :program</b>, student in the <b>SHOOL OF :school </b> admitted in the year <b style=\"text-decoration: underline\"> :adm_year</b>, has paid complete fees upto <b style=\"text-decoration: underline\"> :fin_year</b> as follows :",
-    'clearance_text_debt'=>"We hereby attest that <b style=\"text-decoration: underline\"> :name</b> Matricule <b style=\"text-decoration: underline\"> :matric</b> <b> :program</b>, student in the <b>SHOOL OF :school </b> admitted in the year <b style=\"text-decoration: underline\"> :adm_year</b>,  is <b style=\"text-decoration: underline; text-transform: uppercase; color: red;\">owing a fee of :debt CFA</b> upto  <b style=\"text-decoration: underline\"> :fin_year</b> :",
+    'clearance_text'=>"We hereby attest that <b style=\"text-decoration: underline\"> :name</b> Matricule <b style=\"text-decoration: underline\"> :matric</b> <b> :program</b>, student in the <b>:school </b> admitted in the year <b style=\"text-decoration: underline\"> :adm_year</b>, has paid complete fees upto <b style=\"text-decoration: underline\"> :fin_year</b> as follows :",
+    'clearance_text_debt'=>"We hereby attest that <b style=\"text-decoration: underline\"> :name</b> Matricule <b style=\"text-decoration: underline\"> :matric</b> <b> :program</b>, student in the <b>:school </b> admitted in the year <b style=\"text-decoration: underline\"> :adm_year</b>,  is <b style=\"text-decoration: underline; text-transform: uppercase; color: red;\">owing a fee of :debt CFA</b> upto  <b style=\"text-decoration: underline\"> :fin_year</b> :",
     'fee_clearance'=>'fee clearance',
     'tution_fees_paid'=>'tution fees paid',
     'registration_fees_paid'=>'registration fees paid',
@@ -1058,5 +1058,7 @@ return [
     'clear_encoding'=>'clear encoding',
     'clear_decoding'=>'clear decoding',
     'result_coding'=>'result coding',
+    'bulk_mark_change'=>'bulk mark change',
+    'emergency_contact'=>'emergency contact',
     ''
 ];

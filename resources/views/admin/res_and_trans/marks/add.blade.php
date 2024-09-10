@@ -28,10 +28,10 @@
                 <div class="container-fluid" id="course_display_panel"></div>
             </div>
             <div class="col-md-6 col-xl-3 my-2">
-                <select class="form-control" id="class_id_field" name="class_id">
-                    <option value="">@lang('text.select_class')</option>
-                    @foreach ($classes as $_class)
-                        <option value="{{ $_class['id']??'' }}" {{ $_class['id'] == $class_id ? 'selected' : '' }}>{{ $_class['name']??null }}</option>
+                <select class="chosen-select form-control" name="class_id" id="class_id_field" required  data-placeholder="search class by name...">
+                    <option selected class="text-capitalize">{{__('text.select_class')}}</option>
+                    @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                        <option value="{{$pl['id']}}" {{ $pl['id'] == old('class', $class_id) ? 'selected' : '' }}>{{$pl['name']}}</option>
                     @endforeach
                 </select>
                 <span class="text-secondary text-capitalize">@lang('text.word_class')</span>

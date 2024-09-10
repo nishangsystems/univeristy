@@ -18,12 +18,14 @@
                                 </select>
                             </div>
                             <div class="col-md-5">
-                                <select class="section form-control" name="class" id="class" required>
-                                    <option selected class="text-capitalize">{{__('text.select_class')}}</option>
-                                    @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
-                                        <option value="{{$pl['id']}}">{{$pl['name']}}</option>
-                                    @endforeach
-                                </select>
+                                <div>
+                                    <select class="chosen-select form-control" required name="class" id="form-field-select-3" data-placeholder="Choose a State...">
+                                        <option selected class="text-capitalize">{{__('text.select_class')}}</option>
+                                        @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                                            <option value="{{$pl['id']}}">{{$pl['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-2 d-flex justify-content-end">
                                 <button type="submit" class="btn btn-sm btn-rounded btn-secondary text-uppercase" >{{__('text.word_get')}}</button>

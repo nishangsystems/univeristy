@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="{{asset('css/app.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/css/chosen.min.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/font-awesome/4.5.0/css/font-awesome.min.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/css/fonts.googleapis.com.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/css/ace.min.css')}}" class="ace-main-stylesheet" id="main-ace-style" />
@@ -914,14 +915,7 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
-{{-- 
-                        <li>
-                            <a href="{{route('admin.import_fee')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.import_fees')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li> --}}
+
                         <li>
                             <a href="{{route('admin.fee')}}?type=completed" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
@@ -978,16 +972,6 @@
                             <b class="arrow"></b>
                         </li>
 
-                        @if (\Auth::user()->hasPermissionTo('bypass_result'))
-                            <li>
-                                <a href="{{route('admin.result.bypass')}}" class="text-capitalize">
-                                    <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
-                                    {{__('text.bypass_result')}}
-                                </a>
-                                <b class="arrow"></b>
-                            </li>
-                        @endif
-                        
                         <li>
                             <a href="{{route('admin.resits.payments.index')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
@@ -996,6 +980,28 @@
                             <b class="arrow"></b>
                         </li>
                         
+                    </ul>
+                </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('bypass_result'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon  fa fa-gift"></i>
+                        <span class="menu-text">
+                            {{__('text.bypass_result')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{route('admin.result.bypass')}}" class="text-capitalize">
+                                <strong style="color: {{$bg1}}" class="menu-icon">&Rrightarrow;</strong>
+                                {{__('text.bypass_result')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
                     </ul>
                 </li>
                 @endif
@@ -1311,22 +1317,6 @@
                         </li>
 
                         <li>
-                            <a href="{{route('admin.res_and_trans.exam.add_mark')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.add_marks')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-
-                        <li>
-                            <a href="{{route('admin.res_and_trans.exam.roundoff')}}" class="text-capitalize">
-                                <i class="menu-icon fa fa-caret-right"></i>
-                                {{__('text.roundoff_marks')}}
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-
-                        <li>
                             <a href="{{route('admin.result.ca.upload_report')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.ca_upload_report')}}
@@ -1338,6 +1328,39 @@
                             <a href="{{route('admin.result.exam.upload_report')}}" class="text-capitalize">
                                 <i class="menu-icon fa fa-caret-right"></i>
                                 {{__('text.exam_upload_report')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                    </ul>
+                </li>
+                @endif
+
+                @if (\Auth::user()->hasPermissionTo('mass_change_marks'))
+                <li>
+                    <a href="#" class="dropdown-toggle text-capitalize">
+                        <i  style="color: {{$bg1}}"class="menu-icon fa fa-check"></i>
+                        <span class="menu-text">
+                            {{__('text.bulk_mark_change')}}
+                            </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+
+                    <ul class="submenu">
+                        
+                        <li>
+                            <a href="{{route('admin.res_and_trans.exam.add_mark')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.add_marks')}}
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+
+                        <li>
+                            <a href="{{route('admin.res_and_trans.exam.roundoff')}}" class="text-capitalize">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                {{__('text.roundoff_marks')}}
                             </a>
                             <b class="arrow"></b>
                         </li>
@@ -1889,6 +1912,7 @@
 </a>
 </div>
 <script src="{{asset('assets/js/jquery-2.1.4.min.js')}}"></script>
+<script src="{{asset('assets/js/chosen.jquery.min.js')}}"></script>
 <script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
 <script src="{{ asset('assets/vendor/toastr/toastr.min.js') }}"></script>
 <script src="{{asset('assets/js/ace.min.js')}}"></script>
@@ -1957,6 +1981,36 @@
             // ],
         });
 
+        if(!ace.vars['touch']) {
+            $('.chosen-select').chosen({allow_single_deselect:true}); 
+            //resize the chosen on window resize
+    
+            $(window)
+            .off('resize.chosen')
+            .on('resize.chosen', function() {
+                $('.chosen-select').each(function() {
+                        var $this = $(this);
+                        $this.next().css({'width': $this.parent().width()});
+                })
+            }).trigger('resize.chosen');
+            //resize chosen on sidebar collapse/expand
+            $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+                if(event_name != 'sidebar_collapsed') return;
+                $('.chosen-select').each(function() {
+                        var $this = $(this);
+                        $this.next().css({'width': $this.parent().width()});
+                })
+            });
+    
+    
+            $('#chosen-multiple-style .btn').on('click', function(e){
+                var target = $(this).find('input[type=radio]');
+                var which = parseInt(target.val());
+                if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
+                    else $('#form-field-select-4').removeClass('tag-input-style');
+            });
+        }
+    
     });
 
     function delete_alert(event, data) {

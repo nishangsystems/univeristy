@@ -3,10 +3,18 @@
 @section('section')
     <div class="col-sm-12">
 
-        <form class="input-group input-group-merge border">
-            <input type="date" id="password" name="date" class="w-100 border-0" value="{{request('date')}}">
-            <button type="submit" class="border-0" class="text-capitalize">{{__('text.word_refresh')}}</button>
-        </form>
+        <div class="container-fluid">
+            <form class="row mb-5">
+                <div class="col-10">
+                    <input type="date" name="date" class="form-control" value="{{request('date')}}">
+                </div>
+                <div class="col-2 d-flex justify-content-end">
+                    <span>
+                        <button type="submit" class="btn btn-xs btn-primary rounded" class="text-capitalize">{{__('text.word_refresh')}}</button>
+                    </span>
+                </div>
+            </form>
+        </div>
 
         <div class="content-panel">
             <div class="table-responsive">

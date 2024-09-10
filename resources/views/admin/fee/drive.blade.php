@@ -15,14 +15,22 @@
 
                 <div class="form-group">
                     <div class="col-lg-12 mb-4">
-                        <div class="input-group input-group-merge border">
-                            <select class="w-100   section form-control" id="section0" name="class" required>
-                                <option selected class="text-capitalize">{{__('text.select_class')}}</option>
-                                @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
-                                    <option value="{{$pl['id']}}">{{$pl['name']}}</option>
-                                @endforeach
-                            </select>
-                            <button type="submit" class="border-0 text-uppercase" >{{__('text.word_get')}}</button>
+                        <div class="row">
+                            <div class="col-10">
+                                <div>
+                                    <select class="chosen-select form-control" name="class" id="form-field-select-3" required data-placeholder="Choose a State...">
+                                        <option selected class="text-capitalize">{{__('text.select_class')}}</option>
+                                        @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                                            <option value="{{$pl['id']}}">{{$pl['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end col-2">
+                                <span>
+                                    <button type="submit" class="btn btn-xs btn-primary rounded text-uppercase" >{{__('text.word_get')}}</button>
+                                </span>
+                            </div>
                         </div>
                         <div class="children"></div>
                     </div>

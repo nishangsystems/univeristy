@@ -11,7 +11,7 @@ use App\Models\PaymentItem;
 use App\Models\StudentClass;
 use App\Models\School;
 use App\Models\FeeClearance;
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ClearanceService{
 
@@ -90,6 +90,8 @@ class ClearanceService{
                     }
                 }
             }
+
+            
             $data['clearance'] = $fees;
             $data['total_expected'] = $ret->sum('amount');
             $data['fee_cleared'] = ($data['total_paid'] + $data['total_reg_paid']) >= $data['total_expected'];
@@ -100,6 +102,8 @@ class ClearanceService{
                 $this->saveClearance($student_id);
             }
             $data['institution'] = School::first();
+
+            $data['qrcode'] = QrCode::size('200')->generate(route('student.fee_statement', $student_id));
             // dd($data);
             return $data;
         }
@@ -125,9 +129,43 @@ class ClearanceService{
         # code...
         $student = Students::find($student_id);
         if($student != null){
-            return FeeClearance::where(['student_id'=>$student_id])->first();
+            return FeeClearance::where(['student_id'=>$student_id])->orderBy('id', 'DESC')->first();
         }
         throw new \Exception("Student instance not found");
+    }
+
+    public function student_fee_statement($student_id){
+        $student = Students::find($student_id);
+        if($student == null){
+            return view('student_fee_statement', ['status'=>'error', 'message'=>'Student was not found on the system.']);
+        }
+        $clearance_record = \App\Models\FeeClearance::where('student_id', $student_id)->count();
+        if($clearance_record == 0){
+            return view('student_fee_statement', ['status'=>'error', 'message'=>'No fee clearance has been issued for this student.']);
+        }
+        // get expected fee for this student
+        $expected_fee = Students::where('students.id', $student_id)
+            ->join('student_classes', ['student_classes.student_id'=>'students.id'])
+            ->join('program_levels', ['program_levels.id'=>'student_classes.class_id'])
+            ->join('campus_programs', function($query){
+                $query->on(['campus_programs.program_level_id'=>'program_levels.id'])
+                    ->on(['campus_programs.campus_id'=>'students.campus_id']);
+            })->join('payment_items', function($query){
+                $query->on(['payment_items.campus_program_id'=>'campus_programs.id'])
+                    ->on(['payment_items.year_id'=>'student_classes.year_id']);
+            })->sum('amount') 
+            + \App\Models\ExtraFee::where('student_id', $student_id)->sum('amount');
+
+        $covered_fee = \App\Models\StudentScholarship::where('student_id', $student_id)->sum('amount')
+            + \App\Models\Payments::where('student_id', $student_id)->sum('amount');
+
+
+        if($covered_fee >= $expected_fee){
+            return view('student_fee_statement', ['status'=>'success', 'message'=>"Fee payments completed."]);
+        }else{
+            return view('student_fee_statement', ['status'=>'message', 'message'=>"Fee payments not yet completed."]);
+        }
+
     }
 
 
