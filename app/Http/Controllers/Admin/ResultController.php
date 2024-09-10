@@ -498,6 +498,11 @@ class ResultController extends Controller
         # code...
         $student = Students::find($request->student_id);
         $year = $request->year ?? Helpers::instance()->getCurrentAccademicYear();
+        if($year == Helpers::instance()->getCurrentAccademicYear()){
+            session()->flash('message', "Visit the portal to download your results");
+            return back();
+        }
+        $data['printable'] = $year == Helpers::instance()->getCurrentAccademicYear() ? 0 : 1;
         $class = $student->_class(Helpers::instance()->getCurrentAccademicYear());
         $semester = $request->semester ? 
             Semester::find($request->semester) : 
@@ -512,7 +517,7 @@ class ResultController extends Controller
         $res = $student->result()->where('results.batch_id', '=', $year)->where('results.semester_id', $semester->id)->distinct()->pluck('subject_id')->toArray();
 
         $_registered_courses = $data['user']->registered_courses($year)->where('semester_id', $semester->id)->pluck('course_id')->unique()->toArray();
-        $registered_courses = count($_registered_courses) > 0 ? $_registered_courses : $data['user']->registered_courses($year->id)->whereNotNull('resit_id')->pluck('course_id')->unique()->toArray();
+        $registered_courses = count($_registered_courses) > 0 ? $_registered_courses : $data['user']->registered_courses($year)->whereNotNull('resit_id')->pluck('course_id')->unique()->toArray();
       
         $data['subjects'] = $student->_class(Helpers::instance()->getYear())->subjects()->whereIn('subjects.id', $res)->get();
         $data['results'] = array_map(function($subject_id)use($data, $year, $semester, $student){
@@ -1036,7 +1041,9 @@ class ResultController extends Controller
             $class_subject = $_class->class_subjects()->where('subject_id', $subject->id)->first();
             $data = [
                 'batch_id'=>$year, 'student_id'=>$student->id, 'semester_id'=>$rec['semester'], 'subject_id'=>$subject->id, 
-                'ca_score'=>$rec['ca_score'], 'exam_score'=>$rec['exam_score'], 'coef'=>$class_subject->coef ?? $subject->coef,
+                'ca_score'=>$rec['ca_score'], 'exam_score'=>$rec['exam_score'], 
+                // 'coef'=>($class_subject->coef >= 1 ? $class_subject->coef : $subject->coef),
+                'coef'=> $subject->coef,
                 'class_subject_id'=>$class_subject->id??null, 'reference'=>'REF'.$year.$student->id.$class.$rec['semester'].$subject->id.$subject->coef, 
                 'user_id'=>auth()->id(), 'campus_id'=>$student->campus_id, 'published'=>0
             ];
