@@ -28,6 +28,7 @@ use App\Models\ProgramLevel;
 use App\Models\StudentClass;
 use App\Models\StudentScholarship;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ClearanceService;
 use Throwable;
 use \PDF;
 
@@ -39,6 +40,7 @@ class HomeController extends Controller
         'students.name',
         'student_classes.year_id',
     ];
+    protected $clearanceService;
     private $select1 = [];
     /**
      * Show the application dashboard.
@@ -48,6 +50,10 @@ class HomeController extends Controller
     public function index()
     {
         return redirect()->to(route('login'));
+    }
+
+    public function __construct(ClearanceService $clearanceService){
+        $this->clearanceService = $clearanceService;
     }
 
     public function children(Request $request,  $parent)
@@ -271,21 +277,12 @@ class HomeController extends Controller
 
         // dd($data->where('id', 51)->first());
         if($type == 'completed'){
-            $resp = $data->filter(function($row){
-                return $row->owed <= 0 && $row->fee > 0;
-            });
+            $resp = $data->where('owed', '<=', 0)->where('fee', '>', 0);
         }elseif(($amount = $request->amount) != null){
-            $resp = $data->filter(function($row, $amount){
-                return $row->total >= $amount;
-            });
+            $resp = $data->where('total', '>=', $amount);
         }else{
-            $resp = $data->filter(function($row){
-                return $row->owed > 0;
-            });
-
+            $resp = $data->where('owed', '>', 0);
         }
-        
-
 
         $students = $resp->sortBy('name')->toArray();
 
@@ -651,4 +648,7 @@ class HomeController extends Controller
         return response()->json(['classes'=> $classes]);
     }
     
+    public function student_fee_statement(Request $request, $student_id){
+        return $this->clearanceService->student_fee_statement($student_id);
+    }
 }

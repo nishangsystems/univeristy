@@ -6,9 +6,9 @@
                 <div class=" col-sm-6 col-md-5 col-lg-5 px-2">
                     <label for="">{{__('text.word_class')}}</label>
                     <div>
-                        <select name="class_id" id="" class="form-control rounded" required>
-                            <option value=""></option>
-                            @foreach(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                        <select class="chosen-select form-control rounded" name="class_id" id="class_id_field" required  data-placeholder="search class by name...">
+                            <option selected class="text-capitalize">{{__('text.select_class')}}</option>
+                            @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
                                 <option value="{{$pl['id']}}">{{$pl['name']}}</option>
                             @endforeach
                         </select>

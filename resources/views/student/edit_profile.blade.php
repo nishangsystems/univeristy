@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="row py-2">
-            <label for="" class="col-md-3 text-capitalize">{{__('text.parents_phone_number')}}</label>
+            <label for="" class="col-md-3 text-capitalize">{{__('text.emergency_contact')}}</label>
             <div class="col-md-9">
                 <div class="row">
                     <div class="col-md-5">

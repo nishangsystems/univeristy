@@ -75,6 +75,9 @@
                 <div class="pt-5 mt-5 d-flex justify-content-center">
                     <span class="text-uppercase font-weight-bold">this clearance is issued once</span>
                 </div>
+                <div class="py-5 mt-5 d-flex justify-content-center">
+                    <span class="text-uppercase font-weight-bold">{!! $data['qrcode'] !!}</span>
+                </div>
             </div>
         </div>
     @endif
@@ -90,19 +93,19 @@
             $(document.body).html(docBody);
             
             // save clearance record to database
-            // let url = "{{ Request::url() }}";
-            // let token = "{{ csrf_token() }}";
-            // $({
-            //     method: 'POST', url: url, data: {'_token': token},
-            //     success: function(data){
-            //         console.log($data);
-            //         alert(data.message);
-            //     },
-            //     error: function(error){
-            //         console.log(error);
-            //         alert(err)
-            //     }
-            // });
+            let url = "{{ Request::url() }}";
+            let token = "{{ csrf_token() }}";
+            $({
+                method: 'POST', url: url, data: {'_token': token},
+                success: function(data){
+                    console.log($data);
+                    alert(data.message);
+                },
+                error: function(error){
+                    console.log(error);
+                    alert(err)
+                }
+            });
 
         }
     </script>

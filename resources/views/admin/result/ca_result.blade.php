@@ -4,9 +4,9 @@
     <div id="picker_form" name="picker_form">
         <div class="d-flex input-group-merge border border-dark rounded my-3">
             <label for="" class="input-group-text px-3 text-center bg-dark text-light ">{{__('text.word_class')}}</label>
-            <select name="class" class="form-control" required id="_class_" onchange="subjects()">
-                <option value=""></option>
-                @foreach(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+            <select class="border-0 chosen-select form-control" name="class" id="_class_"  onchange="subjects()" data-placeholder="search class by name...">
+                <option selected class="text-capitalize">{{__('text.select_class')}}</option>
+                @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
                     <option value="{{$pl['id']}}">{{$pl['name']}}</option>
                 @endforeach
             </select>

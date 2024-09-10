@@ -1,7 +1,7 @@
 @extends('admin.layout')
 @section('section')
    <div class="py-2 container-fluid">
-        <div class="row my-4 container p-3 shadow">
+        <div class="row my-4 container-fluid p-3 shadow">
             <div class="col-sm-6 col-md-4 col-lg-3 p-2">
                 <select class="form-control" name="year" id="form_year" required>
                     <option></option>
@@ -21,10 +21,11 @@
                 <span class="text-secondary">{{ __('text.word_semester') }}</span>
             </div>
             <div class="col-sm-6 col-md-4 col-lg-3 p-2">
-                <select class="form-control" name="class" id="form_class" required>
-                    <option></option>
-                    @foreach ($classes??[] as $class)
-                        <option value="{{ $class['id'] }}" {{ $class['id'] == old('class', $class_id) ? 'selected' : '' }}>{{ $class['name']??'' }}</option>
+                
+                <select class="chosen-select form-control" name="class" id="form_class" required  data-placeholder="search class by name...">
+                    <option selected class="text-capitalize">{{__('text.select_class')}}</option>
+                    @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                        <option value="{{$pl['id']}}" {{ $pl['id'] == old('class', $class_id) ? 'selected' : '' }}>{{$pl['name']}}</option>
                     @endforeach
                 </select>
                 <span class="text-secondary">{{ __('text.word_semester') }}</span>

@@ -28,12 +28,15 @@
             <div class="row my-3 py-1">
                 <label class="col-md-3 text-capitalize pl-4">@lang('text.word_class') :</label>
                 <div class="col-md-9">
-                    <select class="form-control rounded" name="class_id" required id="class_selection_field">
-                        <option></option>
+                    <select class="chosen-select form-control" name="class" id="class_selection_field" required  data-placeholder="search class by name...">
+                        <option selected class="text-capitalize">{{__('text.select_class')}}</option>
+                        @forelse(\App\Http\Controllers\Controller::sorted_program_levels() as $pl)
+                            <option value="{{$pl['id']}}">{{$pl['name']}}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
-            <div class="d-flex justify-content-end py-3 px-1 hidden" id="submit_box">
+            <div class="d-flex justify-content-end py-3 px-1" id="submit_box">
                 <button class="btn btn-sm btn-primary rounded" type="submit">@lang('text.word_next')</button>
             <div>
         </form>

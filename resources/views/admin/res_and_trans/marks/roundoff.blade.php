@@ -59,7 +59,7 @@
 
         let confirm_operation = function(element_id){
             let lower = $('#lower_limit').val(), upper = $('#upper_limit').val(), addition = $('#mark').val();
-            let alert_message = `Your are about to alter exam marks between ${lower} and ${upper} by +${addition} for all {{ $background->background_name }} {{ $semester->name }} {{ $year->name }} students. You will not be able to undo this operation`;
+            let alert_message = `Your are about to alter exam marks between ${lower} and ${upper} by +${addition} for all {{ optional($background??null)->background_name??'' }} {{ optional($semester??null)->name??'' }} {{ optional($year??null)->name??'' }} students. You will not be able to undo this operation`;
             if(confirm(alert_message) == true){
                 $('#'+element_id).submit();
             }

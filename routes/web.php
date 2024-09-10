@@ -952,6 +952,8 @@ Route::prefix('student')->name('student.')->middleware(['isStudent'])->group(fun
     });
 });
 
+Route::get('student{id}feeStatement', [HomeController::class, 'student_fee_statement'])->name('student.fee_statement');
+
 Route::get('download_form_b/{year}/{semester}', 'Student\HomeController@download_courses_api');
 
 
