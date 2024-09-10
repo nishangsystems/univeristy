@@ -43,5 +43,7 @@
         <b class="text-capitalize">{{$student->name??''}}</b><br>
         <strong class="text-capitalize">{{$status}}!</strong><span>{{$message}}</span>
     </div>
+
+    <div style="margin-block: 3rem; text-align: center;">&copy; All Rights Reserved. Powered By <a href="https://nishangsystems.org/"><i><b>Nishang Systems</b></i></a></div>
 </body>
 </html>
