@@ -1,8 +1,16 @@
 @extends('admin.printable')
 @section('section')
 @if($access == true)
-        <div class="d-flex justify-content-end py-3">
-            <a href="{{Request::url()}}/download" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_download')}}</a>
+        <div id="printable">
+            @if($printable == 1)
+                <div class="d-flex justify-content-end py-3">
+                    <a onclick="_print()" class="btn btn-sm btn-primary text-capitalize">{{__('text.word_download')}}</a>
+                </div>
+            @else
+                <div class="alert alert-info py-3 border-top border-bottom text-center">
+                    <b>{{ "Visit the portal at ".url('/')." to download results" }}</b>
+                </div>
+            @endif
         </div>
         <div class="card-body">
             <div id="table table-responsive" class="table-editable">
@@ -91,5 +99,12 @@
     @endif
 @endsection
 @section('script')
-    
+    <script>
+        let _print = function() {
+            $('#printable').hide();
+            window.print();
+            $('#printable').show();
+
+        }
+    </script>
 @endsection
