@@ -137,11 +137,11 @@ class ClearanceService{
     public function student_fee_statement($student_id){
         $student = Students::find($student_id);
         if($student == null){
-            return view('student_fee_statement', ['status'=>'error', 'message'=>'Student was not found on the system.']);
+            return view('student_fee_statement', ['status'=>'error', 'message'=>'Student was not found on the system.', 'student'=>$student]);
         }
         $clearance_record = \App\Models\FeeClearance::where('student_id', $student_id)->count();
         if($clearance_record == 0){
-            return view('student_fee_statement', ['status'=>'error', 'message'=>'No fee clearance has been issued for this student.']);
+            return view('student_fee_statement', ['status'=>'error', 'message'=>'No fee clearance has been issued for this student.', 'student'=>$student]);
         }
         // get expected fee for this student
         $expected_fee = Students::where('students.id', $student_id)
@@ -161,9 +161,9 @@ class ClearanceService{
 
 
         if($covered_fee >= $expected_fee){
-            return view('student_fee_statement', ['status'=>'success', 'message'=>"Fee payments completed."]);
+            return view('student_fee_statement', ['status'=>'success', 'message'=>"Fee payments completed.", 'student'=>$student]);
         }else{
-            return view('student_fee_statement', ['status'=>'message', 'message'=>"Fee payments not yet completed."]);
+            return view('student_fee_statement', ['status'=>'message', 'message'=>"Fee payments not yet completed.", 'student'=>$student]);
         }
 
     }
