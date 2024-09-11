@@ -36,15 +36,15 @@
     </div>
 
     @php
-        $creditAttempted += $result['cv'];
-        $creditEarned += $result['ce'];
+        $creditAttempted += intval($result['cv']);
+        $creditEarned += intval($result['ce']);
     @endphp
 
 
     @php
         if($result['passed']){
-            $gpaCreditAttempted += $result['cv'];
-            $gpaCreditEarned += $result['ce'];
+            $gpaCreditAttempted += intval($result['cv']);
+            $gpaCreditEarned += intval($result['ce']);
         }
     @endphp
 @endforeach

@@ -83,7 +83,7 @@ class Results extends Component
                             'code' => $result->subject->code,
                             'type' => $result->subject->status,
                             'passed'=>$passed,
-                            'cv' => $result->subject->coef,
+                            'cv' => intval(optional($result->subject)->coef??0),
                             'validated' => $result->validated,
                             'ce' => $passed ? $result->subject->coef : 0,
                             'grade' => ($grade != "") ? $grade->grade : "-",
