@@ -111,6 +111,7 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function ()
     Route::get('transcript/index', [\App\Http\Livewire\Admin\Transcript\Index::class, '__invoke'])->name('transcript.index');
     Route::get('transcript/results/{student}', [\App\Http\Livewire\Admin\Transcript\Results::class, '__invoke'])->name('transcript.results');
     Route::get('results/hnd/{student}', [\App\Http\Livewire\Admin\Transcript\HNDResults::class, '__invoke'])->name('hnd.results');
+    Route::get('courses/unvalidated/{student}', [\App\Http\Livewire\Admin\UnvalidatedCourses::class, '__invoke'])->name('courses.unvalidated');
 
     Route::get('', 'Admin\HomeController@index')->name('home');
     Route::get('home', 'Admin\HomeController@index')->name('home');

@@ -17,14 +17,14 @@ class ClassSubjectController extends Controller
     public function  edit($section_id, $id)
     {
         $data['parent'] = ProgramLevel::find($section_id);
-        $data['subject'] = DB::table('class_subjects')->whereNull('.deleted_at')
-            ->join('school_units', ['school_units.id' => 'class_subjects.class_id'])
+        $data['subject'] = DB::table('class_subjects')->whereNull('class_subjects.deleted_at')
+            ->join('program_levels', ['program_levels.id' => 'class_subjects.class_id'])
             ->join('subjects', ['subjects.id' => 'class_subjects.subject_id'])
             ->where('class_subjects.class_id', $section_id)
             ->where('class_subjects.subject_id', $id)
             ->select('class_subjects.subject_id', 'subjects.name', 'class_subjects.coef', 'class_subjects.status', 'subjects.semester_id', 'class_subjects.semester_id as _semester_id')
             ->first();
-        $data['title'] = __('text.word_edit').' ' . $data['subject']->name . ' '.__('text.word_for').' ' . $data['parent']->name();
+        $data['title'] = __('text.word_edit').' ' . (optional($data['subject'])->name??'SUBJECT') . ' '.__('text.word_for').' ' . optional($data['parent'])->name();
         return view('admin.class_subjects.edit')->with($data);
     }
 
