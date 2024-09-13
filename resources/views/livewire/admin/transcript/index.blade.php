@@ -34,6 +34,7 @@
                     let k = 1;
                     var link = "{{route('admin.transcript.results', "VALUE")}}";
                     var hnd = "{{route('admin.hnd.results', "VALUE")}}";
+                    var courses = "{{route('admin.courses.unvalidated', "VALUE")}}";
                     data.forEach(element => {
                         tbody_content += `<tr class="border-top border-bottom border-secondary">
                             <td class="border-left boder-right border-secondary">${k++}</td>
@@ -42,8 +43,9 @@
                             <td class="border-left boder-right border-secondary">${element.year}</td>
                             <td class="border-left boder-right border-secondary">${element.class}</td>
                             <td class="border-left boder-right border-secondary">
-                                <a class="btn btn-sm btn-primary" href="${hnd.replace("VALUE", element.id)}">{{__('text.hnd_results')}}</a>
-                                <a class="btn btn-sm btn-primary" target="_blank" href="${link.replace("VALUE", element.id)}">{{__('text.print_transcript')}}</a>
+                                <a class="btn btn-xs btn-primary rounded mb-1 mr-1" href="${hnd.replace("VALUE", element.id)}">{{__('text.hnd_results')}}</a>
+                                <a class="btn btn-xs btn-primary rounded mb-1 mr-1" target="_blank" href="${link.replace("VALUE", element.id)}">{{__('text.print_transcript')}}</a>
+                                <a class="btn btn-xs btn-primary rounded mb-1 mr-1" target="_blank" href="${courses.replace("VALUE", element.id)}">{{__('text.unvalidated_courses')}}</a>
                             </td>
                         </tr>`;
                     });
