@@ -23,7 +23,7 @@ class UnvalidatedCourses extends Component
         $this->title = "Unvalidated Courses For {$student->name} [{$student->matric}]";
         $this->courses = $student->result()->join('subjects', ['subjects.id'=>'results.subject_id'])
             ->select(['subjects.code', 'subjects.name', DB::raw("SUM(results.ca_score + results.exam_score) as total_mark"), 'results.ca_score', 'results.exam_score', 'results.semester_id'])
-            ->groupBy('results.id')->having('total_mark', '>', 50)->get();
+            ->groupBy('results.id')->having('total_mark', '<', 50)->get();
         
     }
 }
